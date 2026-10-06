@@ -13,6 +13,9 @@ remains readable but does not acquire an invented publication version.
 Publication defaults remain off; the library does not grant approval or Online
 activation. See [the library contract](llm/contracts/media-library-publication.md)
 for APIs, permissions, customization and installed acceptance requirements.
+An authorized requester may approve its own publication in Axis. Approval is
+permission-based, not dependent on a different login; native actor provenance,
+tenant/enterprise scope and retained-version activation remain mandatory.
 
 ## Canonical Staged Media Preparation
 

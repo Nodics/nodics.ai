@@ -17,6 +17,27 @@ const os = require('node:os');
 const path = require('node:path');
 const audit = require('../src/service/quality/defaultDesignPrincipleAuditService');
 
+test('knowledge selection is runtime data, including role profiles and replacement bindings', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-knowledge-ownership-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(root, 'config'));
+  const file = path.join(root, 'config/properties.js');
+  for (const definitions of [[{ code: 'sample' }], { $config: 'replace', value: [] }, { $config: 'env', name: 'SOURCES' }]) {
+    for (const copilot of [{ knowledge: { sourceRegistry: { definitions } } }, { runtimeRoleProfiles: { ANY: { knowledge: { sourceRegistry: { definitions } } } } }]) {
+      fs.writeFileSync(file, 'throw new Error("must not execute"); module.exports = ' + JSON.stringify({ copilot }));
+      const failures = [];
+      audit.auditConfigurationSources(failures, root);
+      assert(failures.some(value => value.includes('governed runtime data')));
+    }
+  }
+  fs.writeFileSync(file, 'module.exports = ' + JSON.stringify({ copilot: { knowledge: {
+    sourceRegistry: { definitions: [] }, repositoryRoots: { project: { $config: 'path', base: 'project', relative: '' } }, ingestion: { enabled: true },
+  } } }));
+  const failures = [];
+  audit.auditConfigurationSources(failures, root);
+  assert.deepEqual(failures, []);
+});
+
 test('configuration audit rejects retired authorities and secrets without printing their values', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-config-restrictions-'));
   t.after(() => fs.rmSync(root, {recursive:true,force:true}));

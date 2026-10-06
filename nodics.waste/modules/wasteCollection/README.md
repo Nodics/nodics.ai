@@ -1,5 +1,14 @@
 # Waste Collection
 
+Collection-point native create receipts preserve Waste ownership and current
+authorization. See [original results and continuation](../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md)
+for opt-in configuration, read-only inspection and uncertain-outcome handling.
+
+Native collection-point HTTP creation is insert-only. An existing code is never
+updated by another create, including a newly approved Copilot action. Receipt
+recording may be disabled without weakening this rule. Use the native update
+contract for edits; internal generated imports keep their existing behavior.
+
 `wasteCollection` models places where waste can be dropped off, received,
 inspected, repaired, traded in, aggregated, or sent downstream.
 

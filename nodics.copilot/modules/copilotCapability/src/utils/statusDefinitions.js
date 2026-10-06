@@ -17,5 +17,37 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 module.exports = {
-
+  ERR_CPT_00005: {
+    code: "400",
+    message: "The Process inspection command is invalid.",
+  },
+  ERR_CPT_00006: {
+    code: "403",
+    message: "Process inspection is not available for this user and scope.",
+  },
+  ERR_CPT_00007: {
+    code: "502",
+    message: "Process inspection did not return valid evidence.",
+  },
+  ERR_CPT_00008: {
+    code: "409",
+    message:
+      "Process inspection admission changed. Request a fresh inspection.",
+  },
+  ERR_CPT_00001: {
+    code: "400",
+    message: "The Rules inspection command is invalid.",
+  },
+  ERR_CPT_00002: {
+    code: "403",
+    message: "Rules inspection is not available for this user and scope.",
+  },
+  ERR_CPT_00003: {
+    code: "502",
+    message: "Rules inspection did not return valid evidence.",
+  },
+  ERR_CPT_00004: {
+    code: "409",
+    message: "Rules inspection admission changed. Request a fresh inspection.",
+  },
 };

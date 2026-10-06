@@ -10,6 +10,14 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+Legacy erasure uses the existing index-retirement owner and connection. Qualify
+only an explicitly exhaustive API-key-only historical writer inventory whose
+keys the provider still reports invalidated, with automatic index creation off.
+Missing keys, security-disabled providers, unknown/mixed writers and unqualified
+physical-name reuse fail closed. Never change keys or cluster settings. Delete
+one reviewed blocked UUID with zero retries and accept only native acknowledgement
+plus exact typed absence; Discovery owns original-command durability.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

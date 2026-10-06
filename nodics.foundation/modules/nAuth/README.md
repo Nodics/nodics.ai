@@ -4,6 +4,10 @@ nAuth owns bounded authentication and authorization contracts for people, servic
 
 Keep credential types distinct, preserve strict distributed security state and never use local fallback to bypass revocation or missing authority.
 
+Recognized permission names are not default grants. Location create/update are
+independently assignable through Profile; native route policy remains unchanged.
+See [catalogue versus grants](llm/contracts/README.md#permission-catalogue-versus-grants).
+
 Detailed material is preserved in the adjacent [implementation and operations guide](authentication-security-guide.md). This README is the discovery index, not a replacement authority or evidence that runtime qualification passed.
 
 Read [owner guidance](AGENTS.md) before changing behavior. Customize through the established later-loaded configuration, services, providers, schemas and runtime layers described in the guide; do not copy framework owners or bypass their invariants. Verification commands and their limits are retained in the guide. This documentation-only reorganization runs no behavioral tests or operations.

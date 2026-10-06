@@ -199,6 +199,7 @@ module.exports = function (definition, trigger, context, timeZone) {
                         _cronJob.start();
                         resolve('Job: ' + _definition.code + ' started successfully');
                     }).catch(error => {
+                        _active = false;
                         reject(new CLASSES.CronJobError(error, 'Job: ' + _definition.code + ' has issue while starting'));
                     });
                 } else {

@@ -28,7 +28,14 @@ module.exports = {
 
     /** Requires exactly one changed instance using the database owner's adapter normalization. */
     requireChanged: function (result) {
-        if (SERVICE.DefaultModelsUpdateInitializerService.getAffectedCount(result) !== 1) {
+        if (
+            !/^SUC_/.test(result?.code || '') ||
+            [result, result.result].some(value => value && (
+                value.error || value.success === false || value.acknowledged === false ||
+                (value.errors !== undefined && (!Array.isArray(value.errors) || value.errors.length))
+            )) ||
+            SERVICE.DefaultModelsUpdateInitializerService.getAffectedCount(result) !== 1
+        ) {
             throw new CLASSES.NodicsError(
                 'ERR_PROCESS_00019',
                 'Process action execution changed or was already claimed',
@@ -100,12 +107,14 @@ module.exports = {
         const previous = instance.activeRemoteAction;
         if (
             previous &&
-            ['READY', 'CLAIMED'].includes(previous.status) &&
-            Number(previous.expiresAt) > Date.now()
+            (['READY', 'CLAIMED'].includes(previous.status) ||
+                (previous.journaled === true &&
+                    previous.actionKey === key &&
+                    ['FAILED', 'COMPLETED'].includes(previous.status)))
         ) {
             throw new CLASSES.NodicsError(
                 'ERR_PROCESS_00019',
-                'A Process remote action is already in flight',
+                'A Process remote action is already in flight or requires owner reconciliation',
             );
         }
         let decision = execution.decision || (execution.body && execution.body.decision) || {};
@@ -148,6 +157,7 @@ module.exports = {
             runtimeScope: auth.runtimeScope,
             enterpriseCode: auth.entCode,
             expiresAt: Date.now() + age,
+            journaled: allowed.remote.recordAttempts === true,
         };
         const query = {
             code: instance.code,
@@ -162,6 +172,9 @@ module.exports = {
                 }),
             ),
         );
+        if (active.journaled) {
+            await SERVICE.DefaultProcessActionAttemptService.begin(request, instance, active);
+        }
         return { instance: instance, active: active };
     },
 
@@ -226,6 +239,14 @@ module.exports = {
                     }),
                 ),
             );
+            if (handle.journaled) {
+                await SERVICE.DefaultProcessActionAttemptService.advance(
+                    request,
+                    handle,
+                    status === 'COMPLETED' ? ['CLAIMED'] : ['READY', 'CLAIMED'],
+                    status,
+                );
+            }
         }
     },
 
@@ -278,6 +299,9 @@ module.exports = {
                 }),
             ),
         );
+        if (active.journaled) {
+            await SERVICE.DefaultProcessActionAttemptService.advance(request, active, ['READY'], 'CLAIMED');
+        }
         return {
             code: 'SUC_PROCESS_00000',
             data: {
@@ -285,6 +309,7 @@ module.exports = {
                     version: instance.version, context: active.context },
                 nodeCode: active.nodeCode,
                 executionCode: active.code,
+                attemptRecorded: active.journaled === true,
                 taskCode: active.taskCode,
                 actor: active.actor,
                 body: { decision: active.decision },

@@ -1,5 +1,14 @@
 # mongodb AI Contracts
 
+## Journaled Transaction Commit
+
+`transactionCapabilities` advertises `journaledCommit` only with the existing
+qualified multi-record transaction topology. `executeTransaction` preserves
+snapshot reads and commits with `{ w: 'majority', j: true }`, bounded commit time
+and session cleanup. Unsupported journaling or uncertain acknowledgement rejects;
+capability advertisement is not live failover acceptance. Transaction callbacks
+must remain transaction-safe and must not repeat external domain side effects.
+
 ## Canonical Replacement Selector
 
 `saveItems` calls exported `assertReplacementIdentity` before every driver call

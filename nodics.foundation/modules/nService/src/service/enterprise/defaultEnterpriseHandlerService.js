@@ -59,6 +59,7 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When enterprise records cannot be loaded.
      */
     fetchEnterprise: async function () {
+        let stage = 'ISSUE_RUNTIME_CREDENTIAL';
         try {
             const defaultTenant = CONFIG.get('defaultTenant') || 'default';
             const issued = await SERVICE.DefaultInternalAuthenticationProviderService.fetchInternalAuthToken(defaultTenant);
@@ -66,6 +67,7 @@ module.exports = {
             const selected = CONFIG.get('profileTenantProvisioning')?.enabled === true;
             let legacyRequest;
             if (!selected) {
+                stage = 'VERIFY_RUNTIME_CREDENTIAL';
                 const verified = await SERVICE.DefaultAuthorizationProviderService.authorizeToken({ authToken: issued.authToken });
                 if (!/^SUC_/.test(verified?.code || '') || !verified.result || verified.result.tenant !== defaultTenant) throw new Error();
                 legacyRequest = { tenant: defaultTenant, entCode: verified.result.entCode, authData: verified.result };
@@ -76,17 +78,27 @@ module.exports = {
                 operationName: selected ? 'inventoryWithProof' : 'getRuntimeEnterprise',
                 apiName: selected ? '/internal/tenants/bootstrap' : '/enterprise/get', methodName: 'GET', tenant: defaultTenant,
                 authToken: issued.authToken, requestBody: {}, responseType: true, maxAttempts: 1,
+                header: selected ? undefined : { 'x-enterprise-code': legacyRequest.entCode },
                 request: selected ? { tenant: defaultTenant, headers: { Authorization: 'Bearer ' + issued.authToken }, body: {} } : legacyRequest,
                 secureTransport: selected ? { required: true, allowInsecureLoopback: CONFIG.get('profileTenantProvisioning')?.allowInsecureLoopback === true } : undefined,
                 followRedirects: selected ? false : undefined,
             };
+            stage = 'ENTER_PRIVATE_CONTEXT';
             const logger = SERVICE.DefaultLoggerService;
             if (typeof logger?.runSensitiveOperation !== 'function') throw new Error();
-            const response = await logger.runSensitiveOperation(invocation, () => SERVICE.DefaultModuleService.invokeModule(invocation));
+            const response = await logger.runSensitiveOperation(invocation, () => {
+                stage = 'INVOKE_ENTERPRISE_INVENTORY';
+                return SERVICE.DefaultModuleService.invokeModule(invocation);
+            });
+            stage = 'VALIDATE_ENTERPRISE_INVENTORY';
             if (!/^SUC_/.test(response?.code || '') || response.success === false ||
                 !Array.isArray(response.result) || !response.result.length || response.result.length > 256) throw new Error();
             return response.result;
-        } catch { throw new CLASSES.NodicsError('ERR_TNT_PROVISIONING_HELD'); }
+        } catch {
+            // Static stage names only: upstream errors can contain credentials or private data.
+            try { this.LOG?.error?.('Tenant startup held at ' + stage); } catch {}
+            throw new CLASSES.NodicsError('ERR_TNT_PROVISIONING_HELD');
+        }
     },
 
     /**

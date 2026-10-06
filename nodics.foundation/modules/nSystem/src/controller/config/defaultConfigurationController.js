@@ -379,5 +379,27 @@ module.exports = {
         } else {
             return FACADE.DefaultConfigurationFacade.activateRuntimeConfigurationActivationRequest(request);
         }
+    },
+
+    /** Exposes bounded due dispatch without bypassing router authorization or approval.
+     * @param {Object} request Trusted request.
+     * @param {Function} [callback] Node-style callback.
+     * @returns {Promise|undefined} Result when called without a callback.
+     */
+    activateDueRuntimeConfigurationRequests: function (request, callback) {
+        const result = FACADE.DefaultConfigurationFacade.activateDueRuntimeConfigurationRequests(request);
+        if (callback) result.then(value => callback(null, value)).catch(callback);
+        else return result;
+    },
+
+    /** Maps explicit property recovery to the facade without automatic retry.
+     * @param {Object} request Authorized operator command.
+     * @param {Function} [callback] Node-style callback.
+     * @returns {Promise|undefined} Promise without callback.
+     */
+    reconcileRuntimePropertyActivation: function (request, callback) {
+        const result = FACADE.DefaultConfigurationFacade.reconcileRuntimePropertyActivation(request);
+        if (callback) result.then(value => callback(null, value)).catch(callback);
+        else return result;
     }
 };

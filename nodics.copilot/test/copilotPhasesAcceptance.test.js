@@ -152,6 +152,13 @@ test("read intent routes live module questions and exports without confusing doc
     requestService.assessReadIntent("Why does Nodics use modules?"),
     { type: "KNOWLEDGE" },
   );
+  for (const question of [
+    "Which Nodics module owns publication approval?",
+    "Explain what the Nodics workflow module does",
+    "Which framework modules handle publication?",
+    "Using indexed framework documentation, explain which module owns workflow execution",
+  ]) assert.deepEqual(requestService.assessReadIntent(question), { type: "KNOWLEDGE" });
+  assert.equal(requestService.assessReadIntent("Which Nodics modules are active?").type, "LIVE_READ");
 });
 
 test("Phase 3-4: conversation records are tenant bound and API routes are secured", () => {
@@ -215,6 +222,8 @@ test("confirmed mutations expose one execution transport and preserve execution 
     "copilotCore/src/service/defaultCopilotOrchestrationService",
   );
   const runtime = Object.assign({}, orchestration, {
+    configuration: () => ({ api: { enabled: true }, core: {} }),
+    getOwnedAction: async () => ({ capability: 'commerce.product.create' }),
     executeProductPlan: async (request) => {
       assert.equal(request.actionCode, "approved-action");
       assert.equal(request.confirmed, true);
@@ -273,8 +282,22 @@ test("Axis capability is module owned and API responses use the standard data en
     "copilotApi/src/service/defaultCopilotBackofficeCapabilityService",
   );
   const metadata = capability.getCapability();
-  assert.equal(metadata.navigation[0].id, "assistant");
-  assert.deepEqual(metadata.requiredPermissions, ["copilot.assistant.use"]);
+  assert.equal(metadata.navigation[0].id, "copilot-workspace");
+  assert.equal(
+    metadata.navigation[0].backendWorkspace.workspaceCode,
+    "copilot.workspace",
+  );
+  assert.equal(metadata.navigation[0].route, "/copilot");
+  assert.equal(metadata.navigation[1].label, "Copilot Conversation");
+  assert.equal(metadata.navigation[1].route, "/assistant");
+  assert.equal(metadata.navigation[0].group.id, "ai-copilot");
+  assert.equal(metadata.navigation[0].group.label, "AI & Copilot");
+  assert.deepEqual(metadata.navigation[1].requiredPermissions, [
+    "copilot.assistant.use",
+  ]);
+  assert.deepEqual(metadata.navigation[0].requiredPermissions, [
+    "copilot.assistant.read",
+  ]);
   global.SERVICE = {
     DefaultCopilotOrchestrationService: {
       createConversation: () => ({ conversation: { conversationCode: "c1" } }),
@@ -384,6 +407,68 @@ test("Axis turns retrieve authorized evidence before invoking the provider and p
       events.find((event) => event.eventType === "CITATIONS").data.citations,
       [citation],
     );
+    conversations.state.messages
+      .get(created.conversation.conversationCode)
+      .push({
+        role: "assistant",
+        content: "PRIOR_RESTRICTED_MARKER",
+        sequence: 100,
+      });
+    const configured = global.CONFIG.get();
+    configured.knowledge.groups = { enabled: true };
+    global.CONFIG.get = () => configured;
+    const search = global.SERVICE.DefaultCopilotKnowledgeRuntimeService.search;
+    let selectedGroups;
+    global.SERVICE.DefaultCopilotKnowledgeRuntimeService.search = async (
+      request,
+    ) => {
+      selectedGroups = request.knowledgeGroupCodes;
+      return search(request);
+    };
+    await orchestration.submitTurn({
+      ...identity,
+      conversationCode: created.conversation.conversationCode,
+      idempotencyKey: "group-scoped-turn",
+      message: "Explain the framework?",
+      knowledgeGroupCodes: ["guides"],
+    });
+    assert.deepEqual(selectedGroups, ["guides"]);
+    assert.equal(providerRequest.messages.length, 3);
+    assert.doesNotMatch(
+      JSON.stringify(providerRequest),
+      /PRIOR_RESTRICTED_MARKER/,
+    );
+    configured.conversation.recording = { enabled: false, version: "2" };
+    configured.knowledge.groups.enabled = false;
+    const privateInput = {
+      ...identity,
+      conversationCode: created.conversation.conversationCode,
+      idempotencyKey: "unrecorded-turn",
+      message: "Explain Nodics without recording this question?",
+    };
+    const unrecorded = await orchestration.submitTurn(privateInput);
+    assert.equal(unrecorded.delivery.mode, "REQUEST_ONLY");
+    assert.equal(providerRequest.messages.at(-1).content, privateInput.message);
+    assert.equal(providerRequest.messages.length, 3);
+    assert.ok(
+      unrecorded.delivery.events.some(
+        (event) => event.eventType === "TEXT_DELTA",
+      ),
+    );
+    assert.ok(
+      conversations.state.messages
+        .get(created.conversation.conversationCode)
+        .every((message) => message.turnCode !== unrecorded.turn.code),
+    );
+    assert.ok(
+      conversations.state.events
+        .get(unrecorded.turn.code)
+        .every((event) => event.data.contentNotRecorded === true),
+    );
+    const priorRequest = providerRequest;
+    const repeated = await orchestration.submitTurn(privateInput);
+    assert.deepEqual(repeated.delivery.events, []);
+    assert.equal(providerRequest, priorRequest);
   } finally {
     global.SERVICE = originalService;
     global.CONFIG = originalConfig;
@@ -451,8 +536,14 @@ test("Phase 8-9: workbench clarifies, validates, confirms, then calls an API", a
     price: 4999,
   });
   assert.equal(prepared.records.length, 10);
-  const validated = workbench.validate(prepared, (record) =>
-    record.catalogVersion ? [] : ["catalogVersion"],
+  const validated = workbench.validate(prepared, (record, schema) =>
+    schema === "priceRow"
+      ? record.priceBookCode
+        ? []
+        : ["priceBookCode"]
+      : record.catalogVersion
+        ? []
+        : ["catalogVersion"],
   );
   const policy = load("copilotPolicy/src/service/defaultCopilotPolicyService");
   const context = {
@@ -511,7 +602,11 @@ test("workbench mutations cross the runtime boundary through the owning secured 
   };
   try {
     const result = await orchestration.createOwnedSchemaRecord(
-      { tenant: "default" },
+      {
+        tenant: "default",
+        authData: { enterpriseCode: "enterprise" },
+        httpRequest: { headers: { authorization: "Bearer employee-token" } },
+      },
       {
         connectionName: "commerceStaged",
         targetAuthority: { runtimeRole: "COMMERCE_STAGED" },
@@ -529,6 +624,8 @@ test("workbench mutations cross the runtime boundary through the owning secured 
     assert.equal(invocation.methodName, "PUT");
     assert.equal(invocation.tenant, "default");
     assert.equal(invocation.header["Idempotency-Key"], "plan-1:IPM-001");
+    assert.equal(invocation.header.Authorization, "Bearer employee-token");
+    assert.equal(invocation.header["x-enterprise-code"], "enterprise");
     assert.deepEqual(invocation.request, { code: "IPM-001" });
   } finally {
     global.SERVICE = originalService;
@@ -558,7 +655,11 @@ test("PriceRow creation uses the canonical lowercase resource and propagates rej
   try {
     await assert.rejects(
       orchestration.createOwnedSchemaRecord(
-        { tenant: "tenant-one" },
+        {
+          tenant: "tenant-one",
+          authData: { enterpriseCode: "enterprise" },
+          httpRequest: { headers: { authorization: "Bearer employee-token" } },
+        },
         {
           connectionName: "selected",
           targetAuthority: { runtimeRole: "COMMERCE_STAGED" },

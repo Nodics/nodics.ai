@@ -129,7 +129,8 @@ module.exports = {
             this.rawSchema,
           );
           const result = await this.insertOne(model, options);
-          if (durable) this.validateDurableAcknowledgement(result, true);
+          if (durable || input.insertOnly === true)
+            this.validateDurableAcknowledgement(result, true);
           if (!result.acknowledged && !(result.ops && result.ops.length))
             throw new CLASSES.NodicsError("ERR_MDL_00005");
           return Object.assign({}, model, {
@@ -391,6 +392,11 @@ module.exports = {
           error.code || "ERR_MDL_00000",
         );
       }
+      return this.projectReadResult(input, success);
+    },
+
+    /** Applies current prepared-schema result privacy to ordinary and variant read envelopes. @param {Object} input Original scoped request. @param {Object} success Native query envelope. @returns {Promise<Object>} Owner-projected envelope. */
+    projectReadResult: async function (input, success) {
       const response = { success };
       const owner = SERVICE.DefaultSchemaReadAccessPolicyService;
       if (typeof owner?.providerResult === "function")
@@ -432,20 +438,12 @@ module.exports = {
           "Inconsistent durable journal readback",
         );
       }
-      const response = {
-        success: {
-          query: input.query,
-          options: input.searchOptions,
-          count,
-          result,
-        },
-      };
-      const owner = SERVICE.DefaultSchemaReadAccessPolicyService;
-      if (typeof owner?.providerResult === "function")
-        await owner.providerResult(input, response, this);
-      else if (this.rawSchema?.readProtection !== undefined)
-        throw new CLASSES.NodicsError("ERR_AUTH_00003");
-      return response.success;
+      return this.projectReadResult(input, {
+        query: input.query,
+        options: input.searchOptions,
+        count,
+        result,
+      });
     },
 
     /** Requires a concrete declared identity matching the model before multi-match replacement. @param {Object} input Generated save request. @returns {undefined} @throws {CLASSES.NodicsError} For empty, operator or nonidentity selectors. */

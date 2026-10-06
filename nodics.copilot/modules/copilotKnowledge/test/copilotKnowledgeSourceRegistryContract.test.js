@@ -92,7 +92,7 @@ test('pre-retrieval scopes expose only sources authorized for the current channe
 test('runtime readiness reports configured, indexed, and blocked knowledge source state', () => {
     const sourceDefinition = definition();
     global.CONFIG = { get: key => key === 'copilot' ? {
-        providers: { defaultAdapter: 'fixture', adapters: { fixture: { enabled: true, model: { name: 'fixture' } } } },
+        providers: { enabled: true, default: { adapter: 'fixture' }, adapters: { fixture: { enabled: true, model: { name: 'fixture' } } } },
         policy: policyConfiguration, knowledge: Object.assign({}, fullKnowledgeConfiguration, {
         ingestion: Object.assign({}, fullKnowledgeConfiguration.ingestion, { enabled: true }),
         retrieval: Object.assign({}, fullKnowledgeConfiguration.retrieval, { enabled: true }),
@@ -103,13 +103,15 @@ test('runtime readiness reports configured, indexed, and blocked knowledge sourc
         DefaultCopilotPolicyService: policy
     };
     try {
-        runtimeService.state.reports = new Map([[sourceDefinition.code, { sourceCode: sourceDefinition.code, sourceVersion: sourceDefinition.version, state: 'PROJECTED' }]]);
+        runtimeService.state.reports = new Map([[runtimeService.reportKey(fullKnowledgeConfiguration.ingestion.indexTenant, sourceDefinition.code), { sourceCode: sourceDefinition.code, sourceVersion: sourceDefinition.version, sourcePolicyDigest: runtimeService.registry(CONFIG.get('copilot')).sources[0].sourcePolicyDigest, state: 'PROJECTED' }]]);
         runtimeService.state.lastRefreshAt = '2026-09-24T00:00:00.000Z';
         const ready = runtimeService.readiness();
         assert.equal(ready.businessStatus, 'READY');
         assert.equal(ready.enabledSourceCount, 1);
         assert.equal(ready.indexedSourceCount, 1);
         assert.equal(ready.blockers.length, 0);
+        assert.equal(ready.selectedProviderCode, 'fixture');
+        assert.equal(ready.providerConfigured, true);
         runtimeService.state.reports = new Map();
         const notIndexed = runtimeService.readiness();
         assert.equal(notIndexed.businessStatus, 'NEEDS_ATTENTION');
@@ -120,5 +122,26 @@ test('runtime readiness reports configured, indexed, and blocked knowledge sourc
         runtimeService.state.lastRefreshAt = null;
         delete global.CONFIG;
         delete global.SERVICE;
+    }
+});
+
+test('readiness never silently selects another enabled provider', () => {
+    const previousConfig = global.CONFIG;
+    const service = Object.assign({}, runtimeService, { registry: () => ({ sources: [] }) });
+    try {
+        for (const providers of [
+            { enabled: true, default: { adapter: 'missing' }, adapters: { other: { enabled: true } } },
+            { enabled: false, default: { adapter: 'selected' }, adapters: { selected: { enabled: true } } },
+            { enabled: true, default: { adapter: 'selected' }, adapters: { selected: { enabled: false } } }
+        ]) {
+            global.CONFIG = { get: () => ({ providers, knowledge: { retrieval: { enabled: true } } }) };
+            const result = service.readiness();
+            assert.equal(result.providerConfigured, false);
+            assert.ok(result.blockers.some(blocker => blocker.code === 'COPILOT_PROVIDER_NOT_CONFIGURED'));
+            assert.notEqual(result.selectedProviderCode, 'other');
+        }
+    } finally {
+        if (previousConfig === undefined) delete global.CONFIG;
+        else global.CONFIG = previousConfig;
     }
 });

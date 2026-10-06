@@ -72,3 +72,11 @@ Avoid:
 - putting generic publish workflow rules in this provider variant;
 - adding connection credentials to variant configuration;
 - changing version increment behavior without focused tests.
+## Current-Read Privacy
+
+Current-version aggregation uses the ordinary MongoDB prepared-schema read
+guard and result projector. Missing or denied privacy hooks reject before a
+query; rejected result access prevents delivery. Private journal requests cannot
+select this aggregate path. Run the current-version read tests with and without
+an explicitly selected `NODICS_MONGODB_TEST_URI`; live cases own disposable
+databases and do not qualify an application's complete authorization setup.

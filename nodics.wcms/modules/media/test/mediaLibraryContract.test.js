@@ -352,7 +352,7 @@ function qualify(f) {
             publication = {
                 ...publication,
                 revision: 2,
-                state: 'APPROVAL_PENDING'
+                state: 'PENDING_APPROVAL'
             };
             return publication;
         },
@@ -677,12 +677,12 @@ test('exact fresh version invokes real Media/nPublish request chain; stable retr
         publicationCode: 'publication',
         mediaCode: 'hero',
         versionId: 7,
-        state: 'APPROVAL_PENDING',
+        state: 'PENDING_APPROVAL',
         revision: 2,
         approvalRequired: true
     });
     await library.requestPublication(input, f.request);
-    assert.equal(calls.length, 4);
+    assert.deepEqual(calls.map(call => call[0]), ['capture', 'create', 'validate', 'requestApproval', 'requestApproval']);
 });
 
 test('HTTP mapping preserves signed context, callbacks and no-store while suppressing private provider failures', async (t) => {
@@ -718,6 +718,36 @@ test('HTTP mapping preserves signed context, callbacks and no-store while suppre
             resolve();
         })
     );
+});
+
+test('publication failure diagnostics identify the owner stage without leaking provider details', async (t) => {
+    const f = fixture(t);
+    qualify(f);
+    SERVICE.DefaultMediaRetainedPublicationService.capture = async () => {
+        throw Object.assign(new Error('private-provider-password /private/storage'), { code: 'ERR_MED_00014' });
+    };
+    await assert.rejects(versionProvider.createGoverned({ mediaCode: 'hero', versionId: 7, publicationCode: 'diagnostic-request' }, f.request), error => {
+        assert.equal(error.mediaPublicationStage, 'RETAIN');
+        assert.equal(error.ownerErrorCode, 'ERR_MED_00014');
+        assert.equal(error.cause, undefined);
+        assert.equal(error.message.includes('private'), false);
+        return true;
+    });
+    const messages = [];
+    const target = { ...controller, LOG: { warn: message => messages.push(message) } };
+    for (const stage of ['INSPECT', 'RETAIN', 'CREATE', 'VALIDATE', 'REQUEST_APPROVAL', 'private-secret']) {
+        FACADE.DefaultMediaLibraryFacade.requestPublication = async () => {
+            throw Object.assign(new Error('private-provider-password'), { mediaPublicationStage: stage, ownerErrorCode: 'ERR_MED_00014' });
+        };
+        await assert.rejects(target.requestPublication({ ...f.request, httpRequest: { body: {} } }), error => {
+            assert.equal(error.code, 'ERR_MED_00023');
+            assert.equal(error.message.includes('private'), false);
+            if (stage !== 'private-secret') assert.match(error.message, new RegExp(stage));
+            return true;
+        });
+    }
+    assert.equal(messages.length, 5);
+    assert.equal(messages.some(message => message.includes('private')), false);
 });
 
 test('missing atomic capability, Online role and global publishing denial suppress request commands', async (t) => {

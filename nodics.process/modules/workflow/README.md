@@ -1,5 +1,33 @@
 # Workflow
 
+Legacy publication decisions may retain `action: APPROVE|REJECT` when it agrees
+with the stored approval boolean. Recovery validates the original completed task,
+actor and pinned graph; the label never reaches the domain callback. Typed
+approval contracts remain approved/reason-only. See the runtime governance
+contract and `test/processCompletedDecisionRetry.test.js`.
+
+Trigger create/update/archive/execute commands can record original acknowledgements
+through the same opt-in private journal as tasks. Metadata writes are insert-only
+or exact conditional transitions with acknowledged fresh readback. Original
+receipt inspection never executes the trigger again. See
+[trigger command receipts](llm/contracts/README.md#trigger-command-receipts).
+
+Human task commands carrying an idempotency key use the existing native receipt
+protocol when explicitly enabled for Workflow. The private original receipt is
+inspectable without replay and remains separate from current task state. See
+[task command receipts](llm/contracts/README.md#human-task-command-receipts).
+Assignment also requires exact task CAS and uncached, acknowledged readback.
+
+Create-only Process starts use a dedicated preSave retirement guard. It rejects
+existing identities and private retirement markers while retaining exact scalar
+insert constraints. Update/remove guards keep their atomic retirement predicate;
+an `insertOnly` request option cannot select the save-hook behavior.
+
+Approval eligibility is access-rights based: a requesting user with the required
+permissions may also approve. There is no automatic same-user exclusion and no
+login-name-based admin bypass. Human identity, tenant/enterprise scope, workflow
+state, decision validity and actor audit remain enforced for every user.
+
 Human task claims now use stored reviewer policy plus conditional write/readback;
 completion binds the inspected assignee and instance/node. Existing Axis consumers
 retain Process ownership. See the local contract for concurrency and cancellation
@@ -52,4 +80,4 @@ incident management do not silently start new instances.
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
 
-Remote actions use the existing allowlist and nService with scoped runtime identity. Process persists an expiring single-claim execution in its instance; the target claims authoritative context before mutation. Completed task decisions and immutable versions are read-only through generic APIs. See `llm/contracts/README.md`; no domain HTTP implementation or new identity authority belongs in Process.
+Remote actions use the existing allowlist and nService with scoped runtime identity. Process persists an expiring single-claim execution in its instance; the target claims authoritative context before mutation. Optional private attempt recording retains each execution across later actions and published versions, with strict acknowledgement and no uncertain replay. Completed task decisions and immutable versions are read-only through generic APIs. See `llm/contracts/README.md`; no domain HTTP implementation or new identity authority belongs in Process.

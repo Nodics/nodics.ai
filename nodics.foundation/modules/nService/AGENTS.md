@@ -30,6 +30,13 @@ Capability builders may project the bounded native `backendWorkspace` variant th
 
 ## Tenant startup completion
 
+Inventory diagnostics use fixed credential/private-context/inventory stage names
+only; never expose upstream exceptions or payloads. Logger failures must preserve
+the canonical held status and fail-closed readiness.
+Default-only inventory carries the enterprise from the verified runtime token in
+both the local request and remote `x-enterprise-code` header. Never substitute a
+configured or caller-supplied enterprise for that verified binding.
+
 Consumer-owned startup refusals must use nService-owned status definitions so
 optional Profile absence cannot mask a held error as an unknown code. Preserve
 content-free projection and fail-closed readiness/provenance; never load Profile

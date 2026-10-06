@@ -252,11 +252,25 @@ module.exports = {
             event: {
                 enabled: false
             },
-            router: { groups: { schemaOperations: true },
-                enabled: true
+            router: { enabled: false },
+            cache: { enabled: false },
+            indexes: {
+                individual: { activationRequestIdentity: { name: 'code', enabled: true, options: { unique: true } } },
+                composite: {
+                    active: { name: 'active', enabled: true },
+                    configurationType: { name: 'configurationType', enabled: true },
+                    status: { name: 'status', enabled: true },
+                    approvalStatus: { name: 'approvalStatus', enabled: true },
+                    notBefore: { name: 'notBefore', enabled: true },
+                    code: { name: 'code', enabled: true }
+                }
             },
             tenants: ['default'],
             definition: {
+                revision: { type: 'number', required: true, default: 0, description: 'Exact-revision lifecycle guard; legacy requests must be recreated' },
+                lifecycle: { type: 'array', required: true, description: 'Atomic actor and timestamp evidence for request transitions' },
+                requestEnterpriseCode: { type: 'string', required: false, description: 'Trusted enterprise at request creation; origin context, not a claim that activation affects only this enterprise. Legacy unbound requests remain unassigned.' },
+                notBefore: { type: 'date', required: false, description: 'Earliest permitted activation; optional bounded dispatch is invoked by the existing CronJob owner' },
                 configurationType: {
                     type: 'string',
                     required: true,
@@ -355,7 +369,20 @@ module.exports = {
                 enabled: false
             },
             tenants: ['default'],
+            cache: { enabled: false },
+            indexes: { individual: { runtimeGovernedPropertyIdentity: {
+                name: 'code', enabled: true,
+                options: { unique: true, partialFilterExpression: { ownerModule: 'dynamo', schemaCode: 'tenantProperties' } }
+            } } },
             definition: {
+                governedProperties: {
+                    type: 'object', required: false,
+                    description: 'Owner-managed approved property overrides and atomic revision audit; never a generic field update'
+                },
+                propertyReadFence: {
+                    type: ['object', 'null'], required: false,
+                    description: 'Private nDynamo operation fence preserving one committed property revision until exact consumer release; never a time-expiring lease or browser-editable configuration'
+                },
                 ownerModule: {
                     type: 'string',
                     required: true,

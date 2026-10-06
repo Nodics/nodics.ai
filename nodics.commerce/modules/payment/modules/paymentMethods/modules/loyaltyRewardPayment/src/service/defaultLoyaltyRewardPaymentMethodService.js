@@ -38,6 +38,7 @@ module.exports = {
         return Object.freeze({
             tenant: request.tenant,
             authData: request.authData,
+            authorization: request.authorization,
             ownerId: request.ownerId,
             orderCode: request.orderCode,
             cartCode: request.cartCode,

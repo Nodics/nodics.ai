@@ -20,10 +20,31 @@ The effective policy service must:
 - expose no raw database, filesystem, repository, secret, or network bypass.
 
 Callers remain responsible for enforcing the decision at their boundary:
+Administrative proposals require independent read/manage/admin grants, scoped
+delegation and fresh canonical configuration. Bind review to actor, enterprise,
+reason and exact runtime preview; recheck at persistence. See
+[the guide](../examples/governed-administration.md).
+Business-action settings are fixed boolean tenant-runtime proposals available
+only to elevated administrators. They cannot be delegated to enterprise editors,
+configure owner routes/credentials/journals, or grant native operation permissions.
+Enabling new standalone writes requires the corresponding configured Workbench
+target; disabling writes must not force the independent recovery gate off.
+Re-read effective revision, scope, editability, choices and the fixed patch after
+asynchronous preview. Refresh assignment forms never grant runtime authority or
+install Process definitions; preserve the exact deployment and active source/group
+intersection described in [refresh assignments](../examples/refresh-assignments.md).
+
+Execution callers retain their existing responsibilities:
 `copilotKnowledge` before retrieval, `copilotCapability` before tool exposure
 and invocation, `copilotWorkbench` before confirmation and mutation,
 `copilotApi` before response/export delivery, and the owning domain service at
 final execution.
+
+Confirmation contract version 2 includes the enterprise and a digest covering
+primary records, related records, preview and execution target. Legacy challenges
+cannot authorize mutations. Approval must have a finite future expiry and match
+the current tenant, enterprise, actor and complete plan; current execution grants
+are checked again. A confirmed flag is never a permission grant.
 
 Focused tests must cover public Nexus, authenticated customer, Axis employee,
 administrator, service identity, cross-tenant, cross-project, field-level,

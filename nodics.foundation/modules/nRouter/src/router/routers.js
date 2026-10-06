@@ -41,6 +41,13 @@ const path = require('path');
 module.exports = {
     default: {
         schemaOperations: {
+            inspectCommandReceipt: {
+                secured: true, authTokenTypes: ['access'],
+                permissionConfig: 'schemaApi.writePermission', apiExposure: 'schemaApi',
+                accessGroups: ['userGroup'], cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/schemaName/commands/inspect', method: 'POST',
+                controller: 'DefaultctrlName', operation: 'inspectCommandReceipt',
+            },
             safeSearch: {
                 secured: true,
                 permissionConfig: 'schemaApi.readPermission',

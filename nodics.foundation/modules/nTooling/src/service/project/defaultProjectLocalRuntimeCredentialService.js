@@ -167,6 +167,12 @@ module.exports = {
             };
         }
         let changed = false;
+        // Persist once: rotating this key would orphan encrypted runtime configuration.
+        if (!Object.prototype.hasOwnProperty.call(values, 'NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY')) {
+            values.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY =
+                process.env.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY || this.randomSecret(32);
+            changed = true;
+        }
         if (values.NODICS_BOOTSTRAP_ADMIN_PASSWORD !== localBootstrapAdminPassword) {
             values.NODICS_BOOTSTRAP_ADMIN_PASSWORD = process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword;
             changed = true;

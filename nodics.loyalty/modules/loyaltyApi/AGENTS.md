@@ -5,5 +5,9 @@ Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enable
 
 Own explicit Loyalty APIs for service-to-service integration. Keep public routes resource-oriented and avoid Commerce-specific coupon/order/payment language in route ownership.
 
+Authorized wallet reads use Loyalty's existing service-owned storage context;
+group-free runtime credentials must not acquire administrator groups. See the
+wallet-read contract and `test/loyaltyWalletReadContext.test.js`.
+
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

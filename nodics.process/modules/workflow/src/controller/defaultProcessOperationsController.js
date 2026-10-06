@@ -19,6 +19,11 @@
  * @override Customer process overlays may customize request mapping while preserving backend-owned runtime and audit semantics.
  */
 module.exports = {
+  /** Reads target-scoped persisted action evidence without HTTP caching. @param {Object} request Verified runtime request. @param {Function} callback Response callback. @returns {Promise<Object>} History. */
+  inspectRemoteActions: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    return this.invoke("inspectRemoteActions", request, callback);
+  },
   /**
    * Normalizes route params and query filters before invoking the operation facade.
    *
@@ -90,6 +95,11 @@ module.exports = {
   compensateInstance: function (request, callback) {
     return this.invoke("compensateInstance", request, callback);
   },
+  /** Reads private original instance-command evidence without replay. @param {Object} request Employee context. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Receipt. */
+  inspectInstanceCommand: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    return this.invoke("inspectInstanceCommand", request, callback);
+  },
   /** Lists Process-owned recovery incidents. */
   listIncidents: function (request, callback) {
     return this.invoke("listIncidents", request, callback);
@@ -122,6 +132,11 @@ module.exports = {
   cancelTask: function (request, callback) {
     return this.invoke("cancelTask", request, callback);
   },
+  /** Reads private original-command evidence without cache or replay. @param {Object} request Employee context. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Receipt. */
+  inspectTaskCommand: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    return this.invoke("inspectTaskCommand", request, callback);
+  },
   /** Lists Process-owned scheduled trigger metadata. */
   listTriggers: function (request, callback) {
     return this.invoke("listTriggers", request, callback);
@@ -141,6 +156,11 @@ module.exports = {
   /** Executes an active Process-owned trigger and starts the referenced process. */
   executeTrigger: function (request, callback) {
     return this.invoke("executeTrigger", request, callback);
+  },
+  /** Reads original trigger evidence with no-store response handling. @param {Object} request Secured HTTP context. @param {Function} callback Framework callback. @returns {*} Existing invocation result. */
+  inspectTriggerCommand: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    return this.invoke("inspectTriggerCommand", request, callback);
   },
   /** Lists bounded audit events for operators. */
   listAuditEvents: function (request, callback) {

@@ -28,6 +28,7 @@ const database = {
 
 (async () => {
     assert.strictEqual(handler.transactionCapabilities(database).multiRecordAtomic, true);
+    assert.strictEqual(handler.transactionCapabilities(database).journaledCommit, true);
     const replicaCapabilities = await handler.discoverCapabilities({
         command: async () => ({ setName: 'rs0', logicalSessionTimeoutMinutes: 30 })
     });
@@ -57,6 +58,7 @@ const database = {
     assert.strictEqual(transactionRuns, 1);
     assert.strictEqual(receivedOptions.readConcern.level, 'snapshot');
     assert.strictEqual(receivedOptions.writeConcern.w, 'majority');
+    assert.strictEqual(receivedOptions.writeConcern.j, true);
     assert.strictEqual(receivedOptions.maxCommitTimeMS, 1200);
     assert.strictEqual(ended, true);
     console.log('MongoDB transaction adapter contract validated');

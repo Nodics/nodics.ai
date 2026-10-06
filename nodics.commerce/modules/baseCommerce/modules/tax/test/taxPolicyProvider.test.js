@@ -60,7 +60,11 @@ test('source grants legacy recovery only for the selected pinned first activatio
 
 test('reviewed pre-fix recovery uses actual vService managed CAS and retains receipt checks', async () => {
     const concurrency = require('../../../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultModelConcurrencyService');
-    const updater = require('../../../../../../nodics.foundation/modules/nService/vService/src/service/procs/update/defaultModelsUpdateInitializerService');
+    const updater = Object.assign(
+        {},
+        require('../../../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/update/defaultModelsUpdateInitializerService'),
+        require('../../../../../../nodics.foundation/modules/nService/vService/src/service/procs/update/defaultModelsUpdateInitializerService'),
+    );
     for (const scenario of ['success', 'lost-response', 'receipt-loss', 'disabled', 'foreign-proof', 'wrong-pointer', 'competing-history']) {
         const f = setup(), pub = await f.publication();
         await f.source.activate(pub, request);
@@ -93,7 +97,7 @@ test('reviewed pre-fix recovery uses actual vService managed CAS and retains rec
                 assert.equal(Object.hasOwn(input.model, 'revision'), false, 'owner must not write counters');
                 return new Promise((resolve,reject) => {
                     const response = {};
-                    updater.executeQuery.call({ LOG: { debug() {}, error() {} } }, { ...input, schemaModel }, response,
+                    updater.executeQuery.call({ ...updater, LOG: { debug() {}, error() {} } }, { ...input, schemaModel }, response,
                         { nextSuccess: () => resolve(response.success), error: (_q,_r,error) => reject(error.error || error) });
                 });
             };

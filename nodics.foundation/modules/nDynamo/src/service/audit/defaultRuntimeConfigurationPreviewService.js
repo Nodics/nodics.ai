@@ -52,8 +52,11 @@ module.exports = {
      */
     previewActivation: function (request) {
         return new Promise((resolve, reject) => {
-            this.resolvePreviewConfiguration(request).then(configuration => {
-                let preview = this.createPreview(configuration);
+            this.resolvePreviewConfiguration(request).then(async configuration => {
+                const persistence = SERVICE.DefaultRuntimePropertyPersistenceService;
+                let preview = configuration.configurationType === 'propertyConfiguration' && persistence && persistence.policy().enabled
+                    ? await persistence.preview({ ...request, tenant: configuration.tenant }, configuration)
+                    : this.createPreview(configuration);
                 resolve({
                     code: 'SUC_SYS_00000',
                     message: 'Runtime configuration activation preview completed successfully',
@@ -267,23 +270,121 @@ module.exports = {
     createPropertyPreview: function (descriptor) {
         let configuration = descriptor.configuration;
         this.validatePropertyConfiguration(configuration);
-        let tenant = descriptor.tenant || CONFIG.get('defaultTenant') || 'default';
+        if (
+            configuration.$propertyPatch &&
+            (!SERVICE.DefaultRuntimePropertyPersistenceService ||
+                !SERVICE.DefaultRuntimePropertyPersistenceService.policy()
+                    .enabled)
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_SYS_00002',
+                'Property path commands require durable persistence',
+            );
+        }
+        let tenant =
+            descriptor.tenant || CONFIG.get('defaultTenant') || 'default';
         let previousProperties = CONFIG.getProperties(tenant) || {};
-        let nextProperties = _.merge({}, previousProperties, configuration);
-        let changedPaths = this.collectChangedPaths(previousProperties, nextProperties);
+        let nextProperties = this.mergePropertyConfiguration(
+            previousProperties,
+            configuration,
+        );
+        let changedPaths = this.collectChangedPaths(
+            previousProperties,
+            nextProperties,
+        );
+        const previousSnapshot = this.createPropertySnapshot(
+            previousProperties,
+            changedPaths,
+        );
+        const nextSnapshot = this.createPropertySnapshot(
+            nextProperties,
+            changedPaths,
+        );
+        for (const snapshot of [previousSnapshot, nextSnapshot]) {
+            if (changedPaths.length)
+                this.validatePropertyCommand({
+                    $propertyPatch: { version: 1, ...snapshot },
+                });
+        }
         return {
-            operation: changedPaths.some(path => _.has(previousProperties, path)) ? 'update' : 'create',
+            operation: changedPaths.some((path) =>
+                _.has(previousProperties, path),
+            )
+                ? 'update'
+                : 'create',
             destructive: changedPaths.length > 0,
             configurationType: descriptor.configurationType,
-            configurationCode: descriptor.configurationCode || 'tenantProperties',
+            configurationCode:
+                descriptor.configurationCode || 'tenantProperties',
             moduleName: descriptor.moduleName || 'system',
             tenant: tenant,
-            previousSnapshot: this.createPropertySnapshot(previousProperties, changedPaths),
-            nextSnapshot: this.createPropertySnapshot(nextProperties, changedPaths),
+            previousSnapshot,
+            nextSnapshot,
             changedPaths: changedPaths,
-            warnings: changedPaths.map(path => 'tenant runtime property will change: ' + path),
-            affectedArtifacts: changedPaths.map(path => ({ type: 'property', code: path }))
+            warnings: changedPaths.map(
+                (path) => 'tenant runtime property will change: ' + path,
+            ),
+            affectedArtifacts: changedPaths.map((path) => ({
+                type: 'property',
+                code: path,
+            })),
         };
+    },
+
+    /** Merges property objects while replacing arrays, including an empty exclusion list.
+     * @param {Object} previous Effective properties.
+     * @param {Object} configuration Validated proposal.
+     * @returns {Object} Independent effective properties.
+     */
+    mergePropertyConfiguration: function (previous, configuration) {
+        if (
+            Object.prototype.hasOwnProperty.call(
+                configuration,
+                '$propertyPatch',
+            )
+        ) {
+            this.validatePropertyCommand(configuration);
+            const command = configuration.$propertyPatch;
+            let next = _.cloneDeep(previous);
+            for (const path of command.values
+                .map((entry) => entry.path)
+                .concat(command.missingPaths)) {
+                const parts = path.split('.');
+                for (let index = 1; index < parts.length; index++) {
+                    if (Array.isArray(_.get(next, parts.slice(0, index)))) {
+                        throw new CLASSES.NodicsError(
+                            'ERR_SYS_00002',
+                            'Replace an entire array instead of changing an array member',
+                        );
+                    }
+                }
+            }
+            for (const entry of command.values)
+                _.set(next, entry.path, _.cloneDeep(entry.value));
+            for (const path of command.missingPaths) _.unset(next, path);
+            return next;
+        }
+        const bindings = SERVICE.DefaultConfigurationBindingService;
+        if (!bindings || typeof bindings.merge !== 'function') {
+            throw new CLASSES.NodicsError(
+                'ERR_SYS_00001',
+                'The nConfig property merge owner is required',
+            );
+        }
+        // Reviewed runtime patches are literal values, never environment/property bindings.
+        const declaration = (value) => {
+            if (Array.isArray(value))
+                return { $config: 'replace', value: _.cloneDeep(value) };
+            if (_.isPlainObject(value))
+                return Object.fromEntries(
+                    Object.entries(value).map(([key, item]) => [
+                        key,
+                        declaration(item),
+                    ]),
+                );
+            return value;
+        };
+        return bindings.merge(previous, declaration(configuration));
     },
 
     /**
@@ -294,26 +395,170 @@ module.exports = {
      * @returns {void}
      */
     validatePropertyConfiguration: function (configuration) {
-        if (!_.isPlainObject(configuration) || Object.keys(configuration).length === 0) {
-            throw new CLASSES.NodicsError('ERR_SYS_00001', 'Property configuration must be a non-empty object');
+        if (
+            _.isPlainObject(configuration) &&
+            Object.prototype.hasOwnProperty.call(
+                configuration,
+                '$propertyPatch',
+            )
+        ) {
+            return this.validatePropertyCommand(configuration);
+        }
+        if (
+            !_.isPlainObject(configuration) ||
+            Object.keys(configuration).length === 0
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_SYS_00001',
+                'Property configuration must be a non-empty object',
+            );
         }
         let unsafePaths = [];
         let sensitivePaths = [];
         let sensitivePatterns = this.getSensitivePropertyPatterns();
-        let inspect = (value, prefix) => {
-            Object.keys(value || {}).forEach(key => {
+        let count = 0;
+        const ancestors = new Set();
+        let inspect = (value, prefix, depth = 0) => {
+            if (
+                ++count > 20000 ||
+                depth > 32 ||
+                (value && typeof value === 'object' && ancestors.has(value))
+            ) {
+                throw new CLASSES.NodicsError(
+                    'ERR_SYS_00002',
+                    'Property configuration exceeds structural bounds',
+                );
+            }
+            if (
+                value === null ||
+                typeof value === 'string' ||
+                typeof value === 'boolean' ||
+                (typeof value === 'number' && Number.isFinite(value))
+            )
+                return;
+            if (!_.isPlainObject(value) && !Array.isArray(value)) {
+                throw new CLASSES.NodicsError(
+                    'ERR_SYS_00002',
+                    'Property configuration must contain JSON values',
+                );
+            }
+            ancestors.add(value);
+            Object.keys(value).forEach((key) => {
                 let path = prefix ? prefix + '.' + key : key;
-                if (key === '__proto__' || key === 'prototype' || key === 'constructor') unsafePaths.push(path);
-                if (sensitivePatterns.some(pattern => pattern.test(path))) sensitivePaths.push(path);
-                if (_.isPlainObject(value[key])) inspect(value[key], path);
+                if (
+                    !/^[A-Za-z0-9_-]+$/.test(key) ||
+                    ['__proto__', 'prototype', 'constructor'].includes(key) ||
+                    path.length > 512
+                )
+                    unsafePaths.push(path);
+                if (sensitivePatterns.some((pattern) => pattern.test(path)) && !this.isPublicPropertyMetadata(path, value[key]))
+                    sensitivePaths.push(path);
+                inspect(value[key], path, depth + 1);
             });
+            ancestors.delete(value);
         };
         inspect(configuration, '');
         if (unsafePaths.length > 0) {
-            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Unsafe runtime property paths are not allowed: ' + unsafePaths.join(', '));
+            throw new CLASSES.NodicsError(
+                'ERR_SYS_00002',
+                'Unsafe runtime property paths are not allowed: ' +
+                    unsafePaths.join(', '),
+            );
         }
         if (sensitivePaths.length > 0) {
-            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Sensitive properties must use layered external configuration or a secret manager: ' + sensitivePaths.join(', '));
+            throw new CLASSES.NodicsError(
+                'ERR_SYS_00002',
+                'Sensitive properties must use layered external configuration or a secret manager: ' +
+                    sensitivePaths.join(', '),
+            );
+        }
+    },
+
+    /** Validates the versioned literal path command; no caller-supplied bindings or arbitrary operators are accepted.
+     * @param {Object} configuration Exact path command envelope.
+     * @returns {void} Throws for malformed, overlapping, secret or governance paths.
+     */
+    validatePropertyCommand: function (configuration) {
+        const command = configuration.$propertyPatch;
+        if (
+            Object.keys(configuration).length !== 1 ||
+            !_.isPlainObject(command) ||
+            Object.keys(command).some(
+                (key) =>
+                    ![
+                        'version',
+                        'values',
+                        'missingPaths',
+                        'rollbackRevision',
+                    ].includes(key),
+            ) ||
+            command.version !== 1 ||
+            !Array.isArray(command.values) ||
+            !Array.isArray(command.missingPaths) ||
+            command.values.length + command.missingPaths.length < 1 ||
+            command.values.length + command.missingPaths.length > 1000 ||
+            (command.rollbackRevision !== undefined &&
+                (typeof command.rollbackRevision !== 'string' ||
+                    !/^[a-f0-9]{64}$/.test(command.rollbackRevision)))
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_SYS_00002',
+                'Invalid property path command',
+            );
+        }
+        const paths = [];
+        for (const entry of command.values) {
+            if (
+                !_.isPlainObject(entry) ||
+                Object.keys(entry).length !== 2 ||
+                !Object.prototype.hasOwnProperty.call(entry, 'value')
+            ) {
+                throw new CLASSES.NodicsError(
+                    'ERR_SYS_00002',
+                    'Invalid property path value',
+                );
+            }
+        }
+        for (const entry of command.values.concat(
+            command.missingPaths.map((path) => ({ path, value: null })),
+        )) {
+            const path = entry.path;
+            if (
+                typeof path !== 'string' ||
+                !/^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(path) ||
+                path.length > 512 ||
+                path
+                    .split('.')
+                    .some((part) =>
+                        ['__proto__', 'prototype', 'constructor'].includes(
+                            part,
+                        ),
+                    ) ||
+                paths.some(
+                    (other) =>
+                        path === other ||
+                        path.startsWith(other + '.') ||
+                        other.startsWith(path + '.'),
+                )
+            ) {
+                throw new CLASSES.NodicsError(
+                    'ERR_SYS_00002',
+                    'Invalid or overlapping property paths',
+                );
+            }
+            if (
+                path === 'runtimePropertyGovernance' ||
+                path.startsWith('runtimePropertyGovernance.')
+            ) {
+                throw new CLASSES.NodicsError(
+                    'ERR_SYS_00002',
+                    'Property governance controls require deployment configuration',
+                );
+            }
+            paths.push(path);
+            const patch = {};
+            _.set(patch, path, entry.value);
+            this.validatePropertyConfiguration(patch);
         }
     },
 
@@ -329,6 +574,21 @@ module.exports = {
         ];
         return patterns.map(pattern => pattern instanceof RegExp ?
             new RegExp(pattern.source, pattern.flags.replace('g', '')) : new RegExp(pattern, 'i'));
+    },
+
+    /** Allows only deployment-declared, exact primitive metadata literals; never credentials or arbitrary values.
+     * @param {string} path Fully qualified property path.
+     * @param {*} value Proposed JSON value.
+     * @returns {boolean} Whether a bounded literal declaration recognizes this metadata.
+     */
+    isPublicPropertyMetadata: function (path, value) {
+        const declarations = (CONFIG.get('runtimePropertyGovernance') || {}).publicMetadataLiterals || [];
+        if (!Array.isArray(declarations) || declarations.length > 50) throw new CLASSES.NodicsError('ERR_SYS_00002', 'Invalid public metadata literal declarations');
+        return declarations.some(declaration => {
+            if (!declaration || typeof declaration.path !== 'string' || declaration.path.length > 512 || !/^[A-Za-z0-9_.*-]+$/.test(declaration.path) || !Array.isArray(declaration.values) || declaration.values.length > 10 || declaration.values.some(item => !['string', 'boolean', 'number'].includes(typeof item))) throw new CLASSES.NodicsError('ERR_SYS_00002', 'Invalid public metadata literal declaration');
+            const parts = declaration.path.split('.'), actual = path.split('.');
+            return parts.length === actual.length && parts.every((part, index) => part === '*' ? /^[0-9]+$/.test(actual[index]) : part === actual[index]) && declaration.values.includes(value);
+        });
     },
 
     /**

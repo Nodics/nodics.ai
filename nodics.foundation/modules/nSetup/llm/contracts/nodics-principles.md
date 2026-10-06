@@ -844,6 +844,21 @@ Export runtime behavior as mergeable object members so a later-loaded customer
 project module can override the smallest necessary function without modifying
 out-of-the-box Nodics code.
 
+## Runtime Knowledge Is Framework-Owned
+
+Copilot knowledge management is a reusable framework capability. Registered and
+activated runtime modules provide eligible content; they do not register sources,
+grant access or trigger ingestion. Administrators configure source inclusion,
+exclusion, groups, activation and refresh at runtime through existing Copilot and
+nDynamo governance. Do not require per-module or per-accelerator source catalogs,
+hardcoded application knowledge lists or source-specific startup implementations.
+Keep content and permissioned business operations with their domain owners.
+Deployment coordinates and AI provider selection are not knowledge authorization.
+
+Apply [the runtime knowledge contract](../../../../../nodics.copilot/modules/copilotKnowledge/llm/contracts/runtime-knowledge-configuration-contract.md).
+Corrections must preserve installed selections through reviewed owner migration,
+keep source defaults empty, and enforce recurrence checks in nTooling.
+
 ## Configuration Ownership
 
 `config/properties.js` is a runtime-property contribution, not a business
@@ -913,6 +928,13 @@ practical.
 
 Security, access control, validation, audit, rollback, diagnostics, and test
 coverage are platform contracts, not optional enhancements.
+
+Approval authority follows effective access rights. A user with the required
+submission and approval permissions may perform both actions, including on the
+same request. Do not infer a separation-of-users restriction from requester
+metadata. Administrators use their granted rights, not a hardcoded login-name
+exception. Preserve authenticated tenant/enterprise scope, lifecycle validation,
+native requester and decision-actor provenance, and audit for every operation.
 
 Every meaningful behavior change must consider:
 

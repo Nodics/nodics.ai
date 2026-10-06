@@ -13,6 +13,12 @@
 "use strict";
 /** @module digitalCore/facade/defaultDigitalCommerceMerchantFacade @description Fixed customer/staff merchant orchestration; domain services retain live Profile membership, Store scopes and canonical monetary authority. @layer facade @owner digitalCore @override Later layers may extend orchestration without introducing caller finance or bypassing owner guards. */
 module.exports = {
+  /** Reads exact original receipt evidence through the domain owner, without provider execution. @param {Object} r Signed staff request. @returns {Promise<Object>} Receipt evidence. */
+  inspectReceipt: function (r) {
+    return Promise.resolve().then(() =>
+      SERVICE.DefaultDigitalCommerceMerchantService.inspectReceipt(r),
+    );
+  },
   /** Validates a presented coupon and trusted monetary source. @param {Object} r Signed context. @returns {Promise<Object>} */
   validate: function (r) {
     return Promise.resolve().then(() =>

@@ -20,6 +20,16 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Authentication And Authorization Rules
 
+- The shared catalogue includes Location create/update as independently
+  assignable route permissions. Do not add them to default migration groups
+  merely to make a client or Copilot scenario pass. Location retains execution
+  validation and runtime exposure; Profile retains assignment governance.
+
+- Copilot migration read, execute and erase are separate catalogue entries, not
+  default role grants. Preserve the full inherited catalogue when composing
+  properties; ordinary array overrides merge positionally. The Copilot Knowledge
+  permission-catalogue regression uses nConfig and Profile's real group validator.
+
 - Independent person security bindings validate fail-closed even under legacy
   policy exceptions. Keep shape/stamps generic; Profile owns identity and context.
   See the bounded claims contract and `test/independentSecurityBindings.test.js`.

@@ -67,6 +67,13 @@ See [Canonical acceptance commands](tooling-governance-contracts.md#canonical-ac
 See [Effective acceptance policy](tooling-governance-contracts.md#effective-acceptance-policy).
 ## Selective Local JWT Rotation
 
+Native Local startup also supplies a stable runtime-configuration encryption key
+through the existing generated credential owner. Missing keys are provisioned
+once, existing keys are preserved, and deployment overrides retain precedence.
+This key does not grant access or provision provider tokens. Runtime secret writes
+still use the nSystem schema-owned encrypted store. Never substitute generated
+local values into non-Local environments or rotate encryption during startup.
+
 `DefaultProjectLocalRuntimeCredentialService.rotateJwtSecret(projectRoot,
 environmentCode)` is an explicit operator operation, not startup normalization.
 Only an existing canonical Local environment credential file is eligible. Require

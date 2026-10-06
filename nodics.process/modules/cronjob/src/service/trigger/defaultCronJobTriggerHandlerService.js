@@ -75,16 +75,10 @@ module.exports = {
         let jobDefinition = request.definition;
         jobDefinition.state = ENUMS.CronJobState.RUNNING.key;
         jobDefinition.lastEndTime = jobDefinition.endTime;
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.RUNNING.key,
-                startTime: jobDefinition.startTime,
-                lastEndTime: jobDefinition.lastEndTime
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.RUNNING.key,
+            startTime: jobDefinition.startTime,
+            lastEndTime: jobDefinition.lastEndTime
         }).then(success => {
             process.nextSuccess(request, response);
         }).catch(error => {
@@ -247,13 +241,13 @@ module.exports = {
                 correlationId: correlationId,
                 instanceCode: processTrigger.instanceCode,
                 version: processTrigger.version,
-                context: Object.assign({
+                context: Object.assign({}, processTrigger.context || {}, {
                     source: 'cronjob',
                     cronJobCode: definition.code,
                     cronJobTenant: definition.tenant,
                     scheduledExpression: definition.trigger && definition.trigger.expression,
                     firedAt: startTime
-                }, processTrigger.context || {})
+                })
             },
             job: job
         });
@@ -393,16 +387,10 @@ module.exports = {
         jobDefinition.state = ENUMS.CronJobState.ACTIVE.key;
         jobDefinition.status = ENUMS.CronJobStatus.SUCCESS.key;
         jobDefinition.endTime = new Date();
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.ACTIVE.key,
-                status: ENUMS.CronJobStatus.SUCCESS.key,
-                endTime: jobDefinition.endTime
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.ACTIVE.key,
+            status: ENUMS.CronJobStatus.SUCCESS.key,
+            endTime: jobDefinition.endTime
         }).then(success => {
             process.resolve(response.success);
         }).catch(error => {
@@ -459,17 +447,11 @@ module.exports = {
         jobDefinition.status = ENUMS.CronJobStatus.ERROR.key;
         jobDefinition.log = response.error.toJson();
         jobDefinition.endTime = new Date();
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.ACTIVE.key,
-                status: ENUMS.CronJobStatus.ERROR.key,
-                endTime: jobDefinition.endTime,
-                log: response.errors
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.ACTIVE.key,
+            status: ENUMS.CronJobStatus.ERROR.key,
+            endTime: jobDefinition.endTime,
+            log: response.errors
         }).then(success => {
             process.reject(response.error);
         }).catch(error => {

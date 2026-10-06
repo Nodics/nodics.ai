@@ -10,6 +10,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Module postInit restores tenant-default schema configuration after governed
+  properties. Use the generated value service, exact active-tenant/schema/owner
+  bindings, and the declared decryption path. Fail readiness on ambiguous records,
+  scope mismatch or decryption errors; never log secrets or synthesize credentials.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

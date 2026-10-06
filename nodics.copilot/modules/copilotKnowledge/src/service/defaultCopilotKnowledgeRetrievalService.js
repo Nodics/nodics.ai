@@ -19,7 +19,8 @@ module.exports = {
             registryService: SERVICE.DefaultCopilotKnowledgeSourceRegistryService,
             policyService: SERVICE.DefaultCopilotPolicyService,
             knowledgeService: SERVICE.DefaultCopilotKnowledgeService,
-            discoveryRuntimeService: SERVICE.DefaultDiscoveryRuntimeService
+            discoveryRuntimeService: SERVICE.DefaultDiscoveryRuntimeService,
+            publicationService: SERVICE.DefaultCopilotKnowledgePublicationService
         };
     },
     /** Validates and bounds one retrieval request. @param {Object} request Request. @param {Object} configuration Retrieval configuration. @returns {Object} Normalized input. */
@@ -40,6 +41,7 @@ module.exports = {
                 ownerType: 'COPILOT_KNOWLEDGE',
                 indexConfigurationCode: configuration.indexConfigurationCode || 'copilotKnowledge',
                 'payload.sourceCode.keyword': scope.sourceCodes.slice(),
+                'payload.sourcePolicyDigest.keyword': scope.sourcePolicyDigests.slice(),
                 'payload.classification.keyword': scope.classifications.slice(),
                 'payload.allowedChannels.keyword': scope.channel
             }
@@ -53,13 +55,14 @@ module.exports = {
     resultAllowed: function (record, registry, context, policyConfiguration, policy) {
         const payload = this.payload(record);
         const source = registry.sources.find(item => item.code === payload.sourceCode);
+        if (!source || !/^[a-f0-9]{64}$/.test(source.sourcePolicyDigest || '') || payload.sourcePolicyDigest !== source.sourcePolicyDigest) return false;
         if (!source || source.enabled !== true || (record.ownerType && record.ownerType !== 'COPILOT_KNOWLEDGE') || payload.classification !== source.classification || payload.version !== source.version) return false;
         if (payload.repository !== source.repository || payload.project !== source.project || payload.module !== source.module || payload.owner !== source.owner) return false;
         if (!/^[a-f0-9]{64}$/u.test(String(payload.contentDigest || '')) || !String(payload.code || '').startsWith(source.code + '|')) return false;
         return policy.decideSourceAccess(source, context, policyConfiguration).allowed;
     },
-    /** Maps one authorized result to the evidence allowlist. @param {Object} record Discovery record. @param {Object} configuration Retrieval configuration. @returns {Object} Evidence candidate. */
-    toEvidence: function (record, configuration) {
+    /** Maps one authorized result to the evidence allowlist. @param {Object} record Discovery record. @param {Object} configuration Retrieval configuration. @param {Object} source Current authorized source. @returns {Object} Evidence candidate. */
+    toEvidence: function (record, configuration, source) {
         const payload = this.payload(record);
         const maximum = Number(configuration.maximumExcerptCharacters || 4000);
         return {
@@ -72,7 +75,8 @@ module.exports = {
             provenance: {
                 sourceCode: payload.sourceCode, repository: payload.repository, project: payload.project,
                 module: payload.module, relativePath: payload.relativePath, version: payload.version,
-                contentDigest: payload.contentDigest, classification: payload.classification
+                contentDigest: payload.contentDigest, classification: payload.classification,
+                ...(source?.runtimeBinding ? { runtimeBinding: { ...source.runtimeBinding } } : {})
             }
         };
     },
@@ -85,6 +89,13 @@ module.exports = {
         const scope = dependencies.registryService.buildQueryScope(request.registry, request.securityContext, request.policyConfiguration || {}, dependencies.policyService);
         if (!scope.sourceCodes.length) return dependencies.policyService.deepFreeze({ queryScope: scope, evidence: [], citations: [], insufficientEvidence: true });
         const searchRequest = this.buildSearchRequest(input, scope, configuration);
+        const sources = request.registry.sources.filter(source => scope.sourceCodes.includes(source.code));
+        let generations;
+        if (request.publicationEnabled === true) {
+            generations = await dependencies.publicationService.active(request, sources);
+            if (!generations.size) return dependencies.policyService.deepFreeze({ queryScope: scope, evidence: [], citations: [], insufficientEvidence: true });
+            searchRequest.filters['payload.publicationGeneration.keyword'] = [...generations.values()];
+        }
         const records = await dependencies.discoveryRuntimeService.search({
             tenant: input.indexTenant, authData: request.authData,
             indexConfiguration: request.indexConfiguration,
@@ -92,8 +103,14 @@ module.exports = {
             searchOptions: { limit: input.size },
             searchService: request.searchService
         });
-        const allowed = records.filter(record => this.resultAllowed(record, request.registry, request.securityContext, request.policyConfiguration || {}, dependencies.policyService)).slice(0, input.size);
-        const context = dependencies.knowledgeService.buildContext(allowed.map(record => this.toEvidence(record, configuration)), { maximumEvidenceItems: input.size });
+        const freshGenerations = generations ? await dependencies.publicationService.active(request, sources) : null;
+        request.assertCurrent?.();
+        const allowed = records.filter(record => {
+            const payload = this.payload(record);
+            if (generations && (!generations.has(payload.sourceCode) || payload.publicationOwner !== payload.sourceCode || payload.publicationGeneration !== generations.get(payload.sourceCode) || payload.publicationGeneration !== freshGenerations.get(payload.sourceCode))) return false;
+            return this.resultAllowed(record, request.registry, request.securityContext, request.policyConfiguration || {}, dependencies.policyService);
+        }).slice(0, input.size);
+        const context = dependencies.knowledgeService.buildContext(allowed.map(record => this.toEvidence(record, configuration, request.registry.sources.find(source => source.code === this.payload(record).sourceCode))), { maximumEvidenceItems: input.size });
         return dependencies.policyService.deepFreeze(Object.assign({ queryScope: scope, insufficientEvidence: context.evidence.length === 0 }, context));
     }
 };

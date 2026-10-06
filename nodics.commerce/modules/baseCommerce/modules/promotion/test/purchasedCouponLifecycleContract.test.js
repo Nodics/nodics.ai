@@ -16,6 +16,42 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const source = require("../src/service/defaultPromotionOperationService");
 
+test("published coupon purchase uses activated rules, never the mutable budget record", async () => {
+  global.CONFIG = { get: () => ({}) };
+  global.SERVICE = {
+    DefaultPromotionService: { get: () => assert.fail("Activated purchase cannot read mutable campaign rules") },
+    DefaultPromotionPublicationService: { deliveryEnabled: request => request.storeCode === "published-store" },
+  };
+  let campaigns = [{ code: "campaign", status: "ACTIVE", active: true }];
+  const owner = { ...source, promotions: async request => {
+    assert.equal(request.storeCode, "published-store");
+    return campaigns;
+  } };
+  const request = { tenant: "t", storeCode: "published-store" };
+  assert.deepEqual(await owner.capturePurchasedRights(request, { promotionCode: "campaign" }, new Date()), {});
+  campaigns = [];
+  await assert.rejects(owner.capturePurchasedRights(request, { promotionCode: "campaign" }, new Date()), /not available/);
+  campaigns = [{ code: "campaign", status: "DRAFT" }];
+  await assert.rejects(owner.capturePurchasedRights(request, { promotionCode: "campaign" }, new Date()), /not available/);
+});
+
+test("coupon release explicitly removes persisted reservation fields", async () => {
+  let saved = { code: "coupon", status: "RESERVED", revision: 1, reservedFor: "buyer", idempotencyKey: "purchase" };
+  global.SERVICE = { DefaultCouponService: { update: async request => {
+    assert.equal(request.query.revision, 1);
+    assert.deepEqual(request.model.$unset, { reservedFor: "", idempotencyKey: "" });
+    saved = { ...saved, ...request.model.$set };
+    for (const key of Object.keys(request.model.$unset)) delete saved[key];
+    return { code: "SUC_UPDATE", result: { acknowledged: true, matchedCount: 1 } };
+  } } };
+  const owner = { ...source, serviceAuthData: () => ({}), enterpriseQuery: (_request, query) => query, readLifecycleCoupon: async () => saved };
+  const result = await owner.commitLifecycleCoupon({ tenant: "t" }, saved,
+    { ...saved, status: "ACTIVE", revision: 2, reservedFor: undefined, idempotencyKey: undefined });
+  assert.equal(result.status, "ACTIVE");
+  assert.equal(Object.hasOwn(result, "reservedFor"), false);
+  assert.equal(Object.hasOwn(result, "idempotencyKey"), false);
+});
+
 test("a zero-match coupon update cannot return the intended model", async () => {
   global.SERVICE = {
     DefaultCouponService: {

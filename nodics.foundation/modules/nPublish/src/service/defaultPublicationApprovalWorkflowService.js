@@ -213,7 +213,9 @@ module.exports = {
             local: false, tenant: request.tenant,
             header: { Authorization: authorization, tenant: request.tenant, 'x-enterprise-code': context.enterpriseCode },
             methodName: 'POST', apiName: '/instances', timeoutMs: target.timeoutMs,
-            maxAttempts: 1, idempotencyKey: context.workflowRef,
+            // Process owns replay through the exact instance identity and start fingerprint.
+            // A transport key would opt into its separate, deployment-gated command receipts.
+            maxAttempts: 1,
             requestBody: { definitionCode: policy.definitionCode, instanceCode: context.workflowRef,
                 ...(context.workflowVersion === undefined ? {} : { version: context.workflowVersion }),
                 name: 'Publication review: ' + publication.code, context },

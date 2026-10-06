@@ -7,6 +7,12 @@ Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enable
 rules. Location/map/search remain external framework capabilities referenced by
 source references.
 
+Keep `wasteCollectionPoint.commandReceipt.insertOnly: true`: native HTTP create
+cannot overwrite an existing centre, even with a new approval/idempotency key or
+receipt recording disabled. Updates use their native update contract; imports
+retain generated-service semantics. Preserve the unique identity index and run
+the Copilot collection runtime duplicate/recovery cases after changing this rule.
+
 Every collection point must be associated with at least one enterprise. Use
 `operatorEnterpriseRef` for the organization that owns or operates the bin,
 centre, recycler drop-off, or receiving point. For legacy or seed imports where

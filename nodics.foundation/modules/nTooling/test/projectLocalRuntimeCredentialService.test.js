@@ -35,6 +35,8 @@ assert.strictEqual(fs.statSync(file).mode & 0o777, 0o600, 'generated local crede
 assert(first.NODICS_JWT_SECRET, 'generated local credentials must include JWT signing material');
 assert(first.NODICS_API_KEY_PEPPER, 'generated local credentials must include API-key digest material');
 assert(first.NODICS_API_KEY, 'generated local credentials must include a server-local runtime proof');
+assert(first.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY,
+    'native-local startup must support encrypted provider configuration');
 assert.strictEqual(first.NODICS_BOOTSTRAP_ADMIN_PASSWORD, 'adminPassword',
     'native-local credentials must keep the documented administrator password');
 assert.strictEqual(first.NODICS_RUNTIME_API_KEY, undefined,
@@ -58,15 +60,20 @@ fs.writeFileSync(file, readOnlyFile);
 
 const merged = service.mergeEnvironment(root, 'kickoffLocal', {
     NODICS_API_KEY: 'external-runtime-key',
+    NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY: 'external-encryption-key',
     CUSTOM_VALUE: 'kept'
 });
 assert.strictEqual(merged.NODICS_API_KEY, 'external-runtime-key',
     'deployment-supplied values must override generated local defaults');
 assert.strictEqual(merged.CUSTOM_VALUE, 'kept');
+assert.strictEqual(merged.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY, 'external-encryption-key');
+assert.strictEqual(service.ensureCredentials(root, 'kickoffLocal').NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY,
+    first.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY, 'environment overrides must not rotate persisted encryption keys');
 
 const production = service.mergeEnvironment(root, 'qa', {});
 assert.strictEqual(production.NODICS_API_KEY, undefined,
     'non-local environments must not receive generated local credentials');
+assert.strictEqual(production.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY, undefined);
 
 const migratedRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-local-runtime-credentials-migration-'));
 const migratedFile = service.credentialPath(migratedRoot, 'kickoffLocal');
@@ -87,6 +94,12 @@ assert.strictEqual(migrated.NODICS_API_KEY, 'r'.repeat(48),
     'legacy retained runtime proof must migrate to the server-local runtime proof');
 assert.strictEqual(migrated.NODICS_RUNTIME_API_KEY, undefined);
 assert.strictEqual(migrated.NODICS_WASTE_API_KEY, undefined);
+assert(migrated.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY,
+    'existing local storage must gain the missing runtime encryption key');
+assert.strictEqual(migrated.NODICS_JWT_SECRET, 'j'.repeat(64));
+assert.strictEqual(migrated.NODICS_API_KEY_PEPPER, 'p'.repeat(64));
+assert.strictEqual(service.ensureCredentials(migratedRoot, 'kickoffLocal').NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY,
+    migrated.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY);
 
 // Rotation uses only the existing file, even if compatibility normalization would otherwise change its contents.
 const jwt = require('jsonwebtoken');

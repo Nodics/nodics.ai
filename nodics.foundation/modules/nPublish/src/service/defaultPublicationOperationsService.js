@@ -51,6 +51,7 @@ module.exports = {
         });
         let failed = Number(counts.FAILED || 0);
         return { readiness: stuck.length ? 'DEGRADED' : 'READY', scanned: rows.length, stateCounts: counts,
+            pending: rows.filter(item => transient.has(item.state)).map(this.safe),
             stuck: stuck, metrics: { publicationTotal: rows.length, failedTotal: failed, stuckTotal: stuck.length },
             alerts: failed >= Number(this.config().alertFailureCount || 1) ? [{ code: 'PUBLICATION_FAILURES_PRESENT', severity: 'WARNING', count: failed }] : [] };
     },

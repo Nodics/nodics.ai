@@ -64,10 +64,14 @@ separate prerequisite: this extension does not qualify it or enable execution.
 
 `project:local-reset-maintenance` is the canonical nTooling command entry for
 this scope. It defaults to dry-run and
-requires explicit `--environment=...`, `--project=...`,
+requires explicit `--environment=...`, `--project-code=...`,
 `--databases=ExactDatabaseA,ExactDatabaseB` and `--auth-namespace=auth_ExactPrefix_`.
 Unknown, repeated, missing and wildcard options refuse. The selected project is
-the existing nConfig project code, not an arbitrary display name. No URI,
+the existing nConfig project code, not an arbitrary display name. `--home` selects
+the checkout. The public CLI reserves `--project` as an alias for `--home`;
+maintenance identity must therefore use `--project-code`. Direct service callers
+retain the legacy `--project` spelling, but supplying both identity options refuses.
+No URI,
 password, token, approval callback or provider adapter may be supplied by CLI.
 
 The entry reads every selected backend's real nConfig projection and uses

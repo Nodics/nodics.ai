@@ -659,7 +659,19 @@ module.exports = {
         }).then(importContext => {
             let schemaService = importContext.schemaService;
             let reconciledModels = importContext.reconciledModels;
+            if (header.options.operation === 'update' && reconciledModels.length !== 1) {
+                throw new CLASSES.DataImportError('ERR_IMP_00003',
+                    'A generated update import requires exactly one model per dispatch');
+            }
+            const query = header.options.operation === 'update'
+                ? this.resolveImportModelQuery(header.query, reconciledModels[0])
+                : header.query;
+            if (header.options.operation === 'update' &&
+                (!Object.keys(query).length || Object.values(query).some(value => value === undefined))) {
+                throw new CLASSES.DataImportError('ERR_IMP_00003', 'A generated update import requires a resolved selector');
+            }
             let options = Object.assign({}, request.options || {});
+            if (header.options.operation === 'update') options.returnModified = true;
             delete options.allowCmsAssociationReplacement;
             delete options.replaceAllMatchesByQuery;
             delete options.replaceArraysOnVersionMerge;
@@ -684,11 +696,16 @@ module.exports = {
                     },
                     options: options,
                     searchOptions: request.searchOptions,
-                    query: header.query,
+                    query: query,
                     models: reconciledModels,
+                    ...(header.options.operation === 'update' ? { model: reconciledModels[0] } : {}),
                     suppressRetryErrorLog: request.suppressRetryErrorLog === true
                 }, schemaService).then(success => {
-                if (success && success.result && success.result.length > 0) {
+                if (header.options.operation === 'update' && success &&
+                    success.result && success.result.matchedCount > 0 &&
+                    Array.isArray(success.result.models) && success.result.models.length > 0) {
+                    resolve(success.result.models);
+                } else if (success && success.result && success.result.length > 0) {
                     resolve(success.result);
                 } else if (header.options.operation === 'remove' && success && success.result) {
                     resolve(success.result);

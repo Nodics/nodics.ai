@@ -34,10 +34,11 @@ module.exports = {
    * Protects private retirement evidence and retired records from generic mutation.
    * @param {Object} request Generated pre-mutation context.
    * @param {Object} service Fixed generated owner selected by its interceptor.
+   * @param {boolean} [saveHook=false] Trusted preSave dispatch, never request input.
    * @returns {Promise<boolean>} Ordinary bounded writes pass; retirement evidence is owner-only.
    * @throws {CLASSES.NodicsError} Forged markers, unbounded selectors or uncertain records.
    */
-  protectRetirement: async function (request, service) {
+  protectRetirement: async function (request, service, saveHook = false) {
     if (retirementWrites.has(request)) return true;
     const fail = () => {
       throw new CLASSES.NodicsError("ERR_PROCESS_00028");
@@ -126,8 +127,26 @@ module.exports = {
       response.result.some((row) => row.domainRetirement)
     )
       fail();
-    request.query = { ...query, domainRetirement: { $exists: false } };
+    if (saveHook && request.options?.insertOnly === true) {
+      // Atomic create cannot overwrite a competing/retired identity; update predicates are invalid for insertion.
+      if (
+        Array.isArray(request.model) ||
+        codes.length !== 1 ||
+        response.result.length ||
+        Object.keys(request.model).some((key) => key.startsWith("$"))
+      )
+        fail();
+      request.query = { code: codes[0] };
+    } else request.query = { ...query, domainRetirement: { $exists: false } };
     return true;
+  },
+  /** Guards task preSave while preserving native create-only insertion. @param {Object} request Generated save. @returns {Promise<boolean>} Retirement admission. */
+  protectTaskRetirementSave: function (request) {
+    return this.protectRetirement(request, this.taskService(), true);
+  },
+  /** Guards instance preSave while preserving native create-only insertion. @param {Object} request Generated save. @returns {Promise<boolean>} Retirement admission. */
+  protectInstanceRetirementSave: function (request) {
+    return this.protectRetirement(request, this.instanceService(), true);
   },
   /** Guards generic task persistence. @param {Object} request Generated mutation. @returns {Promise<boolean>} Private retirement admission. */
   protectTaskRetirement: function (request) {
@@ -581,32 +600,12 @@ module.exports = {
           "Reviewer identity checks passed; completion is rechecked on submission.",
       };
     } catch (_) {
-      const auth = request.authData || {},
-        context = instance.context || {};
-      const requester = context[policy.actorPolicy.requesterContextField];
-      const sameRequester =
-        auth.tokenType === "access" &&
-        auth.principalType === "human" &&
-        !auth.isSystem &&
-        auth.tenant === request.tenant &&
-        auth.entCode === context[policy.actorPolicy.enterpriseContextField] &&
-        typeof auth.loginId === "string" &&
-        typeof requester === "string" &&
-        requester.trim() &&
-        auth.loginId.trim().toLowerCase() === requester.trim().toLowerCase();
-      return sameRequester
-        ? {
-            eligible: false,
-            reasonCode: "DIFFERENT_REVIEWER_REQUIRED",
-            message:
-              "A different authorised reviewer is required; the requester cannot review this publication.",
-          }
-        : {
-            eligible: false,
-            reasonCode: "REVIEWER_NOT_AUTHORISED",
-            message:
-              "Your current reviewer identity or permission is not authorised for this task.",
-          };
+      return {
+        eligible: false,
+        reasonCode: "REVIEWER_NOT_AUTHORISED",
+        message:
+          "Your current reviewer identity or permission is not authorised for this task.",
+      };
     }
   },
 
@@ -616,7 +615,7 @@ module.exports = {
    * @param {Object} instance Persisted Process instance.
    * @param {Object} policy Published task policy; actorPolicy names direct context fields.
    * @returns {void} No writes; throws before task completion for invalid authority.
-   * @override Alternative actor policy must retain no-self-review and enterprise isolation.
+   * @override Preserve permission and enterprise isolation; requester identity is audit provenance, not an exclusion.
    */
   assertTaskActor: function (request, instance, policy) {
     const configured = policy.actorPolicy;
@@ -642,7 +641,6 @@ module.exports = {
       auth.entCode !== context[configured.enterpriseContextField] ||
       typeof requester !== "string" ||
       !requester ||
-      auth.loginId.trim().toLowerCase() === requester.trim().toLowerCase() ||
       !permissions ||
       !permissions.isPermissionGranted(
         configured.permission,
@@ -773,6 +771,7 @@ module.exports = {
    * @returns {Promise<Object>} Trigger metadata.
    */
   requireTrigger: async function (request, triggerCode) {
+    this.assertCode(triggerCode);
     if (!this.triggerService())
       throw new CLASSES.NodicsError(
         "ERR_PROCESS_00014",
@@ -781,16 +780,157 @@ module.exports = {
     let response = await this.triggerService().get(
       this.serviceRequest(request, {
         query: { code: this.assertCode(triggerCode) },
-        searchOptions: { limit: 1 },
+        options: { recursive: false, skipItemCache: true },
+        searchOptions: { pageSize: 2, pageNumber: 1 },
       }),
     );
-    let trigger = response && response.result && response.result[0];
+    if (
+      !response ||
+      !/^SUC_/.test(response.code || "") ||
+      response.error ||
+      response.errors ||
+      response.success === false ||
+      !Array.isArray(response.result) ||
+      response.result.length > 1 ||
+      response.result.some((row) => row.code !== triggerCode)
+    )
+      throw new CLASSES.NodicsError("ERR_PROCESS_00016");
+    let trigger = response.result[0];
     if (!trigger)
       throw new CLASSES.NodicsError(
         "ERR_PROCESS_00016",
         "Process trigger was not found",
       );
     return trigger;
+  },
+
+  /** Binds a trigger transition to every mutable field observed before the write. @param {Object} trigger Native record. @returns {Object} Exact generated-owner CAS predicate. */
+  triggerPredicate: function (trigger) {
+    return Object.fromEntries(
+      [
+        "code",
+        "definitionCode",
+        "status",
+        "active",
+        "name",
+        "version",
+        "triggerType",
+        "ownerModule",
+        "cronJobCode",
+        "schedule",
+        "lastObservedAt",
+      ].map((key) => [
+        key,
+        trigger[key] === undefined
+          ? { $exists: false }
+          : trigger[key] !== null && typeof trigger[key] === "object"
+            ? { $eq: trigger[key] }
+            : trigger[key],
+      ]),
+    );
+  },
+
+  /** Requires an acknowledged single trigger update and fresh exact changed-field readback. @param {Object} request Original context. @param {Object} trigger Observed record. @param {Object} update Validated changes. @returns {Promise<Object>} Persisted record; throws before success/audit on uncertainty. */
+  transitionTrigger: async function (request, trigger, update) {
+    const response = await this.triggerService().update(
+      this.serviceRequest(request, {
+        query: this.triggerPredicate(trigger),
+        model: { $set: update },
+      }),
+    );
+    if (
+      !response ||
+      !/^SUC_/.test(response.code || "") ||
+      response.error ||
+      response.errors ||
+      response.success === false ||
+      response.result?.acknowledged !== true ||
+      SERVICE.DefaultModelsUpdateInitializerService.getAffectedCount(
+        response,
+      ) !== 1
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_PROCESS_00017",
+        "Trigger transition is unconfirmed; inspect without replay",
+      );
+    const saved = await this.requireTrigger(request, trigger.code);
+    if (
+      saved.definitionCode !== trigger.definitionCode ||
+      Object.entries(update).some(
+        ([key, value]) => JSON.stringify(saved[key]) !== JSON.stringify(value),
+      )
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_PROCESS_00017",
+        "Trigger readback is unconfirmed; inspect without replay",
+      );
+    return saved;
+  },
+
+  /** Reads exact current published trigger evidence for Cron review without starting work or granting callback authority. @param {Object} request Trusted tenant/principal. @param {string} triggerCode Approved trigger. @returns {Promise<Object>} Immutable version and graph evidence. */
+  inspectScheduleTrigger: async function (request, triggerCode) {
+    const read = async (service, query) => {
+      const response = await service.get(
+        this.serviceRequest(request, {
+          query,
+          options: { skipItemCache: true },
+          searchOptions: { pageNumber: 1, pageSize: 2 },
+        }),
+      );
+      const rows = response?.result;
+      if (
+        !/^SUC_/.test(response?.code || "") ||
+        response.error ||
+        response.success === false ||
+        response.acknowledged === false ||
+        (response.errors !== undefined &&
+          (!Array.isArray(response.errors) || response.errors.length)) ||
+        !Array.isArray(rows) ||
+        rows.length !== 1 ||
+        !rows[0] ||
+        rows[0].error ||
+        rows[0].success === false ||
+        rows[0].acknowledged === false ||
+        (rows[0].errors !== undefined &&
+          (!Array.isArray(rows[0].errors) || rows[0].errors.length)) ||
+        Object.entries(query).some(([key, value]) => rows[0][key] !== value)
+      )
+        throw new CLASSES.NodicsError("ERR_PROCESS_00020");
+      return rows[0];
+    };
+    const trigger = await read(this.triggerService(), {
+      code: this.assertCode(triggerCode),
+    });
+    if (
+      trigger.active !== true ||
+      trigger.status !== "ACTIVE" ||
+      !Number.isSafeInteger(trigger.version) ||
+      trigger.version < 1
+    )
+      throw new CLASSES.NodicsError("ERR_PROCESS_00020");
+    const definition = await read(this.definitionService(), {
+      code: this.assertCode(trigger.definitionCode),
+    });
+    const version = await read(this.versionService(), {
+      definitionCode: definition.code,
+      version: trigger.version,
+    });
+    if (
+      definition.status !== "PUBLISHED" ||
+      definition.active === false ||
+      version.status !== "PUBLISHED" ||
+      !Array.isArray(version.graph?.nodes) ||
+      !version.graph.nodes.length ||
+      !Array.isArray(version.graph.transitions)
+    )
+      throw new CLASSES.NodicsError("ERR_PROCESS_00020");
+    return {
+      triggerCode: trigger.code,
+      definitionCode: definition.code,
+      version: trigger.version,
+      graph: version.graph,
+      cronJobCode: trigger.cronJobCode || null,
+    };
   },
 
   /**
@@ -1802,9 +1942,12 @@ module.exports = {
     };
     let saved;
     try {
-      // No query: generated persistence inserts under the existing unique primary key, never upserts.
+      // Explicit insert intent prevents primary-query generation from upserting a competing start.
       saved = await this.instanceService().save(
-        this.serviceRequest(request, { model: instanceModel }),
+        this.serviceRequest(request, {
+          model: instanceModel,
+          options: { insertOnly: true },
+        }),
       );
     } catch (error) {
       const found = await this.instanceService().get(
@@ -2028,6 +2171,7 @@ module.exports = {
             "approved",
             "reason",
             "outcome",
+            "action",
             "approvals",
             "emergencyOverride",
             "transitionCode",
@@ -2040,8 +2184,8 @@ module.exports = {
       (task.decision.approved === false && !task.decision.reason?.trim())
     )
       fail();
-    // Legacy clients retain a descriptive outcome with the approved decision.
-    // Typed approval contracts remain approved/reason-only; outcome is never a
+    // Legacy clients retain descriptive labels with the approved decision.
+    // Typed approval contracts remain approved/reason-only; labels are never a
     // substitute for the stored boolean, actor or pinned graph-path proof.
     if (
       Object.hasOwn(task.decision, "outcome") &&
@@ -2051,6 +2195,14 @@ module.exports = {
         typeof task.decision.outcome !== "string" ||
         !task.decision.outcome.trim() ||
         task.decision.outcome.length > 256)
+    )
+      fail();
+    if (
+      Object.hasOwn(task.decision, "action") &&
+      (this.taskDecisionContract(
+        this.policyOf(version, this.findNode(graph, taskNode)),
+      ) ||
+        task.decision.action !== (task.decision.approved ? "APPROVE" : "REJECT"))
     )
       fail();
     let next = this.nextNode(graph, taskNode, { decision: task.decision });
@@ -2456,12 +2608,31 @@ module.exports = {
       );
     let assignee = body.assignee;
     this.assertCode(assignee);
-    await this.taskService().update(
+    const response = await this.taskService().update(
       this.serviceRequest(request, {
-        query: { code: task.code },
+        query: {
+          code: task.code,
+          status: task.status,
+          instanceCode: task.instanceCode,
+          nodeCode: task.nodeCode,
+          assignee:
+            task.assignee === undefined ? { $exists: false } : task.assignee,
+        },
         model: { $set: { assignee: assignee } },
       }),
     );
+    this.assertTaskTransitionWrite(response);
+    const saved = await this.readTaskTransition(request, task.code);
+    if (
+      saved.status !== task.status ||
+      saved.instanceCode !== task.instanceCode ||
+      saved.nodeCode !== task.nodeCode ||
+      saved.assignee !== assignee
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_PROCESS_00012",
+        "Task assignment is unconfirmed; inspect without replay",
+      );
     await this.audit(request, {
       instanceCode: task.instanceCode,
       eventType: "process.task.assigned",
@@ -2469,7 +2640,7 @@ module.exports = {
     });
     return {
       code: "SUC_PROCESS_00008",
-      data: Object.assign({}, task, { assignee: assignee }),
+      data: saved,
     };
   },
 
@@ -2604,7 +2775,7 @@ module.exports = {
       this.serviceRequest(request, {
         query: { code: this.assertCode(code) },
         options: { recursive: false, skipItemCache: true },
-        searchOptions: { limit: 2 },
+        searchOptions: { pageSize: 2, pageNumber: 1 },
       }),
     );
     if (
@@ -2739,9 +2910,14 @@ module.exports = {
         "Governed review cancellation requires a domain contract",
       );
     let cancelledAt = new Date();
-    await this.instanceService().update(
+    const cancelled = await this.instanceService().update(
       this.serviceRequest(request, {
-        query: { code: instance.code },
+        query: {
+          code: instance.code,
+          status: instance.status,
+          definitionCode: instance.definitionCode,
+          version: instance.version,
+        },
         model: {
           $set: {
             status: "CANCELLED",
@@ -2751,7 +2927,8 @@ module.exports = {
         },
       }),
     );
-    await this.taskService().update(
+    this.assertTaskTransitionWrite(cancelled);
+    const cancelledTasks = await this.taskService().update(
       this.serviceRequest(request, {
         query: { instanceCode: instance.code, status: "OPEN" },
         model: {
@@ -2764,6 +2941,43 @@ module.exports = {
         options: { recursive: true },
       }),
     );
+    if (
+      !cancelledTasks ||
+      !/^SUC_/.test(cancelledTasks.code || "") ||
+      cancelledTasks.error ||
+      cancelledTasks.success === false ||
+      (cancelledTasks.errors !== undefined &&
+        (!Array.isArray(cancelledTasks.errors) || cancelledTasks.errors.length))
+    )
+      throw new CLASSES.NodicsError("ERR_PROCESS_00027");
+    const saved = await this.readOwnedStartRecord(
+      request,
+      this.instanceService(),
+      { code: instance.code },
+    );
+    if (
+      saved.status !== "CANCELLED" ||
+      saved.definitionCode !== instance.definitionCode ||
+      saved.version !== instance.version ||
+      saved.cancellationReason !== body.reason
+    )
+      throw new CLASSES.NodicsError("ERR_PROCESS_00027");
+    const remaining = await this.taskService().get(
+      this.serviceRequest(request, {
+        query: { instanceCode: instance.code, status: "OPEN" },
+        options: { recursive: false, skipItemCache: true },
+        searchOptions: { pageSize: 1, pageNumber: 1 },
+      }),
+    );
+    if (
+      !remaining ||
+      !/^SUC_/.test(remaining.code || "") ||
+      remaining.error ||
+      remaining.success === false ||
+      !Array.isArray(remaining.result) ||
+      remaining.result.length
+    )
+      throw new CLASSES.NodicsError("ERR_PROCESS_00027");
     await this.audit(request, {
       definitionCode: instance.definitionCode,
       instanceCode: instance.code,
@@ -2772,10 +2986,7 @@ module.exports = {
     });
     return {
       code: "SUC_PROCESS_00009",
-      data: Object.assign({}, instance, {
-        status: "CANCELLED",
-        completedAt: cancelledAt,
-      }),
+      data: saved,
     };
   },
 
@@ -2828,9 +3039,35 @@ module.exports = {
     this.assertCode(triggerModel.code);
     if (triggerModel.cronJobCode) this.assertCode(triggerModel.cronJobCode);
     let response = await this.triggerService().save(
-      this.serviceRequest(request, { model: triggerModel }),
+      this.serviceRequest(request, {
+        model: triggerModel,
+        options: { insertOnly: true },
+      }),
     );
-    let trigger = response.result || response;
+    if (
+      !response ||
+      !/^SUC_/.test(response.code || "") ||
+      response.error ||
+      response.errors ||
+      response.success === false ||
+      response.result?.code !== triggerModel.code
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_PROCESS_00017",
+        "Trigger creation is unconfirmed; inspect without replay",
+      );
+    const trigger = await this.requireTrigger(request, triggerModel.code);
+    if (
+      Object.entries(triggerModel).some(
+        ([key, value]) =>
+          value !== undefined &&
+          JSON.stringify(trigger[key]) !== JSON.stringify(value),
+      )
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_PROCESS_00017",
+        "Trigger creation readback is unconfirmed; inspect without replay",
+      );
     await this.audit(request, {
       definitionCode: definitionCode,
       eventType: "process.trigger.created",
@@ -2881,11 +3118,10 @@ module.exports = {
     if (update.cronJobCode) this.assertCode(update.cronJobCode);
     if (update.status) this.assertTriggerStatus(update.status);
     update.lastObservedAt = new Date();
-    await this.triggerService().update(
-      this.serviceRequest(request, {
-        query: { code: triggerCode },
-        model: { $set: update },
-      }),
+    const saved = await this.transitionTrigger(
+      request,
+      existingTrigger,
+      update,
     );
     await this.audit(request, {
       eventType: "process.trigger.updated",
@@ -2897,7 +3133,9 @@ module.exports = {
     });
     return {
       code: "SUC_PROCESS_00010",
-      data: Object.assign({ code: triggerCode }, update),
+      data: Object.fromEntries(
+        ["code", ...Object.keys(update)].map((key) => [key, saved[key]]),
+      ),
     };
   },
 
@@ -2914,18 +3152,13 @@ module.exports = {
     );
     let existingTrigger = await this.requireTrigger(request, triggerCode);
     let archivedAt = new Date();
-    await this.triggerService().update(
-      this.serviceRequest(request, {
-        query: { code: triggerCode },
-        model: {
-          $set: {
-            active: false,
-            status: "ARCHIVED",
-            archivedAt: archivedAt,
-          },
-        },
-      }),
-    );
+    if (existingTrigger.status === "ARCHIVED")
+      throw new CLASSES.NodicsError("ERR_PROCESS_00017");
+    const saved = await this.transitionTrigger(request, existingTrigger, {
+      active: false,
+      status: "ARCHIVED",
+      archivedAt,
+    });
     await this.audit(request, {
       eventType: "process.trigger.archived",
       metadata: {
@@ -2936,10 +3169,10 @@ module.exports = {
     return {
       code: "SUC_PROCESS_00010",
       data: {
-        code: triggerCode,
-        active: false,
-        status: "ARCHIVED",
-        archivedAt: archivedAt,
+        code: saved.code,
+        active: saved.active,
+        status: saved.status,
+        archivedAt: saved.archivedAt,
       },
     };
   },

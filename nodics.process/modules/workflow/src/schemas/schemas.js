@@ -18,6 +18,11 @@
  */
 module.exports = {
   workflow: {
+    processCommandReceipt: {
+      super: "commandReceipt",
+      model: true,
+      service: { enabled: true },
+    },
     processDefinition: {
       super: "base",
       model: true,
@@ -606,4 +611,98 @@ module.exports.workflow.processTask.definition.domainRetirement = {
   required: false,
   description:
     "Private original closure identity for acknowledged cancellation and same-command recovery.",
+};
+// Private execution evidence; generic authoring cannot manufacture attempt history.
+module.exports.workflow.processActionAttemptRecord = {
+  super: "base",
+  model: true,
+  service: { enabled: true },
+  router: { enabled: false },
+  cache: { enabled: false },
+  search: { enabled: false },
+  event: { enabled: false },
+  backoffice: { mutationMode: "READ_ONLY", operations: [] },
+  indexes: {
+    individual: {
+      attemptIdentity: {
+        name: "code",
+        enabled: true,
+        options: { unique: true },
+      },
+    },
+  },
+  definition: {
+    code: {
+      type: "string",
+      required: true,
+      description: "Exact Process execution identity.",
+    },
+    instanceCode: {
+      type: "string",
+      required: true,
+      description: "Owning instance, not a replay credential.",
+    },
+    definitionCode: {
+      type: "string",
+      required: true,
+      description: "Pinned definition identity.",
+    },
+    version: {
+      type: "int",
+      required: true,
+      description: "Pinned published version.",
+    },
+    moduleName: {
+      type: "string",
+      required: true,
+      description: "Authorized target module.",
+    },
+    actionKey: {
+      type: "string",
+      required: true,
+      description: "Published action identity.",
+    },
+    enterpriseCode: {
+      type: "string",
+      required: true,
+      description: "Authenticated runtime enterprise.",
+    },
+    projectCode: {
+      type: "string",
+      required: true,
+      description: "Authenticated runtime project.",
+    },
+    environmentCode: {
+      type: "string",
+      required: true,
+      description: "Authenticated runtime environment.",
+    },
+    context: {
+      type: "object",
+      required: true,
+      description:
+        "Bounded target-only context; never projected to arbitrary employees.",
+    },
+    status: {
+      type: "string",
+      required: true,
+      description:
+        "Observed READY, CLAIMED, COMPLETED or FAILED; not mutation authority.",
+    },
+    expiresAt: {
+      type: "int",
+      required: true,
+      description: "Original action expiry; expiry never grants replay.",
+    },
+    startedAt: {
+      type: "string",
+      required: true,
+      description: "UTC attempt creation time.",
+    },
+    completedAt: {
+      type: "string",
+      required: false,
+      description: "UTC terminal evidence time, absent when uncertain.",
+    },
+  },
 };

@@ -1,5 +1,25 @@
 # nSystem AI Contracts
 
+Property governance also exposes secured `POST /config/runtime/request/activate-due`
+and `POST /config/runtime/request/reconcile-property`, both with existing
+`runtime.config.request.activate` permission and runtime-configuration exposure.
+nSystem only delegates; nDynamo owns bounded due selection and evidence-only
+reconciliation, while CronJob owns scheduling. Preserve trusted tenant context,
+empty dispatch payload and no uncertain replay. See
+[durable property operations](../../../nDynamo/llm/examples/durable-property-activation.md).
+
+When durable property persistence is enabled, delegate commits and refresh to
+nDynamo's [durable property owner](../../../nDynamo/llm/examples/durable-property-activation.md).
+Startup restoration must propagate failure. Never apply event-supplied values or
+perform in-memory-only rollback of a durable record. The following legacy audit
+limitation applies when that deployment opt-in is disabled.
+
+Property activation must match both the approved previous snapshot and next
+snapshot against a fresh owner preview. Audit promise failures propagate to the
+caller. A failure after in-memory application is uncertain, not proof of rollback
+or durable cross-node persistence. Preserve the nDynamo
+[revision-safe claim and recovery contract](../../../nDynamo/llm/examples/revision-safe-activation.md).
+
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nSystem`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
@@ -7,6 +27,15 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 Secured service-registry API exposure defaults to enabled for runtime registration/contract retrieval. Exposure never bypasses service-token, grant or route permissions. Standalone deployments can explicitly disable the category.
 
 ## Runtime configuration schemas and refresh propagation
+
+Module startup restores tenant-default schema records after durable property
+restoration. The generated runtime-value owner is optional when Dynamo is absent;
+when present, exact deterministic record reads are limited to active tenants and
+their declared schemas. Require matching owner, schema, tenant and default tenant
+scope; reject duplicate or malformed reads and propagate storage/decryption errors
+before readiness. Inactive and missing records do not override source defaults.
+This restore is read-only and emits no refresh events. Non-default scopes are not
+flattened into tenant defaults or given an invented precedence order.
 
 Runtime configuration schemas are declared by the owning module through layered
 `runtimeConfigurationSchemas` properties and served by nSystem. A schema defines

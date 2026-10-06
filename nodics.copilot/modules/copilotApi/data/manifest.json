@@ -1,0 +1,27 @@
+{
+    "contractVersion": 2,
+    "module": "copilotApi",
+    "sections": {
+        "knowledgeRefreshWorkflow": {
+            "kind": "DATA_RELEASE",
+            "selectionPolicy": "EXPLICIT",
+            "dataType": "init",
+            "version": "1.1.0",
+            "description": "Copilot-owned governed static knowledge refresh definition",
+            "owningDomain": "copilotApi",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": ["ALL"],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "sourceRoot": "init-v002",
+            "files": {
+                "init-v002/records/process/copilotKnowledgeWorkflowData.js": "8cfe38650d24e75772c4f755c08fb2a9094eb5d28468de93bf2f38c8f8ccff5b"
+            }
+        }
+    }
+}

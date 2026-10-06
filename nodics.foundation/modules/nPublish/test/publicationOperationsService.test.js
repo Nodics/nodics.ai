@@ -48,6 +48,13 @@ global.SERVICE = {
     assert.deepStrictEqual(diagnostics.metrics, { publicationTotal: 3, failedTotal: 1, stuckTotal: 1 });
     assert.strictEqual(diagnostics.stuck[0].code, 'stuck');
     assert.strictEqual(Object.prototype.hasOwnProperty.call(diagnostics.stuck[0], 'secret'), false);
+    assert.deepStrictEqual(diagnostics.pending.map(item => item.code), ['stuck']);
+    rows.push({ code: 'awaiting-review', state: 'PENDING_APPROVAL', secret: 'private', updatedAt: new Date().toISOString() });
+    const pending = await service.diagnostics({ tenant: 'tenant-a' });
+    assert.deepStrictEqual(pending.pending.map(item => item.code), ['stuck', 'awaiting-review']);
+    assert.strictEqual(Object.prototype.hasOwnProperty.call(pending.pending[1], 'secret'), false);
+    assert.strictEqual(pending.stuck.length, 1, 'fresh pending work is not automatically stuck');
+    rows.pop();
     assert.deepStrictEqual(diagnostics.alerts, [{ code: 'PUBLICATION_FAILURES_PRESENT', severity: 'WARNING', count: 1 }]);
     let correlation = await service.correlation({ params: { correlationId: 'corr-a' } });
     assert.deepStrictEqual(correlation.publications.map(item => item.code), ['online', 'stuck']);

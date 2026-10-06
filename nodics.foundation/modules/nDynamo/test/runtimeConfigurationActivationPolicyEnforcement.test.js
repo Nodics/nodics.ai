@@ -51,7 +51,7 @@ global.SERVICE = {
             return Promise.resolve({ result: [{
                 code: 'approved-router-request', configurationType: 'routerConfiguration', configurationCode: 'runtimeUser',
                 requestedBy: 'requester', approvedBy: 'change-manager', approvalReason: 'Approved change ticket',
-                approvalStatus: 'APPROVED', status: 'APPROVED'
+                approvalStatus: 'APPROVED', status: 'ACTIVATING', revision: 2, activatedBy: 'operator'
             }] });
         }
     },
@@ -137,6 +137,7 @@ routerService.registerRoutersFromDatabase({
         authData: { code: 'operator' },
         runtimeActivationSource: 'approvedRequest',
         trustedRuntimeActivation: true,
+        activationRevision: 2,
         activationRequestCode: 'approved-router-request',
         activationApproval: {
             approved: true,

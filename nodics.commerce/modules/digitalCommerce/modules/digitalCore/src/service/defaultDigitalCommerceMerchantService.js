@@ -160,6 +160,15 @@ module.exports = {
   /** Unwraps a generated owner response. */
   unwrap: function (v) {
     for (let n = 0; n < 7 && v && !Array.isArray(v); n++) {
+      if (
+        typeof v !== "object" ||
+        v.error ||
+        v.success === false ||
+        (v.code !== undefined && !/^SUC_/.test(v.code)) ||
+        (v.errors !== undefined &&
+          (!Array.isArray(v.errors) || v.errors.length))
+      )
+        this.fail("The issuing enterprise is unavailable");
       if (v.data !== undefined) v = v.data;
       else if (v.result !== undefined) v = v.result;
       else break;
@@ -201,18 +210,20 @@ module.exports = {
         targetAuthority: { runtimeRole: "PLATFORM" },
         tenant: r.tenant,
         request: { tenant: r.tenant },
-        apiName: "/enterprise",
+        apiName: "/references/read",
         methodName: "POST",
         requestBody: {
-          query: { code, active: true },
-          options: { recursive: false },
-          searchOptions: { pageSize: 1 },
+          type: "enterprise",
+          codes: [code],
         },
         timeoutMs: 10000,
         maxAttempts: 1,
       }),
     );
-    const enterprise = Array.isArray(response) ? response[0] : response;
+    const enterprise =
+      Array.isArray(response) && response.length === 1
+        ? response[0]
+        : undefined;
     if (!enterprise || enterprise.code !== code || enterprise.active === false)
       this.fail("The issuing enterprise is unavailable");
     return {
@@ -610,6 +621,80 @@ module.exports = {
     }
     return { redemptions };
   },
+  /** Inspects the original committed fulfillment receipt without invoking a provider or replaying redemption. @param {Object} input Current staff, entitlement and original command reference. @returns {Promise<Object>} Exact committed receipt evidence or explicitly unconfirmed state. */
+  inspectReceipt: async function (input) {
+    const r = await this.staff(input);
+    const key = r.idempotencyKey;
+    if (
+      typeof key !== "string" ||
+      !/^[A-Za-z0-9._:-]{8,180}$/.test(key) ||
+      typeof r.payload?.merchantReceiptReference !== "string" ||
+      !/^[A-Za-z0-9][A-Za-z0-9 ._:/-]{2,119}$/.test(
+        r.payload.merchantReceiptReference,
+      )
+    )
+      this.fail("Original receipt reference is required");
+    const item = await this.entitlement(r, false);
+    const merchant = await this.withStore(r, await this.merchant(r, item));
+    if (!this.scoped(r, merchant))
+      this.fail("Receipt is outside your assigned scope");
+    const marker = item.evidence?.merchantRedemption;
+    if (
+      !marker ||
+      marker.confirmationKey !== key ||
+      marker.merchantReceiptReference !== r.payload.merchantReceiptReference ||
+      marker.merchantCode !== merchant.code ||
+      marker.mode !== merchant.mode ||
+      marker.storeRef?.code !== merchant.store?.code ||
+      marker.storeRevision !== merchant.store?.revision
+    )
+      this.fail("Original receipt could not be verified");
+    const pending = {
+      contractVersion: 1,
+      entitlementCode: item.code,
+      state: "UNCONFIRMED",
+    };
+    if (item.claimStatus !== "REDEEMED") return pending;
+    const receipt = await this.readMerchantReceipt(
+      { ...r, ownerId: item.ownerId },
+      this.merchantReceiptModel(r, item, marker, merchant, key),
+    );
+    if (!receipt) return pending;
+    const fresh = await this.staff(input);
+    const current = await this.entitlement(fresh, false);
+    const live = await this.withStore(
+      fresh,
+      await this.merchant(fresh, current),
+    );
+    if (
+      !this.scoped(fresh, live) ||
+      live.code !== merchant.code ||
+      live.mode !== merchant.mode ||
+      live.store?.code !== merchant.store?.code ||
+      live.store?.revision !== merchant.store?.revision ||
+      current.claimStatus !== "REDEEMED" ||
+      current.revision !== item.revision ||
+      JSON.stringify(current.evidence?.merchantRedemption) !==
+        JSON.stringify(marker)
+    )
+      this.fail("Receipt authority changed during inspection");
+    return {
+      contractVersion: 1,
+      entitlementCode: item.code,
+      state: "COMPLETED",
+      confirmationKey: key,
+      receiptCode: receipt.code,
+      merchantReceiptReference: marker.merchantReceiptReference,
+      merchantCode: merchant.code,
+      mode: merchant.mode,
+      ...(merchant.store
+        ? {
+            storeCode: merchant.store.code,
+            storeRevision: merchant.store.revision,
+          }
+        : {}),
+    };
+  },
   /** Confirms employee fulfillment and receipt, then claims and redeems through Promotion under the original customer's ownership. */
   confirm: async function (input) {
     const r = await this.staff(input),
@@ -827,8 +912,7 @@ module.exports = {
       status: "DELIVERED",
       revision: 0,
       active: true,
-      created: new Date(marker.confirmedAt),
-      updated: new Date(marker.confirmedAt),
+      // Generic persistence owns created/updated; deliveredAt pins the original business event.
       deliveredAt: new Date(marker.confirmedAt),
       idempotencyKey: key,
       correlationId: marker.code,

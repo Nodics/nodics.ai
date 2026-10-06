@@ -1,5 +1,16 @@
 # Promotion contracts
 
+## Activated Coupon Checkout
+
+For Stores explicitly selected for governed delivery, purchase-time campaign
+validation uses activated Promotion policy, never a mutable operational budget
+record. Missing or inactive policy fails closed. Unselected Stores retain their
+existing authoring read. Checkout supplies the persisted cart's Store through
+Digital Core; request payloads cannot choose a different policy authority.
+Reservation release uses explicit generated-owner `$unset` mutations for removed
+fields, retaining revision/status CAS and exact readback. An undefined JavaScript
+property is not evidence that persisted reservation ownership was removed.
+
 ## Issuer Seller Consent And Merchant Benefits
 
 Read the [current qualified-source contract](issuer-seller-and-merchant-benefits.md)

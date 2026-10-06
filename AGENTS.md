@@ -139,6 +139,10 @@ and avoid redundant validation and CI polling without weakening required gates.
 
 ## Minimal configuration principle
 
+Apply [Runtime Knowledge Is Framework-Owned](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#runtime-knowledge-is-framework-owned).
+Never add Copilot source catalogs to modules or accelerators. Active modules are
+runtime candidates; source selection and access are governed operator decisions.
+
 For every email/SMS change, follow
 [Module-Owned Email And SMS Presentation](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#module-owned-email-and-sms-presentation).
 Keep domain presentation in layered `src/templates` resources, reusable rendering

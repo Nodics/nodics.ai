@@ -292,6 +292,11 @@ module.exports = {
 
   /** Returns configured API-key scopes for one service principal. */
   servicePrincipalCredentialScopes: function (policy, principalCode) {
+    // The shared Local proof must cover approved sibling grants, not only the
+    // authority runtime's own permissions. Each issued token retains its grant.
+    const deploymentPermissions = principalCode === "apiAdmin"
+      ? this.discoverLocalRuntimeScopes(policy).flatMap(scope => scope.permissions)
+      : [];
     return Array.from(
       new Set(
         []
@@ -302,6 +307,7 @@ module.exports = {
             principalCode === "apiAdmin"
               ? policy.localRuntimeDeploymentGrantPermissions || []
               : [],
+            deploymentPermissions,
           )
           .filter(Boolean),
       ),

@@ -1,5 +1,22 @@
 # profile Agent Contract
 
+Reference employee imports use `DefaultEmployeeService.ensureReferenceAll` when
+the source intends create-or-preserve rather than an account mutation. Keep
+existing credentials and groups untouched, reject key conflicts/inactive or
+linked identities, retain caller authorization on fresh reads and insert-only
+generated saves, and return code-only acknowledgements. This is not employee
+onboarding, membership activation or password-reset authority.
+
+Enterprise parent references are code-owned: `superEnterprise` persists a string
+matching `refSchema.superEnterprise.propertyName: code`. Keep schema validation,
+hierarchy reads and imports aligned; do not substitute database ObjectIds or infer
+parent access. See `llm/contracts/enterprise-delegation.md` for adoption limits.
+
+Preserve [forward bootstrap Copilot administration](llm/contracts/bootstrap-copilot-administration.md):
+immutable Init history, exact assessment source pin, existing administrator scope
+and independent domain/tenant authorization. Never grant Copilot administration
+to ordinary employee groups or infer authority from a role name in a request.
+
 Original-intent recovery follows
 [enterprise setup continuation](llm/contracts/enterprise-setup-continuation.md).
 Use existing acceptance runners, not a new public readiness API. Keep installed
@@ -183,6 +200,8 @@ Runtime admission reuses direct RUNTIME_DEPLOYMENT principal scope assignments. 
 Native-Local bootstrap reconciles only its own active grants from the selected
 server's isolated canonical loader graph plus explicit remote modules, never
 the raw selection list, discovered inactive inventory or caller module headers.
+The generated shared Local proof's credential ceiling covers the same resolved
+sibling policies; never union those permissions into individual runtime grants.
 Preserve strict module ceilings for every environment and do not revive revoked
 grants. See the Local bootstrap section of `llm/contracts/identity-access-lifecycle.md`.
 

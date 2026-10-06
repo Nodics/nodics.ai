@@ -17,5 +17,8 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 module.exports = {
-
+    ERR_CPA_00001: {
+        code: '404',
+        message: 'The requested Copilot conversation or turn is unavailable.'
+    }
 };

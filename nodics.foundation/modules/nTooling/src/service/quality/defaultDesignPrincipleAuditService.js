@@ -539,6 +539,9 @@ module.exports = exportedService = {
                 const current = propertyPath.concat(String(key));
                 const name = current.join('.');
                 const value = property.value;
+                if (/^copilot\.(?:runtimeRoleProfiles\.[^.]+\.)?knowledge\.(?:sourceRegistry\.definitions|groups\.(?:definitions|assignments)|externalLogs\.sources)$/.test(name) &&
+                    !(value.type === 'ArrayExpression' && value.elements.length === 0))
+                    failures.push(file + ': Copilot knowledge selections are governed runtime data, not authored module configuration: ' + name);
                 if (options.customerProject === true)
                     (this.auditCustomerPropertyPlacement || exportedService.auditCustomerPropertyPlacement).call(this, failures, value, current, file);
                 if (options.customerProject === true && file === 'config/properties.js' && current.length === 1 &&

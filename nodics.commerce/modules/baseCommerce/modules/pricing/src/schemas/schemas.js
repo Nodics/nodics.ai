@@ -675,6 +675,8 @@ module.exports.pricing.priceQuote = {
 };
 
 module.exports.pricing.priceQuote.definition.cartCode.required = true;
+module.exports.pricing.priceRow.commandReceipt = { journalSchema: 'pricingCommandReceipt' };
+module.exports.pricing.pricingCommandReceipt = { super: 'commandReceipt', model: true, service: { enabled: true } };
 module.exports.pricing.priceQuote.definition.orderCode.required = true;
 
 module.exports.pricing.priceQuote.definition.variantCode = {

@@ -30,6 +30,14 @@ rows. Success envelopes, exactly one matching code and active records are requir
 codes or the code of a resolved object, never guess an ObjectId lookup. Embedded
 reference objects do not prove current active state; their owners are reloaded.
 
+The persisted `superEnterprise` field is a string, matching that code-owned
+reference. Declaring it as `objectId` rejects ordinary parent codes at database
+validation even when hierarchy validation succeeds. Runtime schema preparation
+must adopt the string validator before importing children. Existing ObjectId
+values are not silently translated or treated as codes; installations containing
+them require explicit Profile-owned reconciliation. This correction does not
+grant parent administration or change consent admission.
+
 Traversal follows the singular child `superEnterprise` reference. The optional
 `subEnterprises` reverse list is not a separate hierarchy/access authority; current
 source declares both references but has no bidirectional consistency transaction.

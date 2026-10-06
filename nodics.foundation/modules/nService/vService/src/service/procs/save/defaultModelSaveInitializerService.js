@@ -25,9 +25,19 @@
  */
 module.exports = {
     /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * Chooses versioned persistence without bypassing base save safeguards.
+     * @param {Object} request Prepared generated save.
+     * @returns {string} Effective provider method.
+     */
+    resolveSaveMethod: function (request) {
+        return request.schemaModel.versioned
+            ? 'saveVersionedItems'
+            : 'saveItems';
+    },
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     init: function (options) {
         return new Promise((resolve, reject) => {
@@ -36,9 +46,9 @@ module.exports = {
     },
 
     /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
@@ -56,11 +66,12 @@ module.exports = {
      */
     saveModel: function (request, response, process) {
         this.LOG.debug('Saving model ');
-        if (request.schemaModel.versioned) {
-            request.schemaModel.saveVersionedItems(request).then(success => {
+        Promise.resolve()
+            .then(() => this.persistModel(request))
+            .then((success) => {
                 let model = {
                     success: true,
-                    code: 'SUC_SAVE_00000'
+                    code: 'SUC_SAVE_00000',
                 };
                 if (success && UTILS.isArray(success) && success.length > 0) {
                     model.result = success[0];
@@ -69,35 +80,23 @@ module.exports = {
                 }
                 response.success = model;
                 process.nextSuccess(request, response);
-            }).catch(error => {
+            })
+            .catch((error) => {
                 this.LOG.error(error);
-                process.error(request, response, new CLASSES.NodicsError(error,
-                    'Failed saving versioned schema: ' + request.schemaModel.schemaName, 'ERR_SAVE_00000'));
+                process.error(
+                    request,
+                    response,
+                    new CLASSES.NodicsError(
+                        error,
+                        'Failed saving ' +
+                            (request.schemaModel.versioned
+                                ? 'versioned '
+                                : '') +
+                            'schema: ' +
+                            request.schemaModel.schemaName,
+                        'ERR_SAVE_00000',
+                    ),
+                );
             });
-        } else {
-            Promise.resolve().then(() => {
-                const concurrency = typeof SERVICE !== 'undefined' && SERVICE.DefaultModelConcurrencyService;
-                return concurrency && concurrency.getField(request.schemaModel.rawSchema)
-                    ? concurrency.execute(request, 'save') : request.schemaModel.saveItems(request);
-            }).then(success => {
-                let model = {
-                    success: true,
-                    code: 'SUC_SAVE_00000'
-                };
-                if (success && UTILS.isArray(success) && success.length > 0) {
-                    model.result = success[0];
-                } else {
-                    model.result = success;
-                }
-                response.success = model;
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                this.LOG.error(error);
-                process.error(request, response, new CLASSES.NodicsError(error,
-                    'Failed saving schema: ' + request.schemaModel.schemaName, 'ERR_SAVE_00000'));
-            });
-        }
     },
-
-
 };

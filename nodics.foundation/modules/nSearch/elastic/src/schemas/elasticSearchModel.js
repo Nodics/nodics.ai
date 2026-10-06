@@ -21,6 +21,14 @@ const _ = require('lodash');
  */
 module.exports = {
     default: {
+        /** Installs private provider-backed retirement; source owners retain policy and journal authority. */
+        defineDefaultIndexRetirement: function (searchModel) {
+            searchModel.inspectRetirement = function () { return SERVICE.DefaultElasticIndexRetirementService.inspect(this); };
+            searchModel.retireIndex = function (input) { return SERVICE.DefaultElasticIndexRetirementService.retire(this, input); };
+            searchModel.inspectErasure = function () { return SERVICE.DefaultElasticIndexRetirementService.inspect(this, true); };
+            searchModel.inspectDecommissioning = function () { return SERVICE.DefaultElasticIndexRetirementService.decommissioned(this); };
+            searchModel.eraseRetiredIndex = function (input) { return SERVICE.DefaultElasticIndexRetirementService.erase(this, input); };
+        },
         /**
          * Invokes promise-based and callback-based search client operations.
          */

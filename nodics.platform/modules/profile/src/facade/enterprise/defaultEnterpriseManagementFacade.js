@@ -17,6 +17,10 @@
  * @override Later modules may compose additional policy while delegating persistence and projection to Profile services.
  */
 module.exports = {
+  /** Delegates original creation inspection to its native owner. @param {Object} request Trusted request. @returns {Promise<Object>} Receipt. */
+  inspectCreationReceipt: function (request) { return SERVICE.DefaultEnterpriseCommandReceiptService.inspectCreation(request); },
+  /** Delegates original invitation inspection without mutation. @param {Object} request Trusted request. @returns {Promise<Object>} Receipt. */
+  inspectInvitationReceipt: function (request) { return SERVICE.DefaultEnterpriseCommandReceiptService.inspectInvitation(request); },
   /** Delegates native setup inspection through EnterpriseManagement. @param {Object} request Human operator. @returns {Promise<Object>} Safe DTO. */
   inspectEnterpriseSetup: function (request) {
     return SERVICE.DefaultEnterpriseManagementService.inspectEnterpriseSetup(

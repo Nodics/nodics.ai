@@ -17,6 +17,21 @@
  * @override Later modules may replace response mapping while preserving the Profile-owned projection and authorization boundary.
  */
 module.exports = {
+  /** Inspects original enterprise creation evidence without invoking setup. @param {Object} request Trusted HTTP context. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Native receipt. */
+  inspectCreationReceipt: function (request, callback) {
+    return this.commandReceiptInspection(request, callback, 'inspectCreationReceipt');
+  },
+  /** Inspects original invitation evidence without issuing another invitation. @param {Object} request Trusted HTTP context. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Native receipt. */
+  inspectInvitationReceipt: function (request, callback) {
+    return this.commandReceiptInspection(request, callback, 'inspectInvitationReceipt');
+  },
+  /** Keeps receipt inspection private and preserves the verified actor. @param {Object} request Trusted request. @param {Function} callback Optional callback. @param {string} operation Fixed facade operation. @returns {Promise<Object>|void} Inert evidence. */
+  commandReceiptInspection: function (request, callback, operation) {
+    request.params = request.httpRequest?.params || request.params || {};
+    request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+    const result = Promise.resolve().then(() => FACADE.DefaultEnterpriseManagementFacade[operation](request)).then(data => ({ code: 'SUC_PRFL_00000', data }));
+    return callback ? result.then(value => callback(null, value)).catch(callback) : result;
+  },
   /** Maps setup inspection with no-store responses and content-free owner failures. @param {Object} request Human request. @param {Function} [callback] Nodics callback. @returns {Promise<Object>|void} Safe DTO. */
   inspectEnterpriseSetup: function (request, callback) {
     return this.setupContinuationAction(request, callback, "INSPECT");

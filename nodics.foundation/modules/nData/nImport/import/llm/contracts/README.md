@@ -219,3 +219,17 @@ release and therefore needs existing generated revision/owner idempotency
 qualification, not a promise of record-level resume. CURRENT releases are
 skipped; RUNNING receipts cannot be taken over on a timeout. A rejected plan
 does not prove anything about earlier imports or constitute a migration.
+
+## Generated Update Dispatch
+
+An import header selecting generated `update` dispatches exactly one normalized
+record as `request.model`, resolving `$property` header selectors against that
+record and retaining tenant, access groups and owner validators. Reject empty or
+unresolved selectors and zero or multiple models before dispatch;
+never silently select the first record. `saveAll` retains `request.models`.
+Updates request returned models and unwrap the generated owner's
+`{ matchedCount, modifiedCount, models }` receipt. An unchanged matched row is
+valid; an unmatched or missing receipt is not successful import evidence.
+Partial repairs must not be converted into saves that require or rewrite
+credentials. Managed-counter schemas still require their existing `saveAll`
+revision contract. Later-layer dispatch overrides preserve these guarantees.

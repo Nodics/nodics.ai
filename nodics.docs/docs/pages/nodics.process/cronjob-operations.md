@@ -30,6 +30,15 @@ happens when it fails.
 
 ## Developer perspective
 
+For `jobDetail.processTrigger`, configured context supplies target-approved
+business inputs. Cron always supplies its own `source: 'cronjob'`, `cronJobCode`,
+`cronJobTenant`, `scheduledExpression` and `firedAt` after that context is copied.
+A configured or Axis-authored source label cannot override scheduler provenance.
+The stored definition is unchanged and the already verified runtime principal is
+forwarded to Process. Metadata alone grants no target authorization. For an AI
+knowledge refresh, configure its current source and policy fingerprint according
+to the Knowledge owner; do not put Copilot policy or another registry in Cron.
+
 Developers should implement scheduled work through Process and Cron contracts,
 not ad hoc startup timers. Project jobs must document configuration, service or
 pipeline ownership, idempotency, permissions, events, tests, and Axis

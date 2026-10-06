@@ -36,6 +36,11 @@ owns why that set is attached to a product.
 
 ## Non-Negotiable Boundaries
 
+Media approval follows Process access-rights checks. An authorized requester can
+also approve; do not introduce requester exclusion, admin-login special cases,
+or a separate Media approval implementation. Retain exact-version publication,
+native identity, tenant/enterprise scope and decision audit.
+
 - Do not let frontend clients provide raw filesystem paths, NAS paths, cloud bucket paths, or public URLs as authoritative storage locations.
 - Do not duplicate media storage under CMS, Product, Import, Documentation, Axis, or project modules.
 - Do not add a provider directly to a caller module. Add a provider implementation behind the `media` provider contract.

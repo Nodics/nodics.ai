@@ -18,7 +18,7 @@ module.exports = {
     hasPermission: function (context, permission) { const values = context && context.permissions || []; return values.includes('*') || values.includes(permission); },
     /** Produces a deterministic digest binding confirmation to the exact mutation payload. */
     planDigest: function (plan) {
-        const value = { id: plan.id, schema: plan.schema, records: plan.records, preview: plan.preview };
+        const value = { id: plan.id, schema: plan.schema, records: plan.records, relatedRecords: plan.relatedRecords || null, executionTarget: plan.executionTarget || null, preview: plan.preview };
         return crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
     },
     /** Recursively freezes policy inputs and decisions. @param {*} value Value to freeze. @returns {*} Frozen value. */
@@ -121,13 +121,13 @@ module.exports = {
     /** Creates a confirmation challenge. @param {Object} plan Prepared plan. @param {Object} context Actor context. @returns {Object} Challenge. */
     createConfirmation: function (plan, context) {
         if (!this.hasPermission(context, 'copilot.mutation.prepare')) throw new Error('COPILOT_MUTATION_PREPARE_FORBIDDEN');
-        return { planId: plan.id, planDigest: this.planDigest(plan), tenant: context.tenant, actor: context.actor, preview: plan.preview, expiresAt: Date.now() + 300000, confirmed: false };
+        return { contractVersion: 2, planId: plan.id, planDigest: this.planDigest(plan), tenant: context.tenant, enterprise: context.enterprise || null, actor: context.actor, preview: plan.preview, expiresAt: Date.now() + 300000, confirmed: false };
     },
     /** Validates execution confirmation. @param {Object} confirmation Challenge. @param {Object} context Actor context. @returns {boolean} True when executable. */
     authorizeExecution: function (confirmation, context, plan) {
         if (!confirmation || confirmation.confirmed !== true) throw new Error('COPILOT_MUTATION_CONFIRMATION_REQUIRED');
-        if (confirmation.expiresAt < Date.now()) throw new Error('COPILOT_MUTATION_CONFIRMATION_EXPIRED');
-        if (confirmation.tenant !== context.tenant || confirmation.actor !== context.actor) throw new Error('COPILOT_MUTATION_CONTEXT_MISMATCH');
+        if (confirmation.contractVersion !== 2 || !Number.isFinite(confirmation.expiresAt) || confirmation.expiresAt <= Date.now()) throw new Error('COPILOT_MUTATION_CONFIRMATION_EXPIRED');
+        if (confirmation.tenant !== context.tenant || confirmation.actor !== context.actor || confirmation.enterprise !== (context.enterprise || null)) throw new Error('COPILOT_MUTATION_CONTEXT_MISMATCH');
         if (!plan || confirmation.planId !== plan.id || confirmation.planDigest !== this.planDigest(plan)) throw new Error('COPILOT_MUTATION_PLAN_MISMATCH');
         if (!this.hasPermission(context, 'copilot.mutation.execute')) throw new Error('COPILOT_MUTATION_EXECUTE_FORBIDDEN');
         return true;

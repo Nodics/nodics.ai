@@ -167,7 +167,9 @@ module.exports = {
             query: { code: activationRequestCode }, options: { recursive: false }
         }).then(result => {
             let persisted = result.result && result.result[0];
-            let valid = persisted && persisted.approvalStatus === 'APPROVED' && persisted.status === 'APPROVED' &&
+            let valid = persisted && persisted.approvalStatus === 'APPROVED' && persisted.status === 'ACTIVATING' &&
+                Number.isSafeInteger(request.activationRevision) && persisted.revision === request.activationRevision &&
+                persisted.activatedBy === this.resolveRequestedBy(request) &&
                 persisted.configurationType === options.configurationType && persisted.configurationCode === options.configurationCode;
             if (!valid) return { approved: false, activationRequestCode: activationRequestCode };
             if (!this.resolveRequestedBy(request)) {

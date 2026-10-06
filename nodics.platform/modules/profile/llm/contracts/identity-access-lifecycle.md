@@ -300,6 +300,14 @@ headers remain a request and are still checked against the persisted assignment.
 This local repair does not apply to non-local environments and does not create a
 generic topology-based entitlement path.
 
+For the generated native-Local `apiAdmin` proof, credential reconciliation
+unions the permissions from those same isolated, effective deployment policies.
+This is a credential ceiling, not a merged runtime grant: each token still
+receives only its own matched assignment's modules and permissions. It must not
+copy authority-runtime permissions into sibling grants, accept caller headers as
+policy, revive revoked assignments, or expand another principal or non-Local
+credential. The mandatory-bootstrap regression covers these scope boundaries.
+
 Local bootstrap's approved module ceiling is the selected server's **indexed
 composed graph**, resolved by nConfig's isolated deployment projection through
 nConfig's normal loader in an isolated process, plus that server's explicit

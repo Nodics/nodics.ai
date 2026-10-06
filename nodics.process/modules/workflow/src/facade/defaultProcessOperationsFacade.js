@@ -19,6 +19,10 @@
  * @override Customer process overlays may add authorization, redaction, or domain enrichment before delegating to operation services.
  */
 module.exports = {
+  /** Delegates target-scoped inspection to the Process owner. @param {Object} request Verified request. @returns {Promise<Object>} History. */
+  inspectRemoteActions: function (request) {
+    return SERVICE.DefaultProcessRemoteActionInspectionService.history(request);
+  },
   /** Delegates one current remote action claim to its Process owner. */
   claimRemoteAction: function (request) {
     return SERVICE.DefaultProcessRemoteActionAdapterService.claim(request);
@@ -43,7 +47,10 @@ module.exports = {
   },
   /** Delegates published process instance start. */
   startInstance: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.startInstance(request);
+    return SERVICE.DefaultProcessInstanceCommandReceiptService.execute(
+      request,
+      "start",
+    );
   },
   /** Delegates fixed CMS publication approval startup. */
   startPublicationApproval: function (request) {
@@ -67,19 +74,28 @@ module.exports = {
   },
   /** Delegates runtime instance cancellation. */
   cancelInstance: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.cancelInstance(
+    return SERVICE.DefaultProcessInstanceCommandReceiptService.execute(
       request,
+      "cancel",
     );
   },
   /** Delegates governed failed-instance retry. */
   retryInstance: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.retryInstance(request);
+    return SERVICE.DefaultProcessInstanceCommandReceiptService.execute(
+      request,
+      "retry",
+    );
   },
   /** Delegates governed domain-owned compensation execution. */
   compensateInstance: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.compensateInstance(
+    return SERVICE.DefaultProcessInstanceCommandReceiptService.execute(
       request,
+      "compensate",
     );
+  },
+  /** Inspects an original instance command without replay. @param {Object} request Employee context. @returns {Promise<Object>} Native receipt. */
+  inspectInstanceCommand: function (request) {
+    return SERVICE.DefaultProcessInstanceCommandReceiptService.inspect(request);
   },
   /** Delegates recovery incident listing. */
   listIncidents: function (request) {
@@ -103,19 +119,35 @@ module.exports = {
   },
   /** Delegates human task claim. */
   claimTask: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.claimTask(request);
+    return SERVICE.DefaultProcessTaskCommandReceiptService.execute(
+      request,
+      "claim",
+    );
   },
   /** Delegates human task assignment. */
   assignTask: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.assignTask(request);
+    return SERVICE.DefaultProcessTaskCommandReceiptService.execute(
+      request,
+      "assign",
+    );
   },
   /** Delegates human task completion. */
   completeTask: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.completeTask(request);
+    return SERVICE.DefaultProcessTaskCommandReceiptService.execute(
+      request,
+      "complete",
+    );
   },
   /** Delegates human task cancellation. */
   cancelTask: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.cancelTask(request);
+    return SERVICE.DefaultProcessTaskCommandReceiptService.execute(
+      request,
+      "cancel",
+    );
+  },
+  /** Inspects a fixed original task command without repeating workflow effects. @param {Object} request Employee context. @returns {Promise<Object>} Scoped receipt. */
+  inspectTaskCommand: function (request) {
+    return SERVICE.DefaultProcessTaskCommandReceiptService.inspect(request);
   },
   /** Delegates Process-owned trigger metadata listing. */
   listTriggers: function (request) {
@@ -123,23 +155,35 @@ module.exports = {
   },
   /** Delegates Process-owned trigger metadata creation. */
   createTrigger: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.createTrigger(request);
+    return SERVICE.DefaultProcessTriggerCommandReceiptService.execute(
+      request,
+      "create",
+    );
   },
   /** Delegates Process-owned trigger metadata update. */
   updateTrigger: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.updateTrigger(request);
+    return SERVICE.DefaultProcessTriggerCommandReceiptService.execute(
+      request,
+      "update",
+    );
   },
   /** Delegates Process-owned trigger metadata archival. */
   archiveTrigger: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.archiveTrigger(
+    return SERVICE.DefaultProcessTriggerCommandReceiptService.execute(
       request,
+      "archive",
     );
   },
   /** Delegates active trigger execution into Process-owned runtime start. */
   executeTrigger: function (request) {
-    return SERVICE.DefaultProcessRuntimeLifecycleService.executeTrigger(
+    return SERVICE.DefaultProcessTriggerCommandReceiptService.execute(
       request,
+      "execute",
     );
+  },
+  /** Inspects an original trigger command without replay. @param {Object} request Employee context. @returns {Promise<Object>} Native receipt. */
+  inspectTriggerCommand: function (request) {
+    return SERVICE.DefaultProcessTriggerCommandReceiptService.inspect(request);
   },
   /** Delegates audit event listing. */
   listAuditEvents: function (request) {

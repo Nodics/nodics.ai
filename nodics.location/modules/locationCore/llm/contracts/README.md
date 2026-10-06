@@ -36,6 +36,13 @@ through normal layered services. Test with
 
 ## Route contract
 
+Create/update/read/search permissions are recognized by the shared nAuth
+catalogue used by Profile group validation. Listing a permission does not grant
+it to an employee or runtime, or activate `locationInternal` exposure. Assign
+write permissions only through authorized Profile governance. The catalogue
+regression verifies all four declared route permissions and that create/update
+are absent from default migration group grants.
+
 Location Core exposes secured internal routes:
 
 - `POST /locations` -> `createLocation`

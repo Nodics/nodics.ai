@@ -55,7 +55,9 @@ function fixture({ denyApproval = false, onlineImportAllowed = false, badNoOp = 
       if (route.endsWith('/complete')) {
         const { decision } = JSON.parse(request.body);
         assert.equal(decision.emergencyOverride, undefined);
-        assert.equal(decision.action, 'APPROVE');
+        assert.deepEqual(Object.keys(decision).sort(), ['approved', 'reason']);
+        assert.equal(decision.approved, true);
+        assert.equal(typeof decision.reason, 'string');
         if (denyApproval) return Response.json({ message: 'approval denied' }, { status: 403 });
         approved = true;
         return Response.json({ instance: { status: 'COMPLETED' } });

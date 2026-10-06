@@ -2,6 +2,17 @@
 
 This provider belongs to Commerce Payment. It may call Loyalty reservation, capture, release, and reverse APIs, but it must not store or mutate Loyalty wallet state directly.
 
+## Customer ownership proof
+
+Reward authorization retains the original customer bearer from Checkout's trusted
+HTTP context through the reward payment method and Payment execution adapter.
+The Profile self-read uses that bearer; the Loyalty wallet read retains its
+existing service-authorized transport. Missing bearer fails before either read; a Profile
+identity mismatch or foreign wallet fails before reservation. Payment transactions,
+checkpoint results and public responses must never retain the bearer. The field
+is not forwarded to non-reward payment adapters. Reservation/capture authority
+continues to use the existing configured Loyalty transport and grants.
+
 ## Canonical reward checkout acceptance
 
 The protected `acceptance:loyalty-reward-checkout` command owns reusable conformance

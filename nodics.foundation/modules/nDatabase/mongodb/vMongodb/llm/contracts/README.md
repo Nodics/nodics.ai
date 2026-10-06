@@ -113,3 +113,12 @@ Run `test/currentVersionReadContract.test.js`. Setting `NODICS_MONGODB_TEST_URI`
 also runs the isolated provider test, which creates and removes only its uniquely
 named temporary database. Without that explicit URI the live test is skipped;
 do not report an isolated pipeline fixture as live MongoDB evidence.
+## Current-Read Provider Privacy
+
+`getCurrentVersionItems` retains the base model's `guardProtectedRead` before
+aggregation and `projectReadResult` after validating its count/record envelope.
+Both hooks resolve through the effective model and schema privacy owner. Pass
+the original request and actual prepared receiver; do not create synthetic
+admission. Private journal modes reject rather than ignoring their durability
+requirements. Current-version selection, bounded paging and schema/property
+privacy are distinct requirements; a valid pipeline is not authorization.

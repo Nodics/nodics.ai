@@ -35,8 +35,9 @@ const schemas = schemaFiles.flatMap(function (file) {
     Object.keys(contributed).forEach(function (namespace) { namespaces[namespace] = contributed[namespace]; });
     return Object.keys(contributed).flatMap(function (namespace) {
         return Object.keys(contributed[namespace]).map(function (schemaCode) {
+            const schema = contributed[namespace][schemaCode];
             return { moduleName: namespace, schemaName: schemaCode, schemaCode: schemaCode,
-                schema: contributed[namespace][schemaCode], exposed: schemaCode !== 'wasteRewardAssessment' };
+                schema: schema, exposed: schema.router?.enabled === true };
         });
     });
 });
@@ -51,9 +52,11 @@ schemas.forEach(function (entry) {
         assert.deepStrictEqual(entry.schema.router, { enabled: false }, 'immutable reward assessments remain service-only');
         assert.deepStrictEqual(entry.schema.backoffice, { mutationMode: 'READ_ONLY', operations: ['search', 'read'] });
         assert.strictEqual(require('../modules/wasteReward/package.json').nodics.runtime.router, false);
-    } else {
+    } else if (entry.exposed) {
         assert.strictEqual(entry.schema.router.enabled, true, entry.schemaCode + ' opts into governed schema operations');
         assert.deepStrictEqual(entry.schema.router.groups, { schemaOperations: true }, entry.schemaCode + ' must not enable broad CRUD route groups');
+    } else {
+        assert.strictEqual(entry.schema.router?.enabled, undefined, entry.schemaCode + ' remains service-only without route configuration');
     }
 });
 

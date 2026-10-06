@@ -132,6 +132,9 @@ global.NODICS = {
 };
 
 global.SERVICE = {
+    DefaultIdentityGovernanceService: {
+        getSystemAuthData: () => ({ isSystem: true, userGroups: ['system'], permissions: [] })
+    },
     DefaultLoggerService: {
         createLogger: function () {
             return logger;
@@ -160,7 +163,7 @@ global.SERVICE.DefaultCronJobService = cronJobService;
 
 cronJobService.update = function (request) {
     updateCalls.push(request);
-    return Promise.resolve({ result: request.model });
+    return Promise.resolve({ code: 'SUC_SYS_00000', result: { acknowledged: true, matchedCount: 1 } });
 };
 
 const tenantJobs = {
@@ -212,6 +215,35 @@ cronJobService.get = function (request) {
     assert.deepStrictEqual(updateCalls.map(call => call.query.code), ['ownedJob', 'failoverJob'], 'container should persist CREATED state for instantiated jobs');
     assert.strictEqual(fakeJobs[0].authToken, 'token-tenantA', 'container should inject tenant internal auth token into runtime job');
     assert.strictEqual(fakeJobs[1].authToken, 'token-tenantB', 'container should inject failover tenant internal auth token into runtime job');
+    assert(updateCalls.every(call => call.authData.isSystem === true), 'runtime bookkeeping uses canonical internal identity');
+    const runtime = global.SERVICE.DefaultCronJobRuntimeService;
+    const writes = updateCalls.length;
+    await assert.rejects(runtime.persistRuntimeState({ getDefinition: () => tenantJobs.tenantA[0] }, { state: 'ACTIVE' }));
+    await assert.rejects(runtime.persistRuntimeState(fakeJobs[0], { active: true }));
+    await assert.rejects(runtime.persistRuntimeState(fakeJobs[0], { jobDetail: { external: '/unsafe' } }));
+    await assert.rejects(runtime.persistRuntimeState(fakeJobs[0], { '$set': { state: 'ACTIVE' } }));
+    const originalTenant = fakeJobs[0].definition.tenant;
+    fakeJobs[0].definition.tenant = 'tenantB';
+    await assert.rejects(runtime.persistRuntimeState(fakeJobs[0], { state: 'ACTIVE' }));
+    fakeJobs[0].definition.tenant = originalTenant;
+    assert.strictEqual(updateCalls.length, writes, 'forged wrappers, tenant changes and definition mutations never reach persistence');
+    const statePatch = { state: 'STOPED', log: ['completed'] };
+    await runtime.persistRuntimeState(fakeJobs[0], statePatch);
+    statePatch.log.push('changed');
+    assert.deepStrictEqual(updateCalls.at(-1).model.log, ['completed'], 'caller cannot mutate a submitted state update');
+    assert.deepStrictEqual(updateCalls.at(-1).query, { code: 'ownedJob', runOnNode: 'nodeA' });
+    const originalUpdate = cronJobService.update;
+    for (const acknowledgement of [
+        { code: 'SUC_SYS_00000', result: { matchedCount: 0 } },
+        { code: 'SUC_SYS_00000', result: { matchedCount: 2 } },
+        { code: 'SUC_SYS_00000', result: { matchedCount: 1, acknowledged: false } },
+        { code: 'ERR_SYS_00000', result: { matchedCount: 1 } },
+        { code: 'SUC_SYS_00000', result: { matchedCount: 1, error: true } }
+    ]) {
+        cronJobService.update = async () => acknowledgement;
+        await assert.rejects(runtime.persistRuntimeState(fakeJobs[0], { state: 'STOPED' }));
+    }
+    cronJobService.update = originalUpdate;
 
     assert.strictEqual(cronJobService.getCronJobContainer(), cronJobService.getCronJobRuntimeService(),
         'legacy container accessor should resolve the runtime service');

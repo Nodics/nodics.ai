@@ -19,19 +19,54 @@
 const assert = require('assert');
 global.UTILS = { isArray: Array.isArray };
 global.CLASSES = { NodicsError: class NodicsError extends Error {} };
-const service = require('../src/service/procs/save/defaultModelSaveInitializerService');
+global.SERVICE = {};
+const service = {
+    ...require('../../../nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService'),
+    ...require('../src/service/procs/save/defaultModelSaveInitializerService'),
+};
 service.LOG = { debug: function () {}, error: function () {} };
 
 function save(versioned) {
-    let saved = { code: versioned ? 'versioned' : 'standard' }, response = {};
-    return new Promise((resolve, reject) => service.saveModel({ schemaModel: {
-        schemaName: saved.code, versioned: versioned,
-        saveVersionedItems: async function () { return saved; }, saveItems: async function () { return saved; }
-    } }, response, {
-        nextSuccess: function () { try { assert.strictEqual(response.success.result, saved); assert.strictEqual(response.model, undefined); resolve(true); } catch (error) { reject(error); } },
-        error: function (request, output, error) { reject(error); }
-    }));
+    let saved = { code: versioned ? 'versioned' : 'standard' },
+        response = {};
+    return new Promise((resolve, reject) =>
+        service.saveModel(
+            {
+                schemaModel: {
+                    schemaName: saved.code,
+                    versioned: versioned,
+                    saveVersionedItems: async function () {
+                        return saved;
+                    },
+                    saveItems: async function () {
+                        return saved;
+                    },
+                },
+            },
+            response,
+            {
+                nextSuccess: function () {
+                    try {
+                        assert.strictEqual(response.success.result, saved);
+                        assert.strictEqual(response.model, undefined);
+                        resolve(true);
+                    } catch (error) {
+                        reject(error);
+                    }
+                },
+                error: function (request, output, error) {
+                    reject(error);
+                },
+            },
+        ),
+    );
 }
 
-(async function () { await save(false); await save(true); console.log('vService save response contract validated'); })()
-    .catch(error => { console.error(error); process.exit(1); });
+(async function () {
+    await save(false);
+    await save(true);
+    console.log('vService save response contract validated');
+})().catch((error) => {
+    console.error(error);
+    process.exit(1);
+});

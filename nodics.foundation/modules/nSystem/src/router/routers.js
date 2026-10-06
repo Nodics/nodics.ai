@@ -456,6 +456,33 @@ module.exports = {
                         activationCode: 'Code of configurationActivationLog entry to rollback'
                     }
                 }
+            },
+            activateDueRuntimeConfigurationRequestsPost: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'runtime.config.request.activate',
+                apiExposure: 'runtimeConfiguration',
+                key: '/config/runtime/request/activate-due',
+                method: 'POST',
+                controller: 'DefaultConfigurationController',
+                operation: 'activateDueRuntimeConfigurationRequests',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/system/config/runtime/request/activate-due',
+                    body: {}
+                }
+            },
+            reconcileRuntimePropertyActivationPost: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'runtime.config.request.activate',
+                apiExposure: 'runtimeConfiguration',
+                key: '/config/runtime/request/reconcile-property',
+                method: 'POST',
+                controller: 'DefaultConfigurationController',
+                operation: 'reconcileRuntimePropertyActivation'
             }
         },
 

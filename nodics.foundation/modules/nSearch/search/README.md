@@ -67,6 +67,10 @@ while retaining the logical definition key and `typeName`. Generated service
 lookup and model customization use the logical identity; provider operations and
 engine bookkeeping use the physical index. See the [identity contract](llm/contracts/README.md#logical-and-physical-index-identity).
 
+Historical `retirement` bindings remain registered for original-result inspection
+but do not create indexes, update mappings or replace active schema routing during
+startup. See [retirement bindings](llm/contracts/README.md#historical-retirement-bindings).
+
 ## Engine Adapter Checklist
 
 When adding a new search engine:

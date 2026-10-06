@@ -24,10 +24,16 @@
  * @property {Object} request.schemaModel.versioned Enables versioned persistence.
  */
 module.exports = {
+    /** Selects versioned persistence after the base private-write checks. @param {Object} request Prepared generated update. @returns {string} Provider method. */
+    resolveUpdateMethod: function (request) {
+        return request.schemaModel.versioned
+            ? 'updateVersionedItems'
+            : 'updateItems';
+    },
     /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     init: function (options) {
         return new Promise((resolve, reject) => {
@@ -36,9 +42,9 @@ module.exports = {
     },
 
     /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
@@ -57,51 +63,35 @@ module.exports = {
     executeQuery: function (request, response, process) {
         this.LOG.debug('Executing remove query');
         try {
-            if (request.schemaModel.versioned) {
-                request.schemaModel.updateVersionedItems(request).then(result => {
+            const update = this.persistUpdates(request);
+            update
+                .then((result) => {
                     response.success = {
                         success: true,
                         code: 'SUC_UPD_00000',
-                        result: result
+                        result: result,
                     };
                     process.nextSuccess(request, response);
-                }).catch(error => {
+                })
+                .catch((error) => {
                     this.LOG.error(error);
-                    if (error && error.errInfo) this.LOG.error('Versioned model update validation details', error.errInfo);
+                    if (error && error.errInfo)
+                        this.LOG.error(
+                            'Model update validation details',
+                            error.errInfo,
+                        );
                     process.error(request, response, {
                         success: false,
                         code: 'ERR_UPD_00000',
-                        error: error
+                        error: error,
                     });
                 });
-            } else {
-                const concurrency = typeof SERVICE !== 'undefined' && SERVICE.DefaultModelConcurrencyService;
-                const update = concurrency && concurrency.getField(request.schemaModel.rawSchema)
-                    ? concurrency.execute(request, 'update') : request.schemaModel.updateItems(request);
-                update.then(result => {
-                    response.success = {
-                        success: true,
-                        code: 'SUC_UPD_00000',
-                        result: result
-                    };
-                    process.nextSuccess(request, response);
-                }).catch(error => {
-                    this.LOG.error(error);
-                    if (error && error.errInfo) this.LOG.error('Model update validation details', error.errInfo);
-                    process.error(request, response, {
-                        success: false,
-                        code: 'ERR_UPD_00000',
-                        error: error
-                    });
-                });
-            }
         } catch (error) {
             process.error(request, response, {
                 success: false,
                 code: 'ERR_UPD_00000',
-                error: error
+                error: error,
             });
         }
     },
-
 };

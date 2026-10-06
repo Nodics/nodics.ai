@@ -370,6 +370,12 @@ test('activated consumer summaries retain store scope and variant lookup reads o
     const enrichment = require('../src/service/defaultProductSearchEnrichmentService');
     SERVICE.DefaultProductSearchEnrichmentService = enrichment;
     const calls = [];
+    let sellingStore = { tenant: f.request.tenant, code: f.request.storeCode,
+        enterpriseRef: { code: 'enterprise-a' }, status: 'ACTIVE', defaultCurrency: 'POINTS' };
+    SERVICE.DefaultStoreService = { get: async input => {
+        assert.deepEqual(input.query, { tenant: f.request.tenant, code: f.request.storeCode });
+        return { result: [sellingStore] };
+    } };
     SERVICE.DefaultCustomerPriceSummaryService = { summarize: async input => { calls.push(input); return { p: { unitAmount: '10', currency: 'USD' } }; } };
     SERVICE.DefaultCustomerAvailabilitySummaryService = { summarize: async input => { calls.push(input); return { p: { available: true, status: 'IN_STOCK' } }; } };
     const row = { code: 'projection-p', status: 'STALE', tenant: f.request.tenant, storeCode: f.request.storeCode, locale: f.request.locale,
@@ -389,6 +395,7 @@ test('activated consumer summaries retain store scope and variant lookup reads o
     await enrichment.consumerSummaries(request, [row, { ...row, code: 'projection-p2', productCode: 'p2' }, row]);
     assert.equal(calls.length, 2, 'One summary call per owner, not per row');
     assert.deepEqual(calls[0].productCodes, ['p', 'p2']);
+    assert.equal(calls[0].currency, 'POINTS', 'Selling Store currency overrides the global USD summary default');
     assert.deepEqual(calls[1].products, [{ productCode: 'p', skus: ['trusted'] }, { productCode: 'p2', skus: ['trusted'] }]);
     assert.equal(calls[0].authData.tenant, request.tenant);
     assert.deepEqual(calls[0].authData.groups, ['serviceAccountUserGroup']);
@@ -399,6 +406,20 @@ test('activated consumer summaries retain store scope and variant lookup reads o
     await enrichment.consumerSummaries(publicRequest, [{ ...row, enterpriseCode: undefined }]);
     assert(calls.every(call => call.enterpriseCode === 'enterprise-a' && call.authData.enterpriseCode === 'enterprise-a'));
     assert.deepEqual(publicRequest, publicBefore);
+    calls.length = 0;
+    await enrichment.consumerSummaries({ ...publicRequest, currency: 'USD', query: { currency: 'USD' } }, [row]);
+    assert.equal(calls[0].currency, 'POINTS', 'Caller currency must not replace Store authority');
+    sellingStore = { ...sellingStore, defaultCurrency: 'AED' };
+    calls.length = 0;
+    await enrichment.consumerSummaries(publicRequest, [row]);
+    assert.equal(calls[0].currency, 'AED', 'Other Store currencies remain independent');
+    for (const invalid of [{ enterpriseRef: { code: 'foreign' } }, { tenant: 'foreign' },
+        { code: 'foreign' }, { status: 'INACTIVE' }, { active: false }, { defaultCurrency: '' }]) {
+        const valid = sellingStore;
+        sellingStore = { ...valid, ...invalid };
+        await assert.rejects(enrichment.consumerSummaries(publicRequest, [row]), /selling currency/);
+        sellingStore = valid;
+    }
     await assert.rejects(enrichment.consumerSummaries({ ...request, authData: { enterpriseCode: 'foreign' } }, [row]), /enterprise scope/);
     await assert.rejects(enrichment.consumerSummaries(publicRequest, [row, { ...row, enterpriseCode: 'foreign' }]), /scope mismatch/);
     await assert.rejects(enrichment.consumerSummaries(publicRequest, [{ ...row, storeCode: 'foreign' }]), /scope mismatch/);

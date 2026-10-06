@@ -37,6 +37,7 @@ let redemptions;
 let budgetLedger;
 
 function installGlobals() {
+    global.CONFIG = { get: () => ({}) };
     promotionRequests = [];
     promotions = [
         {
@@ -142,7 +143,10 @@ function installGlobals() {
                         (!request.query.status ||
                             item.status === request.query.status),
                 );
-                if (index >= 0) coupons[index] = request.model;
+                if (index >= 0) {
+                    coupons[index] = { ...coupons[index], ...(request.model.$set || request.model) };
+                    for (const key of Object.keys(request.model.$unset || {})) delete coupons[index][key];
+                }
                 return {
                     code: 'SUC_UPDATE',
                     result: {

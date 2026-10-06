@@ -137,6 +137,13 @@ See [Business offering setup review](backoffice-governance-contracts.md#business
 
 ## Operational readiness aggregate
 
+Assistant knowledge readiness may be asynchronous. Await the owner with the
+original authenticated request; preserve its evidence/coverage window, inspection
+and cleanup counters, and unknown job-failure count. Do not convert a Promise,
+missing response or rejected owner into ready state. Generation-mode Knowledge
+owns current policy and physical count checks; BackOffice adds no index probe or
+repair authority. See Knowledge's `llm/examples/durable-readiness.md`.
+
 See [Operational readiness aggregate](backoffice-governance-contracts.md#operational-readiness-aggregate).
 
 ## Guided readiness repair provider contract

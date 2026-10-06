@@ -1,5 +1,9 @@
 # Digital Core Contracts
 
+Digital sale confirmation forwards Checkout's persisted-cart Store context to
+Promotion so published campaign validation cannot fall back to mutable rules.
+Digital Core does not select policy roots or reconstruct campaign records.
+
 ## Staged Persistence And Purchase Rights Increment
 
 Entitlement/delivery/reversal persistence requires existing generated owners,

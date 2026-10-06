@@ -70,6 +70,7 @@ module.exports = {
             const response = await adapter.execute(Object.freeze({
                 tenant: request.tenant,
                 authData: request.authData,
+                authorization: request.methodCode === 'LOYALTY_REWARD' ? request.authorization : undefined,
                 ownerId: request.ownerId,
                 orderCode: request.orderCode,
                 cartCode: request.cartCode,

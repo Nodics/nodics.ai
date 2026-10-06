@@ -1,5 +1,30 @@
 # database Agent Contract
 
+Private `internalPersistence: 'DURABLE_JOURNAL'` requests require qualified
+provider capability, insert-only saves or exact conditional updates, and strict
+acknowledgements. Preserve normal generated access/validation; reject transactions,
+managed/versioned models and broad updates in this protocol. Do not forward this
+selector or driver options from HTTP input. See `llm/examples/insert-only-save.md`.
+
+Private create-once owners must use explicit generated `options.insertOnly: true`;
+omitting a query still permits primary-key upsert. Follow
+[insert-only saves](llm/examples/insert-only-save.md). Preserve access/validators,
+exact query constraints, unique-index prerequisites and the atomic adapter create
+primitive. Do not broaden update/remove behavior or managed/versioned semantics.
+
+Opt-in generated command receipts may wrap existing single-record create, update,
+and delete only after canonical controller mapping. Preserve the native operation,
+current descriptor/write/authoring checks, exact one-row update/delete evidence,
+private owner journal, and inspection without replay. Do not turn receipt support
+into generic idempotency, a second dispatcher, or broad-query mutation authority.
+
+Shared save/update persistence admission belongs in `persistModel` and
+`persistUpdates`. Runtime variants choose provider methods through
+`resolveSaveMethod`/`resolveUpdateMethod`; they must not bypass insert-only,
+durable-journal or private credential-retirement admission. Read selectors must
+call the shared `assertReadSafety` before selecting a provider. Qualify actual
+base-plus-vService startup composition as well as the base tests.
+
 For installed ordinary-to-versioned changes, read the
 [operator contract](llm/contracts/installed-version-migration.md) and
 [CLI example](llm/examples/installed-version-migration.md). Keep source flags

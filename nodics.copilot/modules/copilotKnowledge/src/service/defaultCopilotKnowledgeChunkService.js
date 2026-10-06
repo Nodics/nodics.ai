@@ -44,6 +44,8 @@ module.exports = {
                 chunks.push({
                     code: source.code + '|' + this.digest(file.relativePath).slice(0, 16) + '|' + String(chunks.length + 1),
                     sourceCode: source.code, sourceType: source.sourceType, classification: source.classification,
+                    sourcePolicyDigest: source.sourcePolicyDigest,
+                    ...(source.runtimeBinding ? { runtimeBinding: source.runtimeBinding } : {}),
                     repository: source.repository, project: source.project, module: source.module, owner: source.owner,
                     version: source.version, relativePath: file.relativePath, title: this.title(content, file.relativePath),
                     content: text, contentDigest: digest, sequence: chunks.length + 1,

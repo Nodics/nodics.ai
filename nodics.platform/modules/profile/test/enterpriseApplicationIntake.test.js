@@ -1001,7 +1001,7 @@ async function reviewFixture() {
     },
     update: async ({ query, model }) => {
       const row = f.instances.get(query.code);
-      if (!row || !match(row, query)) return { result: { modifiedCount: 0 } };
+      if (!row || !match(row, query)) return { code: "SUC_DBS_00000", result: { modifiedCount: 0 } };
       for (const [key, value] of Object.entries(model.$set)) {
         const parts = key.split(".");
         const last = parts.pop();
@@ -1009,7 +1009,7 @@ async function reviewFixture() {
         for (const part of parts) object = object[part];
         object[last] = value;
       }
-      return { result: { modifiedCount: 1 } };
+      return { code: "SUC_DBS_00000", result: { modifiedCount: 1 } };
     },
   };
   const version = {

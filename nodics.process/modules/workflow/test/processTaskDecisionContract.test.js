@@ -44,6 +44,9 @@ test("real Media contribution published through the definition owner projects ex
   SERVICE.DefaultProcessGraphValidationService = {
     assertValidGraph: () => ({ valid: true }),
   };
+  SERVICE.DefaultModelsUpdateInitializerService = {
+    getAffectedCount: (response) => response.result.modifiedCount,
+  };
   let published;
   await publisher.publishDraft.call(
     {
@@ -54,10 +57,19 @@ test("real Media contribution published through the definition owner projects ex
       versionService: () => ({
         save: async (input) => {
           published = input.model;
+          return { code: "SUC_DBS_00000", result: input.model };
         },
       }),
       definitionService: () => ({
-        update: async () => ({ result: { modifiedCount: 1 } }),
+        update: async (_input) => {
+          Object.assign(definition, {
+            status: "PUBLISHED",
+            currentVersion: 1,
+            validation: { valid: true },
+          });
+          return { code: "SUC_DBS_00000", result: { modifiedCount: 1 } };
+        },
+        get: async () => ({ code: "SUC_DBS_00000", result: [definition] }),
       }),
     },
     { definitionCode: definition.code },
@@ -92,7 +104,7 @@ test("real Media contribution published through the definition owner projects ex
   );
 });
 
-test("current reviewer projection rejects the requester and uses actual completion actor checks", async () => {
+test("requester eligibility follows the same permissions as completion without a distinct reviewer requirement", async () => {
   const f = fixture();
   f.instance.context = {
     enterpriseCode: "enterprise-a",
@@ -113,15 +125,20 @@ test("current reviewer projection rejects the requester and uses actual completi
   };
   f.task.reviewerEligibility = { eligible: true };
   let [result] = await f.owner.projectTaskDecisions(f.request, [f.task]);
-  assert.equal(result.reviewerEligibility.eligible, false);
+  assert.equal(result.reviewerEligibility.eligible, true);
   assert.equal(
     result.reviewerEligibility.reasonCode,
-    "DIFFERENT_REVIEWER_REQUIRED",
+    "ELIGIBLE",
   );
-  assert.throws(
+  assert.doesNotThrow(
     () => f.owner.assertTaskActor(f.request, f.instance, f.version.policy),
-    { code: "ERR_PROCESS_00029" },
   );
+  granted = false;
+  [result] = await f.owner.projectTaskDecisions(f.request, [f.task]);
+  assert.equal(result.reviewerEligibility.eligible, false);
+  assert.equal(result.reviewerEligibility.reasonCode, "REVIEWER_NOT_AUTHORISED");
+  assert.throws(() => f.owner.assertTaskActor(f.request, f.instance, f.version.policy), { code: "ERR_PROCESS_00029" });
+  granted = true;
   f.request.authData.loginId = "checker@example.test";
   [result] = await f.owner.projectTaskDecisions(f.request, [f.task]);
   assert.equal(result.reviewerEligibility.eligible, true);

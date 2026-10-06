@@ -1,5 +1,47 @@
 # Enterprise Merchant Redemption
 
+## Runtime Contract Corrections
+
+Merchant workspace uses the module-unique logical router name `merchantWorkspace`;
+its URL and controller operation remain unchanged. nRouter runtime identities are
+module-scoped, so reusing notification's `workspace` key incorrectly substitutes
+notification admission for merchant admission. Keep route keys unique across groups.
+
+Issuer resolution uses Profile's existing bounded service `/references/read` with
+`type: enterprise` and one code. The runtime credential needs
+`profile.enterprise.reference.read`; employee `profile.scope.read` and merchant
+redemption permission remain independently required. Profile filters active issuer
+references; zero or multiple returned identities are unavailable. Do not restore
+generic identity CRUD or manufacture schema user groups on runtime tokens.
+
+Receipt verification pins original `deliveredAt`, correlation, command, buyer,
+issuer and fulfillment fields. Generic persistence owns `created` and `updated`;
+those storage timestamps are not required to equal the business confirmation time.
+Exact receipt evidence and original-command checks remain mandatory.
+
+See Copilot Workbench's [native acceptance guide](../../../../../../../nodics.copilot/modules/copilotWorkbench/llm/examples/secure-coupon-fulfillment.md)
+for separate Platform/Commerce persistence and response-loss tests. These tests
+qualify synthetic native merchant-screen fulfillment, not payment or external POS.
+
+## Read-Only Original Receipt Inspection
+
+Employee `POST /merchant/redemptions/:code/receipt/query` uses access-token
+authentication, `commerce.coupon.pos.redeem`, sensitive-request logging and no-store
+responses. Supply the original `Idempotency-Key`, `merchantReceiptReference` and
+optional `storeCode`. It loads current Profile scope, issuer/outlet and the exact
+entitlement marker. Replacing any original coordinate fails closed.
+
+The V1 response is `UNCONFIRMED` unless the entitlement is REDEEMED and the original
+receipt passes the same generated-owner/readback checks used by fulfillment.
+Completion includes only entitlement, original command/receipt, issuer/mode and
+outlet coordinates. Staff and entitlement/outlet revisions are checked again after
+the receipt read. Customer identity, token and validation proof are not returned.
+No provider, claim, redeem or mutation operation is called. Missing/failed evidence
+never grants retry. This lets a caller reconcile its own uncertain action without
+duplicating Commerce recovery authority. Current scope remains required even when
+the historical validation proof expired. See Copilot Workbench's secure coupon
+guide for its separately authorized action CAS and user workflow.
+
 ## Qualified Outlet Increment
 
 `digitalCore.merchantRedemption.storeScope` defaults disabled/unqualified. Disabled

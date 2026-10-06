@@ -45,6 +45,7 @@ module.exports = {
         let transaction = capabilities.transaction || {};
         return {
             multiRecordAtomic: transaction.multiRecordAtomic === true,
+            journaledCommit: transaction.multiRecordAtomic === true,
             contextPropagation: true,
             contractVersion: 0,
             reason: transaction.reason
@@ -112,7 +113,7 @@ module.exports = {
                 result = await work({ session: session });
             }, {
                 readConcern: { level: 'snapshot' },
-                writeConcern: { w: 'majority' },
+                writeConcern: { w: 'majority', j: true },
                 maxCommitTimeMS: Number(options.maximumCommitTimeMs)
             });
             return result;

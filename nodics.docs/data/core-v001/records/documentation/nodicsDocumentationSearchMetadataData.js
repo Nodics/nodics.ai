@@ -2139,6 +2139,727 @@ module.exports = {
     "active": true
   },
   "record52": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotordernotificationoperations",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotOrderNotificationOperations",
+    "title": "Order Notification Operations in Copilot",
+    "summary": "Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay.",
+    "searchText": "Order Notification Operations in Copilot Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay. copilot order notification delivery purchased refunded retry receipt",
+    "keywords": [
+      "copilot",
+      "order",
+      "notification",
+      "delivery",
+      "purchased",
+      "refunded",
+      "retry",
+      "receipt"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record53": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotgovernedschemaactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotGovernedSchemaActions",
+    "title": "Governed Selected-Schema Actions in Copilot",
+    "summary": "Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts.",
+    "searchText": "Governed Selected-Schema Actions in Copilot Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts. copilot schema record create update delete collection receipt",
+    "keywords": [
+      "copilot",
+      "schema",
+      "record",
+      "create",
+      "update",
+      "delete",
+      "collection",
+      "receipt"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record54": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotprocesslifecycleactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotProcessLifecycleActions",
+    "title": "Process Definition and Instance Actions in Copilot",
+    "summary": "Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts.",
+    "searchText": "Process Definition and Instance Actions in Copilot Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts. copilot process definition instance publish retry compensate receipt",
+    "keywords": [
+      "copilot",
+      "process",
+      "definition",
+      "instance",
+      "publish",
+      "retry",
+      "compensate",
+      "receipt"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record55": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotprocesstriggeractions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotProcessTriggerActions",
+    "title": "Process Trigger Actions in Copilot",
+    "summary": "Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery.",
+    "searchText": "Process Trigger Actions in Copilot Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery. copilot process trigger workflow archive execute receipt",
+    "keywords": [
+      "copilot",
+      "process",
+      "trigger",
+      "workflow",
+      "archive",
+      "execute",
+      "receipt"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record56": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotprocesstaskactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotProcessTaskActions",
+    "title": "Process Task Actions in Copilot",
+    "summary": "Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection.",
+    "searchText": "Process Task Actions in Copilot Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection. copilot process tasks claim assign complete cancel receipt",
+    "keywords": [
+      "copilot",
+      "process",
+      "tasks",
+      "claim",
+      "assign",
+      "complete",
+      "cancel",
+      "receipt"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record57": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotimportinspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotImportInspection",
+    "title": "Data-release Inspection in Copilot",
+    "summary": "Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media.",
+    "searchText": "Data-release Inspection in Copilot Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media. copilot import data release catalogue preflight validation",
+    "keywords": [
+      "copilot",
+      "import",
+      "data release",
+      "catalogue",
+      "preflight",
+      "validation"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record58": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotprocessinspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotProcessInspection",
+    "title": "Process Inspection in Copilot",
+    "summary": "Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions.",
+    "searchText": "Process Inspection in Copilot Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions. copilot process workflow inspection tasks incidents",
+    "keywords": [
+      "copilot",
+      "process",
+      "workflow",
+      "inspection",
+      "tasks",
+      "incidents"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record59": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotrulesinspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotRulesInspection",
+    "title": "Rules Inspection in Copilot",
+    "summary": "Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads.",
+    "searchText": "Rules Inspection in Copilot Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads. copilot rules inspection audit versions score-band",
+    "keywords": [
+      "copilot",
+      "rules",
+      "inspection",
+      "audit",
+      "versions",
+      "score-band"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record60": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotsecurecouponfulfillment",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotSecureCouponFulfillment",
+    "title": "Secure Coupon Fulfillment",
+    "summary": "Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay.",
+    "searchText": "Secure Coupon Fulfillment Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay. copilot coupon merchant fulfillment redemption receipt",
+    "keywords": [
+      "copilot",
+      "coupon",
+      "merchant",
+      "fulfillment",
+      "redemption",
+      "receipt"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record61": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotstandalonebusinessactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotStandaloneBusinessActions",
+    "title": "Existing Enterprise Invitations and Product Prices",
+    "summary": "Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners.",
+    "searchText": "Existing Enterprise Invitations and Product Prices Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners. copilot invitations prices review ollama",
+    "keywords": [
+      "copilot",
+      "invitations",
+      "prices",
+      "review",
+      "ollama"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record62": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotcollectioninspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotCollectionInspection",
+    "title": "Collection Inspection In Conversation",
+    "summary": "Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads.",
+    "searchText": "Collection Inspection In Conversation Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads. copilot schema capabilities impact collections",
+    "keywords": [
+      "copilot",
+      "schema",
+      "capabilities",
+      "impact",
+      "collections"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record63": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotoriginalbusinessresults",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotOriginalBusinessResults",
+    "title": "Original Business Results and Safe Continuation",
+    "summary": "Inspect native original command receipts and approve only never-started rows after uncertain business execution.",
+    "searchText": "Original Business Results and Safe Continuation Inspect native original command receipts and approve only never-started rows after uncertain business execution. copilot receipts recovery continuation",
+    "keywords": [
+      "copilot",
+      "receipts",
+      "recovery",
+      "continuation"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record64": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotrecordedmanualrefresh",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotRecordedManualRefresh",
+    "title": "Recorded Manual Knowledge Refresh",
+    "summary": "Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness.",
+    "searchText": "Recorded Manual Knowledge Refresh Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness. copilot manual refresh history recovery",
+    "keywords": [
+      "copilot",
+      "manual",
+      "refresh",
+      "history",
+      "recovery"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record65": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecroninactivescheduledrafts",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecronInactiveScheduleDrafts",
+    "title": "Inactive Process Schedule Drafts",
+    "summary": "Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation.",
+    "searchText": "Inactive Process Schedule Drafts Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation. cron schedule draft copilot recovery",
+    "keywords": [
+      "cron",
+      "schedule",
+      "draft",
+      "copilot",
+      "recovery"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record66": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotknowledgegenerationrecovery",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotKnowledgeGenerationRecovery",
+    "title": "Copilot Knowledge Progress and Recovery",
+    "summary": "Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries.",
+    "searchText": "Copilot Knowledge Progress and Recovery Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries. copilot knowledge progress cleanup recovery",
+    "keywords": [
+      "copilot",
+      "knowledge",
+      "progress",
+      "cleanup",
+      "recovery"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record67": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecopilotretentionlifecycle",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecopilotRetentionLifecycle",
+    "title": "Copilot Conversation Retention and Recovery",
+    "summary": "Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures.",
+    "searchText": "Copilot Conversation Retention and Recovery Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures. copilot retention legal hold recovery conversation",
+    "keywords": [
+      "copilot",
+      "retention",
+      "legal hold",
+      "recovery",
+      "conversation"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record68": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacollectionreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2182,7 +2903,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record53": {
+  "record69": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaenterprisereference",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2226,7 +2947,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record54": {
+  "record70": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircasourceinventory",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2270,7 +2991,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record55": {
+  "record71": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacataloguereference",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2314,7 +3035,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record56": {
+  "record72": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaconfigurationreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2358,7 +3079,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record57": {
+  "record73": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2403,7 +3124,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record58": {
+  "record74": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircadatanetwork",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2449,7 +3170,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record59": {
+  "record75": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircasubmissionjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2495,7 +3216,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record60": {
+  "record76": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaoperationsrewards",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2542,7 +3263,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record61": {
+  "record77": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacouponscommerce",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2589,7 +3310,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record62": {
+  "record78": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2635,7 +3356,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record63": {
+  "record79": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircadeploymentverification",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2681,7 +3402,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record64": {
+  "record80": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsgateway",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2725,7 +3446,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record65": {
+  "record81": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhatisnodics",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2768,7 +3489,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record66": {
+  "record82": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2812,7 +3533,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record67": {
+  "record83": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2856,7 +3577,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record68": {
+  "record84": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2900,7 +3621,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record69": {
+  "record85": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2942,7 +3663,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record70": {
+  "record86": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2986,7 +3707,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record71": {
+  "record87": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3030,7 +3751,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record72": {
+  "record88": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3074,7 +3795,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record73": {
+  "record89": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3116,7 +3837,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record74": {
+  "record90": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3158,7 +3879,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record75": {
+  "record91": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3200,7 +3921,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record76": {
+  "record92": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3242,7 +3963,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record77": {
+  "record93": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3284,7 +4005,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record78": {
+  "record94": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3326,7 +4047,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record79": {
+  "record95": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3369,7 +4090,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record80": {
+  "record96": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3415,7 +4136,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record81": {
+  "record97": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3462,7 +4183,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record82": {
+  "record98": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3506,7 +4227,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record83": {
+  "record99": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3552,7 +4273,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record84": {
+  "record100": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3594,7 +4315,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record85": {
+  "record101": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3636,7 +4357,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record86": {
+  "record102": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3678,7 +4399,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record87": {
+  "record103": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageinstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3722,7 +4443,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record88": {
+  "record104": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagebuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3764,7 +4485,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record89": {
+  "record105": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3806,7 +4527,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record90": {
+  "record106": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3848,7 +4569,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record91": {
+  "record107": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3890,7 +4611,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record92": {
+  "record108": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3932,7 +4653,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record93": {
+  "record109": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3974,7 +4695,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record94": {
+  "record110": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4027,7 +4748,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record95": {
+  "record111": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4071,7 +4792,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record96": {
+  "record112": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4116,7 +4837,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record97": {
+  "record113": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4165,7 +4886,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record98": {
+  "record114": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4207,7 +4928,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record99": {
+  "record115": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4249,7 +4970,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record100": {
+  "record116": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4291,7 +5012,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record101": {
+  "record117": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4333,7 +5054,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record102": {
+  "record118": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4375,7 +5096,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record103": {
+  "record119": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4417,7 +5138,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record104": {
+  "record120": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4460,7 +5181,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record105": {
+  "record121": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4502,7 +5223,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record106": {
+  "record122": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4544,7 +5265,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record107": {
+  "record123": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4586,7 +5307,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record108": {
+  "record124": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4628,7 +5349,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record109": {
+  "record125": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4670,7 +5391,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record110": {
+  "record126": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4712,7 +5433,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record111": {
+  "record127": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4754,7 +5475,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record112": {
+  "record128": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4797,7 +5518,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record113": {
+  "record129": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4839,7 +5560,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record114": {
+  "record130": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagediscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4881,7 +5602,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record115": {
+  "record131": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4923,7 +5644,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record116": {
+  "record132": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4965,7 +5686,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record117": {
+  "record133": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5007,7 +5728,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record118": {
+  "record134": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageinventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5049,7 +5770,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record119": {
+  "record135": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5091,7 +5812,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record120": {
+  "record136": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5133,7 +5854,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record121": {
+  "record137": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5175,7 +5896,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record122": {
+  "record138": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5217,7 +5938,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record123": {
+  "record139": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5259,7 +5980,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record124": {
+  "record140": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5301,7 +6022,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record125": {
+  "record141": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5343,7 +6064,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record126": {
+  "record142": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5385,7 +6106,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record127": {
+  "record143": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5427,7 +6148,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record128": {
+  "record144": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5469,7 +6190,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record129": {
+  "record145": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5511,7 +6232,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record130": {
+  "record146": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5553,7 +6274,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record131": {
+  "record147": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5595,7 +6316,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record132": {
+  "record148": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5637,7 +6358,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record133": {
+  "record149": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5679,7 +6400,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record134": {
+  "record150": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5721,7 +6442,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record135": {
+  "record151": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5763,7 +6484,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record136": {
+  "record152": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5805,7 +6526,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record137": {
+  "record153": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5857,7 +6578,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record138": {
+  "record154": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5899,7 +6620,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record139": {
+  "record155": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5941,7 +6662,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record140": {
+  "record156": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5983,7 +6704,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record141": {
+  "record157": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6035,7 +6756,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record142": {
+  "record158": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6077,7 +6798,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record143": {
+  "record159": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6120,7 +6841,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record144": {
+  "record160": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6162,7 +6883,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record145": {
+  "record161": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6204,7 +6925,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record146": {
+  "record162": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6246,7 +6967,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record147": {
+  "record163": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6288,7 +7009,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record148": {
+  "record164": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6330,7 +7051,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record149": {
+  "record165": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6372,7 +7093,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record150": {
+  "record166": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6414,7 +7135,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record151": {
+  "record167": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6456,7 +7177,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record152": {
+  "record168": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6498,7 +7219,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record153": {
+  "record169": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6540,7 +7261,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record154": {
+  "record170": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6582,7 +7303,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record155": {
+  "record171": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6624,7 +7345,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record156": {
+  "record172": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6666,7 +7387,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record157": {
+  "record173": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6708,7 +7429,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record158": {
+  "record174": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6750,7 +7471,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record159": {
+  "record175": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6792,7 +7513,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record160": {
+  "record176": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6836,7 +7557,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record161": {
+  "record177": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6880,7 +7601,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record162": {
+  "record178": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6924,7 +7645,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record163": {
+  "record179": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6968,7 +7689,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record164": {
+  "record180": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7013,7 +7734,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record165": {
+  "record181": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7058,7 +7779,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record166": {
+  "record182": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7102,7 +7823,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record167": {
+  "record183": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7146,7 +7867,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record168": {
+  "record184": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7190,7 +7911,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record169": {
+  "record185": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7234,7 +7955,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record170": {
+  "record186": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7278,7 +7999,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record171": {
+  "record187": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7326,7 +8047,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record172": {
+  "record188": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceshoppinglistcommerceboundary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7372,7 +8093,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record173": {
+  "record189": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7416,7 +8137,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record174": {
+  "record190": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7460,7 +8181,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record175": {
+  "record191": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7506,7 +8227,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record176": {
+  "record192": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7550,7 +8271,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record177": {
+  "record193": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7594,7 +8315,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record178": {
+  "record194": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7638,7 +8359,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record179": {
+  "record195": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7682,7 +8403,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record180": {
+  "record196": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7726,7 +8447,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record181": {
+  "record197": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7770,7 +8491,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record182": {
+  "record198": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7814,7 +8535,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record183": {
+  "record199": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7858,7 +8579,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record184": {
+  "record200": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7902,7 +8623,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record185": {
+  "record201": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7946,7 +8667,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record186": {
+  "record202": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7990,7 +8711,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record187": {
+  "record203": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8034,7 +8755,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record188": {
+  "record204": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8078,7 +8799,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record189": {
+  "record205": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagetoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8120,7 +8841,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record190": {
+  "record206": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8162,7 +8883,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record191": {
+  "record207": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8206,7 +8927,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record192": {
+  "record208": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8250,7 +8971,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record193": {
+  "record209": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewasteimpactproviders",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8295,7 +9016,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record194": {
+  "record210": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationemailsmstemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -8341,7 +9062,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record195": {
+  "record211": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8374,7 +9095,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record196": {
+  "record212": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8407,7 +9128,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record197": {
+  "record213": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstarthere",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8440,7 +9161,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record198": {
+  "record214": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8473,7 +9194,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record199": {
+  "record215": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8506,7 +9227,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record200": {
+  "record216": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8539,7 +9260,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record201": {
+  "record217": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8572,7 +9293,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record202": {
+  "record218": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8605,7 +9326,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record203": {
+  "record219": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8638,7 +9359,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record204": {
+  "record220": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8671,7 +9392,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record205": {
+  "record221": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8704,7 +9425,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record206": {
+  "record222": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8737,7 +9458,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record207": {
+  "record223": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8770,7 +9491,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record208": {
+  "record224": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8803,7 +9524,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record209": {
+  "record225": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8836,7 +9557,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record210": {
+  "record226": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8869,7 +9590,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record211": {
+  "record227": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8902,7 +9623,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record212": {
+  "record228": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8935,7 +9656,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record213": {
+  "record229": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8968,7 +9689,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record214": {
+  "record230": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9001,7 +9722,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record215": {
+  "record231": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9034,7 +9755,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record216": {
+  "record232": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9067,7 +9788,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record217": {
+  "record233": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9100,7 +9821,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record218": {
+  "record234": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9133,7 +9854,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record219": {
+  "record235": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9166,7 +9887,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record220": {
+  "record236": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9199,7 +9920,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record221": {
+  "record237": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9232,7 +9953,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record222": {
+  "record238": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9265,7 +9986,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record223": {
+  "record239": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9298,7 +10019,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record224": {
+  "record240": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9331,7 +10052,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record225": {
+  "record241": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9364,7 +10085,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record226": {
+  "record242": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9397,7 +10118,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record227": {
+  "record243": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9430,7 +10151,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record228": {
+  "record244": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9463,7 +10184,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record229": {
+  "record245": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9496,7 +10217,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record230": {
+  "record246": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9529,7 +10250,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record231": {
+  "record247": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9562,7 +10283,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record232": {
+  "record248": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9595,7 +10316,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record233": {
+  "record249": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9628,7 +10349,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record234": {
+  "record250": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9661,7 +10382,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record235": {
+  "record251": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9694,7 +10415,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record236": {
+  "record252": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9727,7 +10448,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record237": {
+  "record253": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9760,7 +10481,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record238": {
+  "record254": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9793,7 +10514,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record239": {
+  "record255": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9826,7 +10547,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record240": {
+  "record256": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9859,7 +10580,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record241": {
+  "record257": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9892,7 +10613,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record242": {
+  "record258": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9925,7 +10646,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record243": {
+  "record259": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9958,7 +10679,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record244": {
+  "record260": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9991,7 +10712,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record245": {
+  "record261": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -10024,7 +10745,826 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record246": {
+  "record262": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotordernotificationoperations",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotOrderNotificationOperations",
+    "title": "Order Notification Operations in Copilot",
+    "summary": "Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay.",
+    "searchText": "Order Notification Operations in Copilot Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay. # Order Notification Operations in Copilot\n\n## Business Purpose\n\nCopilot can inspect the original notification evidence for one admitted order and\nprepare a retry of an existing frozen notification intent. Digital Core remains\nthe sole owner of order/financial evidence and notification eligibility;\nCommunication remains the delivery-intent owner. Copilot does not create a new\nrecipient, template, channel, message, order, payment or refund.\n\n| Copilot operation                      | Native owner call                           | Effect                                                                         |\n| -------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------ |\n| `commerce.orderNotification.workspace` | `GET /orders/:code/notifications/workspace` | Read current bounded workspace and eligibility hints                           |\n| `commerce.orderNotification.inspect`   | `POST /orders/:code/notifications/inspect`  | Read original frozen-intent observations for PURCHASED or REFUNDED             |\n| `commerce.orderNotification.retry`     | `POST /orders/:code/notifications/retry`    | Request retry of currently eligible original intents after review and approval |\n\nAll three paths are disabled by default. Source availability never grants a user\npermission or proves a runtime is qualified.\n\n## Audience and First Use\n\nBeginners should start with workspace inspection for one disposable order in a\nnon-production enterprise. Confirm that the order reference, revision, event kind\nand bounded intent states match Digital Core before enabling retry. Do not begin\nwith a customer delivery incident or assume that a delivered message proves the\nunderlying purchase or refund.\n\nBusiness users inspect current notification evidence and approve only an exact\norder/event review. Operators configure qualified connections, exact scopes and\nnative permissions, then monitor owner evidence without replaying uncertain work.\nDevelopers extend Digital Core owner contracts and fixed Copilot allowlists\ntogether; they do not add caller-selected endpoints or duplicate delivery state.\n\n## Ownership\n\n```mermaid\nflowchart LR\n  U[Axis employee] --> C[Copilot Core]\n  C --> R[Capability read adapter]\n  C --> W[Workbench retry adapter]\n  R --> D[Digital Core notification owner]\n  W --> D\n  D --> O[Order and financial owners]\n  D --> M[Communication frozen intents]\n  D --> C\n  C --> U\n```\n\n- Axis renders conversation, review, approval and original-result inspection. It\n  owns no business or delivery authority.\n- Capability owns bounded read admission and output minimization.\n- Workbench owns immutable retry review, confirmation binding, one dispatch\n  attempt and no-replay recovery behavior.\n- Digital Core owns current staff access, order/enterprise binding, revision,\n  financial evidence, eligible events and fixed command contracts.\n- Communication owns durable intent status and retry safety.\n\n## Required Configuration\n\nConfigure read and retry independently through normal Nodics layering. Do not edit\ngenerated defaults in a customer module.\n\n```js\ncopilot: {\n  capability: {\n    orderNotificationInspection: {\n      enabled: true,\n      connectionName: \"commerceRuntime\",\n      targetAuthority: { runtimeRole: \"COMMERCE\" },\n      scopes: [{\n        tenant: \"master\",\n        enterprise: \"acme\",\n        environment: \"local\",\n        orderCodes: [\"ORDER-1001\"]\n      }]\n    }\n  },\n  workbench: {\n    orderNotificationTarget: {\n      enabled: true,\n      moduleName: \"digitalCore\",\n      connectionName: \"commerceRuntime\",\n      targetAuthority: { runtimeRole: \"COMMERCE\" }\n    },\n    receiptRecovery: { enabled: true }\n  }\n}\n```\n\nDigital Core must separately enable and qualify notifications, the native\norder-notification workspace and API exposure. Copilot configuration cannot\nactivate Digital Core or Communication.\n\nEach read scope binds one tenant, enterprise and environment to an exact bounded\norder-code list. Wildcards, duplicate scope matches, empty actor identity, a\n`default` connection, target URL overrides and foreign order codes fail closed.\n\nReads require `copilot.data.query` and\n`commerce.digital.notification.read`. Retry preparation additionally requires\n`copilot.mutation.prepare` and `commerce.digital.notification.retry`. Final\nexecution additionally requires `copilot.mutation.execute`. Digital Core repeats\nits current employee, tenant, enterprise, order, revision, financial and\ndelivery-state checks for every native request.\n\n## Employee Journey\n\n### Inspect in conversation\n\n```json\n{\n  \"intent\": \"copilot.commerce.notification.inspect\",\n  \"operation\": \"commerce.orderNotification.workspace\",\n  \"code\": \"ORDER-1001\"\n}\n```\n\n```json\n{\n  \"intent\": \"copilot.commerce.notification.inspect\",\n  \"operation\": \"commerce.orderNotification.inspect\",\n  \"code\": \"ORDER-1001\",\n  \"kind\": \"PURCHASED\"\n}\n```\n\nCopilot returns order reference, revision, financial-state label, event summaries\nand bounded EMAIL/SMS intent observations. Recipient addresses, templates,\ntransport configuration and private financial records are excluded. A delivered\nmessage is not presented as payment, purchase or refund success.\n\n### Prepare a retry\n\nUse typed JSON or the bounded sentence form:\n\n```json\n{\n  \"operation\": \"commerce.orderNotification.retry\",\n  \"orderCode\": \"ORDER-1001\",\n  \"kind\": \"PURCHASED\"\n}\n```\n\n`Retry PURCHASED notification for order ORDER-1001`\n\nPreparation reads the fresh owner workspace and succeeds only when the event and\nnative retry command are currently enabled. The stored plan binds the order code,\nevent kind, current order revision, count/digest of eligible original intent\nidentities, executing employee and fixed Commerce target.\n\nThe review displays every business value needed for approval but does not display\nrecipient addresses or allow the user/model to choose a template, channel or\nintent identifier.\n\n### Approve and execute\n\n```mermaid\nsequenceDiagram\n  participant E as Employee\n  participant C as Copilot\n  participant D as Digital Core\n  E->>C: Prepare exact order and kind\n  C->>D: GET current workspace\n  D-->>C: Revision and eligible original intents\n  C-->>E: Immutable review\n  E->>C: Approve exact digest and revision\n  C->>D: GET fresh workspace\n  D-->>C: Fresh revision and eligibility\n  C->>D: POST retry with kind revision confirmed true\n  D-->>C: REQUESTED plus bounded original outcomes\n  C-->>E: Retry requested; delivery not yet proven\n```\n\nExecution refuses if target, permissions, revision, eligible intent count or\nintent digest changed after review. The native retry receives no arbitrary URL,\nrecipient, channel, template, provider, amount or intent code. Transport retries\nare disabled (`maxAttempts: 1`).\n\n## Uncertain Outcomes\n\nIf the native response is lost or malformed after dispatch, the Copilot action\nremains `OUTCOME_UNKNOWN`. Original-result inspection sends one fixed Digital Core\ninspection request for the same order and event. It reports current observed\nintent state but deliberately leaves the original retry unconfirmed: current\ndelivery state cannot prove which actor or request caused a transition.\n\nNever execute again to discover the result. Never convert `RETRY_PENDING`,\n`DELIVERING` or `DELIVERED` into an original command receipt. The adapter does not\nreplay or optimistically complete the action.\n\n## Rejections\n\n- unconfigured, disabled or ambiguous scope;\n- foreign tenant, enterprise, environment or order;\n- wildcard order lists or caller-supplied routing;\n- missing Copilot or native read/retry grant;\n- PURCHASED/REFUNDED values not explicitly supplied;\n- unknown fields, path syntax or oversized input;\n- disabled native workspace or ineligible event;\n- terminal, absent, uncertain or unobserved intent set;\n- revision, target, permission, intent count or digest drift;\n- malformed/negative owner envelopes or foreign intent identities;\n- recipient, template, channel, provider or intent-code input;\n- automatic retry after transport uncertainty.\n\n## Common mistakes\n\n- Enabling retry before the read workspace and employee authorization have been\n  verified in the same tenant, enterprise and environment.\n- Treating a notification state as proof that an order, payment or refund\n  completed successfully.\n- Adding recipient, template, channel or provider inputs to make the command more\n  flexible; those values belong to the native owners and frozen intent.\n- Retrying after a timeout instead of inspecting the original evidence and\n  preserving an unconfirmed result.\n- Using a default connection, wildcard order scope or service credential in place\n  of the signed employee authority.\n- Customizing Copilot without updating the Digital Core contract, tests, parser\n  allowlist and operator documentation in the same change.\n\n## Customization and Extension\n\nProjects may narrow scope lists, choose a qualified connection and override plain\npresentation labels. They must not add arbitrary routes, weaken exact-order\nselection, treat metadata as permission, copy Digital Core financial logic into\nCopilot, add a second notification journal, or turn inspection into retry.\n\nWhen adding an event kind, extend Digital Core first, then update the owner DTO,\nroute contract, Copilot fixed allowlists, tests, capability descriptor, Axis parser\nand this guide together.\n\n## Verification\n\n```bash\nnode --test \\\n  nodics.copilot/modules/copilotCapability/test/copilotOrderNotificationInspection.test.js \\\n  nodics.copilot/modules/copilotWorkbench/test/copilotOrderNotificationAction.test.js \\\n  nodics.copilot/modules/copilotCore/test/copilotIntentPlanning.test.js \\\n  nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceNotificationContract.test.js\n```\n\nFocused tests cover fixed routes, provider exclusion, minimized output, fresh\neligibility, permission denial, malformed evidence, drift, exact retry body and\ninspection-only uncertainty. Digital Core tests remain authoritative for\nhistorical commit evidence, workspace qualification and native eligibility.\n\n## Troubleshooting\n\n| Symptom                            | Check                                                                                        |\n| ---------------------------------- | -------------------------------------------------------------------------------------------- |\n| No inspection choices              | Read adapter enabled, exact scope, both read permissions, qualified non-default connection   |\n| Retry not proposed                 | Workbench target, planner, prepare/read/retry permissions and explicit order/kind            |\n| Review disappears before execution | Employee, enterprise, target, order revision or eligible intent set changed                  |\n| Outcome remains unknown            | Inspect original evidence; do not execute again                                              |\n| No eligible intent                 | Digital Core event state, financial proof, observed original intent and terminal-state rules |\n| Owner response rejected            | Contract version, order/revision, fixed kinds, intent identity and positive envelope         |\n\nThis implementation is source- and unit-verified. Reference-runtime activation,\nreal Communication delivery and signed-in visual acceptance remain deployment\nqualification work and must not be inferred from these tests.\n",
+    "keywords": [
+      "copilot",
+      "order",
+      "notification",
+      "delivery",
+      "purchased",
+      "refunded",
+      "retry",
+      "receipt",
+      "AI Copilot",
+      "Digital Commerce",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record263": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotgovernedschemaactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotGovernedSchemaActions",
+    "title": "Governed Selected-Schema Actions in Copilot",
+    "summary": "Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts.",
+    "searchText": "Governed Selected-Schema Actions in Copilot Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts. # Governed Selected-Schema Actions in Copilot\n\n## Purpose\n\nAuthorized employees can create, update, or delete one record through Copilot\nwhen an administrator has selected the database collection for Knowledge use and\nhas separately allowlisted that exact source and schema for mutation. nDatabase\nremains the schema, authorization, validation, concurrency, persistence, and\nreceipt owner. Copilot owns clarification, complete review, actor-bound approval,\none dispatch attempt, and original-result recovery.\n\nThis feature does not expose arbitrary APIs or every Axis form. It supports only\nnative `GENERATED_CRUD` schemas with an active generated route, an editable\n`code` identity, current Staged authoring permission, and a private native command\nreceipt. Bulk mutation and business-owned aggregate forms are excluded.\n\n## Audience and First Use\n\nBeginners should start with one disposable record in a non-production Staged\nruntime and stop at the review screen before learning execution. Business users\nwork from the conversation and owning Axis workspace; they do not need database\ncredentials or runtime URLs. Administrators and operators configure exact source,\nschema, permission, and receipt admission. Developers extend the native schema or\nadd a fixed domain command without moving ownership into Copilot.\n\n```mermaid\nflowchart LR\n  User[Authorized employee] --> Conversation[Copilot conversation]\n  Conversation --> Select[Selected Knowledge source and collection]\n  Select --> Descriptor[Fresh native schema descriptor]\n  Descriptor --> Review[Complete field review]\n  Review --> Approve[Actor-bound approval]\n  Approve --> Claim[Durable one-time action claim]\n  Claim --> Native[Generated nDatabase route]\n  Native --> Journal[Private native receipt]\n  Native --> Record[Owned business record]\n  Journal --> Recover[Read-only original-result inspection]\n```\n\n## Supported Commands\n\n| Command | Native route | Result required |\n| --- | --- | --- |\n| `data.record.create` | Descriptor-declared `PUT /{schema}` | Exact created `code` |\n| `data.record.update` | Descriptor-declared `PATCH /{schema}` | Exactly one affected record |\n| `data.record.delete` | Descriptor-declared `DELETE /{schema}` | Exactly one affected record |\n\nThe route, method, API version, module, source policy digest, and descriptor are\ncaptured during review and rechecked before dispatch. A prompt cannot supply or\nreplace any of them.\n\n## Administrator Setup\n\n1. Register the database source through the existing Knowledge source registry.\n2. Assign it to an active Knowledge group and select the intended collection.\n3. Enable schema actions and allowlist each exact source/schema pair. Wildcards\n   are rejected.\n4. Enable native command receipts for the schema-owning module and configure the\n   schema's private `commandReceipt.journalSchema`.\n5. Grant Copilot preparation/execution permissions and the native schema write\n   permission independently. Configuration never grants authority.\n6. Qualify the native runtime, private receipt journal, and original-result\n   inspection before rollout.\n\n```js\nmodule.exports = {\n  copilot: {\n    workbench: {\n      schemaActions: {\n        enabled: true,\n        sources: {\n          \"product-data\": [\"approvedRecord\"]\n        },\n        timeoutMs: 30000\n      },\n      receiptRecovery: { enabled: true }\n    }\n  },\n  commandReceipts: {\n    enabled: true,\n    owners: { product: true }\n  }\n};\n```\n\nThe defaults are disabled. `timeoutMs` must be from 1,000 to 120,000 ms. Do not\nput framework capability into a customer Kickoff module. Use the normal layered\nNodics configuration owner for the deployment.\n\n## Permission Model\n\nPreparation requires an authenticated employee plus `copilot.data.query`,\n`copilot.mutation.prepare`, and `system.schema.manage`. It also requires current\nsource, group, tenant, enterprise, environment, collection, and native schema\naccess. Execution additionally requires `copilot.mutation.execute`; original\nresult inspection requires `copilot.mutation.reconcile`.\n\nnDatabase still checks the current generated write permission, schema access,\nownership, authoring stage, field policy, references, and concurrency on every\noperation. Copilot permissions cannot override what the employee can do in Axis\nor through the native owner.\n\n## Business User Journey\n\n1. Open **AI & Copilot > Conversation** under the intended enterprise.\n2. Identify the exact Knowledge source and collection. Similar labels are not\n   guessed, and an excluded collection remains unavailable.\n3. Ask for one create, update, or delete, or provide typed JSON.\n4. Resolve every clarification. Copilot does not invent required values,\n   identity, revision, or fields.\n5. Review the operation, source, schema, executing employee, and every command\n   leaf. Nothing has changed yet.\n6. Approve the current digest and revision, then execute once.\n7. Verify the result in the owning Axis workspace.\n8. If completion is uncertain, use **Inspect original business results**. Never\n   create another action to retry an ambiguous write.\n\n## Command Examples\n\n### Create\n\n```json\n{\n  \"operation\": \"data.record.create\",\n  \"sourceCode\": \"product-data\",\n  \"schemaName\": \"approvedRecord\",\n  \"model\": {\n    \"code\": \"RECORD-001\",\n    \"name\": \"Reviewed record\",\n    \"active\": true,\n    \"revision\": 1\n  }\n}\n```\n\nEvery required editable field must be explicit. Descriptor defaults do not let\nCopilot silently omit a required business choice.\n\n### Update\n\n```json\n{\n  \"operation\": \"data.record.update\",\n  \"sourceCode\": \"product-data\",\n  \"schemaName\": \"approvedRecord\",\n  \"identity\": { \"code\": \"RECORD-001\", \"revision\": 1 },\n  \"changes\": { \"name\": \"Reviewed record v2\" }\n}\n```\n\nThe update cannot change identity or concurrency fields. The native owner rejects\na stale revision.\n\n### Delete\n\n```json\n{\n  \"operation\": \"data.record.delete\",\n  \"sourceCode\": \"product-data\",\n  \"schemaName\": \"approvedRecord\",\n  \"identity\": { \"code\": \"RECORD-001\", \"revision\": 1 }\n}\n```\n\nUse the native delete-impact view before approval when dependencies matter. The\ngenerated owner still enforces reference restrictions and current revision.\n\n## Confirmation and Execution\n\n```mermaid\nsequenceDiagram\n  participant Axis\n  participant Core as Copilot Core\n  participant Workbench\n  participant Knowledge\n  participant Database as Native schema API\n  participant Receipt as Private receipt\n  Axis->>Core: Typed command or bounded prose\n  Core->>Workbench: Prepare as original employee\n  Workbench->>Knowledge: Authorize selected source and collection\n  Knowledge->>Database: Read fresh schema descriptors\n  Workbench-->>Axis: Complete immutable review\n  Axis->>Workbench: Approve exact digest and revision\n  Axis->>Workbench: Execute once\n  Workbench->>Workbench: Atomically claim action\n  Workbench->>Database: Fixed generated route and idempotency key\n  Database->>Receipt: Claim original command\n  Database->>Database: Existing generated create/update/delete\n  Database->>Receipt: Record acknowledged result\n  Database-->>Workbench: Native result\n  Workbench-->>Axis: Consumed or outcome unknown\n```\n\nThe executor writes `RUNNING` before dispatch. Only the exact created code or one\naffected row proves completion. Transport rejection, malformed acknowledgement,\nor a lost persistence acknowledgement produces `OUTCOME_UNKNOWN`; it never causes\nan automatic second native call.\n\n## Original-Result Recovery\n\nThe native inspection route is:\n\n`POST /nodics/{module}/v0/{schema}/commands/inspect`\n\nCopilot supplies the original operation, exact input, and original idempotency\nkey from the immutable action. Users cannot choose another module, schema, query,\nor receipt. Recovery rechecks actor, tenant, enterprise, source policy,\ncollection selection, schema authorization, and native permission. A completed\nreceipt can close the uncertain row; a missing or started receipt remains\nuncertain. Inspection never sends the write again.\n\n## Input and Review Boundaries\n\n- One record per action; no bulk create, update, or delete.\n- At most 80 submitted fields, 65,536 serialized bytes, depth eight, and 240\n  reviewed leaves.\n- Review sections contain at most 20 leaves and are not silently truncated.\n- Unknown, hidden, read-only, or sensitive fields are rejected.\n- Credential-shaped keys such as password, token, secret, authorization,\n  private key, credential, or API key are rejected at every nested level.\n- Text leaves are at most 2,000 characters and cannot contain control characters.\n- Only safe explicit codes identify source, schema, and record.\n\nThese limits are a security boundary, not a target to increase for complex\nbusiness setup. Add a domain-owned operation for aggregate workflows.\n\n## Deliberate Exclusions\n\n| Exclusion | Reason | Extension path |\n| --- | --- | --- |\n| Wildcard sources or schemas | Would create broad mutation authority | Add reviewed exact entries |\n| Bulk mutation | Needs partial-failure and recovery semantics | Add an owning batch/Workflow contract |\n| Business form with `createOperation` | Aggregate owner has stronger invariants | Use that domain command |\n| Online/read-only authoring | Native lifecycle forbids generic writes | Use Staged or owner publication flow |\n| Arbitrary route/module/method | Would bypass native capability ownership | Add a fixed reviewed adapter |\n| Service-token fallback | Would replace the employee's actual authority | Grant the employee through the owner |\n| Automatic retry/rollback | Completion may be uncertain | Inspect original receipt; use owner reversal |\n\n## Troubleshooting\n\n| Observation | Meaning | Action |\n| --- | --- | --- |\n| Configuration required | Feature, source, or exact schema is not allowlisted | Review deployment configuration |\n| Permission required | Copilot or native schema permission is missing | Request the narrow missing grant |\n| Collection unavailable | Source/group/collection selection excludes it | Review Knowledge assignment |\n| Clarification required | A material input is missing | Send a complete corrected command |\n| Descriptor changed | Route, lifecycle, fields, or policy drifted | Prepare and review a fresh action |\n| Revision conflict | Another write changed the record | Read current state and start a new review |\n| `OUTCOME_UNKNOWN` | Native completion is not proven | Inspect original results; do not retry |\n| Receipt unavailable | Native journal is disabled or unqualified | Keep unresolved and fix owner setup |\n\n## Common Mistakes\n\n- Selecting a collection for Knowledge reads does not authorize mutation; the\n  exact schema action allowlist and current employee permissions are separate.\n- A successful review is not a native write. Approval and execution are separate.\n- `OUTCOME_UNKNOWN` is not failure evidence and must not be retried.\n- A record visible after an uncertain command is not proof that this command\n  created it; use the original receipt.\n- Enabling command receipts does not make every generated schema eligible.\n- Generic CRUD is not a substitute for enterprise onboarding, publication,\n  redemption, workflow, or another business-owned aggregate operation.\n- Production enablement still requires deployment-specific runtime, permission,\n  journal, privacy, and persistence qualification.\n\n## Customization Contract\n\nAdd eligible fields and forms through the owning schema's effective Backoffice\nmetadata. Add sources through the existing Knowledge registry and assignments.\nAdd permissions through nAuth/Profile governance. Do not add a Copilot-owned\nschema registry, duplicate persistence service, generic endpoint executor, or\nproject Kickoff implementation.\n\nFor a business aggregate, implement and document a fixed domain command with its\nown native validation, idempotency, receipt identity, reversal policy, and live\nacceptance. Then register that bounded capability with Copilot; do not relabel it\nas generic CRUD.\n\n## Verification\n\nLocal tests cover create, update, delete, source selection, exact allowlists,\ndescriptor drift, sensitive fields, intent planning, confirmation rendering,\nreceipt binding, and no-replay execution. Disposable real-runtime acceptance\nstarts Profile, Copilot, Product, MongoDB, Redis, and Elasticsearch, then proves\ndenied-reader behavior, create/update/delete, delete-impact, duplicate-execution\nrefusal, private receipt inspection, and restart persistence.\n\nThat acceptance qualifies the synthetic selected schema in the local composition.\nIt does not claim that every generated schema, customer deployment, permission\nset, or business aggregate has been qualified.\n",
+    "keywords": [
+      "copilot",
+      "schema",
+      "record",
+      "create",
+      "update",
+      "delete",
+      "collection",
+      "receipt",
+      "AI Copilot",
+      "Schema Workbench",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record264": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocesslifecycleactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotProcessLifecycleActions",
+    "title": "Process Definition and Instance Actions in Copilot",
+    "summary": "Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts.",
+    "searchText": "Process Definition and Instance Actions in Copilot Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts. # Process Definition and Instance Actions in Copilot\n\n## Purpose\n\nAuthorized employees can review and execute ten fixed Workflow commands through\nCopilot: create, update, prepare, validate, publish, and delete/archive a process\ndefinition; start, cancel, retry, and compensate a process instance. Workflow\nremains the lifecycle and persistence owner. Copilot collects exact values,\nshows every submitted field, records approval, dispatches once, and inspects the\noriginal native receipt when the outcome is uncertain.\n\nThis is not an arbitrary API tool. It cannot select another module, URL, method,\npermission, tenant, enterprise, employee, or operation. An LLM can propose a\ntyped command from literal user input, but it cannot authorize or execute one.\n\n```mermaid\nflowchart LR\n  User[Employee in Axis] --> Conversation[Copilot conversation]\n  Conversation --> Clarify[Clarify exact inputs]\n  Clarify --> Review[Immutable full-field review]\n  Review --> Approve[Actor-bound approval]\n  Approve --> Execute[Durable one-time claim]\n  Execute --> Workflow[Workflow native command]\n  Workflow --> Receipt[Private original receipt]\n  Workflow --> State[Definition or instance state]\n  Receipt --> Recover[Inspection without replay]\n```\n\n## Business Journey\n\nFor a beginner, use a disposable definition with a START, TASK, and END node.\nPractice review and rejection before enabling execution, then confirm each state\nin the Process workspace. A business user should never need database credentials\nor a runtime URL to complete the reviewed journey.\n\n1. Open **AI Copilot**, then **Conversation**, under the intended enterprise.\n2. Identify the exact definition or instance in the Process workspace. Similar\n   names are not resolved by guessing.\n3. Submit a typed command or a supported plain-language request. Missing graph,\n   context, reason, or incident attempt produces clarification and no mutation.\n4. Review the operation, native identifier, executing employee, and every nested\n   command leaf. Long graphs are split into review sections rather than hidden.\n5. Approve the current digest and revision, then execute it. A changed actor,\n   enterprise, permission, target, input, digest, or revision fails closed.\n6. Inspect native Process state. A successful instance start is not proof that\n   later tasks or domain actions completed.\n7. If the reply is lost or ambiguous, choose **Inspect original business\n   results**. Do not submit the command again.\n\n## Definition Commands\n\n### Create a Draft\n\n```json\n{\n  \"operation\": \"process.definition.create\",\n  \"definitionCode\": \"employee-onboarding\",\n  \"name\": \"Employee onboarding\",\n  \"graph\": {\n    \"nodes\": [\n      { \"code\": \"start\", \"type\": \"START\" },\n      { \"code\": \"review\", \"type\": \"TASK\", \"name\": \"Review\" },\n      { \"code\": \"end\", \"type\": \"END\" }\n    ],\n    \"transitions\": [\n      { \"code\": \"to-review\", \"source\": \"start\", \"target\": \"review\" },\n      { \"code\": \"to-end\", \"source\": \"review\", \"target\": \"end\" }\n    ]\n  }\n}\n```\n\nCreation is insert-only. Workflow validates the graph, fixes `DRAFT`, version\nzero and draft revision one, then reads the stored owner record back before\nacknowledging success. Optional `designer`, `policy`, and explicit `active`\nvalues are fully reviewed.\n\n### Update, Validate, and Publish\n\n```json\n{\n  \"operation\": \"process.definition.update\",\n  \"definitionCode\": \"employee-onboarding\",\n  \"name\": \"Employee onboarding v2\"\n}\n```\n\nOnly a draft can be updated. Supply at least one of `name`, `graph`, `designer`,\n`policy`, or `active`. Workflow binds the status and draft revision read before\nthe write, requires exactly one affected record, and verifies fresh readback.\n\nUse `validate process definition employee-onboarding` to record graph validation\nwithout publishing. Then use `publish process definition employee-onboarding`.\nPublishing creates an immutable version with a checksum and conditionally moves\nthe aggregate to `PUBLISHED`. A validation acknowledgement is not publication.\n\n### Prepare or Discard a Later Draft\n\n`prepare process definition employee-onboarding` copies the latest immutable\npublished graph into the next editable draft. It does not modify the published\nversion. `delete process definition employee-onboarding` has three native\noutcomes:\n\n| Current state | Native outcome |\n| --- | --- |\n| New draft with no published version | `DELETED_DRAFT` |\n| Draft prepared from a published version | `DRAFT_DISCARDED`; latest published graph is restored |\n| Published definition | `ARCHIVED`; versions are retained as audit evidence |\n\nThe review says delete because it is the fixed native route; the final state is\ndecided by Workflow from fresh lifecycle state.\n\n## Instance Commands\n\n### Start\n\n```json\n{\n  \"operation\": \"process.instance.start\",\n  \"instanceCode\": \"employee-onboarding-2026-001\",\n  \"definitionCode\": \"employee-onboarding\",\n  \"context\": {\n    \"enterpriseCode\": \"acme\",\n    \"employeeReference\": \"new-hire-17\"\n  }\n}\n```\n\nThe new instance code and context are mandatory. Empty context must be supplied\nas `{}`; Copilot never invents business context. Optional `version` pins an\nimmutable version and optional `name` labels the instance. Workflow checks\noperational admission and published state, inserts once, enters the graph, and\nmarks start complete. An exact native replay is owner-controlled; Copilot still\nuses original-receipt recovery rather than a second dispatch.\n\n### Cancel\n\n```json\n{\n  \"operation\": \"process.instance.cancel\",\n  \"instanceCode\": \"employee-onboarding-2026-001\",\n  \"reason\": \"Hiring request withdrawn\"\n}\n```\n\nCancellation is limited to created, running, or waiting instances. Workflow\nrejects generic cancellation when the immutable definition contains a governed\nactor policy that requires a domain withdrawal contract. Otherwise it uses an\nexact-state update, verifies the cancelled instance and confirms that no open\ntasks remain before writing audit evidence.\n\n### Retry and Compensate\n\n```json\n{\n  \"operation\": \"process.instance.retry\",\n  \"instanceCode\": \"employee-onboarding-2026-002\",\n  \"expectedAttempt\": 1\n}\n```\n\nRetry requires the current non-negative incident attempt. Workflow accepts only\na failed instance with an open retryable ACTION incident, atomically claims the\nnext attempt, and uses the pinned process version. Failure remains a failure;\nCopilot cannot convert a thrown domain error into success.\n\n```json\n{\n  \"operation\": \"process.instance.compensate\",\n  \"instanceCode\": \"employee-onboarding-2026-002\",\n  \"payload\": { \"reason\": \"Reverse completed external step\" }\n}\n```\n\nCompensation requires a failed node with a declarative domain-owned compensation\nadapter. The payload is optional but, when supplied, every leaf is reviewed.\nProcess coordinates incident state; the domain adapter owns business reversal.\n`COMPLETED` means that adapter acknowledged this compensation attempt, not that\nunrelated external systems were reconciled.\n\n## Permissions and Configuration\n\n| Command | Native permission |\n| --- | --- |\n| Create definition | `process.definition.create` |\n| Update or prepare draft | `process.definition.update` |\n| Validate draft | `process.definition.validate` |\n| Publish draft | `process.definition.publish` |\n| Delete/discard/archive definition | `process.definition.delete` |\n| Start instance | `process.instance.start` |\n| Cancel instance | `process.instance.cancel` |\n| Retry incident | `process.instance.retry` |\n| Execute compensation | `process.instance.compensate` |\n\nPreparation also requires `copilot.mutation.prepare`; final dispatch requires\ncurrent `copilot.mutation.execute`. Original-result inspection requires\n`copilot.mutation.reconcile`, the original native command permission, and\n`process.definition.read` or `process.backoffice.view` for the family.\n\nThe target and receipts are default-disabled. Configure them in a deployment-\nowned later layer, never in a customer Kickoff module merely to expose framework\nfunctionality:\n\nA production operator must qualify the connection, receipt persistence and\nnative permissions in each target environment before enabling the target.\n\n```js\nmodule.exports = {\n  copilot: {\n    workbench: {\n      processLifecycleTarget: {\n        enabled: true,\n        moduleName: \"workflow\",\n        connectionName: \"process\",\n        targetAuthority: { runtimeRole: \"PROCESS\" }\n      },\n      processLifecycleTimeoutMs: 30000,\n      receiptRecovery: { enabled: true }\n    },\n    core: { intentPlanning: { enabled: true } }\n  },\n  commandReceipts: { enabled: true, owners: { workflow: true } }\n};\n```\n\nThe connection must already exist and be qualified by normal nService/runtime\nconfiguration. `default` is rejected. The timeout may be 1,000 to 120,000 ms;\ntransport attempts remain fixed at one. Configuration never grants permissions.\n\n## Recovery\n\nDefinition receipts are inspected at:\n\n`POST /nodics/process/v0/definitions/{code}/commands/{kind}/receipt/query`\n\nInstance receipts are inspected at:\n\n`POST /nodics/process/v0/instances/{code}/commands/{kind}/receipt/query`\n\nThe body contains the exact original native `command` and `idempotencyKey`.\nThese endpoints are for the existing Copilot recovery flow; operators should not\nreconstruct keys manually. Inspection checks current employee authority and the\noriginal actor, enterprise, tenant, operation, arguments, target, and result\nidentity. It never invokes the lifecycle method.\n\n```mermaid\nsequenceDiagram\n  participant Axis\n  participant Copilot\n  participant Workflow\n  participant Journal as Private receipt\n  Axis->>Copilot: Execute approved revision\n  Copilot->>Copilot: Claim action once\n  Copilot->>Workflow: Fixed command + original credentials + key\n  Workflow->>Journal: Record started command\n  Workflow->>Workflow: Native lifecycle transition\n  Workflow->>Journal: Record original result\n  Workflow--xCopilot: Response may be lost\n  Axis->>Copilot: Inspect original result\n  Copilot->>Workflow: Receipt query only\n  Workflow->>Journal: Read exact binding\n  Journal-->>Axis: Completed or outcome unknown\n```\n\n## Input and Review Limits\n\n- Identifiers are explicit safe codes up to 128 characters.\n- Unknown top-level fields and arbitrary endpoints are rejected.\n- Credential-like nested keys are rejected.\n- JSON depth is eight, each object/array has at most 80 entries, reviewed leaves\n  are capped at 240, and the native body is capped at 65,536 bytes.\n- Individual text leaves are capped at 2,000 characters and control characters\n  are rejected.\n- Review sections contain at most 20 fields and are never silently truncated.\n\nLarge domain payloads or executable callbacks require a separate owner-reviewed\nadapter. Do not increase limits to turn this into a generic transport.\n\n## Verification\n\n`copilotProcessLifecycleAction.test.js` covers all ten commands, exact routing,\ncomplete review, missing/invalid input, credential rejection, grant denial and\ntarget drift. `processLifecycleCommandReceipt.test.js` covers native permission,\nexact input/result binding and inspection without replay. The opt-in\n`copilotProcessLifecycleRuntime.live.test.js` uses disposable Profile, Workflow,\nCopilot and MongoDB runtimes plus local Ollama for a representative natural-\nlanguage publish journey, restart-safe receipts, denied access and persisted\ndefinition/instance outcomes.\n\nRetry and compensation need a disposable domain ACTION/compensation adapter to\nprove their successful native effects. Their deterministic owner tests do not\nclaim a live customer-domain reversal.\n\n## Troubleshooting\n\n| Symptom | Meaning and response |\n| --- | --- |\n| Configuration required | Qualify the fixed Workflow connection and effective later-layer settings |\n| Permission required | Grant only the needed native and Copilot permissions through Profile ownership |\n| Clarification requested | Supply every listed business value and create a new review |\n| Concurrent change | Reload current Process state; do not force the stale transition |\n| Outcome unknown | Inspect the original receipt; never repeat the command automatically |\n| Retry policy exhausted | Resolve the owner incident or use an approved compensation contract |\n| Compensation unavailable | The failed node has no domain-owned declarative compensation adapter |\n| Definition archived | Create a new governed definition/version; do not reactivate through generic CRUD |\n\n## Safe Customization\n\nDevelopers extend this capability only through normal later-layer contracts.\nLater layers may tighten graph policy, input bounds, permissions, target\nqualification, presentation copy, or domain action admission. Preserve Workflow\nownership, exact native routes, create-only insertion, conditional writes,\nfresh readback, original credentials, immutable review, receipt privacy, and no\nautomatic replay. Axis may customize labels and layout but cannot add authority.\n\n## Common Mistakes\n\n- Treating a validated draft as published or a started instance as completed.\n- Repeating a command after a timeout instead of inspecting its original receipt.\n- Using generic schema CRUD to bypass definition, incident, or compensation policy.\n- Putting Workflow authority, service URLs, or credentials in Axis or model input.\n- Assuming an administrator role grants every enterprise and native permission.\n- Describing deterministic retry or compensation tests as proof of a customer\n  domain adapter's live business reversal.\n\nContinue with [Process Task Actions](process-task-actions.md), [Process Trigger\nActions](process-trigger-actions.md), [Process Inspection](process-inspection.md),\nand [Original Business Results](original-business-results.md).\n",
+    "keywords": [
+      "copilot",
+      "process",
+      "definition",
+      "instance",
+      "publish",
+      "retry",
+      "compensate",
+      "receipt",
+      "AI Copilot",
+      "Process",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record265": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocesstriggeractions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotProcessTriggerActions",
+    "title": "Process Trigger Actions in Copilot",
+    "summary": "Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery.",
+    "searchText": "Process Trigger Actions in Copilot Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery. # Process Trigger Actions in Copilot\n\n## Purpose and Ownership\n\nA Workflow trigger is a relationship to a process definition. An authorized\nemployee can create or update that relationship, archive it, or explicitly\nexecute it to start a workflow instance. A trigger is not a Cron job: creating\ntrigger metadata does not install a schedule, and archival does not delete an\nexisting Cron job or cancel instances already started.\n\nWorkflow owns trigger state, definition resolution, instance creation, domain\ncallbacks and audit. Copilot owns clarification, full-field review and the\napproved command envelope. Axis renders the existing confirmation controls.\nNo provider receives transport authority, and no customer-project implementation\nis required for the reusable capability.\n\n## Business User Journey\n\nFor a beginner, start with a MANUAL, DRAFT, inactive trigger against a synthetic\npublished definition. Check that creation changes only metadata before trying\nan explicitly approved execution. A trigger identifies what can start; an\ninstance is the actual run. They have different identifiers and lifecycles.\n\n1. Sign in to Axis and select the intended enterprise. Open AI Copilot, then\n   Conversation. Use the native Process workspace to identify the definition\n   and trigger; the assistant does not invent identifiers from similar names.\n2. Submit an exact command below. Missing references or activation choices\n   produce clarification without making a business change.\n3. Inspect the review: operation, trigger, executing employee and every supplied\n   native field, including nested schedule or context values.\n4. Approve the current review. Approval alone does not dispatch the command.\n5. Execute the approved revision. A changed plan or stale revision is rejected.\n6. Check the result in Process. For execution, inspect the instance and its\n   tasks/incidents; a successful start acknowledgement is not a guarantee that\n   later workflow or domain actions completed.\n7. After an uncertain result, select **Inspect original business results**.\n   Do not resend the command, change the instance identifier or create a new\n   confirmation to work around the uncertainty.\n\nThe source-backed screen flow is:\n\n| Screen state | User action | Business effect |\n| --- | --- | --- |\n| Conversation | Submit exact command | Validates input and builds a review only |\n| Review pending | Inspect every field, approve or reject | Records intent only |\n| Approved | Execute current revision | Claims one durable action, then calls Workflow once |\n| Consumed | Inspect native Process state | No further execution of that confirmation |\n| Outcome unknown | Inspect original result | Reads the original native receipt, never repeats the command |\n| Receipt still unknown | Investigate native owner evidence | Remains unresolved; no automatic replay |\n\n## Create a Trigger\n\n```json\n{\n  \"operation\": \"process.trigger.create\",\n  \"triggerCode\": \"monthly-review\",\n  \"definitionCode\": \"review-process\",\n  \"name\": \"Monthly review\",\n  \"triggerType\": \"MANUAL\",\n  \"status\": \"DRAFT\",\n  \"active\": false\n}\n```\n\n`triggerCode`, `definitionCode`, `name`, `triggerType`, `status` and `active`\nare required. The adapter never silently chooses ACTIVE or assumes that the\ntrigger should be enabled. Types are MANUAL, CRON or EVENT; supported initial\nstates are DRAFT, ACTIVE or PAUSED. The owner module is fixed to `nodics.process`\nand included in the review. Optional fields are positive integer `version`,\n`cronJobCode` and `schedule` metadata. An omitted version uses native Workflow's\nversion resolution at execution; it is not a pinned-version guarantee.\n\nCreation is insert-only. An existing trigger cannot be overwritten by another\ncreate request, including a concurrent request with the same code.\n\n## Update a Trigger\n\n```json\n{\n  \"operation\": \"process.trigger.update\",\n  \"triggerCode\": \"monthly-review\",\n  \"status\": \"ACTIVE\",\n  \"active\": true\n}\n```\n\nAt least one changed field is required. Allowed fields are `name`, `version`,\n`triggerType`, `cronJobCode`, `status`, `schedule` and `active`. Changing the\ndefinition or metadata owner is not supported by this update contract.\nWorkflow refuses archived triggers. Its update binds the state read immediately\nbefore the write, requires an acknowledged single match and checks fresh native\nreadback before reporting success. This is execution-time concurrency protection,\nnot a claim that preview took a lock or captured a record revision.\n\nWith the existing intent planner enabled, the following requests a review:\n\n> Please update trigger monthly-review with status ACTIVE and active true\n\nThe model must supply literal identifiers and explicit numeric/boolean choices.\nUnknown fields, invented activation choices and unsupported output require\nclarification or rejection. The planner consumes the normal accounted model\nbudget; it has no fallback execution path when the provider or budget is unavailable.\n\n## Execute a Trigger\n\n```json\n{\n  \"operation\": \"process.trigger.execute\",\n  \"triggerCode\": \"monthly-review\",\n  \"instanceCode\": \"monthly-review-october\",\n  \"context\": {}\n}\n```\n\nThe new instance identifier and context object must be explicit. Empty context\nmeans an explicitly supplied `{}`, not inferred business values. Optional fields\nare `correlationId` and positive integer `version`. Workflow must find an active\ntrigger, resolve an admissible published definition, pass operational admission\nand apply its normal start/lifecycle and domain policies. The new instance can\nexecute downstream domain actions immediately; review the definition first.\n\nThe short form `execute trigger monthly-review` asks for the missing instance\nand context. It does not execute with invented values. Typed commands and exact\nshort forms do not call an LLM. Trigger exchanges are excluded from subsequent\nprovider history; configured activity recording is a separate concern.\n\n## Archive a Trigger\n\nEnter `archive trigger monthly-review`, or submit:\n\n```json\n{\n  \"operation\": \"process.trigger.archive\",\n  \"triggerCode\": \"monthly-review\"\n}\n```\n\nWorkflow sets the trigger inactive and ARCHIVED after acknowledged conditional\npersistence. It retains the relationship and original evidence. This command\ndoes not remove a scheduler definition, withdraw a domain review or compensate\nwork already performed.\n\n## Administrator Setup\n\nAn operator should first qualify the original employee's native permissions and\nthe target connection in a disposable local runtime. Do not enable a production\ntarget solely because the synthetic acceptance suite passes.\n\nUse an existing deployment-owned nService alias and actual runtime authority.\nConfigure the Copilot target and native Workflow receipt owner in their respective\nruntimes through normal layered `config/properties.js`:\n\n```js\nmodule.exports = {\n  copilot: {\n    workbench: {\n      processTriggerTarget: {\n        enabled: true,\n        moduleName: \"workflow\",\n        connectionName: \"process\",\n        targetAuthority: { runtimeRole: \"PROCESS\" }\n      },\n      receiptRecovery: { enabled: true }\n    },\n    core: { intentPlanning: { enabled: true } }\n  },\n  commandReceipts: { enabled: true, owners: { workflow: true } }\n};\n```\n\nThe example does not create the connection, activate modules, enable the Copilot\nAPI, or grant an employee any permission. Never add URLs or service credentials\nto the command. A default connection is not an admissible trigger target.\n\n| Boundary | Required authority |\n| --- | --- |\n| Prepare any trigger command | EMPLOYEE actor, tenant and enterprise; `copilot.mutation.prepare` plus native command grant |\n| Create/update/archive | `process.trigger.manage`; native route access-group and exposure policy also apply |\n| Execute trigger | `process.trigger.execute`; native route access-group, activation and domain policy also apply |\n| Execute approved Copilot plan | Current `copilot.mutation.execute`, original actor/scope, exact revision/digest and unchanged qualified target |\n| Inspect original result | `copilot.mutation.reconcile`, prepare/execute grants, current native command grant and `process.backoffice.view` |\n| Write original native receipts | Native `commandReceipts.enabled` and `owners.workflow` |\n\nBoth trigger writes and receipt recovery are default-disabled. Disabling new\nwrites does not erase original evidence or permit replay. Authorized original\ninspection remains possible with recording disabled; routing and current\npermissions must still match.\n\n## Recovery and Troubleshooting\n\nOriginal evidence uses the existing private `processCommandReceipt` model and\nshared native receipt protocol. The native inspection endpoint is:\n\n`POST /nodics/process/v0/triggers/{triggerCode}/commands/{kind}/receipt/query`\n\nIts exact body is `{ \"command\": originalNativeBody, \"idempotencyKey\": originalKey }`.\nThe original body includes `code` and fixed `ownerModule` for creation. Normal\nusers should use the confirmation's inspection button rather than reconstructing\nthis input. Current record existence is never substituted for an original receipt.\n\n| Symptom | Meaning and next step |\n| --- | --- |\n| Configuration required | Qualify the existing owner alias, authority and enablement; do not select another owner as fallback |\n| Permission denied | Review the employee's effective native and Copilot permissions; an administrator title alone is insufficient |\n| Missing fields | Supply the named values and submit a new review; no mutation occurred during preparation |\n| Archived/inactive trigger | Review native state; execution must not silently reactivate it |\n| Stale revision | Reload the original confirmation; never substitute another revision by guessing |\n| Failed or ambiguous native write | The action remains unknown; inspect original evidence before any further action |\n| STARTED or missing receipt | Completion is unproven; no retry or success claim is permitted |\n| Completed start, later incident | Inspect the native instance; start acknowledgement is not full workflow success |\n\n## Customize and Extend Safely\n\nA developer extends the existing module through the normal later-layer contract;\nfrontend rendering does not confer backend authority.\n\nPartners change only their project-owned later layer. For example,\n`<project>/modules/<overlay>/config/properties.js` may override:\n\n```js\nmodule.exports = {\n  copilot: { workbench: {\n    processTriggerTimeoutMs: 12000,\n    processTriggerPresentation: {\n      title: \"Workflow trigger review\",\n      summary: \"Review every proposed field before starting workflow activity.\"\n    }\n  } }\n};\n```\n\nAll other framework defaults remain inherited. The transport timeout must be an\ninteger from 1,000 to 120,000 milliseconds; retries remain fixed at one attempt.\nPresentation overrides cannot add commands or weaken authorization.\n\nInputs allow safe identifiers up to 128 characters, leaf text up to 1,000\ncharacters, nesting depth five, at most 40 entries per object/array and 100\nreviewed leaves, and a native body at most 12,000 characters. Credential-like\nkeys, executable objects, arbitrary endpoints and unknown top-level fields are\nrejected. Supply no secrets in context or metadata. Broader domain-specific\npayload shapes require an owner-reviewed adapter, not a copied generic executor.\n\nReview sections contain at most 20 fields each and preserve every leaf; long\nreviews are split, not truncated. Labels must fit the existing 128-character\nAxis contract. Excessively long nested paths are rejected before a plan is saved.\n\nWorkflow service overlays can tighten trigger lifecycle validation through normal\nservice layering. Preserve insert-only creation, conditional writes, fresh\nacknowledged readback, exact employee/scope/input receipt binding and inspection\nwithout replay. Cron remains the only scheduler owner.\n\n## Verification and Evidence Boundary\n\n`copilotProcessTriggerAction.test.js` composes real Core, approval, executor,\nrecovery, native metadata lifecycle and shared receipt logic using isolated stores.\nIt checks all four commands, denied/drifted scope, stale/duplicate execution,\nwrite failure, malformed receipts, input bounds and later-layer presentation.\n\n`copilotProcessTriggerRuntime.live.test.js` separately enables real disposable\nProfile, Copilot, Workflow, MongoDB and local Ollama. It exercises all four\ncommands, persisted native state, denied roles, restart and original receipts.\nIts response-loss case loses the reply only after the native trigger starts the\ninstance, then reconciles after restart without a second start.\n\nAxis's confirmation tests cover the four explicit recovery identities. The\n`process-task-review.visual.html?mode=trigger` fixture renders the actual shared\ncomponent with synthetic state for desktop/mobile review and unknown-outcome\ninspection. It is not evidence of a signed-in full Axis deployment. These checks\nqualify the bounded trigger adapter, not every Workflow operation or domain graph.\n\n## Common Mistakes\n\n- Treating CRON trigger metadata as an installed schedule. Configure scheduling\n  through Cron's own governed journey and verify its separate lifecycle.\n- Treating ACTIVE status as sufficient when `active` is false. Both native\n  execution prerequisites must hold; neither is silently repaired by Copilot.\n- Reusing an instance identifier to conceal an uncertain execution. Inspect the\n  original action and receipt; do not attempt another trigger command as a probe.\n- Treating confirmation as permission. Native employee grants, current routing,\n  lifecycle and domain rules are rechecked at execution.\n- Copying framework configuration defaults into a customer project. Override\n  only the deployment choice or intentional presentation/timeout difference.\n",
+    "keywords": [
+      "copilot",
+      "process",
+      "trigger",
+      "workflow",
+      "archive",
+      "execute",
+      "receipt",
+      "AI Copilot",
+      "Process",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record266": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocesstaskactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotProcessTaskActions",
+    "title": "Process Task Actions in Copilot",
+    "summary": "Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection.",
+    "searchText": "Process Task Actions in Copilot Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection. # Process Task Actions in Copilot\n\n## Purpose and Ownership\n\nEmployees can prepare, review and confirm four existing Workflow operations:\nclaim a task, assign a task, complete a task and cancel a task. Copilot does not\nexecute a workflow itself. Workflow owns current task state, actor policy,\nassignee checks, decision validation, transitions, domain callbacks and audit.\n\nThis is a bounded integration, not coverage of every Process operation. It does\nnot author definitions, publish graphs, start instances, retry failed actions,\ncompensate workflows or manage triggers. Task cancellation does not cancel an\ninstance, withdraw a domain review or reverse a completed decision.\n\n## Employee Journey\n\nFor a beginner business user, a task is one pending unit of human work inside\na workflow instance. Claiming takes responsibility; completion records a decision.\nNeither is interchangeable with approval of the Copilot proposal itself.\n\nThe existing screen flow is **AI Copilot > Conversation > Review > Approve >\nExecute > Result**. No new task-management screen or separate approval system\nis required. Use Process inspection or the native Process page to identify the\nexact task first. Copilot does not resolve task names or guess identifiers.\n\n1. Open the intended enterprise and a conversation under your employee account.\n2. Enter an exact command from the examples below.\n3. Supply any requested missing identifier, assignee, reason or decision.\n4. Read the review. It lists the operation, task, executing employee and every\n   supplied command field. Preparation has not modified a task and does not\n   establish that the task exists or that Workflow will allow the transition.\n5. Approve the current review, then explicitly execute that approved revision.\n   Editing the proposal or changing enterprise requires a new review.\n6. Check the command result. For completion, also inspect the native instance:\n   a completed human task does not prove downstream domain actions succeeded.\n7. If the result is uncertain, inspect the original result. Do not repeat the\n   task command or manufacture a replacement action to work around uncertainty.\n\n| Intent | Example | Native effect |\n| --- | --- | --- |\n| Claim | `claim task review-42` | Claims the open task for the current employee. |\n| Assign | `assign task review-42 to reviewer-login` | Reassigns an eligible task through native administrator policy. |\n| Complete | Typed decision below | Completes the task and invokes native workflow advancement. |\n| Cancel | `cancel task review-42 because Duplicate request` | Cancels the eligible task only. Domain-owned review cancellation may be refused. |\n\n```json\n{\n  \"operation\": \"process.task.complete\",\n  \"taskCode\": \"review-42\",\n  \"decision\": {\n    \"approved\": false,\n    \"reason\": \"Required evidence is missing\"\n  }\n}\n```\n\nTyped operations accept exactly `operation`, `taskCode` and the operation-specific\nfield: `assignee`, `decision` or `reason`. Claim has no extra input. Supported\ndecision fields are `approved` (boolean), `reason`, `outcome`, `transitionCode`\nand `targetNodeCode`. Workflow still decides whether those fields are valid for\nthe pinned graph and current actor. Emergency override, caller-supplied approval\nlists, arbitrary nested decision data, endpoints and credentials are not accepted\nby this adapter. Use the native governed journey when a policy requires another\nshape; do not encode it inside a reason.\n\nOne plan contains one task command. Identifiers are bounded to 128 characters;\nreasons and other decision text to 1,000 characters. Unknown fields and malformed\nvalues are rejected. Missing values produce clarification rather than defaults.\nTask commands and results are excluded from later provider conversation context.\nConfigured activity recording remains independent of provider-context eligibility.\n\n## Optional Natural Language\n\nThe exact short forms above do not call a model. With the existing accounted\nintent planner enabled, a sentence such as the following may also prepare a review:\n\n> Please complete task review-42 with approved false and reason Required evidence is missing\n\nThe model only extracts a proposal. Backend checks require literal identifiers\nand text, the requested command verb, and an explicit `approved true` or\n`approved false` for a proposed boolean decision. \"Complete this task\" is not\nauthority to invent approval. Unrecognized or unsupported output asks for\nclarification. Provider failure or budget exhaustion cannot bypass review or use\nan unaccounted fallback. The preparation call consumes the existing token budget;\ntyped preparation and native command execution do not require a model.\n\n## Administrator Setup\n\nAn administrator or operator should qualify a synthetic workflow with the actual\nemployee roles before enabling task commands for business users.\n\nUse the existing layered `config/properties.js` in the owning deployment. Select\nan already configured nService alias and its actual runtime authority. Do not put\nURLs, service credentials or a second runtime registry in Copilot properties.\n\n```js\nmodule.exports = {\n  copilot: {\n    workbench: {\n      processTaskTarget: {\n        enabled: true,\n        moduleName: \"workflow\",\n        connectionName: \"process\",\n        targetAuthority: { runtimeRole: \"PROCESS\" }\n      },\n      receiptRecovery: { enabled: true }\n    },\n    core: { intentPlanning: { enabled: true } }\n  },\n  commandReceipts: { enabled: true, owners: { workflow: true } }\n};\n```\n\nThis example assumes that the deployment already owns a `process` alias with\n`PROCESS` authority. It does not create that connection or enable the Copilot API.\nApply Workflow receipt settings to its runtime, not just the Copilot runtime.\nNew Copilot task commands and original-result recovery are default-disabled.\n\n| Setting or grant | Responsibility |\n| --- | --- |\n| `copilot.workbench.processTaskTarget` | Explicit write admission and pinned native target, separate from read-inspection configuration. |\n| `commandReceipts.enabled`, `owners.workflow` | Native private original-command recording before any keyed task mutation. |\n| `copilot.mutation.prepare` | Prepare an employee-owned review. |\n| `copilot.mutation.execute` | Execute an approved current revision. |\n| `process.task.claim/assign/complete/cancel` | Independent native grant matching the command. Native route access groups still apply. |\n| `copilot.mutation.reconcile` | Independently inspect original action outcomes. |\n| `process.backoffice.view` | Required by the native original task receipt inspection route. |\n| `copilot.workbench.receiptRecovery.enabled` | Enable original-result inspection, not replay. |\n\nEmployee access tokens and the enterprise header are forwarded unchanged. No\nservice-token fallback exists. Workflow's record access, tenant isolation,\nreviewer policy and lifecycle validation remain mandatory even when Copilot grants\nare present. Permission and target changes invalidate pending execution.\n\n## Execution and Original Results\n\nThe sequence is: private Copilot approval and row claim, private Workflow original\ncommand claim, native task operation, native acknowledgement validation, original\nreceipt completion, then Copilot result persistence. These are not a distributed\ntransaction. Failures between stages may legitimately leave an unknown outcome.\n\nWorkflow stores `processCommandReceipt` through the existing nDatabase private\njournal protocol. It has no generic CRUD, BackOffice, event or cache exposure.\nReceipt identity binds tenant, enterprise, employee, command kind and original\nkey; its digest binds the exact task identifier and body. A receipt records the\noriginal acknowledgement, not a guess based on a task that now looks completed.\n\nNative original evidence is read through\n`POST /nodics/process/v0/tasks/:taskCode/commands/:command/receipt/query` with\n`{ \"idempotencyKey\": \"original-key\", \"command\": { ...originalBody } }`.\n`:command` is only `claim`, `assign`, `complete` or `cancel`. The route requires\nemployee authentication, Process view permission and the original native command\npermission. Copilot uses its existing **Inspect original business results** action;\nbusiness users need not construct this request.\n\nMissing or STARTED evidence stays unknown. A positively verified COMPLETED receipt\ncan close an uncertain Copilot action without repeating the task operation.\nDisabling new writes preserves authorized original-result inspection. Changing\nthe target, employee, enterprise or reviewed payload cannot adopt another receipt.\nHistorical unkeyed native commands have no backfilled receipt. Native calls with\nno key preserve their existing behavior; a present but malformed key is rejected,\nnever silently treated as an unkeyed command.\n\n| Problem | Meaning | Next step |\n| --- | --- | --- |\n| Clarification | Required input was not supplied. | Supply explicit values and review again. |\n| Permission denied | Copilot or native employee authority is absent. | Ask the appropriate administrator; do not switch to service credentials. |\n| Approval revision conflict | The displayed proof is stale. | Reload the existing action. |\n| Outcome unknown | Native dispatch or acknowledgement is uncertain. | Inspect the original receipt; do not retry the mutation. |\n| Task completed but instance failed | Decision and downstream execution have different outcomes. | Inspect Process incidents and use native recovery policy. |\n| Native review cancellation refused | Generic cancellation cannot implement the domain withdrawal contract. | Follow the owning domain's withdrawal journey. |\n\n## Customize and Extend Safely\n\nDevelopers must extend the owning service through standard Nodics layering rather\nthan replacing employee authorization with a frontend check.\n\nFor a partner deployment, routing and admission overrides belong in its existing\nenvironment/server `config/properties.js`. For example, replacing only\n`copilot.workbench.processTaskTarget.connectionName` with `automationPeer` selects\nthat existing alias; retain the true target authority. An empty or invalid alias\nmust reject preparation. A later module may override the exported adapter\n`input` method to reject `targetNodeCode` for a stricter deployment, using the\nstandard service layering contract. It must not broaden fixed routes or suppress\nthe complete review, current grants, native policy, CAS or receipt checks.\n\nWorkflow extensions belong in the existing Workflow lifecycle/policy services.\nDomain side effects stay in their native owners. Do not copy workflow execution\ninto Copilot, Axis or a customer startup module. Runtime tests must qualify the\neffective later-layer implementation, not just its source declaration.\n\n## Common Mistakes\n\n- Treating a task name as a stable task identifier can target the wrong work.\n  Inspect the task and review its exact code before approval.\n- Treating a completed task as a successful end-to-end workflow hides downstream\n  incidents. Inspect the native instance and its activity after completion.\n- Sending another command after a timeout can repeat business effects. Inspect\n  the original result first; missing evidence is not permission to retry.\n- Enabling Copilot routing without native receipt recording does not make a\n  keyed task command executable. Qualify both runtime configurations.\n\n## Verification and Evidence Limits\n\nFocused tests exercise review, approval, actor/enterprise/target drift, rejected\ninputs, native receipt binding, lost replies, duplicate dispatch prevention and\nconfiguration shutdown. Workflow tests cover exact assignment CAS/readback and\nexisting completion/retirement/actor-policy boundaries. The opt-in\n`copilotProcessTaskRuntime.live.test.js` uses actual employee authentication,\nnative task persistence, a local Ollama preparation, denial and restart inspection\nin disposable runtime storage. It does not certify every deployed Process graph,\nall policy decision shapes or customer domain callbacks. Screenshots and broad\nsigned-in Axis acceptance are separate evidence, not implied by API tests.\n",
+    "keywords": [
+      "copilot",
+      "process",
+      "tasks",
+      "claim",
+      "assign",
+      "complete",
+      "cancel",
+      "receipt",
+      "AI Copilot",
+      "Process",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record267": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotimportinspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotImportInspection",
+    "title": "Data-release Inspection in Copilot",
+    "summary": "Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media.",
+    "searchText": "Data-release Inspection in Copilot Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media. # Data-release inspection\n\n## Purpose\n\nData-release inspection lets an authorized employee review the current nImport catalogue, recent run summaries, and validation-only plans from the Copilot conversation. It does not install a release, execute an initialization profile, upload a file, or import business records.\n\nThe feature is disabled by default. A deployment must bind one Import runtime and explicitly allow release, profile, and history data-type identities for each tenant, enterprise, and environment.\n\nBeginners can use the fixed operation and selection controls without knowing native nImport routes. Business users receive a concise view of the releases or profiles that their enterprise is allowed to inspect. Developers configure exact identities and extend only the typed adapter contract. Operators use the same bounded evidence to diagnose catalogue, validation, and run-history issues without granting conversational installation authority.\n\n## Business journey\n\n1. Open the Copilot conversation and select **Inspect data releases**.\n2. Select a catalogue, history, or validation operation.\n3. For validation, select one configured release or initialization profile.\n4. Select **Inspect**. Axis sends a typed command; it does not send a native route.\n5. Review the bounded owner response in the conversation. Validation responses always state that no import was executed.\n\nCatalogue and history lists are bounded display windows, not total counts. Items outside the configured scope are omitted without revealing their identities or count.\n\n```mermaid\nsequenceDiagram\n  actor Employee\n  participant Axis\n  participant Core as Copilot Core\n  participant Capability as Import Inspection\n  participant Import as nImport\n  Employee->>Axis: Choose catalogue, history, or validation\n  Axis->>Core: Submit fixed typed command\n  Core->>Capability: Execute without model access\n  Capability->>Capability: Check enterprise scope and grants\n  Capability->>Import: One fixed call with employee bearer\n  Import->>Import: Native tenant and permission checks\n  Import-->>Capability: Catalogue or validation-only result\n  Capability->>Capability: Recheck admission and minimize fields\n  Capability-->>Axis: Bounded recorded evidence\n```\n\n## Supported operations\n\n| Copilot operation                 | Native owner call                                                       | Effect                                              |\n| --------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------- |\n| `import.release.init.catalogue`   | `GET /nodics/import/v0/init`                                            | Read configured initialization releases             |\n| `import.release.core.catalogue`   | `GET /nodics/import/v0/core`                                            | Read configured core releases                       |\n| `import.release.sample.catalogue` | `GET /nodics/import/v0/sample`                                          | Read configured sample releases                     |\n| `import.profile.list`             | `GET /nodics/import/v0/initialization-profiles`                         | Read configured initialization profiles             |\n| `import.run.history`              | `GET /nodics/import/v0/run/history?limit=25`                            | Read bounded tenant run summaries                   |\n| `import.release.init.validate`    | `POST /nodics/import/v0/init/validate`                                  | Validate one selected initialization release        |\n| `import.release.core.validate`    | `POST /nodics/import/v0/core/validate`                                  | Validate one selected core release                  |\n| `import.release.sample.validate`  | `POST /nodics/import/v0/sample/validate`                                | Validate one selected sample release                |\n| `import.profile.validate`         | `POST /nodics/import/v0/initialization-profiles/{profileCode}/validate` | Validate one selected profile and its ordered steps |\n\n## Configuration\n\nConfigure `copilot.capability.importInspection` through normal Nodics configuration layering. Do not edit framework defaults for a customer deployment.\n\n```js\n{\n  enabled: true,\n  connectionName: \"importRuntime\",\n  targetAuthority: { runtimeRole: \"IMPORT\" },\n  maximumRows: 25,\n  scopes: [\n    {\n      tenant: \"default\",\n      enterprise: \"exampleEnterprise\",\n      environment: \"local\",\n      initReleaseCodes: [\"foundation:init-v001\"],\n      coreReleaseCodes: [\"foundation:core-v001\"],\n      sampleReleaseCodes: [\"project:sample-v001\"],\n      profileCodes: [\"foundationSetup\"],\n      historyDataTypes: [\"init\", \"core\", \"sample\"]\n    }\n  ]\n}\n```\n\nEach exact scope must be unique. Empty or duplicate scope values, wildcard identities, unknown history data types, invalid runtime authority, or more than 100 identities in one category make the capability unavailable.\n\n## Authorization and privacy\n\nThe employee requires `copilot.data.query` plus the native permission for the selected operation:\n\n| Operation family               | Native permission         |\n| ------------------------------ | ------------------------- |\n| Catalogue and profile list     | `import.release.view`     |\n| Release and profile validation | `import.release.validate` |\n| Run history                    | `import.history.view`     |\n\nCopilot forwards the original employee bearer and enterprise header. nImport remains the release authority and rechecks its own route permissions and tenant scope. The adapter performs one transport attempt, rechecks current Copilot configuration and authorization after the owner responds, and rejects the evidence if the binding changed.\n\nThe projection excludes source paths, filesystem locations, contribution implementation details, request actors, arbitrary metadata, imported records, and unconfigured identities. Responses are limited to 25 records and 24 KB.\n\n## Why installation is not exposed\n\nCurrent nImport receipts protect each release attempt, but the public multi-release and profile install commands are not yet bound to one caller idempotency key and immutable whole-command digest. After an uncertain response, Copilot cannot safely prove which steps completed or inspect one original command result. Automatic replay could duplicate writes.\n\nTherefore these routes remain native-only:\n\n- `POST /nodics/import/v0/init/install`\n- `POST /nodics/import/v0/core/install`\n- `POST /nodics/import/v0/sample/install`\n- `POST /nodics/import/v0/initialization-profiles/{profileCode}/install`\n- `POST /nodics/import/v0/media`\n\nBefore conversational execution can be enabled, nImport must own a durable whole-command receipt that binds actor, tenant, selection, expected versions, command digest, attempt, and original result. It must support inspection without replay and represent partial completion explicitly. Media import additionally requires a reviewed media-upload binding and original-command recovery across staging, parsing, and schema writes.\n\n## Failure and recovery\n\n- A denied Copilot or native grant produces no owner evidence.\n- Invalid or foreign release/profile identities are rejected before transport.\n- Malformed owner envelopes and any validation response claiming import execution are rejected.\n- Transport failures are not retried by the inspection adapter.\n- If configuration or authority changes while the call is running, the response is discarded.\n- For native installation uncertainty, use nImport catalogue and run-history controls; do not repeat an install from Copilot.\n\n## Troubleshooting\n\n| Symptom                                   | Likely cause                                               | Safe response                                                                  |\n| ----------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------ |\n| Import inspection control is unavailable  | Capability is disabled or no exact enterprise scope exists | Ask an operator to verify the active configuration layer and runtime binding.  |\n| A release or profile is not listed        | Its identity is not included in the employee's exact scope | Review the approved scope; do not replace the identity with a wildcard.        |\n| Inspection is denied                      | Copilot or native nImport permission is missing            | Grant only the documented permission through the normal authorization owner.   |\n| Evidence is discarded after a slow call   | Configuration or authority changed during execution        | Re-open the conversation and submit a fresh read after the change is complete. |\n| Validation reports an execution           | Owner response violated the validation-only contract       | Treat the response as invalid and investigate nImport before trying again.     |\n| Native installation has an unknown result | No whole-command receipt is available                      | Inspect native history and receipts; never replay the command from Copilot.    |\n\n## Verification\n\nDevelopers can run the focused backend contract tests from the framework repository:\n\n```bash\nnode --test nodics.copilot/modules/copilotCapability/test/copilotImportInspection.test.js\n```\n\nRun the focused Axis composer tests from the Axis repository:\n\n```bash\nnpx vitest run test/assistant/CopilotImportInspectionComposer.test.tsx\n```\n\nOperators should also verify the active environment with a permitted test employee: confirm that configured identities are visible, foreign identities remain absent, validation states that nothing was executed, and denied grants return no owner evidence. A local unit result verifies the adapter contract; it does not by itself prove a deployed connection, signed-in browser journey, or production authorization configuration.\n\n## Common mistakes\n\n- Enabling the capability without an exact tenant, enterprise, and environment scope.\n- Using release labels as identities instead of the configured immutable release codes.\n- Granting `copilot.data.query` but omitting the native nImport permission, or bypassing nImport authorization in a project extension.\n- Treating a bounded list as the total catalogue or inferring hidden identity counts.\n- Adding an arbitrary URL, request body, filesystem path, or wildcard to make configuration easier.\n- Presenting validation as installation, or retrying an uncertain native install through the conversation.\n- Recording source paths, request actors, raw imported records, or private metadata in conversational evidence.\n\n## Customization contract\n\nLater project or environment layers may narrow scopes, labels, row limits, and target binding. They must not introduce arbitrary URLs, paths, request bodies, wildcard release selection, provider-mediated execution, hidden background reads, or a second import authority. New Import operations require an explicit adapter declaration, bounded projection, native permission, focused tests, documentation, and recovery classification.\n",
+    "keywords": [
+      "copilot",
+      "import",
+      "data release",
+      "catalogue",
+      "preflight",
+      "validation",
+      "AI Copilot",
+      "Data Import",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record268": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocessinspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotProcessInspection",
+    "title": "Process Inspection in Copilot",
+    "summary": "Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions.",
+    "searchText": "Process Inspection in Copilot Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions. # Process Inspection in Copilot\n\nCanonical owner: **nodics.copilot**. Technical adapter: **copilotCapability**.\nNative workflow definitions, tasks, incidents and execution remain owned by\n**nodics.process / workflow**. Axis renders the optional conversation controls.\n\n## Business outcome and boundaries\n\nAn employee can inspect an admitted workflow record from the conversation page:\nwhich version is published, whether an instance is waiting or failed, its task\nstatus, recent activity, and incident retry metadata. Inspection does not claim,\nassign, approve, reject, cancel, retry, compensate, publish or start anything.\nReading a task is not permission to make its decision.\n\nThis capability is a deterministic, typed read. It does not require a model to\ngenerate an answer. Natural-language process mutations and arbitrary workflow\nqueries are not implemented by these adapters. The operation catalogue's\n`IMPLEMENTED` label describes source maturity, not deployment readiness.\n\n## Prerequisites and configuration\n\n1. Compose Copilot with Capability, Policy and the normal conversation owner.\n   Enable the existing conversation API through `copilot.api.enabled`.\n2. Compose the native Workflow owner in the intended Process runtime. Preserve\n   its secured routes and registration/activation requirements. Reads do not\n   bypass a native denial or unavailable route.\n3. Configure an existing named `workflow` connection through nService's normal\n   deployment configuration. Do not put a URL or bearer token into a command.\n4. Give the employee `copilot.data.query` and the specific native permission in\n   the table below through Profile. Existing conversation permissions also apply.\n   No default role is broadened by this feature.\n5. In the owning deployment's normal layered `config/properties.js`, opt in to\n   `copilot.capability.processInspection` and declare an exact scope. Never add\n   framework functionality to customer kickoff/startup code.\n\n| Property | Default | Meaning and limits |\n| --- | --- | --- |\n| `enabled` | `false` | Explicit deployment opt-in; other permissions still apply |\n| `connectionName` | `null` | Existing named Workflow transport, not a URL |\n| `targetAuthority` | `null` | Exact `{ runtimeRole: \"PROCESS\" }` binding; no extra target fields |\n| `maximumRows` | `25` | Integer 1 through 25 displayed rows; not total matching records |\n| `scopes` | `[]` | Up to 1,000 exact tenant/enterprise/environment bindings; exactly one must match |\n| `definitionCodes` | Required per scope | Up to 100 unique native definition codes |\n| `instanceCodes` | Required per scope | Up to 100 unique native instance codes |\n| `taskCodes` | Required per scope | Up to 100 unique native task codes |\n| `incidentCodes` | Required per scope | Up to 100 unique native incident codes |\n| `triggerCodes` | Required per scope | Up to 100 unique Process trigger codes; Cron jobs remain separate |\n| `presentation` | Framework labels | Inert title, field labels, buttons, failure text and fixed-operation labels |\n\nAll five code arrays must exist. `[]` admits none of that record kind. There is no\nwildcard, prefix, inherited all-records fallback or model-selected scope. Codes\nuse letters, digits, dot, underscore and hyphen, start with a letter or digit,\nand are at most 128 characters. The environment must match Copilot's effective\nsecurity context, not an assumed directory name.\n\nExample deployment delta, using synthetic identities:\n\n```javascript\nmodule.exports = {\n  copilot: {\n    capability: {\n      processInspection: {\n        enabled: true,\n        connectionName: 'process',\n        targetAuthority: { runtimeRole: 'PROCESS' },\n        scopes: {\n          $config: 'replace',\n          value: [{\n            tenant: 'default',\n            enterprise: 'example-enterprise',\n            environment: 'local',\n            definitionCodes: ['example-onboarding'],\n            instanceCodes: ['example-onboarding-001'],\n            taskCodes: [],\n            incidentCodes: [],\n            triggerCodes: [],\n          }],\n        },\n      },\n    },\n  },\n};\n```\n\nReplace only actual deployment differences. Use nConfig's explicit replacement\nfor collections when replacing a prior scope list; a shorter ordinary array\nmust not accidentally retain prior entries. This does not grant native access\nor create records. Credentials remain with the original authenticated employee.\n\n## Step-by-step employee journey\n\nFor beginners, start with **Definition summary** for a code supplied by your\nadministrator. A definition is the workflow design; an instance is one execution\nof a published version; a task is a human step; an incident records a failure.\nBusiness users should inspect these states before requesting an operational\ndecision. The configuration steps above are for the administrator or operator,\nnot values a business user must enter in each conversation.\n\n1. Sign in to Axis under the intended enterprise.\n2. Open **AI > Conversation**, separately from the Workspace dashboard.\n3. Open **Inspect Process**. The button is present only when the backend supplies\n   valid nonempty choices for this context. Missing choices do not mean no native\n   workflow records exist.\n4. Choose an operation. List operations use the configured allowlist directly;\n   record operations show only configured codes admitted for that operation and\n   employee permission.\n5. For a record operation, select the record, then choose **Inspect**. A list\n   operation has no record selector. Opening the form or changing a selection\n   performs no read. Changing operation clears the record selection.\n6. Read the returned metadata and observation time. A bounded activity/task list\n   is not a global inventory or total count. No action has been approved or run.\n7. To see a later state, explicitly request a fresh inspection. Re-delivery of\n   the same accepted conversation turn does not cause another owner request.\n\nIf the employee becomes offline, the form refuses submission; it does not queue\nthe read for an eventual reconnect. The conversation controller owns transport\nfailures and uncertain turn delivery. Closing the dialog discards its selection.\nReloaded owner context discards stale choices.\n\n```mermaid\nsequenceDiagram\n    participant Employee\n    participant Axis\n    participant Copilot\n    participant ProfilePolicy\n    participant Workflow\n    Employee->>Axis: Select operation and admitted record\n    Axis->>Copilot: Typed inspection in normal conversation turn\n    Copilot->>ProfilePolicy: Current employee grant and exact scope check\n    Copilot->>Workflow: One fixed GET with original employee bearer\n    Workflow-->>Copilot: Native authorized record or denial\n    Copilot->>ProfilePolicy: Recheck current scope and target\n    Copilot->>Copilot: Validate every identity and minimize scalar fields\n    Copilot-->>Axis: Deterministic metadata, excluded from provider history\n    Axis-->>Employee: Current bounded inspection result\n```\n\n## Operation and native API contracts\n\nEvery row also requires `copilot.data.query`. The table's paths are native API\nsuffixes; the browser cannot submit them as executable input.\n\n| Operation | Native permission | Workflow GET suffix | Configured identity |\n| --- | --- | --- | --- |\n| `process.definition.list` | `process.definition.read` | `/definitions` | Filtered to `definitionCodes` |\n| `process.definition.inspect` | `process.definition.read` | `/definitions/:code` | `definitionCodes` |\n| `process.definition.versions` | `process.definition.read` | `/definitions/:code/versions` | `definitionCodes` |\n| `process.instance.list` | `process.backoffice.view` | `/instances` | Filtered to `instanceCodes` |\n| `process.instance.inspect` | `process.backoffice.view` | `/instances/:code` | `instanceCodes` |\n| `process.instance.detail` | `process.backoffice.view` | `/instances/:code/detail` | `instanceCodes` |\n| `process.instance.tasks` | `process.backoffice.view` | `/tasks?limit=25&instanceCode=:code` | `instanceCodes` |\n| `process.instance.activity` | `process.backoffice.view` | `/audit-events?limit=25&instanceCode=:code` | `instanceCodes` |\n| `process.instance.incidents` | `process.incident.read` | `/incidents?limit=25&instanceCode=:code` | `instanceCodes` |\n| `process.task.inspect` | `process.backoffice.view` | `/tasks/:code` | `taskCodes` |\n| `process.incident.inspect` | `process.incident.read` | `/incidents/:code` | `incidentCodes` |\n| `process.trigger.list` | `process.trigger.read` | `/triggers` | Filtered to `triggerCodes` |\n\nExample equivalent typed conversation input:\n\n```json\n{\"intent\":\"copilot.process.inspect\",\"operation\":\"process.instance.tasks\",\"code\":\"example-onboarding-001\"}\n```\n\nRecord commands accept only these three fields. Extra permissions, environment, fields,\nURLs, methods or authority data are rejected. Fixed API version is `v0`; native\ntransport permits one attempt and never substitutes an internal service token.\n\nList commands contain only `intent` and `operation`, for example:\n\n```json\n{\"intent\":\"copilot.process.inspect\",\"operation\":\"process.definition.list\"}\n```\n\nThey still require a nonempty configured code allowlist. Copilot removes\nunselected owner rows without revealing their content or count.\n\n## Data handling and recording\n\nDefinition/version output includes scalar identity, status and revision/version\nmetadata. Instance output includes status, node, incident/failure codes and times.\nInstance detail combines the same minimized instance fields with bounded tasks\nand activity; it still excludes decisions, actors and execution context. Trigger\nlists expose bounded Process trigger metadata, never Cron job authority.\nTasks expose code, scalar name, instance/node, status and due date. Incidents\nexpose code, instance/definition/node, status, error code, attempt counts and retry\ntime. Activity exposes instance/definition, event type, outcome and event time.\n\nGraphs, execution context, actor/assignee identities, decisions, review contexts,\ncompensation adapters, private receipts and arbitrary metadata are omitted.\nLocalized name objects are omitted rather than selecting an arbitrary locale.\nEvery returned row must belong to the requested native identity, including rows\nbeyond the display limit. Failed envelopes and malformed scalar values reject the\nwhole result. At most 200 native rows are accepted; the serialized projection is\nalso capped at 24,000 bytes by removing display rows, never by exposing raw data.\n\nBoth the typed command and its answer are excluded from future provider context.\nExisting conversation recording controls govern transcript persistence; recording\noff retains request-only content under that owner's policy. Required security\nand execution evidence is not reclassified as optional transcript content.\nNo model usage is billed for these deterministic reads.\n\nThe post-read recheck compares effective Copilot configuration and the trusted\nrequest identity/headers. It is not an additional live Profile token introspection.\nNative credential admission occurs at the secured owner API.\n\n## Failure and recovery\n\n| Symptom or code | Meaning | Safe next action |\n| --- | --- | --- |\n| Button absent | No valid admitted choices in current context | Check scope, deployment selection and specific grants; do not infer record existence |\n| `ERR_CPT_00005` | Invalid typed command | Use a listed operation and exact admitted code |\n| `ERR_CPT_00006` | Missing permission or exact scope | Have the owner review actual employee access; confirmation cannot fix it |\n| `ERR_CPT_00007` | Native denial/failure, wrong envelope/identity or invalid data | Diagnose through the native owner; do not retry through a model or alternate URL |\n| `ERR_CPT_00008` | Identity, target or admission changed during the read | Reload context and explicitly request a fresh inspection |\n| Empty bounded list | The native response contained no rows for this filter | Inspect the correct instance; not proof of no records elsewhere |\n| Failed instance or open incident | Reported native state only | Use the authorized native Process recovery journey; inspection does not retry or compensate |\n\n## Customize and extend safely\n\nFor presentation, override only selected labels in a later project's existing\n`modules/<owned-module>/config/properties.js`, for example\n`copilot.capability.processInspection.presentation.title`. Keep the six required\nlabels bounded and nonempty, and retain fixed operation identities. No HTML,\nJavaScript, URL, permission or route can be supplied through presentation.\n\nFor policy, reduce `maximumRows`, remove admitted codes, or replace the exact scope\narray through nConfig. Test empty arrays and foreign enterprise/environment denial.\nDo not copy framework defaults wholesale into an environment or customer module.\n\nFor a reviewed framework enhancement, add a native read contract in\n`copilotCapability/src/service/defaultCopilotProcessInspectionService.js` only\nafter validating its native owner, input, permissions and minimal projection.\nIts mergeable methods remain later-layer customization points. A new mutation\nmust use governed preparation/approval/execution and cannot be added here as a\nGET. Preserve family-specific Axis validation in `copilotInspectionContract.ts`\nand the shared `CopilotInspectionComposer`; do not add a second frontend registry.\n\nDevelopers should test their effective later-layer implementation, not just the\nframework defaults. A customized projection must retain the identity check for\nevery native row and the independent native permission for its operation.\n\n## Common mistakes\n\n- Enabling inspection without a matching named native connection leaves it\n  unavailable; a browser endpoint is not a replacement.\n- Omitting a code array makes the scope invalid. Use an explicit empty array\n  when that kind of record should not be inspectable.\n- Selecting an instance does not admit every task by standalone task code.\n  Instance task lists remain bound to their admitted instance; a standalone task\n  inspection separately requires membership in `taskCodes`.\n- Treating an incident's retry count as permission to retry bypasses the native\n  decision boundary. Inspection performs no recovery command.\n- Sending old answer text back to a model can reintroduce protected history.\n  The standard turn path excludes both sides of these inspections from prompts.\n- Passing raw database `limit` from a native generated-service customization can\n  lose the requested bound. Preserve Workflow's `pageSize`/`pageNumber` contract.\n\n## Signed-in application verification\n\nThe actual Axis application was also tested against an owned five-runtime\ncomposition: Platform/Profile/Copilot, Process, Rules, WCMS Staged and WCMS Online.\nNormal Axis initialization, CMS publication, human Process approval and module\nactivation were completed before sign-in; readiness was not mocked.\n\nThe operator selected **Inspect Process > Instance tasks > acceptance_instance**\nand explicitly submitted. The answer contained the real `acceptance_task` in\n`OPEN` state, without private context. A Rules summary was read in the same\nconversation. After restarting Copilot and reloading Axis, selecting the saved\nconversation restored both original answers. At 390 pixels, document and viewport\nwidths matched. The successful run had no browser console errors or warnings.\n\nThe restricted reader saw neither inspector nor the operator's history. Pasting\nthe same typed Process command into the ordinary composer returned a native-backed\nCopilot authorization refusal, not data. Final native inspection confirmed task\n`OPEN`, instance `WAITING` and rule `DRAFT`, unchanged. All disposable runtimes,\ndatabases and temporary frontend resources were closed after testing.\n\n![Actual signed-in Process result in the Axis application](../assets/images/full-axis-process-inspection-desktop.png)\n\n![Actual mobile Process form after backend restart](../assets/images/full-axis-process-inspection-mobile.png)\n\n![Restricted employee refused a manually submitted Process command](../assets/images/full-axis-inspection-reader-denied.png)\n\nFor a maintainer reproducing full-application acceptance, the existing\n`copilotKnowledge/test/helpers/runtimeAcceptance/runtimeSession.js` supports\n`NODICS_COPILOT_PROCESS_INSPECTION_ACCEPTANCE=1` and\n`NODICS_COPILOT_RULES_INSPECTION_ACCEPTANCE=1`, together with its runtime,\nregistration, Axis and persistent-acceptance opt-ins. The session returns a\nprivate temporary manifest; keep its password out of logs and documentation.\nUse the adjacent `initializeAxis.js` helper for governed baseline setup, seed\nthe native records through employee APIs as in the native test below, and point\na separately owned Axis dev server at that fixture using environment overrides.\nUse `http://127.0.0.1:3102`, its admitted CORS origin, not shared runtime edits.\nSend `restart` on session stdin for persistence verification and `close` for\nowned cleanup; shut down only the frontend server started for this test.\n\nThis earlier browser evidence covers the two explicit read journeys above, not every\noperation, natural-language intent planning, reference-runtime deployment or\nProcess mutation. The updated native suite separately covers all twelve fixed reads;\nthe three list operations and instance detail still require refreshed signed-in\nvisual evidence.\n\n## Verification: component and native tests\n\nThe captures below show the actual shared Axis component with synthetic Process\nchoices at 1280 by 720 and 390 by 844 pixels. They verify the form's layout and\ntyped submission, not an authenticated Process request or full signed-in route.\n\n![Synthetic Process inspection form at desktop width](../assets/images/process-inspection-desktop.png)\n\n![Synthetic Process inspection form at mobile width](../assets/images/process-inspection-mobile.png)\n\nFocused backend tests exercise all twelve operations, original headers,\ngrant/scope/code denial before transport, immutable binding drift, malformed\nenvelopes, foreign rows beyond display limits, recording on/off and turn replay.\nThe native fixture creates published Workflow definitions, a real human task and\nan incident caused by a callback lacking completed approval evidence. It reads\ntheir actual persisted state, checks unchanged owner records and restarts Copilot.\nLocal Ollama availability is checked; inspection intentionally makes zero model\ncalls. No fixture claims a task or performs a domain publication callback.\n\nRun from the framework checkout:\n\n```bash\nnode --test nodics.copilot/modules/copilotCapability/test/copilotProcessInspection.test.js\nnode --test nodics.process/modules/workflow/test/processInspectionPagination.test.js\nNODICS_COPILOT_PERSISTENT_ACCEPTANCE=1 \\\nNODICS_ERASURE_ES_HOME=/opt/homebrew/opt/elasticsearch-full/libexec \\\nNODICS_ERASURE_MONGO_URI='mongodb://127.0.0.1:27017/?replicaSet=nodicsLocal' \\\nnode --test nodics.copilot/modules/copilotCapability/test/copilotProcessInspectionRuntime.live.test.js\n```\n\nProvider coordinates above describe the supported disposable local test profile,\nnot application defaults. The fixture cleans only its owned resources. Axis's\n`CopilotProcessInspectionComposer.test.tsx` covers explicit selection, exact typed\nsubmission, family isolation, stale choice clearing and offline refusal. Re-run\nRules composer tests when changing shared rendering.\n\nThis is source implementation, private native acceptance and the scoped signed-in\nevidence above, not activation in every reference runtime, published documentation\nor complete Copilot coverage of all workflow mutations.\n",
+    "keywords": [
+      "copilot",
+      "process",
+      "workflow",
+      "inspection",
+      "tasks",
+      "incidents",
+      "AI Copilot",
+      "Process",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record269": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotrulesinspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotRulesInspection",
+    "title": "Rules Inspection in Copilot",
+    "summary": "Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads.",
+    "searchText": "Rules Inspection in Copilot Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads. # Rules Inspection in Copilot\n\nCanonical functional owner: `nodics.copilot`. Technical coordinator:\n`copilotCapability`. Rules API owns authorization and business records; Rules\nDefinition owns persistence. Core owns conversation admission and delivery.\nAxis presents only the current allowed choices. This feature never evaluates,\nsimulates, edits, approves or publishes a policy.\n\nBeginners and business users should follow **Inspect a rule** after an\nadministrator completes setup. Operators own native availability and failure\ninvestigation. Developers should read **Customize and extend safely** before\nchanging bindings or adding an operation.\n\n## Supported operations\n\n| Choice | Native GET path under the Rules connection | Additional employee permission |\n| --- | --- | --- |\n| Rule definitions | `/definitions` | `rules.definition.read` |\n| Rule summary | `/definitions/:code` | `rules.definition.read` |\n| Rule versions | `/definitions/:code/versions` | `rules.definition.read` |\n| Rule activity | `/definitions/:code/audit` | `rules.definition.audit` |\n| Score-band sets | `/band-sets` | `rules.band.read` |\n| Score-band summary | `/band-sets/:code` | `rules.band.read` |\n| Score-band versions | `/band-sets/:code/versions` | `rules.band.read` |\n| Property catalogue | `/property-catalogues/:code` | `rules.definition.read` |\n\nEvery inspection also requires `copilot.data.query`, normal conversation/API\nadmission, an authenticated employee and an exact configured tenant, enterprise\nand environment binding. Native Rules routes independently authorize the original\nemployee. Viewing a choice is not an execution grant.\n\nVersions and activity are bounded native responses, not collection totals. A\nnew draft can legitimately have no published versions. Inspection does not prove\nthat a rule is valid, published, effective or used in a particular customer\njourney. Native simulation writes simulation/audit state and is therefore not\nincluded as a read operation.\n\n## Administrator setup\n\n1. Deploy the normal Rules owners and configure their named module connection\n   using existing runtime configuration. The transport resolves the module's\n   actual URL prefix; the browser does not supply an endpoint.\n2. Confirm the intended employee can use the corresponding native Rules read.\n   Assign permissions through Profile. Do not add wildcard grants or use a\n   runtime service credential as the employee.\n3. Decide which exact rule, band and property-provider codes this enterprise can\n   inspect. A code allowed for one enterprise is not implicitly allowed for\n   another. All three arrays must be present, can be empty, and contain at most\n   100 unique codes each.\n4. In the project's existing configuration layer, override the default-disabled\n   settings. The following is a configuration example, not a new runtime:\n\n   ```js\n   module.exports = {\n     copilot: {\n       capability: {\n         rulesInspection: {\n           enabled: true,\n           connectionName: \"rules-owner\",\n           targetAuthority: { runtimeRole: \"RULES\" },\n           maximumRows: 25,\n           scopes: [{\n             tenant: \"default\",\n             enterprise: \"example-enterprise\",\n             environment: \"local\",\n             ruleCodes: [\"reward-policy\"],\n             bandCodes: [\"reward-bands\"],\n             propertyProviderCodes: [\"eWaste.reward\"],\n           }],\n         },\n       },\n     },\n   };\n   ```\n\n5. Use the actual deployed runtime role, named connection and trusted Copilot\n   environment. The binding above works only if those values exist. No wildcard\n   scopes, duplicate matching bindings, URLs or additional target-authority\n   fields are accepted. `maximumRows` must be an integer from 1 through 25.\n6. Reload the conversation context after applying configuration. Confirm the\n   employee sees only permitted operations and admitted codes. Test a denied\n   actor and an unadmitted code before enabling a wider set.\n\nThe scope binding is an additional Copilot restriction, not an alternate Rules\npermission system. It cannot grant native access. No Kickoff startup code or\ncustomer-specific adapter is needed.\n\n## Inspect a rule\n\n1. Open the separate Copilot conversation page for the intended enterprise.\n2. Select **Inspect Rules**. Opening this form makes no Rules read.\n3. Select an operation, such as **Rule activity**. List operations use the\n   configured allowlist and do not show a record selector.\n4. For a record or property-catalogue operation, select a definition/provider\n   from the allowed choices. Changing operation clears the previous selection.\n   There is no free-form endpoint or arbitrary code field.\n5. Select **Inspect** once. Axis submits a typed command through the ordinary\n   conversation controller. Offline submission is refused, never queued.\n6. Read the metadata response in the conversation. It shows the requested code,\n   operation, observation time, coverage and returned records. An explicit\n   `omittedForDisplay` count identifies rows removed by the display limit.\n7. To request another current observation, explicitly submit another inspection.\n   Replaying the same accepted turn does not issue a second native read. Restored\n   conversation history is historical evidence, not a fresh Rules query.\n\nThe typed command for technical callers is:\n\n```json\n{\n  \"intent\": \"copilot.rules.inspect\",\n  \"operation\": \"rules.definition.audit\",\n  \"code\": \"reward-policy\"\n}\n```\n\nRecord commands accept only these three fields. A tenant, enterprise, endpoint, HTTP\nmethod or handler in the command causes rejection. Unknown operations cannot\nfall through into model-selected API execution.\n\nList commands omit `code`, for example:\n\n```json\n{\"intent\":\"copilot.rules.inspect\",\"operation\":\"rules.definition.list\"}\n```\n\nThe native list is filtered to configured codes without exposing excluded rows\nor their count. Property catalogue output retains bounded property names, data\ntypes, allowed operators and scalar allowed values; provider implementation,\nresolvers and arbitrary nested metadata are excluded.\n\n## Owner flow\n\nThe following captures show the actual Axis component with synthetic choices,\nat desktop and 390-pixel mobile width. They verify form layout, selection and\ntyped command composition, not a signed-in Rules journey.\n\n![Synthetic Rules inspection form at desktop width](../assets/images/rules-inspection-desktop.png)\n\n![Synthetic Rules inspection form at mobile width](../assets/images/rules-inspection-mobile.png)\n\n```mermaid\nsequenceDiagram\n    actor Employee\n    participant Axis\n    participant Core as Copilot Core\n    participant Capability as Rules Inspection\n    participant Rules as Native Rules API\n    Employee->>Axis: Select operation and admitted code\n    Axis->>Core: Submit typed conversation turn\n    Core->>Core: Accept once and exclude provider context\n    Core->>Capability: Execute with original request\n    Capability->>Capability: Check current scope and permissions\n    Capability->>Rules: One fixed GET with employee bearer\n    Rules->>Rules: Native route and record authorization\n    Rules-->>Capability: Owner envelope\n    Capability->>Capability: Recheck admission and project bounded scalars\n    Capability-->>Core: Inert metadata response\n    Core-->>Axis: Recorded or request-only delivery\n```\n\nThere is no LLM call in this flow. Both request and response are excluded from\nsubsequent provider history. Rule graphs, band definitions, arbitrary metadata, audit actor\nidentities, reasons and credentials are not included in the response projection.\nAudit output contains only the rule reference, event type, outcome, version,\ndraft revision and creation time. Other responses contain explicitly allowed\nsummary/version metadata. Owner errors are replaced with a stable generic error,\nnot exposed with native URLs or secrets.\n\nConversation recording follows the existing recording configuration. With\nrecording enabled, authorized transcript administrators can inspect retained\ncontent through the existing transcript owner. With recording disabled, content\nis delivered only for the current request and is not reconstructable from\nhistory. Turn lifecycle metadata still exists. This feature does not create a\nseparate read-audit database or override retention policy.\n\n## Failure and recovery\n\n| Symptom | Meaning | Action |\n| --- | --- | --- |\n| No Inspect Rules control | Disabled, no matching scope, insufficient grants, empty code lists or unavailable context | Administrator checks effective settings and native access; refresh context |\n| Desired code absent | Code not admitted for that operation and scope | Request an administrator review; do not use another enterprise's binding |\n| `ERR_CPT_00001` | Invalid typed command | Correct only the operation/code; remove extra fields |\n| `ERR_CPT_00002` | Current user/scope/configuration refused | Recheck grants and effective binding; no automatic retry |\n| `ERR_CPT_00003` | Native transport or envelope could not establish valid evidence | Inspect owner health and native operation; do not treat an empty/error result as success |\n| `ERR_CPT_00004` | Identity or routing changed while reading | Obtain a new context and explicitly request a fresh read |\n| No versions | Native bounded result may be empty for an unpublished draft | Check the normal Rules lifecycle; inspection does not publish |\n| Recording-off response lost | Transient answer was not retained | A new explicit read is possible; the original content cannot be recovered |\n\nAdmission is rechecked after the native response against effective settings and\nthe current trusted request. Changes visible there prevent delivery; this is not\na second Profile token introspection. Wrong rule identities, malformed scalar\nfields and failed envelopes\nare refused, including mismatched rows beyond the display limit. No original\ncredential, connection routing or native definition graph is placed in browser\ncontext metadata.\n\n## Customize and extend safely\n\nUse the project's existing layered `config/properties.js` or configured external\nproperties file. For example, narrow `maximumRows` to 5 and replace one scope's\n`ruleCodes` with the two policies this enterprise operates. Keep all three code arrays\nand the exact tenant/enterprise/environment triple. Duplicate matching bindings\nare configuration errors, not union rules. Permissions remain Profile-owned.\n\nPresentation strings are configurable under\n`copilot.capability.rulesInspection.presentation`: `title`, `operation`, `code`,\n`submit`, `cancel`, `failure`, and `operations` labels keyed by the eight fixed\noperation codes. Keep all fields present and use short business labels. This\ncustomization changes wording, not the command vocabulary or permission rules.\n\nFor a new native read, extend the framework-owned operation contract and scalar\nprojection with matching owner authorization, route evidence and denial tests.\nExtend the Axis typed parser only for that reviewed code. Do not configure URLs,\nservice names or arbitrary methods as operations. Mutations must use the existing\ngoverned preparation/approval/execution architecture and native receipt contract;\nthey cannot be added to this GET-only path.\n\nVerify changes with `copilotRulesInspection.test.js`, the recording/history\nregressions, Axis `CopilotRulesInspectionComposer.test.tsx`, and the opt-in native\nsuite `copilotRulesInspectionRuntime.live.test.js`. The latter creates only\ndisposable unpublished drafts, reads all eight paths and checks native denial,\nno model usage and restart persistence. Empty draft-version responses do not\nqualify published-version lifecycle behavior. Unit tests cover nonempty bounded\nversion projection. Component screenshots, where present, are synthetic UI\nevidence, not signed-in Rules authorization or production acceptance.\n\n## Common mistakes\n\n- Treating a visible operation as permission to execute it. Both Copilot and\n  native Rules check the current employee again when the request runs.\n- Sharing a wildcard code list between enterprises. Bind exact admitted codes\n  to one tenant/enterprise/environment triple and test negative access.\n- Treating a draft summary or empty version list as publication evidence.\n  Use the native lifecycle for validation, approval and publication.\n- Asking the LLM to interpret raw rule graphs from this tool. This metadata-only\n  path excludes graphs and never invokes a model.\n- Retrying a lost recorded turn under another identity. Reopen only owned\n  history; use a new explicit read when a current observation is needed.\n\n## Verification\n\nFull signed-in Axis acceptance also covers **Inspect Rules > Rule summary >\nacceptance_rule** in an owned five-runtime composition. The actual native DRAFT\nsummary was returned through the conversation lifecycle, persisted after a\nCopilot backend restart and restored from history on a 390-pixel viewport.\nThe restricted employee saw no Rules inspector and no operator conversation.\nNative inspection confirmed the rule remained DRAFT. Browser console checks on\nthe successful journey had no warnings/errors; disposable resources were closed.\nThis is one qualified browser read journey, not published-version lifecycle,\nall Rules operations or reference-runtime deployment.\n\n![Actual signed-in Rules result in Axis](../assets/images/full-axis-rules-inspection-desktop.png)\n\n![Recorded inspection restored on mobile after backend restart](../assets/images/full-axis-inspection-mobile-restart.png)\n\nSee [Process inspection](process-inspection.md#signed-in-application-verification)\nfor the shared browser acceptance setup and test-session switches.\n\nFrom the framework root, with the existing local Mongo replica set and owned\nElasticsearch fixture available:\n\n```sh\nenv NODICS_COPILOT_PERSISTENT_ACCEPTANCE=1 \\\n  NODICS_ERASURE_ES_HOME=/opt/homebrew/opt/elasticsearch-full/libexec \\\n  NODICS_ERASURE_MONGO_URI='mongodb://127.0.0.1:27017/?replicaSet=nodicsLocal' \\\n  node --test nodics.copilot/modules/copilotCapability/test/copilotRulesInspectionRuntime.live.test.js\n```\n\nUse the provider paths appropriate to the machine. The test manages private\ndatabases, ports and runtime processes and closes only its owned resources.\nIt does not alter shared runtimes, production records or customer startup files.\n",
+    "keywords": [
+      "copilot",
+      "rules",
+      "inspection",
+      "audit",
+      "versions",
+      "score-band",
+      "AI Copilot",
+      "Rules Engine",
+      "Business Operations"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record270": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotsecurecouponfulfillment",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotSecureCouponFulfillment",
+    "title": "Secure Coupon Fulfillment",
+    "summary": "Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay.",
+    "searchText": "Secure Coupon Fulfillment Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay. # Secure Coupon Fulfillment\n\nCanonical functional owner: `nodics.copilot`. Technical coordinator:\n`copilotWorkbench`. Digital Core owns merchant validation and fulfillment\nreceipts; Promotion owns coupon eligibility and redemption; Profile owns staff\nidentity, permissions and issuer/outlet scope. Axis displays these contracts.\n\nBeginners and business users should follow **Complete a redemption** after an\nadministrator has enabled the capability. Operators own setup and uncertain\nresult investigation. Developers should use **Customize and extend safely**\nbefore changing configuration or integrating another native provider.\n\n## Availability and prerequisites\n\nThis optional capability is disabled by default. It does not grant employee\npermissions, create a merchant, settle an external POS transaction or enable a\nprovider merely because its form appears.\n\n| Requirement | Owner and configuration |\n| --- | --- |\n| Copilot route admission and private action storage | Copilot API/Policy/Workbench and generated persistence |\n| Operational Commerce connection | Existing named `digitalCore` connection with `COMMERCE` authority |\n| Secure adapter | `copilot.workbench.couponTarget.enabled: true` |\n| Preparation | `copilot.mutation.prepare`, `commerce.coupon.pos.redeem`, `profile.scope.read` plus normal route admission |\n| Redemption activity | `copilot.data.query`, `commerce.coupon.pos.redeem` plus current Profile staff scope |\n| Execution and original receipt inspection | Additionally `copilot.mutation.execute` |\n| Issuer and outlet access | Live Profile scope assignment, independently checked by Digital Core |\n| Bounded issuer display lookup | Commerce runtime credential with `profile.enterprise.reference.read` |\n| Native merchant readiness | Digital Core merchant provider, Promotion eligibility and any selected outlet/pricing prerequisites |\n\nThe runtime credential is only for Profile's bounded reference lookup. Human\nfulfillment continues with the original employee identity. An employee's\nauthenticated partition is not automatically an issuing merchant scope.\n\n## Configure and open\n\n1. Deploy the normal owner modules and generated private action persistence.\n   Keep sensitive-request logging protection enabled.\n2. Configure the operational Commerce connection through existing runtime\n   configuration. Do not reuse a Staged product-authoring target.\n3. Enable the adapter through the project's existing external configuration\n   layer. The example connection must already exist:\n\n   ```js\n   module.exports = {\n     copilot: {\n       workbench: {\n         couponTarget: {\n           enabled: true,\n           moduleName: \"digitalCore\",\n           connectionName: \"commerce-owner\",\n           targetAuthority: { runtimeRole: \"COMMERCE\" },\n         },\n       },\n     },\n   };\n   ```\n\n4. Assign the approved employee permissions and actual enterprise/outlet scope\n   through Profile. Never substitute a browser flag or service credential.\n5. Qualify native provider readiness separately. `MERCHANT_SCREEN` is staff\n   fulfillment attestation; `LOCAL_SAMPLE` is test evidence. Neither proves an\n   unintegrated external POS has settled a purchase.\n6. Reload Axis and open AI & Copilot, then the conversation page. The fresh\n   context response advertises **Redeem a coupon** only when configured and\n   authorized. The Workspace dashboard remains separate from conversation.\n\n## Complete a redemption\n\n1. Select **Redeem a coupon**. Opening the form only loads authorized input\n   metadata; it does not validate or redeem a code.\n2. Enter the customer-presented code in the masked field and the original\n   transaction/receipt reference. Select an authorized outlet when required.\n   For priced benefits use the source-reference label supplied by the owner.\n3. Select **Validate and review**. The transient code clears immediately. The\n   sensitive request goes to native validation, not a language model or chat.\n4. Review the issuer, benefit, receipt, outlet, proof expiry and entitlement\n   revision. Supported priced benefits include the original source revision,\n   currency and amounts. Unsupported benefit shapes are rejected, not hidden.\n5. Select **Approve reviewed fulfillment**. Approval binds the exact plan digest\n   and revision. It neither performs fulfillment nor grants missing authority.\n6. Only after providing the benefit, select **Confirm fulfilled benefit and\n   redeem**. One durable action claim precedes the original employee command.\n7. Keep the action reference. After navigation, **Open existing action** reloads\n   it with current backend ownership checks. Never use a new action as a retry\n   for an uncertain original fulfillment.\n\n## Review redemption activity\n\n1. Open **Redeem a coupon**, then select **Redemption activity**. Axis requests\n   the current Digital Core queue only when this tab is selected.\n2. Review the product, claim status and receipt reference. The table is bounded\n   to 100 owner records and shows an explicit recovery marker when the original\n   receipt requires investigation.\n3. Select **Refresh activity** for a new owner read. Refresh never validates,\n   claims, confirms or retries a coupon.\n4. Treat the list as current enterprise-scoped operational evidence, not a\n   ledger total or customer history. Coupon tokens, customer identities and\n   native command keys are excluded from the Copilot and Axis contracts.\n\n## Screen and owner flow\n\n```mermaid\nflowchart TD\n  A[Conversation] --> B[Secure masked form]\n  A --> Q[Redemption activity]\n  Q --> R[One employee-authorized Digital Core queue read]\n  R --> S[Bounded minimized table]\n  B --> C[Validate with Digital Core, Profile and Promotion]\n  C --> D[Minimized private proof and review]\n  D --> E[Explicit approval: no fulfillment write]\n  E --> F[Explicit fulfillment confirmation]\n  F --> G[Durable claim and native owner command]\n  G --> H{Exact completion evidence?}\n  H -->|Yes| I[Confirmed native receipt]\n  H -->|No| J[Retain uncertain action]\n  J --> K[Reload and inspect original receipt]\n  K --> L{Exact original evidence?}\n  L -->|Yes| I\n  L -->|No| J\n```\n\n## Recover an uncertain result\n\nA timeout or lost acknowledgement is not evidence that the benefit was not\nprovided. Copilot stops further fulfillment and retains the original action.\n\n1. Select **Reload action**. `EXECUTING` and `OUTCOME_UNKNOWN` actions can expose\n   **Check original receipt**.\n2. Inspect the original receipt. This is read-only at the native owner; it does\n   not invoke confirm, redeem, claim, a provider or a new command key.\n3. Only native `REDEEMED` state plus the exact original committed receipt can\n   complete the existing action. Current permissions, target, staff scope and\n   evidence are rechecked before the action revision is advanced atomically.\n4. Missing evidence, incomplete commits, changed outlets or lost scope remain\n   unconfirmed. An authorized Commerce operator must investigate the original\n   command through its owner workflow. Do not create a replacement fulfillment.\n\nApproval expiry prevents new execution, not inspection of an old completion.\nConcurrent inspection cannot produce two action completions.\n\n| Symptom | Interpretation and next step |\n| --- | --- |\n| Secure form absent | Check adapter target, current context and preparation grants; do not widen default roles |\n| Validation denied | Check current employee merchant/outlet scope and native eligibility |\n| Proof expired or review changed | Obtain fresh native validation and explicitly review again |\n| Stale action revision | Reload the existing action; never overwrite a newer decision |\n| Outcome unknown after restart | Inspect the original receipt, not a second confirmation |\n| Receipt mismatch or owner unavailable | Preserve uncertainty and investigate with the owner |\n\n## API and privacy contract\n\n| Entry | Purpose |\n| --- | --- |\n| `GET /copilotApi/v0/coupons/workspace` | Authorized form metadata |\n| `GET /copilotApi/v0/coupons/redemptions` | Bounded, minimized merchant redemption activity |\n| `POST /copilotApi/v0/coupons/prepare` | Sensitive validation and private review |\n| Existing confirmation approve/reject/execute/get | Revision/digest-bound action lifecycle |\n| `POST /copilotApi/v0/confirmations/:confirmationCode/coupon-receipt` | Reconcile the original receipt |\n| `POST /digitalCore/v0/merchant/redemptions/:code/receipt/query` | Current employee-scoped native evidence |\n\nDeployment prefixes follow normal module exposure. Preparation accepts only\n`couponToken`, `merchantReceiptReference` and optional `storeCode`. Inspection\naccepts `expectedRevision` and `argumentsDigest`; callers cannot replace the\ntarget, command key or receipt. Private actions retain minimized proof/review,\nnot the raw token or customer identity. Native business `deliveredAt` is distinct\nfrom framework-owned persistence `created`/`updated` timestamps.\n\nRecognized coupon-redemption messages are redirected before provider invocation\nor conversation persistence. Only neutral guidance is retained and excluded\nfrom future provider context. This is not universal secret detection or\nhistorical cleansing: never paste codes into ordinary chat, titles, receipt\nreferences or free-form review fields.\n\n## Customize and extend safely\n\nUse the project's existing external properties file loaded by `nConfig`, not a\nnew customer kickoff service or edits to generated framework defaults. A project\nmay name that file `config/properties.js`; its deployment must select the file\nthrough the existing configuration contract. Framework defaults live at\n`nodics.copilot/modules/copilotWorkbench/config/properties.js` and are reference\nmaterial, not the project's customization destination.\n\nFor example, merge these labels into the existing project configuration:\n\n```js\nmodule.exports = {\n  copilot: {\n    workbench: {\n      couponPresentation: {\n        open: \"Redeem customer coupon\",\n        redemptionsTab: \"Recent fulfillment activity\",\n        refreshRedemptions: \"Refresh fulfillment activity\",\n        receipt: \"Original till receipt reference\",\n        execute: \"Confirm benefit provided and redeem\",\n      },\n    },\n  },\n};\n```\n\nKeep all effective labels bounded and nonempty. Preserve the remaining default\nlabels and re-run context/UI tests after applying the layered configuration.\nChanging labels cannot disable review, approval, native authority, sensitive\nlogging, revision checks, token minimization or original-command recovery.\nChanging a target invalidates old plans and requires new validation/review.\n\nNew providers or benefit shapes require native domain qualification, strict DTO\nparsing and regression tests before UI support. There is no supported generic\nAPI executor or direct coupon-status database override. Verify malformed labels,\nrevoked permissions, expired proofs, stale revisions, mismatched receipts and\nuncertain outcomes; each must reject safely or retain uncertainty.\n\n## Common mistakes\n\n- Treating approval as execution: approval only records the reviewed decision.\n- Using enterprise identity as merchant access: Profile staff scope is separate.\n- Pasting raw codes into ordinary chat or receipt fields: use the masked form.\n- Retrying a timeout by creating another action: inspect the original receipt.\n- Treating staff attestation as external POS settlement: qualify that provider\n  separately before making a settlement claim.\n- Treating the activity table as a complete ledger or retry control: it is a\n  bounded read and never repeats fulfillment.\n- Updating coupon status directly or bypassing the native owner: no supported\n  customization permits this.\n\n## Verification\n\nFrom the framework root, with a local MongoDB replica set, Elasticsearch binary\nand Ollama available:\n\n```sh\nNODICS_COPILOT_PERSISTENT_ACCEPTANCE=1 \\\nNODICS_ERASURE_ES_HOME=/opt/homebrew/opt/elasticsearch-full/libexec \\\nNODICS_ERASURE_MONGO_URI='mongodb://127.0.0.1:27017/?replicaSet=nodicsLocal' \\\nnode --test nodics.copilot/modules/copilotWorkbench/test/copilotCouponRuntime.live.test.js\n```\n\nThe fixture owns private namespaces, ports and Platform/operational Commerce\nprocesses. It creates a synthetic campaign and real native reservation, sale,\nentitlement and delivery records; its paid-order reference is a prerequisite,\nnot payment-checkout acceptance. Cleanup removes only fixture-owned resources.\n\nThe focused unit and Axis suites additionally prove the fixed merchant queue,\nindependent read permission, post-read policy recheck, strict 100-row bound,\nprivate-field minimization and uncached UI transport. The three live scenarios\nprove authorized fulfillment, actual native response loss\nwith read-only recovery after restart, and a recognized coupon conversation\nwith local Ollama availability but zero model calls/raw-token persistence.\nThey also check reader denial, an employee with no merchant scope, approval\nwithout fulfillment, stale revisions and exactly one native confirmation.\n\nThis qualifies the local `MERCHANT_SCREEN` profile without outlet or monetary\nbenefit selection. It does not qualify external POS, activated pricing,\npublication, production deployment or a new signed-in browser journey. Axis\ncomponent/visual fixtures are separate UI evidence. Documentation pack generation\nis not publication or visual acceptance.\n",
+    "keywords": [
+      "copilot",
+      "coupon",
+      "merchant",
+      "fulfillment",
+      "redemption",
+      "receipt",
+      "AI Copilot",
+      "Business Operations",
+      "Coupon Fulfillment",
+      "Recovery"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record271": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotstandalonebusinessactions",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotStandaloneBusinessActions",
+    "title": "Existing Enterprise Invitations and Product Prices",
+    "summary": "Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners.",
+    "searchText": "Existing Enterprise Invitations and Product Prices Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners. # Existing Enterprise Invitations and Product Prices\n\nFunctional owner: `nodics.copilot`. Technical owner: `copilotWorkbench`.\nProfile owns invitations and access; Pricing owns price rows and authoring policy.\n\n## Business Outcome\n\nUse the conversation to invite employees into an enterprise that already exists,\nor create prices for products that already exist. Neither journey creates an\nenterprise or product as a side effect. Invitations remain pending registration.\nCreating a price row does not activate a price book or publish a customer price.\n\nBoth journeys follow **prepare, review, approve, execute, inspect**. Preparation\nand approval save only the Copilot action. Execution makes the native owner calls.\nAt most 20 invitations or 20 price rows are accepted in one standalone action.\n\nBeginners should start with the step-by-step journey for their task and stop at\nreview until every value is correct. Developers should read the native execution\ncontract before extending fields. An operator should preserve the original action\nreference and follow the recovery table whenever completion is uncertain.\n\n![Standalone invitation and price reviews on desktop](../assets/images/standalone-actions-desktop.jpg)\n\nCapture context: local Axis real confirmation renderer, synthetic data,\n1280x900 desktop and 390x844 mobile. These are not signed-in customer records.\n\n![Completed invitation and approved price on mobile](../assets/images/standalone-actions-mobile.jpg)\n\n## Administrator Setup\n\n1. Compose existing Copilot API, Core, Conversation, Policy and Workbench modules.\n   Keep generated private `copilotAction` persistence enabled with atomic revision\n   claims. Do not add customer kickoff orchestration or a second action store.\n2. Configure the native Profile target and existing Product/Pricing workbench\n   target through the approved Nodics configuration layer. The connection names\n   below are placeholders for already registered deployment connections.\n3. Enable only the new journey needed. Both flags default to `false`:\n\n   ```js\n   copilot: {\n     workbench: {\n       standaloneInvitationsEnabled: true,\n       standalonePricesEnabled: true,\n       enterpriseTarget: {\n         enabled: true,\n         moduleName: 'profile',\n         connectionName: 'registered-profile-owner',\n         targetAuthority: null\n       },\n       target: {\n         pricingModule: 'pricing',\n         connectionName: 'registered-commerce-owner',\n         targetAuthority: null\n       }\n     }\n   }\n   ```\n\n   Preserve existing `target.productModule` and other settings when applying a\n   partial change. Standalone prices do not require a Product module target.\n4. Grant `copilot.mutation.prepare` and `copilot.mutation.execute` independently.\n   Invitations additionally require `profile.enterpriseAccess.assign`, but not\n   `profile.enterprise.create`. Profile still checks administrator rights,\n   consent, destination enterprise and allowed invitation roles on every request.\n   Pricing still checks native schema write access and authoring/publication\n   policy. A Copilot permission does not imply either native permission.\n5. Preserve the employee bearer and initiating enterprise header. Explicitly\n   naming a different destination enterprise does not switch the initiating\n   identity or bypass Profile's destination authorization.\n6. For optional natural-language extraction, enable\n   `copilot.core.intentPlanning.enabled` and configure the existing provider,\n   model and budget owners. Explicit JSON works without a model call. Never send\n   secrets or coupon tokens through these commands.\n7. For native original-result inspection, provision the Profile/Pricing private\n   receipt journals and enable the reviewed recording/recovery prerequisites in\n   [Original Business Results](original-business-results.md). Grant\n   `copilot.mutation.reconcile` independently. Source installation changes no gates.\n\n| Setting | Default | Effect |\n| --- | --- | --- |\n| `standaloneInvitationsEnabled` | `false` | Admits invitation-only preparation and execution |\n| `standalonePricesEnabled` | `false` | Admits standalone price-row preparation and execution |\n| `enterpriseTarget` | Disabled, unconfigured | Existing Profile routing, never a caller URL |\n| `target.pricingModule/connectionName` | Deployment-owned | Existing native Pricing routing |\n| `core.intentPlanning.enabled` | `false` | Optional permission-filtered extraction through accounted provider |\n| `workbench.receiptRecovery.enabled` | `false` | Exact native inspection and reviewed unstarted-row continuation |\n\n## Manage Admission in Axis\n\nBeginners should ask an authorized administrator to configure these controls;\nbusiness users do not need elevated configuration permissions to use an admitted\njourney for which they already have native access.\n\n1. Open **AI & Copilot > Copilot Settings > Business action controls** with\n   `copilot.configuration.read`, `copilot.configuration.manage` and the separate\n   `copilot.configuration.admin` grant. Enterprise delegation cannot supply the\n   elevated grant or expose this section.\n2. Read the **tenant-wide** notice. All enterprises sharing the runtime are\n   affected, although each operation still requires its own current permissions.\n3. Choose new invitation admission, new price admission, supported request\n   interpretation and original-result inspection independently. Each defaults\n   off. These controls expose no endpoint, credential, native journal or grant.\n4. Enter the reason, select **Review proposal**, check every before/after value,\n   then **Submit for approval** once. Keep the request reference. No checkbox\n   change or proposal submission immediately activates a feature.\n5. Follow the existing independent runtime approval/activation journey. Reload\n   Settings after activation to inspect the effective revision. Native targets\n   and durable receipt prerequisites must already be configured by their owners.\n\nTo stop new standalone writes, propose clearing the invitation/price controls.\nYou may leave **Inspect original business results** enabled. Non-coupon original\ninspection can then resolve already-submitted commands even when their new-write\ngate is off. Original routing, identity and native permissions must still match.\nCompleted rows are never replayed. A fresh review of unstarted rows does not\noverride disabled execution; independently re-enable the journey before executing.\n\nTurning off interpretation affects new provider planning, not explicit JSON\ncommands or native write permissions. Turning off inspection removes that Copilot\nrecovery surface; it does not delete receipts. A gate change is not cancellation\nor rollback of a native command already in flight. Coupon recovery remains separate.\n\n### Reviewed Controls on Desktop and Mobile\n\nThese screenshots use the real Axis Settings renderer with synthetic descriptors\nand responses. They demonstrate layout and proposal-only behavior, not signed-in\ndeployment acceptance or a real configuration change.\n\n![Reviewing inspection while new writes remain paused](../assets/images/business-controls-desktop-review.jpg)\n\nDesktop review shows only the changed inspection value. The other three controls\nremain off; the tenant-wide notice remains visible before submission.\n\n![Mobile request awaiting independent runtime approval](../assets/images/business-controls-mobile-requested.jpg)\n\nThe mobile result is a request awaiting approval, not an active setting. Inputs\nare locked after submission to prevent duplicate requests. Use the existing\nruntime approval process, then reload Settings to retrieve effective values.\n\n## Invite Employees Step by Step\n\n1. Open **AI & Copilot > Copilot Conversation** under the correct initiating\n   enterprise. The Workspace prerequisites show invitation admission separately\n   from enterprise creation. Prerequisites are not an execution authorization.\n2. Supply the existing destination enterprise code and every email and role:\n\n   ```json\n   {\n     \"operation\": \"profile.enterprise.invite\",\n     \"enterpriseCode\": \"DEMO_AI\",\n     \"employees\": [\n       { \"email\": \"operator@example.invalid\", \"roleCode\": \"VIEWER\" }\n     ]\n   }\n   ```\n\n   With intent planning enabled, the equivalent prompt is: `Invite employee\n   operator@example.invalid with role VIEWER to existing enterprise DEMO_AI.`\n   Supported roles are `ENTERPRISE_ADMIN`, `CONTENT_MANAGER`, `OPERATOR`, and\n   `VIEWER`; actual Profile policy may refuse a role for the current employee.\n3. Resolve missing fields by submitting the complete corrected command. Copilot\n   does not silently merge previous messages. Empty invitation lists, duplicate\n   emails after case normalization, extra authority fields and unknown roles fail.\n4. Review every email, role, destination enterprise and generated invitation row\n   identity. No native invitation has been sent at this point.\n5. Approve the current revision, then explicitly execute once. Each row goes to\n   `POST /enterprises/:enterpriseCode/access-assignments` with the employee bearer\n   and a stable idempotency key. No enterprise-create call occurs.\n6. Read each outcome. Native acknowledgement must identify the exact destination,\n   email, role and `PENDING` status. Invitees must still complete Profile's existing\n   registration process. A pending invitation is not an active employee account.\n\n## Create Prices Step by Step\n\n1. Confirm that the product and price book already exist in the intended native\n   authoring context. This adapter does not discover or create missing references.\n   The review explicitly says that reference existence has not been verified.\n   The current native draft schema accepts identifier strings; successful draft\n   creation does not establish that a Product or PriceBook with that code exists.\n2. Supply a new price-row code and all six explicit fields:\n\n   ```json\n   {\n     \"operation\": \"commerce.price.create\",\n     \"prices\": [{\n       \"code\": \"DEMO_PRICE\",\n       \"priceBookCode\": \"DEMO_BOOK\",\n       \"productCode\": \"DEMO_PRODUCT\",\n       \"unitAmount\": \"12.3400\",\n       \"currency\": \"AED\",\n       \"minQuantity\": \"1\"\n     }]\n   }\n   ```\n\n3. Keep monetary and quantity values as strings. Numbers, exponents, negative\n   values and a zero minimum quantity are rejected. Amounts allow up to 24 integer\n   digits and 12 decimal places. Currency must be three uppercase letters; the\n   native owner remains responsible for business-valid currencies and references.\n4. Review the exact amount, currency, product, price book, minimum quantity, code\n   and generated initial revision `1`. Precision and trailing zeroes are preserved.\n5. Approve, then execute. Each row uses the native generated `PUT /pricerow`\n   creation contract with one transport attempt and the original employee.\n6. Inspect outcomes. Use the existing Pricing and publication workflows for any\n   later activation/publication. Copilot does not directly alter lifecycle status.\n\n## API and Execution Contract\n\nPreparation endpoints are `POST /v0/invitations/prepare` and\n`POST /v0/prices/prepare` under the normal Copilot API exposure. They use the same\nbodies as conversation commands, require secured employee access tokens, declare\nsensitive request handling and return `Cache-Control: no-store`. They return a\nclarification or the normal immutable confirmation, never a business record.\nApproval, execution and original-result inspection reuse existing confirmations\nroutes; no new client-side execution registry exists.\n\n```mermaid\nsequenceDiagram\n    participant User as Axis employee\n    participant Core as Copilot Core\n    participant Workbench as Workbench and Policy\n    participant Native as Profile or Pricing\n    User->>Core: Explicit command or supported prose\n    Core->>Workbench: Validate bounded values and current grants\n    Workbench-->>User: Saved review and actor-bound challenge\n    User->>Workbench: Approve current digest and revision\n    User->>Workbench: Execute once\n    Workbench->>Workbench: Atomic action claim\n    loop Reviewed rows\n        Workbench->>Native: Native command with employee identity\n        Native-->>Workbench: Exact result or uncertain response\n    end\n    Workbench-->>User: Per-row outcomes\n    User->>Workbench: Inspect original results if uncertain\n    Workbench->>Native: Original receipt read only\n    Workbench-->>User: Completion or fresh review for unstarted rows\n```\n\nEvery executed field is in the displayed review and plan digest. Added record\nfields, changed targets, stale revisions and foreign action scope fail closed.\nPermissions and target configuration are checked before each native dispatch.\nThere is no automatic replay, compensation, service-token fallback or publication.\n\n## Troubleshooting and Recovery\n\n| Observation | Meaning | Next step |\n| --- | --- | --- |\n| Configuration required | Journey flag or native target is missing | Administrator reviews the correct configuration layer |\n| Permission required | Independent Copilot or Profile grant is missing | Request an authorized policy review, not a broad wildcard |\n| Clarification | Material values are absent or cannot be grounded in the human message | Send a complete explicit corrected command |\n| Native refusal | Owner validation, consent, references or authoring policy refused the operation | Correct through the native owner; do not bypass it |\n| `OUTCOME_UNKNOWN` | A native write may have happened, but completion is not proven | Preserve action reference and inspect original results |\n| `NOT_STARTED` after another uncertain row | Later rows were deliberately not submitted | Continue only after all started rows are proven and a new approval is issued |\n| Original receipt remains unknown | No exact completion evidence is available | Keep locked; current record existence is not receipt proof |\n\nDo not create a replacement action to evade an uncertain row. Native original\ninspection uses `POST /enterprises/:enterpriseCode/access-assignments/commands/inspect`\nor `POST /pricerow/commands/inspect`; it never sends the original write again.\n\n## Customize and Extend Safely\n\nUse normal project-owned configuration files, such as your project's existing\n`config/properties.js`, for the flags and registered routing names. Use the\nexisting later-layer override mechanism for presentation text under\n`copilot.core.conversationContext.journeys`; verify the effective property\npath in Core's defaults before applying deployment overrides. Do not put framework\nbehavior in custom kickoff modules or configure a browser-supplied endpoint.\n\nA worked safe customization is to keep `standalonePricesEnabled: false` while\nadmitting invitation-only use with `standaloneInvitationsEnabled: true`, preserving\nthe existing Profile target and separate invitation grant. The Workspace then\nexplains price configuration as unavailable; no source edits or new permissions\nare needed to display that state. Tests must verify it remains unavailable both\nin explicit JSON preparation and provider-advertised forms.\n\nNew fields or owner operations require a framework adapter change, complete\ndigest-bound review, native permission/validation contracts and exact receipt\nmapping. The hard bounds, explicit review, employee credentials, immutable target,\natomic claim and no-uncertain-replay guarantees are not configurable shortcuts.\n\n## Common Mistakes\n\n- Requesting enterprise-create permission for an invitation-only task. Use the\n  independent invitation permission and let Profile evaluate destination access.\n- Sending a decimal as a JSON number. Use an exact string to avoid rounding.\n- Treating preparation as proof that a product, enterprise or price book exists.\n  Native permissions/schema/authoring policy are enforced at execution, but\n  current PriceRow draft authoring does not establish referenced-record existence.\n- Treating an invitation as an activated employee or a price row as published.\n  Registration and publication remain separate native-owner journeys.\n- Starting a fresh command after a lost response. Inspect the original receipt;\n  unknown completion must remain locked rather than duplicated.\n\n## Verification\n\nRun the isolated contract suite and the opt-in local synthetic inference test:\n\n```sh\nnode --test nodics.copilot/modules/copilotWorkbench/test/copilotStandaloneActions.test.js\nnode --test nodics.copilot/modules/copilotCore/test/copilotIntentPlanning.test.js\nNODICS_COPILOT_LOCAL_ACCEPTANCE=1 node --test nodics.copilot/modules/copilotCore/test/copilotLocalOllama.acceptance.test.js\n```\n\nThe opt-in test pins loopback `127.0.0.1:11434`, uses the existing Ollama adapter,\nand defaults to `gemma3:4b`. `NODICS_COPILOT_LOCAL_MODEL` selects another installed\nlocal model. It sends fictional values only, performs no business writes and\nvalidates actual extraction and measured model usage. Its test-only provider\nbridge does not verify deployed usage persistence, authenticated APIs or budgets.\nWithout opt-in, these two network tests skip.\n\nAxis verification uses `test/assistant/AssistantConfirmationCard.test.tsx` and\n`test/assistant/standalone-actions.visual.html` at desktop/mobile sizes. Signed-in\nacceptance still requires deployment-owned permissions, private receipt storage,\nnative authoring targets and disposable approved business records. Authored and\ngenerated documentation is not automatically imported or published to a runtime.\n\n### Native Authoring Acceptance\n\nThe framework includes independent disposable live tests for standalone prices\nand products with linked prices. They authenticate real employees through Profile,\nstart an owned Commerce Staged runtime with CURRENT versioned MongoDB storage,\nand use real native APIs and private command receipts. No test writes to the\ncustomer project's databases or starts a frontend.\n\n1. Start the local MongoDB replica set and Ollama using the deployment's existing\n   service configuration. Install/select a local model through the provider guide.\n2. Set `NODICS_ERASURE_ES_HOME` to the installed Elasticsearch home used by the\n   shared isolated fixture, and `NODICS_ERASURE_MONGO_URI` to the local replica-set\n   URI. Despite the historical variable name, these tests do not erase customer\n   indexes; the fixture creates and cleans its own provider resources.\n3. From the framework root run each test below with those variables exported:\n\n   ```sh\n   NODICS_COPILOT_PERSISTENT_ACCEPTANCE=1 node --test nodics.copilot/modules/copilotWorkbench/test/copilotPriceRuntime.live.test.js\n   NODICS_COPILOT_PERSISTENT_ACCEPTANCE=1 node --test nodics.copilot/modules/copilotWorkbench/test/copilotProductRuntime.live.test.js\n   ```\n\n4. Each suite must pass all three scenarios: direct preparation, controlled loss\n   of a successful native price response, and real Ollama prose extraction.\n   Without opt-in the tests skip; a skip is not live acceptance.\n5. Inspect failures at the native owner first. Do not widen native grants,\n   bypass CURRENT versioned authoring, or replace a failed owner with a stub.\n   Teardown runs after success or failure and closes only owned resources.\n\nBoth suites prove denied-reader boundaries, no native writes during review or\napproval, stale-revision refusal, exact native values, persisted confirmation and\nnative-owner restart. In the two-product lost-price case, completed products and\nthe first price remain intact; inspection makes no writes, and renewed approval\ncreates only the unstarted second price. Diagnostics assert the exact number of\nnative completions. Duplicate conversation-turn submission adds no model charge.\n\nThe fixtures use synthetic catalogue and price-book identifiers rather than\npublished catalogues. This is native draft authoring/recovery acceptance, not\nreference resolution, price-book activation, publication, storefront pricing,\nfull Axis browser acceptance or coverage of every operation in Commerce.\n",
+    "keywords": [
+      "copilot",
+      "invitations",
+      "prices",
+      "review",
+      "ollama",
+      "AI Copilot",
+      "Business Operations",
+      "Invitations",
+      "Pricing"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record272": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotcollectioninspection",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotCollectionInspection",
+    "title": "Collection Inspection In Conversation",
+    "summary": "Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads.",
+    "searchText": "Collection Inspection In Conversation Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads. # Collection Inspection In Conversation\n\nFunctional owner: `nodics.copilot`. Technical owner: `copilotKnowledge`.\nnDatabase and each domain retain schema, permission and reference-integrity\nauthority. Axis renders the existing conversation; it owns no operation registry.\n\n## Business Outcome\n\nBefore requesting a business change, inspect the selected collection's fields\nand available native operations without reading business records. Technical\noperators can also preview native deletion impact for one exact identity.\nThese are deterministic, employee-only inspections, not AI-generated queries,\nmutations, exports or automatic business-operation planning. They consume no\nmodel tokens and do not send their inputs or results to an LLM.\n\nBeginners should use View fields first and read the observation without proposing\nany changes. Developers should follow the fixed owner-call and customization\ncontracts below; operators should preserve the original turn when investigating\na failed or lost response.\n\n| Inspection | Native owner call | Returned evidence |\n| --- | --- | --- |\n| List collections | GET `/schemas` | Selected eligible collection names and labels |\n| View fields | GET `/schemas/:schema` | Visible field definitions and advertised operations |\n| View capabilities | Active GET `/<schema>/capabilities` | Fresh minimized native descriptor |\n| Technical deletion impact | Active POST `/<schema>/delete-impact` | Matching target count and blocked flag |\n\nThe paths above are owner contracts, not editable form fields. All calls retain\nthe original employee bearer, tenant and enterprise. Native route availability\ndoes not prove access; advertised operations do not prove that Copilot implements\ntheir mutation journeys. A source's inclusion never grants create/update/delete.\n\n## Administrator Setup\n\n1. Compose Copilot API, Core, Conversation, Policy and Knowledge normally. Enable\n   `copilot.api.enabled` through the existing approved configuration layer.\n2. Register a DATABASE source under\n   `copilot.knowledge.sourceRegistry.definitions`, with explicit module,\n   tenant/enterprise/environment scope, classification, groups and exclusions.\n   Keep RESTRICTED source policy and required secret inspection. Wildcard\n   collection selection includes only current eligible native descriptors;\n   exclusions always win. No database corpus is indexed for these reads.\n3. Assign active groups within the enterprise source ceiling. Grant existing\n   assistant use/read, `copilot.data.query`, restricted-source access and the\n   owning schema discovery permissions to the appropriate employees.\n4. For technical impact previews, grant `copilot.mutation.prepare` separately.\n   The native owner must also advertise deletion to that employee. Read-only\n   schema access remains insufficient even when the impact route exists.\n5. Deploy the backend adapters before exposing optional UI labels:\n   `copilot.core.conversationContext.liveReads.inspectSchema` and\n   `inspectCapabilities`. Their defaults are View fields and View capabilities.\n   Contracts without these labels retain the previous record-search controls.\n6. Configure recording, transcript access and retention independently. Live\n   inspection history is point-in-time evidence, not reusable authorization.\n\n## Business User Steps\n\n1. Open **AI & Copilot**, then **Conversation**.\n2. Choose permitted active knowledge groups. An explicitly empty selection never\n   falls back to every source when group selection is enabled.\n3. Select **Read live evidence**, then a Business data source.\n4. Select **List collections** to inspect selected metadata without reading rows,\n   or choose a collection from the authorized list.\n5. Select **View fields** or **View capabilities**. Search text is not required.\n   The dialog closes and submits one normal conversation turn.\n6. Read the observation timestamp, schema name and visible field definitions.\n   `required`, `readOnly` and `primary` describe native metadata at that moment.\n   No default/fixed values, business records or related collection names appear.\n7. To read records, open the form again and explicitly submit a bounded search.\n   An inspection never automatically follows links or executes an operation.\n\nControls wrap on narrow screens. Loading, missing selection, source errors and\ndisabled states prevent submission. Offline clicks do not queue for reconnect.\n\n## Technical Impact Steps\n\nThere is no deletion form or delete command added by this capability. A technical\noperator can submit the following fictional typed command through the existing\nconversation after obtaining the exact native identity and required revision:\n\n```json\n{\"intent\":\"copilot.data.deleteImpact\",\"sourceCode\":\"business-data\",\"input\":{\"schemaName\":\"address\",\"identity\":{\"code\":\"office-address\"}}}\n```\n\n1. Inspect the native schema contract. Supply the primary field, or the native\n   display field when no primary field exists. Do not guess an identifier.\n2. If native compare-and-set concurrency requires a revision, include that exact\n   field and current value in `identity`. Managed revisions must be non-negative\n   safe integers. No raw query operators or extra identity keys are accepted.\n3. Submit the command explicitly. Copilot checks both source/read admission and\n   mutation-preparation admission, then checks native delete advertisement.\n4. Read the result. `targetCount: 0` may mean the supplied identity or revision\n   is stale. `blocked: false` is a bounded native technical observation, not an\n   authorization, guarantee of later deletion, or complete business-impact report.\n5. No records are changed. Relationship names and reference counts are omitted.\n   Business cancellation, deactivation, refund, publishing and similar lifecycles\n   remain separate native commands with their own reviews and permissions.\n\nFor direct clients, the other two new commands are:\n\n```json\n{\"intent\":\"copilot.data.schema\",\"sourceCode\":\"business-data\",\"input\":{\"schemaName\":\"address\"}}\n```\n\n```json\n{\"intent\":\"copilot.data.capabilities\",\"sourceCode\":\"business-data\",\"input\":{\"schemaName\":\"address\"}}\n```\n\n## Authority And Recording Flow\n\n```mermaid\nsequenceDiagram\n    participant Employee\n    participant Axis\n    participant Core as Copilot Core\n    participant Knowledge\n    participant Native as Native Schema Owner\n    Employee->>Axis: Select source and inspection\n    Axis->>Core: Normal actor-bound conversation turn\n    Core->>Knowledge: Fixed typed intent and selected groups\n    Knowledge->>Knowledge: Source, scope and independent grant checks\n    Knowledge->>Native: Employee GET schemas\n    Native-->>Knowledge: Current authorized descriptor\n    Knowledge->>Knowledge: Validate exact route and recheck admission\n    Knowledge->>Native: One non-mutating inspection\n    Native-->>Knowledge: Native result\n    Knowledge->>Knowledge: Reauthorize, minimize and secret-inspect\n    Knowledge-->>Core: Inert evidence with observation time\n    Core-->>Axis: Record or request-only delivery per pinned policy\n```\n\nBoth sides of each exchange are excluded from subsequent provider history.\nRecording enabled: a repeated accepted turn replays original events without\nrepeating the owner request, including after restart. Recording disabled: results\nare delivered only in the active request; lost content is not reconstructed.\nAnother explicit turn is a new observation, not recovery of a mutation.\n\n## Failure And Recovery\n\n| Observation | Meaning and next step |\n| --- | --- |\n| Source unavailable | Check current group assignment, source scope and grants; do not change the command's tenant or route. |\n| Collection excluded | Ask the administrator to review the exclusion through normal governance. No alternative path is tried. |\n| Inspection unavailable | The native contract may be inactive, incompatible or denied. Inspect owner configuration and permissions. |\n| Enterprise impact refused | Readable enterprise metadata does not imply delete access. Preserve that boundary. |\n| Permission changed in flight | The result is withheld. Refresh context and resolve authority before a new explicit inspection. |\n| Invalid identity | Supply the native primary identity and required revision only; no operators or inferred values. |\n| Zero impact targets | Identity/revision may be stale. Never report deletion, absence of dependencies or permission to delete. |\n| Display limit reached | The response declares omitted rows. It is not a full export. |\n| Lost recorded response | Reopen/replay the original turn. Do not infer a business operation occurred. |\n| Lost unrecorded response | Original content cannot be reconstructed; another deliberate inspection is a new observation. |\n\nThe owner accepts at most 1,000 descriptor fields and a 256 KiB projected result.\nConversation rendering applies its smaller existing event/display budget and\nreports omissions explicitly. No automatic page walking or model fallback occurs.\n\n## Customize And Extend Safely\n\nPresentation overrides belong in the existing customer-owned layered\n`config/properties.js`, not a framework fork or new UI authority:\n\n```js\nmodule.exports = {\n    copilot: {\n        core: {\n            conversationContext: {\n                liveReads: {\n                    inspectSchema: 'Inspect fields',\n                    inspectCapabilities: 'Inspect native capabilities'\n                }\n            }\n        }\n    }\n};\n```\n\nA later-loaded customer Knowledge extension can narrow `inspectionFields` in\n`src/service/defaultCopilotDatabaseSourceService.js`; the default owner invokes\nit through the effective mergeable service. Keep `inspect`, `authorizeInspection`,\n`reauthorize`, `inspectionOperation`, `inspectionIdentity` and `responseData`\ncontracts intact. Never add defaults/secrets/related-source metadata, accept\narbitrary endpoints, turn inspection into mutation or weaken permission checks.\nDomain-specific semantics belong to the native domain, not a Copilot fork.\n\nFrontend contributors may wrap `CopilotLiveReadComposer` with the same typed\ncontract. Preserve fixed intents, explicit submission, selection/error/offline\ngates and no credential configuration in the browser. Optional labels are\npresentation, not authorization.\n\n## Common Mistakes\n\n- Treating an advertised native operation as a Copilot mutation adapter or grant.\n- Treating an unblocked impact preview or zero matching targets as deletion proof.\n- Copying defaults, relationship names or native routes into model prompts.\n- Removing an exclusion or switching enterprise identity inside the command.\n- Retrying a failed inspection through another route or an LLM.\n- Confusing synthetic UI screenshots with signed-in business acceptance.\n\n## Verification Boundary\n\nFocused source tests cover allowed and denied scope, independent impact grants,\nroute injection, invalid identities, stale policy, grant revocation, malformed\nnative envelopes, secret scanning and later-layer field projection. Conversation\ntests cover all three intents, recording on/off, replay and no provider fallback.\nAxis tests cover explicit metadata actions, source selection, offline behavior\nand optional-contract compatibility.\n\nThe opt-in native test composes a disposable local runtime with real Profile\nauthentication. It checks schema/capability inspection, allowed technical address\nimpact with zero matching targets, refused enterprise impact under read-only\nnative access, exclusions and recorded replay after restart. Zero-target native\nacceptance is not evidence for every domain's populated reference graph.\nSynthetic browser layout evidence is not full signed-in Axis acceptance.\nThese paths do not close the remaining Copilot mutation adapters or checkpoint 22.\n",
+    "keywords": [
+      "copilot",
+      "schema",
+      "capabilities",
+      "impact",
+      "collections",
+      "AI Copilot",
+      "Knowledge",
+      "Schema Inspection"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record273": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotoriginalbusinessresults",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotOriginalBusinessResults",
+    "title": "Original Business Results and Safe Continuation",
+    "summary": "Inspect native original command receipts and approve only never-started rows after uncertain business execution.",
+    "searchText": "Original Business Results and Safe Continuation Inspect native original command receipts and approve only never-started rows after uncertain business execution. # Original Business Results and Safe Continuation\n\nFunctional owner: `nodics.copilot`. Technical owner: `copilotWorkbench`.\nProduct, Pricing, Waste Collection and Profile own their native command journals.\nnDatabase supplies the bounded persistence protocol; Axis renders the result.\n\n## Business Outcome\n\nAn interrupted response does not establish whether a business operation failed.\nCopilot can inspect the original native acknowledgement without submitting that\noperation again. Completed rows remain completed. If every submitted row is\nproven complete, a new approval can cover the rows that were never started.\n\nThis guide covers Product creation with PriceRows, Profile enterprise creation\nwith pending employee invitations, standalone existing-enterprise invitations,\nstandalone price-row creation, and Waste collection-centre creation. Follow\n[standalone business actions](standalone-business-actions.md) for their setup,\nreview and native-owner boundaries. Coupon\nfulfillment retains its separate Commerce receipt inspector. This is not a\ngeneric adapter for every Axis operation, and invitations do not activate accounts.\n\n![Original result inspection on desktop](../assets/images/native-recovery-desktop.png)\n\n![Fresh continuation approval on mobile](../assets/images/native-recovery-mobile.png)\n\nThese screenshots use synthetic renderer data, not a signed-in customer runtime.\n\n### Signed-In Local Enterprise Evidence\n\nThe following captures are from the complete Axis application with actual\nProfile authentication, local Ollama, native enterprise execution and durable\nMongoDB receipts. The data is disposable and synthetic.\n\n![Completed enterprise and invitations in full Axis](../assets/images/copilot-enterprise-completed-desktop.jpg)\n\n![Completed action at mobile width](../assets/images/copilot-enterprise-completed-mobile.jpg)\n\nThe tested sequence lost the response after the native enterprise succeeded,\nrestarted the backend, inspected the original receipt, obtained fresh approval\nand executed only the three never-started invitations. Native queries verified\none enterprise and four PENDING invitations including its administrator. A\nsecond conversation recovered its review after a reload during model execution;\nrejecting it added no invitation and did not repeat the model charge. This is\nlocal-profile acceptance, not proof of every business adapter, notification\ndelivery, invitee activation or distributed failover.\n\nBeginners should follow the Employee Journey and preserve the original action\nreference when execution is uncertain. Developers should read the API Contract\nand Customization and Extension sections before adding another native adapter.\n\n## Administrator Setup\n\nCollection-point creation is insert-only: using an existing centre code in a new\napproved create must not edit that centre. If it cannot be confirmed, preserve\nthe action reference and use **Inspect original business results**. An earlier\nrecord with the same code is not proof that this command succeeded. Use the\nnative collection-point update journey for an intended edit. This rule applies\neven when new receipt recording is disabled; it does not change internal import\nor Product/Pricing versioning behavior.\n\n1. Deploy the matching framework owners and Axis client. Keep the implementation\n   in framework modules, not customer kickoff modules.\n2. Provision `productCommandReceipt`, `pricingCommandReceipt`,\n   `wasteCollectionCommandReceipt` and `profileCommandReceipt` in their owning\n   modules. Each extends nDatabase's abstract `commandReceipt` schema and has a\n   unique code index. Keep generic routes, cache, events, search and BackOffice\n   editing disabled for these journals.\n3. Qualify the existing `DURABLE_JOURNAL` persistence path, including majority\n   primary readback, durable insert-only identity and atomic conditional updates.\n   A successful volatile test double is not deployment qualification. Do not\n   replace the generated model service with a second storage connection.\n   Include the effective service hierarchy in qualification. When `vService` is\n   active, its save/update adapters must retain shared database admission and its\n   read selector must retain private-read qualification. Confirm that duplicate\n   journal creation cannot overwrite the original and stale conditional\n   completion matches zero records. Keep journals unversioned even on Staged\n   runtimes with versioned Product/Pricing data. The framework's opt-in vService\n   MongoDB tests cover this boundary in disposable storage; run native Copilot\n   acceptance as a separate authenticated gate. Existing overwritten evidence\n   cannot be reconstructed by installing this fix, and uncertainty never permits\n   resubmitting the original business operation.\n4. On each native owner, explicitly admit recording through layered configuration:\n\n   ```js\n   commandReceipts: {\n     enabled: true,\n     owners: { product: true, pricing: true, wasteCollection: true, profile: true }\n   }\n   ```\n\n   Defaults are `enabled: false` and no admitted owners. Admit only modules\n   composed on that runtime. Once admitted, these wrapped commands require a\n   stable original idempotency key; legacy callers without one fail closed.\n5. On Copilot, enable `copilot.workbench.receiptRecovery.enabled` through the\n   normal reviewed deployment process. Configure `label` and `continuation`\n   presentation text. No deployment gate is enabled by source installation.\n6. Grant the employee `copilot.mutation.prepare`, `copilot.mutation.execute` and\n   independently `copilot.mutation.reconcile`. Preserve native schema write,\n   enterprise setup/access, consent and role permissions. Recovery cannot widen\n   any of these grants. The original tenant, enterprise and human actor must match.\n7. Configure canonical native module names and existing target authority. Product\n   and Pricing may have different owning modules. A changed execution target\n   invalidates reconciliation; credentials and destinations never come from chat.\n8. Validate a disposable test-runtime action end to end before production\n   enablement. Include lost response, current access revocation and a competing\n   reconciliation request. Do not create or delete customer records for testing.\n\n## Employee Journey\n\nNew-write admission is distinct from evidence inspection. Disabling standalone\ninvitation/price admission, Profile enterprise creation admission or Waste\ncollection-centre admission does not by itself block non-coupon original-result\nreads. The independent recovery gate, current employee/native grants and exact\noriginal target remain mandatory. Removing or changing the native target fails\nclosed; an alternate route cannot be used to infer the original result.\n\nIf inspection proves all submitted rows complete, unstarted rows may receive a\nfresh review, but execution still refuses while their journey is disabled. An\napproval or caller-supplied `inspection` field cannot bypass the disabled gate.\nAdministrators can propose the standalone admission, interpretation and recovery\ncontrols through **Copilot Settings > Business action controls**. Independent\nruntime governance owns activation; none of these controls erase native receipts.\n\n1. Prepare the supported operation in Copilot and review every primary and related\n   record. Resolve missing required information before approving.\n2. Approve the displayed action, then explicitly execute it. Keep the action\n   reference visible in the conversation.\n3. If the response is interrupted, do not submit the same business request as a\n   new task. The action shows `OUTCOME_UNKNOWN` or `EXECUTING`; Execute is absent.\n4. Select **Inspect original business results**. Axis first reads the current\n   original action, then asks the fixed owning APIs for original receipts.\n5. When a submitted row is proven complete, its state becomes `COMPLETED`. If any\n   submitted row is unresolved, the action remains `OUTCOME_UNKNOWN` and no\n   continuation approval is offered.\n6. If all submitted rows completed and later rows remain `NOT_STARTED`, review\n   the refreshed confirmation. The notice distinguishes completed work from\n   remaining work. Approve this new revision, then execute explicitly.\n7. Continuation skips all completed rows and submits only never-started rows.\n   Another lost response follows the same inspection path. There is no timer,\n   automatic retry, compensation or rollback.\n8. Reloading a recorded conversation restores its latest owned action from the\n   private action journal when recovery is admitted. An older action can still\n   be inspected by its exact API reference. Recording-off conversations do not\n   acquire transcript history merely because a business journal exists.\n\n## State Diagram\n\n```mermaid\nflowchart TD\n    approved[\"Approved action\"] --> execution[\"Claim and dispatch original row\"]\n    execution --> unknown[\"Response or completion uncertain\"]\n    unknown --> inspect[\"Explicit original receipt inspection\"]\n    inspect --> proof{\"Original completion proven?\"}\n    proof -->|No| unknown\n    proof -->|Yes| remaining{\"Any never-started rows?\"}\n    remaining -->|No| complete[\"Consumed: all rows complete\"]\n    remaining -->|Yes| review[\"Review and approve a new revision\"]\n    review --> continuation[\"Execute never-started rows only\"]\n    continuation --> execution\n```\n\n## API Contract\n\nAll paths below are relative to the appropriate module's versioned API base.\nThey are authenticated, sensitive and noncacheable; none accepts a destination,\nprovider credential, arbitrary query or alternate actor.\n\n| Owner | Method and Path | Body |\n| --- | --- | --- |\n| Copilot API | `POST /confirmations/:confirmationCode/original-results` | `expectedRevision`, `argumentsDigest` |\n| Product | `POST /product/commands/inspect` | `model`, `idempotencyKey` |\n| Pricing | `POST /pricerow/commands/inspect` | `model`, `idempotencyKey` |\n| Waste Collection | `POST /wastecollectionpoint/commands/inspect` | `model`, `idempotencyKey` |\n| Profile | `POST /enterprises/commands/inspect` | `model`, `idempotencyKey` |\n| Profile | `POST /enterprises/:enterpriseCode/access-assignments/commands/inspect` | `command`, `idempotencyKey`; original command contains its matching key |\n\nCopilot derives the original key from plan ID, schema and row identity. Native\ninspection returns contract version, original scope, command fingerprint,\nargument fingerprint and `COMPLETED` or `OUTCOME_UNKNOWN`. Completion includes\nonly a bounded result identity and result fingerprint, never the full record.\n\nEach receipt is inserted as STARTED before the one native dispatch. COMPLETED is\nwritten only after exact native acknowledgement and current authorization. A\ncrash between the business write and completion receipt deliberately remains\nunknown. This protocol is not a distributed exactly-once transaction.\nThe journal keeps its original scalar claim predicate separate from the model\npassed to generated save. Schema defaults and pipeline metadata must not become\nnew completion conditions. The native result and exact original claim still\nhave to match; this does not relax durable-journal validation.\n\n## Troubleshooting\n\n| Observation | Meaning and Action |\n| --- | --- |\n| Inspection control absent | Verify independent grant, enabled Copilot recovery and supported operation. Do not broaden native access. |\n| No receipt for a historical action | Remains unknown. Do not backfill completion from record existence. |\n| Recording disabled after execution | Existing native receipts remain inspectable under current native authority. |\n| Source action still APPROVED after transport loss | Axis keeps the uncertainty lock; a delayed original execution may still arrive. A read does not authorize retry. |\n| Receipt STARTED but record exists | Still unknown: record existence does not prove the original command's entire outcome. |\n| Current employee permission or consent revoked | Inspection fails closed even if the original command was allowed. Restore access only through normal owner governance. |\n| Revision changed | Reload original evidence. Do not overwrite another claimant or reuse stale approval. |\n| Domain write acknowledged but journal response lost | Inspection may recover the retained completion. If completion was not durably recorded, uncertainty remains. |\n\n## Customization and Extension\n\nExtend only native adapters with explicit schema, authorization, route and result\ncontracts. Do not send model-generated URLs or treat all schema CRUD as supported\nbusiness journeys. Keep original intent immutable and bound continuation to its\ndigest. Do not discard native receipts through transcript or action retention.\n\n## Common Mistakes\n\n- Treating a timeout or a current record as proof of original completion.\n- Reusing the old approval or replaying a completed row during continuation.\n- Enabling recovery before private schemas, unique indexes and provider durability\n  are qualified, or granting native permissions merely to make a button appear.\n- Deleting native receipts through transcript retention or inventing receipts for\n  historical operations whose result was never acknowledged.\n\n## Verification\n\nRun `modelCommandReceipt.test.js`, `enterpriseCommandReceipt.test.js`,\n`copilotActionRecovery.test.js`, existing typed domain action tests, generated\ncontroller/router contracts, and Axis client/presentation/card tests. Browser\nchecks must cover desktop, mobile, uncertainty lock, new approval and completion.\nLive provider, authenticated runtime and deployed schema qualification remain\nseparate acceptance evidence.\n",
+    "keywords": [
+      "copilot",
+      "receipts",
+      "recovery",
+      "continuation",
+      "AI Copilot",
+      "Business Operations",
+      "Recovery"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record274": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotrecordedmanualrefresh",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotRecordedManualRefresh",
+    "title": "Recorded Manual Knowledge Refresh",
+    "summary": "Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness.",
+    "searchText": "Recorded Manual Knowledge Refresh Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness. # Recorded Manual Knowledge Refresh\n\nFunctional owner: `nodics.copilot`. Technical owner: `copilotKnowledge`.\nProcess owns starts and execution attempts. Axis renders the authorized journey;\nDiscovery and nSearch retain publication and physical indexing ownership.\n\n## Business Outcome\n\nA knowledge administrator can review one registered source, explicitly confirm\nits refresh, and inspect the original execution after a lost response. Starting\nthe refresh does not mean the new knowledge is ready. The source inventory still\nprovides the independent published-generation and physical-count evidence.\n\nThis journey covers static runtime code and authored documentation sources.\nDATABASE and EXTERNAL_LOG sources remain live, independently authorized queries.\nIt does not load customer records into an index or invoke a model.\n\nBeginners should first inspect source scope and readiness, then ask a knowledge\nadministrator to confirm that the source is admitted for recorded refresh.\nDevelopers should read the API and customization sections before extending the UI.\n\n## Administrator Setup\n\n1. Configure the registered source, required permissions, tenant, enterprise,\n   customer-project and environment scopes. Activate the intended knowledge\n   groups. Admit both EMPLOYEE and SYSTEM channels explicitly; neither channel\n   inherits the other's permissions.\n2. Install and publish the existing Copilot refresh Process contribution. Enable\n   private attempt recording and provision its generated schema/unique index.\n   Process action declaration and remote callback admission remain deployment\n   responsibilities. This feature does not install or publish definitions.\n3. Configure `copilot.knowledge.workflowRefresh.assignments` for the exact\n   source and runtime scope. Multiple unique versions of one definition are\n   allowed; new manual starts select the highest assigned version. Competing\n   definitions or duplicate versions are rejected.\n4. Configure `workflowRefresh.actionAuthority` with an explicit, non-default\n   connection and runtime role. Use existing nService credential configuration;\n   no credential, destination or handler is accepted from Axis.\n5. On Process, explicitly admit `copilotApi` and the published owner definition\n   through its default-disabled internal-start policy. Qualify current service\n   identity, enterprise scope and `process.instance.start.internal` permission.\n6. On the callback runtime, qualify the current Workflow service principal,\n   source-management and source-read permissions, source SYSTEM admission and\n   current enterprise/group restrictions. Employee grants are never copied into\n   a service token.\n7. Enable `workflowRefresh.enabled` and, separately, `workflowRefresh.manualEnabled`\n   through normal runtime governance. Both default to false. No customer module\n   implementation is required. When manual mode is enabled, the older synchronous\n   refresh endpoint rejects calls, including calls from old clients; there is no\n   fallback around the recorded path.\n8. Grant authorized employees `copilot.knowledge.internal.read` and\n   `copilot.knowledge.source.manage`, plus each source's required permissions.\n   Read-only original inspection requires source visibility and internal read,\n   not source management. Route security independently requires an access token\n   and the employee access group.\n\n| Setting | Owner | Meaning |\n| --- | --- | --- |\n| `workflowRefresh.manualEnabled` | Knowledge | Opt-in employee Process start journey |\n| `workflowRefresh.assignments` | Knowledge | At most 100 exact source/scope/version assignments |\n| `actionAuthority.timeoutMs` | Knowledge/nService | Explicit timeout, 1 to 30,000 ms; one attempt |\n| Internal start and remote action admission | Process | Published definition/owner and runtime authorization |\n| `studio.manualRefreshPresentation` | Knowledge | Inert captions and safe outcome messages |\n\n## Business User Steps\n\n1. Open **Copilot > Knowledge Studio** and select a visible code/documentation\n   source. Read its current included/excluded paths, fingerprint and readiness.\n2. Under **Recorded source refresh**, choose **Review refresh**. This is read-only:\n   no Process instance, file scan, indexing operation or model call occurs.\n3. Review the Process reference, selected definition and published version.\n   The review also binds the current source fingerprint and verified employee.\n4. Select **Confirm source refresh**, then **Start refresh**. Repeated clicking\n   cannot dispatch a second start from this mounted view. Offline commands are\n   rejected rather than queued for reconnection.\n5. A start acknowledgement means Process accepted that exact identity and\n   recorded its start; it does not claim callback or index completion.\n6. Select **Inspect original refresh** to read attempts for exactly that original\n   Process reference. Read the state, start time, policy match and recovery\n   indication. Use the source's full **Refresh executions** history for all pages.\n7. Reload source inventory to inspect physical readiness. A prior-policy\n   completion is not evidence that today's exclusions or source content are ready.\n\n## Execution And Recovery\n\n```mermaid\nsequenceDiagram\n    participant User\n    participant Axis\n    participant Knowledge\n    participant Process\n    participant Index as Discovery and nSearch\n    User->>Axis: Review selected source\n    Axis->>Knowledge: Source fingerprint and command UUID\n    Knowledge->>Knowledge: Current employee, groups and assignment\n    Knowledge-->>Axis: Bound review and stable Process reference\n    User->>Axis: Confirm and start\n    Axis->>Knowledge: Original review and explicit confirmation\n    Knowledge->>Process: One canonical internal start\n    Process->>Process: Create-only identity and recorded attempts\n    Process->>Knowledge: Single-use source callback\n    Knowledge->>Index: Independently authorized ingestion\n    Axis->>Knowledge: Inspect original reference\n    Knowledge->>Process: Exact instance attempt query, read-only\n    Process-->>Axis: Minimized evidence through Knowledge\n```\n\n| Observation | Meaning | Next step |\n| --- | --- | --- |\n| Review unavailable | Gate, source visibility, permissions or assignment failed | Ask the owner to inspect current admission; do not widen scope blindly |\n| Source changed after review | The review is stale | Obtain a fresh review before any new dispatch |\n| Start acknowledged | Exact Process start evidence exists | Inspect attempts and current index readiness independently |\n| Start response lost or contradictory | The command may already have applied | Inspect original reference; never replay based on timeout |\n| No recorded attempts | Process may not yet have prepared the callback, or evidence is unavailable | Outcome remains unknown; inspect the original Process instance |\n| Awaiting claim / In progress | Recorded remote-action lifecycle only | Wait or inspect Process; no automatic retry |\n| Completed | Process recorded callback completion | Verify the current source policy and physical index readiness |\n| Failed / Outcome requires inspection | Recorded failure or expired nonterminal claim | Process operator investigates; do not manufacture a new command as recovery |\n\nThe command UUID is bound to tenant, enterprise, project, environment, employee\nand source. Its Process identity deliberately excludes mutable version and source\nfingerprint. Exact duplicate delivery therefore uses Process's existing start\nreplay; changing an assignment cannot turn the same command into another run.\nThe UI never automatically resends it. Post-dispatch errors are conservatively\nreported as unconfirmed, including revocation while waiting for acknowledgement.\n\nOriginal inspection is read-only and remains available at the API when the\nmanual-start gate is turned off. The underlying history integration, current\nsource visibility and Process connection must remain valid. Source/identity\nnavigation discards transient UI state and aborts requests, not backend work.\nAfter leaving the panel, use source execution history and the displayed Process\nreference. There is no browser-persistent command queue. The inline inspector\nshows at most the newest 25 original attempts; full source history is paginated.\n\nLegacy synchronous refreshes and runs predating attempt recording are not\nbackfilled. Absence of old history is not proof that no indexing took place.\n\n## API Contract\n\nAll public paths are under the existing versioned `copilotApi` owner:\n\n| POST path | Body | Result |\n| --- | --- | --- |\n| `/knowledge/sources/:sourceCode/refresh/preview` | `requestId`, `expectedPolicyDigest` | V1 REVIEW, minimized identity, definition/version and review digest |\n| `/knowledge/sources/:sourceCode/refresh/start` | Same identity plus `reviewDigest`, `confirmed: true` | V1 START_ACKNOWLEDGED with PROCESS_INSTANCE evidence |\n| `/knowledge/sources/:sourceCode/refresh/inspect` | Original `requestId` | V1 ATTEMPTS_AVAILABLE or OUTCOME_UNKNOWN, bounded V2 history |\n\nExtra request fields are rejected. Review and start require a lower-case UUIDv4\nand the exact 64-character source fingerprint. No body-supplied actor, permissions,\nconnection, Process context or schedule is accepted. Process history accepts an\noptional exact `instanceCode` only in ATTEMPTS mode, binding it in both generated\nquery predicates and returned-row validation. History never claims an action.\n\n## Customize and extend safely\n\nIn a project-owned inherited Copilot configuration module's `config/properties.js`,\noverride only intended presentation differences, for example:\n\n```js\nmodule.exports = {\n  copilot: {\n    knowledge: {\n      studio: {\n        manualRefreshPresentation: {\n          title: 'Refresh approved enterprise knowledge',\n          start: 'Start approved refresh',\n        },\n      },\n    },\n  },\n};\n```\n\nExisting configuration layering supplies the remaining keys. Changing copy does\nnot enable the feature, publish a Process definition or grant permission. A\nproject-owned Axis renderer can wrap `KnowledgeManualRefreshPanel` and the typed\nclient while preserving explicit review/confirmation, source-scoped teardown,\nstrict receipt parsing and the sent-command lock. Never copy source authority,\njob persistence, retries, credentials or context construction into the browser.\n\nMaintainers run Knowledge event/manual integration tests, Process remote-action\ninspection tests, Axis `KnowledgeManualRefreshPanel.test.tsx` and Studio/history\nregressions. Tests cover canonical duplicate starts, lost/negative acknowledgement,\nstale policy, access revocation, exact returned scope, offline calls and aborts.\nSigned-in multi-runtime persistence and actual provider qualification remain\ndeployment acceptance; synthetic UI and isolated storage do not prove them.\n\n## Common mistakes\n\n- Treating a Process start acknowledgement as completed ingestion.\n- Restarting a refresh because the original response timed out.\n- Granting SYSTEM source access by copying an employee's credentials.\n- Enabling recorded-manual mode without its Process assignment and attempt store.\n- Interpreting an empty legacy history as proof that no indexing occurred.\n\n## Verification\n\nThe owner tests listed above establish local control flow, isolated persistence\nand strict response handling. The responsive fixture establishes renderer behavior.\nBefore production activation, separately verify actual generated indexes, service\ncredentials, current employee grants, remote callback recording and physical\npublication evidence in the selected runtime. No test result automatically enables\nthe gates or authorizes a real source refresh.\n\n## Sanitized Visual Evidence\n\nActual Axis renderer, synthetic response, 2026-10-04. No real employee, customer\nsource or backend mutation. Desktop 1280px and mobile 390px show original-attempt\ninspection after a simulated lost start response, not successful indexing.\n\n![Recorded refresh inspection on desktop](../assets/images/copilot-manual-refresh-desktop.png)\n\n![Recorded refresh inspection on mobile](../assets/images/copilot-manual-refresh-mobile.png)\n",
+    "keywords": [
+      "copilot",
+      "manual",
+      "refresh",
+      "history",
+      "recovery",
+      "AI Copilot",
+      "Knowledge",
+      "Refresh"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record275": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacroninactivescheduledrafts",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacronInactiveScheduleDrafts",
+    "title": "Inactive Process Schedule Drafts",
+    "summary": "Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation.",
+    "searchText": "Inactive Process Schedule Drafts Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation. # Inactive Process Schedule Drafts\n\nReviewed activation and original-command recovery are shown below using the\nreal Axis renderer with synthetic responses. These captures do not prove a\ndeployed timer, customer ingestion or multi-node execution. The desktop viewport\nis 1280x900; mobile is 390x844 with no horizontal overflow.\n\n![Reviewed schedule activation](../assets/images/schedule-lifecycle-desktop.png)\n![Mobile schedule activation review](../assets/images/schedule-lifecycle-mobile.png)\n\nFunctional owner: `nodics.process`. Cronjob owns the persisted schedule and its\nruntime lifecycle. Process owns trigger relationships and immutable workflow\nversions. A Copilot refresh continues to require current Knowledge source access\nand policy admission at execution time.\n\n## Business Outcome\n\nAn operator can prepare an approved automation schedule without starting work.\nThe journey separates choosing a target, reviewing the exact schedule and saving\nan inactive definition. A lost response leads to original-save inspection rather\nthan a second submission. This reduces accidental activation during setup.\n\nThis is an optional inactive-draft capability, not a complete Copilot scheduling\nwizard. It does not create or publish a Process workflow/trigger, assign a source,\nprove provider readiness, enable a scheduler or grant runtime credentials.\nThe existing generic Cron form remains a different operation: saving an active\nNEW job there can schedule work immediately. Use **Schedule drafts** for this flow.\n\nBeginners should complete the review without saving first and ask their Cron\noperator to explain the selected timing and runtime timezone. Business operators\ndo not need database or scheduler credentials for this journey.\n\n## Prepare the Deployment\n\nAdministrators and implementation partners perform these steps before operators\nuse the form. Installation alone leaves provisioning disabled.\n\n1. Deploy the compatible Cron API and Axis renderer. The authoritative connection\n   comes from authenticated BackOffice discovery, not a browser-entered URL.\n2. Qualify Cron's generated persistence provider and existing unique job-code\n   index. Insert-only saves must reject duplicate identities, not update them.\n   Verify generated ownership/access hooks and inactive save behavior in the\n   target deployment. A local unit test is not live database qualification.\n3. Prepare the Process definition/version/trigger through its own governed APIs.\n   Validate required domain grants and runtime admission independently. A valid\n   trigger code in a draft is not proof that this step succeeded.\n4. For Copilot refresh, establish the approved source assignment and expected\n   policy digest using the Knowledge and Process contracts. Source/policy changes\n   can make the eventual callback reject; drafting does not bypass that check.\n5. In the appropriate deployment-owned configuration layer, set scoped targets\n   under `cronjob.scheduleDrafts.targets`. Each target fixes one tenant/enterprise,\n   Process trigger, node, bounded context and a list of approved timings.\n6. Review frequency, capacity and the scheduler runtime's timezone. Expressions\n   use the existing Cron parser; there is no new per-draft timezone control.\n7. Enable `cronjob.scheduleDrafts.enabled` through the deployment's existing\n   governance. Independently assign `cronjob.lifecycle.manage` to appropriate\n   verified employees. Generated Cron access rules still apply.\n\nDo not widen employee permissions to repair a missing configuration. No target\nis shown for another enterprise, and disabled deployments return no choices.\n\n## Create an Inactive Draft\n\n1. Open the authorized **Process and Automations > Cron jobs** workspace.\n2. Find **Schedule drafts**. If no approved targets are available, ask the\n   deployment administrator to inspect scoped configuration and current grants.\n3. Enter a new job code and a descriptive name. Codes start with a letter and\n   allow letters, digits, periods, underscores and hyphens, up to 128 characters.\n4. Choose **Approved target**, then **Approved timing**. The node and Process\n   trigger are supplied by the backend; the browser cannot choose another handler.\n5. Select **Review draft**. This does not persist anything. Review the displayed\n   Process trigger, execution node, timing and name.\n6. Tick **I confirm this inactive schedule draft**, then select **Save inactive\n   draft** once. Editing any input invalidates the old review and confirmation.\n7. Look for **Inactive draft saved. No job has been started.** The receipt is\n   accepted only when the backend returns the exact inactive persisted record.\n   The form stays frozen to prevent a second insertion of the same draft.\n8. Stop here for provisioning. Trigger qualification and eventual activation are\n   separate Process/Cron administrative actions, not follow-up automatic effects.\n\n```mermaid\nsequenceDiagram\n    participant Operator\n    participant Axis\n    participant Cron\n    participant Store as Generated Cron Persistence\n    Operator->>Axis: Select approved target and timing\n    Axis->>Cron: Preview exact draft\n    Cron->>Cron: Check scope, grants and configuration\n    Cron-->>Axis: Inactive review and digest\n    Operator->>Axis: Confirm and save\n    Axis->>Cron: Draft plus original digest\n    Cron->>Cron: Recheck current review\n    Cron->>Store: Insert only, active false\n    alt Exact persisted acknowledgement\n        Store-->>Cron: One matching inactive record\n        Cron-->>Axis: SAVED_INACTIVE\n    else Lost or ambiguous acknowledgement\n        Cron-->>Axis: Outcome uncertain\n        Operator->>Axis: Inspect original save\n        Axis->>Cron: Original code and digest\n        Cron->>Store: Exact actor-scoped read, no write\n        Cron-->>Axis: Saved inactive or still unknown\n    end\n```\n\n## Prepare a Draft From Knowledge Studio\n\nThe same owner-controlled journey is available beside an approved knowledge\nsource. Administrators enable this optional entry point only after completing\nthe deployment preparation above. This entry point does not add an activation\nstep or relax any Cron or Knowledge permission.\n\n1. Configure the approved Cron target with an optional `sourceBinding`. Its\n   `moduleName` is `copilotApi`, `sourceCode` is the exact approved source code,\n   and `policyDigest` is the current source fingerprint. Configure the same\n   source and fingerprint in the target's Process context as `sourceCode` and\n   `expectedPolicyDigest`. No source content or credentials belong in the binding.\n2. Enable `copilot.knowledge.studio.sourceScheduleDraftsEnabled` in the governed\n   deployment layer. This defaults false and is independent of Cron provisioning.\n3. Give the appropriate operator both the existing source-management and Cron\n   lifecycle permissions through the normal authorization workflow. The source\n   must also be visible under current source/group restrictions. Axis requires an\n   available authorized Cron navigation contribution and connection.\n4. Open **AI > Knowledge Studio**, select the approved source, then find\n   **Schedule drafts**. Only targets with the exact current module, source and\n   fingerprint are offered. A missing match is not a reason to use another source.\n5. Follow the review, confirmation and inactive-save steps above. Review remains\n   bound to the approved target and current actor. The Process context is not\n   editable from this form.\n6. After a source policy change, have its owner qualify the new assignment and\n   update the approved target through normal configuration governance. Old target\n   bindings disappear from the source view; they are not silently rewritten.\n7. Preserve the original receipt before switching sources or leaving an uncertain\n   save. Source changes discard the transient form. Use original-save inspection,\n   never another insertion, to investigate an already-dispatched command.\n\n```javascript\n// Part of one deployment-approved Cron target; illustrative values only.\nsourceBinding: {\n    moduleName: 'copilotApi',\n    sourceCode: 'approvedDocumentationSource',\n    policyDigest: '<current 64-character lowercase source fingerprint>'\n},\ncontext: {\n    sourceCode: 'approvedDocumentationSource',\n    expectedPolicyDigest: '<the same current fingerprint>'\n}\n```\n\nThis association does not provision a workflow, prove a trigger's published\nversion, establish the runtime principal or replace callback source admission.\nSaved inactive is still the only successful persistence result of this flow.\n\nThe following captures use the real Knowledge Studio and Cron components with\nsynthetic source/target responses. They show an acknowledged inactive save, not\na deployed trigger or running job. Desktop (1280 pixels) and mobile (390 pixels)\nchecks reported no horizontal overflow or browser warnings.\n\n![Source-linked inactive draft on desktop](../assets/images/knowledge-source-schedules-desktop.png)\n\n![Source-linked inactive draft on mobile](../assets/images/knowledge-source-schedules-mobile.png)\n\n## Recover an Uncertain Save\n\n1. Keep the page open. A timeout or invalid response does not prove the insert\n   failed. Axis preserves the original code and digest in memory and locks edits.\n2. Select **Inspect original save**. This reads the original actor-scoped record;\n   it does not resend the creation command or activate a scheduler.\n3. An unchanged inactive NEW definition can be confirmed even if provisioning\n   was disabled after the save. Current employee authorization is still required.\n4. Missing, foreign, edited or activated records remain uncertain. Inspection is\n   not a terminal failure verdict and never unlocks another insertion.\n5. Retain the original code/review digest through approved operator evidence if\n   the page must be closed. Browser reload, logout or connection change discards\n   transient review state. Do not choose a new code simply to bypass uncertainty.\n6. Escalate unresolved evidence to the owning Cron operator. Review provider\n   acknowledgements and the original scoped definition; do not replay from logs.\n\nThe fingerprint protects against accidental drift when inspecting the stored\ndefinition. It is not a tamper-proof audit record or a private durable journal.\nPrivileged generic Cron administrators retain their own edit authority.\n\n## API and Limits\n\nAll paths are relative to the authorized Cron module's `/v0` base. Every route is\nsecured with the lifecycle-management grant and independent service admission.\n\n| Method and Path | Input | Result |\n| --- | --- | --- |\n| GET `/schedules/drafts/capabilities` | None | Versioned enterprise-scoped choices and labels |\n| POST `/schedules/drafts/preview` | Code, name, target code, approved expression | Non-mutating review digest |\n| POST `/schedules/drafts` | Same input, digest, `confirmed: true` | One inactive insert or uncertainty |\n| POST `/schedules/drafts/inspect` | Original code and digest | Original inactive receipt or uncertainty |\n\nConfiguration is bounded to 100 targets, 24 unique expressions per target, 16 flat\nbusiness-context entries and 256 characters per context string. Names/labels are\nbounded to 160 characters, expressions to 120. Credentials, provenance overrides,\nuntrusted target nodes and executable handlers are never browser input. No\nautomatic retry, offline queue, fallback generic save or HTTP redirect is used.\n\n| Symptom | Meaning | Safe Response |\n| --- | --- | --- |\n| No approved targets | Disabled or unmatched tenant/enterprise configuration | Inspect owner configuration; do not broaden scope |\n| Review rejected | Invalid input, denied access or malformed target | Correct configuration/input, then obtain a new review |\n| Save review no longer matches | Actor, target or configuration changed | Inspect if a save was dispatched; never silently reuse old review |\n| Save response lost or malformed | Insert may already exist | Inspect the original code and digest |\n| Inspection remains unknown | No unchanged matching inactive record proven | Preserve evidence and use owner-led investigation |\n| Draft saved but no execution | Expected: inactive provisioning only | Qualify trigger and activation separately |\n\n## Customize and Extend Safely\n\nBackend administrators and developers override only actual deployment selection in their\nown module or server `config/properties.js`. Keep framework defaults inherited.\nThe following intentionally disabled example contains illustrative identifiers,\nnot a ready-to-activate customer configuration:\n\n```javascript\nmodule.exports = {\n    cronjob: {\n        scheduleDrafts: {\n            enabled: false,\n            targets: [{\n                code: 'approvedDocumentationRefresh',\n                label: 'Documentation refresh',\n                tenantCode: 'exampleTenant',\n                enterpriseCode: 'exampleEnterprise',\n                runOnNode: 'approvedAutomationNode',\n                triggerCode: 'approvedRefreshTrigger',\n                expressions: ['0 0 * * * *'],\n                context: { sourceCode: 'approvedDocumentationSource' }\n            }],\n            presentation: { title: 'Prepared automation schedules' }\n        }\n    }\n};\n```\n\nFor a Copilot target, add the exact policy digest required by its published action\ncontract only after source assignment. Never store provider keys, passwords or\nruntime tokens in context. Configuration cannot make source access or Process\npublication optional. There is no wildcard enterprise target.\n\nFrontend partners can wrap the typed `CronScheduleDraftPanel` in customer-owned\nlayout, preserving authorized connection selection, bounded text, accessible\ncontrols, scope resets and uncertainty locks. Do not move the target registry,\npermission decisions, persistence or scheduler into Axis or a kickoff module.\n\n## Common Mistakes\n\n- Treating a draft as activation: inactive persistence intentionally starts no job.\n- Using a new job code after a timeout: the original insert may already exist;\n  inspect the original receipt instead of manufacturing a duplicate schedule.\n- Putting service credentials in business context: use the existing verified\n  runtime principal and target-module authorization, not stored secrets.\n- Assuming a valid trigger code proves publication: qualify the Process version\n  and source assignment through their owners before activation.\n\n## Verification and Evidence Boundary\n\nThese sanitized captures show the actual Axis draft renderer with a synthetic\napproved target, not a signed-in runtime. Desktop at 1280 pixels and mobile at\n390 pixels showed no horizontal overflow. Browser verification exercised both\nacknowledged save and lost-response/original-save inspection. An initial empty\nselect warning was corrected and a clean-page run reported no console errors.\n\n![Synthetic inactive schedule review on desktop](../assets/images/cron-schedule-draft-desktop.png)\n\n![Synthetic inactive schedule review on mobile](../assets/images/cron-schedule-draft-mobile.png)\n\nMaintainers and QA run Cron schedule-draft, route/controller, activator/runtime\nand Process trigger tests. Cover unauthorized/cross-enterprise callers, modified\nconfiguration after preview, duplicate inserts, partial/negative acknowledgements,\noriginal-scope inspection, disabled provisioning and a still-running provider.\nAxis tests cover typed response rejection, explicit confirmation, input/session\nchanges, offline denial and one-shot save/inspection. Exercise desktop and mobile\nwith the synthetic fixture before signed-in acceptance.\n\nSource/fixture validation does not establish unique-index deployment, failover\ndurability, published workflow readiness, actual scheduled callbacks or manual\nbusiness acceptance. Recorded manual refresh has its own\n[Process-backed journey](../nodics.copilot/recorded-manual-refresh.md). Legacy\nrefresh history and legacy-index migration remain separate from inactive\nprovisioning. Reviewed activation is described below; saving never activates.\n\n## Reviewed Activation and Recovery\n\nThe **Schedule control** section uses the existing Cron pool. Separately qualify\nunique job indexes, conditional updates, runtime credentials and unique owning\nnode identity, then enable `cronjob.scheduleDrafts.activationEnabled` (default\nfalse). The original verified human, tenant and enterprise must match the saved\ndraft. Another administrator cannot implicitly adopt its receipt.\n\n1. Open Schedule control in Cron jobs or below a source-linked saved draft.\n2. Enter the original job code and select **Inspect schedule**. This is read-only\n   and remains available with activation disabled.\n3. Select **Review activation**. Cron rechecks approved timing, target context and\n   node; Process reads the exact active trigger, published definition/version and\n   graph without starting an instance.\n4. Review the reference, tick confirmation and select **Apply change** once.\n   Actor, persisted revision, definition, dates, target and graph bind the review.\n5. Active status requires the matching original command and an actually active\n   timer. It does not prove that a callback or knowledge refresh succeeded.\n6. To stop future ticks, inspect, select **Review deactivation**, confirm and\n   apply. This remains possible after activation is disabled or the target is\n   removed. A callback already running may finish; this is not compensation.\n7. After a lost response, inspect the original code. **Reconcile original\n   command** only finalizes matching runtime evidence; it never dispatches a\n   scheduler command. A missing timer cannot prove activation. An uncertain\n   activation can instead be explicitly reviewed for deactivation. Overlapping\n   lifecycle commands on the owning node are rejected, not queued.\n\nFixed authenticated POST routes: `/schedules/lifecycle/preview`, `/execute`,\n`/inspect`, `/reconcile`. Preview accepts exactly\n`{code, expectedRevision, intent}`, with `ACTIVATE` or `DEACTIVATE`. Execute adds\n`confirmed: true` and `reviewDigest`. Inspect accepts `{code}`; reconcile accepts\n`{code, expectedRevision}`. Extra keys, stale reviews and contradictory responses\nfail closed. All routes require `cronjob.lifecycle.manage` and owner admission.\n\nPrivate `jobDetail.scheduleLifecycle` records revision, actor, intent, digest and\ntimestamps before one dispatch. Lost acknowledgement retains `DISPATCHING` and\npublic `OUTCOME_UNKNOWN` until original proof is sufficient. Actual timer state\nand matching definition are checked independently of generic success strings.\nExisting startup/failover ownership remains unchanged; a local pool is not a\ncross-node health assertion. Generic Cron administration is a separate trusted\nsurface, not a tamper-proof lifecycle ledger.\n\nCustomize `scheduleDrafts.lifecyclePresentation` while retaining all keys and\nbounded text. Tests cover concurrency, failed start pipelines, stale versions,\ngate/revocation changes, missing timers, reconciliation and offline refusal.\nQualify actual callback execution separately before live activation.\n\nRelated: [Cron operations](cronjob-operations.md),\n[Scheduled automation](scheduled-automation.md), and\n[Copilot knowledge recovery](../nodics.copilot/knowledge-generation-recovery.md).\n",
+    "keywords": [
+      "cron",
+      "schedule",
+      "draft",
+      "copilot",
+      "recovery",
+      "Cron Operations",
+      "Inactive Schedules",
+      "Recovery"
+    ],
+    "facets": {
+      "section": "cron-and-scheduled-automation",
+      "group": "cron-and-scheduled-automation",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record276": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotknowledgegenerationrecovery",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotKnowledgeGenerationRecovery",
+    "title": "Copilot Knowledge Progress and Recovery",
+    "summary": "Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries.",
+    "searchText": "Copilot Knowledge Progress and Recovery Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries. # Copilot Knowledge Progress and Recovery\n\nFunctional owner: `nodics.copilot`. Technical owner: `copilotKnowledge`.\nDiscovery owns publication manifests; nSearch owns physical index operations.\nProcess owns execution history and Cronjob owns schedules.\n\n## Business Outcome\n\nKnowledge Studio distinguishes the published knowledge used for answers from a\nreplacement that is still being written. Administrators can inspect progress,\nretire a stalled publication and review eligible obsolete-index cleanup without\nrerunning ingestion. These operations do not alter the source repository or\nbusiness database, invoke a language model, or cancel a provider request.\n\nThe controls require separate permissions and current source visibility. A source\nhidden by enterprise ceilings, inactive groups or revoked source access is not\nrepresented by an anonymous placeholder or hidden-source count.\n\nBeginners should start with the read-only inventory and progress explanation.\nAn operator should qualify persistence and provider behavior before enabling\nretirement or cleanup; a missing button is not a reason to widen user permissions.\n\n## Before Starting\n\n1. Provision Discovery's private `discoveryGeneration` schema and unique identity\n   index through the normal framework lifecycle. Verify generated persistence\n   supports the private `DURABLE_JOURNAL` protocol with journaled majority writes.\n2. Deploy compatible guarded-write implementations on every ingestion runtime.\n   A mixed deployment is not qualified. Unguarded callers cannot modify a manifest\n   containing guarded writer evidence. Never remove its private writer fields to\n   make an older runtime proceed.\n3. Verify the selected nSearch provider's save, refresh, exact-count search and\n   query-removal acknowledgements. A returned promise is not proof of a write.\n4. Enable `copilot.knowledge.generationPublication.enabled` only through existing\n   runtime configuration governance. It defaults off. Verify source registration,\n   classification, secret inspection and enterprise/group selection first.\n5. Provision the private `copilotKnowledgeMaintenance` receipt schema. Independently\n   grant source management, source read, cleanup and recovery permissions to the\n   intended operators. Installing source code grants no access.\n\nDATABASE and EXTERNAL_LOG sources are live evidence sources, not static index\nrefresh or cleanup targets. Existing unqualified legacy chunks are excluded in\ngeneration mode; exclusion is not physical erasure or a completed migration.\n\n## Inspect a Refresh\n\n1. Open **AI & Copilot > Knowledge Studio** and reload the inventory.\n2. Select the authorized source. Review its configured version, includes,\n   exclusions and runtime provenance before preparing another refresh.\n3. Read current index readiness separately from pending-writer progress. A\n   published generation remains selected while a replacement is incomplete,\n   provided the published source policy still matches current policy.\n4. When available, read **Acknowledged chunk writes**, shown as completed writes\n   out of the expected number. Reload inventory for a fresh snapshot.\n5. Use the phase explanation below. Never infer worker termination from age or a\n   lack of progress. An uncertain writer requires inspection before another run.\n\n| Phase | Meaning | What It Does Not Prove |\n| --- | --- | --- |\n| Waiting for the next write | No physical write is currently claimed | The process is alive or the job has finished |\n| Write awaiting acknowledgement | One physical write has a durable claim | The provider committed, failed or stopped |\n| Writes complete; publication verification pending | All expected writes were acknowledged and sealed | Visibility, count verification or publication succeeded |\n| Indexed with durable evidence | Published policy fingerprint and exact index count matched at inspection | Answer quality, immutable readiness or complete source integrity |\n\nThe bar measures acknowledged writes, not overall job completion. Empty sources\nhave zero expected writes and can still publish an empty replacement after exact\ncount verification. Private generation tokens, write claims and index predicates\nare never browser controls.\n\n```mermaid\nsequenceDiagram\n    participant User as Administrator\n    participant Knowledge as Copilot Knowledge\n    participant Discovery as Discovery Publication\n    participant Search as Discovery Projection and nSearch\n    User->>Knowledge: Preview and explicitly confirm refresh\n    Knowledge->>Knowledge: Read bounded source and inspect secrets\n    Knowledge->>Discovery: Begin private generation\n    loop Each prepared chunk\n        Knowledge->>Discovery: Claim exact write before dispatch\n        Discovery-->>Knowledge: Journaled revision acknowledgement\n        Knowledge->>Search: Write generation-qualified chunk once\n        Search-->>Knowledge: Exact positive acknowledgement\n        Knowledge->>Discovery: Complete original write claim\n    end\n    Knowledge->>Discovery: Seal exact completed count\n    Knowledge->>Search: Refresh visibility and verify exact count\n    Knowledge->>Knowledge: Recheck current authority and policy\n    Knowledge->>Discovery: Publish exact sealed generation\n    User->>Knowledge: Reload scoped readiness\n```\n\n## Retire a Stalled Publication\n\n1. Inspect the existing Process attempt and owning runtime. Retirement is a\n   publication fence, not process cancellation or proof of physical quiescence.\n2. Select the independent writer-recovery review for the selected source. The\n   deployment must explicitly enable it and the minimum-age bound must pass.\n3. Check the source and expected chunk count. Cancel if the source or operation\n   is not the intended target; do not submit private tokens manually.\n4. Confirm once. Fresh source policy, routing, permissions and manifest revision\n   must match. The authorization receipt must persist before retirement.\n5. Reload inventory and inspect the maintenance receipt. A missing completion\n   acknowledgement is an unknown outcome, not permission to retry automatically.\n\nRetirement prevents a guarded worker from obtaining another write claim. A write\nalready dispatched can still finish. Its original confirmed completion is\nrecorded even after retirement, but the worker cannot adopt another pending\ngeneration or resume dispatch. The previously published generation is unchanged.\n\n## Review Obsolete Cleanup\n\n1. Reload the source after retirement or a successful refresh with cleanup debt.\n2. Select **Review cleanup**. A currently pending generation blocks the reviewed\n   cleanup journey. Database and log sources have no static cleanup.\n3. Compare eligible generations with the separate operator-only count. Eligibility\n   comes from Discovery, not from the browser or the age of an operation.\n4. Confirm once only when the eligible count is positive. Every removal is scoped\n   to the exact tenant, owner, index configuration and obsolete generation.\n5. Inspect the acknowledged result and reload inventory. Operator-only debt may\n   remain. Never rerun ingestion just to resolve a cleanup acknowledgement.\n\n| Evidence | Cleanup Eligibility |\n| --- | --- |\n| Former completed published generation | Eligible after replacement |\n| Retired guarded IDLE or SEALED writer | Eligible because no write is outstanding |\n| Retired guarded WRITING claim | Blocked until original acknowledged completion |\n| Legacy or unclassified token | Blocked; no retrospective proof is inferred |\n| Lost write-claim or physical response | Blocked; elapsed time is not completion |\n\nAuthorization and completion receipts are separate. The maintenance-history\npanel requires its own read grant and remains a read even when write gates are\ndisabled. A receipt that authorized cleanup does not prove deletion completed.\nSearch-provider timeout, conflicts, malformed counts or negative acknowledgement\npreserve uncertainty and do not trigger an automatic retry.\n\n## Retire a Dedicated Legacy Index\n\nLegacy retirement is separate from abandoning one guarded writer. It places a\nprovider write barrier on an entire old physical index after verifying replacement\ngenerations in a different index. Elasticsearch's modern promise-based client is\nthe supported native provider. The existing nSearch connection is reused.\n\nThis is **retirement with retained data, not physical cleanup**. Unknown legacy\ntokens remain ineligible for generation deletion. The workflow never deletes or\nrecreates the index, removes a block, alters search roles, cancels workers or\ncopies unscanned legacy chunks. Retaining the blocked index prevents ordinary old\nwrites from automatically creating it again. Physical erasure uses the separate\nqualified workflow below; retirement never implicitly authorizes deletion.\n\n### Administrator Setup\n\n1. Provision private `discoveryIndexRetirementReceipt`, its unique `code` index\n   and generated services with `DURABLE_JOURNAL` persistence. Keep generic CRUD,\n   search, events and caches disabled.\n2. Keep the old logical nSearch binding registered. Its `indexDef.retirement`\n   must declare `dedicated: true`, `immutablePhysicalName: true`,\n   `ownerType: 'COPILOT_KNOWLEDGE'`, and exact `tenantCode` and `enterpriseCode`.\n   These are deployment contracts, not inferred facts. The index administrator\n   must establish exclusive ownership and prevent deletion/recreation, alias\n   changes or name reuse during and after retirement. Shared indexes, aliases,\n   data streams and wildcard names are rejected.\n3. Provision a separate replacement logical/physical index through nSearch.\n   Repoint the existing Knowledge ingestion/retrieval binding and refresh all\n   intended static sources through recorded refresh. A current policy, sealed\n   generation, exact physical count and stable manifest revision are required.\n4. Configure `copilot.knowledge.legacyMigration.plans` in the owning runtime layer.\n   Each stable plan code defines `label`, exact `tenantCode`, `enterpriseCode`,\n   `legacyIndexName` and one to 100 unique `sourceCodes`. Include every intended\n   replacement. Exclusions remain explicit policy decisions; an old index cannot\n   reveal every historical writer or reconstruct deployment topology.\n5. Grant `copilot.knowledge.migration.read` separately from\n   `copilot.knowledge.migration.execute`, alongside current source-management and\n   source-read permissions. The operator must be authorized for every source.\n   Hidden plans do not disclose labels or source counts.\n6. Qualify whole-index barrier semantics in an isolated deployment, including\n   missing shard acknowledgements. Only then enable\n   `copilot.knowledge.legacyMigration.enabled`. It defaults false; plans default\n   empty. Never place provider credentials in Copilot policy.\n\n| Configuration | Purpose |\n| --- | --- |\n| `legacyMigration.enabled` | Admits new reviews and retirement commands |\n| `legacyMigration.plans.<code>` | Server-owned exact scope, old logical binding and replacement sources |\n| `legacyMigration.presentation` | Labels, impact notice and retained/uncertain-result copy |\n| `indexDef.retirement` | nSearch-owned dedicated, immutable physical-index qualification |\n\n### Business and Operator Steps\n\nBefore starting, sign in to the selected local or deployed Axis environment and\nopen Copilot Workspace. Knowledge Studio is separately permissioned: workspace\naccess alone does not grant knowledge access or migration authority. A hidden\nKnowledge Studio entry is not evidence of an empty index or completed migration.\nUse the existing Profile access-management process to assign the intended\noperator's scoped grants, then sign in again and refresh module discovery.\nDo not automatically grant permanent removal to every administrator.\n\nIf Workspace fails with a confirmation/action lookup error, rebuild the selected\nbackend from the corrected Copilot route declarations. Route names must be unique\nacross the entire module; groups do not isolate repeated names such as `get`.\nThe registered-route regression exercises each HTTP path with its intended\noperation, permission and privacy metadata, including the erasure endpoints.\n\n1. Open **AI & Copilot > Knowledge Studio**. Fully authorized plans appear beneath\n   the source workspace.\n2. Select **Review replacement** on the intended plan. This performs reads only.\n3. Review the verified source count and whole-index impact notice. Cancel if the\n   plan is wrong. Physical names, UUIDs and provider credentials stay private.\n4. Select **Retire legacy writes** once. Current source/routing checks run again,\n   then a unique durable original claim precedes one provider barrier with\n   transport retries disabled. Completion requires positive index/shard evidence\n   followed by an exact-UUID blocked readback.\n5. Read the result. **Retired** means the barrier was acknowledged and remains\n   present at inspection. It is not a physical-erasure report or a current\n   replacement-readiness lease. Legacy bytes remain.\n6. After a timeout, select **Inspect original retirement**. Reads remain available\n   with new mutation disabled. Missing or STARTED receipts remain uncertain even\n   when current metadata says blocked. Metadata alone cannot reconstruct whether\n   the original barrier acknowledged completion of in-flight writes.\n7. Escalate uncertainty to the index operator. Never clear receipts, replace UUIDs,\n   repeat the command, or change actors to bypass the unique claim. A lost response\n   after durable completion can be recovered by inspection without another barrier.\n\n```text\nsource authority + replacement generation/count\n                       |\n                exact reviewed fingerprint\n                       |\n              unique durable original claim\n                       |\n           nSearch whole-index write barrier (once)\n                       |\n       shard acknowledgement + same UUID blocked readback\n                       |\n          original receipt RETIRED; old data RETAINED\n```\n\nPrivate POST APIs are `/knowledge/migrations/:migrationCode/preview`, `/retire`\nand `/inspect` under the Copilot API base. Preview and inspect accept `{}`. Retire\naccepts exactly `{ confirmed: true, reviewDigest }`. Results explicitly include\n`retainedLegacyData: true` and `physicalCleanupComplete: false`. See the\n[Elasticsearch add-index-block contract](https://www.elastic.co/docs/api/doc/elasticsearch/operation/operation-indices-add-block)\nfor native acknowledgement semantics. Custom providers must implement equivalent\nqualification through nSearch, not optimistic success in Copilot.\n\n## Permanently Remove a Retired Index\n\nThis is a separate irreversible operation. The implementation supports dedicated\nindexes with an explicitly complete **API-key-only historical writer inventory**.\nUnknown writers, password-based/mixed credentials, shared indexes and deployments\nwithout security are not qualified. Do not declare the inventory complete merely\nto make the command available. The index administrator must verify it against\ndeployment/credential records and exclude concurrent manual recreation/name reuse.\n\nHere, physical cleanup means removal of the live index through the provider API.\nIt does not certify disk sanitization, removal from snapshots/backups, or expiry\nof independently retained audit records. Apply the relevant storage-retention\nprocess separately; `ERASED` is not a claim of forensic or backup erasure.\n\n### Operator Prerequisites\n\n1. Complete the acknowledged retirement above. A STARTED or uncertain barrier\n   does not qualify, even when current metadata shows a write block.\n2. Have the credential owner invalidate every historical writer API key through\n   its normal approved security process. Copilot does not revoke or change keys.\n   The provider must still return each exact key with `invalidated: true`;\n   missing/expired-only keys do not count as revocation evidence. Retention of\n   invalidated keys is bounded by Elasticsearch, so qualify before that evidence\n   expires. See [Elastic API-key invalidation](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-invalidate-api-key.html).\n3. Configure the existing nSearch model's `indexDef.retirement.erasure` in its\n   owning deployment layer, using IDs only, never API-key secrets:\n\n   ```js\n   erasure: {\n     writerInventoryComplete: true,\n     writerCredentialMode: \"API_KEY_ONLY\",\n     writerApiKeyIds: [\"historical_writer_key_id\"]\n   }\n   ```\n\n   One to 100 unique exact IDs are accepted. The declared list must be exhaustive;\n   this is a deployment qualification, not automatic discovery of historical users.\n4. The effective cluster `action.auto_create_index` must be `false`. The provider\n   checks transient, persistent and default precedence without changing settings.\n   This conservative supported profile prevents ordinary automatic recreation;\n   it does not prevent an administrator from explicitly creating a new index.\n   Keep immutable-name ownership in force throughout the migration. See\n   [Elastic index management settings](https://www.elastic.co/docs/reference/elasticsearch/configuration-reference/index-management-settings).\n5. Keep the original private Discovery receipt and its unique index. Adopt the\n   optional `erasure` field through the normal schema build/deployment lifecycle.\n   Never remove this receipt or reset its erasure claim to retry a command.\n6. Grant `copilot.knowledge.migration.erase` separately, alongside existing\n   migration read/execute and current source permissions. Explicitly enable\n   `copilot.knowledge.legacyMigration.erasureEnabled` and the existing migration\n   gate only after qualification. Both default disabled. Enabling a flag does not\n   qualify the provider or grant any user access.\n\n### Business User Steps\n\n1. In **Knowledge Studio**, find the configured migration plan's permanent-removal\n   section. Check that the source migration and retirement have been completed.\n2. Select **Review permanent removal**. No deletion occurs. Copilot verifies\n   current source authority, replacements, original UUID and provider writer evidence.\n3. Read the irreversible-impact notice and verified source count. Cancel if this\n   is not the intended migration. Index names, keys and receipt identities remain\n   backend-private.\n4. Select **Permanently remove legacy index** once. The original retirement receipt\n   is conditionally claimed before one exact native deletion. Current scope and\n   replacement checks run again; transport retries remain disabled.\n5. `ERASED` requires native positive acknowledgement, exact absence and durable\n   original completion. A timeout or `OUTCOME_UNKNOWN` never authorizes another\n   delete. Select **Inspect original removal** instead.\n6. Inspection remains available with write gates off. Lost response after durable\n   completion can show ERASED. Missing acknowledgement before completion remains\n   unknown even if bytes are absent; contact the owner rather than clearing the\n   claim. A recreated index with a different UUID is rejected, never deleted.\n\nThe following captures show the actual Axis component with synthetic owner\nresponses, not a signed-in runtime or proof that any live index was erased.\n\n![Desktop permanent-removal review](../assets/images/legacy-erasure-desktop.jpg)\n\n![Mobile original-removal result](../assets/images/legacy-erasure-mobile.jpg)\n\n```text\nacknowledged retirement + complete revoked writer inventory + replacements\n                               |\n                     separate reviewed digest\n                               |\n                    durable erasure STARTED CAS\n                               |\n                exact blocked UUID delete, no retry\n                               |\n          native acknowledgement + absence + durable completion\n                               |\n                  original erasure ERASED receipt\n```\n\nPrivate POST endpoints under the Copilot base:\n`/knowledge/migrations/:migrationCode/erasure-preview` and `/erasure-inspect`\naccept `{}`; `/erase` accepts exactly `{ confirmed: true, reviewDigest }`.\n`ERASED` returns `physicalCleanupComplete: true`, `retainedLegacyData: false`.\nUnknown erasure returns `physicalCleanupComplete: false`, `retainedLegacyData: null`:\nit asserts neither retention nor completed removal. Reads never retry deletion.\n\n### Customization and Failure Cases\n\nPresentation belongs to `legacyMigration.presentation.erase*` in layered\nproperties. Axis renders those labels and the existing one-shot review component.\nA later nSearch provider can override native qualification/deletion only while\npreserving exact scope, immutable UUID, fresh guards, no retry and original durable\nevidence. Do not implement provider calls in Axis or Copilot, or substitute a\ncheckbox for native decommissioning evidence. Test allowed and denied credentials,\nscope drift, failed claims, lost acknowledgements, competing attempts and restart\ninspection before admitting another provider or credential mechanism.\n\n## Limits and Recovery\n\n### Reproduce Isolated Erasure Qualification\n\nFramework maintainers can run the real-provider acceptance test without changing\nan existing Elasticsearch cluster or deleting business data. Prerequisites are\nan installed Elasticsearch distribution with its bundled JDK, the framework's\noptional Elastic client, and an explicitly selected loopback MongoDB replica set.\nThe tested local combination is Elasticsearch 7.17.4 with the installed 8.x client;\nthis is compatibility evidence for these operations, not a production-version\nor security-support recommendation.\n\n1. From the framework repository, select the installed distribution's absolute\n   home and the loopback replica-set URI. Do not supply a business database name.\n2. Run the opt-in test:\n\n   ```bash\n   NODICS_ERASURE_LIVE=1 \\\n   NODICS_ERASURE_ES_HOME=/absolute/path/to/elasticsearch \\\n   NODICS_ERASURE_MONGO_URI='mongodb://127.0.0.1:27017/?replicaSet=yourReplicaSet' \\\n   node --test nodics.discovery/modules/discoveryPublication/test/discoveryErasure.live.test.js\n   ```\n\n3. The fixture starts a separate loopback-only secured Elastic node on ephemeral\n   ports, with generated credentials and its own data/configuration directories.\n   It uses HTTP only on loopback for disposable test credentials; it does not\n   validate production TLS. Shared Elasticsearch configuration is never altered.\n4. MongoDB's provider fixture creates a random `nodics_erasure_test_*` database,\n   installs the private receipt's unique identity index and uses the actual\n   generated save/read/update initializers and provider model. Receipt writes\n   request majority+journal acknowledgement and reads use primary-majority state.\n5. Verify every scenario passes: live writer rejection, key invalidation and\n   denied subsequent write, acknowledged retirement/removal, concurrent claim\n   exclusion, lost claim/delete/completion responses, changed UUID rejection and\n   original evidence in a fresh Node process. The fresh inspection process has\n   no inherited in-memory receipt state and cannot write through its journal.\n6. Normal completion stops the owned node and removes its generated directories\n   and disposable database. An externally killed test may require operator\n   cleanup of its exact owned resources; never sweep shared data by wildcard.\n\nThis runner does not authenticate a Profile employee or exercise signed-in Axis.\nIts domain authorization callbacks are explicit test declarations, and replacement\nevidence uses disposable provider counts/UUIDs, not a real customer's source\npublication. Customer source completeness, exhaustive historical writers,\ndeployment grants/gates and signed-in acceptance must still be qualified before\nusing the feature on an existing index. Unit tests additionally exercise Copilot\nsource/grant and review binding through the actual durable-update initializer.\n\nThe generated persistence regression is important: embedded-object or `$exists`\npredicates are rejected by the durable journal contract. Erasure uses null/scalar\npredicates, and retirement isolates its insert payload from provider-added `_id`.\n\n### Authenticated Runtime and Axis Component Qualification\n\nA second, stronger local workflow now exercises actual Profile employees,\nregistered Copilot HTTP endpoints, current source policy, generated-schema\npublication and a complete runtime restart. Its detailed contributor guide is\n`copilotKnowledge/llm/examples/authenticated-erasure-acceptance.md`.\n\n1. Select an installed secured-provider distribution and loopback MongoDB replica\n   set using the same explicit fixture variables described above. Add\n   `NODICS_COPILOT_RUNTIME_ACCEPTANCE=1` and run\n   `node --test nodics.copilot/modules/copilotKnowledge/test/copilotErasureRuntime.live.test.js`.\n2. The fixture creates its own runtime composition, Redis process, database,\n   operator, reader and synthetic source through the framework's normal owners.\n   It must not alter existing administrator grants or shared search settings.\n3. Verify the test acknowledges real source publication before retirement,\n   denies an active writer, revokes only its fixture key, removes once, and\n   recovers the original result after restarting with both write gates disabled.\n4. For browser verification, start Axis independently and use the guide's\n   `runtimeSession.js` coordinator. Open Axis's\n   `/test/assistant/knowledge-migration.live.html` on `127.0.0.1:3100` and sign in\n   with the temporary manifest's credentials. Keep that manifest private.\n5. Use Preview ingestion, Refresh source index and Confirm source refresh.\n   Reload inventory and check published-generation evidence. Review/cancel before\n   explicitly retiring. Confirm removal is unavailable before entering `revoke`\n   in the backend fixture terminal. Obtain a fresh removal review and confirm.\n6. Enter `restart-read-only`, reload, sign in again and inspect original removal.\n   Write controls must be absent while the original ERASED result survives.\n   The reader must not acquire the operator's original result. Enter `close`\n   and await cleanup after capturing sanitized evidence.\n\nThe 2026-10-04 browser run used production Axis components and clients, real\nProfile sessions, MongoDB persistence and an isolated secured Elastic node. The\ncaptures below show original inspection after runtime restart, with both gates\ndisabled. The mobile viewport was 390px with no horizontal overflow. These are\nauthenticated component captures, not synthetic responses and not full Axis\nBackOffice bootstrap/navigation acceptance.\n\n![Authenticated component inspection after restart, desktop](../assets/images/legacy-erasure-authenticated-components-desktop.jpg)\n\n![Authenticated component inspection after restart, mobile](../assets/images/legacy-erasure-authenticated-components-mobile.jpg)\n\nThis qualification found three integration contracts worth retaining: nAuth must\nrecognize the three migration permissions without granting them by default;\nDiscovery's two generation slots must accept explicit null values; and startup\nmust register historical retirement bindings without recreating their physical\nindexes or replacing the active schema's search binding. Retirement success copy\ndescribes that historical step; only separate acknowledged removal reports erasure.\n\nExpected chunks are bounded to 100,000; obsolete tokens and retained writer\nevidence are bounded to 100. Reaching the obsolete bound prevents another claim\nuntil eligible cleanup is resolved. Do not enlarge these limits to hide a stuck\nwriter. No lease expiry, TTL takeover, caller-supplied index selector or broad\nsource deletion is supported.\n\nRecorded manual refresh uses Process-owned history; legacy mode retains bounded\nsynchronous ingestion. History does not backfill old manual or legacy runs.\nDedicated legacy retirement and qualified API-key-only erasure have separate\nprovider-backed original evidence. Unknown/mixed historical writers, a barrier\nwhose acknowledgement was never recorded and uncertain erasure cannot be repaired\nby assuming completion. Provider/source tests are not live deployment acceptance.\n\n## Customize and Extend Safely\n\nAdministrators use existing runtime governance for enablement and source rules.\nPartner developers can override presentation in their project-owned module's\n`config/properties.js`, for example:\n\n```javascript\nmodule.exports = {\n    copilot: {\n        knowledge: {\n            studio: {\n                presentation: {\n                    progress: 'Confirmed index writes',\n                },\n            },\n        },\n    },\n};\n```\n\nPreserve all sibling defaults through Nodics layering. Axis may customize the\ntyped progress renderer, but cannot change eligibility, produce write proofs,\ninvent grants or hold search credentials. Provider changes remain in the existing\nDiscovery/nSearch owners and must retain exact acknowledgements and scoped\nremoval. No customer module should copy the framework persistence implementation.\n\n## Common Mistakes\n\n- Treating all acknowledged chunks as published knowledge: visibility, count and\n  publication still need to succeed after the writer is sealed.\n- Treating retirement as process cancellation: an already dispatched write can\n  finish and must retain its original claim until acknowledgement.\n- Clearing private writer fields or retrying after a timeout: both discard the\n  evidence needed to avoid unsafe dispatch or deletion.\n- Deleting by source name alone: cleanup must use exact recorded generation\n  predicates through Discovery, never a caller-built search query.\n\n## Verification\n\nThe legacy-retirement captures below use the actual Axis panel with synthetic\nresponses only. Its reviewed whole-index impact, explicit retained-data notice,\nconfirmation lock and original inspection were checked at 1280x900 and 390x844.\nNo provider block or deletion was performed during these checks.\n\n![Synthetic legacy retirement review on desktop](../assets/images/legacy-retirement-desktop.png)\n\n![Synthetic legacy retirement review on mobile](../assets/images/legacy-retirement-mobile.png)\n\nRun `copilotKnowledge/test/copilotKnowledgeMigration.test.js` for actual owner\nintegration with isolated transport/persistence: same-key concurrency, foreign\nscope, denied grants, incomplete replacements, stale revisions, UUID changes,\nrevocation, partial shard acknowledgements and lost claim/completion responses.\nAxis migration tests reject foreign or contradictory receipts and never expose\nanother command after a sent retirement. These checks do not qualify a real\nindex, search credential or distributed persistence deployment.\n\nThe following sanitized Axis captures use the actual Studio renderer with a\nsynthetic generation-status fixture. They show 24 acknowledged writes out of 76,\nnot a real ingestion or signed-in acceptance result. Desktop and 390-pixel mobile\nchecks found no horizontal overflow or browser console errors.\n\n![Synthetic Knowledge Studio acknowledged-write progress on desktop](../assets/images/copilot-knowledge-progress-desktop.png)\n\n![Synthetic Knowledge Studio acknowledged-write progress on mobile](../assets/images/copilot-knowledge-progress-mobile.png)\n\nFramework maintainers and AI tools run Discovery generation tests, Knowledge\npublication/cleanup/writer-recovery tests and Axis Studio tests. Cover retirement\nbefore dispatch, retirement during dispatch, original late completion, unknown\nacknowledgements, negative envelopes, source revocation, stale revision and\nanother source's preservation. Verify desktop/mobile layouts and private-field\nprojection. These local fixtures are not deployed multi-node, signed-in or real\nindex-provider acceptance. Deployment gates remain disabled until qualified.\n",
+    "keywords": [
+      "copilot",
+      "knowledge",
+      "progress",
+      "cleanup",
+      "recovery",
+      "AI Copilot",
+      "Knowledge",
+      "Recovery"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record277": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacopilotretentionlifecycle",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacopilotRetentionLifecycle",
+    "title": "Copilot Conversation Retention and Recovery",
+    "summary": "Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures.",
+    "searchText": "Copilot Conversation Retention and Recovery Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures. # Bounded Conversation Retention\n\n## Independent Audit Retention\n\nAudit retention is separate from conversation-content deletion. It owns only\n`TRANSCRIPT_ACCESS` receipts and terminal `ACTION` records. Provider accounting,\nconversation tombstones, retention receipts, active approvals, running commands\nand `OUTCOME_UNKNOWN` actions are never selected. Missing enterprise audit policy\nmeans preserve indefinitely; transcript expiry and holds are not audit policy.\n\n### Deployment and Policy\n\n1. Deploy private `copilotAuditRetentionOperation` with its unique code index.\n   Qualify journaled persistence and atomic transactions covering this receipt,\n   `copilotTranscriptAccess` and `copilotAction`. Keep generic routes, caches and\n   events disabled. Standalone nontransactional storage is not enough.\n2. Qualify `databaseTransactions.enabled`, `failClosed`, multi-record atomicity\n   and journaled commit. Enable the existing nDynamo read fence for owner\n   `copilotConversation` with durable governed tenant-property persistence.\n3. Grant human operators `copilot.activity.read` and independently\n   `copilot.audit.retention.execute`. Configuration additionally needs existing\n   configuration-management authority and `copilot.audit.retention.configure`.\n   Super administrators may delegate the **Independent audit retention policy**\n   section through Enterprise administration. Delegation does not grant the\n   independent configuration permission or the execution permission.\n4. In AI Configuration, select **Transcript access audit retention** or **Action\n   audit retention** for the enterprise. Set independent days, hold-all, held\n   audit codes and held conversation codes. Use existing proposal, review and\n   activation. New forms default to preserving all audit.\n5. After deployment acceptance, explicitly enable\n   `copilot.conversation.auditRetention.deletionEnabled`, default false, through\n   deployment governance. The business form cannot enable deletion or relax\n   persistence qualification. `maximumBatch` defaults 25, allowed range 1-100.\n\nExample `auditRetention.enterprisePolicies` entry, intentionally held:\n\n```json\n{\"tenantCode\":\"exampleTenant\",\"enterpriseCode\":\"exampleEnterprise\",\n \"kind\":\"TRANSCRIPT_ACCESS\",\"retentionDays\":365,\"holdAll\":true,\n \"recordCodes\":[],\"conversationCodes\":[]}\n```\n\n### Operator Journey\n\n1. Open **Copilot > Activity > Audit retention**. The independent capability must\n   be admitted. Without policy no deletion category is available, but original\n   operation recovery can remain visible.\n2. Select a category, enter a business reason, then **Review audit deletion**.\n   This bounded read creates no receipt, acquires no fence and deletes nothing.\n3. Review count, exact UTC cutoff and reference. Held records are excluded.\n   Action candidates must be `EXECUTED`, `CANCELLED`, `REJECTED` or `EXPIRED`;\n   missing trustworthy scope or dates never becomes inferred eligibility.\n4. Tick the irreversible-deletion confirmation, then **Delete reviewed batch**\n   once. The original reference remains visible. Offline commands are not queued.\n5. Completion covers only this reviewed batch. Refresh Activity to review another\n   batch; there is no automatic drain loop or automatic uncertain retry.\n6. After response loss, use **Inspect original operation**. `COMPLETED` and the\n   removed count were committed with deletion in one transaction. Missing\n   evidence remains `OUTCOME_UNKNOWN`, not proof of rollback.\n7. **Stop pending operation** stops `PREPARED`; **Release retained policy fence**\n   releases a terminal operation's retained fence. Neither retries deletion. If deletion won a concurrent race,\n   it reports `COMPLETED`, not a false stop. A rejected transaction rolls back\n   removal and completion together. Recovery works with deletion disabled,\n   subject to original actor and qualified storage. No actor takeover is implied.\n\n```text\nreview -> exact audit identities/hashes + policy revision + cutoff\nconfirm -> PREPARED journal -> nDynamo policy-revision fence\n        -> transaction: recheck originals/holds; delete batch; commit receipt\n        -> durable readback -> release original fence\nlost acknowledgement -> original inspection -> stop/release only; no delete replay\n```\n\n### API and Customization\n\nAuthenticated fixed POST routes: `/activity/audit-retention/preview`, `/execute`,\n`/inspect`, `/stop`. Preview accepts exactly `{kind, reason}`. Execute adds the\nreturned `operationCode`, `cutoff`, `reviewDigest` and `confirmed: true`.\nInspect/stop accept only `{operationCode}`. Extra keys and stale reviews fail.\nResponses contain bounded counts and original state, never audit content,\nprivate selected-record hashes or fence tokens. Inspection does not release a\nfence; the explicit stop/release command does.\n\nCustomize `auditRetention.presentation` without dropping required text keys.\nKeep policy in the administration owner and rendering in Axis. Do not add direct\ndatabase calls, TTL cleanup or a nontransactional fallback. Minimal deletion\nreceipts are retained indefinitely and cannot erase themselves. Provider\naccounting still needs its accounting owner's policy; this operation cannot\nerase that ledger. Test holds, policy drift, foreign rows, rollback, lost commits,\nterminal-only actions and no-replay UI. Local fixtures are not live deletion or\nregulatory approval of a retention period.\n\n### Verified Interface\n\nThese captures use the real Axis renderer with synthetic owner responses, not\nlive audit deletion. Desktop review was checked at 1280x900, and mobile review\nand lost-response recovery at 390x844. No horizontal overflow was observed.\n\n![Independent audit deletion review](../assets/images/audit-retention-desktop.png)\n![Mobile audit review](../assets/images/audit-retention-mobile.png)\n![Original audit receipt recovery after a lost response](../assets/images/audit-retention-recovery-mobile.png)\n\nBeginners should start with the administrator journey: reviewing metadata never\ndeletes content. Business administrators decide which expired conversation is\nreviewed, while the operator qualifies storage and deployment before production. Developers preserve\nthe canonical owner contracts when customizing labels or the typed renderer.\n\n## Ownership\n\nConversation owns reviewed retention and the private `retentionOperation` on its\nexisting parent record. Generated services own persistence, nDatabase owns opaque\ntransactions, MongoDB owns snapshot/majority/journal mechanics, and nDynamo owns\ncommitted configuration and its private revision fence. Axis is presentation only.\nConversation-content retention reuses its parent receipt; independent audit\nretention uses the private generated receipt described above. No project/Kickoff\nimplementation or background scheduler is added.\n\nOnly bound messages, events and turns of one expired CLOSED/ARCHIVED conversation\nare eligible. The parent tombstone, operation reason/actor/counts, transcript access\nreceipts, action audit and provider accounting remain. Their retention is separate.\nThis is not backup erasure, export cleanup or a legacy migration. Conversation\nclosure is a separate non-destructive command in the same lifecycle panel.\n\n## Deployment Steps\n\n1. Deploy every Conversation writer with the transactional parent guard, including\n   remote workers. Verify no legacy writer can bypass it. Local tests do not prove\n   full writer coverage, and age is not proof that a worker has stopped.\n2. Qualify the actual transaction-capable MongoDB replica set or sharded topology.\n   Enable `databaseTransactions.enabled` with `failClosed: true`. All participating\n   schemas retain transaction eligibility and disabled cache/events. The adapter\n   must advertise `journaledCommit` and commit with majority plus journal.\n3. Enable canonical nDynamo persistence and\n   `runtimePropertyGovernance.persistence.requireDurableJournal: true`. Internal\n   generated CAS uses majority/journal; readback uses primary/majority. Unqualified\n   providers, broad updates and transaction mixing are rejected.\n4. Enable `runtimePropertyGovernance.readFence.enabled` and explicitly admit\n   `readFence.owners.copilotConversation: true`. Verify a committed persisted\n   property revision exists before preparing retention.\n5. Configure `copilot.conversation.storage: 'GENERATED_SERVICE'`,\n   `writerFence.enabled: true` and `lifecycle.maximumBatch` between 1 and 100.\n   Only after qualification separately enable `lifecycle.deletionEnabled` through\n   normal configuration governance. Both writer/deletion gates ship disabled.\n6. Grant the original employee `copilot.activity.read`,\n   `copilot.activity.lifecycle.read` and `copilot.activity.lifecycle.execute`.\n   These grants do not confer transcript access or any cross-enterprise authority.\n7. On disposable data qualify two employees/enterprises, competing writers, hold\n   activation, rollback, process termination, primary changes and lost responses.\n   No automatic deployment, real deletion or topology qualification is performed\n   by the source test suite.\n\n## Administrator Journey\n\n1. Select the enterprise, open Activity, then Retention review and Load review.\n2. Review age, hold and state; open Retention operation for the conversation.\n   Backend capability admission controls whether the command panel is displayed.\n3. Enter a business reason and choose Review deletion. This creates no operation\n   or fence. The digest binds actor, parent, timestamp, writer token and policy.\n4. Check the confirmation and choose Confirm retention operation. PREPARED evidence\n   is durably persisted. No content is deleted and no policy fence is acquired yet.\n5. Confirm and choose Delete next batch. The owner acquires/inspects its pinned\n   property fence, then removes at most one bounded page and advances the journal\n   in one transaction. Empty pages advance through messages, events and turns.\n6. Confirm each next batch explicitly. There is no auto-run loop or retry. At\n   PURGED the content stages are empty, the parent tombstone remains and the exact\n   fence is released after durable readback. Never reuse the conversation identity.\n\n## Recovery and Holds\n\nAfter a timeout, choose Inspect original operation, not Begin or automatic retry.\nAn empty inspect body retrieves the original actor's operation for that exact\nconversation, including after a lost begin response. It returns the stored revision\nand counts. A later explicit advance must use that revision; stale ones fail.\n\nStop and preserve remaining content records STOPPED transactionally and freezes\nthe parent as RETENTION_STOPPED. Only after primary-majority terminal readback\ndoes it release the fence. It neither restores deleted content nor reopens writers.\nSTOPPED cannot advance directly. A fresh review can reauthorize the remaining\ndeletion without restoring content or reopening writers. If terminal acknowledgement or\nrelease is lost, inspect and explicitly repeat terminal stop/release with the\nobserved revision. That operation cannot delete another page.\n\nInspection and stopping work with deletion disabled while durable persistence,\nwriter fencing and original authority remain qualified. If those prerequisites\nare disabled, restore qualified deployment before recovery. Never delete a fence\nmanually. Legacy/foreign child bindings abort the page; stop and escalate to the\nmigration owner instead of guessing or silently omitting ownership.\n\n### Close an Active Conversation\n\n1. Select the conversation, enter a business reason and choose **Review conversation closure**.\n2. Read the closure notice. Closure stops new content writes; it does not cancel\n   provider calls or business operations already running.\n3. Confirm the reviewed closure. The exact parent revision/write token must still\n   match; concurrent conversation activity invalidates the review.\n4. The owner records CLOSED and the closure timestamp atomically. No content is\n   deleted, and retention age starts at closure rather than an earlier activity.\n5. After an uncertain response, choose **Inspect original closure**, never submit\n   Close again. Inspection requires the original actor and current independent\n   lifecycle authority. Holds remain effective and closure does not remove them.\n\nClosure remains available with the deletion gate off, but requires qualified\ndurable persistence and the transactional writer guard. Its private receipt is\nnot exposed in ordinary conversation records.\n\n### Resume a Stopped Retention Operation\n\n1. Inspect the original retention operation and confirm STOPPED.\n2. Finish its exact stop/fence release if that acknowledgement was lost.\n3. Enter a fresh business reason and choose **Review remaining deletion**.\n4. The owner checks the current committed policy, active holds, original content\n   cutoff, original actor, exact revision and absence of the prior fence.\n5. Confirm the new review. State becomes RESUMING; no content is removed by this\n   command. The operation identity, stage and cumulative deletion counts remain.\n6. Explicitly delete the next batch. It acquires a fence for the newly reviewed\n   policy and continues from retained progress, without repeating deleted pages.\n\nLost resumption acknowledgement requires original-operation inspection. A stale\nreview, new hold, longer unelapsed retention period or missing historical cutoff\nrejects. At most twenty resumptions are retained; reaching that bound refuses\nanother resumption rather than truncating prior audit. Old operation journals\nwithout an original cutoff remain inspectable/stoppable but cannot be resumed.\nPartner overrides may change presentation, not these identity, fence or recovery\nrules. Run retention execution, API routing and Axis retention tests for changes.\n\nThe tenant property fence blocks governed property changes, including new holds,\nwhile deletion is in progress. A proposed hold is not active until activation\nsucceeds. For an urgent hold, stop retention, verify durable STOPPED and fence\nrelease, then activate the hold. The broad fence may delay unrelated settings;\nthere is no TTL or implicit takeover that could admit deletion under stale holds.\n\n## Secured API\n\nAll are sensitive, no-store, employee access-token POSTs below\n`/activity/:conversationCode/retention/`. The route owns conversation identity;\nthe body cannot override tenant, actor, enterprise, storage options or policy.\n\n| Suffix | Exact body | Effect |\n| --- | --- | --- |\n| preview | reason | Read-only digest and bounded batch size |\n| begin | reason, reviewDigest, confirmed: true | Persist reviewed intent once |\n| inspect | empty, or operationCode | Read original actor's evidence |\n| advance | operationCode, expectedRevision | One transactional bounded page |\n| stop | operationCode, expectedRevision | Freeze terminal state and release exact fence |\n| resume-preview | operationCode, expectedRevision, reason | Review remaining stopped work under current policy |\n| resume | operationCode, expectedRevision, reason, reviewDigest, confirmed | Record resumption without deleting content |\n| close-preview | reason | Review ACTIVE conversation closure |\n| close | reason, reviewDigest, confirmed | Close without deleting content or canceling external work |\n| close-inspect | empty | Read original actor's recorded closure |\n\nReceipts contain contractVersion 1, tenant/enterprise context, conversationCode,\noperationCode, revision, state, per-store counts and terminal completedAt. Private\nreason, policy, fence token and content are omitted. Stale/foreign/duplicate evidence,\nbody extensions, contradictory acknowledgements and unqualified storage fail closed.\n\n```mermaid\nsequenceDiagram\n    actor Admin\n    participant Axis\n    participant Conversation\n    participant Dynamo as nDynamo\n    participant DB as nDatabase\n    Admin->>Axis: Review and confirm\n    Axis->>Conversation: Begin with current digest\n    Conversation->>DB: Durable parent CAS: PREPARED\n    Admin->>Axis: Confirm next batch\n    Axis->>Conversation: Advance original operation and revision\n    Conversation->>Dynamo: Acquire or inspect pinned policy fence\n    Conversation->>DB: Transaction: parent check, bounded delete, journal update\n    DB-->>Conversation: Commit or uncertain outcome\n    Conversation->>DB: Primary-majority parent readback\n    alt Terminal persisted state\n        Conversation->>Dynamo: Release exact fence\n    end\n    Conversation-->>Axis: Scoped receipt or unconfirmed error\n```\n\n## Customize and Extend Safely\n\nCustomize `lifecycle.executionPresentation` through layered configuration or wrap\nthe existing typed Axis panel. Preserve grants, scope, explicit confirmation,\nno-replay recovery and late-response disposal. No arbitrary transport destinations,\nlocal authority, browser persistence, audit deletion, TTL or batch above 100.\n\nFor a project-specific label, extend the existing active project configuration\nmodule's `config/properties.js`; do not duplicate the framework service in a\ncustomer module or change Kickoff to own retention. For example:\n\n```javascript\n/** @file Project presentation and bounded batch override; does not enable deletion. */\nmodule.exports = {\n    copilot: {\n        conversation: {\n            lifecycle: {\n                maximumBatch: 25,\n                executionPresentation: { title: 'Review recorded conversation retention' }\n            }\n        }\n    }\n};\n```\n\nInherited presentation keys remain with the framework defaults. Apply through\nthe project's established configuration lifecycle and inspect the effective\nsettings. A label or smaller batch must not manufacture execution permission.\nReject a batch above 100; after a failed change, keep the previously effective\nconfiguration and use the existing governance recovery, not browser overrides.\n\n## Verification\n\nRun Conversation retention/writer/persistence suites, API route tests, nDynamo\nfence tests, generated durable-pipeline and MongoDB transaction tests. Axis has\n`CopilotRetention.test.tsx`, lifecycle tests and synthetic `retention.visual.html`.\nThese do not prove deployed failover, backup erasure, writer coverage or signed-in\npersistent-runtime acceptance. Independent audit retention remains outside this\ncontent-purge operation and must not be claimed as completed by it.\n\n## Common Mistakes\n\n| Mistake | Required response |\n| --- | --- |\n| Treating an expired row as deletion authorization | Obtain fresh review and independent execution admission |\n| Enabling only the deletion flag | Qualify every writer, persisted policy fence and transaction provider first |\n| Retrying after a timeout | Inspect the original operation and observed revision |\n| Assuming a submitted hold is active | Confirm activation; stop in-progress retention before activating a new hold |\n| Deleting private audit or fence records manually | Preserve evidence and recover through the owning service |\n| Treating a stopped record as an active session | Keep it frozen; never recreate its identity |\n\n## Axis Capture Evidence\n\nThese are real Axis renderer captures from the isolated synthetic fixture at\n`/test/assistant/retention.visual.html`, taken 2026-10-03 at 1280 x 1000 and\n390 x 844. They contain fictional records and no real credentials or customer\ncontent. The walkthrough verified explicit review, confirmation, one batch,\ninspection and frozen stop, with no horizontal overflow or browser errors.\nThey are renderer evidence, not signed-in persistence or destructive acceptance.\n\n![Desktop retention review with separate confirmation](../assets/images/copilot-retention-desktop.png)\n\n![Mobile retention review with wrapped controls](../assets/images/copilot-retention-mobile.png)\n\n## Source and Publication State\n\nFunctional owner: `nodics.copilot`; technical owner: `copilotConversation`.\nThe service, private schemas, configuration and owner tests are under\n`nodics.copilot/modules/copilotConversation`. Secured API mapping belongs to\n`copilotApi`; orchestration belongs to `copilotCore`. Axis's typed client and\npanel live under its existing `src/assistant` boundary. nDynamo and nDatabase\nremain the only policy/persistence coordination owners.\n\nThis page is authored and locally generated for the framework content pack.\nGenerating a release does not import it into Platform, activate documentation\nnavigation or publish it to a customer. Use the existing governed content-pack\nrelease/import process and verify the rendered page in the target environment.\n",
+    "keywords": [
+      "copilot",
+      "retention",
+      "legal hold",
+      "recovery",
+      "conversation",
+      "AI Copilot",
+      "Retention",
+      "Recovery"
+    ],
+    "facets": {
+      "section": "ai-and-developer-tooling",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record278": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacollectionreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10073,7 +11613,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record247": {
+  "record279": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaenterprisereference",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10122,7 +11662,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record248": {
+  "record280": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircasourceinventory",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10171,7 +11711,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record249": {
+  "record281": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacataloguereference",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10220,7 +11760,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record250": {
+  "record282": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaconfigurationreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10269,7 +11809,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record251": {
+  "record283": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10320,7 +11860,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record252": {
+  "record284": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircadatanetwork",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10371,7 +11911,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record253": {
+  "record285": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircasubmissionjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10422,7 +11962,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record254": {
+  "record286": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaoperationsrewards",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10474,7 +12014,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record255": {
+  "record287": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacouponscommerce",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10526,7 +12066,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record256": {
+  "record288": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10577,7 +12117,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record257": {
+  "record289": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircadeploymentverification",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10628,7 +12168,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record258": {
+  "record290": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsgateway",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10679,7 +12219,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record259": {
+  "record291": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10729,7 +12269,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record260": {
+  "record292": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10779,7 +12319,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record261": {
+  "record293": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10829,7 +12369,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record262": {
+  "record294": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10879,7 +12419,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record263": {
+  "record295": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10927,7 +12467,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record264": {
+  "record296": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10977,7 +12517,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record265": {
+  "record297": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11027,7 +12567,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record266": {
+  "record298": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11077,7 +12617,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record267": {
+  "record299": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11125,7 +12665,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record268": {
+  "record300": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11173,7 +12713,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record269": {
+  "record301": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11221,7 +12761,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record270": {
+  "record302": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11269,7 +12809,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record271": {
+  "record303": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11317,7 +12857,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record272": {
+  "record304": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11365,7 +12905,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record273": {
+  "record305": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11415,7 +12955,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record274": {
+  "record306": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11468,7 +13008,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record275": {
+  "record307": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11522,7 +13062,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record276": {
+  "record308": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11573,7 +13113,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record277": {
+  "record309": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11627,7 +13167,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record278": {
+  "record310": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11675,7 +13215,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record279": {
+  "record311": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11723,7 +13263,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record280": {
+  "record312": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11771,7 +13311,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record281": {
+  "record313": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11821,7 +13361,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record282": {
+  "record314": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatabuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11869,7 +13409,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record283": {
+  "record315": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11917,7 +13457,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record284": {
+  "record316": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11965,7 +13505,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record285": {
+  "record317": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12013,7 +13553,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record286": {
+  "record318": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12061,7 +13601,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record287": {
+  "record319": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12109,7 +13649,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record288": {
+  "record320": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12169,7 +13709,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record289": {
+  "record321": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12221,7 +13761,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record290": {
+  "record322": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12274,7 +13814,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record291": {
+  "record323": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12330,7 +13870,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record292": {
+  "record324": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12378,7 +13918,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record293": {
+  "record325": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12426,14 +13966,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record294": {
+  "record326": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataschemaDataModelingManagement",
     "title": "Data Modeling and Schema Management",
     "summary": "How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension.",
-    "searchText": "Data Modeling and Schema Management How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. # Data Modeling and Schema Management\n\n## Shared schema metadata for every API consumer\n\nA module owns its data and APIs. Axis, exports, Copilot and another application\nconsume the same capability contracts. Foundation's existing `nDatabase` Schema\nUtility service describes the effective schema; Safe Query translates bounded\nsearch; generated controllers, facades and services retain the normal persistence\npipeline. No Workbench service, parallel registry or extra architectural layer\nis required.\n\nFor an operator, this means a field added through an authorized schema extension\nappears consistently in discovery, forms and search. It does not grant access to\nthat field or authorize a business transition. Schema access, property rules,\ntenant/record ownership, publication and concurrency remain backend decisions.\n\n| Capability | Canonical interface relative to the module endpoint | Owner |\n| --- | --- | --- |\n| Schema collection | `GET /schemas` | Schema Utility `listSchemas` |\n| Schema detail | `GET /schemas/:schema` | Schema Utility `getSchema` |\n| Resource capabilities | `GET /<schema>/capabilities` | Generated transport to the same Utility owner |\n| Bounded search | `POST /<schema>/safe-search` | Safe Query and generated read |\n| Create | `PUT /<schema>` with a raw model | Generated save pipeline |\n| Update | `PATCH /<schema>` with query/model/options | Generated update pipeline |\n| Delete impact | `POST /<schema>/delete-impact` with an identity | Utility and Reference Integrity |\n| Delete | `DELETE /<schema>` with a query | Generated remove pipeline |\n| Explicit bounded bulk | `POST /<schema>/bulk` | Utility and generated remove |\n| Enterprise setup | `POST /enterprises` in Profile | Enterprise Management |\n\n### Customize and extend safely\n\nDeclare fields in the owning schema through the existing module hierarchy.\nUse its `backoffice` metadata for client-safe fields, forms, relationships and\npermitted operations. For example:\n\n```javascript\nbackoffice: {\n    excludedFields: ['internalNotes'],\n    form: {\n        sections: {\n            businessDetails: { label: 'Business details', fields: ['name', 'customerReference'] }\n        }\n    }\n}\n```\n\nThe fields must exist in the effective schema. Preserve inherited exclusions\nwhen overriding an array. A deleted field disappears; ungrouped editable fields\nremain available. Form visibility cannot bypass required input or authorization.\nWhen metadata is insufficient, override the existing `DefaultSchemaUtilityService`\nhelper through ordinary module service inheritance. Do not copy a base service,\ncreate another schema catalogue or place metadata authority in a UI.\n\n### Failure, compatibility and operational rollout\n\nThe framework is unreleased. All `/schema/workbench` endpoints and their\ncontroller, facade and service are removed. The owning configuration is now\n`schemaApi`, with `system.schema.view` and `system.schema.manage` defaults.\nCurrent callers, configuration and bootstrap grants move together; there are no\nold-route aliases or second namespace defaults. Persisted grants from an earlier\nlocal database need the normal governed data update before authenticated use.\nThis source migration does not rewrite stored records or permission documents.\n\nUnknown, inactive, excluded and inaccessible schemas fail closed. A missing owner\nis an error, not permission to load raw schema or another service implementation.\nProtected filters and unbounded searches fail before reads. Rebuild and restart\naffected runtimes, and verify allowed and denied identities against their actual\npolicy. Source composition and mocked persistence checks do not establish live\nHTTP authentication, custom service overrides or persisted policy acceptance.\n\n### Validation and remaining route migration\n\nCanonical schema transport migration is complete in source. Contract tests cover\ncompiled controller/facade/service templates, active aliases, effective overrides,\nfield filtering, original revisions, tenant/owner scope, callbacks and no-write\nrejections. Axis tests cover the actual client requests and persisted responses.\nPrepared Local/Docker runtime checks inspect API coverage, permissions and OpenAPI\nmetadata without binding a listener. Live signed-in acceptance remains separate.\n\n## Generated create, update and delete contracts\n\nControllers map declared input instead of merging arbitrary body properties into\nthe secured request. Authentication, tenant, enterprise, module/schema identity,\ntransaction and trace context stay server-owned, including non-enumerable values.\nUnknown, protected and read-only top-level model fields are omitted; fixed schema\nvalues and trusted scope are applied. Nested validation stays with schema owners.\nOperator model patches such as `$set`, `$inc` and dotted paths are rejected.\n\nSelective schema APIs use one scalar primary identity for update/delete and keep\nthe original revision when required. They cannot accept a broad operator query\nin place of the selected record. An explicit domain create command blocks generic\ncreate/createAll. Staged-only and read-only metadata reject writes independently\nof the client's form, the route's visibility or the presence of a manage grant.\n\n```json\n{\n  \"query\": { \"code\": \"record-one\", \"revision\": 4 },\n  \"model\": { \"name\": \"Updated label\" },\n  \"options\": { \"recursive\": false, \"returnModified\": true }\n}\n```\n\nFor this update, the concurrency owner compares revision 4 and computes the next\nvalue. Missing, malformed and stale managed tokens retain the existing 428, 400\nand 409 contracts. Reload and review a conflict; never automatically replace its\ntoken with a freshly fetched revision. Advanced broad-query/by-ID interfaces,\nwhen explicitly exposed by the owning schema, retain their separate contracts.\nInternal domain/import calls use their existing policy and persistence pipeline.\n\n### Compatibility, errors and retries\n\nKeep the generated response envelope. A create/update client must receive one\npersisted record with its identity and usable managed revision: a direct record,\na single-record array or the generated `models` result. A count, missing identity,\nempty/multiple models or unusable revision is an error for record editing.\n`modifiedCount: 0` can be a valid no-op when one persisted record is returned.\nAn invalid success response may follow an applied write; retain user input and\ninspect/reload the data before retrying. Never synthesize success from form input.\n\nGeneric idempotency-key forwarding is not a durable replay ledger. Domain commands\nretain their existing principal-bound key, input digest and recovery rules.\nSelected bulk deletion is schema-opted-in, bounded and keyed, and retains every\nidentity's required revision in the remove query. It uses Reference Integrity and\nthe normal generated remove pipeline. The current provider contract does not\nsupport managed-counter multi-record CAS, so those schemas do not advertise bulk\nDELETE and reject it before dispatch. They remain editable one record at a time.\nThe governed Local reset has its separate provider-issued maintenance authority;\na caller flag or lookalike object cannot activate it.\n\n### Canonical schema discovery\n\n`GET /schemas` returns `{ code, data: { moduleName, schemas } }`; detail and\ncapabilities return `{ code, data: descriptor }`. An authorized empty module\nreturns an empty list. An unavailable detail returns the existing unavailable\nerror. Thin controller/facade adapters pass the original secured request and the\nroute-selected schema separately to Utility `listSchemas/getSchema`.\n\nDiscovery preserves active aliases, effective extensions, safe fields, authoring,\nform/reference/concurrency metadata and prepared API routes. Collection/detail\nuse `schemaApi.discoveryPermission` (default `system.schema.view`), secured\n`userGroup` access and exposure category `schemaApi`. Tagged resource reads use\n`schemaApi.readPermission`; writes use `schemaApi.writePermission`. Change grants\nthrough the existing identity owner. Metadata and exposure never grant access.\n\nAxis uses the canonical collection and detail paths, or an advertised capability\nroute for detail. Import/export, documentation, media and other schema screens\nshare this typed client. Missing/disabled routes and authorization errors remain\nvisible. No fallback selects Workbench, another runtime or Online authoring.\nSuccessful connections retain their identity when another connection fails.\n\n### Selective module APIs and route-driven clients\n\nAn eligible model can opt into the existing nRouter template group without\nexposing broad raw-query, by-ID or unrestricted bulk-create routes:\n\n```javascript\nrouter: { enabled: true, groups: { schemaOperations: true } }\n```\n\nThis group contains the seven resource operations above. Effective schema access\nand authoring determine which are usable. Product and PriceRow use this group;\nsource writes require Staged. Editorial Online projections and publication\nreceipts permit secured inspection while rejecting generated writes. Public\nEditorial delivery continues through its sanitized business APIs.\n\n`router.enabled: false` still disables generated routes. An explicit empty groups\nobject selects none; `schemaOperations: false` removes an inherited group. Unknown\ngroups and non-boolean entries fail configuration rather than enabling broad CRUD.\nOmitting `groups` preserves the schema's existing full default-group selection.\nGlobal module HTTP enablement remains independent; internal schema contributors\ndo not acquire listeners or API hosts merely by declaring a model.\n\n`apiOperations` comes from prepared matching generated-controller routes. It is\nan inert projection, not another registry. Each operation declares `method`, a\nstatic relative `path`, `apiVersion` and `active`:\n\n```json\n{\"create\":{\"method\":\"PUT\",\"path\":\"/product\",\"apiVersion\":\"v0\",\"active\":true}}\n```\n\nAxis validates and follows this path under the selected connection. Missing\noptional route metadata uses the standard canonical resource path; no response\ntriggers a second transport. Disabled declarations send no request. Ambiguous\nroutes, unsafe paths, unsupported methods or versions fail closed. Later modules\ncan override the existing routes; use `active: false` to disable an inherited\noperation instead of introducing a competing endpoint.\n\n### Domain setup and confirmation\n\nSchema `aggregateOperations` can name an existing owning controller operation;\nUtility resolves its actual prepared route. Service names are not executable\nclient metadata and there is no generic aggregate dispatcher. Profile's declared\nenterprise setup maps to `POST /enterprises` with `{ model: { ... } }` and a valid\n`Idempotency-Key` header. Profile validates writable fields, keeps tenant setup\nserver-owned, preserves references and uses its existing activation retry logic.\nA generic enterprise PUT cannot replace that business operation.\n\nCopilot prepares Product actions at `/products/prepare` and executes through its\nconfirmation API. The duplicate Product execution HTTP adapter is removed.\nConfirmed Product/PriceRow writes use canonical module PUT resources and retain\nfresh policy, connection/tenant/target scope and key forwarding. They do not\ncreate an automatic transaction or durable replay guarantee.\n\n### Rollout and verification\n\nUpgrade backend source, generated output, current clients and governed grants as\none coordinated change. Existing metadata extensions move to Schema Utility;\napplication identity stays in application contributions. Keep domain workflows,\noriginal revisions, policy rejection and response errors visible. Verify default\nand later-layer behavior, disabled groups/routes, allowed/denied identities,\nStaged/Online, aliases, tenant isolation, conflict recovery and missing owners.\nNo migration silently rewrites stored data. Generated documentation and runtime\npreparation evidence complement, rather than replace, authenticated live checks.\n\n## Publication-aware Generic Authoring\n\nCanonical owner: Foundation's `nDatabase` resolves generic authoring policy;\n`nController` checks generated HTTP mutations before request-body mapping. The\nowning schema declares its lifecycle in existing `backoffice` metadata. The\nexisting server-owned `runtimeRole.publication` supplies Staged/Online context.\n\n```js\nbackoffice: {\n    mutationPolicy: { lifecycle: 'PUBLISHABLE', publishRequired: true }\n}\n```\n\nThis source may be authored only where the runtime publication role is STAGED.\nONLINE, OPERATIONAL, unknown and missing roles do not grant authoring. Read/search\nremain subject to normal access checks. Workbench removes write, bulk and\naggregate capabilities; generated HTTP mutations reject before persistence,\nincluding saveAll and delete-by-code/id. A body field cannot override the role.\n\nFor an owner-managed projection or receipt use:\n\n```js\nbackoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'] }\n```\n\nThat denies generic HTTP and Workbench mutations, not the owning publication\nservice. nPublish/domain providers and approved import workflows retain their\nexisting generated-service paths, authentication, lifecycle and tenant checks.\nThis boundary does not authorize arbitrary internal writes or replace approval.\n\nCMS content, Editorial sources, and Product/Category/Variant catalogue sources\ndeclare the publication rule. Their publication evidence and derived projections\ndeclare read-only generic authoring. Store/Point of Service remain operational.\nDo not infer publication from a module name, technical revision or native version\nfield. Mixed-lifecycle modules are supported intentionally.\n\n```mermaid\nflowchart LR\n    A[Effective schema metadata] --> P[Shared authoring policy]\n    R[Existing runtime role] --> P\n    P --> W[Workbench descriptor and mutation checks]\n    P --> C[Generated HTTP mutation guard]\n    W --> S[Authorized source CRUD]\n    C --> S\n    D[Owning publication workflow] --> O[Online projection and activation]\n```\n\n### Customize and Extend Safely\n\nAdd the fragment above to the owning custom module's\n`src/schemas/schemas.js`; retain normal fields, references and access groups.\nUse its existing environment `config/properties.js` to declare\n`runtimeRole: { code: 'PROJECT_STAGED', publication: 'STAGED' }`.\nDo not add a separate publication-schema registry or infer authority in Axis.\nA service override may extend `DefaultSchemaAuthoringPolicyService` but must\npreserve fail-closed Online/missing-role behavior and the existing writer owner.\n\nExample: promotional copy requires Staged authoring and publication, while an\norder in the same module remains operational. A publication receipt must be\nread-only in Workbench even for an administrator; changing its state manually is\nnot publishing. Reclassifying an inherited source as operational requires\nremoving all publication markers through schema composition and documenting a\nreal change in ownership, not bypassing approval for convenience.\n\nRun `schemaAuthoringAuthorityContract.test.js`, `schemaWorkbenchContract.test.js`,\nthe owning publication tests and Axis Workbench tests. Verify missing role,\nread-only targets, body spoofing, promise/callback errors, and no persistence on\nrejection. A full Published view must read active domain projections; these\ngeneric guards do not create a publication workflow or a source/Online diff UI.\n\n## Installed Version Migration\n\nConverting installed ordinary records to versioned authoring is a maintenance\noperation, separate from moving source code, changing a technical revision,\nresetting a schema or publishing a release. Database owns the scoped command\nand orchestration; the selected database provider owns conditional record/index\neffects, nImport owns strict `importRun` evidence, and nTooling owns local outage\ninspection. Operators control downtime and reopening. Business users do not run\nthis procedure through generic CRUD or Axis.\n\nThe current native-local sequence is: stop and exclude all writers; capture and\nreview an immutable scoped plan; durably begin/checkpoint the attempt; backfill\nonly `versionId: 0`; create/verify version-qualified unique indexes before dropping\nmapped old constraints; verify every planned record/index; then separately adopt\nsource flags and variants before reopening. No other record values, revisions or\ntimestamps are regenerated. Batch intent acknowledgement reduces journal writes,\nbut each record remains conditional and requires reconciliation after interruption.\n\nPlanning and execution require ordinary source schemas. Do not enable\n`isVersionedEnabled` first and let startup reconcile installed indexes. After\nverified forward completion, opt in the owning schemas explicitly, include\n`vDatabase`, `vService` and the matching provider variant, and qualify CURRENT\nauthoring reads where intended. Invalidate affected caches and account for every\ntenant/database loading that source, including separate Online installations.\nCURRENT reads do not activate a published release. The maintenance result always\nleaves `writersMayRestart: false` pending this handoff.\n\n### Failure And Recovery\n\nMissing outage evidence, source/index drift, storage failure, wrong worker or\nunplanned record state stops the operation. Preserve the original plan/checksum,\nidentity and journal, and keep writers offline. Resume or interrupted-attempt\nrollback applies only to a RUNNING journal with verified previous-worker stop\nevidence. It must not reopen a terminal COMPLETED/ROLLED_BACK journal.\n\nPre-reopen compensation of a completed migration needs a **new linked journal**,\nfresh outage and verification of the exact unchanged target. The parent remains\nCOMPLETED; successful linked compensation becomes ROLLED_BACK. Database owns the\ncommand integration and rollback-direction enforcement; the journal API alone\ndoes not execute compensation. Preserve/restore the reviewed ordinary source\ncomposition without bypassing its original hash. Any subsequent authoring or\nunaccounted state requires separately qualified repair, not deletion of history.\n\n### Customize And Extend Safely\n\nProject owners select actual environment/server/tenant/schema scope through the\nexisting command and effective configuration; generic mechanics stay in the\nframework. `installedVersionMigration.limits` controls bounded source/plan work;\nthe strict journal has a separate aggregate evidence budget. A project's\n`modules/<owning-module>/src/schemas/schemas.js` may later select\n`isVersionedEnabled: true` and `versionedReadMode: 'CURRENT'` on qualified schemas.\nDo not edit the global base, invent a journal or copy provider operations into a\ncustomer script. Extensions cannot weaken immutable scope/checksum, durability,\nworker fencing, outage, conditional writes, index ordering or terminal evidence.\n\nFollow the [operator contract](../../../../nodics.foundation/modules/nDatabase/database/llm/contracts/installed-version-migration.md)\nand [worked local example](../../../../nodics.foundation/modules/nDatabase/database/llm/examples/installed-version-migration.md).\nValidate command parsing, orchestration, provider/journal contracts and outage\nfailure cases, then retain separate installed-run and post-restart application\nevidence. This authored guide is not proof of a live migration, generated\ndocumentation update, publication or production qualification.\n\n## Technical revisions without manual arithmetic\n\nCanonical owner: `nodics.foundation`, implemented by `nDatabase/database` and\nthe MongoDB provider. A technical edit counter detects two people changing the\nsame record. It is not a business version, a published content version, or a\ndata-release version. The existing effective schema declares who manages it:\n\n```js\nbackoffice: {\n    concurrency: { field: 'revision', managed: true }\n}\n```\n\nThis is schema metadata, not a new configuration file, registry, or importer.\nThe first migrated framework schemas are `store.store`, `store.salesChannel`,\nand `store.pointOfService`. Other schemas are not automatically migrated merely\nbecause they contain a property named `revision`.\n\n| Operation         | Caller responsibility                                        | Framework responsibility                                           |\n| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |\n| Create            | Supply business fields and stable identity, no counter       | Initialize counter to 1                                            |\n| Edit              | Retain the original read token, send changed business fields | Compare original token atomically and increment once               |\n| Save unchanged    | Retain original token                                        | Return current record without advancing counter or mutation events |\n| Delete            | Retain original token and identity                           | Apply access/reference checks and conditional delete               |\n| Import `saveAll`  | Author ordinary data rows without counters                   | Read original tokens and use generated CRUD                        |\n| Concurrent change | Review newer data and resolve the user's intended edit       | Reject stale write; never silently overwrite                       |\n\n```mermaid\nsequenceDiagram\n    participant A as Editor A\n    participant B as Editor B\n    participant G as Generated CRUD\n    participant D as Database provider\n    A->>G: Read record\n    G-->>A: Record with revision 7\n    B->>G: Read record\n    G-->>B: Record with revision 7\n    A->>G: Edit with original token 7\n    G->>D: Atomic match identity and revision 7\n    D-->>A: Persisted record with revision 8\n    B->>G: Edit with original token 7\n    G-->>B: 409 conflict, review latest record\n```\n\n### Developer service example\n\nUse the existing generated service inside an authorized module operation. The\nexample assumes `tenant` and `authData` come from the authenticated request:\n\n```js\nconst response = await SERVICE.DefaultPointOfServiceService.get({\n  tenant,\n  authData,\n  query: { code: \"project-web-pos\" },\n});\nconst original = response.result[0];\nconst saved = await SERVICE.DefaultPointOfServiceService.update({\n  tenant,\n  authData,\n  query: { code: original.code, revision: original.revision ?? 0 },\n  model: { name: \"Updated web service point\" },\n  options: { returnModified: true },\n});\nconst nextEditingSnapshot = saved.result.models[0];\n```\n\nPoint of Service uses a string name. Other schemas may use localized objects;\nalways follow the effective field type. Never write `revision + 1` in the caller.\nAxis carries the original token automatically and treats the returned record as\nthe next editing snapshot. It excludes managed counters from editable payloads.\n\n### Conflict and recovery behavior\n\n| Response                      | Meaning                                                                    | Recovery                                                                                          |\n| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |\n| 409 / `ERR_CONCURRENCY_00001` | Record changed, disappeared, or identity raced during creation             | Preserve draft, read latest through the owning service, review differences, deliberately resubmit |\n| 428 / `ERR_CONCURRENCY_00002` | Existing-record edit omitted original token                                | Fix caller to retain its read result; do not manufacture a token                                  |\n| 400 / `ERR_CONCURRENCY_00003` | Invalid token, broad selector, operator patch, unsupported provider/schema | Correct the contract; do not disable concurrency to suppress the error                            |\n\nLegacy records with no counter use token 0 and a missing-field compare-and-set.\nTheir first changed write creates counter 1. Existing populated counters never\nreset. An old token cannot succeed by supplying a newer number in the payload:\nthe query token takes precedence. Audit timestamps alone do not count as edits.\n\n### Customize and extend safely\n\nUse your existing later-loaded project module's `src/schemas/schemas.js`, not a\nnew revision configuration layer. For a project-owned non-versioned schema whose\nwrites all use generated CRUD, declare a typed technical field and metadata:\n\n```js\nmodule.exports = {\n  projectOperations: {\n    serviceDesk: {\n      definition: {\n        code: { type: \"string\", required: true, unique: true },\n        editCounter: {\n          type: \"long\",\n          required: true,\n          default: 1,\n          description:\n            \"Framework-managed counter used to detect concurrent edits.\",\n        },\n      },\n      backoffice: { concurrency: { field: \"editCounter\", managed: true } },\n    },\n  },\n};\n```\n\nCompose this fragment with the project's established model, access and ownership\ndefaults. Keep a scalar unique primary identity. Audit every writer before\nmigration: generated single-record save/update/delete supports plain field\npatches, not `$inc`, `$set`, dotted paths, or mass updates. Domain services already\nincrementing their own counters must retain that authority until deliberately\nmigrated. `managed: false` leaves that existing behavior intact; it is not a\nconcurrency bypass to apply to an already-managed shared schema.\n\n`versionId` and `isVersionedEnabled: true` cannot use this managed-counter path.\nThe versioned provider and nPublish remain authoritative. A project cannot\ncustomize away access checks, tenant selection, atomic matching, original-token\nrequirements, or genuine conflict rejection. Alternate providers must implement\nthe same atomic `compareAndSetItem` boundary and return the persisted record.\n\nTest create, successive edits, no-op, stale/missing/malformed token, simultaneous\nwriters, ownership denial, legacy missing counter, deletion restrictions, and\nproject field-name overrides. Run `modelConcurrencyContract.test.js` under\n`nDatabase/database/test` and `mongodbManagedConcurrencyContract.test.js` under\n`nDatabase/mongodb/test`. In Axis, create a disposable Point of Service, edit it\ntwice, and verify that the counter is read-only. Never delete real business data\nto test a revision migration.\n\nThis mechanism protects one record. Nested model saves and import files can\ncomplete some writes before a later conflict; they are not transactions. Use the\nexisting supported database transaction or owning workflow for atomic business\noperations. See the import documentation for retry and release boundaries.\n\nHow schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nCustomers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior. Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question            | Answer for this topic                                                                                                                                                    |\n| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| What problem does it solve?  | Customers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior.                |\n| Who uses it?                 | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools.                                               |\n| What changes can it support? | Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition. |\n| What must be governed?       | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries.                                                   |\n\n## Journey and ownership\n\nFoundation schema services own schema compilation and generated artifacts. Each functional module owns its business schema definitions and allowed extension points. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility           | Owner                               | Notes                                                                                   |\n| ------------------------ | ----------------------------------- | --------------------------------------------------------------------------------------- |\n| Business capability name | Data Modeling and Schema Management | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner             | nodics.foundation                   | Carries exact implementation, documentation, and validation evidence.                   |\n| Technical module         | nSchema                             | Holds the relevant schema, service, router, data, or contract detail where applicable.  |\n| Axis experience          | Backend-declared workspace          | Axis renders metadata and actions but does not become the authority.                    |\n| Public experience        | Online content delivery             | Nexus renders only records approved for public access.                                  |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area            | What to document                                                               | Verification signal                             |\n| ---------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |\n| Model or record        | Type code, catalog, tenant, enterprise, state, owner, and lifecycle.           | Schema contract or generated model test.        |\n| Configuration key      | Default value, override location, environment scope, and runtime impact.       | Config validation and runtime refresh evidence. |\n| API or event           | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions.              | Content-pack validation and access-policy test. |\n\n```js\nschemaExtension: { typeCode: \"Product\", properties: { fit: { type: \"String\", localized: true } } }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type                          | Recommended path                                                       | Avoid                                                |\n| ------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow.           | Hardcoding labels or page trees in the frontend.     |\n| Runtime setting                             | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand.     |\n| Domain behavior                             | Extension service, validator, pipeline step, or provider adapter.      | Forking the standard module for customer-only logic. |\n| Public visibility                           | Access policy with public/authenticated/role-based state.              | Exposing internal or draft pages through Nexus.      |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail                                                      |\n| ------------------- | ---------------------------------------------------------------------------------- |\n| Security            | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit               | Actor, timestamp, source record, checksum, approval, route/event, and result.      |\n| Resilience          | Retry, idempotency, compensation, fallback, cache invalidation, and rollback.      |\n| Observability       | Logs, metrics, dashboard cards, health checks, and support evidence.               |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n### Governed local maintenance\n\nThe governed Local reset is a separate maintenance operation. Its existing\nprovider-issued opaque authority permits bulk removal of configured local\nmodels, including managed-counter schemas, through the generated remove\npipeline. Caller-supplied flags or lookalike authority objects cannot enable\nthis path. Ordinary generated deletes still require a scalar identity and the\noriginal revision; no client or project may disable these checks for editing.\n",
+    "searchText": "Data Modeling and Schema Management How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. # Data Modeling and Schema Management\n\n## Shared schema metadata for every API consumer\n\nA module owns its data and APIs. Axis, exports, Copilot and another application\nconsume the same capability contracts. Foundation's existing `nDatabase` Schema\nUtility service describes the effective schema; Safe Query translates bounded\nsearch; generated controllers, facades and services retain the normal persistence\npipeline. No Workbench service, parallel registry or extra architectural layer\nis required.\n\nFor an operator, this means a field added through an authorized schema extension\nappears consistently in discovery, forms and search. It does not grant access to\nthat field or authorize a business transition. Schema access, property rules,\ntenant/record ownership, publication and concurrency remain backend decisions.\n\n| Capability | Canonical interface relative to the module endpoint | Owner |\n| --- | --- | --- |\n| Schema collection | `GET /schemas` | Schema Utility `listSchemas` |\n| Schema detail | `GET /schemas/:schema` | Schema Utility `getSchema` |\n| Resource capabilities | `GET /<schema>/capabilities` | Generated transport to the same Utility owner |\n| Bounded search | `POST /<schema>/safe-search` | Safe Query and generated read |\n| Create | `PUT /<schema>` with a raw model | Generated save pipeline |\n| Update | `PATCH /<schema>` with query/model/options | Generated update pipeline |\n| Delete impact | `POST /<schema>/delete-impact` with an identity | Utility and Reference Integrity |\n| Delete | `DELETE /<schema>` with a query | Generated remove pipeline |\n| Explicit bounded bulk | `POST /<schema>/bulk` | Utility and generated remove |\n| Enterprise setup | `POST /enterprises` in Profile | Enterprise Management |\n\n### Customize and extend safely\n\nDeclare fields in the owning schema through the existing module hierarchy.\nUse its `backoffice` metadata for client-safe fields, forms, relationships and\npermitted operations. For example:\n\n```javascript\nbackoffice: {\n    excludedFields: ['internalNotes'],\n    form: {\n        sections: {\n            businessDetails: { label: 'Business details', fields: ['name', 'customerReference'] }\n        }\n    }\n}\n```\n\nThe fields must exist in the effective schema. Preserve inherited exclusions\nwhen overriding an array. A deleted field disappears; ungrouped editable fields\nremain available. Form visibility cannot bypass required input or authorization.\nWhen metadata is insufficient, override the existing `DefaultSchemaUtilityService`\nhelper through ordinary module service inheritance. Do not copy a base service,\ncreate another schema catalogue or place metadata authority in a UI.\n\n### Failure, compatibility and operational rollout\n\nThe framework is unreleased. All `/schema/workbench` endpoints and their\ncontroller, facade and service are removed. The owning configuration is now\n`schemaApi`, with `system.schema.view` and `system.schema.manage` defaults.\nCurrent callers, configuration and bootstrap grants move together; there are no\nold-route aliases or second namespace defaults. Persisted grants from an earlier\nlocal database need the normal governed data update before authenticated use.\nThis source migration does not rewrite stored records or permission documents.\n\nUnknown, inactive, excluded and inaccessible schemas fail closed. A missing owner\nis an error, not permission to load raw schema or another service implementation.\nProtected filters and unbounded searches fail before reads. Rebuild and restart\naffected runtimes, and verify allowed and denied identities against their actual\npolicy. Source composition and mocked persistence checks do not establish live\nHTTP authentication, custom service overrides or persisted policy acceptance.\n\n### Validation and remaining route migration\n\nCanonical schema transport migration is complete in source. Contract tests cover\ncompiled controller/facade/service templates, active aliases, effective overrides,\nfield filtering, original revisions, tenant/owner scope, callbacks and no-write\nrejections. Axis tests cover the actual client requests and persisted responses.\nPrepared Local/Docker runtime checks inspect API coverage, permissions and OpenAPI\nmetadata without binding a listener. Live signed-in acceptance remains separate.\n\n## Generated create, update and delete contracts\n\nControllers map declared input instead of merging arbitrary body properties into\nthe secured request. Authentication, tenant, enterprise, module/schema identity,\ntransaction and trace context stay server-owned, including non-enumerable values.\nUnknown, protected and read-only top-level model fields are omitted; fixed schema\nvalues and trusted scope are applied. Nested validation stays with schema owners.\nOperator model patches such as `$set`, `$inc` and dotted paths are rejected.\n\nSelective schema APIs use one scalar primary identity for update/delete and keep\nthe original revision when required. They cannot accept a broad operator query\nin place of the selected record. An explicit domain create command blocks generic\ncreate/createAll. Staged-only and read-only metadata reject writes independently\nof the client's form, the route's visibility or the presence of a manage grant.\n\n```json\n{\n  \"query\": { \"code\": \"record-one\", \"revision\": 4 },\n  \"model\": { \"name\": \"Updated label\" },\n  \"options\": { \"recursive\": false, \"returnModified\": true }\n}\n```\n\nFor this update, the concurrency owner compares revision 4 and computes the next\nvalue. Missing, malformed and stale managed tokens retain the existing 428, 400\nand 409 contracts. Reload and review a conflict; never automatically replace its\ntoken with a freshly fetched revision. Advanced broad-query/by-ID interfaces,\nwhen explicitly exposed by the owning schema, retain their separate contracts.\nInternal domain/import calls use their existing policy and persistence pipeline.\n\n### Compatibility, errors and retries\n\nKeep the generated response envelope. A create/update client must receive one\npersisted record with its identity and usable managed revision: a direct record,\na single-record array or the generated `models` result. A count, missing identity,\nempty/multiple models or unusable revision is an error for record editing.\n`modifiedCount: 0` can be a valid no-op when one persisted record is returned.\nAn invalid success response may follow an applied write; retain user input and\ninspect/reload the data before retrying. Never synthesize success from form input.\n\nGeneric idempotency-key forwarding is not a durable replay ledger. Domain commands\nretain their existing principal-bound key, input digest and recovery rules.\nSelected bulk deletion is schema-opted-in, bounded and keyed, and retains every\nidentity's required revision in the remove query. It uses Reference Integrity and\nthe normal generated remove pipeline. The current provider contract does not\nsupport managed-counter multi-record CAS, so those schemas do not advertise bulk\nDELETE and reject it before dispatch. They remain editable one record at a time.\nThe governed Local reset has its separate provider-issued maintenance authority;\na caller flag or lookalike object cannot activate it.\n\n### Canonical schema discovery\n\n`GET /schemas` returns `{ code, data: { moduleName, schemas } }`; detail and\ncapabilities return `{ code, data: descriptor }`. An authorized empty module\nreturns an empty list. An unavailable detail returns the existing unavailable\nerror. Thin controller/facade adapters pass the original secured request and the\nroute-selected schema separately to Utility `listSchemas/getSchema`.\n\nDiscovery preserves active aliases, effective extensions, safe fields, authoring,\nform/reference/concurrency metadata and prepared API routes. Collection/detail\nuse `schemaApi.discoveryPermission` (default `system.schema.view`), secured\n`userGroup` access and exposure category `schemaApi`. Tagged resource reads use\n`schemaApi.readPermission`; writes use `schemaApi.writePermission`. Change grants\nthrough the existing identity owner. Metadata and exposure never grant access.\n\nAxis uses the canonical collection and detail paths, or an advertised capability\nroute for detail. Import/export, documentation, media and other schema screens\nshare this typed client. Missing/disabled routes and authorization errors remain\nvisible. No fallback selects Workbench, another runtime or Online authoring.\nSuccessful connections retain their identity when another connection fails.\n\n### Selective module APIs and route-driven clients\n\nAn eligible model can opt into the existing nRouter template group without\nexposing broad raw-query, by-ID or unrestricted bulk-create routes:\n\n```javascript\nrouter: { enabled: true, groups: { schemaOperations: true } }\n```\n\nThis group contains the seven resource operations above. Effective schema access\nand authoring determine which are usable. Product and PriceRow use this group;\nsource writes require Staged. Editorial Online projections and publication\nreceipts permit secured inspection while rejecting generated writes. Public\nEditorial delivery continues through its sanitized business APIs.\n\n`router.enabled: false` still disables generated routes. An explicit empty groups\nobject selects none; `schemaOperations: false` removes an inherited group. Unknown\ngroups and non-boolean entries fail configuration rather than enabling broad CRUD.\nOmitting `groups` preserves the schema's existing full default-group selection.\nGlobal module HTTP enablement remains independent; internal schema contributors\ndo not acquire listeners or API hosts merely by declaring a model.\n\n`apiOperations` comes from prepared matching generated-controller routes. It is\nan inert projection, not another registry. Each operation declares `method`, a\nstatic relative `path`, `apiVersion` and `active`:\n\n```json\n{\"create\":{\"method\":\"PUT\",\"path\":\"/product\",\"apiVersion\":\"v0\",\"active\":true}}\n```\n\nAxis validates and follows this path under the selected connection. Missing\noptional route metadata uses the standard canonical resource path; no response\ntriggers a second transport. Disabled declarations send no request. Ambiguous\nroutes, unsafe paths, unsupported methods or versions fail closed. Later modules\ncan override the existing routes; use `active: false` to disable an inherited\noperation instead of introducing a competing endpoint.\n\n### Domain setup and confirmation\n\nSchema `aggregateOperations` can name an existing owning controller operation;\nUtility resolves its actual prepared route. Service names are not executable\nclient metadata and there is no generic aggregate dispatcher. Profile's declared\nenterprise setup maps to `POST /enterprises` with `{ model: { ... } }` and a valid\n`Idempotency-Key` header. Profile validates writable fields, keeps tenant setup\nserver-owned, preserves references and uses its existing activation retry logic.\nA generic enterprise PUT cannot replace that business operation.\n\nCopilot prepares Product actions at `/products/prepare` and executes through its\nconfirmation API. The duplicate Product execution HTTP adapter is removed.\nConfirmed Product/PriceRow writes use canonical module PUT resources and retain\nfresh policy, connection/tenant/target scope and key forwarding. They do not\ncreate an automatic transaction or durable replay guarantee.\n\n### Rollout and verification\n\nUpgrade backend source, generated output, current clients and governed grants as\none coordinated change. Existing metadata extensions move to Schema Utility;\napplication identity stays in application contributions. Keep domain workflows,\noriginal revisions, policy rejection and response errors visible. Verify default\nand later-layer behavior, disabled groups/routes, allowed/denied identities,\nStaged/Online, aliases, tenant isolation, conflict recovery and missing owners.\nNo migration silently rewrites stored data. Generated documentation and runtime\npreparation evidence complement, rather than replace, authenticated live checks.\n\n## Publication-aware Generic Authoring\n\nCanonical owner: Foundation's `nDatabase` resolves generic authoring policy;\n`nController` checks generated HTTP mutations before request-body mapping. The\nowning schema declares its lifecycle in existing `backoffice` metadata. The\nexisting server-owned `runtimeRole.publication` supplies Staged/Online context.\n\n```js\nbackoffice: {\n    mutationPolicy: { lifecycle: 'PUBLISHABLE', publishRequired: true }\n}\n```\n\nThis source may be authored only where the runtime publication role is STAGED.\nONLINE, OPERATIONAL, unknown and missing roles do not grant authoring. Read/search\nremain subject to normal access checks. Workbench removes write, bulk and\naggregate capabilities; generated HTTP mutations reject before persistence,\nincluding saveAll and delete-by-code/id. A body field cannot override the role.\n\nFor an owner-managed projection or receipt use:\n\n```js\nbackoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'] }\n```\n\nThat denies generic HTTP and Workbench mutations, not the owning publication\nservice. nPublish/domain providers and approved import workflows retain their\nexisting generated-service paths, authentication, lifecycle and tenant checks.\nThis boundary does not authorize arbitrary internal writes or replace approval.\n\nCMS content, Editorial sources, and Product/Category/Variant catalogue sources\ndeclare the publication rule. Their publication evidence and derived projections\ndeclare read-only generic authoring. Store/Point of Service remain operational.\nDo not infer publication from a module name, technical revision or native version\nfield. Mixed-lifecycle modules are supported intentionally.\n\n```mermaid\nflowchart LR\n    A[Effective schema metadata] --> P[Shared authoring policy]\n    R[Existing runtime role] --> P\n    P --> W[Workbench descriptor and mutation checks]\n    P --> C[Generated HTTP mutation guard]\n    W --> S[Authorized source CRUD]\n    C --> S\n    D[Owning publication workflow] --> O[Online projection and activation]\n```\n\n### Customize and Extend Safely\n\nAdd the fragment above to the owning custom module's\n`src/schemas/schemas.js`; retain normal fields, references and access groups.\nUse its existing environment `config/properties.js` to declare\n`runtimeRole: { code: 'PROJECT_STAGED', publication: 'STAGED' }`.\nDo not add a separate publication-schema registry or infer authority in Axis.\nA service override may extend `DefaultSchemaAuthoringPolicyService` but must\npreserve fail-closed Online/missing-role behavior and the existing writer owner.\n\nExample: promotional copy requires Staged authoring and publication, while an\norder in the same module remains operational. A publication receipt must be\nread-only in Workbench even for an administrator; changing its state manually is\nnot publishing. Reclassifying an inherited source as operational requires\nremoving all publication markers through schema composition and documenting a\nreal change in ownership, not bypassing approval for convenience.\n\nRun `schemaAuthoringAuthorityContract.test.js`, `schemaWorkbenchContract.test.js`,\nthe owning publication tests and Axis Workbench tests. Verify missing role,\nread-only targets, body spoofing, promise/callback errors, and no persistence on\nrejection. A full Published view must read active domain projections; these\ngeneric guards do not create a publication workflow or a source/Online diff UI.\n\n## Installed Version Migration\n\nConverting installed ordinary records to versioned authoring is a maintenance\noperation, separate from moving source code, changing a technical revision,\nresetting a schema or publishing a release. Database owns the scoped command\nand orchestration; the selected database provider owns conditional record/index\neffects, nImport owns strict `importRun` evidence, and nTooling owns local outage\ninspection. Operators control downtime and reopening. Business users do not run\nthis procedure through generic CRUD or Axis.\n\nThe current native-local sequence is: stop and exclude all writers; capture and\nreview an immutable scoped plan; durably begin/checkpoint the attempt; backfill\nonly `versionId: 0`; create/verify version-qualified unique indexes before dropping\nmapped old constraints; verify every planned record/index; then separately adopt\nsource flags and variants before reopening. No other record values, revisions or\ntimestamps are regenerated. Batch intent acknowledgement reduces journal writes,\nbut each record remains conditional and requires reconciliation after interruption.\n\nPlanning and execution require ordinary source schemas. Do not enable\n`isVersionedEnabled` first and let startup reconcile installed indexes. After\nverified forward completion, opt in the owning schemas explicitly, include\n`vDatabase`, `vService` and the matching provider variant, and qualify CURRENT\nauthoring reads where intended. Invalidate affected caches and account for every\ntenant/database loading that source, including separate Online installations.\nCURRENT reads do not activate a published release. The maintenance result always\nleaves `writersMayRestart: false` pending this handoff.\n\nQualify read privacy separately from version selection:\n\n1. Retain the prepared schema's `readProtection` and its existing native owner.\n   CURRENT reads invoke the same provider read guard as ordinary reads before\n   aggregation. Missing or denied hooks must produce no provider query.\n2. Keep the original employee/tenant request throughout selection. Choosing the\n   newest record does not grant access to that record or its fields.\n3. Apply the native provider-result projector before returning the aggregate\n   envelope. A changed or rejected result policy must not deliver raw rows.\n4. Test authorized, denied, missing-owner and redacted-result cases alongside\n   latest-before-filter/count/paging tests. Private durable journals stay on\n   their unversioned protocol and cannot use CURRENT aggregation.\n\nThe MongoDB variant reuses `guardProtectedRead` and `projectReadResult`; it does\nnot own a second permission registry. These protections also apply to native\nread APIs consumed by Copilot. Run the opt-in current-version MongoDB test in\ndisposable storage and then the affected authenticated application journey.\n\n### Failure And Recovery\n\nMissing outage evidence, source/index drift, storage failure, wrong worker or\nunplanned record state stops the operation. Preserve the original plan/checksum,\nidentity and journal, and keep writers offline. Resume or interrupted-attempt\nrollback applies only to a RUNNING journal with verified previous-worker stop\nevidence. It must not reopen a terminal COMPLETED/ROLLED_BACK journal.\n\nPre-reopen compensation of a completed migration needs a **new linked journal**,\nfresh outage and verification of the exact unchanged target. The parent remains\nCOMPLETED; successful linked compensation becomes ROLLED_BACK. Database owns the\ncommand integration and rollback-direction enforcement; the journal API alone\ndoes not execute compensation. Preserve/restore the reviewed ordinary source\ncomposition without bypassing its original hash. Any subsequent authoring or\nunaccounted state requires separately qualified repair, not deletion of history.\n\n### Customize And Extend Safely\n\nProject owners select actual environment/server/tenant/schema scope through the\nexisting command and effective configuration; generic mechanics stay in the\nframework. `installedVersionMigration.limits` controls bounded source/plan work;\nthe strict journal has a separate aggregate evidence budget. A project's\n`modules/<owning-module>/src/schemas/schemas.js` may later select\n`isVersionedEnabled: true` and `versionedReadMode: 'CURRENT'` on qualified schemas.\nDo not edit the global base, invent a journal or copy provider operations into a\ncustomer script. Extensions cannot weaken immutable scope/checksum, durability,\nworker fencing, outage, conditional writes, index ordering or terminal evidence.\n\nFollow the [operator contract](../../../../nodics.foundation/modules/nDatabase/database/llm/contracts/installed-version-migration.md)\nand [worked local example](../../../../nodics.foundation/modules/nDatabase/database/llm/examples/installed-version-migration.md).\nValidate command parsing, orchestration, provider/journal contracts and outage\nfailure cases, then retain separate installed-run and post-restart application\nevidence. This authored guide is not proof of a live migration, generated\ndocumentation update, publication or production qualification.\n\n## Technical revisions without manual arithmetic\n\nCanonical owner: `nodics.foundation`, implemented by `nDatabase/database` and\nthe MongoDB provider. A technical edit counter detects two people changing the\nsame record. It is not a business version, a published content version, or a\ndata-release version. The existing effective schema declares who manages it:\n\n```js\nbackoffice: {\n    concurrency: { field: 'revision', managed: true }\n}\n```\n\nThis is schema metadata, not a new configuration file, registry, or importer.\nThe first migrated framework schemas are `store.store`, `store.salesChannel`,\nand `store.pointOfService`. Other schemas are not automatically migrated merely\nbecause they contain a property named `revision`.\n\n| Operation         | Caller responsibility                                        | Framework responsibility                                           |\n| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |\n| Create            | Supply business fields and stable identity, no counter       | Initialize counter to 1                                            |\n| Edit              | Retain the original read token, send changed business fields | Compare original token atomically and increment once               |\n| Save unchanged    | Retain original token                                        | Return current record without advancing counter or mutation events |\n| Delete            | Retain original token and identity                           | Apply access/reference checks and conditional delete               |\n| Import `saveAll`  | Author ordinary data rows without counters                   | Read original tokens and use generated CRUD                        |\n| Concurrent change | Review newer data and resolve the user's intended edit       | Reject stale write; never silently overwrite                       |\n\n```mermaid\nsequenceDiagram\n    participant A as Editor A\n    participant B as Editor B\n    participant G as Generated CRUD\n    participant D as Database provider\n    A->>G: Read record\n    G-->>A: Record with revision 7\n    B->>G: Read record\n    G-->>B: Record with revision 7\n    A->>G: Edit with original token 7\n    G->>D: Atomic match identity and revision 7\n    D-->>A: Persisted record with revision 8\n    B->>G: Edit with original token 7\n    G-->>B: 409 conflict, review latest record\n```\n\n### Developer service example\n\nUse the existing generated service inside an authorized module operation. The\nexample assumes `tenant` and `authData` come from the authenticated request:\n\n```js\nconst response = await SERVICE.DefaultPointOfServiceService.get({\n  tenant,\n  authData,\n  query: { code: \"project-web-pos\" },\n});\nconst original = response.result[0];\nconst saved = await SERVICE.DefaultPointOfServiceService.update({\n  tenant,\n  authData,\n  query: { code: original.code, revision: original.revision ?? 0 },\n  model: { name: \"Updated web service point\" },\n  options: { returnModified: true },\n});\nconst nextEditingSnapshot = saved.result.models[0];\n```\n\nPoint of Service uses a string name. Other schemas may use localized objects;\nalways follow the effective field type. Never write `revision + 1` in the caller.\nAxis carries the original token automatically and treats the returned record as\nthe next editing snapshot. It excludes managed counters from editable payloads.\n\n### Conflict and recovery behavior\n\n| Response                      | Meaning                                                                    | Recovery                                                                                          |\n| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |\n| 409 / `ERR_CONCURRENCY_00001` | Record changed, disappeared, or identity raced during creation             | Preserve draft, read latest through the owning service, review differences, deliberately resubmit |\n| 428 / `ERR_CONCURRENCY_00002` | Existing-record edit omitted original token                                | Fix caller to retain its read result; do not manufacture a token                                  |\n| 400 / `ERR_CONCURRENCY_00003` | Invalid token, broad selector, operator patch, unsupported provider/schema | Correct the contract; do not disable concurrency to suppress the error                            |\n\nLegacy records with no counter use token 0 and a missing-field compare-and-set.\nTheir first changed write creates counter 1. Existing populated counters never\nreset. An old token cannot succeed by supplying a newer number in the payload:\nthe query token takes precedence. Audit timestamps alone do not count as edits.\n\n### Customize and extend safely\n\nUse your existing later-loaded project module's `src/schemas/schemas.js`, not a\nnew revision configuration layer. For a project-owned non-versioned schema whose\nwrites all use generated CRUD, declare a typed technical field and metadata:\n\n```js\nmodule.exports = {\n  projectOperations: {\n    serviceDesk: {\n      definition: {\n        code: { type: \"string\", required: true, unique: true },\n        editCounter: {\n          type: \"long\",\n          required: true,\n          default: 1,\n          description:\n            \"Framework-managed counter used to detect concurrent edits.\",\n        },\n      },\n      backoffice: { concurrency: { field: \"editCounter\", managed: true } },\n    },\n  },\n};\n```\n\nCompose this fragment with the project's established model, access and ownership\ndefaults. Keep a scalar unique primary identity. Audit every writer before\nmigration: generated single-record save/update/delete supports plain field\npatches, not `$inc`, `$set`, dotted paths, or mass updates. Domain services already\nincrementing their own counters must retain that authority until deliberately\nmigrated. `managed: false` leaves that existing behavior intact; it is not a\nconcurrency bypass to apply to an already-managed shared schema.\n\n`versionId` and `isVersionedEnabled: true` cannot use this managed-counter path.\nThe versioned provider and nPublish remain authoritative. A project cannot\ncustomize away access checks, tenant selection, atomic matching, original-token\nrequirements, or genuine conflict rejection. Alternate providers must implement\nthe same atomic `compareAndSetItem` boundary and return the persisted record.\n\nTest create, successive edits, no-op, stale/missing/malformed token, simultaneous\nwriters, ownership denial, legacy missing counter, deletion restrictions, and\nproject field-name overrides. Run `modelConcurrencyContract.test.js` under\n`nDatabase/database/test` and `mongodbManagedConcurrencyContract.test.js` under\n`nDatabase/mongodb/test`. In Axis, create a disposable Point of Service, edit it\ntwice, and verify that the counter is read-only. Never delete real business data\nto test a revision migration.\n\nThis mechanism protects one record. Nested model saves and import files can\ncomplete some writes before a later conflict; they are not transactions. Use the\nexisting supported database transaction or owning workflow for atomic business\noperations. See the import documentation for retry and release boundaries.\n\nHow schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nCustomers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior. Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question            | Answer for this topic                                                                                                                                                    |\n| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| What problem does it solve?  | Customers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior.                |\n| Who uses it?                 | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools.                                               |\n| What changes can it support? | Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition. |\n| What must be governed?       | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries.                                                   |\n\n## Journey and ownership\n\nFoundation schema services own schema compilation and generated artifacts. Each functional module owns its business schema definitions and allowed extension points. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility           | Owner                               | Notes                                                                                   |\n| ------------------------ | ----------------------------------- | --------------------------------------------------------------------------------------- |\n| Business capability name | Data Modeling and Schema Management | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner             | nodics.foundation                   | Carries exact implementation, documentation, and validation evidence.                   |\n| Technical module         | nSchema                             | Holds the relevant schema, service, router, data, or contract detail where applicable.  |\n| Axis experience          | Backend-declared workspace          | Axis renders metadata and actions but does not become the authority.                    |\n| Public experience        | Online content delivery             | Nexus renders only records approved for public access.                                  |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area            | What to document                                                               | Verification signal                             |\n| ---------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |\n| Model or record        | Type code, catalog, tenant, enterprise, state, owner, and lifecycle.           | Schema contract or generated model test.        |\n| Configuration key      | Default value, override location, environment scope, and runtime impact.       | Config validation and runtime refresh evidence. |\n| API or event           | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions.              | Content-pack validation and access-policy test. |\n\n```js\nschemaExtension: { typeCode: \"Product\", properties: { fit: { type: \"String\", localized: true } } }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type                          | Recommended path                                                       | Avoid                                                |\n| ------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow.           | Hardcoding labels or page trees in the frontend.     |\n| Runtime setting                             | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand.     |\n| Domain behavior                             | Extension service, validator, pipeline step, or provider adapter.      | Forking the standard module for customer-only logic. |\n| Public visibility                           | Access policy with public/authenticated/role-based state.              | Exposing internal or draft pages through Nexus.      |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail                                                      |\n| ------------------- | ---------------------------------------------------------------------------------- |\n| Security            | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit               | Actor, timestamp, source record, checksum, approval, route/event, and result.      |\n| Resilience          | Retry, idempotency, compensation, fallback, cache invalidation, and rollback.      |\n| Observability       | Logs, metrics, dashboard cards, health checks, and support evidence.               |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n### Governed local maintenance\n\nThe governed Local reset is a separate maintenance operation. Its existing\nprovider-issued opaque authority permits bulk removal of configured local\nmodels, including managed-counter schemas, through the generated remove\npipeline. Caller-supplied flags or lookalike authority objects cannot enable\nthis path. Ordinary generated deletes still require a scalar identity and the\noriginal revision; no client or project may disable these checks for editing.\n",
     "keywords": [
       "data-modeling-and-schema-management",
       "schema-and-model-extension",
@@ -12474,7 +14014,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record295": {
+  "record327": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12522,7 +14062,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record296": {
+  "record328": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12570,7 +14110,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record297": {
+  "record329": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12618,7 +14158,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record298": {
+  "record330": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12667,7 +14207,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record299": {
+  "record331": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12715,7 +14255,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record300": {
+  "record332": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12763,7 +14303,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record301": {
+  "record333": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12811,7 +14351,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record302": {
+  "record334": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12859,7 +14399,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record303": {
+  "record335": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12907,7 +14447,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record304": {
+  "record336": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12955,7 +14495,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record305": {
+  "record337": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13003,7 +14543,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record306": {
+  "record338": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13052,7 +14592,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record307": {
+  "record339": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13100,7 +14640,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record308": {
+  "record340": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13148,7 +14688,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record309": {
+  "record341": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13196,7 +14736,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record310": {
+  "record342": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13244,7 +14784,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record311": {
+  "record343": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13292,7 +14832,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record312": {
+  "record344": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13340,7 +14880,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record313": {
+  "record345": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13388,7 +14928,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record314": {
+  "record346": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13436,7 +14976,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record315": {
+  "record347": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13484,7 +15024,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record316": {
+  "record348": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13532,7 +15072,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record317": {
+  "record349": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13580,7 +15120,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record318": {
+  "record350": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13628,7 +15168,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record319": {
+  "record351": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13676,7 +15216,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record320": {
+  "record352": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13724,7 +15264,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record321": {
+  "record353": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13772,7 +15312,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record322": {
+  "record354": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13820,7 +15360,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record323": {
+  "record355": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13868,7 +15408,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record324": {
+  "record356": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13916,7 +15456,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record325": {
+  "record357": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13964,7 +15504,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record326": {
+  "record358": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14012,7 +15552,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record327": {
+  "record359": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14060,7 +15600,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record328": {
+  "record360": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14108,7 +15648,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record329": {
+  "record361": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14156,7 +15696,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record330": {
+  "record362": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14204,7 +15744,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record331": {
+  "record363": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14263,7 +15803,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record332": {
+  "record364": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14311,14 +15851,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record333": {
+  "record365": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessFirstHumanTask",
     "title": "Build Your First Human Task Flow",
     "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
-    "searchText": "Build Your First Human Task Flow Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps. # Build Your First Human Task Flow\n\nFor governed reviewer tasks, claim now uses the stored actor policy before writing:\nthe reviewer must have current enterprise/permission authority and cannot be the\nrequester. A claim cannot select another reviewer as a shortcut around assignment.\nConcurrent changes reject rather than returning a fabricated claimed task. Inspect\nthe actual stored task after an uncertain response. Completion binds the inspected\nassignee and instance/node. This does not establish atomic cancellation across an\ninstance and its tasks; cross-owner lifecycle acceptance remains separate.\n\nCompletion and cancellation require an acknowledged single task write followed by\nfresh owner readback before audit or advancement. Failed responses or changed\ndecision/actor/timestamp refuse success. Generic task and instance cancellation\ncannot cancel governed actor-policy reviews: the owning domain must first define\nits withdrawal/cancellation contract. This does not yet implement application\nwithdrawal, expiry or resubmission by itself. Profile owns those domain commands.\nProcess adds a separately default-disabled signed-source retirement route for\nexact closed review correlation. It cancels the waiting task with CAS before\nretiring its instance, recovers only matching own closure evidence, and refuses\ncompleted competing decisions or in-flight remote actions. Private persistence\nhooks guard retirement markers. This is staged reconciliation, not a cross-owner\ntransaction; inspect uncertain outcomes using the source owner's recovery command.\n\nHuman tasks are the bridge between automation and people. A task tells an\noperator, reviewer, merchandiser, support agent, or approver what needs human\nattention.\n\n## Example business scenario\n\nA content editor changes a page. The change should not go live until someone\nreviews it. The process creates a task called `Review content`. The reviewer can\nclaim it, assign it, or complete it. Generic cancellation is available only for\nnon-governed tasks; governed reviews require a domain-owned cancellation contract.\n\n```mermaid\nstateDiagram-v2\n  [*] --> OPEN\n  OPEN --> CLAIMED: claim\n  OPEN --> COMPLETED: complete\n  CLAIMED --> COMPLETED: complete\n  OPEN --> CANCELLED: cancel\n  CLAIMED --> CANCELLED: cancel\n```\n\n## Task fields you should understand\n\n| Field          | Why it matters                                           |\n| -------------- | -------------------------------------------------------- |\n| `code`         | Stable task identifier for audit and support.            |\n| `instanceCode` | Links the task to the running process instance.          |\n| `nodeCode`     | Shows which workflow step produced the task.             |\n| `assignee`     | Person, queue, or group expected to work on it.          |\n| `status`       | Current state such as `OPEN`, `CLAIMED`, or `COMPLETED`. |\n| `dueAt`        | Optional SLA date for operations.                        |\n\n## How Axis should present task work\n\nAxis should show tasks as business work, not as raw database rows. A good task\nscreen answers:\n\n1. What process created this task?\n2. What business object is affected?\n3. Who owns it now?\n4. What action can I take safely?\n5. What happened before this task?\n\nThe detail timeline answers the fifth question by reading Process audit events.\n\n## Developer customization\n\nCustomer modules can customize assignment without editing standard Process\nsource. For example:\n\n- route enterprise onboarding approvals to an enterprise admin queue;\n- route product publishing approvals to merchandising;\n- route logistics exceptions to warehouse operations;\n- route refund approval tasks to finance.\n\nThe customization should live in the customer or domain module, not in Axis.\nAxis renders authorized actions; Process owns task lifecycle.\n\n## End-to-end task example\n\nConsider a high-value refund that requires finance approval. The Order module\nowns refund eligibility and the Payment module owns provider execution. Process\ncreates the approval task with bounded business references, candidate group,\ndue date, and expected outcome choices. It does not copy the full Order or\npayment credentials into task data.\n\nAn authorized finance user opens Axis, claims the task, reviews backend-owned\ncontext, and chooses approve or reject. The claim request includes the current\ntask version so two users cannot both become the assignee. Completion includes\nthe expected task state, chosen outcome, correlation identifier, and a bounded\ncomment. Process records the transition and invokes the next registered domain\nadapter; Axis does not calculate the next node.\n\n| Test path               | Expected result                                | Evidence                                      |\n| ----------------------- | ---------------------------------------------- | --------------------------------------------- |\n| Authorized claim        | Task becomes assigned once.                    | Assignee, version, timestamp, and audit event |\n| Competing claim         | Stale request is rejected.                     | Stable conflict code and unchanged assignee   |\n| Unauthorized completion | No state or domain side effect changes.        | Permission denial and security audit          |\n| Valid approval          | Process advances to the approved path.         | Completion event and next-node correlation    |\n| Expired task            | Policy-driven escalation or rejection occurs.  | Due-date evaluation and escalation evidence   |\n| Runtime restart         | Open task remains available in the same state. | Durable task and process instance projection  |\n\nOperators should monitor open-task age, overdue volume, claim conflicts,\ncompletion latency, failed continuations, and escalation backlog. Alerts must\nidentify the tenant and stable task or process reference without exposing\nsensitive task payloads. A business administrator may change assignment policy\nthrough a governed definition or customer configuration, but cannot bypass\npermissions or rewrite completed history.\n\n## Common mistakes\n\n- Letting the browser assign, complete, or reopen tasks without backend validation and expected-state checks.\n- Omitting tenant, permission, correlation, expiry, escalation, or audit requirements.\n\n## Verification\n\nCreate a task, test authorized claim and completion, reject an unauthorized actor and stale update, then confirm assignment history, process continuation, and operator-visible audit evidence.\nThis is the minimum beginner verification before adding assignment customization.\n",
+    "searchText": "Build Your First Human Task Flow Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps. # Build Your First Human Task Flow\n\nFor governed reviewer tasks, claim now uses the stored actor policy before writing:\nthe reviewer must have current enterprise/permission authority and cannot be the\nrequester. A claim cannot select another reviewer as a shortcut around assignment.\nConcurrent changes reject rather than returning a fabricated claimed task. Inspect\nthe actual stored task after an uncertain response. Completion binds the inspected\nassignee and instance/node. This does not establish atomic cancellation across an\ninstance and its tasks; cross-owner lifecycle acceptance remains separate.\n\nCompletion and cancellation require an acknowledged single task write followed by\nfresh owner readback before audit or advancement. Failed responses or changed\ndecision/actor/timestamp refuse success. Generic task and instance cancellation\ncannot cancel governed actor-policy reviews: the owning domain must first define\nits withdrawal/cancellation contract. This does not yet implement application\nwithdrawal, expiry or resubmission by itself. Profile owns those domain commands.\nProcess adds a separately default-disabled signed-source retirement route for\nexact closed review correlation. It cancels the waiting task with CAS before\nretiring its instance, recovers only matching own closure evidence, and refuses\ncompleted competing decisions or in-flight remote actions. Private persistence\nhooks guard retirement markers. This is staged reconciliation, not a cross-owner\ntransaction; inspect uncertain outcomes using the source owner's recovery command.\n\nHuman tasks are the bridge between automation and people. A task tells an\noperator, reviewer, merchandiser, support agent, or approver what needs human\nattention.\n\n## Example business scenario\n\nA content editor changes a page. The change should not go live until someone\nreviews it. The process creates a task called `Review content`. The reviewer can\nclaim it, assign it, or complete it. Generic cancellation is available only for\nnon-governed tasks; governed reviews require a domain-owned cancellation contract.\n\n```mermaid\nstateDiagram-v2\n  [*] --> OPEN\n  OPEN --> CLAIMED: claim\n  OPEN --> COMPLETED: complete\n  CLAIMED --> COMPLETED: complete\n  OPEN --> CANCELLED: cancel\n  CLAIMED --> CANCELLED: cancel\n```\n\n## Task fields you should understand\n\n| Field          | Why it matters                                           |\n| -------------- | -------------------------------------------------------- |\n| `code`         | Stable task identifier for audit and support.            |\n| `instanceCode` | Links the task to the running process instance.          |\n| `nodeCode`     | Shows which workflow step produced the task.             |\n| `assignee`     | Person, queue, or group expected to work on it.          |\n| `status`       | Current state such as `OPEN`, `CLAIMED`, or `COMPLETED`. |\n| `dueAt`        | Optional SLA date for operations.                        |\n\n## How Axis should present task work\n\n### Backend-owned approval decisions\n\nProcess task list, task detail and instance-detail tasks may contain this exact\nread-only decision contract:\n\n```json\n{\n  \"contractVersion\": 1,\n  \"kind\": \"APPROVAL\",\n  \"approveLabel\": \"Approve\",\n  \"rejectLabel\": \"Reject\",\n  \"reasonLabel\": \"Reason\",\n  \"rejectionReasonRequired\": true,\n  \"maximumReasonLength\": 1000\n}\n```\n\nProcess derives it from the stored task's instance and immutable published\ndefinition version, then the effective task-node actor or decision policy. Node\npolicy overrides version policy. A complete three-field actor policy or an\nowner-declared `policy.decisionContract` determines this contract; a permission,\ntask name, code prefix or assignee alone cannot. Stored or caller-supplied\ndecision contracts are not authority. Legacy tasks with neither pinned\ndeclaration have no decisionContract.\n\nAxis renders the supplied labels and collects `{ approved: boolean,\nreason?: string }` through the existing Process completion API. Rejection needs\na nonblank reason; provided reasons must not exceed 1000 characters. Process\nretains independent task admission, state and transition enforcement. The pinned\nactor policy, where present, separately enforces authenticated human review,\ntenant, enterprise, permission and no-self-review. A decision descriptor alone\ndoes not grant these protections or manufacture requester context.\nSeeing the contract does not mean the viewer can approve. No Profile callback\nshould be called directly from the browser.\n\n```mermaid\nflowchart LR\n  Task[Stored task] --> Instance[Stored instance]\n  Instance --> Version[Pinned published version]\n  Version --> Policy[Effective task-node actor or decision policy]\n  Policy --> Contract[Read-only decision contract]\n  Contract --> Axis[Axis approve or reject]\n  Axis --> Complete[Process completion admission]\n```\n\nProcess reads instance/version evidence freshly within the authorized tenant,\nrequires one successful matching record, and bounds projection to 100 tasks.\nMissing, failed, ambiguous or mismatched evidence rejects the read instead of\ninventing approval controls. Inspect the original stored task/version and owner\ndiagnostic before retrying. After uncertain completion, inspect state rather\nthan automatically repeating the decision. These source fixtures do not certify\ninstalled provider behavior or live browser acceptance.\n\nAn owner can add this exact seven-field declaration in a new qualified immutable\nversion of its existing definition. Contract version, kind, rejection requirement\nand maximum length remain fixed as shown above; labels must be nonblank and at\nmost 200 characters. There is no purpose/category expansion. Existing waiting\ninstances stay pinned to their original version. A migration needs separately\ngoverned cancellation and confirmed old task/instance state before a fresh domain\nrequest. Do not edit the waiting instance or use generic completion to migrate.\nThe projection fixtures do not validate that migration.\n\nAxis should show tasks as business work, not as raw database rows. A good task\nscreen answers:\n\n1. What process created this task?\n2. What business object is affected?\n3. Who owns it now?\n4. What action can I take safely?\n5. What happened before this task?\n\nThe detail timeline answers the fifth question by reading Process audit events.\n\n## Developer customization\n\nCustomer modules can customize assignment without editing standard Process\nsource. For example:\n\n- route enterprise onboarding approvals to an enterprise admin queue;\n- route product publishing approvals to merchandising;\n- route logistics exceptions to warehouse operations;\n- route refund approval tasks to finance.\n\nThe customization should live in the customer or domain module, not in Axis.\nAxis renders authorized actions; Process owns task lifecycle.\n\n## End-to-end task example\n\nConsider a high-value refund that requires finance approval. The Order module\nowns refund eligibility and the Payment module owns provider execution. Process\ncreates the approval task with bounded business references, candidate group,\ndue date, and expected outcome choices. It does not copy the full Order or\npayment credentials into task data.\n\nAn authorized finance user opens Axis, claims the task, reviews backend-owned\ncontext, and chooses approve or reject. The claim request includes the current\ntask version so two users cannot both become the assignee. Completion includes\nthe expected task state, chosen outcome, correlation identifier, and a bounded\ncomment. Process records the transition and invokes the next registered domain\nadapter; Axis does not calculate the next node.\n\n| Test path               | Expected result                                | Evidence                                      |\n| ----------------------- | ---------------------------------------------- | --------------------------------------------- |\n| Authorized claim        | Task becomes assigned once.                    | Assignee, version, timestamp, and audit event |\n| Competing claim         | Stale request is rejected.                     | Stable conflict code and unchanged assignee   |\n| Unauthorized completion | No state or domain side effect changes.        | Permission denial and security audit          |\n| Valid approval          | Process advances to the approved path.         | Completion event and next-node correlation    |\n| Expired task            | Policy-driven escalation or rejection occurs.  | Due-date evaluation and escalation evidence   |\n| Runtime restart         | Open task remains available in the same state. | Durable task and process instance projection  |\n\nOperators should monitor open-task age, overdue volume, claim conflicts,\ncompletion latency, failed continuations, and escalation backlog. Alerts must\nidentify the tenant and stable task or process reference without exposing\nsensitive task payloads. A business administrator may change assignment policy\nthrough a governed definition or customer configuration, but cannot bypass\npermissions or rewrite completed history.\n\n## Common mistakes\n\n- Letting the browser assign, complete, or reopen tasks without backend validation and expected-state checks.\n- Omitting tenant, permission, correlation, expiry, escalation, or audit requirements.\n\n## Customize and extend safely\n\nKeep overrides in a project-owned module that extends Workflow, for example\n`modules/companyWorkflow/src/service/operation/defaultProcessRuntimeLifecycleService.js`.\nThe existing exported `taskDecisionContract` helper is a presentation extension\npoint; `projectTaskDecisions` remains responsible for fresh pinned-source reads.\nAn inherited-helper override can change a label without introducing an actor\npolicy or changing completion authority:\n\n```js\n// Within the customer's existing inherited-service override pattern:\nconst contract = inheritedTaskDecisionContract.call(this, policy);\nreturn contract ? { ...contract, approveLabel: \"Confirm approval\" } : undefined;\n```\n\nResolve `inheritedTaskDecisionContract` through the project's established service\nextension mechanism, not a copied Process implementation. Labels must be nonblank\nand no longer than 200 characters for Axis. Keep the exact contract shape,\nrejection-reason requirement and 1000-character ceiling. Do not derive authority\nfrom labels or change requester/enterprise admission in a presentation override.\n\nChanges to domain reviewer policy require a newly qualified published version;\nexisting instances retain their original version. The generic labels above need\nno Profile metadata. Domain owners may declare the approved seven-field\n`policy.decisionContract` in a newly qualified version, not modify released data.\nTest unchanged legacy omission, valid and malformed pinned actor policy,\nnode precedence, foreign/missing version evidence, blank or oversized rejection,\nuncertain completion inspection and inherited customization. The isolated\n`processTaskDecisionContract.test.js` fixture covers source projection; installed\nprovider and browser decisions remain separate acceptance steps.\n\n## Verification\n\nCreate a task, test authorized claim and completion, reject an unauthorized actor and stale update, then confirm assignment history, process continuation, and operator-visible audit evidence.\nThis is the minimum beginner verification before adding assignment customization.\n",
     "keywords": [
       "process-and-workflow-automation",
       "human-task-flow",
@@ -14359,7 +15899,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record334": {
+  "record366": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14407,7 +15947,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record335": {
+  "record367": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14465,14 +16005,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record336": {
+  "record368": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacronOperations",
     "title": "Cron operations",
     "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
-    "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron Operations\n\nCron Operations is the overview for scheduled business automation in Nodics.\nIt explains why scheduled work is governed, where responsibility belongs, and\nwhich detailed pages to read before adding or operating jobs.\n\n## Scheduled work model\n\n```mermaid\nflowchart LR\n  Job[\"Scheduled job\"] --> Owner[\"Responsible node\"]\n  Owner --> Execute[\"Business action\"]\n  Execute --> Evidence[\"Log, audit, status\"]\n  Evidence --> Axis[\"Axis operations\"]\n```\n\n| Concern | What the documentation must explain |\n| --- | --- |\n| Schedule | Timezone, activation, retry, and pause behavior. |\n| Responsibility | Which node owns execution and how failover works. |\n| Business impact | Which records, systems, or customers can be affected. |\n| Operations | How an operator sees status, failures, and retry controls. |\n\n## Business perspective\n\nCron is not just a timer. It runs business operations such as cleanup, export,\nnotification, synchronization, recalculation, or escalation. Business users\nneed to know what runs automatically, when it runs, who can pause it, and what\nhappens when it fails.\n\n## Developer perspective\n\nDevelopers should implement scheduled work through Process and Cron contracts,\nnot ad hoc startup timers. Project jobs must document configuration, service or\npipeline ownership, idempotency, permissions, events, tests, and Axis\nvisibility.\n\n## Continue with\n\n- **Cron Node Responsibility and TEE** for cluster ownership, failover,\n  transfer-back, and the Task Execution Engine use case.\n- **Project Cron Customization** for customer-owned job definitions,\n  configuration, permissions, and tests.\n- **Scheduled Automation and Cron Triggers** for trigger concepts.\n- **Process and Cronjob Shared Runtime** for the boundary between Process and\n  Cron capabilities.\n\n## Operational evidence\n\nCron evidence should be written for the person on call as much as the developer. Include job code, schedule, timezone, enabled state, owning node, last run, next run, current status, retry count, error summary, affected business records, and audit reference. If the job triggers a pipeline or external integration, document the downstream evidence too. This keeps automated operations understandable when the business asks whether an expected nightly or hourly action actually happened.\n\n## Reader and implementation contract\n\nA beginner should understand that Cron is a governed automation capability. A business user should know what automatic process is running, which decision it supports, and how failure affects customers or operations. A developer should document job definition, trigger, service or pipeline, configuration keys, permissions, idempotency, and events. An operator should know current owner, last run, next run, failure reason, retry option, and audit record.\n\nCron documentation must be updated whenever a new scheduled job is added or a project changes schedule, provider, retry, or responsibility behavior. If the job is a good TEE use case, this page should link to TEE so the business value of reliable task execution is clear.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Starting unmanaged timers from application startup.\n- Running the same scheduled job on multiple nodes without ownership.\n- Hiding job state from Axis.\n- Documenting the code path but not the business risk and retry behavior.\n\n## Verification\n\nVerify Cron with registration, disabled state, execution, retry, failure,\ncluster responsibility, audit, logs, and browser-visible operator status. A\nbeginner should understand why the job exists; a developer should know where to\nextend it; an operator should know how to control it.\n",
+    "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron Operations\n\nCron Operations is the overview for scheduled business automation in Nodics.\nIt explains why scheduled work is governed, where responsibility belongs, and\nwhich detailed pages to read before adding or operating jobs.\n\n## Scheduled work model\n\n```mermaid\nflowchart LR\n  Job[\"Scheduled job\"] --> Owner[\"Responsible node\"]\n  Owner --> Execute[\"Business action\"]\n  Execute --> Evidence[\"Log, audit, status\"]\n  Evidence --> Axis[\"Axis operations\"]\n```\n\n| Concern | What the documentation must explain |\n| --- | --- |\n| Schedule | Timezone, activation, retry, and pause behavior. |\n| Responsibility | Which node owns execution and how failover works. |\n| Business impact | Which records, systems, or customers can be affected. |\n| Operations | How an operator sees status, failures, and retry controls. |\n\n## Business perspective\n\nCron is not just a timer. It runs business operations such as cleanup, export,\nnotification, synchronization, recalculation, or escalation. Business users\nneed to know what runs automatically, when it runs, who can pause it, and what\nhappens when it fails.\n\n## Developer perspective\n\nFor `jobDetail.processTrigger`, configured context supplies target-approved\nbusiness inputs. Cron always supplies its own `source: 'cronjob'`, `cronJobCode`,\n`cronJobTenant`, `scheduledExpression` and `firedAt` after that context is copied.\nA configured or Axis-authored source label cannot override scheduler provenance.\nThe stored definition is unchanged and the already verified runtime principal is\nforwarded to Process. Metadata alone grants no target authorization. For an AI\nknowledge refresh, configure its current source and policy fingerprint according\nto the Knowledge owner; do not put Copilot policy or another registry in Cron.\n\nDevelopers should implement scheduled work through Process and Cron contracts,\nnot ad hoc startup timers. Project jobs must document configuration, service or\npipeline ownership, idempotency, permissions, events, tests, and Axis\nvisibility.\n\n## Continue with\n\n- **Cron Node Responsibility and TEE** for cluster ownership, failover,\n  transfer-back, and the Task Execution Engine use case.\n- **Project Cron Customization** for customer-owned job definitions,\n  configuration, permissions, and tests.\n- **Scheduled Automation and Cron Triggers** for trigger concepts.\n- **Process and Cronjob Shared Runtime** for the boundary between Process and\n  Cron capabilities.\n\n## Operational evidence\n\nCron evidence should be written for the person on call as much as the developer. Include job code, schedule, timezone, enabled state, owning node, last run, next run, current status, retry count, error summary, affected business records, and audit reference. If the job triggers a pipeline or external integration, document the downstream evidence too. This keeps automated operations understandable when the business asks whether an expected nightly or hourly action actually happened.\n\n## Reader and implementation contract\n\nA beginner should understand that Cron is a governed automation capability. A business user should know what automatic process is running, which decision it supports, and how failure affects customers or operations. A developer should document job definition, trigger, service or pipeline, configuration keys, permissions, idempotency, and events. An operator should know current owner, last run, next run, failure reason, retry option, and audit record.\n\nCron documentation must be updated whenever a new scheduled job is added or a project changes schedule, provider, retry, or responsibility behavior. If the job is a good TEE use case, this page should link to TEE so the business value of reliable task execution is clear.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Starting unmanaged timers from application startup.\n- Running the same scheduled job on multiple nodes without ownership.\n- Hiding job state from Axis.\n- Documenting the code path but not the business risk and retry behavior.\n\n## Verification\n\nVerify Cron with registration, disabled state, execution, retry, failure,\ncluster responsibility, audit, logs, and browser-visible operator status. A\nbeginner should understand why the job exists; a developer should know where to\nextend it; an operator should know how to control it.\n",
     "keywords": [
       "cron-and-scheduled-automation",
       "cron-operations",
@@ -14513,7 +16053,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record337": {
+  "record369": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14562,7 +16102,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record338": {
+  "record370": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14610,7 +16150,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record339": {
+  "record371": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14658,14 +16198,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record340": {
+  "record372": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessScheduledAutomation",
     "title": "Scheduled Automation and Cron Triggers",
     "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
-    "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.process/modules/cronjob owns job scheduling, firing, retry timing, and\n  scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as cronjob\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cronjob\nremains responsible for deciding when to call this endpoint and how to retry\nscheduler failures.\n\n## Cron-owned job declaration\n\nWhen workflow and cronjob run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in cronjob. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.process/modules/cronjob` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n\n## Customization and extension guidance\n\nProjects can customize scheduled automation with project-owned triggers, calendars, retry rules, pause and resume permissions, or business-specific execution services. Document configuration keys, owner module, affected business data, Axis controls, job evidence, and recovery behavior. Scheduled work should stay inside the governed Process and Cron model so operators can understand and control it.\n\n## Common mistakes\n\n- Treating trigger activation as proof that a scheduler exists and is healthy.\n- Duplicating schedule state in Process and Cron or losing tenant, correlation, idempotency, and audit context.\n\n## Verification\n\nActivate a Process trigger, verify the Cron-owned schedule handoff, execute it once with idempotency evidence, reject unauthorized or inactive execution, and confirm retry and recovery behavior.\nA beginner developer and production operator should both understand which evidence belongs to Process and which belongs to Cron.\nAlso repeat the check after processServer restarts and after a missed schedule window. Confirm the scheduler follows the configured misfire policy, does not replay a completed correlation unexpectedly, and exposes a recoverable incident when downstream execution fails. Metrics and logs must remain tenant-safe, bounded, and free of trigger payload secrets.\n",
+    "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nFunctional owner: `nodics.process`.\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.process/modules/cronjob owns job scheduling, firing, retry timing, and\n  scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as cronjob\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cronjob\nremains responsible for deciding when to call this endpoint and how to retry\nscheduler failures.\n\n## Scheduler State and Business Authority\n\nThree different checks apply; none substitutes for another:\n\n1. The employee reviews and confirms a schedule using their own Cron permissions.\n2. Cron persists its own wrapper state through `persistRuntimeState`. Only an\n   owner-created wrapper can write the fixed state/status/timestamp/log fields.\n   The owner supplies canonical internal identity and fixes tenant, code and node.\n   A missing or ambiguous update acknowledgement fails the operation.\n3. Every new tick obtains current operational admission and forwards the verified\n   runtime principal to Process. Process and the destination module independently\n   authorize the requested business work and source policy.\n\nAn active timer is not proof of a successful business action. Inspect the original\nCron lifecycle receipt, the Process instance, and the destination's attempt history\nseparately. Do not reactivate or rerun a command solely because its response was lost.\nCompletion bookkeeping remains available for admitted work during drain; this does\nnot allow another target execution after business deactivation.\n\n## Cron-owned job declaration\n\nWhen workflow and cronjob run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in cronjob. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.process/modules/cronjob` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n\n## Customization and extension guidance\n\nProjects can customize scheduled automation with project-owned triggers, calendars, retry rules, pause and resume permissions, or business-specific execution services. Document configuration keys, owner module, affected business data, Axis controls, job evidence, and recovery behavior. Scheduled work should stay inside the governed Process and Cron model so operators can understand and control it.\n\n## Common mistakes\n\n- Treating trigger activation as proof that a scheduler exists and is healthy.\n- Duplicating schedule state in Process and Cron or losing tenant, correlation, idempotency, and audit context.\n\n## Verification\n\nActivate a Process trigger, verify the Cron-owned schedule handoff, execute it once with idempotency evidence, reject unauthorized or inactive execution, and confirm retry and recovery behavior.\nA beginner developer and production operator should both understand which evidence belongs to Process and which belongs to Cron.\nAlso repeat the check after processServer restarts and after a missed schedule window. Confirm the scheduler follows the configured misfire policy, does not replay a completed correlation unexpectedly, and exposes a recoverable incident when downstream execution fails. Metrics and logs must remain tenant-safe, bounded, and free of trigger payload secrets.\n",
     "keywords": [
       "cron-and-scheduled-automation",
       "scheduled-automation-triggers",
@@ -14706,7 +16246,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record341": {
+  "record373": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14754,7 +16294,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record342": {
+  "record374": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14802,7 +16342,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record343": {
+  "record375": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14850,7 +16390,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record344": {
+  "record376": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14898,7 +16438,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record345": {
+  "record377": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14946,7 +16486,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record346": {
+  "record378": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14994,7 +16534,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record347": {
+  "record379": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15042,7 +16582,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record348": {
+  "record380": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15090,7 +16630,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record349": {
+  "record381": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15138,7 +16678,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record350": {
+  "record382": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15186,7 +16726,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record351": {
+  "record383": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15234,7 +16774,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record352": {
+  "record384": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15282,7 +16822,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record353": {
+  "record385": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15330,7 +16870,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record354": {
+  "record386": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15380,7 +16920,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record355": {
+  "record387": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15430,7 +16970,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record356": {
+  "record388": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15480,7 +17020,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record357": {
+  "record389": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15530,7 +17070,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record358": {
+  "record390": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15581,7 +17121,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record359": {
+  "record391": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15632,7 +17172,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record360": {
+  "record392": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15682,7 +17222,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record361": {
+  "record393": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15732,7 +17272,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record362": {
+  "record394": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15782,7 +17322,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record363": {
+  "record395": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15832,7 +17372,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record364": {
+  "record396": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15882,7 +17422,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record365": {
+  "record397": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15936,7 +17476,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record366": {
+  "record398": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15988,7 +17528,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record367": {
+  "record399": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16038,7 +17578,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record368": {
+  "record400": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16088,7 +17628,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record369": {
+  "record401": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16142,7 +17682,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record370": {
+  "record402": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16192,7 +17732,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record371": {
+  "record403": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16242,7 +17782,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record372": {
+  "record404": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16292,7 +17832,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record373": {
+  "record405": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16342,7 +17882,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record374": {
+  "record406": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16392,7 +17932,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record375": {
+  "record407": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16442,7 +17982,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record376": {
+  "record408": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16492,7 +18032,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record377": {
+  "record409": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16542,7 +18082,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record378": {
+  "record410": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16592,7 +18132,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record379": {
+  "record411": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16642,7 +18182,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record380": {
+  "record412": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16692,7 +18232,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record381": {
+  "record413": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16742,7 +18282,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record382": {
+  "record414": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16792,7 +18332,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record383": {
+  "record415": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatatoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16840,7 +18380,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record384": {
+  "record416": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16888,7 +18428,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record385": {
+  "record417": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16939,7 +18479,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record386": {
+  "record418": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -16990,7 +18530,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record387": {
+  "record419": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawasteimpactproviders",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -17041,7 +18581,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record388": {
+  "record420": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationemailsmstemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",

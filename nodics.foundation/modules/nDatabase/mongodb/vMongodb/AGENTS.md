@@ -10,6 +10,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- CURRENT aggregation must call the inherited `guardProtectedRead` before any
+  provider query and `projectReadResult` before delivery. Effective prepared
+  schema privacy applies to aggregate reads too; missing/denied hooks reject.
+  Private journal requests cannot use CURRENT aggregation. Do not copy privacy
+  policy into the variant or infer permission from successful aggregation.
+
 - Versioned successor updates reuse `mergeNextVersion` with array replacement
   enabled on cloned inputs. Supplied arrays replace whole values recursively,
   including empty arrays; omitted fields inherit. Never use lodash's indexed

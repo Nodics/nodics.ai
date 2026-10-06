@@ -146,8 +146,10 @@ module.exports = {
         const groups=(auth.userGroups||auth.groups||[]).map(g=>typeof g==='string'?g:g.code);
         if(auth.principalType==='service'&&groups.includes('serviceAccountUserGroup'))return;
         if (auth.principalType !== 'customer' || !auth.loginId) this.fail('Authenticated customer is required for reward payment');
+        if (typeof request.authorization !== 'string' || !/^Bearer\s+\S+$/i.test(request.authorization)) this.fail('Customer bearer authorization is required for reward payment');
+        const header = { Authorization: request.authorization, 'X-Enterprise-Code': auth.entCode || auth.enterpriseCode };
         const unwrap = value => { for(let i=0;i<6 && value && !Array.isArray(value);i++){if(value.data!==undefined)value=value.data;else if(value.result!==undefined)value=value.result;else break;} return value; };
-        const profile = unwrap(await SERVICE.DefaultModuleService.invokeModule({local:false,moduleName:'profile',connectionName:'profile',tenant:request.tenant,request:{tenant:request.tenant},apiName:'/customer',methodName:'POST',requestBody:{query:{loginId:auth.loginId},searchOptions:{pageSize:1},options:{recursive:false}}}));
+        const profile = unwrap(await SERVICE.DefaultModuleService.invokeModule({local:false,moduleName:'profile',connectionName:'profile',tenant:request.tenant,header,request:{tenant:request.tenant},apiName:'/customer',methodName:'POST',requestBody:{query:{loginId:auth.loginId},searchOptions:{pageSize:1},options:{recursive:false}}}));
         const customer = Array.isArray(profile) ? profile[0] : profile;
         const target = this.providerConfig().loyaltyTarget;
         const projection = unwrap(await SERVICE.DefaultModuleService.invokeModule({local:false,moduleName:target.moduleName,connectionName:target.connectionName,tenant:request.tenant,request:{tenant:request.tenant},apiName:'/wallets/'+encodeURIComponent(walletCode),methodName:'GET',requestBody:{}}));

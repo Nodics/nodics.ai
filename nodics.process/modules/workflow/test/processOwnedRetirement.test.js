@@ -61,6 +61,51 @@ test("ordinary mutation retains an atomic no-retirement query fence", async () =
   assert.deepEqual(request.query.domainRetirement, { $exists: false });
 });
 
+test("insert-only preSave preserves exact constraints but cannot bypass update or retirement guards", async () => {
+  const f = fixture();
+  const empty = { get: async () => ({ code: "SUC_FIND_TEST", result: [] }) };
+  const owner = {
+    ...f.owner,
+    instanceService: () => empty,
+    taskService: () => empty,
+  };
+  const input = () => ({
+    tenant: "tenant-a",
+    model: { code: "fresh", status: "RUNNING" },
+    query: { code: "fresh" },
+    options: { insertOnly: true },
+  });
+  for (const hook of [
+    "protectInstanceRetirementSave",
+    "protectTaskRetirementSave",
+  ]) {
+    const request = input();
+    await owner[hook](request);
+    assert.deepEqual(request.query, { code: "fresh" });
+    assert.equal(request.options.insertOnly, true);
+    await assert.rejects(
+      owner[hook]({
+        ...input(),
+        model: { code: "fresh", domainRetirement: {} },
+      }),
+    );
+  }
+  const update = input();
+  await owner.protectInstanceRetirement(update);
+  assert.deepEqual(
+    update.query.domainRetirement,
+    { $exists: false },
+    "request option never selects save-only admission",
+  );
+  const existing = {
+    ...owner,
+    instanceService: () => ({
+      get: async () => ({ code: "SUC_FIND_TEST", result: [{ code: "fresh" }] }),
+    }),
+  };
+  await assert.rejects(existing.protectInstanceRetirementSave(input()));
+});
+
 test("generic selectors cannot hide retired identity rewrites or upserts", async () => {
   const f = fixture();
   for (const extra of [

@@ -71,6 +71,10 @@ The adapter also implements provider-neutral transactions through
 `MongoClient.startSession()` and `session.withTransaction()`. MongoDB model
 operations translate the opaque Nodics transaction context into `{ session }`
 options for find, insert, update, upsert, and delete.
+Qualified transaction capability includes `journaledCommit: true`; execution
+uses snapshot reads and `{ w: 'majority', j: true }` commit concern. This describes
+the protocol, not completed storage-engine or failover qualification. Unknown
+commit outcomes remain errors and do not authorize replaying external effects.
 
 MongoDB transactions require a replica set or sharded cluster. The default
 standalone `mongodb://127.0.0.1:27017` development topology is not qualified.

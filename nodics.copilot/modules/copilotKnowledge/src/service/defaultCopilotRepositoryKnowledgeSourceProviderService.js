@@ -34,6 +34,7 @@ module.exports = {
         const candidate = String(relativePath).replace(/\\/gu, '/');
         const expected = String(pattern || '').replace(/\\/gu, '/').replace(/^\.\//u, '');
         if (!expected || expected.startsWith('/') || expected.split('/').includes('..')) return false;
+        if (expected === '**/*') return true;
         if (expected === '**/README.md') return candidate === 'README.md' || candidate.endsWith('/README.md');
         if (expected === '**/AGENTS.md') return candidate === 'AGENTS.md' || candidate.endsWith('/AGENTS.md');
         if (expected.startsWith('**/') && !expected.slice(3).includes('*')) return candidate === expected.slice(3) || candidate.endsWith('/' + expected.slice(3));
@@ -53,6 +54,8 @@ module.exports = {
     excluded: function (relativePath, source, configuration) {
         const candidate = String(relativePath).replace(/\\/gu, '/');
         const segments = candidate.split('/');
+        // Each child runtime module is selected independently, including inactive children.
+        if (source.runtimeModule && ['modules', 'envs', 'nodes'].includes(segments[0])) return true;
         if (((configuration || {}).excludedSegments || []).some(value => {
             const excluded = String(value).replace(/\\/gu, '/');
             return excluded.includes('/') ? candidate === excluded || candidate.startsWith(excluded + '/') || candidate.includes('/' + excluded + '/') : segments.includes(excluded);
@@ -69,7 +72,7 @@ module.exports = {
             const relative = path.relative(root, absolute).replace(/\\/gu, '/');
             if (this.excluded(relative, source, configuration) || entry.isSymbolicLink()) return;
             if (entry.isDirectory()) this.walk(root, absolute, source, configuration, output);
-            else if (entry.isFile() && source.paths.some(pattern => this.matchesPattern(relative, pattern))) output.push(relative);
+            else if (entry.isFile() && (configuration.allowedExtensions || []).includes(path.extname(relative).toLowerCase()) && source.paths.some(pattern => this.matchesPattern(relative, pattern))) output.push(relative);
             if (output.length > Number((configuration || {}).maximumFilesPerSource || 5000)) throw new Error('COPILOT_KNOWLEDGE_SOURCE_FILE_LIMIT_EXCEEDED');
         });
         return output;
@@ -81,7 +84,10 @@ module.exports = {
         const roots = (options || {}).repositoryRoots || {};
         const configuredRoot = roots[source.repository];
         if (!configuredRoot || !path.isAbsolute(configuredRoot)) throw new Error('COPILOT_KNOWLEDGE_REPOSITORY_ROOT_REQUIRED');
-        const root = fs.realpathSync(configuredRoot);
+        const repositoryRoot = fs.realpathSync(configuredRoot);
+        if (source.runtimeModule && !source.runtimeBinding) throw new Error('COPILOT_RUNTIME_BINDING_REQUIRED');
+        const root = source.runtimeBinding ? fs.realpathSync(path.resolve(repositoryRoot, source.runtimeBinding.relativeRoot)) : repositoryRoot;
+        if (root !== repositoryRoot && !root.startsWith(repositoryRoot + path.sep)) throw new Error('COPILOT_KNOWLEDGE_PATH_ESCAPE');
         if (!fs.statSync(root).isDirectory()) throw new Error('COPILOT_KNOWLEDGE_REPOSITORY_ROOT_INVALID');
         const allowedExtensions = configuration.allowedExtensions || [];
         let totalBytes = 0;
@@ -92,7 +98,12 @@ module.exports = {
             if (stat.isSymbolicLink() || stat.size > Number(configuration.maximumFileBytes || 1048576)) throw new Error('COPILOT_KNOWLEDGE_FILE_BOUND_EXCEEDED');
             totalBytes += stat.size;
             if (totalBytes > Number(configuration.maximumSourceBytes || 52428800)) throw new Error('COPILOT_KNOWLEDGE_SOURCE_BYTE_LIMIT_EXCEEDED');
-            return { relativePath: relative, content: fs.readFileSync(absolute, 'utf8'), size: stat.size, updatedAt: stat.mtime.toISOString() };
+            const bytes = fs.readFileSync(absolute);
+            if (bytes.length !== stat.size || bytes.includes(0)) throw new Error('COPILOT_KNOWLEDGE_TEXT_FORMAT_INVALID');
+            let content;
+            try { content = new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
+            catch { throw new Error('COPILOT_KNOWLEDGE_TEXT_FORMAT_INVALID'); }
+            return { relativePath: path.relative(repositoryRoot, absolute).split(path.sep).join('/'), content, size: stat.size, updatedAt: stat.mtime.toISOString() };
         });
     }
 };

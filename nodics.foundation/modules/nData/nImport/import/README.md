@@ -20,6 +20,10 @@ This module owns generic import mechanics. Functional modules own their data mea
 
 ## Developer Notes
 
+- Single-record `update` headers preserve the generated owner's `model` contract;
+  ambiguous batches reject before mutation. See the
+  [dispatch contract](llm/contracts/README.md#generated-update-dispatch).
+
 - Import phases retry only explicit owner-declared dependency/safe-transient
   failures with `NOT_APPLIED` write outcomes. Unknown outcomes, authorization,
   credential, validation and concurrency refusals are terminal. The outer loop

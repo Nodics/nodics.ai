@@ -18,6 +18,7 @@
  */
 module.exports = {
   profile: {
+    profileCommandReceipt: { super: 'commandReceipt', model: true, service: { enabled: true } },
     tenant: {
       super: "super",
       indexes: {
@@ -561,10 +562,10 @@ module.exports = {
           },
         },
         superEnterprise: {
-          type: "objectId",
+          type: "string",
           required: false,
           label: "Parent enterprise",
-          description: "Parent enterprise code if any",
+          description: "Parent enterprise code resolved through the code-owned Profile hierarchy; never a database identifier",
           searchOptions: {
             enabled: true, // default is false
           },

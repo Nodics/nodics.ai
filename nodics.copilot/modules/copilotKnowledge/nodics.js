@@ -32,7 +32,7 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves when post-initialization completes.
      */
     postInit: function (options) {
-        ['README', 'AGENTS_CONTRACT', 'LLM_CONTRACT', 'SOURCE_CODE', 'CUSTOMER_PROJECT', 'CURATED_MEMORY'].forEach(sourceType => {
+        ['README', 'INTERNAL_DOCUMENTATION', 'AGENTS_CONTRACT', 'LLM_CONTRACT', 'SOURCE_CODE', 'CUSTOMER_PROJECT', 'CURATED_MEMORY'].forEach(sourceType => {
             SERVICE.DefaultDiscoverySourceRegistryService.register('COPILOT_KNOWLEDGE', sourceType, SERVICE.DefaultCopilotRepositoryKnowledgeSourceProviderService);
         });
         return Promise.resolve(true);

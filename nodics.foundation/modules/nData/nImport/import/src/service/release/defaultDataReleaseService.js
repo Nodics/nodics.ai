@@ -1061,6 +1061,7 @@ module.exports = {
           let admitted;
           try {
             admitted = await provider.validateImportTarget({
+              releaseCode: release.releaseCode,
               moduleName: targetModule,
               schemaName: options.schemaName,
               indexName: options.indexName,

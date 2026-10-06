@@ -73,7 +73,7 @@ module.exports = {
           enabled: false,
           ownerService: "DefaultProfileBootstrapIdentityAssessmentService",
           maximumAgeMs: 300000,
-          sources: [{ releaseCode: "profile:init-v001", version: "0.0.2" }],
+          sources: [{ releaseCode: "profile:init-v001", version: "0.0.3" }],
         },
         pageSize: 100,
         maximumPages: 100,

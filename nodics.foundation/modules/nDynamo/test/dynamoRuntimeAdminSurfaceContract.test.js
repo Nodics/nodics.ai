@@ -44,7 +44,10 @@ assert.strictEqual(schemas.routerConfiguration.router.enabled, true, 'routerConf
 assert.strictEqual(schemas.schemaConfiguration.router.enabled, true, 'schemaConfiguration is a generated runtime admin API');
 assert.strictEqual(schemas.pipeline.router.enabled, true, 'pipeline is a generated runtime admin API');
 assert.strictEqual(schemas.schemaAccessPolicy.router.enabled, true, 'schemaAccessPolicy is a generated runtime admin API');
-for (const name of ['configurationActivationRequest', 'configurationActivationLog']) {
+assert.strictEqual(schemas.configurationActivationRequest.router.enabled, false, 'activation intent and claims must use the governed lifecycle, never generic CRUD');
+assert.strictEqual(schemas.configurationActivationRequest.cache.enabled, false);
+assert.strictEqual(schemas.configurationActivationRequest.indexes.individual.activationRequestIdentity.options.unique, true);
+for (const name of ['configurationActivationLog']) {
     assert.strictEqual(schemas[name].router.enabled, true, name + ' participates in secured canonical schema operations');
     assert.deepStrictEqual(schemas[name].router.groups, { schemaOperations: true }, name + ' excludes unrelated generated route groups');
 }

@@ -11,6 +11,10 @@
 
 const _ = require('lodash');
 
+// Only wrappers constructed by this owner can persist scheduler bookkeeping.
+const ownedJobs = new WeakMap();
+const runtimeFields = new Set(['state', 'status', 'activeTime', 'startTime', 'lastEndTime', 'endTime', 'stopTime', 'log']);
+
 /**
  * @module cronjob/service/cronjob/DefaultCronJobRuntimeService
  * @description Owns the process-local tenant/job pool that creates, updates,
@@ -23,6 +27,36 @@ const _ = require('lodash');
 module.exports = {
     /** Process-local runtime jobs keyed by tenant and job code. */
     jobPool: {},
+
+    /**
+     * Persists bounded scheduler bookkeeping for an owner-created wrapper.
+     * This internal authority never changes definitions or authorizes job targets.
+     * Completion remains writable while new-work admission is disabled.
+     * @param {Object} job Owner-created runtime wrapper, not request data.
+     * @param {Object} model Runtime state and timestamp changes only.
+     * @returns {Promise<Object>} Native model-service acknowledgement.
+     */
+    persistRuntimeState: async function (job, model) {
+        const binding = ownedJobs.get(job);
+        const definition = job?.getDefinition?.();
+        if (!binding || definition?.tenant !== binding.tenant || definition?.code !== binding.code ||
+            !model || !Object.keys(model).length || Object.keys(model).some(key => !runtimeFields.has(key))) {
+            throw new CLASSES.NodicsError('ERR_JOB_00000', 'Invalid scheduler runtime-state authority');
+        }
+        const result = await SERVICE.DefaultCronJobService.update({
+            tenant: binding.tenant,
+            authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+            query: { code: binding.code, runOnNode: binding.runOnNode },
+            model: _.cloneDeep(model)
+        });
+        if (!/^SUC_/.test(result?.code || '') || result.error || result.success === false ||
+            result.acknowledged === false || result.result?.acknowledged === false ||
+            result.result?.error || result.result?.success === false ||
+            result.result?.matchedCount !== 1) {
+            throw new CLASSES.NodicsError('ERR_JOB_00000', 'Scheduler state persistence was not acknowledged');
+        }
+        return result;
+    },
 
     /** Returns a read-only summary of scheduler ownership for diagnostics. */
     getPoolSummary: function () {
@@ -96,25 +130,20 @@ module.exports = {
                     if (!this.jobPool[definition.tenant][definition.code]) {
                         if (CONFIG.get('nodeId') === definition.runOnNode || (definition.tempNode && CONFIG.get('nodeId') === definition.tempNode)) {
                             let tmpCronJob = new CLASSES.CronJob(definition, definition.trigger);
+                            ownedJobs.set(tmpCronJob, Object.freeze({ tenant: definition.tenant, code: definition.code, runOnNode: definition.runOnNode }));
                             tmpCronJob.LOG = SERVICE.DefaultLoggerService.createLogger('CronJob-' + definition.code);
                             tmpCronJob.validate();
                             tmpCronJob.init();
                             tmpCronJob.setAuthToken(authToken);
                             tmpCronJob.setJobPool(this.jobPool);
                             this.jobPool[definition.tenant][definition.code] = tmpCronJob;
-                            SERVICE.DefaultCronJobService.update({
-                                tenant: definition.tenant,
-                                query: {
-                                    code: definition.code
-                                },
-                                model: {
-                                    state: ENUMS.CronJobState.CREATED.key
-                                }
+                            this.persistRuntimeState(tmpCronJob, {
+                                state: ENUMS.CronJobState.CREATED.key
                             }).then(success => {
                                 _self.LOG.debug('Job: ' + definition.code + ' has been successfully added in ready to run pool on tenant: ' + definition.tenant);
                                 resolve('Job: ' + definition.code + ' has been successfully added in ready to run pool on tenant: ' + definition.tenant);
                             }).catch(error => {
-                                delete this.jobPool[definition.code];
+                                delete this.jobPool[definition.tenant][definition.code];
                                 _self.LOG.error('Job: ' + definition.code + ' failed on updating state on tenant: ' + definition.tenant);
                                 reject(new CLASSES.NodicsError(error, 'Job: ' + definition.code + ' failed on updating state on tenant: ' + definition.tenant, 'ERR_JOB_00000'));
                             });
@@ -279,6 +308,7 @@ module.exports = {
                     }
                     if (!definition.runOnNode || CONFIG.get('nodeId') === definition.runOnNode) {
                         let tmpCronJob = new CLASSES.CronJob(definition, definition.trigger);
+                        ownedJobs.set(tmpCronJob, Object.freeze({ tenant: definition.tenant, code: definition.code, runOnNode: definition.runOnNode }));
                         tmpCronJob.LOG = SERVICE.DefaultLoggerService.createLogger('CronJob-' + definition.code);
                         tmpCronJob.validate();
                         tmpCronJob.setAuthToken(authToken);

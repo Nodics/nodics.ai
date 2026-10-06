@@ -1,7 +1,7 @@
 {
   "contract": "nodics.documentation.validation/v1",
   "generatedAt": "2026-08-26T00:00:00.000Z",
-  "release": "0.16.22",
+  "release": "0.16.29",
   "source": "nodics.docs/docs/catalogue.json",
   "owner": "nodics.docs",
   "targetAudience": [
@@ -455,7 +455,7 @@
     "readinessScore": 100
   },
   "integrity": {
-    "checksum": "f6aca7a30f4decb47b0929bca8957de41fb5e0641e15882fb01417ee0c8570fc",
+    "checksum": "ddb91b2f26b01aa32c1359a7bccf7b08bc22d86ca6ec74dc9c7cc3739479a851",
     "meaning": "Deterministic digest for validation-report integrity; it is not a production approval signature."
   }
 }

@@ -2,6 +2,15 @@
 
 Clarification, mutation approval, safety, tenancy, audit, and execution policy.
 
+Copilot Settings projects scoped allowances, ceilings, delegation, provider/model,
+recording and knowledge controls. Reviewed proposals reuse nDynamo governance.
+See the [administration guide](llm/examples/governed-administration.md) for setup,
+step-by-step use, APIs, customization and recovery.
+
+[Refresh workflow and publisher assignments](llm/examples/refresh-assignments.md)
+use the same reviewed governance, scoped to the current deployment and visible
+sources. Process installation, credentials, grants and schedules remain separate.
+
 This module produces provider-neutral, fail-closed decisions for knowledge
 retrieval, tool exposure, field access, export, confirmation, and execution.
 It consumes trusted Nodics identity and authorization context; the model never

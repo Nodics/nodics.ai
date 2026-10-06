@@ -54,7 +54,7 @@ export function refusal(code) {
 /** Parses exact CLI selections. Mutation defaults off; ambiguous, duplicate and wildcard options refuse. */
 export function parseOptions(args) {
   const values = {};
-  const allowed = new Set(['environment', 'project', 'databases', 'registered-tenants', 'auth-namespace', 'execute', 'exclusive-deployment', 'writers-excluded']);
+  const allowed = new Set(['environment', 'project', 'project-code', 'databases', 'registered-tenants', 'auth-namespace', 'execute', 'exclusive-deployment', 'writers-excluded']);
   for (const argument of args) {
     const match = argument.match(/^--([a-z-]+)(?:=(.*))?$/);
     if (!match || !allowed.has(match[1]) || Object.hasOwn(values, match[1]))
@@ -66,6 +66,10 @@ export function parseOptions(args) {
       if (!match[2]) throw refusal('RESET_SELECTION_REQUIRED');
       values[match[1]] = match[2];
     }
+  }
+  if (values['project-code'] !== undefined) {
+    if (values.project !== undefined) throw refusal('RESET_SELECTION_INVALID');
+    values.project = values['project-code'];
   }
   for (const key of ['environment', 'project']) {
     if (!/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(values[key] || ''))
@@ -514,7 +518,7 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
 /** Runs complete preflight before effects; verifies each drop and clears reviewed auth keys last. Errors retain count-only partial/uncertain receipts and never restart writers. */
 export async function run(options, dependencies = {}) {
   // Revalidate exported calls as strictly as CLI input; injected ports are isolated test consumers only.
-  options = parseOptions([`--environment=${options.environment}`, `--project=${options.project}`,
+  options = parseOptions([`--environment=${options.environment}`, `--project-code=${options.project}`,
     `--databases=${Array.isArray(options.databases) ? options.databases.join(',') : ''}`,
     `--auth-namespace=${options.authNamespace}`, ...(options.execute === true ? ['--execute'] : []),
     ...(Array.isArray(options.registeredTenants) ? [`--registered-tenants=${options.registeredTenants.join(',')}`] : []),

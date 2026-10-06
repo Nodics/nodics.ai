@@ -9,7 +9,7 @@
 
  */
 
-'use strict';
+"use strict";
 
 /**
  * @module nodics.process/modules/workflow/src/facade/defaultProcessDefinitionFacade
@@ -19,22 +19,70 @@
  * @override Customer process overlays may add approval, policy, or domain-specific orchestration before delegating to lifecycle services.
  */
 module.exports = {
-    /** Delegates definition listing. */
-    listDefinitions: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.listDefinitions(request); },
-    /** Delegates definition read. */
-    getDefinition: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.getDefinition(request); },
-    /** Delegates draft creation. */
-    createDefinition: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.createDefinition(request); },
-    /** Delegates draft update. */
-    updateDraft: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.updateDraft(request); },
-    /** Delegates draft validation. */
-    validateDraft: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.validateDraft(request); },
-    /** Delegates draft publication. */
-    publishDraft: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.publishDraft(request); },
-    /** Delegates next-draft preparation from latest published version. */
-    prepareNextDraft: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.prepareNextDraft(request); },
-    /** Delegates draft delete or published archive. */
-    deleteOrArchive: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.deleteOrArchive(request); },
-    /** Delegates version listing. */
-    listVersions: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.listVersions(request); }
+  /** Delegates definition listing. */
+  listDefinitions: function (request) {
+    return SERVICE.DefaultProcessDefinitionLifecycleService.listDefinitions(
+      request,
+    );
+  },
+  /** Delegates definition read. */
+  getDefinition: function (request) {
+    return SERVICE.DefaultProcessDefinitionLifecycleService.getDefinition(
+      request,
+    );
+  },
+  /** Delegates draft creation. */
+  createDefinition: function (request) {
+    return SERVICE.DefaultProcessDefinitionCommandReceiptService.execute(
+      request,
+      "create",
+    );
+  },
+  /** Delegates draft update. */
+  updateDraft: function (request) {
+    return SERVICE.DefaultProcessDefinitionCommandReceiptService.execute(
+      request,
+      "update",
+    );
+  },
+  /** Delegates draft validation. */
+  validateDraft: function (request) {
+    return SERVICE.DefaultProcessDefinitionCommandReceiptService.execute(
+      request,
+      "validate",
+    );
+  },
+  /** Delegates draft publication. */
+  publishDraft: function (request) {
+    return SERVICE.DefaultProcessDefinitionCommandReceiptService.execute(
+      request,
+      "publish",
+    );
+  },
+  /** Delegates next-draft preparation from latest published version. */
+  prepareNextDraft: function (request) {
+    return SERVICE.DefaultProcessDefinitionCommandReceiptService.execute(
+      request,
+      "prepare",
+    );
+  },
+  /** Delegates draft delete or published archive. */
+  deleteOrArchive: function (request) {
+    return SERVICE.DefaultProcessDefinitionCommandReceiptService.execute(
+      request,
+      "delete",
+    );
+  },
+  /** Inspects a fixed original definition command without replay. */
+  inspectDefinitionCommand: function (request) {
+    return SERVICE.DefaultProcessDefinitionCommandReceiptService.inspect(
+      request,
+    );
+  },
+  /** Delegates version listing. */
+  listVersions: function (request) {
+    return SERVICE.DefaultProcessDefinitionLifecycleService.listVersions(
+      request,
+    );
+  },
 };

@@ -17,6 +17,22 @@ const assert = require('node:assert/strict');
 const checkout = require('../src/service/defaultDigitalCommerceCheckoutService');
 const entitlement = require('../src/service/defaultDigitalCommerceEntitlementService');
 
+test('digital confirmation preserves the trusted checkout Store for Promotion', async () => {
+    global.SERVICE = {
+        DefaultPromotionOperationService: { confirmCouponCodeSale: async request => {
+            assert.equal(request.storeCode, 'published-store');
+            assert.equal(request.tenant, 'tenant-a');
+            return { code: 'coupon-a', status: 'SOLD' };
+        } },
+        DefaultDigitalCommerceEntitlementService: { createFromCouponSales: async () => [
+            { code: 'entitlement-a', providerCode: 'coupon-a' },
+        ] },
+    };
+    const result = await checkout.confirmSale({ tenant: 'tenant-a', storeCode: 'published-store', payload: { storeCode: 'forged-store' } },
+        { code: 'order-a' }, [{ code: 'coupon-a', idempotencyKey: 'purchase-a' }]);
+    assert.equal(result[0].entitlementCode, 'entitlement-a');
+});
+
 test('missing generated entitlement owner rejects instead of constructing success', async () => {
     await assert.rejects(
         entitlement.save(undefined, {}, { code: 'e' }),

@@ -1,5 +1,14 @@
 # nDynamo Agent Contract
 
+Private committed-revision read fences follow
+[the owner sequence](llm/examples/property-read-fences.md). Keep acquisition
+default-disabled, property commits fence-aware, first commits insert-only and
+recovery bound to the exact original operation. No automatic expiry/takeover or
+claim of destructive-operation completion or failover qualification is permitted.
+Fences require `persistence.requireDurableJournal: true`; preserve that internal
+protocol on every property read, insert, conditional commit and fence update.
+Ordinary persistence remains configurable but cannot admit a destructive consumer.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -9,6 +18,20 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - If a deeper child module has its own `AGENTS.md`, follow that file for changes inside the child module.
 
 ## Module Work Rules
+
+- Durable properties follow [the persistence guide](llm/examples/durable-property-activation.md):
+  explicit deployment opt-in, generated exact-revision storage, atomic embedded
+  audit, array replacement, fail-closed restoration and no uncertain replay.
+  Do not enable direct in-memory rollback when durable mode is selected.
+
+- Preserve [revision-safe activation](llm/examples/revision-safe-activation.md):
+  generated exact-revision claims and lifecycle evidence, no uncertain-outcome
+  replay, no generic activation-request CRUD, and no invented historical audit
+  when upgrading legacy requests. notBefore remains an earliest-time guard;
+  optional bounded due dispatch is invoked by the existing CronJob scheduler.
+  Reviewed `$propertyPatch` deletions persist absence markers. Rollback prepares
+  a new approval request from recorded evidence. Evidence-only reconciliation
+  may close a committed claim, but must never rerun its property mutation.
 
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.

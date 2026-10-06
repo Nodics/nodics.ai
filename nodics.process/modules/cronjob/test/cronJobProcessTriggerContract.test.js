@@ -119,6 +119,19 @@ function processStub() {
     assert.strictEqual(executionRequests[0].runtimeOperation.context.cronJobCode, 'dailyContentApprovalJob', 'Cron job code should be included in Process context');
     assert.strictEqual(executionRequests[0].runtimeOperation.context.businessDate, '2026-08-09', 'Process context should include configured trigger context');
 
+    definition.jobDetail.processTrigger.context = {
+        businessDate: '2026-08-09', source: 'axis-cron-console', cronJobTenant: 'foreign',
+        cronJobCode: 'forged-job', scheduledExpression: 'forged-expression', firedAt: 'forged-time'
+    };
+    const principal = { serviceId: 'approved-cron-instance', tokenType: 'service' };
+    await triggerHandler.executeProcessTriggerJob(definition, {}, principal);
+    assert.strictEqual(executionRequests[1].authData, principal);
+    assert.deepStrictEqual(executionRequests[1].runtimeOperation.context, {
+        businessDate: '2026-08-09', source: 'cronjob', cronJobTenant: 'default',
+        cronJobCode: 'dailyContentApprovalJob', scheduledExpression: '0 10 * * *', firedAt: '2026-08-09T10:00:00.000Z'
+    }, 'Configured business context cannot overwrite scheduler-owned provenance');
+    assert.strictEqual(definition.jobDetail.processTrigger.context.cronJobTenant, 'foreign', 'Handoff must not mutate the stored definition');
+
     delete global.SERVICE.DefaultProcessRuntimeLifecycleService;
     const missingRuntimeResponse = {};
     triggerHandler.triggerProcess({

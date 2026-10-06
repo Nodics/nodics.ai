@@ -1,5 +1,10 @@
 # copilotCore examples
 
+- [Natural-language preparation](natural-language-preparation.md): bounded,
+  budget-accounted interpretation for supported business preparers.
+- [Persistent local acceptance](persistent-local-acceptance.md): real Profile,
+  Ollama, citations, budgets, isolation, recording-off and restart verification.
+
 Generated documentation entry for copilotCore.
 
 ## Canonical schema invocation

@@ -51,12 +51,10 @@ module.exports = {
     wallet: async function (request) {
         let walletCode = request.walletCode || request.params && request.params.walletCode || request.payload && request.payload.walletCode;
         this.required(walletCode, 'walletCode');
-        let result = await this.service('DefaultLoyaltyWalletService').get({
-            tenant: request.tenant,
-            authData: request.authData,
-            query: { code: walletCode },
-            pageSize: 1
-        });
+        const operation = this.service('DefaultLoyaltyRewardOperationService');
+        let result = await this.service('DefaultLoyaltyWalletService').get(
+            operation.serviceRequest(request, { query: { code: walletCode }, pageSize: 1 })
+        );
         let wallet = this.unwrap(result);
         return Array.isArray(wallet) ? wallet[0] : wallet;
     },

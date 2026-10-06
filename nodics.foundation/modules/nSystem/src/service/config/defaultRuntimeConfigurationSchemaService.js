@@ -30,6 +30,38 @@ module.exports = {
         return Promise.resolve(true);
     },
 
+    /** Restores active tenant-default schema records through their generated owner before readiness. Storage/decryption failures propagate; no events or writes are issued. @returns {Promise<boolean>} True after restoration. */
+    restorePersistedConfiguration: async function () {
+        const store = SERVICE.DefaultRuntimeConfigurationValueService;
+        if (!store || typeof store.get !== 'function') return true;
+        const tenants = NODICS.getActiveTenants();
+        if (!Array.isArray(tenants)) {
+            throw new CLASSES.NodicsError('ERR_SYS_00001', 'Active tenant inventory is required');
+        }
+        for (const tenant of tenants) {
+            const schemas = CONFIG.get('runtimeConfigurationSchemas', tenant) || {};
+            for (const schemaCode of Object.keys(schemas).sort()) {
+                const request = { tenant };
+                const code = this.runtimeRecordCode(request, schemaCode);
+                const response = await store.get({ tenant, query: { code }, pageSize: 2, searchOptions: { limit: 2 } });
+                const records = response.result;
+                if (!Array.isArray(records) || records.length > 1) {
+                    throw new CLASSES.NodicsError('ERR_SYS_00002', 'Ambiguous runtime configuration record');
+                }
+                const record = records[0];
+                if (!record || record.active === false) continue;
+                if (record.code !== code || record.tenant !== tenant || record.schemaCode !== schemaCode ||
+                    record.ownerModule !== schemas[schemaCode].ownerModule ||
+                    record.scope?.level !== 'tenant' || record.scope?.code !== tenant) {
+                    throw new CLASSES.NodicsError('ERR_SYS_00002', 'Runtime configuration scope mismatch');
+                }
+                const patch = this.createEffectiveRuntimePatch(record, schemas[schemaCode]);
+                if (Object.keys(patch).length) CONFIG.changeTenantProperties({ runtimeConfiguration: patch }, tenant);
+            }
+        }
+        return true;
+    },
+
     /**
      * Lists runtime configuration schemas declared by active modules.
      *
@@ -424,11 +456,11 @@ module.exports = {
     },
 
     /** Decrypts a sensitive configuration envelope for effective runtime application. */
-    decryptSensitiveValue: function (envelope) {
+    decryptSensitiveValue: function (envelope, tenant) {
         if (!envelope) {
             return undefined;
         }
-        let key = this.resolveEncryptionKey();
+        let key = this.resolveEncryptionKey(tenant);
         if (!key) {
             throw new CLASSES.NodicsError('ERR_SYS_00002', 'Runtime configuration encryption key is required for sensitive values');
         }
@@ -441,8 +473,8 @@ module.exports = {
     },
 
     /** Resolves the configured AES key material for runtime configuration secrets. */
-    resolveEncryptionKey: function () {
-        let security = CONFIG.get('runtimeConfigurationSecurity') || {};
+    resolveEncryptionKey: function (tenant) {
+        let security = CONFIG.get('runtimeConfigurationSecurity', tenant) || {};
         let configured = security.encryptionKey;
         if (!configured || typeof configured !== 'string') {
             return undefined;
@@ -475,15 +507,15 @@ module.exports = {
     },
 
     /** Creates the effective runtime configuration patch represented by a record. */
-    createEffectiveRuntimePatch: function (record) {
-        let schema = this.resolveSchema(record.schemaCode);
+    createEffectiveRuntimePatch: function (record, schema) {
+        schema = schema || this.resolveSchema(record.schemaCode);
         let patch = {};
         (schema.fields || []).forEach(field => {
             let fieldRecord = record.fields && record.fields[field.code];
             if (!fieldRecord) {
                 return;
             }
-            let value = fieldRecord.sensitive ? this.decryptSensitiveValue(fieldRecord.encryptedValue) : fieldRecord.value;
+            let value = fieldRecord.sensitive ? this.decryptSensitiveValue(fieldRecord.encryptedValue, record.tenant) : fieldRecord.value;
             if (field.path) {
                 if (this.fieldPathTargetsValue(field.path)) {
                     _.set(patch, field.path, value);

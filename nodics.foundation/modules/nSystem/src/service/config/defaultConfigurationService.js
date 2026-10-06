@@ -93,6 +93,8 @@ module.exports = {
      * @returns {Promise<Object>} Activation response.
      */
     applyPropertyConfiguration: function (request, configuration, preview) {
+        const persistence = SERVICE.DefaultRuntimePropertyPersistenceService;
+        if (persistence && persistence.policy().enabled) return persistence.commit(request, configuration, preview);
         return new Promise((resolve, reject) => {
             let tenant = request.tenant || CONFIG.get('defaultTenant') || 'default';
             let previewService = SERVICE.DefaultRuntimeConfigurationPreviewService;
@@ -107,10 +109,10 @@ module.exports = {
                     tenant: tenant,
                     configuration: configuration
                 });
-                if (preview && !_.isEqual(preview.nextSnapshot, currentPreview.nextSnapshot)) {
+                if (!preview || !_.isEqual(preview.previousSnapshot, currentPreview.previousSnapshot) || !_.isEqual(preview.nextSnapshot, currentPreview.nextSnapshot)) {
                     throw new CLASSES.NodicsError('ERR_SYS_00002', 'Effective tenant properties changed after approval; create a new activation request');
                 }
-                CONFIG.changeTenantProperties(configuration, tenant);
+                CONFIG.setProperties(previewService.mergePropertyConfiguration(CONFIG.getProperties(tenant) || {}, configuration), tenant);
                 let entry = {
                     configurationType: 'propertyConfiguration',
                     configurationCode: 'tenantProperties',
@@ -136,13 +138,13 @@ module.exports = {
                         tenant: tenant,
                         changedPaths: currentPreview.changedPaths
                     }
-                }));
+                })).catch(reject);
             } catch (error) {
                 this.recordPropertyConfigurationAudit({
                     configurationType: 'propertyConfiguration', configurationCode: 'tenantProperties',
                     moduleName: 'system', action: 'activate', status: 'FAILED', tenant: tenant,
                     requestedBy: this.resolveRuntimeActor(request), correlationId: request.correlationId, error: error
-                }).then(() => reject(error));
+                }).then(() => reject(error)).catch(reject);
             }
         });
     },
@@ -155,6 +157,10 @@ module.exports = {
      * @returns {Promise<Object>} Rollback application result.
      */
     restorePropertyConfigurationSnapshot: function (request, snapshot) {
+        const persistence = SERVICE.DefaultRuntimePropertyPersistenceService;
+        if (persistence && persistence.policy().enabled) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_SYS_00002', 'Durable property rollback requires a new reviewed activation; direct snapshot restore is unavailable'));
+        }
         let tenant = request.tenant || CONFIG.get('defaultTenant') || 'default';
         let properties = _.cloneDeep(CONFIG.getProperties(tenant) || {});
         (snapshot.values || []).forEach(entry => _.set(properties, entry.path, _.cloneDeep(entry.value)));
@@ -417,6 +423,22 @@ module.exports = {
         return this.delegateRuntimeConfigurationActivationRequest(request, 'activateApprovedRequest');
     },
 
+    /** Delegates scheduled dispatch to nDynamo; CronJob owns invocation timing.
+     * @param {Object} request Authorized tenant command.
+     * @returns {Promise<Object>} Bounded due-request outcomes.
+     */
+    activateDueRuntimeConfigurationRequests: function (request) {
+        return this.delegateRuntimeConfigurationActivationRequest(request, 'activateDueRequests');
+    },
+
+    /** Reconciles a claimed property request from committed evidence without replay.
+     * @param {Object} request Authorized operator command.
+     * @returns {Promise<Object>} Recovery receipt.
+     */
+    reconcileRuntimePropertyActivation: function (request) {
+        return this.delegateRuntimeConfigurationActivationRequest(request, 'reconcilePropertyActivation');
+    },
+
     /**
      * Delegates activation request lifecycle operations to dynamo governance service.
      *
@@ -544,6 +566,12 @@ module.exports = {
      * @returns {Promise<string>} Reload message.
      */
     handleRuntimeConfigurationChangedEvent: function (request) {
+        const payload = request.event && request.event.data;
+        if (payload && payload.schemaCode === 'tenantProperties') {
+            const persistence = SERVICE.DefaultRuntimePropertyPersistenceService;
+            if (!persistence) return Promise.reject(new CLASSES.NodicsError('ERR_SYS_00001', 'Runtime property persistence is unavailable'));
+            return persistence.refresh(request).then(() => 'Governed tenant properties refreshed');
+        }
         return new Promise((resolve, reject) => {
             try {
                 if (!SERVICE.DefaultRuntimeConfigurationSchemaService ||

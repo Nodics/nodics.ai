@@ -45,6 +45,18 @@ checksum journal, owner proof or raw publication model is returned. DTOs are
 new objects; cached/provider rows are not mutated. Responses and failures use
 `Cache-Control: no-store`; provider errors are replaced with fixed
 `ERR_MED_00023` without original cause, private message or driver details.
+Publication initiation failures may name only the fixed stage (`INSPECT`,
+`RETAIN`, `CREATE`, `VALIDATE`, or `REQUEST_APPROVAL`). Server diagnostics add
+only a validated owner error code, never the original message or cause. This
+distinguishes failed owner boundaries without exposing provider internals.
+
+After an uncertain or failed approval start, inspect the existing request and
+retry with the same `publicationCode`, media code and exact version. A retained
+`PENDING_APPROVAL` publication re-enters nPublish's existing approval request
+path, using the committed workflow identity rather than creating another
+publication. Process alone decides whether exact replay is complete and safe;
+an incomplete native start still requires Process recovery. This does not
+approve, activate or automatically retry publication.
 
 ## Exact Versions And Commands
 
@@ -196,7 +208,8 @@ seven-field APPROVAL contract with required rejection reason, maximum 1000
 characters. The existing nPublish actor mapping verifies the stored maker;
 authenticated login ID is journaled with the pending publication revision and
 selected immutable Process version. Neither body requester nor service fallback
-can supply it. Process enforces a different native reviewer; no approval grant
+can supply it. Process enforces native reviewer access rights, allowing the
+requester to approve when authorized; no approval grant
 is added. Existing reviewer assignments remain the supported customization path.
 
 Library readiness verifies the current published candidate's actual actor and

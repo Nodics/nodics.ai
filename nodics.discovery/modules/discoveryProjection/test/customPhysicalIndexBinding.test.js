@@ -45,6 +45,15 @@ test('Discovery save resolves the logical schema identity without a physical reg
         return { acknowledged: true };
     } } };
     assert.deepEqual(await service.doSave({ tenant: 'fixtureTenant' }), { acknowledged: true });
+    const pipelines = [];
+    SERVICE.DefaultPipelineService.start = async (name, request) => {
+        pipelines.push(name);
+        assert.equal(request.indexName, 'discoveryDocumentProjection');
+        return { code: 'SUC_SEARCH' };
+    };
+    await service.doRefresh({ tenant: 'fixtureTenant' });
+    await service.doRemoveByQuery({ tenant: 'fixtureTenant', query: { term: { ownerType: 'fixture' } } });
+    assert.deepEqual(pipelines, ['doRefreshIndexInitializerPipeline', 'doRemoveModelsByQueryInitializerPipeline']);
     assert.equal(schema.indexName, 'fixture_discovery_projection');
     delete schema.typeName;
     schema.indexName = 'discoveryDocumentProjection';

@@ -18,6 +18,26 @@
  */
 module.exports = {
     default: {
+        commandReceipt: {
+            super: 'base', model: false, commandReceiptJournal: true,
+            cache: { enabled: false }, router: { enabled: false, groups: { schemaOperations: false } },
+            event: { enabled: false }, search: { enabled: false }, service: { enabled: false },
+            backoffice: { enabled: false },
+            definition: {
+                tenantCode: { type: 'string', required: true, description: 'Verified runtime partition of the original command.' },
+                enterpriseCode: { type: 'string', required: true, description: 'Original employee enterprise, never a caller override.' },
+                principalCode: { type: 'string', required: true, description: 'Original human command principal.' },
+                moduleName: { type: 'string', required: true, description: 'Native capability that owns this private journal.' },
+                operation: { type: 'string', required: true, description: 'Native fixed operation identity.' },
+                argumentsDigest: { type: 'string', required: true, description: 'Fingerprint of the exact original submitted command, not its contents.' },
+                state: { type: 'string', required: true, description: 'STARTED or COMPLETED; incomplete or absent evidence remains unknown.' },
+                startedAt: { type: 'string', required: true, description: 'Original claim UTC timestamp in exact ISO format.' },
+                completedAt: { type: 'string', required: false, description: 'UTC timestamp of the original acknowledged completion.' },
+                resultIdentity: { type: 'string', required: false, description: 'Bounded native result identity, not full business data.' },
+                resultDigest: { type: 'string', required: false, description: 'Fingerprint binding original arguments and native result identity.' },
+            },
+            indexes: { individual: { commandReceiptIdentity: { name: 'code', enabled: true, options: { unique: true } } } },
+        },
         super: {
             model: false,
             service: {

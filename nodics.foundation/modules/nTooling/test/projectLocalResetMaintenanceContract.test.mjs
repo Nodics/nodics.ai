@@ -41,6 +41,15 @@ test('explicit exact scope is mandatory, bounded and dry-run by default', () => 
     args.map(x => x.startsWith('--databases=') ? '--databases=acmeLocalPlatform,acmeLocalPlatform' : x)]) assert.throws(() => parseOptions(bad));
 });
 
+test('public CLI normalization preserves maintenance project identity independently of the project home', () => {
+  const tooling = require('../src/service/defaultToolingCommandService');
+  const canonical = args.map(value => value.replace('--project=', '--project-code='));
+  const normalized = tooling.normalizeArguments(['project:local-reset-maintenance', '--home=/tmp/customer', ...canonical]);
+  assert.equal(tooling.resolveHome(normalized), '/tmp/customer');
+  assert.deepEqual(parseOptions(normalized.slice(2)), options());
+  assert.throws(() => parseOptions([...canonical, '--project=acme.project']), /RESET_SELECTION_INVALID/);
+});
+
 test('plan reports scope/counts without credentials or fabricated provider emptiness', () => {
   const s = selection();
   s.scopes.forEach(scope => { scope.databases[0].endpoint = 'mongodb://user:private-secret@127.0.0.1:27017'; });

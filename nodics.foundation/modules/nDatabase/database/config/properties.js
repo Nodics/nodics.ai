@@ -17,6 +17,7 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  commandReceipts: { enabled: false, owners: {} },
   tooling: {
     commands: {
       'schema:version-migrate': {

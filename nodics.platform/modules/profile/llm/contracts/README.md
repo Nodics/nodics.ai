@@ -7,6 +7,13 @@ Source availability does not establish qualification or live acceptance.
 
 ## Dedicated Contracts
 
+- Original setup/invitation receipts: `DefaultEnterpriseCommandReceiptService`
+  wraps existing native commands only under explicit `commandReceipts`
+  admission. `profileCommandReceipt` is private durable evidence. Inspection
+  rechecks human, native grants, enterprise, descriptor, consent and role
+  authority; it never reruns setup, refreshes invitations or activates accounts.
+  See the [operator guide](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+
 - [Enterprise tenant provisioning and durable namespace admission](enterprise-tenant-provisioning.md)
 
 - [Private notification and verification transport](private-notification-transport.md)

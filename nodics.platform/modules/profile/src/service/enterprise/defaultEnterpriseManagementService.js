@@ -1027,6 +1027,14 @@ module.exports = {
    * @returns {Promise<Object>} Persisted enterprise, including reference identities.
    */
   createFromModel: async function (request) {
+    if (CONFIG.get('commandReceipts')?.enabled === true && CONFIG.get('commandReceipts').owners?.profile === true) {
+      if (!SERVICE.DefaultEnterpriseCommandReceiptService) throw this.error('Native command receipts are unavailable');
+      return SERVICE.DefaultEnterpriseCommandReceiptService.execute(request, 'CREATE', () => this.createFromModelOriginal(request));
+    }
+    return this.createFromModelOriginal(request);
+  },
+  /** Executes the existing descriptor-validated enterprise setup; receipt wrapping never changes its native guards. @param {Object} request Trusted original aggregate. @returns {Promise<Object>} Native projection. */
+  createFromModelOriginal: async function (request) {
     this.authorize(request);
     if (!this.isPlatformAdministrator(request.authData))
       throw this.error(
@@ -1413,6 +1421,14 @@ module.exports = {
 
   /** Creates or refreshes one email pre-assignment for enterprise employee registration. */
   preAssignAccess: async function (request) {
+    if (CONFIG.get('commandReceipts')?.enabled === true && CONFIG.get('commandReceipts').owners?.profile === true) {
+      if (!SERVICE.DefaultEnterpriseCommandReceiptService) throw this.error('Native command receipts are unavailable');
+      return SERVICE.DefaultEnterpriseCommandReceiptService.execute(request, 'INVITE', () => this.preAssignAccessOriginal(request));
+    }
+    return this.preAssignAccessOriginal(request);
+  },
+  /** Preserves the native invitation lifecycle and consent/role guards beneath optional receipt capture. @param {Object} request Original invitation. @returns {Promise<Object>} Native invitation projection. */
+  preAssignAccessOriginal: async function (request) {
     let body = request.body || {};
     let enterpriseCode = String(
       (request.params && request.params.enterpriseCode) ||

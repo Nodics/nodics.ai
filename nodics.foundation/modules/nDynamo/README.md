@@ -1,5 +1,20 @@
 # nDynamo
 
+Private [property read fences](llm/examples/property-read-fences.md) optionally
+hold one committed revision for an admitted owner operation. They do not enable
+destructive consumers or replace deployment/durability qualification.
+Fence admission requires `persistence.requireDurableJournal: true` as well as
+enabled persistence. This opt-in selector reaches every generated CAS and
+primary-majority readback; ordinary mode is not adequate for a retention fence.
+The private generated fence field accepts an object while held and explicit null
+after an acknowledged exact-token release. Missing or cleared fields do not prove
+the consumer operation completed.
+
+Opt-in [durable property activation](llm/examples/durable-property-activation.md)
+uses the existing runtime-value store for an atomic approved override and audit,
+with restart restoration and metadata-only refresh. Read migration, capacity,
+rollback and distributed-acceptance limits before enabling it.
+
 `nDynamo` is the governed runtime change capability. It lets an authorized
 operator propose selected configuration changes, inspect their impact, obtain
 approval, activate them, audit the result, and roll them back without creating
@@ -36,8 +51,11 @@ the requester, reason, correlation identifier, and approval state. Property and
 schema access-policy requests additionally store a canonical SHA-256 digest so
 the approved patch cannot be substituted before activation.
 
-Approval and activation enforce configured separation-of-duties rules. Successful
-and failed activation attempts are audited. Rollback restores the previous
+Approval and activation enforce the configured authorization policy. The current
+policy requires an actor, not distinct actors for each step. Revision-checked
+decisions and activation claims include lifecycle evidence in the same write.
+Separate activation-log persistence still has its own failure boundary.
+Rollback restores the previous
 snapshot through the owning service instead of bypassing its runtime contract.
 Property snapshots contain only changed values and absent paths, preventing
 unrelated tenant configuration from being overwritten.
@@ -47,9 +65,14 @@ and rollback lifecycle. Developers and AI tools must treat the generated
 `schemaAccessPolicy` model as the persisted policy record and the runtime
 governance services as the mutation contract for control-plane changes.
 
-Generic CRUD routers for activation requests and activation logs are disabled.
-Their model services remain internal dependencies of the dedicated,
-permissioned control-plane endpoints.
+Generic CRUD routers for activation requests are disabled; their model service
+is an internal dependency of the dedicated permissioned endpoints. Activation-log
+generic routes remain unchanged and must not be described as immutable auditing.
+Read the [revision-safe activation guide](llm/examples/revision-safe-activation.md)
+for request migration, concurrency and uncertain outcomes. The
+[durable property guide](llm/examples/durable-property-activation.md) explains
+reviewed key removal, compensating rollback, optional CronJob due dispatch and
+evidence-only recovery without replay. All remain opt-in deployment operations.
 
 Runtime schema configuration includes the standard `cache`, `event`, and
 `transaction` metadata used by the effective schema. nDynamo persists and
@@ -126,7 +149,7 @@ those contracts but must not become another mutation authority.
 
 - Adding a direct property or database mutation endpoint.
 - Storing secrets in runtime property configuration.
-- Letting one actor request, approve, and activate a protected change.
+- Assuming different actors are required without a configured separation policy.
 - Recomputing or replacing the approved patch after approval.
 - Creating a new lifecycle for one configuration type instead of extending the
   existing governance contract.

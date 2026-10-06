@@ -155,7 +155,10 @@ module.exports = {
       correlationId: request.correlationId,
     };
     if (payload.paymentMethod === "LOYALTY_REWARD")
-      return SERVICE.DefaultLoyaltyRewardPaymentMethodService.prepare(base);
+      return SERVICE.DefaultLoyaltyRewardPaymentMethodService.prepare({
+        ...base,
+        authorization: request.httpRequest?.headers?.authorization || request.authorization,
+      });
     if (payload.paymentMethod === "WALLET")
       return SERVICE.DefaultWalletPaymentMethodService.prepare(base);
     if (payload.paymentMethod === "CASH_ON_DELIVERY")
@@ -533,15 +536,15 @@ module.exports = {
         });
         return result && result.redemption ? result : undefined;
       },
-      confirmDigitalSale: (request, order, reservations) =>
-        SERVICE.DefaultDigitalCommerceCheckoutService &&
-        SERVICE.DefaultDigitalCommerceCheckoutService.confirmSale
-          ? SERVICE.DefaultDigitalCommerceCheckoutService.confirmSale(
-              request,
-              order,
-              reservations,
-            )
-          : reservations,
+      confirmDigitalSale: async (request, order, reservations) => {
+        if (!reservations?.length) return reservations;
+        const digital = SERVICE.DefaultDigitalCommerceCheckoutService;
+        if (!digital?.confirmSale) throw new Error("Digital sale owner is required");
+        const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({
+          ...request, cartCode: request.payload.cartCode,
+        });
+        return digital.confirmSale({ ...request, storeCode: cart.storeCode }, order, reservations);
+      },
       releaseFulfillment: (request, order) =>
         self.save(
           SERVICE.DefaultConsignmentService,

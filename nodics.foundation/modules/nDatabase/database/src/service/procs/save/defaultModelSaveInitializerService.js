@@ -31,9 +31,9 @@ const util = require('util');
  */
 module.exports = {
     /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     init: function (options) {
         return new Promise((resolve, reject) => {
@@ -42,9 +42,9 @@ module.exports = {
     },
 
     /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
@@ -62,8 +62,31 @@ module.exports = {
      */
     validateModel: function (request, response, process) {
         this.LOG.debug('Validating input for saving model');
-        if (!request.model || !UTILS.isObject(request.model) || Array.isArray(request.model)) {
-            process.error(request, response, new CLASSES.NodicsError('ERR_SAVE_00003', 'Model can not be null or empty for save operation'));
+        if (
+            !request.model ||
+            !UTILS.isObject(request.model) ||
+            Array.isArray(request.model)
+        ) {
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError(
+                    'ERR_SAVE_00003',
+                    'Model can not be null or empty for save operation',
+                ),
+            );
+        } else if (
+            request.options?.insertOnly !== undefined &&
+            typeof request.options.insertOnly !== 'boolean'
+        ) {
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError(
+                    'ERR_SAVE_00003',
+                    'insertOnly must be a boolean',
+                ),
+            );
         } else {
             process.nextSuccess(request, response);
         }
@@ -79,10 +102,27 @@ module.exports = {
     checkAccess: function (request, response, process) {
         this.LOG.debug('Checking model access');
         let rawSchema = request.schemaModel.rawSchema;
-        if (SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(request.authData, rawSchema.accessGroups) >= CONFIG.get('accessPoints').writeAccessPoint) {
-            SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, 'create').then(() => process.nextSuccess(request, response)).catch(error => process.error(request, response, error));
+        if (
+            SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(
+                request.authData,
+                rawSchema.accessGroups,
+            ) >= CONFIG.get('accessPoints').writeAccessPoint
+        ) {
+            SERVICE.DefaultRecordOwnershipPolicyService.enforce(
+                request,
+                'create',
+            )
+                .then(() => process.nextSuccess(request, response))
+                .catch((error) => process.error(request, response, error));
         } else {
-            process.error(request, response, new CLASSES.NodicsError('ERR_AUTH_00003', 'current user do not have access to this resource'));
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError(
+                    'ERR_AUTH_00003',
+                    'current user do not have access to this resource',
+                ),
+            );
         }
     },
     /**
@@ -95,16 +135,24 @@ module.exports = {
      */
     enforceCreateAccessPolicies: function (request, response, process) {
         this.LOG.debug('Applying create access policies');
-        if (!SERVICE.DefaultSchemaWriteAccessPolicyService ||
-            typeof SERVICE.DefaultSchemaWriteAccessPolicyService.enforceCreatePolicies !== 'function') {
+        if (
+            !SERVICE.DefaultSchemaWriteAccessPolicyService ||
+            typeof SERVICE.DefaultSchemaWriteAccessPolicyService
+                .enforceCreatePolicies !== 'function'
+        ) {
             process.nextSuccess(request, response);
             return;
         }
-        SERVICE.DefaultSchemaWriteAccessPolicyService.enforceCreatePolicies(request, response).then(success => {
-            process.nextSuccess(request, response);
-        }).catch(error => {
-            process.error(request, response, error);
-        });
+        SERVICE.DefaultSchemaWriteAccessPolicyService.enforceCreatePolicies(
+            request,
+            response,
+        )
+            .then((success) => {
+                process.nextSuccess(request, response);
+            })
+            .catch((error) => {
+                process.error(request, response, error);
+            });
     },
     /**
      * Resolves tenant-specific schema options defensively.
@@ -144,17 +192,24 @@ module.exports = {
     applyDefaultValues: function (request, response, process) {
         this.LOG.debug('Applying default values to the model');
         try {
-            if (SERVICE.DefaultModelConcurrencyService) SERVICE.DefaultModelConcurrencyService.initializeSave(request);
+            if (SERVICE.DefaultModelConcurrencyService)
+                SERVICE.DefaultModelConcurrencyService.initializeSave(request);
         } catch (error) {
             process.error(request, response, error);
             return;
         }
-        let defaultValues = Object.assign({},
+        let defaultValues = Object.assign(
+            {},
             this.getRawSchemaDefaultValues(request),
-            this.getTenantSchemaOptions(request).defaultValues || {});
+            this.getTenantSchemaOptions(request).defaultValues || {},
+        );
         if (defaultValues && !UTILS.isBlank(defaultValues)) {
             _.each(defaultValues, (value, property) => {
-                request.model = this.resolveDefaultProperty(property.split('.'), request.model, value);
+                request.model = this.resolveDefaultProperty(
+                    property.split('.'),
+                    request.model,
+                    value,
+                );
             });
         }
         process.nextSuccess(request, response);
@@ -171,13 +226,25 @@ module.exports = {
         if (properties && properties.length > 1) {
             let prop = properties.shift();
             if (!model[prop]) model[prop] = {};
-            model[prop] = this.resolveDefaultProperty(properties, model[prop], value);
-        } else if (properties && properties.length === 1 &&
-            (model[properties[0]] === undefined || model[properties[0]] === null)) {
+            model[prop] = this.resolveDefaultProperty(
+                properties,
+                model[prop],
+                value,
+            );
+        } else if (
+            properties &&
+            properties.length === 1 &&
+            (model[properties[0]] === undefined ||
+                model[properties[0]] === null)
+        ) {
             try {
                 let serviceName = value.substring(0, value.indexOf('.'));
-                let functionName = value.substring(value.indexOf('.') + 1, value.length);
-                model[properties[0]] = SERVICE[serviceName][functionName](model);
+                let functionName = value.substring(
+                    value.indexOf('.') + 1,
+                    value.length,
+                );
+                model[properties[0]] =
+                    SERVICE[serviceName][functionName](model);
             } catch (error) {
                 model[properties[0]] = value;
             }
@@ -215,7 +282,7 @@ module.exports = {
             if (UTILS.isObject(value)) {
                 let subModel = model[property];
                 if (subModel && UTILS.isArray(subModel)) {
-                    subModel.forEach(element => {
+                    subModel.forEach((element) => {
                         _self.excludeProperty(element, value);
                     });
                 } else if (subModel && UTILS.isObject(subModel)) {
@@ -239,13 +306,26 @@ module.exports = {
     applyPreInterceptors: function (request, response, process) {
         this.LOG.debug('Applying pre save model interceptors');
         let schemaName = request.schemaModel.schemaName;
-        let interceptors = SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(schemaName);
+        let interceptors =
+            SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
+                schemaName,
+            );
         if (interceptors && interceptors.preSave) {
-            SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.preSave), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_SAVE_00009'));
-            });
+            SERVICE.DefaultInterceptorService.executeInterceptors(
+                [].concat(interceptors.preSave),
+                request,
+                response,
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_SAVE_00009'),
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -261,13 +341,27 @@ module.exports = {
     applyPreValidators: function (request, response, process) {
         this.LOG.debug('Applying pre model validator');
         let schemaName = request.schemaModel.schemaName;
-        let validators = SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(request.tenant, schemaName);
+        let validators =
+            SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
+                request.tenant,
+                schemaName,
+            );
         if (validators && validators.preSave) {
-            SERVICE.DefaultValidatorService.executeValidators([].concat(validators.preSave), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_SAVE_00009'));
-            });
+            SERVICE.DefaultValidatorService.executeValidators(
+                [].concat(validators.preSave),
+                request,
+                response,
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_SAVE_00009'),
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -290,11 +384,27 @@ module.exports = {
                 let value = validators[property];
                 if (request.model[property]) {
                     try {
-                        let serviceName = value.substring(0, value.indexOf('.'));
-                        let functionName = value.substring(value.indexOf('.') + 1, value.length);
-                        SERVICE[serviceName][functionName](request.model[property]);
+                        let serviceName = value.substring(
+                            0,
+                            value.indexOf('.'),
+                        );
+                        let functionName = value.substring(
+                            value.indexOf('.') + 1,
+                            value.length,
+                        );
+                        SERVICE[serviceName][functionName](
+                            request.model[property],
+                        );
                     } catch (error) {
-                        process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_SAVE_00011'));
+                        process.error(
+                            request,
+                            response,
+                            new CLASSES.NodicsError(
+                                error,
+                                null,
+                                'ERR_SAVE_00011',
+                            ),
+                        );
                         return;
                     }
                 }
@@ -319,12 +429,18 @@ module.exports = {
                 response: response,
                 models: [request.model],
                 index: 0,
-                callback: SERVICE.DefaultModelService.saveNestedModels
-            }).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'));
-            });
+                callback: SERVICE.DefaultModelService.saveNestedModels,
+            })
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'),
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -340,18 +456,141 @@ module.exports = {
      */
     saveModel: function (request, response, process) {
         this.LOG.debug('Saving model ');
-        const concurrency = SERVICE.DefaultModelConcurrencyService;
-        const save = concurrency && concurrency.getField(request.schemaModel.rawSchema)
-            ? concurrency.execute(request, 'save') : request.schemaModel.saveItems(request);
-        save.then(success => {
+        const save = Promise.resolve().then(() => this.persistModel(request));
+        save.then((success) => {
             response.success = {
                 code: 'SUC_SAVE_00000',
-                result: success
+                result: success,
             };
             process.nextSuccess(request, response);
-        }).catch(error => {
+        }).catch((error) => {
             console.log('model error: ', error);
             process.error(request, response, error);
+        });
+    },
+    /**
+     * Selects ordinary persistence; versioned layers override this selector only.
+     * @param {Object} request Prepared generated save.
+     * @returns {string} Provider method name.
+     */
+    resolveSaveMethod: function (request) {
+        if (request.schemaModel.versioned) {
+            throw new CLASSES.NodicsError(
+                'ERR_SAVE_00003',
+                'Version-aware save capability is unavailable',
+            );
+        }
+        return 'saveItems';
+    },
+    /**
+     * Preserves insertion/journal guards before variant provider selection.
+     * @param {Object} request Authorized and validated generated save.
+     * @returns {Promise<Object>} Native persistence result.
+     */
+    persistModel: async function (request) {
+        if (
+            request.internalPersistence !== undefined &&
+            request.options?.insertOnly !== true
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_SAVE_00003',
+                'Durable journal save requires explicit insert-only persistence',
+            );
+        }
+        if (
+            request.options?.insertOnly !== undefined &&
+            typeof request.options.insertOnly !== 'boolean'
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_SAVE_00003',
+                'insertOnly must be a boolean',
+            );
+        }
+        if (request.options?.insertOnly === true)
+            return this.insertModel(request);
+        const concurrency = SERVICE.DefaultModelConcurrencyService;
+        if (
+            !request.schemaModel.versioned &&
+            concurrency &&
+            concurrency.getField(request.schemaModel.rawSchema)
+        ) {
+            return concurrency.execute(request, 'save');
+        }
+        const method = this.resolveSaveMethod(request);
+        if (typeof request.schemaModel[method] !== 'function') {
+            throw new CLASSES.NodicsError(
+                'ERR_SAVE_00003',
+                'Required save capability is unavailable',
+            );
+        }
+        return request.schemaModel[method](request);
+    },
+    /**
+     * Inserts once through the existing atomic adapter primitive after save authorization and validators.
+     * Query constraints must exactly describe the new model; operators and mismatches fail closed.
+     * Managed/versioned schemas retain their own lifecycle and cannot opt into this path.
+     * @param {Object} request Prepared generated save request.
+     * @returns {Promise<Object>} Acknowledged inserted model, never an upserted existing model.
+     */
+    insertModel: async function (request) {
+        const model = request.schemaModel;
+        const query = request.query || {};
+        const capability =
+            request.internalPersistence !== undefined
+                ? model.persistenceCapabilities?.()
+                : undefined;
+        if (
+            request.internalPersistence !== undefined &&
+            (request.internalPersistence !== 'DURABLE_JOURNAL' ||
+                request.transactionContext ||
+                model.rawSchema?.router?.enabled !== false ||
+                model.rawSchema?.cache?.enabled !== false ||
+                model.rawSchema?.event?.enabled !== false ||
+                model.rawSchema?.credentialRetirement !== undefined ||
+                capability?.contractVersion !== 1 ||
+                capability.durableJournal !== true ||
+                capability.primaryMajorityReadback !== true)
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_SAVE_00003',
+                'Qualified durable journal persistence required',
+            );
+        }
+        if (
+            !_.isPlainObject(request.model) ||
+            !_.isPlainObject(query) ||
+            model.versioned ||
+            SERVICE.DefaultModelConcurrencyService?.getField(model.rawSchema) ||
+            typeof model.compareAndSetItem !== 'function' ||
+            request.options?.replaceAllMatchesByQuery === true ||
+            request.options?.recursive === true ||
+            Object.entries(query).some(
+                ([key, value]) =>
+                    key.startsWith('$') ||
+                    key.includes('.') ||
+                    value === undefined ||
+                    !_.isEqual(value, request.model[key]) ||
+                    (typeof value === 'object' &&
+                        value !== null &&
+                        !(value instanceof Date) &&
+                        typeof value.toHexString !== 'function'),
+            )
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_SAVE_00003',
+                'Insert-only save requires supported model and exact constraints',
+            );
+        }
+        return model.compareAndSetItem({
+            operation: 'create',
+            model: request.model,
+            insertOnly: true,
+            ...(request.internalPersistence
+                ? { internalPersistence: request.internalPersistence }
+                : {}),
+            ...(request.transactionContext
+                ? { transactionContext: request.transactionContext }
+                : {}),
         });
     },
     /**
@@ -364,18 +603,28 @@ module.exports = {
      */
     populateSubModels: function (request, response, process) {
         this.LOG.debug('Populating sub models');
-        if (response.success.result && request.options && request.options.recursive) {
+        if (
+            response.success.result &&
+            request.options &&
+            request.options.recursive
+        ) {
             SERVICE.DefaultModelService.travelModels({
                 request: request,
                 response: response,
                 models: [response.success.result],
                 index: 0,
-                callback: SERVICE.DefaultModelService.populateNestedModels
-            }).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'));
-            });
+                callback: SERVICE.DefaultModelService.populateNestedModels,
+            })
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'),
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -390,9 +639,16 @@ module.exports = {
      */
     populateVirtualProperties: function (request, response, process) {
         let virtualProperties = request.schemaModel.rawSchema.virtualProperties;
-        if (response.success.result && virtualProperties && !UTILS.isBlank(virtualProperties)) {
+        if (
+            response.success.result &&
+            virtualProperties &&
+            !UTILS.isBlank(virtualProperties)
+        ) {
             this.LOG.debug('Populating virtual properties');
-            SERVICE.DefaultSchemaVirtualPropertiesHandlerService.populateVirtualProperties(virtualProperties, response.success.result);
+            SERVICE.DefaultSchemaVirtualPropertiesHandlerService.populateVirtualProperties(
+                virtualProperties,
+                response.success.result,
+            );
             process.nextSuccess(request, response);
         } else {
             process.nextSuccess(request, response);
@@ -408,14 +664,28 @@ module.exports = {
      */
     applyPostValidators: function (request, response, process) {
         let schemaName = request.schemaModel.schemaName;
-        let validators = SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(request.tenant, schemaName);
+        let validators =
+            SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
+                request.tenant,
+                schemaName,
+            );
         if (validators && validators.postSave) {
             this.LOG.debug('Applying post model validator');
-            SERVICE.DefaultValidatorService.executeValidators([].concat(validators.postSave), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_SAVE_00010'));
-            });
+            SERVICE.DefaultValidatorService.executeValidators(
+                [].concat(validators.postSave),
+                request,
+                response,
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_SAVE_00010'),
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -429,19 +699,35 @@ module.exports = {
      * @returns {undefined}
      */
     applyPostInterceptors: function (request, response, process) {
-        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+        if (
+            SERVICE.DefaultModelConcurrencyService &&
+            SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)
+        ) {
             process.nextSuccess(request, response);
             return;
         }
         let schemaName = request.schemaModel.schemaName;
-        let interceptors = SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(schemaName);
+        let interceptors =
+            SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
+                schemaName,
+            );
         if (interceptors && interceptors.postSave) {
             this.LOG.debug('Applying post save model interceptors');
-            SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.postSave), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_SAVE_00010'));
-            });
+            SERVICE.DefaultInterceptorService.executeInterceptors(
+                [].concat(interceptors.postSave),
+                request,
+                response,
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_SAVE_00010'),
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -455,7 +741,10 @@ module.exports = {
      * @returns {undefined}
      */
     invalidateRouterCache: function (request, response, process) {
-        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+        if (
+            SERVICE.DefaultModelConcurrencyService &&
+            SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)
+        ) {
             process.nextSuccess(request, response);
             return;
         }
@@ -469,12 +758,23 @@ module.exports = {
                     authData: request.authData,
                     moduleName: schemaModel.moduleName,
                     cacheType: 'router',
-                    resourceName: schemaModel.schemaName
-                }).then(success => {
-                    this.LOG.debug('Cache for router: ' + schemaModel.schemaName + ' has been flushed cuccessfully');
-                }).catch(error => {
-                    this.LOG.warn('Cache for router: ' + schemaModel.schemaName + ' has not been flushed cuccessfully', error.message);
-                });
+                    resourceName: schemaModel.schemaName,
+                })
+                    .then((success) => {
+                        this.LOG.debug(
+                            'Cache for router: ' +
+                                schemaModel.schemaName +
+                                ' has been flushed cuccessfully',
+                        );
+                    })
+                    .catch((error) => {
+                        this.LOG.warn(
+                            'Cache for router: ' +
+                                schemaModel.schemaName +
+                                ' has not been flushed cuccessfully',
+                            error.message,
+                        );
+                    });
             }
         } catch (error) {
             this.LOG.error('Facing issue while invalidating router cache ');
@@ -491,26 +791,44 @@ module.exports = {
      * @returns {undefined}
      */
     invalidateItemCache: function (request, response, process) {
-        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+        if (
+            SERVICE.DefaultModelConcurrencyService &&
+            SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)
+        ) {
             process.nextSuccess(request, response);
             return;
         }
         let invalidation = Promise.resolve();
         try {
             let schemaModel = request.schemaModel;
-            if (response.success && schemaModel.cache && schemaModel.cache.enabled) {
+            if (
+                response.success &&
+                schemaModel.cache &&
+                schemaModel.cache.enabled
+            ) {
                 this.LOG.debug('Invalidating item cache for modified model');
                 invalidation = SERVICE.DefaultCacheService.invalidateResource({
                     tenant: request.tenant,
                     authData: request.authData,
                     moduleName: schemaModel.moduleName,
                     cacheType: 'schema',
-                    resourceName: schemaModel.schemaName
-                }).then(success => {
-                    this.LOG.debug('Cache for schema: ' + schemaModel.schemaName + ' has been flushed cuccessfully');
-                }).catch(error => {
-                    this.LOG.warn('Cache for schema: ' + schemaModel.schemaName + ' has not been flushed cuccessfully', error.message);
-                });
+                    resourceName: schemaModel.schemaName,
+                })
+                    .then((success) => {
+                        this.LOG.debug(
+                            'Cache for schema: ' +
+                                schemaModel.schemaName +
+                                ' has been flushed cuccessfully',
+                        );
+                    })
+                    .catch((error) => {
+                        this.LOG.warn(
+                            'Cache for schema: ' +
+                                schemaModel.schemaName +
+                                ' has not been flushed cuccessfully',
+                            error.message,
+                        );
+                    });
             }
         } catch (error) {
             this.LOG.error('Facing issue while invalidating item cache ');
@@ -527,13 +845,20 @@ module.exports = {
      * @returns {undefined}
      */
     triggerModelChangeEvent: function (request, response, process) {
-        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+        if (
+            SERVICE.DefaultModelConcurrencyService &&
+            SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)
+        ) {
             process.nextSuccess(request, response);
             return;
         }
         try {
             let schemaModel = request.schemaModel;
-            if (response.success.result && schemaModel.rawSchema.event && schemaModel.rawSchema.event.enabled) {
+            if (
+                response.success.result &&
+                schemaModel.rawSchema.event &&
+                schemaModel.rawSchema.event.enabled
+            ) {
                 this.LOG.debug('Triggering event for modified model');
                 let event = {
                     tenant: request.tenant,
@@ -541,27 +866,42 @@ module.exports = {
                     sourceName: schemaModel.moduleName,
                     sourceId: CONFIG.get('nodeId'),
                     target: schemaModel.moduleName,
-                    state: "NEW",
-                    type: schemaModel.rawSchema.event.type || "ASYNC",
-                    targetType: schemaModel.rawSchema.event.targetType || ENUMS.TargetType.MODULE_NODES.key,
+                    state: 'NEW',
+                    type: schemaModel.rawSchema.event.type || 'ASYNC',
+                    targetType:
+                        schemaModel.rawSchema.event.targetType ||
+                        ENUMS.TargetType.MODULE_NODES.key,
                     active: true,
                     data: {
                         schemaName: schemaModel.schemaName,
                         modelName: schemaModel.modelName,
-                        propertyName: (schemaModel.rawSchema.definition.code) ? 'code' : '_id',
-                        models: [response.success.result.code || response.success.result._id]
-                    }
+                        propertyName: schemaModel.rawSchema.definition.code
+                            ? 'code'
+                            : '_id',
+                        models: [
+                            response.success.result.code ||
+                                response.success.result._id,
+                        ],
+                    },
                 };
-                this.LOG.debug('Pushing event for item created : ' + schemaModel.schemaName);
-                SERVICE.DefaultEventService.publish(event).then(success => {
-                    this.LOG.debug('Event successfully posted');
-                }).catch(error => {
-                    this.LOG.error('While posting model change event : ', error);
-                });
+                this.LOG.debug(
+                    'Pushing event for item created : ' +
+                        schemaModel.schemaName,
+                );
+                SERVICE.DefaultEventService.publish(event)
+                    .then((success) => {
+                        this.LOG.debug('Event successfully posted');
+                    })
+                    .catch((error) => {
+                        this.LOG.error(
+                            'While posting model change event : ',
+                            error,
+                        );
+                    });
             }
         } catch (error) {
             this.LOG.error('Facing issue while pushing save event : ', error);
         }
         process.nextSuccess(request, response);
-    }
+    },
 };

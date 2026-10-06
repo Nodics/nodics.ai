@@ -10,6 +10,14 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Save/update response adapters delegate to inherited `persistModel` and
+  `persistUpdates`. Customize `resolveSaveMethod`/`resolveUpdateMethod` to select
+  provider methods, never duplicate base private-write admission. Read selection
+  invokes inherited `assertReadSafety` before version-mode selection. Private
+  journals remain unversioned, insert-only on creation and exact-CAS on update
+  even when vService is active. Run database insert-only/durable tests and the
+  startup-composed mutation tests; unsupported private capabilities fail closed.
+
 - Nonversioned managed save/update schemas must delegate to the effective
   `DefaultModelConcurrencyService`, including internal generated-service calls.
   Do not bypass it through `saveItems`/`updateItems` or calculate revisions in

@@ -68,10 +68,18 @@ module.exports = {
                 );
             })
             .then((result) => ({ code: 'SUC_MED_00032', data: result }))
-            .catch(() => {
+            .catch((error) => {
+                const stage = operation === 'requestPublication' && error &&
+                    ['INSPECT', 'RETAIN', 'CREATE', 'VALIDATE', 'REQUEST_APPROVAL'].includes(error.mediaPublicationStage)
+                    ? error.mediaPublicationStage : undefined;
+                if (stage && this.LOG && typeof this.LOG.warn === 'function') {
+                    const code = /^ERR_[A-Z0-9]+_[0-9]{5}$/.test(error.ownerErrorCode) ? error.ownerErrorCode : 'UNCLASSIFIED';
+                    this.LOG.warn('Media publication request stopped at ' + stage + ' (' + code + ')');
+                }
                 throw new CLASSES.NodicsError(
                     'ERR_MED_00023',
-                    'Media library operation is unavailable or invalid'
+                    stage ? 'Media publication request stopped at ' + stage + '. Reconcile the existing request before retrying.'
+                        : 'Media library operation is unavailable or invalid'
                 );
             });
         if (!callback) return promise;

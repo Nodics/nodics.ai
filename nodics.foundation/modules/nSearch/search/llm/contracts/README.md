@@ -23,6 +23,21 @@ definition key and retain the existing physical-key contributor as a compatibili
 fallback. Engine creation/existence bookkeeping uses the physical lowercase name.
 Tenant/module validation and provider activation remain unchanged.
 
+### Historical Retirement Bindings
+
+An explicit `retirement` field reserves a logical model for an existing physical
+target. Startup registers it but must not create the physical index, apply schema
+mappings or redirect an active schema pointer to that historical target. This
+rule also suppresses provisioning for malformed/null declarations; such metadata
+does not qualify a retirement command. The owning retirement service remains
+responsible for dedicated ownership, scope, immutable UUID and command admission.
+After acknowledged erasure, keep the binding to inspect original durable evidence
+without recreating the removed index on restart. Ordinary definitions without
+the field retain their existing provisioning behavior. Later layers may change
+the registered binding only through the owner lifecycle; changed identity cannot
+reuse the original review. Verify both paths with the startup retirement and
+logical/physical identity tests.
+
 ## Search Readiness And Read-Source Policy
 
 `nSearch/search` owns the canonical readiness contract for search engine health,

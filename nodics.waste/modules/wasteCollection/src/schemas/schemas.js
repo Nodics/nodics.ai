@@ -99,3 +99,5 @@ module.exports = { wasteCollection: {
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } })
 } };
+module.exports.wasteCollection.wasteCollectionPoint.commandReceipt = { journalSchema: 'wasteCollectionCommandReceipt', insertOnly: true };
+module.exports.wasteCollection.wasteCollectionCommandReceipt = { super: 'commandReceipt', model: true, service: { enabled: true } };

@@ -31,20 +31,36 @@ module.exports = {
             lifecycle.getVersionProvider('media') !== SERVICE.DefaultMediaPublicationVersionProviderService) {
             throw this.manifests().invalid('Media publication providers are not installed');
         }
-        let publication = await lifecycle.getRepository().get(input.publicationCode, request);
-        if (publication) {
-            const manifest = await this.getVersion(publication, request);
-            if (publication.rootCode !== input.mediaCode || manifest.artifacts.asset.versionId !== input.versionId) {
-                throw this.manifests().invalid('Media publication retry identity conflict');
+        let stage = 'INSPECT';
+        try {
+            let publication = await lifecycle.getRepository().get(input.publicationCode, request);
+            if (publication) {
+                const manifest = await this.getVersion(publication, request);
+                if (publication.rootCode !== input.mediaCode || manifest.artifacts.asset.versionId !== input.versionId) {
+                    throw this.manifests().invalid('Media publication retry identity conflict');
+                }
+            } else {
+                stage = 'RETAIN';
+                const manifest = await this.manifests().capture({ code: input.mediaCode, versionId: input.versionId }, request);
+                stage = 'CREATE';
+                publication = await lifecycle.create({ ...request, publication: { code: input.publicationCode, domain: 'media',
+                    rootType: 'media', rootCode: input.mediaCode, sourceVersion: manifest.code } });
             }
-        } else {
-            const manifest = await this.manifests().capture({ code: input.mediaCode, versionId: input.versionId }, request);
-            publication = await lifecycle.create({ ...request, publication: { code: input.publicationCode, domain: 'media',
-                rootType: 'media', rootCode: input.mediaCode, sourceVersion: manifest.code } });
+            if (publication.state === 'STAGED') {
+                stage = 'VALIDATE';
+                publication = await lifecycle.validate({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });
+            }
+            if (publication.state === 'VALIDATED' || publication.state === 'PENDING_APPROVAL') {
+                stage = 'REQUEST_APPROVAL';
+                publication = await lifecycle.requestApproval({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });
+            }
+            return publication;
+        } catch (cause) {
+            const error = new CLASSES.NodicsError('ERR_MED_00023', 'Media publication request did not complete');
+            error.mediaPublicationStage = stage;
+            error.ownerErrorCode = cause && /^ERR_[A-Z0-9]+_[0-9]{5}$/.test(cause.code) ? cause.code : 'UNCLASSIFIED';
+            throw error;
         }
-        if (publication.state === 'STAGED') publication = await lifecycle.validate({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });
-        if (publication.state === 'VALIDATED') publication = await lifecycle.requestApproval({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });
-        return publication;
     },
     /** Resolves the owning manifest service. */
     manifests: function () { return SERVICE.DefaultMediaRetainedPublicationService; },

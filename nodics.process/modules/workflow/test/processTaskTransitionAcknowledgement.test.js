@@ -20,6 +20,60 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const source = require('../src/service/operation/defaultProcessRuntimeLifecycleService');
 
+test('assignment requires exact unchanged task CAS and verified readback before audit', async () => {
+    global.CLASSES = { NodicsError: class extends Error {} };
+    global.SERVICE = {
+        DefaultModelsUpdateInitializerService: {
+            getAffectedCount: (r) => r.result.matchedCount,
+        },
+    };
+    const task = {
+        code: 'task',
+        status: 'OPEN',
+        instanceCode: 'instance',
+        nodeCode: 'review',
+    };
+    let matched = 0,
+        drift = false,
+        audited = 0;
+    const owner = {
+        ...source,
+        requireTask: async () => task,
+        taskService: () => ({
+            update: async (request) => {
+                assert.deepEqual(request.query, {
+                    ...task,
+                    assignee: { $exists: false },
+                });
+                return {
+                    code: 'SUC_TEST',
+                    result: { acknowledged: true, matchedCount: matched },
+                };
+            },
+        }),
+        readTaskTransition: async () => ({
+            ...task,
+            assignee: drift ? 'other' : 'reviewer',
+        }),
+        audit: async () => {
+            audited++;
+        },
+    };
+    const request = {
+        tenant: 'tenant',
+        taskCode: 'task',
+        body: { assignee: 'reviewer' },
+    };
+    await assert.rejects(owner.assignTask(request));
+    matched = 1;
+    drift = true;
+    await assert.rejects(owner.assignTask(request));
+    assert.equal(audited, 0);
+    drift = false;
+    assert.equal((await owner.assignTask(request)).data.assignee, 'reviewer');
+    assert.equal(audited, 1);
+});
+
 test('failed envelopes cannot be converted into task success by an affected count', () => {
     global.CLASSES = { NodicsError: class extends Error {} };
     global.SERVICE = {
@@ -196,7 +250,10 @@ test('transition readback bypasses cache and rejects error envelopes and duplica
             get: async (request) => {
                 assert.equal(request.options.skipItemCache, true);
                 assert.equal(request.options.recursive, false);
-                assert.equal(request.searchOptions.limit, 2);
+                assert.deepEqual(request.searchOptions, {
+                    pageSize: 2,
+                    pageNumber: 1,
+                });
                 return response;
             },
         }),

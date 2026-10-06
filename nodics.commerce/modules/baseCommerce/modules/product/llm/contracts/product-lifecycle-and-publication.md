@@ -102,6 +102,10 @@ deduplicating Product codes and SKUs; there is no per-row policy lookup. They do
 not reuse potentially stale indexed summaries or mutate retained catalogue
 projections. Missing configured owner/summary/enrichment providers and policy
 reader failures reject delivery, never return indexed stock or price instead.
+Consumer Pricing currency comes from one current, active, tenant/enterprise-matched
+Store read per result set. Neither a public currency parameter nor the global
+USD publication default can override that selling currency. Missing, inactive,
+foreign or malformed Store currency fails closed; retained prices are not a fallback.
 Consumer enrichment batch-loads the already-selected projection identities from
 the retained generated projection service (search documents may omit enterprise).
 Code, tenant, store, Product, locale, publication version and source hash must

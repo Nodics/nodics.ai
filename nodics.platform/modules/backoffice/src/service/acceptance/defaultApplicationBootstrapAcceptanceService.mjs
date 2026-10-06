@@ -812,7 +812,7 @@ export async function runApplicationBootstrapAcceptance({
     const completed = await requestJson(processUrl, `/nodics/process/v0/tasks/${encodeURIComponent(task.code)}/complete`, {
       headers,
       method: "POST",
-      body: JSON.stringify({ decision: { approved: true, action: "APPROVE", reason: "Local end-to-end baseline acceptance" } }),
+      body: JSON.stringify({ decision: { approved: true, reason: "Local end-to-end baseline acceptance" } }),
     });
     if (completed.instance?.status !== "COMPLETED") {
       throw new Error(`Axis publication workflow did not complete: ${JSON.stringify(completed)}`);
@@ -1000,7 +1000,7 @@ export async function runApplicationBootstrapAcceptance({
         }
         await requestJson(processUrl, `/nodics/process/v0/tasks/${encodeURIComponent(task.code)}/complete`, {
           headers, method: "POST",
-          body: JSON.stringify({ decision: { approved: true, action: "APPROVE", reason: "Optional Axis documentation publication qualification" } }),
+          body: JSON.stringify({ decision: { approved: true, reason: "Optional Axis documentation publication qualification" } }),
         });
         status = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.profileCode}/initialization`, { headers });
       }

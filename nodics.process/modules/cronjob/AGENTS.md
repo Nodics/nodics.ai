@@ -22,3 +22,23 @@ This capability declares an inert model-service inventory for [governed Local re
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
 
 New job target execution requires current operational admission. Forward the authenticated runtime principal to Process; preserve already-running job completion/recovery on business deactivation.
+
+Runtime state writes belong to `DefaultCronJobRuntimeService.persistRuntimeState`.
+Only owner-created wrapper identities may use canonical system identity for the
+fixed bookkeeping fields. Never pass this identity to Process/domain actions,
+accept a caller-created wrapper, or allow definition/activation edits through it.
+Keep tenant/code/node predicates and require an exact update acknowledgement.
+
+Process handoff preserves configured business context but Cron owns `source`,
+`cronJobCode`, `cronJobTenant`, `scheduledExpression` and `firedAt`. Apply those
+trusted values last; configured context must not forge scheduler provenance or
+change the verified principal. These metadata values are never authorization.
+
+Inactive schedule provisioning is owned by `DefaultCronJobScheduleDraftService`.
+Read `llm/contracts/inactive-schedule-drafts.md` before changing its APIs or Axis
+renderer. Deployment targets, scoped review, insert-only persistence, exact
+acknowledgements and non-replaying inspection are mandatory. A saved draft is
+not a qualified Process trigger, source assignment or activated schedule.
+Optional source bindings are inert, exact policy-fingerprint associations. Validate
+them against approved Process context; never treat them as a source grant or an
+activation receipt. Source-aware Axis surfaces must exclude unbound/stale choices.

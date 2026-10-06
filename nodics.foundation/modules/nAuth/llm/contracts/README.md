@@ -4,6 +4,16 @@ This folder contains module-specific AI/developer contracts for `nodics.foundati
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
+## Permission Catalogue Versus Grants
+
+The shared `identityGovernance.permissionCatalog` lets Profile validate permission
+names even when their native runtime is separate. Location create/update/read/search
+are catalogue members; create/update are not default migration-group grants.
+An administrator must separately assign the approved permission, and nRouter
+still checks identity, exposure, route admission and the native operation.
+Unknown permission codes must continue to fail Profile group validation. Location's
+`locationPermissionCatalog.test.js` guards assignability and non-granting behavior.
+
 ## Strict auth cache activation
 
 Capability-supplied `securityBindings` are one to eight distinct, bounded

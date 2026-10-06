@@ -10,6 +10,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+Approval is permission-based, including for the original requesting user.
+Native requester binding proves provenance, not separation of users. Reuse
+Process authority and preserve scoped identity and immutable decision evidence;
+do not add a username-based admin bypass or reinstate self-approval exclusion.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

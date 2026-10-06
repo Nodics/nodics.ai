@@ -17,5 +17,10 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 module.exports = {
-
+  copilotImportIntent: { definition: { INSPECT: "copilot.import.inspect" } },
+  copilotRulesIntent: { definition: { INSPECT: "copilot.rules.inspect" } },
+  copilotProcessIntent: { definition: { INSPECT: "copilot.process.inspect" } },
+  copilotOrderNotificationIntent: {
+    definition: { INSPECT: "copilot.commerce.notification.inspect" },
+  },
 };

@@ -1,5 +1,13 @@
 # profile
 
+Bootstrap Init `0.0.3` retains older releases and gives the existing runtime
+administrator current Copilot knowledge, settings, provider-check and usage
+grants. See [bootstrap Copilot setup](llm/contracts/bootstrap-copilot-administration.md).
+
+Opt-in original enterprise-create and invitation receipts preserve Profile's
+native authority. See [the original-result guide](../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md)
+for configuration, private persistence, inspection and uncertain-outcome limits.
+
 Profile owns enterprise, employee and customer identity, registration, access assignments and session-context decisions.
 
 Parent relationships never grant access automatically. Preserve exact-target authority, canonical credentials, private application evidence, proof-bound onboarding and independent platform authority. Documented qualification gates remain unchanged.

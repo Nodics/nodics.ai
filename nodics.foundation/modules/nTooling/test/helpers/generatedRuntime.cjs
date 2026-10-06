@@ -82,16 +82,26 @@ async function generate(root, selection) {
     await SERVICE.DefaultInfraService.buildServices();
     const generatedRoot = NODICS.getGeneratedArtifactPath('service');
     assert.equal(generatedRoot, path.join(root, 'envs/quality/worker/src/service/gen'));
+    const scopedJournalSchemas = new Set(selection.scopedJournalSchemas || []);
     for (const [moduleName, schemas] of Object.entries(selection.schemas)) {
         for (const [schemaName, exposed] of Object.entries(schemas)) {
             const effective = NODICS.getModule(moduleName).rawSchema[schemaName];
             assert(effective, moduleName + '.' + schemaName + ' must materialize');
             assert.equal(effective.model, true, schemaName + ' must retain its model definition');
             assert.equal(effective.service.enabled, true);
-            assert.equal(effective.router.enabled, exposed);
+            assert.equal(
+                effective.router.enabled,
+                exposed,
+                moduleName + '.' + schemaName + ' router exposure must match the owner contract',
+            );
             if (exposed) assert.equal(effective.router.groups.schemaOperations, true);
-            assert.equal(effective.definition.tenant, undefined);
-            assert.equal(effective.definition.enterpriseCode, undefined);
+            if (scopedJournalSchemas.has(moduleName + '.' + schemaName)) {
+                assert(effective.definition.tenantCode, schemaName + ' must retain its private tenant partition');
+                assert(effective.definition.enterpriseCode, schemaName + ' must retain its private enterprise partition');
+            } else {
+                assert.equal(effective.definition.tenant, undefined);
+                assert.equal(effective.definition.enterpriseCode, undefined);
+            }
             const name = 'Default' + schemaName[0].toUpperCase() + schemaName.slice(1) + 'Service';
             const generated = require(path.join(generatedRoot, name + '.js'));
             assert.equal(typeof generated.get, 'function', name + '.get');

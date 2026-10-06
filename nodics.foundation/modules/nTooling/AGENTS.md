@@ -9,6 +9,9 @@ owner capabilities, ambiguous scope, live writers and unconfirmed effects;
 retain partial counts and attempt every close. No CLI-provided adapters or
 startup cache erasure. Attestation is not independent exclusivity proof. See
 [maintenance preflight](llm/contracts/tooling-governance-contracts.md#exact-local-reset-maintenance-preflight).
+Use `--project-code` for maintenance identity and `--home` for the checkout;
+the public `--project` alias selects a filesystem home. Test the public argument
+normalizer together with the owning command parser to preserve this boundary.
 Registered tenant selection uses that same owner with exact protected durable
 pins and current explicit launch selection. Do not infer names, add wildcards,
 include shared default test databases or treat a serialized observation as proof.
@@ -51,6 +54,12 @@ Project extensions may strengthen checks while preserving the canonical partner
 write boundary and the separate Nodics contribution and release process.
 
 ## Module Work Rules
+
+- Native Local credential provisioning includes a stable runtime-configuration
+  encryption key in the existing private generated credential file. Add it only
+  when absent; never rotate existing encryption material during startup. External
+  environment inputs retain precedence. Provider tokens remain governed runtime
+  configuration, not generated defaults or committed application source.
 
 - Content-pack packages may retain dot-separated identifier segments so moving
   governed reference data into an accelerator does not rename import identities.
@@ -179,6 +188,10 @@ Customer property-placement checks belong to the existing framework design
 principle audit, not a project-specific validator. Parse authored configuration
 without executing it; recognize quoted and unquoted keys and arbitrary server
 names. Static tooling contributions are inert discovery metadata. Use
+the same audit to reject authored Copilot source, group and external-log selections,
+including runtime-role profiles and binding wrappers. Empty defaults and generic
+templates do not select content; real selections belong to nDynamo governance.
+Use
 `projectRuntimeAcceptance` to overlay acceptance policy from the explicitly
 selected runtime's nConfig graph, including customer modules. Never interpret
 discovery as runtime activation. Child probes inherit deployment environment

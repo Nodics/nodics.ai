@@ -128,16 +128,10 @@ module.exports = {
             jobDefinition.log = [];
         }
         jobDefinition.log.push(request.error);
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                status: ENUMS.CronJobStatus.ERROR.key,
-                endTime: jobDefinition.endTime,
-                log: jobDefinition.log
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            status: ENUMS.CronJobStatus.ERROR.key,
+            endTime: jobDefinition.endTime,
+            log: jobDefinition.log
         }).then(success => {
             process.nextSuccess(request, response);
         }).catch(error => {

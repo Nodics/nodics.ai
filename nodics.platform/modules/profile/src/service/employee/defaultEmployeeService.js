@@ -18,6 +18,97 @@
  */
 module.exports = {
   /**
+   * Ensures bounded reference employees without rewriting existing identities or credentials.
+   * Existing accounts must match both immutable source keys and remain active native employees.
+   * @param {Object} request Authorized nImport batch; generated reads/writes retain its authority.
+   * @returns {Promise<Object>} Code-only acknowledgements, never credentials or persisted principals.
+   */
+  ensureReferenceAll: async function (request) {
+    const fail = () => {
+      throw new CLASSES.NodicsError("ERR_PROFILE_CREDENTIAL_OWNERSHIP");
+    };
+    const models = request?.models;
+    if (!Array.isArray(models) || models.length > 100 || !request.tenant)
+      fail();
+    const codes = new Set();
+    const logins = new Set();
+    for (const model of models) {
+      if (
+        !model ||
+        Object.getPrototypeOf(model) !== Object.prototype ||
+        typeof model.code !== "string" ||
+        !model.code ||
+        model.code.length > 192 ||
+        typeof model.loginId !== "string" ||
+        !model.loginId ||
+        model.loginId.length > 320 ||
+        model._id ||
+        model.authenticationIdentity ||
+        model.principalType === "service" ||
+        codes.has(model.code) ||
+        logins.has(model.loginId)
+      )
+        fail();
+      codes.add(model.code);
+      logins.add(model.loginId);
+    }
+    const result = [];
+    for (const model of models) {
+      const existing = await this.get({
+        tenant: request.tenant,
+        authData: request.authData,
+        query: { $or: [{ code: model.code }, { loginId: model.loginId }] },
+        options: { recursive: false, skipItemCache: true },
+        searchOptions: { pageSize: 2, pageNumber: 1 },
+      });
+      if (
+        !/^SUC_/.test(existing?.code || "") ||
+        existing.success === false ||
+        existing.error ||
+        (existing.errors &&
+          (!Array.isArray(existing.errors) || existing.errors.length)) ||
+        !Array.isArray(existing.result) ||
+        existing.count !== existing.result.length ||
+        existing.result.length > 1
+      )
+        fail();
+      if (existing.result.length) {
+        const original = existing.result[0];
+        if (
+          !original._id ||
+          original.code !== model.code ||
+          original.loginId !== model.loginId ||
+          original.active !== true ||
+          original.authenticationIdentity ||
+          original.principalType === "service"
+        )
+          fail();
+        // A source upgrade is not password reset, account reactivation or permission reconciliation.
+      } else {
+        const saved = await this.save({
+          tenant: request.tenant,
+          authData: request.authData,
+          model: { ...model },
+          options: { insertOnly: true },
+        });
+        if (
+          !/^SUC_/.test(saved?.code || "") ||
+          saved.success === false ||
+          saved.error ||
+          (saved.errors &&
+            (!Array.isArray(saved.errors) || saved.errors.length)) ||
+          !saved.result ||
+          Array.isArray(saved.result) ||
+          saved.result.code !== model.code ||
+          !saved.result._id
+        )
+          fail();
+      }
+      result.push({ code: model.code });
+    }
+    return { result };
+  },
+  /**
 
      * Retrieves by login id information.
 

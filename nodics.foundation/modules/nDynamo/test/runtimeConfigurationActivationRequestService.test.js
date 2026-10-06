@@ -50,19 +50,27 @@ global.SERVICE = {
         save: function (request) {
             storedRequests[request.model.code] = request.model;
             return Promise.resolve({
-                result: [request.model]
+                code: 'SUC_TEST', result: request.model
             });
+        },
+        update: async function (request) {
+            const row = storedRequests[request.query.code];
+            const matched = row && Object.entries(request.query).every(([key, value]) => row[key] === value);
+            if (matched) storedRequests[row.code] = { ...row, ...structuredClone(request.model) };
+            return { code: 'SUC_TEST', result: { matchedCount: matched ? 1 : 0 } };
         },
         get: function (request) {
             queryRequests.push(request);
             if (request.query.approvalStatus) {
                 return Promise.resolve({
+                    code: 'SUC_TEST',
                     result: Object.keys(storedRequests).map(key => storedRequests[key]).filter(model => {
                         return model.approvalStatus === request.query.approvalStatus;
                     })
                 });
             }
             return Promise.resolve({
+                code: 'SUC_TEST',
                 result: storedRequests[request.query.code] ? [storedRequests[request.query.code]] : []
             });
         }
@@ -158,6 +166,7 @@ service.createActivationRequest({
     assert.strictEqual(queryRequests[queryRequests.length - 1].searchOptions.limit, 10);
 
     storedRequests.schemaRequest = {
+        revision: 0, lifecycle: [],
         code: 'schemaRequest',
         configurationType: 'schemaConfiguration',
         configurationCode: 'tenant',

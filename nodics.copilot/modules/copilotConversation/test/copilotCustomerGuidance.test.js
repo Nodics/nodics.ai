@@ -19,7 +19,7 @@ const guidance = require("../src/service/defaultCopilotCustomerGuidanceService")
   policy = require("../../copilotPolicy/src/service/defaultCopilotPolicyService");
 let retrievals, calls, evidence, seen;
 const settings = {
-  project: "circa",
+  project: "customer-project",
   adapter: "mock",
   profile: "customerGuidance",
 };
@@ -148,9 +148,28 @@ test("provider failure persists an unavailable turn while preserving domain", as
     throw new Error("timeout");
   };
   const result = await guidance.reply(request(), settings);
-  assert.match(result.message, /progress is saved/);
+  assert.match(result.message, /No action was performed/);
   assert.deepEqual(result.actions, []);
   assert.equal([...conversation.state.turns.values()][0].state, "COMPLETED");
+});
+
+test("shared guidance supports another domain without accepting request-owned context", async () => {
+  await guidance.reply(
+    request({ facts: { privateCustomerField: "PRIVATE" }, stage: "INJECTED" }),
+    {
+      ...settings,
+      context: {
+        stage: "AWAITING_DELIVERY",
+        facts: { deliveryMethod: "Collection", nested: { secret: "PRIVATE" } },
+      },
+    },
+  );
+  assert.match(seen, /AWAITING_DELIVERY/);
+  assert.match(seen, /deliveryMethod/);
+  assert.doesNotMatch(
+    seen,
+    /PRIVATE|INJECTED|collection-centre|BEFORE_DRAFT|METADATA_SUGGESTED/,
+  );
 });
 test("replay returns canonical completed response without calling model again", async () => {
   const result = await guidance.reply(

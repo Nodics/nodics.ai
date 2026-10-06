@@ -33,9 +33,14 @@ module.exports = {
      * defined it that with Promise way
      * @param {*} options 
      */
-    postInit: function (options) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
+    postInit: async function (options) {
+        const persistence = SERVICE.DefaultRuntimePropertyPersistenceService;
+        if (persistence) await persistence.restore();
+        else if ((CONFIG.get('runtimePropertyGovernance') || {}).persistence?.enabled === true) {
+            throw new CLASSES.NodicsError('ERR_SYS_00001', 'Runtime property persistence owner is required');
+        }
+        const schemas = SERVICE.DefaultRuntimeConfigurationSchemaService;
+        if (schemas) await schemas.restorePersistedConfiguration();
+        return true;
     },
 };

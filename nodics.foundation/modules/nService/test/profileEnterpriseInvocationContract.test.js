@@ -99,7 +99,37 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     });
     assert.deepStrictEqual(calls[1].requestBody, {});
     assert.strictEqual(calls[1].authToken, 'retained-runtime-proof');
+    assert.deepStrictEqual(calls[1].header, { 'x-enterprise-code': 'enterprise-a' });
     assert.strictEqual(calls[1].maxAttempts, 1);
+
+    const issuer = SERVICE.DefaultInternalAuthenticationProviderService;
+    const verifier = SERVICE.DefaultAuthorizationProviderService;
+    const logger = SERVICE.DefaultLoggerService;
+    const transport = SERVICE.DefaultModuleService;
+    const original = [issuer.fetchInternalAuthToken, verifier.authorizeToken,
+        logger.runSensitiveOperation, transport.invokeModule];
+    const stages = ['ISSUE_RUNTIME_CREDENTIAL', 'VERIFY_RUNTIME_CREDENTIAL',
+        'ENTER_PRIVATE_CONTEXT', 'INVOKE_ENTERPRISE_INVENTORY', 'VALIDATE_ENTERPRISE_INVENTORY'];
+    const diagnostics = [];
+    handler.LOG.error = message => diagnostics.push(message);
+    for (const stage of stages) {
+        [issuer.fetchInternalAuthToken, verifier.authorizeToken,
+            logger.runSensitiveOperation, transport.invokeModule] = original;
+        const fail = async () => { throw new Error('private bearer and tenant details'); };
+        if (stage === stages[0]) issuer.fetchInternalAuthToken = fail;
+        if (stage === stages[1]) verifier.authorizeToken = fail;
+        if (stage === stages[2]) logger.runSensitiveOperation = fail;
+        if (stage === stages[3]) transport.invokeModule = fail;
+        if (stage === stages[4]) transport.invokeModule = async () => ({ code: 'SUC_FIND_00000', result: [] });
+        await assert.rejects(handler.fetchEnterprise(), error =>
+            error.code === 'ERR_TNT_PROVISIONING_HELD' && !error.message.includes('private bearer'));
+        assert.strictEqual(diagnostics.pop(), 'Tenant startup held at ' + stage);
+    }
+    handler.LOG.error = () => { throw new Error('logger unavailable'); };
+    await assert.rejects(handler.fetchEnterprise(), error => error.code === 'ERR_TNT_PROVISIONING_HELD');
+    [issuer.fetchInternalAuthToken, verifier.authorizeToken,
+        logger.runSensitiveOperation, transport.invokeModule] = original;
+    handler.LOG.error = function () {};
 
     let activeTenants = [];
     let bootstrapRequest;

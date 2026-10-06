@@ -13,6 +13,24 @@
 
 /** @module eWaste/service/defaultEWasteConversationService @description Grounds customer conversation in a Waste-owned draft and allowlisted taxonomy; Copilot supplies advisory language, never executable actions. @layer service @owner eWaste @override Later layers may refine prompts and guidance while preserving owner, revision and confirmation boundaries. */
 module.exports = {
+  /** Minimizes owner-read Waste facts for shared advisory guidance. Never accepts customer context or changes domain state. @param {Object|null} draft Authorized draft. @returns {Object} Trusted domain context. */
+  guidanceContext: function (draft) {
+    const facts = {};
+    for (const key of [
+      "name",
+      "description",
+      "itemTypeCode",
+      "categoryCode",
+      "quantity",
+      "conditionGrade",
+      "brand",
+      "model",
+      "sizeClass",
+    ])
+      if (draft?.submittedFacts?.[key] !== undefined)
+        facts[key] = draft.submittedFacts[key];
+    return { facts, stage: draft?.submissionStatus || "BEFORE_DRAFT" };
+  },
   /** Orchestrates guidance with trusted project copy, owner/revision checks and canonical correction routing. No reply advances or submits the journey. */
   guidance: async function (request, policy = {}) {
     const domain = SERVICE.DefaultEWasteExperienceService,
@@ -40,10 +58,11 @@ module.exports = {
           request.payload.conversationCode,
         idempotencyKey: request.idempotencyKey,
         legacyHistory: draft?.metadata?.conversation,
-        facts: draft?.submittedFacts,
-        stage: draft?.submissionStatus || "BEFORE_DRAFT",
       },
-      Object.assign({}, settings, { fixedMessage: message }),
+      Object.assign({}, settings, {
+        fixedMessage: message,
+        context: this.guidanceContext(draft),
+      }),
     );
     message = result.message;
     if (!draft) return result;
@@ -126,7 +145,8 @@ module.exports = {
       message =
         "This submission is already recorded for review. Its evidence and confirmed facts cannot be edited. You can follow its status in My Account or start another submission.";
     } else if (explicitItem) {
-      message = 'The collection team will review the classification. You can edit the name and description, or retake the photo for a new analysis.';
+      message =
+        "The collection team will review the classification. You can edit the name and description, or retake the photo for a new analysis.";
     } else {
       const items = await store.list(
         "wasteItemType",
@@ -184,7 +204,7 @@ module.exports = {
         !Array.isArray(correction)
       ) {
         const allowed = {};
-        for (const key of ['name', 'description'])
+        for (const key of ["name", "description"])
           if (correction[key] !== undefined) allowed[key] = correction[key];
         patch = operations.customerFacts(allowed);
       }

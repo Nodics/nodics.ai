@@ -18,6 +18,48 @@
  */
 module.exports = {
     cronjob: {
+        scheduleDrafts: {
+            lifecyclePreview: { secured: true, accessGroups: ['userGroup'], permission: 'cronjob.lifecycle.manage', key: '/schedules/lifecycle/preview', method: 'POST', controller: 'DefaultCronJobScheduleDraftController', operation: 'lifecyclePreview' },
+            lifecycleExecute: { secured: true, accessGroups: ['userGroup'], permission: 'cronjob.lifecycle.manage', key: '/schedules/lifecycle/execute', method: 'POST', controller: 'DefaultCronJobScheduleDraftController', operation: 'lifecycleExecute' },
+            lifecycleInspect: { secured: true, accessGroups: ['userGroup'], permission: 'cronjob.lifecycle.manage', key: '/schedules/lifecycle/inspect', method: 'POST', controller: 'DefaultCronJobScheduleDraftController', operation: 'lifecycleInspect' },
+            lifecycleReconcile: { secured: true, accessGroups: ['userGroup'], permission: 'cronjob.lifecycle.manage', key: '/schedules/lifecycle/reconcile', method: 'POST', controller: 'DefaultCronJobScheduleDraftController', operation: 'lifecycleReconcile' },
+            capabilities: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
+                key: '/schedules/drafts/capabilities',
+                method: 'GET',
+                controller: 'DefaultCronJobScheduleDraftController',
+                operation: 'capabilities'
+            },
+            preview: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
+                key: '/schedules/drafts/preview',
+                method: 'POST',
+                controller: 'DefaultCronJobScheduleDraftController',
+                operation: 'preview'
+            },
+            create: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
+                key: '/schedules/drafts',
+                method: 'POST',
+                controller: 'DefaultCronJobScheduleDraftController',
+                operation: 'create'
+            },
+            inspect: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
+                key: '/schedules/drafts/inspect',
+                method: 'POST',
+                controller: 'DefaultCronJobScheduleDraftController',
+                operation: 'inspect'
+            }
+        },
         createJob: {
             createPostJob: {
                 secured: true,

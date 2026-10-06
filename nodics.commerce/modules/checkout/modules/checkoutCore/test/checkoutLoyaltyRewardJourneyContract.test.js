@@ -81,6 +81,7 @@ async function setup(overrides) {
         DefaultCommerceOrderEntryService: orderEntryStore,
         DefaultConsignmentService: options.consignmentService || store(),
         DefaultCartOperationService: {
+            cartSnapshot: async () => ({ code: 'cart-1', storeCode: 'published-store' }),
             validateDirect: async () => ({ status: 'VALID' }),
             calculate: async request => ({
                 code: request.payload.calculationCode || 'calc-1',
@@ -99,6 +100,7 @@ async function setup(overrides) {
                 return [{ code: 'coupon-row-1', entryCode: 'entry-1', status: 'RESERVED' }];
             },
             confirmSale: async (request, order, reservations) => {
+                assert.equal(request.storeCode, 'published-store');
                 digitalEvents.push('SOLD');
                 return reservations.map(row => Object.assign({}, row, { status: 'SOLD', orderCode: order.code }));
             },
@@ -136,6 +138,7 @@ function checkoutRequest(code) {
         tenant: 'runtimeTenantFromToken',
         ownerId: 'customer-1',
         authData: { tenant: 'runtimeTenantFromToken', principalId: 'customer-1', principalType:'customer', loginId:'customer@example.test', userGroups: ['customerUserGroup'] },
+        httpRequest: { headers: { authorization: 'Bearer customer-test-token' } },
         idempotencyKey: code + ':place',
         correlationId: code + ':corr',
         payload: {

@@ -17,2678 +17,4428 @@
  * @override Environments may tighten requirements and thresholds while preserving source authority and stable alert semantics.
  */
 module.exports = {
-    _lastPublishedSignature: null,
-    _findingAcknowledgements: Object.create(null),
-    _lastOperationalReadinessSnapshot: null,
-    _operationalReadinessTimeline: [],
-    _repairAttempts: [],
-    _repairReceipts: [],
-    _repairResultsByKey: Object.create(null),
-    _repairLocksByTarget: Object.create(null),
-    _repairProviderRegistry: Object.create(null),
-    _repairProviderCapabilityCache: Object.create(null),
-    _repairTelemetry: { registered: 0, unregistered: 0, dryRuns: 0, executed: 0, completed: 0, failed: 0, blocked: 0, providerRefreshes: 0 },
-    _supportedRepairContractVersion: 1,
-    /** Registers configuration validity as a required readiness contributor. */
-    init: function () {
-        if (SERVICE.DefaultHealthService) SERVICE.DefaultHealthService.registerReadinessContributor('backofficeOperationalConfiguration', {
-            required: true, order: 391, description: 'BackOffice operational configuration is valid',
-            check: () => this.validateConfiguration().valid
+  _lastPublishedSignature: null,
+  _findingAcknowledgements: Object.create(null),
+  _lastOperationalReadinessSnapshot: null,
+  _operationalReadinessTimeline: [],
+  _repairAttempts: [],
+  _repairReceipts: [],
+  _repairResultsByKey: Object.create(null),
+  _repairLocksByTarget: Object.create(null),
+  _repairProviderRegistry: Object.create(null),
+  _repairProviderCapabilityCache: Object.create(null),
+  _repairTelemetry: {
+    registered: 0,
+    unregistered: 0,
+    dryRuns: 0,
+    executed: 0,
+    completed: 0,
+    failed: 0,
+    blocked: 0,
+    providerRefreshes: 0,
+  },
+  _supportedRepairContractVersion: 1,
+  /** Registers configuration validity as a required readiness contributor. */
+  init: function () {
+    if (SERVICE.DefaultHealthService)
+      SERVICE.DefaultHealthService.registerReadinessContributor(
+        "backofficeOperationalConfiguration",
+        {
+          required: true,
+          order: 391,
+          description: "BackOffice operational configuration is valid",
+          check: () => this.validateConfiguration().valid,
+        },
+      );
+    return Promise.resolve(true);
+  },
+  /** Completes operational readiness initialization. */
+  postInit: function () {
+    return Promise.resolve(true);
+  },
+  /** Returns layered operations policy. */
+  getConfiguration: function () {
+    return (CONFIG.get("backofficeRegistry") || {}).operations || {};
+  },
+  /** Safely resolves a layered configuration path without exposing the value to clients. */
+  resolveConfigurationPath: function (path) {
+    let segments = String(path || "")
+      .split(".")
+      .filter(Boolean);
+    if (segments.length === 0) return undefined;
+    let value = CONFIG.get(segments.shift());
+    while (segments.length > 0 && value !== undefined && value !== null) {
+      value = value[segments.shift()];
+    }
+    return value;
+  },
+  /** Returns true when a configured value looks like a sample/local bootstrap secret. */
+  isSampleOrLocalValue: function (value) {
+    if (typeof value !== "string") return false;
+    let normalized = value.trim().toLowerCase();
+    if (!normalized) return false;
+    if (normalized === "adminpassword") return true;
+    return [
+      "sample",
+      "local",
+      "test",
+      "default",
+      "change-me",
+      "changeme",
+      "placeholder",
+    ].some((fragment) => normalized.includes(fragment));
+  },
+  /** Normalizes browser-validation evidence from tooling/runtime configuration without exposing secrets. */
+  browserValidationEvidence: function (browserValidation) {
+    browserValidation = browserValidation || {};
+    let evidence =
+      browserValidation.latestEvidence || browserValidation.evidence || {};
+    let allowed = ["PASSED", "FAILED", "SKIPPED", "STALE", "NOT_RUN"];
+    let state = allowed.includes(String(evidence.state || "").toUpperCase())
+      ? String(evidence.state).toUpperCase()
+      : "NOT_RUN";
+    return {
+      state: state,
+      checkedAt: evidence.checkedAt ? String(evidence.checkedAt) : undefined,
+      runId: evidence.runId ? String(evidence.runId) : undefined,
+      command: evidence.command ? String(evidence.command) : undefined,
+      urls: [].concat(evidence.urls || []).map((item) => String(item)),
+      failedStep: evidence.failedStep ? String(evidence.failedStep) : undefined,
+      message: evidence.message
+        ? String(evidence.message)
+        : state === "PASSED"
+          ? "Browser validation passed."
+          : state === "SKIPPED"
+            ? "Browser validation was skipped."
+            : "Browser validation evidence is not passing.",
+      nextAction: evidence.nextAction
+        ? String(evidence.nextAction)
+        : state === "PASSED"
+          ? "Refresh Axis readiness and continue acceptance."
+          : state === "SKIPPED"
+            ? "Enable browser validation only where a browser runner is available."
+            : "Run the local browser smoke and refresh readiness evidence.",
+      source: evidence.source
+        ? String(evidence.source)
+        : evidence.evidenceFile
+          ? "GENERATED_FILE"
+          : "CONFIGURATION",
+      evidenceFile: evidence.evidenceFile
+        ? String(evidence.evidenceFile)
+        : undefined,
+    };
+  },
+  /** Resolves browser-validation evidence from the nTooling owner contract, context, or layered configuration. */
+  resolveBrowserValidationEvidence: function (browserValidation, context) {
+    context = context || {};
+    if (context.acceptanceEvidence)
+      return this.browserValidationEvidence({
+        latestEvidence: Object.assign(
+          { source: "OPERATIONAL_READINESS_CONTEXT" },
+          context.acceptanceEvidence,
+        ),
+      });
+    let provider = SERVICE.DefaultToolingAcceptanceEvidenceService;
+    if (
+      provider &&
+      typeof provider.latestBrowserValidationEvidence === "function"
+    ) {
+      try {
+        let evidence = provider.latestBrowserValidationEvidence(context);
+        if (evidence)
+          return this.browserValidationEvidence({
+            latestEvidence: Object.assign(
+              { source: "NTOOLING_ACCEPTANCE_EVIDENCE" },
+              evidence,
+            ),
+          });
+      } catch (error) {
+        return this.browserValidationEvidence({
+          latestEvidence: {
+            state: "FAILED",
+            source: "NTOOLING_ACCEPTANCE_EVIDENCE",
+            failedStep: "latestBrowserValidationEvidence",
+            message:
+              "Browser-validation evidence provider failed: " +
+              String(error.code || error.message || error),
+            nextAction:
+              "Run acceptance, refresh post-reset readiness evidence, and retry Axis bootstrap.",
+          },
         });
-        return Promise.resolve(true);
-    },
-    /** Completes operational readiness initialization. */
-    postInit: function () { return Promise.resolve(true); },
-    /** Returns layered operations policy. */
-    getConfiguration: function () { return (CONFIG.get('backofficeRegistry') || {}).operations || {}; },
-    /** Safely resolves a layered configuration path without exposing the value to clients. */
-    resolveConfigurationPath: function (path) {
-        let segments = String(path || '').split('.').filter(Boolean);
-        if (segments.length === 0) return undefined;
-        let value = CONFIG.get(segments.shift());
-        while (segments.length > 0 && value !== undefined && value !== null) {
-            value = value[segments.shift()];
-        }
-        return value;
-    },
-    /** Returns true when a configured value looks like a sample/local bootstrap secret. */
-    isSampleOrLocalValue: function (value) {
-        if (typeof value !== 'string') return false;
-        let normalized = value.trim().toLowerCase();
-        if (!normalized) return false;
-        if (normalized === 'adminpassword') return true;
-        return ['sample', 'local', 'test', 'default', 'change-me', 'changeme', 'placeholder']
-            .some(fragment => normalized.includes(fragment));
-    },
-    /** Normalizes browser-validation evidence from tooling/runtime configuration without exposing secrets. */
-    browserValidationEvidence: function (browserValidation) {
-        browserValidation = browserValidation || {};
-        let evidence = browserValidation.latestEvidence || browserValidation.evidence || {};
-        let allowed = ['PASSED', 'FAILED', 'SKIPPED', 'STALE', 'NOT_RUN'];
-        let state = allowed.includes(String(evidence.state || '').toUpperCase()) ?
-            String(evidence.state).toUpperCase() : 'NOT_RUN';
-        return {
-            state: state,
-            checkedAt: evidence.checkedAt ? String(evidence.checkedAt) : undefined,
-            runId: evidence.runId ? String(evidence.runId) : undefined,
-            command: evidence.command ? String(evidence.command) : undefined,
-            urls: [].concat(evidence.urls || []).map(item => String(item)),
-            failedStep: evidence.failedStep ? String(evidence.failedStep) : undefined,
-            message: evidence.message ? String(evidence.message) : state === 'PASSED' ?
-                'Browser validation passed.' : state === 'SKIPPED' ?
-                    'Browser validation was skipped.' : 'Browser validation evidence is not passing.',
-            nextAction: evidence.nextAction ? String(evidence.nextAction) : state === 'PASSED' ?
-                'Refresh Axis readiness and continue acceptance.' : state === 'SKIPPED' ?
-                    'Enable browser validation only where a browser runner is available.' :
-                    'Run the local browser smoke and refresh readiness evidence.',
-            source: evidence.source ? String(evidence.source) : evidence.evidenceFile ? 'GENERATED_FILE' : 'CONFIGURATION',
-            evidenceFile: evidence.evidenceFile ? String(evidence.evidenceFile) : undefined,
-        };
-    },
-    /** Resolves browser-validation evidence from the nTooling owner contract, context, or layered configuration. */
-    resolveBrowserValidationEvidence: function (browserValidation, context) {
-        context = context || {};
-        if (context.acceptanceEvidence) return this.browserValidationEvidence({
-            latestEvidence: Object.assign({ source: 'OPERATIONAL_READINESS_CONTEXT' }, context.acceptanceEvidence)
-        });
-        let provider = SERVICE.DefaultToolingAcceptanceEvidenceService;
-        if (provider && typeof provider.latestBrowserValidationEvidence === 'function') {
-            try {
-                let evidence = provider.latestBrowserValidationEvidence(context);
-                if (evidence) return this.browserValidationEvidence({
-                    latestEvidence: Object.assign({ source: 'NTOOLING_ACCEPTANCE_EVIDENCE' }, evidence)
-                });
-            } catch (error) {
-                return this.browserValidationEvidence({ latestEvidence: {
-                    state: 'FAILED',
-                    source: 'NTOOLING_ACCEPTANCE_EVIDENCE',
-                    failedStep: 'latestBrowserValidationEvidence',
-                    message: 'Browser-validation evidence provider failed: ' + String(error.code || error.message || error),
-                    nextAction: 'Run acceptance, refresh post-reset readiness evidence, and retry Axis bootstrap.',
-                } });
-            }
-        }
-        return this.browserValidationEvidence(browserValidation);
-    },
-    /** Returns operator command guidance for the acceptance evidence loop. */
-    acceptanceOperatorCommands: function () {
-        return [
-            'npm run docker-local:acceptance',
-            'npm run project:post-reset-readiness -- --live --json',
-            'Refresh Axis dashboard bootstrap',
-        ];
-    },
-    /** Returns a stable timestamp for bounded operational evidence. */
-    now: function () { return new Date().toISOString(); },
-    /** Creates one client-safe startup finding. */
-    startupFinding: function (code, severity, owner, message, action, options) {
-        options = options || {};
-        let finding = {
-            code: String(code),
-            severity: ['ERROR', 'WARNING', 'INFO'].includes(String(severity)) ? String(severity) : 'WARNING',
-            owner: String(owner || 'backoffice'),
-            ownerType: String(options.ownerType || 'CONFIGURATION'),
-            propertyPath: options.propertyPath ? String(options.propertyPath) : undefined,
-            message: String(message),
-            action: String(action),
-            dismissible: options.dismissible === true,
-            auditRequired: options.auditRequired === true,
-            repair: this.startupRepair(options.repair, options),
-        };
-        if (options.acknowledgement) finding.acknowledgement = options.acknowledgement;
-        return finding;
-    },
-    /** Returns the authenticated human/service principal for audit-safe evidence. */
-    principal: function (request) {
-        let auth = request && request.authData || {};
-        return String(auth.loginId || auth.userId || auth.principalId || auth.clientId || 'unknown');
-    },
-    /** Creates a stable acknowledgement key without storing property values. */
-    acknowledgementKey: function (tenant, code, propertyPath) {
-        return [tenant || 'default', code || 'UNKNOWN', propertyPath || ''].map(value => String(value)).join('|');
-    },
-    /** Returns current bounded acknowledgement evidence for one startup finding. */
-    findAcknowledgement: function (request, code, propertyPath) {
-        let record = this._findingAcknowledgements[this.acknowledgementKey(request && request.tenant, code, propertyPath)];
-        if (!record) return undefined;
-        return {
-            acknowledged: true,
-            acknowledgedAt: record.acknowledgedAt,
-            acknowledgedBy: record.acknowledgedBy,
-            reasonCode: record.reasonCode,
-        };
-    },
-    /** Creates bounded repair metadata for startup/configuration findings. */
-    startupRepair: function (repair, options) {
-        options = options || {};
-        repair = repair || {};
-        let available = repair.available === true;
-        let metadata = {
-            available: available,
-            operation: String(repair.operation || options.repairOperation || (available ? 'runtimeConfiguration.update' : 'manual.review')),
-            actionCode: String(repair.actionCode || options.repairActionCode || (available ? 'UPDATE_CONFIGURATION' : 'REVIEW_OWNER')),
-            eligibility: ['AUTOMATIC', 'MANUAL', 'NOT_AVAILABLE'].includes(String(repair.eligibility)) ?
-                String(repair.eligibility) : (available ? 'MANUAL' : 'NOT_AVAILABLE'),
-            label: String(repair.label || options.repairLabel || (available ? 'Update configuration' : 'Review owning configuration')),
-            idempotent: repair.idempotent === undefined ? true : repair.idempotent === true,
-            requiresConfirmation: repair.requiresConfirmation === undefined ? available : repair.requiresConfirmation === true,
-        };
-        if (!available) metadata.unavailableReason = String(repair.unavailableReason || options.repairUnavailableReason ||
-            'No governed automatic repair is available for this finding. Use the owning configuration or runtime capability.');
-        return metadata;
-    },
-    /** Validates mandatory non-secret property presence declared by owning modules. */
-    collectMandatoryPropertyFindings: function (policy, request) {
-        return [].concat(policy.requiredProperties || []).map(rule => {
-            let value = this.resolveConfigurationPath(rule.path);
-            if (value !== undefined && value !== null && String(value).trim() !== '') return undefined;
-            let code = rule.code || 'MANDATORY_CONFIGURATION_MISSING';
-            return this.startupFinding(
-                code,
-                rule.severity || 'ERROR',
-                rule.owner || 'backoffice',
-                rule.message || 'A mandatory runtime configuration value is missing.',
-                rule.action || 'Add the value in the owning module, server, tenant, or external configuration layer.',
-                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible, auditRequired: rule.auditRequired,
-                    acknowledgement: this.findAcknowledgement(request, code, rule.path),
-                    repair: rule.repair || { available: true, operation: 'runtimeConfiguration.update',
-                        actionCode: 'UPDATE_REQUIRED_CONFIGURATION', eligibility: 'MANUAL',
-                        label: 'Add required configuration', idempotent: true, requiresConfirmation: true } }
-            );
-        }).filter(Boolean);
-    },
-    /** Flags configured default/sample values without returning the sensitive value. */
-    collectDefaultValueRiskFindings: function (policy, request) {
-        return [].concat(policy.defaultValueRisks || []).map(rule => {
-            let value = this.resolveConfigurationPath(rule.path);
-            if (value === undefined || value === null || String(value).trim() === '') return undefined;
-            let risky = rule.match === 'SAMPLE_OR_LOCAL_STRING' ? this.isSampleOrLocalValue(value) : false;
-            if (!risky) return undefined;
-            let code = rule.code || 'DEFAULT_CONFIGURATION_VALUE_ACTIVE';
-            return this.startupFinding(
-                code,
-                rule.severity || 'WARNING',
-                rule.owner || 'backoffice',
-                rule.message || 'A sample/default runtime configuration value is active.',
-                rule.action || 'Replace the value through the owning configuration layer before non-local use.',
-                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible !== false,
-                    acknowledgement: this.findAcknowledgement(request, code, rule.path),
-                    auditRequired: rule.auditRequired !== false, repair: rule.repair || { available: true,
-                        operation: 'runtimeConfiguration.update', actionCode: 'ROTATE_DEFAULT_CONFIGURATION',
-                        eligibility: 'MANUAL', label: 'Rotate default value', idempotent: true,
-                        requiresConfirmation: true } }
-            );
-        }).filter(Boolean);
-    },
-    /** Reports bootstrap repair/self-healing prerequisites without exposing values. */
-    collectBootstrapChecks: function (policy) {
-        return [].concat(policy.bootstrapChecks || []).map(rule => {
-            let value = this.resolveConfigurationPath(rule.path);
-            let ready = value !== undefined && value !== null && String(value).trim() !== '';
-            return {
-                code: String(rule.code || 'BOOTSTRAP_CHECK'),
-                state: ready ? 'READY' : 'MISSING',
-                owner: String(rule.owner || 'backoffice'),
-                ownerType: String(rule.ownerType || 'CONFIGURATION'),
-                propertyPath: rule.path ? String(rule.path) : undefined,
-                message: String(rule.message || (ready ? 'Bootstrap prerequisite is resolved.' : 'Bootstrap prerequisite is missing.')),
-                action: String(rule.action || 'Repair the owning layered configuration and restart the affected runtime.'),
-                auditRequired: rule.auditRequired === true
-            };
-        });
-    },
-    /** Maps operational configuration failures to startup findings with repair guidance. */
-    collectConfigurationFailureFindings: function (request) {
-        let messages = {
-            LEASE_TTL_NOT_GREATER_THAN_SWEEP: 'Registry lease timing is invalid.',
-            DISTRIBUTED_STORE_REQUIRED: 'A distributed registry store is required by policy.',
-            DISTRIBUTED_STORE_COORDINATES_INVALID: 'Distributed registry store coordinates are incomplete.',
-            AVAILABILITY_PRESSURE_LIMIT_INVALID: 'Runtime availability pressure limits are invalid.',
-            AVAILABILITY_FRESHNESS_INVALID: 'Availability freshness timing is invalid.',
-            OPERATION_THRESHOLD_INVALID: 'Operational readiness thresholds are invalid.',
-            OPERATION_SAMPLE_LIMIT_INVALID: 'Operational sample limits are invalid.',
-            PRODUCTION_DISTRIBUTED_STORE_REQUIRED: 'Production mode requires a distributed registry store.',
-            PRODUCTION_HTTPS_REQUIRED: 'Production mode requires HTTPS-only runtime registration.',
-            PRODUCTION_HOST_ALLOWLIST_REQUIRED: 'Production mode requires runtime host allowlists.',
-            PRODUCTION_AUDIT_DELIVERY_REQUIRED: 'Production mode requires strict audit delivery.',
-            PRODUCTION_AUDIT_PUBLISHER_UNAVAILABLE: 'The configured production audit publisher is unavailable.',
-            PRODUCTION_ALERT_DELIVERY_REQUIRED: 'Production mode requires strict alert delivery.',
-            PRODUCTION_ALERT_PUBLISHER_UNAVAILABLE: 'The configured production alert publisher is unavailable.',
-            PRODUCTION_HUMAN_ADMIN_REQUIRED: 'Production mode requires human administrator actions.'
-        };
-        return this.validateConfiguration().failures.map(code => this.startupFinding(
-            code,
-            'ERROR',
-            'backoffice',
-            messages[code] || 'BackOffice operational configuration is invalid.',
-            'Repair the owning BackOffice operations configuration and restart the affected runtime.',
-            { ownerType: 'BACKOFFICE_OPERATIONS', dismissible: false, auditRequired: true,
-                acknowledgement: this.findAcknowledgement(request, code),
-                repair: { available: false, operation: 'backoffice.operations.configure',
-                    actionCode: 'REPAIR_BACKOFFICE_OPERATIONS_CONFIGURATION', eligibility: 'NOT_AVAILABLE',
-                    label: 'Repair BackOffice operations configuration', idempotent: true,
-                    requiresConfirmation: false,
-                    unavailableReason: 'BackOffice operations policy is source/layer owned and must be repaired in the owning configuration before restart.' } }
-        ));
-    },
-    /** Produces a sanitized startup/configuration validation report for Axis and operators. */
-    startupValidationReport: function (request) {
-        let operations = this.getConfiguration();
-        let policy = operations.startupValidation || {};
-        if (policy.enabled === false) {
-            return { state: 'READY', checkedAt: new Date().toISOString(), source: 'backoffice.operationalReadiness',
-                summary: { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0, acknowledged: 0 },
-                bootstrapChecks: { total: 0, ready: 0, missing: 0, needsAttention: 0, checks: [] }, findings: [] };
-        }
-        let findings = []
-            .concat(this.collectConfigurationFailureFindings(request))
-            .concat(this.collectMandatoryPropertyFindings(policy, request))
-            .concat(this.collectDefaultValueRiskFindings(policy, request))
-            .filter(Boolean)
-            .sort((left, right) => {
-                let order = { ERROR: 0, WARNING: 1, INFO: 2 };
-                return order[left.severity] - order[right.severity] || left.code.localeCompare(right.code);
-            });
-        let summary = findings.reduce((result, finding) => {
-            result.total++;
-            if (finding.severity === 'ERROR') result.errors++;
-            else if (finding.severity === 'WARNING') result.warnings++;
-            else result.info++;
-            if (finding.dismissible === true) result.dismissible++;
-            if (finding.acknowledgement && finding.acknowledgement.acknowledged === true) result.acknowledged++;
-            return result;
-        }, { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0, acknowledged: 0 });
-        let bootstrapCheckItems = this.collectBootstrapChecks(policy);
-        let bootstrapChecks = bootstrapCheckItems.reduce((result, check) => {
-            result.total++;
-            if (check.state === 'READY') result.ready++;
-            else if (check.state === 'MISSING') result.missing++;
-            else result.needsAttention++;
-            return result;
-        }, { total: 0, ready: 0, missing: 0, needsAttention: 0, checks: bootstrapCheckItems });
-        return {
-            state: summary.errors > 0 ? 'NOT_READY' : summary.warnings > 0 ? 'NEEDS_ATTENTION' : 'READY',
-            checkedAt: new Date().toISOString(),
-            source: 'backoffice.operationalReadiness',
-            summary: summary,
-            bootstrapChecks: bootstrapChecks,
-            findings: findings
-        };
-    },
-    /** Creates one shared readiness blocker with stable business/user recovery fields. */
-    readinessBlocker: function (code, severity, ownerType, source, action, message, options) {
-        options = options || {};
-        return {
-            blockerCode: String(code),
-            code: String(code),
-            severity: String(severity || 'NEEDS_ATTENTION'),
-            ownerType: String(ownerType || 'BACKOFFICE'),
-            source: String(source || 'BACKOFFICE_OPERATIONAL_READINESS'),
-            action: String(action || 'Review readiness'),
-            message: String(message || 'Readiness needs review.'),
-            disabledReason: String(options.disabledReason || message || 'Readiness needs review.'),
-            repair: {
-                available: options.repairAvailable === true,
-                operation: String(options.repairOperation || 'readiness.review'),
-                action: String(options.repairAction || 'REVIEW_READINESS'),
-                eligibility: String(options.repairEligibility || (options.repairAvailable === true ? 'MANUAL' : 'NOT_AVAILABLE')),
-                label: String(options.repairLabel || action || 'Review readiness'),
+      }
+    }
+    return this.browserValidationEvidence(browserValidation);
+  },
+  /** Returns operator command guidance for the acceptance evidence loop. */
+  acceptanceOperatorCommands: function () {
+    return [
+      "npm run docker-local:acceptance",
+      "npm run project:post-reset-readiness -- --live --json",
+      "Refresh Axis dashboard bootstrap",
+    ];
+  },
+  /** Returns a stable timestamp for bounded operational evidence. */
+  now: function () {
+    return new Date().toISOString();
+  },
+  /** Creates one client-safe startup finding. */
+  startupFinding: function (code, severity, owner, message, action, options) {
+    options = options || {};
+    let finding = {
+      code: String(code),
+      severity: ["ERROR", "WARNING", "INFO"].includes(String(severity))
+        ? String(severity)
+        : "WARNING",
+      owner: String(owner || "backoffice"),
+      ownerType: String(options.ownerType || "CONFIGURATION"),
+      propertyPath: options.propertyPath
+        ? String(options.propertyPath)
+        : undefined,
+      message: String(message),
+      action: String(action),
+      dismissible: options.dismissible === true,
+      auditRequired: options.auditRequired === true,
+      repair: this.startupRepair(options.repair, options),
+    };
+    if (options.acknowledgement)
+      finding.acknowledgement = options.acknowledgement;
+    return finding;
+  },
+  /** Returns the authenticated human/service principal for audit-safe evidence. */
+  principal: function (request) {
+    let auth = (request && request.authData) || {};
+    return String(
+      auth.loginId ||
+        auth.userId ||
+        auth.principalId ||
+        auth.clientId ||
+        "unknown",
+    );
+  },
+  /** Creates a stable acknowledgement key without storing property values. */
+  acknowledgementKey: function (tenant, code, propertyPath) {
+    return [tenant || "default", code || "UNKNOWN", propertyPath || ""]
+      .map((value) => String(value))
+      .join("|");
+  },
+  /** Returns current bounded acknowledgement evidence for one startup finding. */
+  findAcknowledgement: function (request, code, propertyPath) {
+    let record =
+      this._findingAcknowledgements[
+        this.acknowledgementKey(request && request.tenant, code, propertyPath)
+      ];
+    if (!record) return undefined;
+    return {
+      acknowledged: true,
+      acknowledgedAt: record.acknowledgedAt,
+      acknowledgedBy: record.acknowledgedBy,
+      reasonCode: record.reasonCode,
+    };
+  },
+  /** Creates bounded repair metadata for startup/configuration findings. */
+  startupRepair: function (repair, options) {
+    options = options || {};
+    repair = repair || {};
+    let available = repair.available === true;
+    let metadata = {
+      available: available,
+      operation: String(
+        repair.operation ||
+          options.repairOperation ||
+          (available ? "runtimeConfiguration.update" : "manual.review"),
+      ),
+      actionCode: String(
+        repair.actionCode ||
+          options.repairActionCode ||
+          (available ? "UPDATE_CONFIGURATION" : "REVIEW_OWNER"),
+      ),
+      eligibility: ["AUTOMATIC", "MANUAL", "NOT_AVAILABLE"].includes(
+        String(repair.eligibility),
+      )
+        ? String(repair.eligibility)
+        : available
+          ? "MANUAL"
+          : "NOT_AVAILABLE",
+      label: String(
+        repair.label ||
+          options.repairLabel ||
+          (available ? "Update configuration" : "Review owning configuration"),
+      ),
+      idempotent:
+        repair.idempotent === undefined ? true : repair.idempotent === true,
+      requiresConfirmation:
+        repair.requiresConfirmation === undefined
+          ? available
+          : repair.requiresConfirmation === true,
+    };
+    if (!available)
+      metadata.unavailableReason = String(
+        repair.unavailableReason ||
+          options.repairUnavailableReason ||
+          "No governed automatic repair is available for this finding. Use the owning configuration or runtime capability.",
+      );
+    return metadata;
+  },
+  /** Validates mandatory non-secret property presence declared by owning modules. */
+  collectMandatoryPropertyFindings: function (policy, request) {
+    return []
+      .concat(policy.requiredProperties || [])
+      .map((rule) => {
+        let value = this.resolveConfigurationPath(rule.path);
+        if (
+          value !== undefined &&
+          value !== null &&
+          String(value).trim() !== ""
+        )
+          return undefined;
+        let code = rule.code || "MANDATORY_CONFIGURATION_MISSING";
+        return this.startupFinding(
+          code,
+          rule.severity || "ERROR",
+          rule.owner || "backoffice",
+          rule.message || "A mandatory runtime configuration value is missing.",
+          rule.action ||
+            "Add the value in the owning module, server, tenant, or external configuration layer.",
+          {
+            ownerType: rule.ownerType,
+            propertyPath: rule.path,
+            dismissible: rule.dismissible,
+            auditRequired: rule.auditRequired,
+            acknowledgement: this.findAcknowledgement(request, code, rule.path),
+            repair: rule.repair || {
+              available: true,
+              operation: "runtimeConfiguration.update",
+              actionCode: "UPDATE_REQUIRED_CONFIGURATION",
+              eligibility: "MANUAL",
+              label: "Add required configuration",
+              idempotent: true,
+              requiresConfirmation: true,
             },
-            suggestedAction: String(options.suggestedAction || action || 'Review readiness'),
-            businessImpact: String(options.businessImpact || 'This readiness issue can block reliable local recovery, publication, or go-live validation.'),
-            recoveryHint: String(options.recoveryHint || options.suggestedAction || action || 'Review the owning workspace and refresh readiness.'),
-        };
-    },
-    /** Normalizes one active runtime observation for operator-safe communication diagnostics. */
-    runtimeObservation: function (instance, availability) {
-        availability = availability || {};
-        let state = String((availability[instance.moduleName] || {}).state || instance.state || 'UNKNOWN');
-        let freshness = String((availability[instance.moduleName] || {}).freshness || (state === 'UP' ? 'FRESH' : 'UNKNOWN'));
-        let stale = ['STALE', 'MISSING'].includes(freshness) || ['DOWN', 'UNAVAILABLE'].includes(state);
-        return {
-            moduleName: instance.moduleName,
-            instanceId: instance.instanceId,
-            environment: instance.environment,
-            server: instance.server,
-            node: instance.node || 'default',
-            runtimeRole: instance.runtimeRole && instance.runtimeRole.code,
-            publication: instance.runtimeRole && instance.runtimeRole.publication,
-            state: state,
-            freshness: freshness,
-            lastSeenAt: instance.lastSeenAt,
-            reasonCode: stale ? (freshness === 'STALE' ? 'HEARTBEAT_STALE' : 'RUNTIME_UNAVAILABLE') : 'RUNTIME_OBSERVED',
-            recoveryAction: stale ? 'Refresh Module Registry, verify the server is running, and check runtime API key/grant readiness.' :
-                'Runtime heartbeat is visible to BackOffice.',
-        };
-    },
-    /** Builds stable operator-safe runtime communication diagnostics from active bootstrap evidence. */
-    runtimeCommunicationDiagnostics: function (modules, availability) {
-        modules = modules || {};
-        availability = availability || {};
-        let entries = Object.entries(modules).reduce((result, entry) => result.concat(entry[1] || []), []);
-        let observations = entries.map(instance => this.runtimeObservation(instance, availability));
-        let serverKeys = Array.from(new Set(observations.map(item =>
-            [item.environment, item.server, item.node || 'default'].filter(Boolean).join(':')).filter(Boolean))).sort();
-        let runtimeRoles = Array.from(new Set(observations.map(item => item.runtimeRole).filter(Boolean))).sort();
-        let stale = observations.filter(item => ['HEARTBEAT_STALE', 'RUNTIME_UNAVAILABLE'].includes(item.reasonCode));
-        let unavailable = Object.entries(availability).filter(entry => !['UP', 'UNKNOWN'].includes(String((entry[1] || {}).state || 'UNKNOWN')));
-        let communicationChecks = [
+          },
+        );
+      })
+      .filter(Boolean);
+  },
+  /** Flags configured default/sample values without returning the sensitive value. */
+  collectDefaultValueRiskFindings: function (policy, request) {
+    return []
+      .concat(policy.defaultValueRisks || [])
+      .map((rule) => {
+        let value = this.resolveConfigurationPath(rule.path);
+        if (
+          value === undefined ||
+          value === null ||
+          String(value).trim() === ""
+        )
+          return undefined;
+        let risky =
+          rule.match === "SAMPLE_OR_LOCAL_STRING"
+            ? this.isSampleOrLocalValue(value)
+            : false;
+        if (!risky) return undefined;
+        let code = rule.code || "DEFAULT_CONFIGURATION_VALUE_ACTIVE";
+        return this.startupFinding(
+          code,
+          rule.severity || "WARNING",
+          rule.owner || "backoffice",
+          rule.message ||
+            "A sample/default runtime configuration value is active.",
+          rule.action ||
+            "Replace the value through the owning configuration layer before non-local use.",
+          {
+            ownerType: rule.ownerType,
+            propertyPath: rule.path,
+            dismissible: rule.dismissible !== false,
+            acknowledgement: this.findAcknowledgement(request, code, rule.path),
+            auditRequired: rule.auditRequired !== false,
+            repair: rule.repair || {
+              available: true,
+              operation: "runtimeConfiguration.update",
+              actionCode: "ROTATE_DEFAULT_CONFIGURATION",
+              eligibility: "MANUAL",
+              label: "Rotate default value",
+              idempotent: true,
+              requiresConfirmation: true,
+            },
+          },
+        );
+      })
+      .filter(Boolean);
+  },
+  /** Reports bootstrap repair/self-healing prerequisites without exposing values. */
+  collectBootstrapChecks: function (policy) {
+    return [].concat(policy.bootstrapChecks || []).map((rule) => {
+      let value = this.resolveConfigurationPath(rule.path);
+      let ready =
+        value !== undefined && value !== null && String(value).trim() !== "";
+      return {
+        code: String(rule.code || "BOOTSTRAP_CHECK"),
+        state: ready ? "READY" : "MISSING",
+        owner: String(rule.owner || "backoffice"),
+        ownerType: String(rule.ownerType || "CONFIGURATION"),
+        propertyPath: rule.path ? String(rule.path) : undefined,
+        message: String(
+          rule.message ||
+            (ready
+              ? "Bootstrap prerequisite is resolved."
+              : "Bootstrap prerequisite is missing."),
+        ),
+        action: String(
+          rule.action ||
+            "Repair the owning layered configuration and restart the affected runtime.",
+        ),
+        auditRequired: rule.auditRequired === true,
+      };
+    });
+  },
+  /** Maps operational configuration failures to startup findings with repair guidance. */
+  collectConfigurationFailureFindings: function (request) {
+    let messages = {
+      LEASE_TTL_NOT_GREATER_THAN_SWEEP: "Registry lease timing is invalid.",
+      DISTRIBUTED_STORE_REQUIRED:
+        "A distributed registry store is required by policy.",
+      DISTRIBUTED_STORE_COORDINATES_INVALID:
+        "Distributed registry store coordinates are incomplete.",
+      AVAILABILITY_PRESSURE_LIMIT_INVALID:
+        "Runtime availability pressure limits are invalid.",
+      AVAILABILITY_FRESHNESS_INVALID:
+        "Availability freshness timing is invalid.",
+      OPERATION_THRESHOLD_INVALID:
+        "Operational readiness thresholds are invalid.",
+      OPERATION_SAMPLE_LIMIT_INVALID: "Operational sample limits are invalid.",
+      PRODUCTION_DISTRIBUTED_STORE_REQUIRED:
+        "Production mode requires a distributed registry store.",
+      PRODUCTION_HTTPS_REQUIRED:
+        "Production mode requires HTTPS-only runtime registration.",
+      PRODUCTION_HOST_ALLOWLIST_REQUIRED:
+        "Production mode requires runtime host allowlists.",
+      PRODUCTION_AUDIT_DELIVERY_REQUIRED:
+        "Production mode requires strict audit delivery.",
+      PRODUCTION_AUDIT_PUBLISHER_UNAVAILABLE:
+        "The configured production audit publisher is unavailable.",
+      PRODUCTION_ALERT_DELIVERY_REQUIRED:
+        "Production mode requires strict alert delivery.",
+      PRODUCTION_ALERT_PUBLISHER_UNAVAILABLE:
+        "The configured production alert publisher is unavailable.",
+      PRODUCTION_HUMAN_ADMIN_REQUIRED:
+        "Production mode requires human administrator actions.",
+    };
+    return this.validateConfiguration().failures.map((code) =>
+      this.startupFinding(
+        code,
+        "ERROR",
+        "backoffice",
+        messages[code] || "BackOffice operational configuration is invalid.",
+        "Repair the owning BackOffice operations configuration and restart the affected runtime.",
+        {
+          ownerType: "BACKOFFICE_OPERATIONS",
+          dismissible: false,
+          auditRequired: true,
+          acknowledgement: this.findAcknowledgement(request, code),
+          repair: {
+            available: false,
+            operation: "backoffice.operations.configure",
+            actionCode: "REPAIR_BACKOFFICE_OPERATIONS_CONFIGURATION",
+            eligibility: "NOT_AVAILABLE",
+            label: "Repair BackOffice operations configuration",
+            idempotent: true,
+            requiresConfirmation: false,
+            unavailableReason:
+              "BackOffice operations policy is source/layer owned and must be repaired in the owning configuration before restart.",
+          },
+        },
+      ),
+    );
+  },
+  /** Produces a sanitized startup/configuration validation report for Axis and operators. */
+  startupValidationReport: function (request) {
+    let operations = this.getConfiguration();
+    let policy = operations.startupValidation || {};
+    if (policy.enabled === false) {
+      return {
+        state: "READY",
+        checkedAt: new Date().toISOString(),
+        source: "backoffice.operationalReadiness",
+        summary: {
+          total: 0,
+          errors: 0,
+          warnings: 0,
+          info: 0,
+          dismissible: 0,
+          acknowledged: 0,
+        },
+        bootstrapChecks: {
+          total: 0,
+          ready: 0,
+          missing: 0,
+          needsAttention: 0,
+          checks: [],
+        },
+        findings: [],
+      };
+    }
+    let findings = []
+      .concat(this.collectConfigurationFailureFindings(request))
+      .concat(this.collectMandatoryPropertyFindings(policy, request))
+      .concat(this.collectDefaultValueRiskFindings(policy, request))
+      .filter(Boolean)
+      .sort((left, right) => {
+        let order = { ERROR: 0, WARNING: 1, INFO: 2 };
+        return (
+          order[left.severity] - order[right.severity] ||
+          left.code.localeCompare(right.code)
+        );
+      });
+    let summary = findings.reduce(
+      (result, finding) => {
+        result.total++;
+        if (finding.severity === "ERROR") result.errors++;
+        else if (finding.severity === "WARNING") result.warnings++;
+        else result.info++;
+        if (finding.dismissible === true) result.dismissible++;
+        if (
+          finding.acknowledgement &&
+          finding.acknowledgement.acknowledged === true
+        )
+          result.acknowledged++;
+        return result;
+      },
+      {
+        total: 0,
+        errors: 0,
+        warnings: 0,
+        info: 0,
+        dismissible: 0,
+        acknowledged: 0,
+      },
+    );
+    let bootstrapCheckItems = this.collectBootstrapChecks(policy);
+    let bootstrapChecks = bootstrapCheckItems.reduce(
+      (result, check) => {
+        result.total++;
+        if (check.state === "READY") result.ready++;
+        else if (check.state === "MISSING") result.missing++;
+        else result.needsAttention++;
+        return result;
+      },
+      {
+        total: 0,
+        ready: 0,
+        missing: 0,
+        needsAttention: 0,
+        checks: bootstrapCheckItems,
+      },
+    );
+    return {
+      state:
+        summary.errors > 0
+          ? "NOT_READY"
+          : summary.warnings > 0
+            ? "NEEDS_ATTENTION"
+            : "READY",
+      checkedAt: new Date().toISOString(),
+      source: "backoffice.operationalReadiness",
+      summary: summary,
+      bootstrapChecks: bootstrapChecks,
+      findings: findings,
+    };
+  },
+  /** Creates one shared readiness blocker with stable business/user recovery fields. */
+  readinessBlocker: function (
+    code,
+    severity,
+    ownerType,
+    source,
+    action,
+    message,
+    options,
+  ) {
+    options = options || {};
+    return {
+      blockerCode: String(code),
+      code: String(code),
+      severity: String(severity || "NEEDS_ATTENTION"),
+      ownerType: String(ownerType || "BACKOFFICE"),
+      source: String(source || "BACKOFFICE_OPERATIONAL_READINESS"),
+      action: String(action || "Review readiness"),
+      message: String(message || "Readiness needs review."),
+      disabledReason: String(
+        options.disabledReason || message || "Readiness needs review.",
+      ),
+      repair: {
+        available: options.repairAvailable === true,
+        operation: String(options.repairOperation || "readiness.review"),
+        action: String(options.repairAction || "REVIEW_READINESS"),
+        eligibility: String(
+          options.repairEligibility ||
+            (options.repairAvailable === true ? "MANUAL" : "NOT_AVAILABLE"),
+        ),
+        label: String(options.repairLabel || action || "Review readiness"),
+      },
+      suggestedAction: String(
+        options.suggestedAction || action || "Review readiness",
+      ),
+      businessImpact: String(
+        options.businessImpact ||
+          "This readiness issue can block reliable local recovery, publication, or go-live validation.",
+      ),
+      recoveryHint: String(
+        options.recoveryHint ||
+          options.suggestedAction ||
+          action ||
+          "Review the owning workspace and refresh readiness.",
+      ),
+    };
+  },
+  /** Normalizes one active runtime observation for operator-safe communication diagnostics. */
+  runtimeObservation: function (instance, availability) {
+    availability = availability || {};
+    let state = String(
+      (availability[instance.moduleName] || {}).state ||
+        instance.state ||
+        "UNKNOWN",
+    );
+    let freshness = String(
+      (availability[instance.moduleName] || {}).freshness ||
+        (state === "UP" ? "FRESH" : "UNKNOWN"),
+    );
+    let stale =
+      ["STALE", "MISSING"].includes(freshness) ||
+      ["DOWN", "UNAVAILABLE"].includes(state);
+    return {
+      moduleName: instance.moduleName,
+      instanceId: instance.instanceId,
+      environment: instance.environment,
+      server: instance.server,
+      node: instance.node || "default",
+      runtimeRole: instance.runtimeRole && instance.runtimeRole.code,
+      publication: instance.runtimeRole && instance.runtimeRole.publication,
+      state: state,
+      freshness: freshness,
+      lastSeenAt: instance.lastSeenAt,
+      reasonCode: stale
+        ? freshness === "STALE"
+          ? "HEARTBEAT_STALE"
+          : "RUNTIME_UNAVAILABLE"
+        : "RUNTIME_OBSERVED",
+      recoveryAction: stale
+        ? "Refresh Module Registry, verify the server is running, and check runtime API key/grant readiness."
+        : "Runtime heartbeat is visible to BackOffice.",
+    };
+  },
+  /** Builds stable operator-safe runtime communication diagnostics from active bootstrap evidence. */
+  runtimeCommunicationDiagnostics: function (modules, availability) {
+    modules = modules || {};
+    availability = availability || {};
+    let entries = Object.entries(modules).reduce(
+      (result, entry) => result.concat(entry[1] || []),
+      [],
+    );
+    let observations = entries.map((instance) =>
+      this.runtimeObservation(instance, availability),
+    );
+    let serverKeys = Array.from(
+      new Set(
+        observations
+          .map((item) =>
+            [item.environment, item.server, item.node || "default"]
+              .filter(Boolean)
+              .join(":"),
+          )
+          .filter(Boolean),
+      ),
+    ).sort();
+    let runtimeRoles = Array.from(
+      new Set(observations.map((item) => item.runtimeRole).filter(Boolean)),
+    ).sort();
+    let stale = observations.filter((item) =>
+      ["HEARTBEAT_STALE", "RUNTIME_UNAVAILABLE"].includes(item.reasonCode),
+    );
+    let unavailable = Object.entries(availability).filter(
+      (entry) =>
+        !["UP", "UNKNOWN"].includes(
+          String((entry[1] || {}).state || "UNKNOWN"),
+        ),
+    );
+    let communicationChecks = [
+      {
+        code: "RUNTIME_IDENTITY_PRESENT",
+        state: observations.length > 0 ? "READY" : "MISSING",
+        message:
+          observations.length > 0
+            ? "Runtime instances supplied environment/server/node identity."
+            : "No runtime instance identity is available from BackOffice bootstrap.",
+        action:
+          observations.length > 0
+            ? "Monitor runtime identity."
+            : "Start runtimes and refresh Module Registry.",
+      },
+      {
+        code: "SERVER_NODE_COORDINATES_PRESENT",
+        state:
+          observations.every((item) => item.server && item.node) &&
+          observations.length > 0
+            ? "READY"
+            : "NEEDS_ATTENTION",
+        message: "Each runtime should report server and node coordinates.",
+        action:
+          "Verify runtime self-registration includes project, environment, server, and node.",
+      },
+      {
+        code: "RUNTIME_API_KEY_GRANT_READY",
+        state:
+          observations.length > 0 && unavailable.length === 0
+            ? "READY"
+            : "NEEDS_ATTENTION",
+        message:
+          "Internal runtime calls require server-level API key and grant readiness.",
+        action:
+          "Check server-level defaultAuthDetail and runtime communication grants in owning framework configuration.",
+      },
+      {
+        code: "MODULE_REGISTRY_RECONCILED",
+        state:
+          stale.length === 0 && unavailable.length === 0
+            ? "READY"
+            : "NEEDS_ATTENTION",
+        message:
+          "Module Registry should reconcile active runtime leases and stale node records on every startup.",
+        action:
+          "Refresh Module Registry after startup; stale leases are repaired by the backend lease reconciler.",
+      },
+    ];
+    let reasonCodes = Array.from(
+      new Set(
+        observations
+          .map((item) => item.reasonCode)
+          .concat(unavailable.length > 0 ? ["RUNTIME_UNAVAILABLE"] : [])
+          .concat(observations.length === 0 ? ["RUNTIME_NOT_REGISTERED"] : []),
+      ),
+    ).sort();
+    return {
+      entries: entries,
+      observations: observations,
+      serverKeys: serverKeys,
+      runtimeRoles: runtimeRoles,
+      staleCount: stale.length,
+      unavailable: unavailable,
+      reasonCodes: reasonCodes,
+      communicationChecks: communicationChecks,
+    };
+  },
+  /** Maps module availability into a compact support-safe readiness section. */
+  moduleRuntimeSection: function (modules, availability) {
+    let diagnostics = this.runtimeCommunicationDiagnostics(
+      modules,
+      availability,
+    );
+    let runtimeCount = diagnostics.entries.length;
+    let unavailable = diagnostics.unavailable;
+    let blockers = [];
+    if (runtimeCount === 0)
+      blockers.push(
+        this.readinessBlocker(
+          "RUNTIME_NOT_REGISTERED",
+          "NEEDS_ATTENTION",
+          "RUNTIME",
+          "BACKOFFICE_BOOTSTRAP",
+          "Start runtimes and refresh Module Registry",
+          "No runtime heartbeat evidence is registered for the visible module catalogue.",
+          {
+            repairOperation: "moduleRegistry.refreshRuntime",
+            repairAction: "REFRESH_RUNTIME",
+            suggestedAction:
+              "Start local/backend runtimes, then refresh Module Registry and Axis bootstrap.",
+          },
+        ),
+      );
+    if (unavailable[0])
+      blockers.push(
+        this.readinessBlocker(
+          "RUNTIME_UNAVAILABLE",
+          "BLOCKED",
+          "RUNTIME",
+          "BACKOFFICE_AVAILABILITY",
+          "Open Module Registry",
+          "One or more registered runtimes are degraded or unavailable.",
+          {
+            repairOperation: "moduleRegistry.refreshRuntime",
+            repairAction: "REFRESH_RUNTIME",
+            suggestedAction:
+              "Refresh Module Registry and inspect stale runtime observations.",
+          },
+        ),
+      );
+    if (diagnostics.staleCount > 0)
+      blockers.push(
+        this.readinessBlocker(
+          "HEARTBEAT_STALE",
+          "NEEDS_ATTENTION",
+          "RUNTIME",
+          "BACKOFFICE_AVAILABILITY",
+          "Refresh Module Registry",
+          "One or more runtime heartbeat observations are stale.",
+          {
+            repairOperation: "moduleRegistry.refreshRuntime",
+            repairAction: "REFRESH_RUNTIME",
+            suggestedAction:
+              "Restart the owning runtime if needed, refresh Module Registry, and rerun local recovery readiness.",
+          },
+        ),
+      );
+    return {
+      key: "runtimeCommunication",
+      title: "Runtime internal communication",
+      businessStatus:
+        blockers.length > 0
+          ? "NEEDS_ATTENTION"
+          : runtimeCount > 0
+            ? "READY"
+            : "NOT_CONFIGURED",
+      ownerModule: "nService",
+      source: "BACKOFFICE_BOOTSTRAP",
+      route: "/system/modules",
+      summary: {
+        runtimeCount: runtimeCount,
+        unavailableCount: unavailable.length,
+        staleCount: diagnostics.staleCount,
+        serverCount: diagnostics.serverKeys.length,
+        nodeCount: diagnostics.serverKeys.length,
+        runtimeRoles: diagnostics.runtimeRoles,
+        reasonCodes: diagnostics.reasonCodes,
+        communicationChecks: diagnostics.communicationChecks,
+        runtimeObservations: diagnostics.observations.slice(0, 25),
+        operatorCommands: [
+          "npm run local-recovery:readiness -- --live --json",
+          "Open Module Registry and refresh runtime status",
+          "Check server-level API key/grant readiness when probes fail",
+        ],
+      },
+      blockers: blockers,
+      nextAction:
+        blockers.length > 0
+          ? "Open Module Registry and repair unavailable runtime communication."
+          : runtimeCount > 0
+            ? "Runtime communication has active bootstrap evidence."
+            : "Register runtime modules before validating communication.",
+    };
+  },
+  /** Summarizes application initialization capability readiness profiles. */
+  applicationSection: function (profileStatusReport, profiles) {
+    profiles = [].concat(profiles || []);
+    let statuses = [].concat((profileStatusReport || {}).statuses || []);
+    let errors = [].concat((profileStatusReport || {}).errors || []);
+    let blockers =
+      profiles.length === 0
+        ? [
+            this.readinessBlocker(
+              "APPLICATION_PROFILES_MISSING",
+              "NEEDS_ATTENTION",
+              "APPLICATION_INITIALIZATION",
+              "BACKOFFICE_APPLICATION_INITIALIZATION",
+              "Open Setup & Accelerators",
+              "No application initialization profiles are visible to this operator.",
+              {
+                repairOperation: "applicationInitialization.reviewProfiles",
+                repairAction: "REVIEW_APPLICATION_PROFILES",
+              },
+            ),
+          ]
+        : [];
+    let profileCodesWithStatus = new Set(
+      statuses
+        .map((status) => String(status.profileCode || ""))
+        .filter(Boolean),
+    );
+    profiles
+      .filter(
+        (profile) =>
+          profile &&
+          profile.code &&
+          !profileCodesWithStatus.has(String(profile.code)),
+      )
+      .forEach((profile) => {
+        blockers.push(
+          this.readinessBlocker(
+            "APPLICATION_PARITY_PROVIDER_UNAVAILABLE",
+            "NEEDS_ATTENTION",
+            "APPLICATION_INITIALIZATION",
+            "BACKOFFICE_APPLICATION_INITIALIZATION",
+            "Refresh application parity",
+            "Application parity could not be read for profile: " +
+              String(profile.title || profile.code),
             {
-                code: 'RUNTIME_IDENTITY_PRESENT',
-                state: observations.length > 0 ? 'READY' : 'MISSING',
-                message: observations.length > 0 ? 'Runtime instances supplied environment/server/node identity.' :
-                    'No runtime instance identity is available from BackOffice bootstrap.',
-                action: observations.length > 0 ? 'Monitor runtime identity.' : 'Start runtimes and refresh Module Registry.',
+              repairOperation: "applicationInitialization.refreshStatus",
+              repairAction: "REFRESH_APPLICATION_PARITY",
+              repairAvailable: true,
+              repairEligibility: "MANUAL",
+              repairLabel: "Refresh application parity",
+              suggestedAction:
+                "Refresh Setup & Accelerators and verify the owning runtime/provider is active.",
             },
+          ),
+        );
+      });
+    errors.forEach((item) => {
+      let profile = item.profile || {};
+      let blocker = this.readinessBlocker(
+        "APPLICATION_PARITY_PROVIDER_FAILED",
+        "NEEDS_ATTENTION",
+        "APPLICATION_INITIALIZATION",
+        "BACKOFFICE_APPLICATION_INITIALIZATION",
+        "Refresh application parity",
+        "Application parity provider failed for profile: " +
+          String(profile.title || profile.code || "unknown"),
+        {
+          repairOperation: "applicationInitialization.refreshStatus",
+          repairAction: "REFRESH_APPLICATION_PARITY",
+          repairAvailable: true,
+          repairEligibility: "MANUAL",
+          repairLabel: "Refresh application parity",
+          suggestedAction:
+            "Open Setup & Accelerators, refresh the profile, and verify the owning runtime.",
+        },
+      );
+      blocker.profileCode = profile.code ? String(profile.code) : undefined;
+      blocker.failureCode = item.error
+        ? String(
+            item.error.code ||
+              item.error.message ||
+              "APPLICATION_PARITY_FAILED",
+          )
+        : undefined;
+      blockers.push(blocker);
+    });
+    statuses.forEach((status) => {
+      let capability = (status && status.capability) || {};
+      if (
+        capability.businessStatus &&
+        !["ONLINE", "READY"].includes(String(capability.businessStatus))
+      ) {
+        blockers.push(
+          this.readinessBlocker(
+            "APPLICATION_PARITY_NOT_ONLINE",
+            "NEEDS_ATTENTION",
+            "APPLICATION_INITIALIZATION",
+            "BACKOFFICE_APPLICATION_INITIALIZATION",
+            "Open Setup & Accelerators",
+            "Application is not Online-ready: " +
+              String(status.applicationCode || status.profileCode || "unknown"),
             {
-                code: 'SERVER_NODE_COORDINATES_PRESENT',
-                state: observations.every(item => item.server && item.node) && observations.length > 0 ? 'READY' : 'NEEDS_ATTENTION',
-                message: 'Each runtime should report server and node coordinates.',
-                action: 'Verify runtime self-registration includes project, environment, server, and node.',
+              repairOperation: "applicationInitialization.prepareCapability",
+              repairAction: "PREPARE_APPLICATION_PARITY",
+              repairAvailable: true,
+              repairEligibility: "MANUAL",
+              repairLabel: "Prepare application parity",
+              suggestedAction:
+                capability.nextAction ||
+                "Prepare, approve, and publish the application profile.",
             },
+          ),
+        );
+      }
+    });
+    let applicationCodes = statuses
+      .map((status) => status.applicationCode || status.profileCode)
+      .filter(Boolean)
+      .map(String);
+    let applicationStatusCounts = this.countByValue(
+      statuses,
+      (status) =>
+        (status && status.capability && status.capability.businessStatus) ||
+        "UNKNOWN",
+    );
+    return {
+      key: "applications",
+      title: "Customer application readiness",
+      businessStatus: blockers.length ? "NEEDS_ATTENTION" : "READY",
+      ownerModule: "backoffice",
+      source: "BACKOFFICE_APPLICATION_INITIALIZATION",
+      route: "/publishing",
+      summary: {
+        profileCount: profiles.length,
+        statusCount: statuses.length,
+        providerErrorCount: errors.length,
+        applicationCodes: applicationCodes,
+        applicationStatusCounts: applicationStatusCounts,
+        nexusParity:
+          applicationCodes.includes("nexus") ||
+          applicationCodes.some((code) => /nexus/i.test(code))
+            ? "OBSERVED"
+            : "NOT_OBSERVED",
+        agoraParity:
+          applicationCodes.includes("agora") ||
+          applicationCodes.some((code) => /agora/i.test(code))
+            ? "OBSERVED"
+            : "NOT_OBSERVED",
+        circaParity:
+          applicationCodes.includes("circa") ||
+          applicationCodes.some((code) => /circa/i.test(code))
+            ? "OBSERVED"
+            : "NOT_OBSERVED",
+        operatorCommands: [
+          "Open Setup & Accelerators",
+          "Refresh application profile status",
+          "Prepare or publish pending profiles",
+          "Refresh operational readiness",
+        ],
+      },
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Open Setup & Accelerators and initialize or repair required application parity profiles."
+        : "Application profiles are available and parity providers returned ready state.",
+    };
+  },
+  /** Summarizes local acceptance and optional browser-validation evidence without making browsers mandatory outside opted-in environments. */
+  acceptanceSection: function (profileStatusReport, context) {
+    let tooling = CONFIG.get("tooling") || {};
+    let acceptance = tooling.acceptance || {};
+    let browserValidation = acceptance.browserValidation || {};
+    let statuses = [].concat((profileStatusReport || {}).statuses || []);
+    let errors = [].concat((profileStatusReport || {}).errors || []);
+    let browserEnabled = browserValidation.enabled === true;
+    let browserEvidence = this.resolveBrowserValidationEvidence(
+      browserValidation,
+      context,
+    );
+    let operatorCommands = this.acceptanceOperatorCommands();
+    let reason = browserValidation.reason
+      ? String(browserValidation.reason)
+      : browserEnabled
+        ? "Browser validation is enabled for this environment."
+        : "Browser validation is disabled by configuration.";
+    let online = statuses.filter(
+      (status) =>
+        status &&
+        status.capability &&
+        status.capability.businessStatus === "ONLINE",
+    ).length;
+    let pending = Math.max(0, statuses.length - online);
+    let blockers = [];
+    errors.forEach((item) => {
+      let blocker = this.readinessBlocker(
+        "ACCEPTANCE_PROFILE_PROVIDER_UNAVAILABLE",
+        "NEEDS_ATTENTION",
+        "ACCEPTANCE",
+        "BACKOFFICE_APPLICATION_INITIALIZATION",
+        "Open Setup & Accelerators",
+        "Acceptance readiness could not read one or more application profiles.",
+        {
+          repairOperation: "applicationInitialization.refreshStatus",
+          repairAction: "REFRESH_ACCEPTANCE_STATUS",
+          suggestedAction:
+            "Refresh Setup & Accelerators and verify the owning publication/runtime providers are registered.",
+        },
+      );
+      blocker.profileCode =
+        item.profile && item.profile.code
+          ? String(item.profile.code)
+          : undefined;
+      blockers.push(blocker);
+    });
+    if (pending > 0)
+      blockers.push(
+        this.readinessBlocker(
+          "ACCEPTANCE_APPLICATIONS_NOT_ONLINE",
+          "NEEDS_ATTENTION",
+          "ACCEPTANCE",
+          "BACKOFFICE_APPLICATION_INITIALIZATION",
+          "Open Setup & Accelerators",
+          "One or more customer application profiles are not Online-ready.",
+          {
+            repairOperation: "applicationInitialization.reviewProfiles",
+            repairAction: "REVIEW_APPLICATION_PARITY",
+            suggestedAction:
+              "Open Setup & Accelerators and bring pending applications or documentation packs Online before final acceptance.",
+          },
+        ),
+      );
+    if (
+      browserEnabled &&
+      browserEvidence.state !== "PASSED" &&
+      browserEvidence.state !== "SKIPPED"
+    ) {
+      let evidenceCode =
+        browserEvidence.state === "FAILED"
+          ? "BROWSER_VALIDATION_FAILED"
+          : browserEvidence.state === "STALE"
+            ? "BROWSER_VALIDATION_EVIDENCE_STALE"
+            : "BROWSER_VALIDATION_EVIDENCE_REQUIRED";
+      blockers.push(
+        this.readinessBlocker(
+          evidenceCode,
+          browserEvidence.state === "FAILED" ? "BLOCKED" : "NEEDS_ATTENTION",
+          "ACCEPTANCE",
+          "NTOOLING_BROWSER_VALIDATION",
+          "Run local browser validation",
+          browserEvidence.message ||
+            "Browser validation evidence is not passing.",
+          {
+            repairOperation: "tooling.acceptance.browserValidation",
+            repairAction: "CAPTURE_BROWSER_VALIDATION",
+            suggestedAction:
+              browserEvidence.nextAction ||
+              "Run the local acceptance/browser smoke and refresh Axis after evidence is captured.",
+          },
+        ),
+      );
+      blockers[blockers.length - 1].browserValidationState =
+        browserEvidence.state;
+      blockers[blockers.length - 1].failedStep = browserEvidence.failedStep;
+      blockers[blockers.length - 1].checkedAt = browserEvidence.checkedAt;
+    }
+    let businessStatus = blockers.length
+      ? "NEEDS_ATTENTION"
+      : statuses.length
+        ? "READY"
+        : browserEnabled
+          ? "NEEDS_ATTENTION"
+          : "NOT_CONFIGURED";
+    return {
+      key: "acceptance",
+      title: "Acceptance and browser validation",
+      businessStatus: businessStatus,
+      ownerModule: "tooling",
+      source: "NTOOLING_ACCEPTANCE_READINESS",
+      route: "/dashboard",
+      summary: {
+        browserValidationEnabled: browserEnabled,
+        browserValidationReason: reason,
+        browserValidationState: browserEnabled
+          ? browserEvidence.state
+          : "SKIPPED",
+        browserValidationCheckedAt: browserEvidence.checkedAt,
+        browserValidationRunId: browserEvidence.runId,
+        browserValidationFailedStep: browserEvidence.failedStep,
+        browserValidationSource: browserEvidence.source,
+        browserValidationEvidenceFile: browserEvidence.evidenceFile,
+        browserValidationCommand: browserEvidence.command,
+        browserValidationNextAction: browserEvidence.nextAction,
+        operatorCommands: operatorCommands,
+        profileCount: statuses.length,
+        onlineProfileCount: online,
+        pendingProfileCount: pending,
+        providerErrorCount: errors.length,
+        blockerCount: blockers.length,
+      },
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Complete application parity and capture configured local browser-validation evidence. Commands: " +
+          operatorCommands.join(" -> ")
+        : statuses.length
+          ? "Acceptance readiness has no detected blockers."
+          : "Configure acceptance profiles or keep browser validation disabled until a local runner is available.",
+    };
+  },
+  /** Builds guided documentation repair metadata for operator-facing blockers. */
+  documentationRepair: function (operation, action, label) {
+    return {
+      operation: operation,
+      action: action,
+      label: label,
+      available: true,
+      eligibility: "MANUAL",
+    };
+  },
+  /** Summarizes documentation source visibility and publication guidance. */
+  documentationSection: function (sources, publicationState) {
+    sources = [].concat(sources || []);
+    let bySource = (publicationState || {}).bySourceId || {};
+    let pending = sources.filter((source) => {
+      if (!source || !source.id) return false;
+      let state = bySource[String(source.id)];
+      return source.type === "CMS" && (!state || state.ready !== true);
+    });
+    let blockers = [];
+    if (sources.length === 0)
+      blockers.push(
+        this.readinessBlocker(
+          "DOCUMENTATION_SOURCES_MISSING",
+          "NEEDS_ATTENTION",
+          "DOCUMENTATION",
+          "BACKOFFICE_DOCUMENTATION",
+          "Open Documentation Dashboard",
+          "No documentation sources are visible to this operator.",
+          {
+            repairOperation: "documentation.installSources",
+            repairAction: "INSTALL_DOCUMENTATION_SOURCES",
+            repairAvailable: true,
+            repairEligibility: "MANUAL",
+            repairLabel: "Install documentation sources",
+          },
+        ),
+      );
+    pending.forEach((source) => {
+      let state = bySource[String(source.id)] || {};
+      let readiness = String(state.readiness || "").toUpperCase();
+      let repair =
+        readiness.includes("NOT_INSTALLED") ||
+        readiness.includes("NOT_INITIALIZED")
+          ? this.documentationRepair(
+              "documentation.pack.installStaged",
+              "INSTALL_DOCUMENTATION_PACK",
+              "Install documentation pack",
+            )
+          : readiness.includes("INDEX")
+            ? this.documentationRepair(
+                "documentation.index.refresh",
+                "INDEX_DOCUMENTATION_PACK",
+                "Index documentation pack",
+              )
+            : this.documentationRepair(
+                "documentation.publish",
+                "PUBLISH_DOCUMENTATION",
+                "Publish documentation pack",
+              );
+      let blocker = this.readinessBlocker(
+        readiness.includes("INDEX")
+          ? "DOCUMENTATION_INDEXING_PENDING"
+          : readiness.includes("NOT_INSTALLED") ||
+              readiness.includes("NOT_INITIALIZED")
+            ? "DOCUMENTATION_PACK_NOT_INSTALLED"
+            : "DOCUMENTATION_PUBLICATION_PENDING",
+        "NEEDS_ATTENTION",
+        "PUBLICATION",
+        "DOCUMENTATION_PUBLICATION",
+        "Open Documentation Dashboard",
+        "Documentation pack is not Online-ready: " +
+          String(source.label || source.id),
+        {
+          repairOperation: repair.operation,
+          repairAction: repair.action,
+          repairAvailable: true,
+          repairEligibility: "MANUAL",
+          repairLabel: repair.label,
+          suggestedAction:
+            "Install staged content, request approval, approve, and publish the documentation pack Online.",
+        },
+      );
+      blocker.sourceId = String(source.id);
+      blocker.route = source.route ? String(source.route) : undefined;
+      blocker.readiness = state.readiness ? String(state.readiness) : "UNKNOWN";
+      blockers.push(blocker);
+    });
+    let sourceReadinessCounts = this.countByValue(sources, (source) => {
+      if (!source || !source.id) return "UNKNOWN";
+      let state = bySource[String(source.id)] || {};
+      if (source.type === "OPENAPI") return "REFERENCE";
+      return state.ready === true ? "READY" : state.readiness || "NOT_READY";
+    });
+    return {
+      key: "documentation",
+      title: "Documentation publishing and indexing",
+      businessStatus: blockers.length ? "NEEDS_ATTENTION" : "READY",
+      ownerModule: "documentation",
+      source: "BACKOFFICE_DOCUMENTATION",
+      route: "/docs/dashboard",
+      summary: {
+        sourceCount: sources.length,
+        cmsSourceCount: sources.filter(
+          (source) => source && source.type === "CMS",
+        ).length,
+        pendingPublicationCount: pending.length,
+        installedSourceCount: sources.filter((source) => {
+          let state =
+            source && source.id ? bySource[String(source.id)] || {} : {};
+          return (
+            state.installed === true ||
+            state.ready === true ||
+            String(state.readiness || "").includes("INSTALLED")
+          );
+        }).length,
+        onlineSourceCount: sources.filter((source) => {
+          let state =
+            source && source.id ? bySource[String(source.id)] || {} : {};
+          return (
+            state.online === true ||
+            state.ready === true ||
+            String(state.readiness || "").includes("ONLINE")
+          );
+        }).length,
+        indexedSourceCount: sources.filter((source) => {
+          let state =
+            source && source.id ? bySource[String(source.id)] || {} : {};
+          return (
+            state.indexed === true ||
+            String(state.indexing || "").toUpperCase() === "INDEXED"
+          );
+        }).length,
+        openApiSourceCount: sources.filter(
+          (source) => source && source.type === "OPENAPI",
+        ).length,
+        sourceReadinessCounts: sourceReadinessCounts,
+        operatorCommands: [
+          "Open Documentation Dashboard",
+          "Initialize or install staged documentation packs",
+          "Request approval and publish Online",
+          "Trigger documentation indexing",
+          "Refresh operational readiness",
+        ],
+      },
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Install, approve, publish, and index documentation packs from Documentation Dashboard."
+        : "Documentation sources are visible and publication blockers were not detected.",
+    };
+  },
+  /** Builds a placeholder section when a domain capability has not yet exposed canonical readiness. */
+  ownerPendingSection: function (
+    key,
+    title,
+    ownerModule,
+    route,
+    source,
+    nextAction,
+  ) {
+    return {
+      key: key,
+      title: title,
+      businessStatus: "NOT_EXPOSED",
+      ownerModule: ownerModule,
+      source: source,
+      route: route,
+      summary: { exposed: false },
+      blockers: [
+        this.readinessBlocker(
+          key.toUpperCase() + "_READINESS_NOT_EXPOSED",
+          "NEEDS_ATTENTION",
+          ownerModule,
+          source,
+          nextAction,
+          title +
+            " does not yet expose a canonical BackOffice readiness section.",
+          {
+            repairOperation: ownerModule + ".exposeReadiness",
+            repairAction: "EXPOSE_READINESS_CONTRACT",
+          },
+        ),
+      ],
+      nextAction: nextAction,
+    };
+  },
+  /** Returns the operator authorization header for owner runtime readiness reads. */
+  authorizationHeader: function (request) {
+    let header =
+      (request &&
+        (request.header ||
+          request.headers ||
+          (request.httpRequest && request.httpRequest.headers))) ||
+      {};
+    let value = header.Authorization || header.authorization;
+    if (value && /^Bearer\s+/i.test(String(value))) return String(value);
+    if (request && request.authToken) return "Bearer " + request.authToken;
+    return undefined;
+  },
+  /** Extracts unique nImport catalogue targets from application preparation profiles. */
+  importReadinessTargets: function (profiles) {
+    let targets = {};
+    [].concat(profiles || []).forEach((profile) => {
+      [].concat((profile || {}).dataPackages || []).forEach((step) => {
+        if (!step || !step.dataType || !step.targetServer) return;
+        let dataType = String(step.dataType);
+        let key = [
+          step.targetServer,
+          step.targetRuntimeRole || "",
+          dataType,
+        ].join(":");
+        targets[key] = {
+          dataType: dataType,
+          targetServer: String(step.targetServer),
+          targetRuntimeRole: step.targetRuntimeRole
+            ? String(step.targetRuntimeRole)
+            : undefined,
+        };
+      });
+    });
+    return Object.values(targets).sort((left, right) =>
+      [left.targetServer, left.targetRuntimeRole || "", left.dataType]
+        .join(":")
+        .localeCompare(
+          [
+            right.targetServer,
+            right.targetRuntimeRole || "",
+            right.dataType,
+          ].join(":"),
+        ),
+    );
+  },
+  /** Calls the owner nImport catalogue route for one target runtime. */
+  invokeImportCatalogue: async function (target, request) {
+    if (
+      !SERVICE.DefaultModuleService ||
+      typeof SERVICE.DefaultModuleService.invokeModule !== "function"
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Module communication service is unavailable",
+      );
+    }
+    let authorization = this.authorizationHeader(request);
+    return SERVICE.DefaultModuleService.invokeModule({
+      moduleName: "import",
+      local: false,
+      connectionName: target.targetServer,
+      connectionType: "abstract",
+      targetAuthority: {
+        server: target.targetServer,
+        runtimeRole: target.targetRuntimeRole
+          ? { code: target.targetRuntimeRole }
+          : undefined,
+      },
+      methodName: "GET",
+      apiName: "/" + target.dataType,
+      timeoutMs: 30000,
+      maxAttempts: 1,
+      header: authorization ? { Authorization: authorization } : {},
+      responseSelector: (response) =>
+        (response && (response.data || response.result || response)) || [],
+    });
+  },
+  /** Normalizes an nImport release blocker into the shared BackOffice readiness shape. */
+  normalizeImportBlocker: function (blocker, release, target) {
+    blocker = blocker || {};
+    let action =
+      blocker.action ||
+      (release.readiness || {}).nextAction ||
+      "Open Data Releases";
+    let repair = Object.assign({}, blocker.repair || {});
+    if (!repair.operation) repair.operation = "dataRelease.install";
+    if (!repair.action)
+      repair.action = repair.actionCode || "REPAIR_DATA_RELEASE";
+    if (!repair.eligibility)
+      repair.eligibility =
+        repair.available === true ? "MANUAL" : "NOT_AVAILABLE";
+    if (!repair.label) repair.label = action;
+    if (repair.available === undefined)
+      repair.available =
+        repair.eligibility === "MANUAL" || repair.eligibility === "AUTOMATIC";
+    return {
+      blockerCode: String(
+        blocker.blockerCode || blocker.code || "DATA_RELEASE_NOT_READY",
+      ),
+      code: String(
+        blocker.code || blocker.blockerCode || "DATA_RELEASE_NOT_READY",
+      ),
+      severity: String(blocker.severity || "NEEDS_ATTENTION"),
+      ownerType: String(blocker.ownerType || "DATA_RELEASE"),
+      source: String(blocker.source || "IMPORT_RELEASE_CATALOGUE"),
+      action: String(action),
+      message: String(
+        blocker.message ||
+          (release.displayName || release.releaseCode || "Data release") +
+            " is not ready.",
+      ),
+      disabledReason: String(
+        blocker.disabledReason ||
+          blocker.message ||
+          "Data release is not ready.",
+      ),
+      repair: repair,
+      suggestedAction: String(blocker.suggestedAction || action),
+      businessImpact: String(
+        blocker.businessImpact ||
+          "Required business data may be missing or stale, so application setup and publication validation can be misleading.",
+      ),
+      recoveryHint: String(
+        blocker.recoveryHint ||
+          blocker.suggestedAction ||
+          action ||
+          "Repair the data release in the import workspace and refresh readiness.",
+      ),
+      ownerModule: release.moduleName || (release.readiness || {}).owningModule,
+      releaseCode: release.releaseCode,
+      dataType: target.dataType,
+      targetServer: target.targetServer,
+      targetRuntimeRole: target.targetRuntimeRole,
+    };
+  },
+  /** Counts stable status values without leaking owner payloads into the dashboard contract. */
+  countByValue: function (items, resolver) {
+    return [].concat(items || []).reduce((result, item) => {
+      let value = resolver(item);
+      value = value ? String(value) : "UNKNOWN";
+      result[value] = (result[value] || 0) + 1;
+      return result;
+    }, {});
+  },
+  /** Groups import releases by their business data group so operators see outcomes, not files. */
+  importReleaseGroups: function (releases) {
+    let groups = {};
+    [].concat(releases || []).forEach((release) => {
+      let readiness = release.readiness || {};
+      let group =
+        readiness.group ||
+        release.releaseGroup ||
+        release.dataGroup ||
+        release.dataType ||
+        "DATA_RELEASE";
+      let key = String(group);
+      if (!groups[key])
+        groups[key] = {
+          code: key,
+          releaseCount: 0,
+          blockerCount: 0,
+          currentCount: 0,
+          needsAttentionCount: 0,
+          targetServers: [],
+        };
+      groups[key].releaseCount++;
+      if (
+        readiness.businessStatus === "READY" ||
+        readiness.businessStatus === "CURRENT" ||
+        readiness.businessStatus === "PREPARED_STAGED"
+      )
+        groups[key].currentCount++;
+      if (
+        readiness.businessStatus &&
+        !["READY", "CURRENT", "PREPARED_STAGED"].includes(
+          String(readiness.businessStatus),
+        )
+      ) {
+        groups[key].needsAttentionCount++;
+      }
+      groups[key].blockerCount += [].concat(readiness.blockers || []).length;
+      let target = release._target || {};
+      if (
+        target.targetServer &&
+        !groups[key].targetServers.includes(String(target.targetServer))
+      ) {
+        groups[key].targetServers.push(String(target.targetServer));
+      }
+    });
+    return Object.values(groups).sort((left, right) =>
+      left.code.localeCompare(right.code),
+    );
+  },
+  /** Returns a stable unique compact array for client-safe dashboard summaries. */
+  uniqueValues: function (items) {
+    return []
+      .concat(items || [])
+      .filter(Boolean)
+      .map((item) => String(item))
+      .filter((item, index, values) => values.indexOf(item) === index);
+  },
+  /** Extracts safe repair actions from section blockers. */
+  repairActionsForSection: function (blockers) {
+    return this.uniqueValues(
+      [].concat(blockers || []).map((blocker) => {
+        let repair = (blocker && blocker.repair) || {};
+        let label = repair.label || blocker.suggestedAction || blocker.action;
+        let operation = repair.operation || "readiness.review";
+        let action = repair.action || repair.actionCode || blocker.code;
+        return [label, operation, action].filter(Boolean).join(" · ");
+      }),
+    ).slice(0, 5);
+  },
+  /** Extracts target runtime dependencies from section blockers without exposing credentials. */
+  runtimeDependenciesForSection: function (blockers) {
+    return this.uniqueValues(
+      [].concat(blockers || []).map((blocker) => {
+        let diagnostic = (blocker && blocker.runtimeDiagnostic) || {};
+        let server = (blocker && blocker.targetServer) || diagnostic.server;
+        let role =
+          (blocker && blocker.targetRuntimeRole) ||
+          diagnostic.runtimeRole ||
+          diagnostic.runtimeRoleCode;
+        let node = diagnostic.node;
+        return [server, role, node].filter(Boolean).join("/");
+      }),
+    ).slice(0, 5);
+  },
+  /** Resolves a concise business impact statement for each recovery lane. */
+  laneBusinessImpact: function (section, fallback) {
+    let blockers = [].concat((section || {}).blockers || []);
+    let impact = blockers
+      .map((blocker) => blocker && blocker.businessImpact)
+      .find(Boolean);
+    return String(
+      impact ||
+        fallback ||
+        "Readiness must be resolved before dependable go-live or recovery validation.",
+    );
+  },
+  /** Creates the business-user recovery lane model consumed by Axis. */
+  recoveryLane: function (section, label, description) {
+    section = section || {};
+    let blockers = [].concat(section.blockers || []);
+    return {
+      key: String(section.key || label || "readiness"),
+      label: String(label || section.title || section.key || "Readiness"),
+      description: String(description || section.title || "Review readiness."),
+      state: String(section.businessStatus || "UNKNOWN"),
+      ownerModule: String(section.ownerModule || "unknown"),
+      source: String(section.source || "unknown"),
+      route: String(section.route || "/dashboard"),
+      blockerCount: blockers.length,
+      issueCodes: blockers
+        .map((blocker) => blocker.code || blocker.blockerCode)
+        .filter(Boolean)
+        .slice(0, 4),
+      repairActions: this.repairActionsForSection(blockers),
+      runtimeDependencies: this.runtimeDependenciesForSection(blockers),
+      businessImpact: this.laneBusinessImpact(section),
+      nextAction: String(section.nextAction || "Review the owning workspace."),
+    };
+  },
+  /** Builds the canonical go-live recovery matrix from existing readiness sections. */
+  operationalRecoveryMatrix: function (sections) {
+    let byKey = [].concat(sections || []).reduce((result, section) => {
+      if (section && section.key) result[section.key] = section;
+      return result;
+    }, {});
+    return [
+      this.recoveryLane(
+        byKey.runtimeCommunication,
+        "Verify runtimes",
+        "Confirm module runtimes, heartbeats, grants, and internal communication.",
+      ),
+      this.recoveryLane(
+        byKey.imports,
+        "Import data",
+        "Install and repair business data releases from owner catalogues.",
+      ),
+      this.recoveryLane(
+        byKey.publishing,
+        "Prepare staged publication",
+        "Prepare staged application and documentation publication profiles.",
+      ),
+      this.recoveryLane(
+        byKey.approval,
+        "Complete approvals",
+        "Resolve governed Process approval tasks before Online publication.",
+      ),
+      this.recoveryLane(
+        byKey.documentation,
+        "Publish documentation",
+        "Install, approve, publish, and index documentation packs.",
+      ),
+      this.recoveryLane(
+        byKey.media,
+        "Repair media",
+        "Create required media objects and reconcile references before Online delivery.",
+      ),
+      this.recoveryLane(
+        byKey.search,
+        "Validate search",
+        "Confirm database/search rendering policy and index readiness.",
+      ),
+      this.recoveryLane(
+        byKey.assistant,
+        "Index assistant knowledge",
+        "Confirm governed Assistant sources are registered, indexed, and retrievable.",
+      ),
+      this.recoveryLane(
+        byKey.acceptance,
+        "Capture validation evidence",
+        "Run configured browser and acceptance checks after repairs.",
+      ),
+    ];
+  },
+  /** Builds the owner-backed import release readiness section from nImport catalogue projections. */
+  importReadinessSection: async function (request, profiles) {
+    let targets = this.importReadinessTargets(profiles);
+    if (targets.length === 0) {
+      return {
+        key: "imports",
+        title: "Data import releases",
+        businessStatus: "NOT_CONFIGURED",
+        ownerModule: "import",
+        source: "IMPORT_RELEASE_CATALOGUE",
+        route: "/operations/imports-exports",
+        summary: { targetCount: 0, releaseCount: 0, blockerCount: 0 },
+        blockers: [
+          this.readinessBlocker(
+            "IMPORT_READINESS_TARGETS_MISSING",
+            "NEEDS_ATTENTION",
+            "DATA_RELEASE",
+            "IMPORT_RELEASE_CATALOGUE",
+            "Open Setup & Accelerators",
+            "No application preparation data targets are visible for import readiness.",
             {
-                code: 'RUNTIME_API_KEY_GRANT_READY',
-                state: observations.length > 0 && unavailable.length === 0 ? 'READY' : 'NEEDS_ATTENTION',
-                message: 'Internal runtime calls require server-level API key and grant readiness.',
-                action: 'Check server-level defaultAuthDetail and runtime communication grants in owning framework configuration.',
+              repairOperation: "applicationInitialization.configureProfiles",
+              repairAction: "CONFIGURE_PREPARATION_TARGETS",
+              suggestedAction:
+                "Define application preparation data targets in the owning application initialization profiles.",
             },
-            {
-                code: 'MODULE_REGISTRY_RECONCILED',
-                state: stale.length === 0 && unavailable.length === 0 ? 'READY' : 'NEEDS_ATTENTION',
-                message: 'Module Registry should reconcile active runtime leases and stale node records on every startup.',
-                action: 'Refresh Module Registry after startup; stale leases are repaired by the backend lease reconciler.',
-            },
-        ];
-        let reasonCodes = Array.from(new Set(observations.map(item => item.reasonCode)
-            .concat(unavailable.length > 0 ? ['RUNTIME_UNAVAILABLE'] : [])
-            .concat(observations.length === 0 ? ['RUNTIME_NOT_REGISTERED'] : []))).sort();
-        return {
-            entries: entries,
-            observations: observations,
-            serverKeys: serverKeys,
-            runtimeRoles: runtimeRoles,
-            staleCount: stale.length,
-            unavailable: unavailable,
-            reasonCodes: reasonCodes,
-            communicationChecks: communicationChecks,
-        };
-    },
-    /** Maps module availability into a compact support-safe readiness section. */
-    moduleRuntimeSection: function (modules, availability) {
-        let diagnostics = this.runtimeCommunicationDiagnostics(modules, availability);
-        let runtimeCount = diagnostics.entries.length;
-        let unavailable = diagnostics.unavailable;
-        let blockers = [];
-        if (runtimeCount === 0) blockers.push(this.readinessBlocker(
-            'RUNTIME_NOT_REGISTERED',
-            'NEEDS_ATTENTION',
-            'RUNTIME',
-            'BACKOFFICE_BOOTSTRAP',
-            'Start runtimes and refresh Module Registry',
-            'No runtime heartbeat evidence is registered for the visible module catalogue.',
-            { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_RUNTIME',
-                suggestedAction: 'Start local/backend runtimes, then refresh Module Registry and Axis bootstrap.' }
-        ));
-        if (unavailable[0]) blockers.push(this.readinessBlocker(
-            'RUNTIME_UNAVAILABLE',
-            'BLOCKED',
-            'RUNTIME',
-            'BACKOFFICE_AVAILABILITY',
-            'Open Module Registry',
-            'One or more registered runtimes are degraded or unavailable.',
-            { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_RUNTIME', suggestedAction: 'Refresh Module Registry and inspect stale runtime observations.' }
-        ));
-        if (diagnostics.staleCount > 0) blockers.push(this.readinessBlocker(
-            'HEARTBEAT_STALE',
-            'NEEDS_ATTENTION',
-            'RUNTIME',
-            'BACKOFFICE_AVAILABILITY',
-            'Refresh Module Registry',
-            'One or more runtime heartbeat observations are stale.',
-            { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_RUNTIME',
-                suggestedAction: 'Restart the owning runtime if needed, refresh Module Registry, and rerun local recovery readiness.' }
-        ));
-        return {
-            key: 'runtimeCommunication',
-            title: 'Runtime internal communication',
-            businessStatus: blockers.length > 0 ? 'NEEDS_ATTENTION' : runtimeCount > 0 ? 'READY' : 'NOT_CONFIGURED',
-            ownerModule: 'nService',
-            source: 'BACKOFFICE_BOOTSTRAP',
-            route: '/system/modules',
-            summary: {
-                runtimeCount: runtimeCount,
-                unavailableCount: unavailable.length,
-                staleCount: diagnostics.staleCount,
-                serverCount: diagnostics.serverKeys.length,
-                nodeCount: diagnostics.serverKeys.length,
-                runtimeRoles: diagnostics.runtimeRoles,
-                reasonCodes: diagnostics.reasonCodes,
-                communicationChecks: diagnostics.communicationChecks,
-                runtimeObservations: diagnostics.observations.slice(0, 25),
-                operatorCommands: [
-                    'npm run local-recovery:readiness -- --live --json',
-                    'Open Module Registry and refresh runtime status',
-                    'Check server-level API key/grant readiness when probes fail',
-                ],
-            },
-            blockers: blockers,
-            nextAction: blockers.length > 0 ? 'Open Module Registry and repair unavailable runtime communication.' :
-                runtimeCount > 0 ? 'Runtime communication has active bootstrap evidence.' : 'Register runtime modules before validating communication.',
-        };
-    },
-    /** Summarizes application initialization capability readiness profiles. */
-    applicationSection: function (profileStatusReport, profiles) {
-        profiles = [].concat(profiles || []);
-        let statuses = [].concat((profileStatusReport || {}).statuses || []);
-        let errors = [].concat((profileStatusReport || {}).errors || []);
-        let blockers = profiles.length === 0 ? [this.readinessBlocker(
-            'APPLICATION_PROFILES_MISSING',
-            'NEEDS_ATTENTION',
-            'APPLICATION_INITIALIZATION',
-            'BACKOFFICE_APPLICATION_INITIALIZATION',
-            'Open Setup & Accelerators',
-            'No application initialization profiles are visible to this operator.',
-            { repairOperation: 'applicationInitialization.reviewProfiles', repairAction: 'REVIEW_APPLICATION_PROFILES' }
-        )] : [];
-        let profileCodesWithStatus = new Set(statuses.map(status => String(status.profileCode || '')).filter(Boolean));
-        profiles.filter(profile => profile && profile.code && !profileCodesWithStatus.has(String(profile.code))).forEach(profile => {
-            blockers.push(this.readinessBlocker(
-                'APPLICATION_PARITY_PROVIDER_UNAVAILABLE',
-                'NEEDS_ATTENTION',
-                'APPLICATION_INITIALIZATION',
-                'BACKOFFICE_APPLICATION_INITIALIZATION',
-                'Refresh application parity',
-                'Application parity could not be read for profile: ' + String(profile.title || profile.code),
-                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_APPLICATION_PARITY',
-                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh application parity',
-                    suggestedAction: 'Refresh Setup & Accelerators and verify the owning runtime/provider is active.' }
-            ));
-        });
-        errors.forEach(item => {
-            let profile = item.profile || {};
-            let blocker = this.readinessBlocker(
-                'APPLICATION_PARITY_PROVIDER_FAILED',
-                'NEEDS_ATTENTION',
-                'APPLICATION_INITIALIZATION',
-                'BACKOFFICE_APPLICATION_INITIALIZATION',
-                'Refresh application parity',
-                'Application parity provider failed for profile: ' + String(profile.title || profile.code || 'unknown'),
-                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_APPLICATION_PARITY',
-                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh application parity',
-                    suggestedAction: 'Open Setup & Accelerators, refresh the profile, and verify the owning runtime.' }
-            );
-            blocker.profileCode = profile.code ? String(profile.code) : undefined;
-            blocker.failureCode = item.error ? String(item.error.code || item.error.message || 'APPLICATION_PARITY_FAILED') : undefined;
-            blockers.push(blocker);
-        });
-        statuses.forEach(status => {
-            let capability = status && status.capability || {};
-            if (capability.businessStatus && !['ONLINE', 'READY'].includes(String(capability.businessStatus))) {
-                blockers.push(this.readinessBlocker(
-                    'APPLICATION_PARITY_NOT_ONLINE',
-                    'NEEDS_ATTENTION',
-                    'APPLICATION_INITIALIZATION',
-                    'BACKOFFICE_APPLICATION_INITIALIZATION',
-                    'Open Setup & Accelerators',
-                    'Application is not Online-ready: ' + String(status.applicationCode || status.profileCode || 'unknown'),
-                    { repairOperation: 'applicationInitialization.prepareCapability', repairAction: 'PREPARE_APPLICATION_PARITY',
-                        repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Prepare application parity',
-                        suggestedAction: capability.nextAction || 'Prepare, approve, and publish the application profile.' }
-                ));
-            }
-        });
-        let applicationCodes = statuses.map(status => status.applicationCode || status.profileCode).filter(Boolean).map(String);
-        let applicationStatusCounts = this.countByValue(statuses, status =>
-            status && status.capability && status.capability.businessStatus || 'UNKNOWN');
-        return {
-            key: 'applications',
-            title: 'Customer application readiness',
-            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : 'READY',
-            ownerModule: 'backoffice',
-            source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
-            route: '/publishing',
-            summary: {
-                profileCount: profiles.length,
-                statusCount: statuses.length,
-                providerErrorCount: errors.length,
-                applicationCodes: applicationCodes,
-                applicationStatusCounts: applicationStatusCounts,
-                nexusParity: applicationCodes.includes('nexus') || applicationCodes.some(code => /nexus/i.test(code)) ? 'OBSERVED' : 'NOT_OBSERVED',
-                agoraParity: applicationCodes.includes('agora') || applicationCodes.some(code => /agora/i.test(code)) ? 'OBSERVED' : 'NOT_OBSERVED',
-                circaParity: applicationCodes.includes('circa') || applicationCodes.some(code => /circa/i.test(code)) ? 'OBSERVED' : 'NOT_OBSERVED',
-                operatorCommands: [
-                    'Open Setup & Accelerators',
-                    'Refresh application profile status',
-                    'Prepare or publish pending profiles',
-                    'Refresh operational readiness',
-                ],
-            },
-            blockers: blockers,
-            nextAction: blockers.length ? 'Open Setup & Accelerators and initialize or repair required application parity profiles.' :
-                'Application profiles are available and parity providers returned ready state.',
-        };
-    },
-    /** Summarizes local acceptance and optional browser-validation evidence without making browsers mandatory outside opted-in environments. */
-    acceptanceSection: function (profileStatusReport, context) {
-        let tooling = CONFIG.get('tooling') || {};
-        let acceptance = tooling.acceptance || {};
-        let browserValidation = acceptance.browserValidation || {};
-        let statuses = [].concat((profileStatusReport || {}).statuses || []);
-        let errors = [].concat((profileStatusReport || {}).errors || []);
-        let browserEnabled = browserValidation.enabled === true;
-        let browserEvidence = this.resolveBrowserValidationEvidence(browserValidation, context);
-        let operatorCommands = this.acceptanceOperatorCommands();
-        let reason = browserValidation.reason ? String(browserValidation.reason) :
-            browserEnabled ? 'Browser validation is enabled for this environment.' :
-                'Browser validation is disabled by configuration.';
-        let online = statuses.filter(status =>
-            status && status.capability && status.capability.businessStatus === 'ONLINE').length;
-        let pending = Math.max(0, statuses.length - online);
-        let blockers = [];
-        errors.forEach(item => {
-            let blocker = this.readinessBlocker(
-                'ACCEPTANCE_PROFILE_PROVIDER_UNAVAILABLE',
-                'NEEDS_ATTENTION',
-                'ACCEPTANCE',
-                'BACKOFFICE_APPLICATION_INITIALIZATION',
-                'Open Setup & Accelerators',
-                'Acceptance readiness could not read one or more application profiles.',
-                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_ACCEPTANCE_STATUS',
-                    suggestedAction: 'Refresh Setup & Accelerators and verify the owning publication/runtime providers are registered.' }
-            );
-            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
-            blockers.push(blocker);
-        });
-        if (pending > 0) blockers.push(this.readinessBlocker(
-            'ACCEPTANCE_APPLICATIONS_NOT_ONLINE',
-            'NEEDS_ATTENTION',
-            'ACCEPTANCE',
-            'BACKOFFICE_APPLICATION_INITIALIZATION',
-            'Open Setup & Accelerators',
-            'One or more customer application profiles are not Online-ready.',
-            { repairOperation: 'applicationInitialization.reviewProfiles', repairAction: 'REVIEW_APPLICATION_PARITY',
-                suggestedAction: 'Open Setup & Accelerators and bring pending applications or documentation packs Online before final acceptance.' }
-        ));
-        if (browserEnabled && browserEvidence.state !== 'PASSED' && browserEvidence.state !== 'SKIPPED') {
-            let evidenceCode = browserEvidence.state === 'FAILED' ? 'BROWSER_VALIDATION_FAILED' :
-                browserEvidence.state === 'STALE' ? 'BROWSER_VALIDATION_EVIDENCE_STALE' :
-                    'BROWSER_VALIDATION_EVIDENCE_REQUIRED';
-            blockers.push(this.readinessBlocker(
-                evidenceCode,
-                browserEvidence.state === 'FAILED' ? 'BLOCKED' : 'NEEDS_ATTENTION',
-                'ACCEPTANCE',
-                'NTOOLING_BROWSER_VALIDATION',
-                'Run local browser validation',
-                browserEvidence.message || 'Browser validation evidence is not passing.',
-                { repairOperation: 'tooling.acceptance.browserValidation', repairAction: 'CAPTURE_BROWSER_VALIDATION',
-                    suggestedAction: browserEvidence.nextAction || 'Run the local acceptance/browser smoke and refresh Axis after evidence is captured.' }
-            ));
-            blockers[blockers.length - 1].browserValidationState = browserEvidence.state;
-            blockers[blockers.length - 1].failedStep = browserEvidence.failedStep;
-            blockers[blockers.length - 1].checkedAt = browserEvidence.checkedAt;
-        }
-        let businessStatus = blockers.length ? 'NEEDS_ATTENTION' :
-            statuses.length ? 'READY' : browserEnabled ? 'NEEDS_ATTENTION' : 'NOT_CONFIGURED';
-        return {
-            key: 'acceptance',
-            title: 'Acceptance and browser validation',
-            businessStatus: businessStatus,
-            ownerModule: 'tooling',
-            source: 'NTOOLING_ACCEPTANCE_READINESS',
-            route: '/dashboard',
-            summary: {
-                browserValidationEnabled: browserEnabled,
-                browserValidationReason: reason,
-                browserValidationState: browserEnabled ? browserEvidence.state : 'SKIPPED',
-                browserValidationCheckedAt: browserEvidence.checkedAt,
-                browserValidationRunId: browserEvidence.runId,
-                browserValidationFailedStep: browserEvidence.failedStep,
-                browserValidationSource: browserEvidence.source,
-                browserValidationEvidenceFile: browserEvidence.evidenceFile,
-                browserValidationCommand: browserEvidence.command,
-                browserValidationNextAction: browserEvidence.nextAction,
-                operatorCommands: operatorCommands,
-                profileCount: statuses.length,
-                onlineProfileCount: online,
-                pendingProfileCount: pending,
-                providerErrorCount: errors.length,
-                blockerCount: blockers.length,
-            },
-            blockers: blockers,
-            nextAction: blockers.length ? 'Complete application parity and capture configured local browser-validation evidence. Commands: ' + operatorCommands.join(' -> ') :
-                statuses.length ? 'Acceptance readiness has no detected blockers.' :
-                    'Configure acceptance profiles or keep browser validation disabled until a local runner is available.',
-        };
-    },
-    /** Builds guided documentation repair metadata for operator-facing blockers. */
-    documentationRepair: function (operation, action, label) {
-        return { operation: operation, action: action, label: label, available: true, eligibility: 'MANUAL' };
-    },
-    /** Summarizes documentation source visibility and publication guidance. */
-    documentationSection: function (sources, publicationState) {
-        sources = [].concat(sources || []);
-        let bySource = (publicationState || {}).bySourceId || {};
-        let pending = sources.filter(source => {
-            if (!source || !source.id) return false;
-            let state = bySource[String(source.id)];
-            return source.type === 'CMS' && (!state || state.ready !== true);
-        });
-        let blockers = [];
-        if (sources.length === 0) blockers.push(this.readinessBlocker(
-            'DOCUMENTATION_SOURCES_MISSING',
-            'NEEDS_ATTENTION',
-            'DOCUMENTATION',
-            'BACKOFFICE_DOCUMENTATION',
-            'Open Documentation Dashboard',
-            'No documentation sources are visible to this operator.',
-            { repairOperation: 'documentation.installSources', repairAction: 'INSTALL_DOCUMENTATION_SOURCES',
-                repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Install documentation sources' }
-        ));
-        pending.forEach(source => {
-            let state = bySource[String(source.id)] || {};
-            let readiness = String(state.readiness || '').toUpperCase();
-            let repair = readiness.includes('NOT_INSTALLED') || readiness.includes('NOT_INITIALIZED') ?
-                this.documentationRepair('documentation.pack.installStaged', 'INSTALL_DOCUMENTATION_PACK', 'Install documentation pack') :
-                readiness.includes('INDEX') ?
-                    this.documentationRepair('documentation.index.refresh', 'INDEX_DOCUMENTATION_PACK', 'Index documentation pack') :
-                    this.documentationRepair('documentation.publish', 'PUBLISH_DOCUMENTATION', 'Publish documentation pack');
-            let blocker = this.readinessBlocker(
-                readiness.includes('INDEX') ? 'DOCUMENTATION_INDEXING_PENDING' :
-                    readiness.includes('NOT_INSTALLED') || readiness.includes('NOT_INITIALIZED') ? 'DOCUMENTATION_PACK_NOT_INSTALLED' :
-                        'DOCUMENTATION_PUBLICATION_PENDING',
-                'NEEDS_ATTENTION',
-                'PUBLICATION',
-                'DOCUMENTATION_PUBLICATION',
-                'Open Documentation Dashboard',
-                'Documentation pack is not Online-ready: ' + String(source.label || source.id),
-                { repairOperation: repair.operation, repairAction: repair.action, repairAvailable: true,
-                    repairEligibility: 'MANUAL', repairLabel: repair.label,
-                    suggestedAction: 'Install staged content, request approval, approve, and publish the documentation pack Online.' }
-            );
-            blocker.sourceId = String(source.id);
-            blocker.route = source.route ? String(source.route) : undefined;
-            blocker.readiness = state.readiness ? String(state.readiness) : 'UNKNOWN';
-            blockers.push(blocker);
-        });
-        let sourceReadinessCounts = this.countByValue(sources, source => {
-            if (!source || !source.id) return 'UNKNOWN';
-            let state = bySource[String(source.id)] || {};
-            if (source.type === 'OPENAPI') return 'REFERENCE';
-            return state.ready === true ? 'READY' : state.readiness || 'NOT_READY';
-        });
-        return {
-            key: 'documentation',
-            title: 'Documentation publishing and indexing',
-            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : 'READY',
-            ownerModule: 'documentation',
-            source: 'BACKOFFICE_DOCUMENTATION',
-            route: '/docs/dashboard',
-            summary: {
-                sourceCount: sources.length,
-                cmsSourceCount: sources.filter(source => source && source.type === 'CMS').length,
-                pendingPublicationCount: pending.length,
-                installedSourceCount: sources.filter(source => {
-                    let state = source && source.id ? bySource[String(source.id)] || {} : {};
-                    return state.installed === true || state.ready === true || String(state.readiness || '').includes('INSTALLED');
-                }).length,
-                onlineSourceCount: sources.filter(source => {
-                    let state = source && source.id ? bySource[String(source.id)] || {} : {};
-                    return state.online === true || state.ready === true || String(state.readiness || '').includes('ONLINE');
-                }).length,
-                indexedSourceCount: sources.filter(source => {
-                    let state = source && source.id ? bySource[String(source.id)] || {} : {};
-                    return state.indexed === true || String(state.indexing || '').toUpperCase() === 'INDEXED';
-                }).length,
-                openApiSourceCount: sources.filter(source => source && source.type === 'OPENAPI').length,
-                sourceReadinessCounts: sourceReadinessCounts,
-                operatorCommands: [
-                    'Open Documentation Dashboard',
-                    'Initialize or install staged documentation packs',
-                    'Request approval and publish Online',
-                    'Trigger documentation indexing',
-                    'Refresh operational readiness',
-                ],
-            },
-            blockers: blockers,
-            nextAction: blockers.length ? 'Install, approve, publish, and index documentation packs from Documentation Dashboard.' :
-                'Documentation sources are visible and publication blockers were not detected.',
-        };
-    },
-    /** Builds a placeholder section when a domain capability has not yet exposed canonical readiness. */
-    ownerPendingSection: function (key, title, ownerModule, route, source, nextAction) {
-        return {
-            key: key,
-            title: title,
-            businessStatus: 'NOT_EXPOSED',
-            ownerModule: ownerModule,
-            source: source,
-            route: route,
-            summary: { exposed: false },
-            blockers: [this.readinessBlocker(
-                key.toUpperCase() + '_READINESS_NOT_EXPOSED',
-                'NEEDS_ATTENTION',
-                ownerModule,
-                source,
-                nextAction,
-                title + ' does not yet expose a canonical BackOffice readiness section.',
-                { repairOperation: ownerModule + '.exposeReadiness', repairAction: 'EXPOSE_READINESS_CONTRACT' }
-            )],
-            nextAction: nextAction,
-        };
-    },
-    /** Returns the operator authorization header for owner runtime readiness reads. */
-    authorizationHeader: function (request) {
-        let header = request && (request.header || request.headers || (request.httpRequest && request.httpRequest.headers)) || {};
-        let value = header.Authorization || header.authorization;
-        if (value && /^Bearer\s+/i.test(String(value))) return String(value);
-        if (request && request.authToken) return 'Bearer ' + request.authToken;
-        return undefined;
-    },
-    /** Extracts unique nImport catalogue targets from application preparation profiles. */
-    importReadinessTargets: function (profiles) {
-        let targets = {};
-        [].concat(profiles || []).forEach(profile => {
-            [].concat((profile || {}).dataPackages || []).forEach(step => {
-                if (!step || !step.dataType || !step.targetServer) return;
-                let dataType = String(step.dataType);
-                let key = [step.targetServer, step.targetRuntimeRole || '', dataType].join(':');
-                targets[key] = {
-                    dataType: dataType,
-                    targetServer: String(step.targetServer),
-                    targetRuntimeRole: step.targetRuntimeRole ? String(step.targetRuntimeRole) : undefined,
-                };
-            });
-        });
-        return Object.values(targets).sort((left, right) =>
-            [left.targetServer, left.targetRuntimeRole || '', left.dataType].join(':')
-                .localeCompare([right.targetServer, right.targetRuntimeRole || '', right.dataType].join(':')));
-    },
-    /** Calls the owner nImport catalogue route for one target runtime. */
-    invokeImportCatalogue: async function (target, request) {
-        if (!SERVICE.DefaultModuleService || typeof SERVICE.DefaultModuleService.invokeModule !== 'function') {
-            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Module communication service is unavailable');
-        }
-        let authorization = this.authorizationHeader(request);
-        return SERVICE.DefaultModuleService.invokeModule({
-            moduleName: 'import',
-            local: false,
-            connectionName: target.targetServer,
-            connectionType: 'abstract',
-            targetAuthority: {
-                server: target.targetServer,
-                runtimeRole: target.targetRuntimeRole ? { code: target.targetRuntimeRole } : undefined,
-            },
-            methodName: 'GET',
-            apiName: '/' + target.dataType,
-            timeoutMs: 30000,
-            maxAttempts: 1,
-            header: authorization ? { Authorization: authorization } : {},
-            responseSelector: response => response && (response.data || response.result || response) || [],
-        });
-    },
-    /** Normalizes an nImport release blocker into the shared BackOffice readiness shape. */
-    normalizeImportBlocker: function (blocker, release, target) {
-        blocker = blocker || {};
-        let action = blocker.action || (release.readiness || {}).nextAction || 'Open Data Releases';
-        let repair = Object.assign({}, blocker.repair || {});
-        if (!repair.operation) repair.operation = 'dataRelease.install';
-        if (!repair.action) repair.action = repair.actionCode || 'REPAIR_DATA_RELEASE';
-        if (!repair.eligibility) repair.eligibility = repair.available === true ? 'MANUAL' : 'NOT_AVAILABLE';
-        if (!repair.label) repair.label = action;
-        if (repair.available === undefined) repair.available = repair.eligibility === 'MANUAL' || repair.eligibility === 'AUTOMATIC';
-        return {
-            blockerCode: String(blocker.blockerCode || blocker.code || 'DATA_RELEASE_NOT_READY'),
-            code: String(blocker.code || blocker.blockerCode || 'DATA_RELEASE_NOT_READY'),
-            severity: String(blocker.severity || 'NEEDS_ATTENTION'),
-            ownerType: String(blocker.ownerType || 'DATA_RELEASE'),
-            source: String(blocker.source || 'IMPORT_RELEASE_CATALOGUE'),
-            action: String(action),
-            message: String(blocker.message || (release.displayName || release.releaseCode || 'Data release') + ' is not ready.'),
-            disabledReason: String(blocker.disabledReason || blocker.message || 'Data release is not ready.'),
-            repair: repair,
-            suggestedAction: String(blocker.suggestedAction || action),
-            businessImpact: String(blocker.businessImpact || 'Required business data may be missing or stale, so application setup and publication validation can be misleading.'),
-            recoveryHint: String(blocker.recoveryHint || blocker.suggestedAction || action || 'Repair the data release in the import workspace and refresh readiness.'),
-            ownerModule: release.moduleName || (release.readiness || {}).owningModule,
-            releaseCode: release.releaseCode,
-            dataType: target.dataType,
-            targetServer: target.targetServer,
-            targetRuntimeRole: target.targetRuntimeRole,
-        };
-    },
-    /** Counts stable status values without leaking owner payloads into the dashboard contract. */
-    countByValue: function (items, resolver) {
-        return [].concat(items || []).reduce((result, item) => {
-            let value = resolver(item);
-            value = value ? String(value) : 'UNKNOWN';
-            result[value] = (result[value] || 0) + 1;
-            return result;
-        }, {});
-    },
-    /** Groups import releases by their business data group so operators see outcomes, not files. */
-    importReleaseGroups: function (releases) {
-        let groups = {};
-        [].concat(releases || []).forEach(release => {
-            let readiness = release.readiness || {};
-            let group = readiness.group || release.releaseGroup || release.dataGroup || release.dataType || 'DATA_RELEASE';
-            let key = String(group);
-            if (!groups[key]) groups[key] = {
-                code: key,
-                releaseCount: 0,
-                blockerCount: 0,
-                currentCount: 0,
-                needsAttentionCount: 0,
-                targetServers: [],
-            };
-            groups[key].releaseCount++;
-            if (readiness.businessStatus === 'READY' || readiness.businessStatus === 'CURRENT' ||
-                readiness.businessStatus === 'PREPARED_STAGED') groups[key].currentCount++;
-            if (readiness.businessStatus && !['READY', 'CURRENT', 'PREPARED_STAGED'].includes(String(readiness.businessStatus))) {
-                groups[key].needsAttentionCount++;
-            }
-            groups[key].blockerCount += [].concat(readiness.blockers || []).length;
-            let target = release._target || {};
-            if (target.targetServer && !groups[key].targetServers.includes(String(target.targetServer))) {
-                groups[key].targetServers.push(String(target.targetServer));
-            }
-        });
-        return Object.values(groups).sort((left, right) => left.code.localeCompare(right.code));
-    },
-    /** Returns a stable unique compact array for client-safe dashboard summaries. */
-    uniqueValues: function (items) {
-        return [].concat(items || []).filter(Boolean).map(item => String(item))
-            .filter((item, index, values) => values.indexOf(item) === index);
-    },
-    /** Extracts safe repair actions from section blockers. */
-    repairActionsForSection: function (blockers) {
-        return this.uniqueValues([].concat(blockers || []).map(blocker => {
-            let repair = blocker && blocker.repair || {};
-            let label = repair.label || blocker.suggestedAction || blocker.action;
-            let operation = repair.operation || 'readiness.review';
-            let action = repair.action || repair.actionCode || blocker.code;
-            return [label, operation, action].filter(Boolean).join(' · ');
-        })).slice(0, 5);
-    },
-    /** Extracts target runtime dependencies from section blockers without exposing credentials. */
-    runtimeDependenciesForSection: function (blockers) {
-        return this.uniqueValues([].concat(blockers || []).map(blocker => {
-            let diagnostic = blocker && blocker.runtimeDiagnostic || {};
-            let server = blocker && blocker.targetServer || diagnostic.server;
-            let role = blocker && blocker.targetRuntimeRole || diagnostic.runtimeRole || diagnostic.runtimeRoleCode;
-            let node = diagnostic.node;
-            return [server, role, node].filter(Boolean).join('/');
-        })).slice(0, 5);
-    },
-    /** Resolves a concise business impact statement for each recovery lane. */
-    laneBusinessImpact: function (section, fallback) {
-        let blockers = [].concat((section || {}).blockers || []);
-        let impact = blockers.map(blocker => blocker && blocker.businessImpact).find(Boolean);
-        return String(impact || fallback || 'Readiness must be resolved before dependable go-live or recovery validation.');
-    },
-    /** Creates the business-user recovery lane model consumed by Axis. */
-    recoveryLane: function (section, label, description) {
-        section = section || {};
-        let blockers = [].concat(section.blockers || []);
-        return {
-            key: String(section.key || label || 'readiness'),
-            label: String(label || section.title || section.key || 'Readiness'),
-            description: String(description || section.title || 'Review readiness.'),
-            state: String(section.businessStatus || 'UNKNOWN'),
-            ownerModule: String(section.ownerModule || 'unknown'),
-            source: String(section.source || 'unknown'),
-            route: String(section.route || '/dashboard'),
-            blockerCount: blockers.length,
-            issueCodes: blockers.map(blocker => blocker.code || blocker.blockerCode).filter(Boolean).slice(0, 4),
-            repairActions: this.repairActionsForSection(blockers),
-            runtimeDependencies: this.runtimeDependenciesForSection(blockers),
-            businessImpact: this.laneBusinessImpact(section),
-            nextAction: String(section.nextAction || 'Review the owning workspace.'),
-        };
-    },
-    /** Builds the canonical go-live recovery matrix from existing readiness sections. */
-    operationalRecoveryMatrix: function (sections) {
-        let byKey = [].concat(sections || []).reduce((result, section) => {
-            if (section && section.key) result[section.key] = section;
-            return result;
-        }, {});
-        return [
-            this.recoveryLane(byKey.runtimeCommunication, 'Verify runtimes', 'Confirm module runtimes, heartbeats, grants, and internal communication.'),
-            this.recoveryLane(byKey.imports, 'Import data', 'Install and repair business data releases from owner catalogues.'),
-            this.recoveryLane(byKey.publishing, 'Prepare staged publication', 'Prepare staged application and documentation publication profiles.'),
-            this.recoveryLane(byKey.approval, 'Complete approvals', 'Resolve governed Process approval tasks before Online publication.'),
-            this.recoveryLane(byKey.documentation, 'Publish documentation', 'Install, approve, publish, and index documentation packs.'),
-            this.recoveryLane(byKey.media, 'Repair media', 'Create required media objects and reconcile references before Online delivery.'),
-            this.recoveryLane(byKey.search, 'Validate search', 'Confirm database/search rendering policy and index readiness.'),
-            this.recoveryLane(byKey.assistant, 'Index assistant knowledge', 'Confirm governed Assistant sources are registered, indexed, and retrievable.'),
-            this.recoveryLane(byKey.acceptance, 'Capture validation evidence', 'Run configured browser and acceptance checks after repairs.'),
-        ];
-    },
-    /** Builds the owner-backed import release readiness section from nImport catalogue projections. */
-    importReadinessSection: async function (request, profiles) {
-        let targets = this.importReadinessTargets(profiles);
-        if (targets.length === 0) {
-            return {
-                key: 'imports',
-                title: 'Data import releases',
-                businessStatus: 'NOT_CONFIGURED',
-                ownerModule: 'import',
-                source: 'IMPORT_RELEASE_CATALOGUE',
-                route: '/operations/imports-exports',
-                summary: { targetCount: 0, releaseCount: 0, blockerCount: 0 },
-                blockers: [this.readinessBlocker(
-                    'IMPORT_READINESS_TARGETS_MISSING',
-                    'NEEDS_ATTENTION',
-                    'DATA_RELEASE',
-                    'IMPORT_RELEASE_CATALOGUE',
-                    'Open Setup & Accelerators',
-                    'No application preparation data targets are visible for import readiness.',
-                    { repairOperation: 'applicationInitialization.configureProfiles', repairAction: 'CONFIGURE_PREPARATION_TARGETS',
-                        suggestedAction: 'Define application preparation data targets in the owning application initialization profiles.' }
-                )],
-                nextAction: 'Define application preparation data targets in the owning application initialization profiles.',
-            };
-        }
-        let releases = [];
-        let providerErrors = [];
-        for (let target of targets) {
-            try {
-                let response = await this.invokeImportCatalogue(target, request);
-                [].concat(response || []).forEach(release => releases.push(Object.assign({}, release, { _target: target })));
-            } catch (error) {
-                providerErrors.push({ target: target, error: error });
-            }
-        }
-        let blockers = releases.reduce((result, release) => {
-            let readiness = release.readiness || {};
-            return result.concat([].concat(readiness.blockers || []).map(blocker =>
-                this.normalizeImportBlocker(blocker, release, release._target || {})));
-        }, []);
-        providerErrors.forEach(item => {
-            let diagnostic = item.error && item.error.metadata && item.error.metadata.runtimeInvocationDiagnostic;
-            blockers.push(this.readinessBlocker(
-                'IMPORT_READINESS_PROVIDER_UNAVAILABLE',
-                'NEEDS_ATTENTION',
-                'DATA_RELEASE',
-                'IMPORT_RELEASE_CATALOGUE',
-                'Refresh Module Registry',
-                'nImport catalogue readiness could not be read from the target runtime.',
-                { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_IMPORT_RUNTIME',
-                    suggestedAction: 'Start the target runtime, refresh Module Registry, then retry import readiness.',
-                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh runtime' }
-            ));
-            blockers[blockers.length - 1].targetServer = item.target.targetServer;
-            blockers[blockers.length - 1].targetRuntimeRole = item.target.targetRuntimeRole;
-            blockers[blockers.length - 1].dataType = item.target.dataType;
-            if (diagnostic) blockers[blockers.length - 1].runtimeDiagnostic = diagnostic;
-        });
-        let statusCounts = this.countByValue(releases, release => (release.readiness || {}).businessStatus || 'UNKNOWN');
-        let releaseGroups = this.importReleaseGroups(releases);
-        let businessStatus = providerErrors.length || blockers.length ? 'NEEDS_ATTENTION' : releases.length ? 'READY' : 'NOT_CONFIGURED';
-        return {
-            key: 'imports',
-            title: 'Data import releases',
-            businessStatus: businessStatus,
-            ownerModule: 'import',
-            source: 'IMPORT_RELEASE_CATALOGUE',
-            route: '/operations/imports-exports',
-            summary: Object.assign({
-                targetCount: targets.length,
-                releaseCount: releases.length,
-                blockerCount: blockers.length,
-                providerErrorCount: providerErrors.length,
-                releaseGroups: releaseGroups,
-                operatorCommands: [
-                    'Open Data Releases',
-                    'Validate blocked release group',
-                    'Install or update selected release',
-                    'Refresh operational readiness',
-                ],
-            }, statusCounts),
-            blockers: blockers,
-            nextAction: blockers.length ? 'Open Data Releases and repair blocked release groups.' :
-                releases.length ? 'Data releases are prepared in the owning import catalogues.' :
-                    'Install required data release catalogues for the active preparation targets.',
-        };
-    },
-    /** Reads owner application profile readiness projections once for publishing and approval aggregate sections. */
-    applicationProfileStatusEntries: async function (request, profiles) {
-        let service = SERVICE.DefaultBackofficeApplicationInitializationService;
-        if (!service || typeof service.status !== 'function') return { statuses: [], errors: [] };
-        let statuses = [];
-        let errors = [];
-        for (let profile of [].concat(profiles || [])) {
-            if (!profile || !profile.code) continue;
-            try {
-                let status = await service.status(String(profile.code), request);
-                statuses.push(status);
-            } catch (error) {
-                errors.push({ profile: profile, error: error });
-            }
-        }
-        return { statuses: statuses, errors: errors };
-    },
-    /** Normalizes application capability blockers into shared readiness blockers. */
-    normalizeCapabilityBlocker: function (blocker, status, ownerTypeOverride) {
-        blocker = blocker || {};
-        let repair = Object.assign({}, blocker.repair || {});
-        if (!repair.operation) repair.operation = 'applicationInitialization.status';
-        if (!repair.action) repair.action = repair.actionCode || blocker.code || 'REVIEW_CAPABILITY';
-        if (!repair.eligibility) repair.eligibility = repair.available === true ? 'MANUAL' : 'NOT_AVAILABLE';
-        if (!repair.label) repair.label = blocker.action || 'Review capability';
-        if (repair.available === undefined) repair.available = repair.eligibility === 'MANUAL' || repair.eligibility === 'AUTOMATIC';
-        let ownerType = String(ownerTypeOverride || blocker.ownerType || 'APPLICATION_CAPABILITY');
-        return {
-            blockerCode: String(blocker.blockerCode || blocker.code || 'CAPABILITY_NOT_READY'),
-            code: String(blocker.code || blocker.blockerCode || 'CAPABILITY_NOT_READY'),
-            severity: String(blocker.severity || 'NEEDS_ATTENTION'),
-            ownerType: ownerType,
-            source: String(blocker.source || 'BACKOFFICE_APPLICATION_INITIALIZATION'),
-            action: String(blocker.action || 'Open Setup & Accelerators'),
-            message: String(blocker.message || 'Application capability needs attention.'),
-            disabledReason: String(blocker.disabledReason || blocker.message || 'Application capability needs attention.'),
-            repair: repair,
-            suggestedAction: String(blocker.suggestedAction || blocker.action || (status && status.capability && status.capability.nextAction) || 'Open Setup & Accelerators'),
-            businessImpact: String(blocker.businessImpact || (ownerType === 'PROCESS_WORKFLOW' ?
-                'Governed publication cannot move Online until the approval task is actionable and complete.' :
-                ownerType === 'MEDIA_MODULE' ?
-                    'Published pages may show missing images or broken references until media objects and references are reconciled.' :
-                    'The application cannot be treated as Online-ready until the owning capability is repaired.')),
-            recoveryHint: String(blocker.recoveryHint || blocker.suggestedAction || blocker.action ||
-                'Open the owning workspace, complete the repair, and refresh readiness.'),
-            profileCode: status && status.profileCode ? String(status.profileCode) : undefined,
-            applicationCode: status && status.applicationCode ? String(status.applicationCode) : undefined,
-            siteCode: status && status.siteCode ? String(status.siteCode) : undefined,
-            releaseCode: status && status.releaseCode ? String(status.releaseCode) : undefined,
-            approvalDiagnostic: blocker.approvalDiagnostic,
-            publicationDiagnostic: blocker.publicationDiagnostic,
-            runtimeDiagnostic: blocker.runtimeDiagnostic,
-        };
-    },
-    /** Builds owner-backed publication readiness from application initialization/CMS projections. */
-    publishingSection: function (profileStatusReport) {
-        let statuses = [].concat((profileStatusReport || {}).statuses || []);
-        let errors = [].concat((profileStatusReport || {}).errors || []);
-        let blockers = statuses.reduce((result, status) => {
-            let capability = status && status.capability || {};
-            let capabilityBlockers = [].concat(capability.blockers || [])
-                .filter(blocker => blocker.source !== 'PUBLICATION_APPROVAL');
-            return result.concat(capabilityBlockers.map(blocker => this.normalizeCapabilityBlocker(blocker, status, 'PUBLICATION')));
-        }, []);
-        errors.forEach(item => {
-            let blocker = this.readinessBlocker(
-                'PUBLICATION_PROVIDER_UNAVAILABLE',
-                'NEEDS_ATTENTION',
-                'PUBLICATION',
-                'BACKOFFICE_APPLICATION_INITIALIZATION',
-                'Open Setup & Accelerators',
-                'Publication readiness could not be read from the owning application profile.',
-                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_PUBLICATION_STATUS',
-                    suggestedAction: 'Refresh Setup & Accelerators and verify the target publication runtime is registered.' }
-            );
-            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
-            blockers.push(blocker);
-        });
-        let online = statuses.filter(status => status && status.capability && status.capability.businessStatus === 'ONLINE').length;
-        let pending = statuses.length - online;
-        let profileStateCounts = this.countByValue(statuses, status =>
-            status && status.capability && status.capability.businessStatus || 'UNKNOWN');
-        let publicationStatusCounts = this.countByValue(statuses, status =>
-            status && status.capability && status.capability.publicationDiagnostic &&
-            status.capability.publicationDiagnostic.status || 'UNKNOWN');
-        return {
-            key: 'publishing',
-            title: 'Publication readiness',
-            businessStatus: errors.length || blockers.length || pending > 0 ? 'NEEDS_ATTENTION' : statuses.length ? 'READY' : 'NOT_CONFIGURED',
-            ownerModule: 'cms',
-            source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
-            route: '/publishing/setup',
-            summary: { profileCount: statuses.length, onlineCount: online, pendingCount: Math.max(0, pending),
-                blockerCount: blockers.length, providerErrorCount: errors.length, profileStateCounts: profileStateCounts,
-                publicationStatusCounts: publicationStatusCounts,
-                operatorCommands: [
-                    'Open Setup & Accelerators',
-                    'Prepare staged content',
-                    'Request or complete approval',
-                    'Publish Online after approval',
-                ] },
-            blockers: blockers,
-            nextAction: blockers.length || pending > 0 ? 'Open Setup & Accelerators and resolve publication readiness blockers.' :
-                statuses.length ? 'Publication profiles are Online-ready.' : 'Configure application publication profiles.',
-        };
-    },
-    /** Builds owner-backed approval readiness from Process evidence carried by CMS/application projections. */
-    approvalSection: function (profileStatusReport) {
-        let statuses = [].concat((profileStatusReport || {}).statuses || []);
-        let errors = [].concat((profileStatusReport || {}).errors || []);
-        let blockers = [];
-        statuses.forEach(status => {
-            let capability = status && status.capability || {};
-            let diagnostic = capability.approvalDiagnostic || {};
-            if (['APPROVED', 'NOT_STARTED'].includes(String(diagnostic.status || ''))) return;
-            let approvalBlockers = [].concat(capability.blockers || [])
-                .filter(blocker => blocker.source === 'PUBLICATION_APPROVAL');
-            if (approvalBlockers.length) {
-                blockers = blockers.concat(approvalBlockers.map(blocker => this.normalizeCapabilityBlocker(blocker, status, 'PROCESS_WORKFLOW')));
-                return;
-            }
-            let blocker = this.readinessBlocker(
-                'APPROVAL_IN_PROGRESS',
-                'NEEDS_ATTENTION',
-                'PROCESS_WORKFLOW',
-                'PUBLICATION_APPROVAL',
-                diagnostic.suggestedAction || 'Open Approval Queue',
-                diagnostic.message || 'Publication approval needs reviewer action.',
-                { repairOperation: 'process.approval.review', repairAction: 'REVIEW_APPROVAL_TASK',
-                    suggestedAction: diagnostic.suggestedAction || 'Open Approval Queue and review the governed task.' }
-            );
-            blocker.profileCode = status.profileCode ? String(status.profileCode) : undefined;
-            blocker.publicationCode = diagnostic.publicationCode;
-            blocker.publicationState = diagnostic.publicationState;
-            blocker.taskCode = diagnostic.taskCode;
-            blocker.taskStatus = diagnostic.taskStatus;
-            blockers.push(blocker);
-        });
-        errors.forEach(item => {
-            let blocker = this.readinessBlocker(
-                'APPROVAL_PROVIDER_UNAVAILABLE',
-                'NEEDS_ATTENTION',
-                'PROCESS_WORKFLOW',
-                'PUBLICATION_APPROVAL',
-                'Refresh publication status',
-                'Approval readiness could not be read because publication status is unavailable.',
-                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_APPROVAL_STATUS',
-                    suggestedAction: 'Refresh Setup & Accelerators and verify CMS/Process runtimes are registered.' }
-            );
-            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
-            blockers.push(blocker);
-        });
-        let pending = statuses.filter(status => {
-            let diagnostic = status && status.capability && status.capability.approvalDiagnostic || {};
-            return !['APPROVED', 'NOT_STARTED'].includes(String(diagnostic.status || ''));
-        }).length;
-        let approvalStatusCounts = this.countByValue(statuses, status =>
-            status && status.capability && status.capability.approvalDiagnostic &&
-            status.capability.approvalDiagnostic.status || 'UNKNOWN');
-        return {
-            key: 'approval',
-            title: 'Process approval tasks',
-            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : 'READY',
-            ownerModule: 'workflow',
-            source: 'PUBLICATION_APPROVAL',
-            route: '/process/approval-queue',
-            summary: { profileCount: statuses.length, pendingApprovalCount: pending, blockerCount: blockers.length,
-                providerErrorCount: errors.length, approvalStatusCounts: approvalStatusCounts,
-                operatorCommands: [
-                    'Open Approval Queue',
-                    'Review actionable publication task',
-                    'If missing, refresh publication status and Process runtime',
-                    'Refresh operational readiness',
-                ] },
-            blockers: blockers,
-            nextAction: blockers.length ? 'Open Approval Queue and reconcile governed publication approval tasks.' :
-                'No actionable publication approval blockers were detected.',
-        };
-    },
-    /** Builds owner-backed media readiness from media-manifest evidence in application/CMS projections. */
-    mediaSection: async function (profileStatusReport, context) {
-        context = context || {};
-        let statuses = [].concat((profileStatusReport || {}).statuses || []);
-        let errors = [].concat((profileStatusReport || {}).errors || []);
-        let blockers = statuses.reduce((result, status) => {
-            let capability = status && status.capability || {};
-            let mediaBlockers = [].concat(capability.blockers || [])
-                .filter(blocker => blocker.source === 'MEDIA_MANIFEST' || String(blocker.code || '').startsWith('MEDIA_'));
-            return result.concat(mediaBlockers.map(blocker => this.normalizeCapabilityBlocker(blocker, status, 'MEDIA_MODULE')));
-        }, []);
-        errors.forEach(item => {
-            let blocker = this.readinessBlocker(
-                'MEDIA_PROVIDER_UNAVAILABLE',
-                'NEEDS_ATTENTION',
-                'MEDIA_MODULE',
-                'BACKOFFICE_APPLICATION_INITIALIZATION',
-                'Open Media Management',
-                'Media readiness could not be read because the owning application/media status is unavailable.',
-                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_MEDIA_STATUS',
-                    suggestedAction: 'Refresh Setup & Accelerators and verify the target media/CMS runtimes are registered.' }
-            );
-            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
-            blockers.push(blocker);
-        });
-        let ownerReadiness;
-        if (SERVICE.DefaultMediaReadinessService && typeof SERVICE.DefaultMediaReadinessService.readiness === 'function') {
-            try {
-                ownerReadiness = await SERVICE.DefaultMediaReadinessService.readiness(context);
-                blockers = blockers.concat([].concat((ownerReadiness || {}).blockers || []).map(item => {
-                    item = item || {};
-                    return this.readinessBlocker(
-                        item.code || item.blockerCode || 'MEDIA_READINESS_BLOCKER',
-                        item.severity || 'NEEDS_ATTENTION',
-                        'MEDIA_MODULE',
-                        item.source || 'MEDIA_READINESS',
-                        item.action || 'Open Media Management',
-                        item.message || 'Media readiness needs attention.',
-                        { repairAvailable: item.repair && item.repair.available === true,
-                            repairOperation: item.repair && item.repair.operation,
-                            repairAction: item.repair && (item.repair.action || item.repair.actionCode),
-                            repairEligibility: item.repair && item.repair.eligibility,
-                            repairLabel: item.repair && item.repair.label,
-                            suggestedAction: item.suggestedAction || item.action || 'Open Media Management',
-                            businessImpact: item.businessImpact || 'Published pages, product catalogues, documentation, or evidence views may show missing media until repaired.',
-                            recoveryHint: item.recoveryHint || item.action || 'Open Media Management and follow the owner repair guidance.' }
-                    );
-                }));
-            } catch (error) {
-                let blocker = this.readinessBlocker(
-                    'MEDIA_READINESS_PROVIDER_FAILED',
-                    'NEEDS_ATTENTION',
-                    'MEDIA_MODULE',
-                    'MEDIA_READINESS',
-                    'Open Media Management',
-                    'Media readiness provider failed while scanning object, physical artifact, reference, or cleanup readiness.',
-                    { repairOperation: 'media.readiness', repairAction: 'REFRESH_MEDIA_READINESS',
-                        repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh media readiness',
-                        suggestedAction: 'Inspect Media runtime startup and refresh operational readiness.',
-                        businessImpact: 'Axis cannot confirm media artifact/reference readiness until the Media owner provider responds.',
-                        recoveryHint: 'Repair the Media runtime/provider failure, restart if needed, and refresh readiness.' }
-                );
-                blocker.failureCode = String(error.code || error.message || 'MEDIA_READINESS_FAILED');
-                blockers.push(blocker);
-            }
-        }
-        let mediaStates = statuses.map(status => {
-            let summary = status && status.capability && status.capability.publicationSummary || {};
-            return summary.media ? String(summary.media) : 'UNKNOWN';
-        });
-        let mediaStateCounts = this.countByValue(mediaStates, state => state);
-        let ready = mediaStates.filter(state => state === 'READY_OR_NOT_REQUIRED').length;
-        let needsRepair = mediaStates.filter(state => state === 'NEEDS_REPAIR').length;
-        let ownerSummary = ownerReadiness && ownerReadiness.summary || {};
-        return {
-            key: 'media',
-            title: 'Media objects and references',
-            businessStatus: blockers.length || errors.length || needsRepair > 0 ? 'NEEDS_ATTENTION' :
-                statuses.length || ownerReadiness ? 'READY' : 'NOT_CONFIGURED',
-            ownerModule: 'media',
-            source: 'MEDIA_MANIFEST',
-            route: '/media',
-            summary: {
-                profileCount: statuses.length,
-                readyOrNotRequiredCount: ready,
-                needsRepairCount: needsRepair,
-                blockerCount: blockers.length,
-                providerErrorCount: errors.length,
-                mediaStateCounts: mediaStateCounts,
-                ownerProviderAvailable: !!ownerReadiness,
-                mediaObjectProviderAvailable: ownerSummary.providerAvailable,
-                mediaReferenceProviderAvailable: ownerSummary.referenceProviderAvailable,
-                mediaCleanupProviderAvailable: ownerSummary.cleanupProviderAvailable,
-                mediaObjectCount: ownerSummary.mediaCount || 0,
-                incompleteMetadataCount: ownerSummary.incompleteMetadataCount || 0,
-                missingPhysicalCount: ownerSummary.missingPhysicalCount || 0,
-                referenceCount: ownerSummary.referenceCount || 0,
-                brokenReferenceCount: ownerSummary.brokenReferenceCount || 0,
-                cleanupCandidateCount: ownerSummary.cleanupCandidateCount || 0,
-                draftCleanupStatus: ownerSummary.draftCleanupStatus,
-                rejectedDraftCleanupStatus: ownerSummary.rejectedDraftCleanupStatus,
-                acceptedEvidenceRetentionStatus: ownerSummary.acceptedEvidenceRetentionStatus,
-                cleanupReviewRoute: '/media/cleanup-candidates',
-                replicationRoute: '/media/replication',
-                operatorCommands: [
-                    'Open Media Management',
-                    'Repair missing media objects from manifest',
-                    'Reconcile product or content references',
-                    'Refresh publication readiness',
-                ],
-            },
-            blockers: blockers,
-            nextAction: blockers.length ? 'Open Media Management or Setup & Accelerators and repair missing media references/assets.' :
-                statuses.length ? 'Media references and required publication assets are ready or not required.' :
-                    'Configure application/media preparation profiles before validating media readiness.',
-        };
-    },
-    /** Reads Circa/eWaste owner readiness locally or from the registered eWaste runtime. */
-    eWasteAcceptanceReadiness: async function (request, context) {
-        let service = SERVICE.DefaultEWasteAcceptanceReadinessService;
-        if (service && typeof service.readiness === 'function') return service.readiness(context);
-        if (!SERVICE.DefaultModuleService || typeof SERVICE.DefaultModuleService.invokeModule !== 'function') return undefined;
-        let authorization = this.authorizationHeader(request);
-        return SERVICE.DefaultModuleService.invokeModule({
-            moduleName: 'eWaste',
-            local: false,
-            connectionName: 'wasteServer',
-            connectionType: 'abstract',
-            targetAuthority: {
-                server: 'wasteServer',
-                runtimeRole: { code: 'WASTE' },
-            },
-            methodName: 'GET',
-            apiName: '/readiness/acceptance',
-            timeoutMs: 10000,
-            maxAttempts: 1,
-            header: authorization ? { Authorization: authorization } : {},
-            responseSelector: response => response && (response.data || response.result || response),
-        });
-    },
-    /** Includes Circa/eWaste owner readiness when the eWaste accelerator is present in the active runtime. */
-    eWasteAcceptanceSection: async function (request, context) {
-        context = context || {};
-        let hasEWasteConfig = !!CONFIG.get('eWaste');
-        let report;
-        try {
-            report = await this.eWasteAcceptanceReadiness(request, context);
-        } catch (error) {
-            let blocker = this.readinessBlocker(
-                'EWASTE_ACCEPTANCE_PROVIDER_FAILED',
-                'NEEDS_ATTENTION',
-                'EWASTE_ACCEPTANCE',
-                'EWASTE_ACCEPTANCE_READINESS',
-                'Open eWaste readiness',
-                'The eWaste acceptance readiness provider failed while building readiness evidence.',
-                { repairOperation: 'eWaste.acceptance.readiness', repairAction: 'REFRESH_EWASTE_ACCEPTANCE_READINESS',
-                    suggestedAction: 'Inspect eWaste startup/configuration and refresh readiness.',
-                    businessImpact: 'Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.',
-                    recoveryHint: 'Repair the owning eWaste provider error, restart if needed, and refresh readiness.' }
-            );
-            blocker.failureCode = String(error.code || error.message || 'EWASTE_ACCEPTANCE_READINESS_FAILED');
-            return {
-                key: 'eWasteAcceptance',
-                title: 'Circa/eWaste acceptance readiness',
-                businessStatus: 'NEEDS_ATTENTION',
-                ownerModule: 'eWaste',
-                source: 'EWASTE_ACCEPTANCE_READINESS',
-                route: '/waste/review-queue',
-                summary: { providerAvailable: false, blockerCount: 1 },
-                blockers: [blocker],
-                nextAction: 'Open eWaste readiness and repair the owner provider failure.',
-            };
-        }
-        if (!hasEWasteConfig && !report) return undefined;
-        if (!report) {
-            let blocker = this.readinessBlocker(
-                'EWASTE_ACCEPTANCE_PROVIDER_NOT_CONFIGURED',
-                'NEEDS_ATTENTION',
-                'EWASTE_ACCEPTANCE',
-                'EWASTE_ACCEPTANCE_READINESS',
-                'Start eWaste readiness provider',
-                'The eWaste acceptance readiness provider is not available in this runtime.',
-                { repairOperation: 'eWaste.acceptance.readiness', repairAction: 'START_EWASTE_ACCEPTANCE_READINESS',
-                    suggestedAction: 'Activate the eWaste accelerator runtime and refresh operational readiness.',
-                    businessImpact: 'Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.',
-                    recoveryHint: 'Start the owning eWaste runtime and refresh Axis readiness.' }
-            );
-            return {
-                key: 'eWasteAcceptance',
-                title: 'Circa/eWaste acceptance readiness',
-                businessStatus: 'NEEDS_ATTENTION',
-                ownerModule: 'eWaste',
-                source: 'EWASTE_ACCEPTANCE_READINESS',
-                route: '/waste/review-queue',
-                summary: { providerAvailable: false, blockerCount: 1 },
-                blockers: [blocker],
-                nextAction: 'Start the owning eWaste readiness provider and refresh readiness.',
-            };
-        }
-        let blockers = [].concat((report || {}).blockers || []).map(item => {
+          ),
+        ],
+        nextAction:
+          "Define application preparation data targets in the owning application initialization profiles.",
+      };
+    }
+    let releases = [];
+    let providerErrors = [];
+    for (let target of targets) {
+      try {
+        let response = await this.invokeImportCatalogue(target, request);
+        []
+          .concat(response || [])
+          .forEach((release) =>
+            releases.push(Object.assign({}, release, { _target: target })),
+          );
+      } catch (error) {
+        providerErrors.push({ target: target, error: error });
+      }
+    }
+    let blockers = releases.reduce((result, release) => {
+      let readiness = release.readiness || {};
+      return result.concat(
+        []
+          .concat(readiness.blockers || [])
+          .map((blocker) =>
+            this.normalizeImportBlocker(
+              blocker,
+              release,
+              release._target || {},
+            ),
+          ),
+      );
+    }, []);
+    providerErrors.forEach((item) => {
+      let diagnostic =
+        item.error &&
+        item.error.metadata &&
+        item.error.metadata.runtimeInvocationDiagnostic;
+      blockers.push(
+        this.readinessBlocker(
+          "IMPORT_READINESS_PROVIDER_UNAVAILABLE",
+          "NEEDS_ATTENTION",
+          "DATA_RELEASE",
+          "IMPORT_RELEASE_CATALOGUE",
+          "Refresh Module Registry",
+          "nImport catalogue readiness could not be read from the target runtime.",
+          {
+            repairOperation: "moduleRegistry.refreshRuntime",
+            repairAction: "REFRESH_IMPORT_RUNTIME",
+            suggestedAction:
+              "Start the target runtime, refresh Module Registry, then retry import readiness.",
+            repairAvailable: true,
+            repairEligibility: "MANUAL",
+            repairLabel: "Refresh runtime",
+          },
+        ),
+      );
+      blockers[blockers.length - 1].targetServer = item.target.targetServer;
+      blockers[blockers.length - 1].targetRuntimeRole =
+        item.target.targetRuntimeRole;
+      blockers[blockers.length - 1].dataType = item.target.dataType;
+      if (diagnostic)
+        blockers[blockers.length - 1].runtimeDiagnostic = diagnostic;
+    });
+    let statusCounts = this.countByValue(
+      releases,
+      (release) => (release.readiness || {}).businessStatus || "UNKNOWN",
+    );
+    let releaseGroups = this.importReleaseGroups(releases);
+    let businessStatus =
+      providerErrors.length || blockers.length
+        ? "NEEDS_ATTENTION"
+        : releases.length
+          ? "READY"
+          : "NOT_CONFIGURED";
+    return {
+      key: "imports",
+      title: "Data import releases",
+      businessStatus: businessStatus,
+      ownerModule: "import",
+      source: "IMPORT_RELEASE_CATALOGUE",
+      route: "/operations/imports-exports",
+      summary: Object.assign(
+        {
+          targetCount: targets.length,
+          releaseCount: releases.length,
+          blockerCount: blockers.length,
+          providerErrorCount: providerErrors.length,
+          releaseGroups: releaseGroups,
+          operatorCommands: [
+            "Open Data Releases",
+            "Validate blocked release group",
+            "Install or update selected release",
+            "Refresh operational readiness",
+          ],
+        },
+        statusCounts,
+      ),
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Open Data Releases and repair blocked release groups."
+        : releases.length
+          ? "Data releases are prepared in the owning import catalogues."
+          : "Install required data release catalogues for the active preparation targets.",
+    };
+  },
+  /** Reads owner application profile readiness projections once for publishing and approval aggregate sections. */
+  applicationProfileStatusEntries: async function (request, profiles) {
+    let service = SERVICE.DefaultBackofficeApplicationInitializationService;
+    if (!service || typeof service.status !== "function")
+      return { statuses: [], errors: [] };
+    let statuses = [];
+    let errors = [];
+    for (let profile of [].concat(profiles || [])) {
+      if (!profile || !profile.code) continue;
+      try {
+        let status = await service.status(String(profile.code), request);
+        statuses.push(status);
+      } catch (error) {
+        errors.push({ profile: profile, error: error });
+      }
+    }
+    return { statuses: statuses, errors: errors };
+  },
+  /** Normalizes application capability blockers into shared readiness blockers. */
+  normalizeCapabilityBlocker: function (blocker, status, ownerTypeOverride) {
+    blocker = blocker || {};
+    let repair = Object.assign({}, blocker.repair || {});
+    if (!repair.operation)
+      repair.operation = "applicationInitialization.status";
+    if (!repair.action)
+      repair.action = repair.actionCode || blocker.code || "REVIEW_CAPABILITY";
+    if (!repair.eligibility)
+      repair.eligibility =
+        repair.available === true ? "MANUAL" : "NOT_AVAILABLE";
+    if (!repair.label) repair.label = blocker.action || "Review capability";
+    if (repair.available === undefined)
+      repair.available =
+        repair.eligibility === "MANUAL" || repair.eligibility === "AUTOMATIC";
+    let ownerType = String(
+      ownerTypeOverride || blocker.ownerType || "APPLICATION_CAPABILITY",
+    );
+    return {
+      blockerCode: String(
+        blocker.blockerCode || blocker.code || "CAPABILITY_NOT_READY",
+      ),
+      code: String(
+        blocker.code || blocker.blockerCode || "CAPABILITY_NOT_READY",
+      ),
+      severity: String(blocker.severity || "NEEDS_ATTENTION"),
+      ownerType: ownerType,
+      source: String(blocker.source || "BACKOFFICE_APPLICATION_INITIALIZATION"),
+      action: String(blocker.action || "Open Setup & Accelerators"),
+      message: String(
+        blocker.message || "Application capability needs attention.",
+      ),
+      disabledReason: String(
+        blocker.disabledReason ||
+          blocker.message ||
+          "Application capability needs attention.",
+      ),
+      repair: repair,
+      suggestedAction: String(
+        blocker.suggestedAction ||
+          blocker.action ||
+          (status && status.capability && status.capability.nextAction) ||
+          "Open Setup & Accelerators",
+      ),
+      businessImpact: String(
+        blocker.businessImpact ||
+          (ownerType === "PROCESS_WORKFLOW"
+            ? "Governed publication cannot move Online until the approval task is actionable and complete."
+            : ownerType === "MEDIA_MODULE"
+              ? "Published pages may show missing images or broken references until media objects and references are reconciled."
+              : "The application cannot be treated as Online-ready until the owning capability is repaired."),
+      ),
+      recoveryHint: String(
+        blocker.recoveryHint ||
+          blocker.suggestedAction ||
+          blocker.action ||
+          "Open the owning workspace, complete the repair, and refresh readiness.",
+      ),
+      profileCode:
+        status && status.profileCode ? String(status.profileCode) : undefined,
+      applicationCode:
+        status && status.applicationCode
+          ? String(status.applicationCode)
+          : undefined,
+      siteCode: status && status.siteCode ? String(status.siteCode) : undefined,
+      releaseCode:
+        status && status.releaseCode ? String(status.releaseCode) : undefined,
+      approvalDiagnostic: blocker.approvalDiagnostic,
+      publicationDiagnostic: blocker.publicationDiagnostic,
+      runtimeDiagnostic: blocker.runtimeDiagnostic,
+    };
+  },
+  /** Builds owner-backed publication readiness from application initialization/CMS projections. */
+  publishingSection: function (profileStatusReport) {
+    let statuses = [].concat((profileStatusReport || {}).statuses || []);
+    let errors = [].concat((profileStatusReport || {}).errors || []);
+    let blockers = statuses.reduce((result, status) => {
+      let capability = (status && status.capability) || {};
+      let capabilityBlockers = []
+        .concat(capability.blockers || [])
+        .filter((blocker) => blocker.source !== "PUBLICATION_APPROVAL");
+      return result.concat(
+        capabilityBlockers.map((blocker) =>
+          this.normalizeCapabilityBlocker(blocker, status, "PUBLICATION"),
+        ),
+      );
+    }, []);
+    errors.forEach((item) => {
+      let blocker = this.readinessBlocker(
+        "PUBLICATION_PROVIDER_UNAVAILABLE",
+        "NEEDS_ATTENTION",
+        "PUBLICATION",
+        "BACKOFFICE_APPLICATION_INITIALIZATION",
+        "Open Setup & Accelerators",
+        "Publication readiness could not be read from the owning application profile.",
+        {
+          repairOperation: "applicationInitialization.refreshStatus",
+          repairAction: "REFRESH_PUBLICATION_STATUS",
+          suggestedAction:
+            "Refresh Setup & Accelerators and verify the target publication runtime is registered.",
+        },
+      );
+      blocker.profileCode =
+        item.profile && item.profile.code
+          ? String(item.profile.code)
+          : undefined;
+      blockers.push(blocker);
+    });
+    let online = statuses.filter(
+      (status) =>
+        status &&
+        status.capability &&
+        status.capability.businessStatus === "ONLINE",
+    ).length;
+    let pending = statuses.length - online;
+    let profileStateCounts = this.countByValue(
+      statuses,
+      (status) =>
+        (status && status.capability && status.capability.businessStatus) ||
+        "UNKNOWN",
+    );
+    let publicationStatusCounts = this.countByValue(
+      statuses,
+      (status) =>
+        (status &&
+          status.capability &&
+          status.capability.publicationDiagnostic &&
+          status.capability.publicationDiagnostic.status) ||
+        "UNKNOWN",
+    );
+    return {
+      key: "publishing",
+      title: "Publication readiness",
+      businessStatus:
+        errors.length || blockers.length || pending > 0
+          ? "NEEDS_ATTENTION"
+          : statuses.length
+            ? "READY"
+            : "NOT_CONFIGURED",
+      ownerModule: "cms",
+      source: "BACKOFFICE_APPLICATION_INITIALIZATION",
+      route: "/publishing/setup",
+      summary: {
+        profileCount: statuses.length,
+        onlineCount: online,
+        pendingCount: Math.max(0, pending),
+        blockerCount: blockers.length,
+        providerErrorCount: errors.length,
+        profileStateCounts: profileStateCounts,
+        publicationStatusCounts: publicationStatusCounts,
+        operatorCommands: [
+          "Open Setup & Accelerators",
+          "Prepare staged content",
+          "Request or complete approval",
+          "Publish Online after approval",
+        ],
+      },
+      blockers: blockers,
+      nextAction:
+        blockers.length || pending > 0
+          ? "Open Setup & Accelerators and resolve publication readiness blockers."
+          : statuses.length
+            ? "Publication profiles are Online-ready."
+            : "Configure application publication profiles.",
+    };
+  },
+  /** Builds owner-backed approval readiness from Process evidence carried by CMS/application projections. */
+  approvalSection: function (profileStatusReport) {
+    let statuses = [].concat((profileStatusReport || {}).statuses || []);
+    let errors = [].concat((profileStatusReport || {}).errors || []);
+    let blockers = [];
+    statuses.forEach((status) => {
+      let capability = (status && status.capability) || {};
+      let diagnostic = capability.approvalDiagnostic || {};
+      if (["APPROVED", "NOT_STARTED"].includes(String(diagnostic.status || "")))
+        return;
+      let approvalBlockers = []
+        .concat(capability.blockers || [])
+        .filter((blocker) => blocker.source === "PUBLICATION_APPROVAL");
+      if (approvalBlockers.length) {
+        blockers = blockers.concat(
+          approvalBlockers.map((blocker) =>
+            this.normalizeCapabilityBlocker(
+              blocker,
+              status,
+              "PROCESS_WORKFLOW",
+            ),
+          ),
+        );
+        return;
+      }
+      let blocker = this.readinessBlocker(
+        "APPROVAL_IN_PROGRESS",
+        "NEEDS_ATTENTION",
+        "PROCESS_WORKFLOW",
+        "PUBLICATION_APPROVAL",
+        diagnostic.suggestedAction || "Open Approval Queue",
+        diagnostic.message || "Publication approval needs reviewer action.",
+        {
+          repairOperation: "process.approval.review",
+          repairAction: "REVIEW_APPROVAL_TASK",
+          suggestedAction:
+            diagnostic.suggestedAction ||
+            "Open Approval Queue and review the governed task.",
+        },
+      );
+      blocker.profileCode = status.profileCode
+        ? String(status.profileCode)
+        : undefined;
+      blocker.publicationCode = diagnostic.publicationCode;
+      blocker.publicationState = diagnostic.publicationState;
+      blocker.taskCode = diagnostic.taskCode;
+      blocker.taskStatus = diagnostic.taskStatus;
+      blockers.push(blocker);
+    });
+    errors.forEach((item) => {
+      let blocker = this.readinessBlocker(
+        "APPROVAL_PROVIDER_UNAVAILABLE",
+        "NEEDS_ATTENTION",
+        "PROCESS_WORKFLOW",
+        "PUBLICATION_APPROVAL",
+        "Refresh publication status",
+        "Approval readiness could not be read because publication status is unavailable.",
+        {
+          repairOperation: "applicationInitialization.refreshStatus",
+          repairAction: "REFRESH_APPROVAL_STATUS",
+          suggestedAction:
+            "Refresh Setup & Accelerators and verify CMS/Process runtimes are registered.",
+        },
+      );
+      blocker.profileCode =
+        item.profile && item.profile.code
+          ? String(item.profile.code)
+          : undefined;
+      blockers.push(blocker);
+    });
+    let pending = statuses.filter((status) => {
+      let diagnostic =
+        (status && status.capability && status.capability.approvalDiagnostic) ||
+        {};
+      return !["APPROVED", "NOT_STARTED"].includes(
+        String(diagnostic.status || ""),
+      );
+    }).length;
+    let approvalStatusCounts = this.countByValue(
+      statuses,
+      (status) =>
+        (status &&
+          status.capability &&
+          status.capability.approvalDiagnostic &&
+          status.capability.approvalDiagnostic.status) ||
+        "UNKNOWN",
+    );
+    return {
+      key: "approval",
+      title: "Process approval tasks",
+      businessStatus: blockers.length ? "NEEDS_ATTENTION" : "READY",
+      ownerModule: "workflow",
+      source: "PUBLICATION_APPROVAL",
+      route: "/process/approval-queue",
+      summary: {
+        profileCount: statuses.length,
+        pendingApprovalCount: pending,
+        blockerCount: blockers.length,
+        providerErrorCount: errors.length,
+        approvalStatusCounts: approvalStatusCounts,
+        operatorCommands: [
+          "Open Approval Queue",
+          "Review actionable publication task",
+          "If missing, refresh publication status and Process runtime",
+          "Refresh operational readiness",
+        ],
+      },
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Open Approval Queue and reconcile governed publication approval tasks."
+        : "No actionable publication approval blockers were detected.",
+    };
+  },
+  /** Builds owner-backed media readiness from media-manifest evidence in application/CMS projections. */
+  mediaSection: async function (profileStatusReport, context) {
+    context = context || {};
+    let statuses = [].concat((profileStatusReport || {}).statuses || []);
+    let errors = [].concat((profileStatusReport || {}).errors || []);
+    let blockers = statuses.reduce((result, status) => {
+      let capability = (status && status.capability) || {};
+      let mediaBlockers = []
+        .concat(capability.blockers || [])
+        .filter(
+          (blocker) =>
+            blocker.source === "MEDIA_MANIFEST" ||
+            String(blocker.code || "").startsWith("MEDIA_"),
+        );
+      return result.concat(
+        mediaBlockers.map((blocker) =>
+          this.normalizeCapabilityBlocker(blocker, status, "MEDIA_MODULE"),
+        ),
+      );
+    }, []);
+    errors.forEach((item) => {
+      let blocker = this.readinessBlocker(
+        "MEDIA_PROVIDER_UNAVAILABLE",
+        "NEEDS_ATTENTION",
+        "MEDIA_MODULE",
+        "BACKOFFICE_APPLICATION_INITIALIZATION",
+        "Open Media Management",
+        "Media readiness could not be read because the owning application/media status is unavailable.",
+        {
+          repairOperation: "applicationInitialization.refreshStatus",
+          repairAction: "REFRESH_MEDIA_STATUS",
+          suggestedAction:
+            "Refresh Setup & Accelerators and verify the target media/CMS runtimes are registered.",
+        },
+      );
+      blocker.profileCode =
+        item.profile && item.profile.code
+          ? String(item.profile.code)
+          : undefined;
+      blockers.push(blocker);
+    });
+    let ownerReadiness;
+    if (
+      SERVICE.DefaultMediaReadinessService &&
+      typeof SERVICE.DefaultMediaReadinessService.readiness === "function"
+    ) {
+      try {
+        ownerReadiness =
+          await SERVICE.DefaultMediaReadinessService.readiness(context);
+        blockers = blockers.concat(
+          [].concat((ownerReadiness || {}).blockers || []).map((item) => {
             item = item || {};
             return this.readinessBlocker(
-                item.code || item.blockerCode || 'EWASTE_ACCEPTANCE_NOT_READY',
-                item.severity || 'NEEDS_ATTENTION',
-                'EWASTE_ACCEPTANCE',
-                item.source || 'EWASTE_ACCEPTANCE_READINESS',
-                item.action || 'Open eWaste readiness',
-                item.message || 'Circa/eWaste acceptance readiness needs attention.',
-                { repairAvailable: item.repair && item.repair.available === true,
-                    repairOperation: item.repair && item.repair.operation,
-                    repairAction: item.repair && (item.repair.action || item.repair.actionCode),
-                    repairEligibility: item.repair && item.repair.eligibility,
-                    repairLabel: item.repair && item.repair.label,
-                    suggestedAction: item.suggestedAction || item.action || 'Open eWaste readiness',
-                    businessImpact: item.businessImpact || 'Circa/eWaste acceptance can be blocked until the owner readiness item is resolved.',
-                    recoveryHint: item.recoveryHint || item.suggestedAction || item.action || 'Open eWaste readiness and follow the owner guidance.' }
-            );
-        });
-        return {
-            key: 'eWasteAcceptance',
-            title: 'Circa/eWaste acceptance readiness',
-            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : String((report || {}).businessStatus || 'NOT_CONFIGURED'),
-            ownerModule: 'eWaste',
-            source: 'EWASTE_ACCEPTANCE_READINESS',
-            route: '/waste/review-queue',
-            summary: Object.assign({ providerAvailable: true }, (report || {}).summary || {}, { blockerCount: blockers.length }),
-            blockers: blockers,
-            nextAction: blockers.length ? 'Open eWaste readiness and resolve Telegram, AI, media or scenario blockers.' :
-                ((report || {}).nextAction || 'Circa/eWaste acceptance readiness is clear.'),
-        };
-    },
-    /** Summarizes nSearch/read-source configuration without requiring custom-project runtime settings. */
-    searchConfigurationSummary: function () {
-        let search = CONFIG.get('search') || {};
-        let defaultOptions = (search.default || {}).options || {};
-        let runtimeRoleConfig = CONFIG.get('runtimeRole') || {};
-        let runtimeRole = runtimeRoleConfig.code || runtimeRoleConfig.name || runtimeRoleConfig.roleCode || undefined;
-        let runtimeProfile = runtimeRole && search.runtimeRoleProfiles ? search.runtimeRoleProfiles[String(runtimeRole)] : undefined;
-        let profileEntries = Object.entries(runtimeProfile || {}).filter(entry => {
-            let value = entry[1] || {};
-            return value.options && value.options.enabled === true;
-        });
-        let defaultEnabled = defaultOptions.enabled === true;
-        let fallbackEnabled = defaultOptions.fallback === true;
-        let engine = defaultOptions.engine || 'database';
-        return {
-            runtimeRole: runtimeRole ? String(runtimeRole) : 'UNKNOWN',
-            engine: String(engine),
-            defaultSearchEnabled: defaultEnabled,
-            defaultFallbackEnabled: fallbackEnabled,
-            runtimeProfileCount: profileEntries.length,
-            runtimeProfileCodes: profileEntries.map(entry => String(entry[0])),
-            readSourcePolicy: fallbackEnabled ? 'SEARCH_WITH_DATABASE_FALLBACK' :
-                defaultEnabled || profileEntries.length > 0 ? 'SEARCH_ENGINE' : 'DATABASE_OR_OWNER_DEFAULT',
-        };
-    },
-    /** Returns bounded discovery/search diagnostics from owner services. */
-    searchReadinessEvidence: function (context) {
-        context = context || {};
-        let diagnostics = SERVICE.DefaultBackofficeDiscoveryService &&
-            typeof SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics === 'function' ?
-                SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics() : {};
-        let ownerReadiness;
-        if (SERVICE.DefaultSearchConfigurationService &&
-            typeof SERVICE.DefaultSearchConfigurationService.readiness === 'function') {
-            try {
-                ownerReadiness = SERVICE.DefaultSearchConfigurationService.readiness(context);
-            } catch (error) {
-                ownerReadiness = { businessStatus: 'NEEDS_ATTENTION', blockers: [{
-                    code: 'SEARCH_READINESS_PROVIDER_FAILED',
-                    severity: 'NEEDS_ATTENTION',
-                    source: 'NSEARCH_CONFIGURATION',
-                    action: 'Open Search controls',
-                    message: 'Search readiness provider failed while reading search/read-source policy.',
-                    repair: { operation: 'search.readiness', action: 'REFRESH_SEARCH_READINESS',
-                        label: 'Refresh search readiness', available: true, eligibility: 'MANUAL' }
-                }], summary: { failureCode: String(error.code || error.message || 'SEARCH_READINESS_FAILED') } };
-            }
-        }
-        let searchReady;
-        if (SERVICE.DefaultSearchConfigurationService &&
-            typeof SERVICE.DefaultSearchConfigurationService.getSearchReadiness === 'function') {
-            try {
-                searchReady = SERVICE.DefaultSearchConfigurationService.getSearchReadiness();
-            } catch (error) {
-                searchReady = false;
-            }
-        }
-        let moduleEntries = Object.entries(context.modules || {}).reduce((result, entry) => result.concat((entry[1] || [])
-            .map(item => Object.assign({ moduleName: entry[0] }, item))), []);
-        let activeSearchModules = moduleEntries.filter(item => /search/i.test(String(item.moduleName || item.module || item.name || '')));
-        let activeDiscoveryModules = moduleEntries.filter(item => /discovery/i.test(String(item.moduleName || item.module || item.name || '')));
-        return {
-            diagnostics: diagnostics || {},
-            searchReady: searchReady,
-            ownerReadiness: ownerReadiness,
-            activeSearchModuleCount: activeSearchModules.length,
-            activeDiscoveryModuleCount: activeDiscoveryModules.length,
-        };
-    },
-    /** Builds owner-backed readiness for search indexes and database/search read-source policy. */
-    searchSection: function (context) {
-        let configuration = this.searchConfigurationSummary();
-        let evidence = this.searchReadinessEvidence(context);
-        let diagnostics = evidence.diagnostics || {};
-        let ownerReadiness = evidence.ownerReadiness || {};
-        let ownerSummary = ownerReadiness.summary || {};
-        let blockers = [].concat(ownerReadiness.blockers || []).map(item => this.readinessBlocker(
-            item.code || item.blockerCode || 'SEARCH_READINESS_BLOCKER',
-            item.severity || 'NEEDS_ATTENTION',
-            'SEARCH',
-            item.source || 'NSEARCH_CONFIGURATION',
-            item.action || 'Open Search controls',
-            item.message || 'Search/read-source readiness needs attention.',
-            { repairAvailable: item.repair && item.repair.available === true,
+              item.code || item.blockerCode || "MEDIA_READINESS_BLOCKER",
+              item.severity || "NEEDS_ATTENTION",
+              "MEDIA_MODULE",
+              item.source || "MEDIA_READINESS",
+              item.action || "Open Media Management",
+              item.message || "Media readiness needs attention.",
+              {
+                repairAvailable: item.repair && item.repair.available === true,
                 repairOperation: item.repair && item.repair.operation,
-                repairAction: item.repair && (item.repair.action || item.repair.actionCode),
+                repairAction:
+                  item.repair && (item.repair.action || item.repair.actionCode),
                 repairEligibility: item.repair && item.repair.eligibility,
                 repairLabel: item.repair && item.repair.label,
-                suggestedAction: item.suggestedAction || item.action || 'Open Search controls',
-                businessImpact: item.businessImpact || 'Pages or workbenches configured to render from search may show empty or stale results until repaired.',
-                recoveryHint: item.recoveryHint || 'Refresh or rebuild search indexes, then refresh readiness.' }
-        ));
-        if (evidence.searchReady === false && !blockers.some(blocker => blocker.code === 'SEARCH_ENGINE_UNAVAILABLE')) blockers.push(this.readinessBlocker(
-            'SEARCH_ENGINE_UNAVAILABLE',
-            'NEEDS_ATTENTION',
-            'SEARCH',
-            'NSEARCH_RUNTIME',
-            'Open Search controls',
-            'One or more initialized search engine clients are unavailable.',
-            { repairOperation: 'search.refreshEngines', repairAction: 'REFRESH_SEARCH_ENGINE',
-                repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh search engine',
-                suggestedAction: 'Open Search controls, verify the active read-source policy, and repair the unavailable engine.',
-                businessImpact: 'Pages or workbenches configured to render from search may show empty or stale results until the search engine is healthy.',
-                recoveryHint: 'Switch read-source policy to database fallback or repair/reindex the search engine, then refresh readiness.' }
-        ));
-        if ((diagnostics.failures || 0) > 0 || diagnostics.lastFailureCode) {
-            let blocker = this.readinessBlocker(
-                'DISCOVERY_CONTRACT_SYNC_FAILED',
-                'NEEDS_ATTENTION',
-                'DISCOVERY',
-                'BACKOFFICE_DISCOVERY',
-                'Open Discovery controls',
-                'BackOffice discovery has recent contract synchronization failures.',
-                { repairOperation: 'discovery.refreshContracts', repairAction: 'REFRESH_DISCOVERY_CONTRACTS',
-                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh discovery contracts',
-                    suggestedAction: 'Open Discovery controls, refresh owner module contracts, and inspect the latest failure code.',
-                    businessImpact: 'Axis may miss routes, schemas, or owner workspaces when discovery contracts are stale.',
-                    recoveryHint: 'Refresh owner module contracts, then refresh runtime readiness.' }
+                suggestedAction:
+                  item.suggestedAction ||
+                  item.action ||
+                  "Open Media Management",
+                businessImpact:
+                  item.businessImpact ||
+                  "Published pages, product catalogues, documentation, or evidence views may show missing media until repaired.",
+                recoveryHint:
+                  item.recoveryHint ||
+                  item.action ||
+                  "Open Media Management and follow the owner repair guidance.",
+              },
             );
-            blocker.lastFailureCode = diagnostics.lastFailureCode ? String(diagnostics.lastFailureCode) : undefined;
-            blocker.lastFailureAt = diagnostics.lastFailureAt;
-            blockers.push(blocker);
-        }
-        let hasConfiguredSearch = configuration.defaultSearchEnabled || configuration.runtimeProfileCount > 0 ||
-            evidence.activeSearchModuleCount > 0 || evidence.activeDiscoveryModuleCount > 0 ||
-            (diagnostics.attempts || 0) > 0 || (diagnostics.activeSnapshots || 0) > 0;
-        return {
-            key: 'search',
-            title: 'Search indexes and read-source policy',
-            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : hasConfiguredSearch ? 'READY' : 'NOT_CONFIGURED',
-            ownerModule: 'search',
-            source: 'NSEARCH_CONFIGURATION',
-            route: '/discovery',
-            summary: {
-                runtimeRole: configuration.runtimeRole,
-                engine: configuration.engine,
-                readSourcePolicy: configuration.readSourcePolicy,
-                defaultSearchEnabled: configuration.defaultSearchEnabled,
-                defaultFallbackEnabled: configuration.defaultFallbackEnabled,
-                runtimeProfileCount: configuration.runtimeProfileCount,
-                ownerProviderAvailable: !!evidence.ownerReadiness,
-                ownerBusinessStatus: ownerReadiness.businessStatus,
-                configuredModuleCount: ownerSummary.configuredModuleCount,
-                initializedEngineCount: ownerSummary.initializedEngineCount,
-                inactiveEngineCount: ownerSummary.inactiveEngineCount,
-                axisConfigurationVisible: ownerSummary.axisConfigurationVisible,
-                configurationRoute: ownerSummary.configurationRoute || '/discovery',
-                repairActions: ownerSummary.repairActions || [],
-                activeSearchModuleCount: evidence.activeSearchModuleCount,
-                activeDiscoveryModuleCount: evidence.activeDiscoveryModuleCount,
-                discoveryAttempts: diagnostics.attempts || 0,
-                discoveryFailures: diagnostics.failures || 0,
-                discoveryLastSuccessAt: diagnostics.lastSuccessAt,
-                discoveryLastFailureAt: diagnostics.lastFailureAt,
-                renderingPolicy: ownerSummary.readSourcePolicy || configuration.readSourcePolicy,
-                indexFreshness: ownerSummary.indexFreshness || (diagnostics.lastSuccessAt ? 'OBSERVED' : 'UNKNOWN'),
-                projectionFreshness: ownerSummary.projectionFreshness,
-                operatorCommands: [
-                    'Open Discovery/Search controls',
-                    'Review database/search rendering policy',
-                    'Refresh owner contracts or rebuild index',
-                    'Refresh operational readiness',
-                ],
-            },
-            blockers: blockers,
-            nextAction: blockers.length ? 'Open Discovery/Search controls and reconcile search engine or contract synchronization failures.' :
-                hasConfiguredSearch ? 'Search/read-source readiness evidence is available.' :
-                    'Enable an owner search/read-source profile when the runtime must render from search indexes.',
-        };
-    },
-    /** Builds owner-backed readiness for Axis Assistant knowledge sources and indexing. */
-    assistantSection: function () {
-        let service = SERVICE.DefaultCopilotKnowledgeRuntimeService;
-        if (!service || typeof service.readiness !== 'function') {
-            let blocker = this.readinessBlocker(
-                'COPILOT_KNOWLEDGE_PROVIDER_NOT_CONFIGURED',
-                'INFO',
-                'ASSISTANT_KNOWLEDGE',
-                'COPILOT_KNOWLEDGE_READINESS',
-                'Open Assistant Knowledge',
-                'Assistant knowledge provider is not configured for this runtime.',
-                { repairOperation: 'copilotKnowledge.configureSources', repairAction: 'CONFIGURE_KNOWLEDGE_SOURCES',
-                    repairAvailable: false,
-                    suggestedAction: 'Activate Copilot Knowledge only when Axis Assistant should answer from governed sources.',
-                    businessImpact: 'Axis Assistant will not answer from governed Nodics knowledge until sources and indexing are configured.',
-                    recoveryHint: 'Register governed knowledge sources, enable retrieval and ingestion, then index them.' }
-            );
-            return {
-            key: 'assistant',
-            title: 'Assistant knowledge sources',
-            businessStatus: 'NOT_CONFIGURED',
-            ownerModule: 'copilotKnowledge',
-            source: 'COPILOT_KNOWLEDGE_READINESS',
-            route: '/assistant',
-            summary: { providerAvailable: false, blockerCount: 1, reason: 'PROVIDER_NOT_CONFIGURED',
-                operatorCommands: [
-                    'Open Assistant Knowledge',
-                    'Register governed sources',
-                    'Trigger indexing',
-                    'Refresh operational readiness',
-                ] },
-            blockers: [blocker],
-            nextAction: 'Activate Copilot Knowledge when Axis Assistant should answer from governed knowledge sources.',
-        };
-        }
-        let report;
-        try {
-            report = service.readiness();
-        } catch (error) {
-            let blocker = this.readinessBlocker(
-                'COPILOT_KNOWLEDGE_PROVIDER_UNAVAILABLE',
-                'NEEDS_ATTENTION',
-                'ASSISTANT_KNOWLEDGE',
-                'COPILOT_KNOWLEDGE_READINESS',
-                'Open Assistant Knowledge',
-                'Assistant knowledge readiness could not be read from the owning Copilot Knowledge service.',
-                { repairOperation: 'copilotKnowledge.readiness', repairAction: 'REFRESH_KNOWLEDGE_READINESS',
-                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh knowledge readiness',
-                    suggestedAction: 'Open Assistant Knowledge and verify Copilot Knowledge module startup and configuration.',
-                    businessImpact: 'Axis Assistant cannot determine whether governed sources are ready, so answers may be blocked.',
-                    recoveryHint: 'Verify Copilot Knowledge runtime startup/configuration, then refresh readiness.' }
-            );
-            blocker.failureCode = String(error.code || error.message || 'COPILOT_KNOWLEDGE_READINESS_FAILED');
-            return {
-                key: 'assistant',
-                title: 'Assistant knowledge sources',
-                businessStatus: 'NEEDS_ATTENTION',
-                ownerModule: 'copilotKnowledge',
-                source: 'COPILOT_KNOWLEDGE_READINESS',
-                route: '/assistant',
-                summary: { providerAvailable: false, blockerCount: 1 },
-                blockers: [blocker],
-                nextAction: 'Open Assistant Knowledge and repair the Copilot Knowledge readiness provider.',
-            };
-        }
-        let blockers = [].concat((report || {}).blockers || []).map(item => {
-            item = item || {};
-            return this.readinessBlocker(
-                item.code || 'COPILOT_KNOWLEDGE_NOT_READY',
-                item.severity || 'NEEDS_ATTENTION',
-                'ASSISTANT_KNOWLEDGE',
-                item.source || 'COPILOT_KNOWLEDGE_READINESS',
-                item.action || 'Open Assistant Knowledge',
-                item.message || 'Assistant knowledge source readiness needs attention.',
-                { repairAvailable: item.repair && item.repair.available === true,
-                    repairOperation: item.repair && item.repair.operation,
-                    repairAction: item.repair && (item.repair.action || item.repair.actionCode),
-                    repairEligibility: item.repair && item.repair.eligibility,
-                    repairLabel: item.repair && item.repair.label,
-                    suggestedAction: item.action || 'Open Assistant Knowledge',
-                    businessImpact: item.businessImpact || 'Axis Assistant may refuse to answer because governed knowledge sources are missing, stale, or not indexed.',
-                    recoveryHint: item.recoveryHint || 'Register the source, trigger indexing, and refresh knowledge readiness.' }
-            );
-        });
-        return {
-            key: 'assistant',
-            title: 'Assistant knowledge sources',
-            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : String((report || {}).businessStatus || 'NOT_CONFIGURED'),
-            ownerModule: 'copilotKnowledge',
-            source: 'COPILOT_KNOWLEDGE_READINESS',
-            route: '/assistant',
-            summary: {
-                providerAvailable: true,
-                retrievalEnabled: (report || {}).retrievalEnabled === true,
-                ingestionEnabled: (report || {}).ingestionEnabled === true,
-                sourceRegistryEnabled: (report || {}).sourceRegistryEnabled === true,
-                sourceCount: (report || {}).sourceCount || 0,
-                enabledSourceCount: (report || {}).enabledSourceCount || 0,
-                indexedSourceCount: (report || {}).indexedSourceCount || 0,
-                notIndexedSourceCount: (report || {}).notIndexedSourceCount || 0,
-                failedSourceCount: (report || {}).failedSourceCount || 0,
-                lastRefreshAt: (report || {}).lastRefreshAt,
-                providerConfigured: (report || {}).providerConfigured === true,
-                enabledProviderCount: (report || {}).enabledProviderCount || 0,
-                selectedProviderCode: (report || {}).selectedProviderCode,
-                modelConfigured: (report || {}).modelConfigured === true,
-                modelName: (report || {}).modelName,
-                blockerCount: blockers.length,
-                operatorCommands: [
-                    'Open Assistant Knowledge',
-                    'Register or enable governed source',
-                    'Trigger indexing',
-                    'Refresh operational readiness',
-                ],
-            },
-            blockers: blockers,
-            nextAction: blockers.length ? 'Open Assistant Knowledge and resolve source registry or indexing blockers.' :
-                (report || {}).businessStatus === 'READY' ? 'Assistant knowledge sources are configured and indexed.' :
-                    'Configure Copilot Knowledge retrieval and enabled sources before relying on Assistant answers.',
-        };
-    },
-    /** Returns the bounded in-memory operational readiness timeline for Axis and support diagnostics. */
-    operationalReadinessTimeline: function () {
-        return (this._operationalReadinessTimeline || []).slice();
-    },
-    /** Normalizes one requested owner repair without trusting frontend state. */
-    normalizeRepairRequest: function (request) {
-        let input = request && request.readinessRepair || {};
-        let repair = input.repair || {};
-        let operation = String(input.operation || repair.operation || '').trim();
-        let action = String(input.action || repair.action || repair.actionCode || '').trim();
-        let ownerModule = String(input.ownerModule || '').trim();
-        let idempotencyKey = String(input.idempotencyKey || '').trim();
-        if (!operation || !action || !ownerModule || !idempotencyKey) {
-            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Readiness repair requires operation, action, ownerModule, and idempotencyKey');
-        }
-        let eligibility = String(input.eligibility || repair.eligibility || 'NOT_AVAILABLE');
-        let available = input.available === true || repair.available === true;
-        let context = input.context && typeof input.context === 'object' && !Array.isArray(input.context) ? input.context : {};
-        return {
-            repairContractVersion: Number(input.repairContractVersion || repair.repairContractVersion || 1),
-            idempotencyKey: idempotencyKey,
-            dryRun: input.dryRun !== false,
-            operation: operation,
-            action: action,
-            ownerModule: ownerModule,
-            ownerType: input.ownerType ? String(input.ownerType) : undefined,
-            source: input.source ? String(input.source) : 'BACKOFFICE_OPERATIONAL_READINESS',
-            blockerCode: input.blockerCode ? String(input.blockerCode) : undefined,
-            route: input.route ? String(input.route) : undefined,
-            eligibility: eligibility,
-            available: available,
-            label: String(input.label || repair.label || action),
-            reason: input.reason ? String(input.reason) : undefined,
-            correlationId: String(input.correlationId || request && request.correlationId || idempotencyKey),
-            timeoutMs: Number.isInteger(input.timeoutMs) ? Math.max(1000, Math.min(input.timeoutMs, 120000)) : 30000,
-            targetIdentifiers: this.normalizeRepairTargetIdentifiers(input.targetIdentifiers || context.targetIdentifiers || {}),
-            preview: input.preview && typeof input.preview === 'object' && !Array.isArray(input.preview) ? input.preview : undefined,
-            prerequisites: [].concat(input.prerequisites || context.prerequisites || []),
-            batch: input.batch === true,
-            highImpact: input.highImpact === true,
-            operatorNote: input.operatorNote ? String(input.operatorNote) : undefined,
-            environmentPolicy: input.environmentPolicy ? String(input.environmentPolicy) : undefined,
-            context: context,
-        };
-    },
-    /** Normalizes stable target identifiers; display labels are never enough to execute a repair. */
-    normalizeRepairTargetIdentifiers: function (identifiers) {
-        identifiers = identifiers && typeof identifiers === 'object' && !Array.isArray(identifiers) ? identifiers : {};
-        return ['releaseCode', 'profileCode', 'publicationCode', 'taskCode', 'mediaManifestCode', 'sourceCode']
-            .reduce((result, key) => {
-                if (identifiers[key]) result[key] = String(identifiers[key]);
-                return result;
-            }, {});
-    },
-    /** Returns true when at least one stable target identifier is supplied. */
-    hasRepairTargetIdentity: function (repair) {
-        return Object.keys(repair.targetIdentifiers || {}).length > 0;
-    },
-    /** Registers an owner repair provider through framework/module startup or tests. */
-    registerRepairProvider: function (ownerModule, provider, metadata) {
-        ownerModule = String(ownerModule || '').trim();
-        if (!ownerModule) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Repair provider ownerModule is required');
-        if (!provider || (typeof provider.executeRepair !== 'function' &&
-            typeof provider.executeReadinessRepair !== 'function')) {
-            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Repair provider requires executeRepair or executeReadinessRepair');
-        }
-        this._repairProviderRegistry[ownerModule] = Object.assign({
-            ownerModule: ownerModule,
-            registeredAt: this.now(),
-            lifecycleState: 'REGISTERED',
-            provider: provider,
-        }, metadata || {});
-        delete this._repairProviderCapabilityCache[ownerModule];
-        this._repairTelemetry.registered += 1;
-        this._repairTelemetry.providerRefreshes += 1;
-        this.recordRepairProviderEvent('REGISTERED', ownerModule, metadata);
-        return this.repairProviderDescriptor(this._repairProviderRegistry[ownerModule]);
-    },
-    /** Removes one owner repair provider registration. */
-    unregisterRepairProvider: function (ownerModule) {
-        ownerModule = String(ownerModule || '').trim();
-        delete this._repairProviderRegistry[ownerModule];
-        delete this._repairProviderCapabilityCache[ownerModule];
-        this._repairTelemetry.unregistered += 1;
-        this._repairTelemetry.providerRefreshes += 1;
-        this.recordRepairProviderEvent('UNREGISTERED', ownerModule, {});
-        return true;
-    },
-    /** Records a compact provider lifecycle event for Module Registry and support diagnostics. */
-    recordRepairProviderEvent: function (event, ownerModule, metadata) {
-        let item = {
-            eventType: 'backoffice.readinessRepair.provider',
-            event: event,
-            ownerModule: ownerModule,
-            providerCode: metadata && metadata.providerCode ? String(metadata.providerCode) : ownerModule,
-            checkedAt: this.now(),
-        };
-        this._repairProviderEvents = [item].concat(this._repairProviderEvents || []).slice(0, 25);
-        if (SERVICE.DefaultBackofficeAuditService && typeof SERVICE.DefaultBackofficeAuditService.record === 'function') {
-            Promise.resolve(SERVICE.DefaultBackofficeAuditService.record(item)).catch(() => false);
-        }
-        return item;
-    },
-    /** Returns a client-safe provider descriptor. */
-    repairProviderDescriptor: function (entry, capability) {
-        entry = entry || {};
-        capability = capability || {};
-        return {
-            ownerModule: String(entry.ownerModule || capability.ownerModule || 'unknown'),
-            providerCode: String(entry.providerCode || capability.providerCode || entry.ownerModule || 'unknown'),
-            lifecycleState: String(capability.lifecycleState || entry.lifecycleState || (capability.available === false ? 'UNAVAILABLE' : 'READY')),
-            registeredAt: entry.registeredAt,
-            repairContractVersion: Number(capability.repairContractVersion || entry.repairContractVersion || this._supportedRepairContractVersion),
-            supportedOperations: [].concat(capability.supportedOperations || capability.supportedRepairOperations || entry.supportedOperations || [])
-                .map(item => ({ operation: String((item || {}).operation || ''), action: (item || {}).action ? String(item.action) : undefined }))
-                .filter(item => item.operation),
-            message: capability.message ? String(capability.message) : undefined,
-            nextAction: capability.nextAction ? String(capability.nextAction) : undefined,
-        };
-    },
-    /** Returns registered repair providers without exposing executable instances. */
-    repairProviderRegistry: function () {
-        return Object.keys(this._repairProviderRegistry || {}).sort().map(ownerModule =>
-            this.repairProviderDescriptor(this._repairProviderRegistry[ownerModule]));
-    },
-    /** Returns the provider capability cache TTL in milliseconds. */
-    repairProviderCapabilityTtlMs: function () {
-        let operations = this.getConfiguration() || {};
-        let repair = operations.repair || {};
-        return Math.max(1000, Number(repair.providerCapabilityTtlMs || 30000));
-    },
-    /** Resolves provider candidates through registry first and legacy framework service names second. */
-    repairProviderEntries: function (repair) {
-        let entries = [];
-        let registered = this._repairProviderRegistry && this._repairProviderRegistry[repair.ownerModule];
-        if (registered && registered.provider) entries.push(registered);
-        [
-            ['backoffice', SERVICE.DefaultBackofficeReadinessRepairService],
-            ['operationalReadiness', SERVICE.DefaultOperationalReadinessRepairService],
-        ].forEach(pair => {
-            if (pair[1]) entries.push({ ownerModule: pair[0], providerCode: pair[0], provider: pair[1], lifecycleState: 'READY' });
-        });
-        let ownerToken = String(repair.ownerModule || '').replace(/[^A-Za-z0-9]/g, '');
-        if (ownerToken) {
-            let serviceName = 'Default' + ownerToken.charAt(0).toUpperCase() + ownerToken.slice(1) + 'ReadinessRepairService';
-            if (SERVICE[serviceName]) entries.push({
-                ownerModule: repair.ownerModule,
-                providerCode: serviceName,
-                provider: SERVICE[serviceName],
-                lifecycleState: 'READY',
-            });
-        }
-        let seen = new Set();
-        return entries.filter(entry => {
-            let provider = entry && entry.provider;
-            if (!provider || (typeof provider.executeRepair !== 'function' &&
-                typeof provider.executeReadinessRepair !== 'function')) return false;
-            let key = entry.providerCode || entry.ownerModule || provider;
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-        });
-    },
-    /** Resolves an owner-declared repair provider; BackOffice never guesses repair work. */
-    repairProvider: function (repair) {
-        let entry = this.repairProviderEntry(repair);
-        return entry && entry.provider;
-    },
-    /** Resolves an owner-declared repair provider registry entry. */
-    repairProviderEntry: function (repair) {
-        return this.repairProviderEntries(repair).find(entry => entry && entry.provider);
-    },
-    /** Reads optional provider capability/health metadata without requiring every provider to implement it. */
-    repairProviderCapability: function (provider, repair, entry) {
-        if (!provider) return {};
-        let ownerModule = String(repair && repair.ownerModule || entry && entry.ownerModule || '');
-        let cacheKey = ownerModule + ':' + String(repair && repair.operation || '*') + ':' + String(repair && repair.action || '*');
-        let cached = this._repairProviderCapabilityCache[cacheKey];
-        if (cached && cached.expiresAtMs > Date.now()) return cached.capability;
-        let capability = {};
-        if (typeof provider.repairCapability === 'function') capability = provider.repairCapability(repair) || {};
-        else if (typeof provider.readinessRepairCapability === 'function') capability = provider.readinessRepairCapability(repair) || {};
-        else if (typeof provider.selfTest === 'function') capability = { selfTestAvailable: true };
-        if (ownerModule) this._repairProviderCapabilityCache[cacheKey] = {
-            capability: capability,
-            expiresAtMs: Date.now() + this.repairProviderCapabilityTtlMs(),
-            cachedAt: this.now(),
-        };
-        return capability;
-    },
-    /** Validates provider capability metadata before execution. */
-    validateRepairProviderCapability: function (entry, repair) {
-        let provider = entry && entry.provider || entry;
-        let capability = this.repairProviderCapability(provider, repair, entry);
-        let version = Number(capability.repairContractVersion || 1);
-        if (version !== this._supportedRepairContractVersion) return {
-            state: 'UNSUPPORTED_CONTRACT',
-            message: 'Owner repair provider contract version is unsupported.',
-            nextAction: 'Upgrade the owner repair provider or BackOffice repair contract before executing.',
-            provider: this.repairProviderDescriptor(entry, capability),
-        };
-        let lifecycleState = String(capability.lifecycleState || entry && entry.lifecycleState || 'READY');
-        if (['DISABLED', 'MISCONFIGURED', 'UNAVAILABLE'].includes(lifecycleState)) return {
-            state: lifecycleState === 'MISCONFIGURED' ? 'PROVIDER_MISCONFIGURED' : 'PROVIDER_UNAVAILABLE',
-            message: String(capability.message || 'Owner repair provider is not ready.'),
-            nextAction: String(capability.nextAction || 'Open Module Registry or the owning configuration workspace and repair provider readiness.'),
-            provider: this.repairProviderDescriptor(entry, capability),
-        };
-        let supported = [].concat(capability.supportedOperations || capability.supportedRepairOperations || []);
-        if (supported.length > 0) {
-            let match = supported.some(item => {
-                item = item || {};
-                return String(item.operation || '') === repair.operation &&
-                    (!item.action || String(item.action) === repair.action);
-            });
-            if (!match) return {
-                state: 'NOT_SUPPORTED',
-                message: 'Owner repair provider does not support this operation/action pair.',
-                nextAction: 'Open the owning workspace or choose a supported repair action.',
-                provider: this.repairProviderDescriptor(entry, capability),
-            };
-        }
-        if (capability.available === false) return {
-            state: 'PROVIDER_UNAVAILABLE',
-            message: String(capability.message || 'Owner repair provider is not currently available.'),
-            nextAction: String(capability.nextAction || 'Retry after the owner repair provider reports healthy.'),
-            provider: this.repairProviderDescriptor(entry, capability),
-        };
-        return { provider: this.repairProviderDescriptor(entry, capability) };
-    },
-    /** Returns a stable repair target key for locks, receipts, and telemetry. */
-    repairTargetKey: function (repair) {
-        let ids = this.normalizeRepairTargetIdentifiers(repair.targetIdentifiers);
-        let encoded = Object.keys(ids).sort().map(key => key + '=' + ids[key]).join('&');
-        return [repair.ownerModule, repair.operation, repair.action, encoded].map(value => String(value || '')).join('|');
-    },
-    /** Attempts to acquire an execution lock for a repair target. */
-    acquireRepairLock: function (repair, request) {
-        let targetKey = this.repairTargetKey(repair);
-        let now = Date.now();
-        let existing = this._repairLocksByTarget[targetKey];
-        if (existing && existing.expiresAtMs > now) return {
-            acquired: false,
-            targetKey: targetKey,
-            lock: Object.assign({}, existing, { expiresAtMs: undefined, expiresAt: new Date(existing.expiresAtMs).toISOString() }),
-        };
-        let expiresAtMs = now + Math.max(5000, Number(repair.timeoutMs || 30000) + 30000);
-        let lock = {
-            targetKey: targetKey,
-            ownerModule: repair.ownerModule,
-            operation: repair.operation,
-            action: repair.action,
-            idempotencyKey: repair.idempotencyKey,
-            correlationId: repair.correlationId,
-            acquiredAt: this.now(),
-            expiresAtMs: expiresAtMs,
-            principal: this.principal(request),
-        };
-        this._repairLocksByTarget[targetKey] = lock;
-        return { acquired: true, targetKey: targetKey, lock: Object.assign({}, lock, { expiresAtMs: undefined, expiresAt: new Date(expiresAtMs).toISOString() }) };
-    },
-    /** Releases a target execution lock owned by the current idempotency key. */
-    releaseRepairLock: function (targetKey, idempotencyKey) {
-        let existing = this._repairLocksByTarget[targetKey];
-        if (existing && existing.idempotencyKey === idempotencyKey) delete this._repairLocksByTarget[targetKey];
-    },
-    /** Returns policy/safety metadata for a repair request. */
-    repairSafety: function (repair, result) {
-        result = result || {};
-        let safetyLevel = result.safety && result.safety.level ? String(result.safety.level) :
-            repair.highImpact ? 'HIGH_IMPACT' : repair.batch ? 'BATCH_DISABLED' : 'SAFE';
-        return {
-            level: safetyLevel,
-            destructiveDisabled: safetyLevel === 'DESTRUCTIVE_DISABLED' || repair.action === 'DELETE' || repair.action === 'REMOVE',
-            highImpact: repair.highImpact === true,
-            batchExecutionAllowed: false,
-        };
-    },
-    /** Creates a normalized human and machine repair plan from provider output. */
-    normalizeRepairPlan: function (repair, result) {
-        result = result || {};
-        let plan = result.plan && typeof result.plan === 'object' && !Array.isArray(result.plan) ? result.plan : {};
-        return {
-            businessSteps: [].concat(plan.businessSteps || result.businessSteps || []).filter(Boolean).map(item => String(item)).slice(0, 12),
-            machineSteps: [].concat(plan.machineSteps || result.machineSteps || []).filter(Boolean).map(item => {
-                item = item && typeof item === 'object' && !Array.isArray(item) ? item : { action: item };
-                return {
-                    action: String(item.action || repair.action),
-                    ownerModule: String(item.ownerModule || repair.ownerModule),
-                    target: item.target ? String(item.target) : undefined,
-                };
-            }).slice(0, 12),
-        };
-    },
-    /** Publishes a best-effort repair event for cluster/runtime refresh. */
-    publishRepairEvent: function (result, request) {
-        if (!SERVICE.DefaultEventService || typeof SERVICE.DefaultEventService.publish !== 'function') {
-            return Promise.resolve({ skipped: true, reason: 'event_service_unavailable' });
-        }
-        return SERVICE.DefaultEventService.publish({
-            tenant: request && request.tenant || 'default',
-            event: 'operationalReadinessRepairChanged',
-            data: {
-                state: result.state,
-                ownerModule: result.ownerModule,
-                operation: result.operation,
-                action: result.action,
-                targetIdentifiers: result.targetIdentifiers,
-                receiptCode: result.receipt && result.receipt.receiptCode,
-                refreshScopes: result.events && result.events.refreshScopes,
-            },
-            correlationId: result.correlationId,
-        }).catch(error => ({ skipped: true, reason: 'event_publish_failed', errorCode: error.code }));
-    },
-    /** Records a durable-shape in-memory receipt until persistence is introduced. */
-    recordRepairReceipt: function (result, request) {
-        if (result.dryRun || result.idempotentReplay) return undefined;
-        let receipt = {
-            receiptCode: ['repair', result.ownerModule, Date.now()].map(value => String(value || 'unknown')).join(':'),
-            receiptType: 'OPERATIONAL_READINESS_REPAIR',
-            state: result.state,
-            ownerModule: result.ownerModule,
-            operation: result.operation,
-            action: result.action,
-            targetIdentifiers: result.targetIdentifiers,
-            evidenceReference: result.evidenceReference,
-            correlationId: result.correlationId,
-            idempotencyKey: result.idempotencyKey,
-            principal: this.principal(request),
-            checkedAt: result.checkedAt,
-        };
-        this._repairReceipts = [receipt].concat(this._repairReceipts || []).slice(0, 50);
-        if (SERVICE.DefaultBackofficeRepairReceiptService && typeof SERVICE.DefaultBackofficeRepairReceiptService.save === 'function') {
-            Promise.resolve(SERVICE.DefaultBackofficeRepairReceiptService.save({
-                tenant: request && request.tenant,
-                authData: request && request.authData,
-                query: { receiptCode: receipt.receiptCode },
-                model: receipt,
-            })).catch(() => false);
-        }
-        return receipt;
-    },
-    /** Returns bounded client-safe repair receipts. */
-    repairReceipts: function () {
-        return (this._repairReceipts || []).slice();
-    },
-    /** Returns the owner-provider execution function. */
-    invokeRepairProvider: async function (provider, repair, request) {
-        if (typeof provider.executeRepair === 'function') return provider.executeRepair(repair, request);
-        return provider.executeReadinessRepair(repair, request);
-    },
-    /** Normalizes repair execution result from owner modules into the BackOffice contract. */
-    normalizeRepairResult: function (repair, result, options) {
-        options = options || {};
-        result = result || {};
-        let state = String(result.state || options.state || (repair.dryRun ? 'DRY_RUN' : 'COMPLETED'));
-        let preview = result.preview && typeof result.preview === 'object' && !Array.isArray(result.preview) ? result.preview :
-            repair.preview && typeof repair.preview === 'object' ? repair.preview : {};
-        let provider = result.provider || options.provider;
-        let refreshScopes = [].concat(result.refreshScopes || result.events && result.events.refreshScopes || [])
-            .filter(Boolean).map(item => String(item)).slice(0, 12);
-        return {
-            contractVersion: 1,
-            repairContractVersion: this._supportedRepairContractVersion,
-            idempotencyKey: repair.idempotencyKey,
-            correlationId: repair.correlationId,
-            dryRun: repair.dryRun === true,
-            state: state,
-            operation: repair.operation,
-            action: repair.action,
-            ownerModule: repair.ownerModule,
-            ownerType: repair.ownerType,
-            source: repair.source,
-            blockerCode: repair.blockerCode,
-            provider: provider && typeof provider === 'object' && !Array.isArray(provider) ?
-                this.repairProviderDescriptor(provider, provider) : undefined,
-            targetIdentifiers: this.normalizeRepairTargetIdentifiers(result.targetIdentifiers || repair.targetIdentifiers),
-            prerequisites: [].concat(result.prerequisites || repair.prerequisites || []).slice(0, 20),
-            preview: {
-                changedCount: Number.isInteger(preview.changedCount) ? preview.changedCount : undefined,
-                skippedCount: Number.isInteger(preview.skippedCount) ? preview.skippedCount : undefined,
-                targetCodes: [].concat(preview.targetCodes || []).filter(Boolean).map(item => String(item)).slice(0, 25),
-            },
-            transaction: {
-                atomic: result.transaction && result.transaction.atomic === true,
-                rollbackAvailable: result.transaction && result.transaction.rollbackAvailable === true,
-                rollbackHint: result.transaction && result.transaction.rollbackHint ? String(result.transaction.rollbackHint) :
-                    'No automatic rollback was declared for this repair result.',
-                compensatingAction: result.transaction && result.transaction.compensatingAction ?
-                    String(result.transaction.compensatingAction) : undefined,
-            },
-            policy: {
-                environment: result.policy && result.policy.environment ? String(result.policy.environment) : repair.environmentPolicy,
-                approvalRequired: result.policy && result.policy.approvalRequired === true,
-                approvalRoute: result.policy && result.policy.approvalRoute ? String(result.policy.approvalRoute) : undefined,
-                disabled: result.policy && result.policy.disabled === true,
-            },
-            retryPolicy: {
-                safeToRetry: result.retryPolicy && result.retryPolicy.safeToRetry !== undefined ?
-                    result.retryPolicy.safeToRetry === true : state !== 'COMPLETED',
-                reuseIdempotencyKey: result.retryPolicy && result.retryPolicy.reuseIdempotencyKey !== undefined ?
-                    result.retryPolicy.reuseIdempotencyKey === true : true,
-            },
-            safety: this.repairSafety(repair, result),
-            plan: this.normalizeRepairPlan(repair, result),
-            lock: options.lock,
-            receipt: result.receipt && typeof result.receipt === 'object' && !Array.isArray(result.receipt) ? result.receipt : undefined,
-            events: {
-                emitted: false,
-                refreshScopes: refreshScopes,
-                invalidatesReadiness: state === 'COMPLETED' || state === 'PARTIAL_SUCCESS',
-            },
-            changedCount: Number.isInteger(result.changedCount) ? result.changedCount : 0,
-            skippedCount: Number.isInteger(result.skippedCount) ? result.skippedCount : 0,
-            blockersRemaining: Number.isInteger(result.blockersRemaining) ? result.blockersRemaining : (state === 'COMPLETED' ? 0 : 1),
-            retryable: result.retryable === undefined ? state !== 'COMPLETED' : result.retryable === true,
-            nextAction: String(result.nextAction || options.nextAction || (repair.dryRun ?
-                'Review dry-run evidence, confirm the repair, then execute with the same owner operation.' :
-                'Refresh operational readiness and review remaining blockers.')),
-            evidenceReference: result.evidenceReference ? String(result.evidenceReference) : options.evidenceReference,
-            message: String(result.message || options.message || (repair.dryRun ?
-                'Dry run completed for the owner repair operation.' : 'Repair operation completed.')),
-            checkedAt: this.now(),
-            idempotentReplay: options.idempotentReplay === true,
-        };
-    },
-    /** Records a bounded operator-safe repair attempt and audit event. */
-    recordRepairAttempt: function (result, request) {
-        let attempt = Object.assign({}, result, {
-            principal: this.principal(request),
-            tenant: request && request.tenant,
-        });
-        this._repairAttempts = [attempt].concat(this._repairAttempts || []).slice(0, 25);
-        if (result.dryRun) this._repairTelemetry.dryRuns += 1;
-        else this._repairTelemetry.executed += 1;
-        if (result.state === 'COMPLETED') this._repairTelemetry.completed += 1;
-        else if (result.state === 'FAILED') this._repairTelemetry.failed += 1;
-        else if (['NOT_EXECUTABLE', 'PROVIDER_UNAVAILABLE', 'VALIDATION_FAILED', 'BATCH_EXECUTION_DISABLED'].includes(result.state)) {
-            this._repairTelemetry.blocked += 1;
-        }
-        let publisher = SERVICE.DefaultBackofficeAuditService;
-        if (publisher && typeof publisher.record === 'function') {
-            Promise.resolve(publisher.record(Object.assign({
-                eventType: 'backoffice.operationalReadiness.repair',
-                label: 'Operational readiness repair',
-            }, attempt))).catch(() => false);
-        }
-        return result;
-    },
-    /** Returns recent bounded repair attempts for dashboard refresh/debug payloads. */
-    repairHistory: function (request) {
-        let input = request && request.query || request || {};
-        let limit = Math.min(Math.max(Number(input.limit || 25), 1), 100);
-        return (this._repairAttempts || []).filter(item => {
-            if (input.ownerModule && item.ownerModule !== String(input.ownerModule)) return false;
-            if (input.operation && item.operation !== String(input.operation)) return false;
-            if (input.state && item.state !== String(input.state)) return false;
-            if (input.principal && item.principal !== String(input.principal)) return false;
-            return true;
-        }).slice(0, limit);
-    },
-    /** Builds a client-safe dependency graph for repair planning and Axis visualization. */
-    repairDependencyGraph: function (repairs) {
-        repairs = [].concat(repairs || []);
-        let nodes = {};
-        let edges = [];
-        repairs.forEach((repair, index) => {
-            repair = repair || {};
-            let repairId = 'repair:' + index + ':' + String(repair.ownerModule || 'unknown') + ':' + String(repair.operation || 'unknown');
-            nodes[repairId] = { id: repairId, type: 'REPAIR', ownerModule: repair.ownerModule, operation: repair.operation, action: repair.action };
-            [].concat(repair.prerequisites || []).forEach((dependency, dependencyIndex) => {
-                let dependencyId = 'dependency:' + index + ':' + dependencyIndex + ':' + String(dependency.code || dependency.operation || dependency);
-                nodes[dependencyId] = { id: dependencyId, type: 'DEPENDENCY', code: String(dependency.code || dependency.operation || dependency) };
-                edges.push({ from: dependencyId, to: repairId, relation: 'REQUIRED_BEFORE' });
-            });
-        });
-        return { nodes: Object.values(nodes), edges: edges };
-    },
-    /** Produces a dry-run batch plan without executing owner repairs. */
-    planRepairBatch: function (request) {
-        let repairs = [].concat(request && request.repairs || request && request.readinessRepairs || []);
-        let normalized = repairs.map((item, index) => this.normalizeRepairRequest({ readinessRepair: Object.assign({
-            idempotencyKey: 'repair-batch-plan-' + index,
-            dryRun: true,
-        }, item || {}) }));
-        return {
-            contractVersion: 1,
-            state: normalized.length ? 'DRY_RUN' : 'EMPTY',
-            repairCount: normalized.length,
-            executableCount: normalized.filter(item => item.available === true && ['MANUAL', 'AUTOMATIC'].includes(item.eligibility)).length,
-            highImpactCount: normalized.filter(item => item.highImpact).length,
-            graph: this.repairDependencyGraph(normalized),
-            nextAction: normalized.length ? 'Review the dependency graph and execute one governed owner repair at a time until batch approval/rollback maturity is enabled.' :
-                'Select readiness repair actions before planning a batch.',
-        };
-    },
-    /** Returns repair governance summary for Module Registry and Axis readiness panels. */
-    repairGovernanceSection: function () {
-        let providers = this.repairProviderRegistry();
-        let unavailable = providers.filter(provider => ['UNAVAILABLE', 'MISCONFIGURED', 'DISABLED'].includes(provider.lifecycleState));
-        return {
-            key: 'repairGovernance',
-            title: 'Repair governance',
-            businessStatus: unavailable.length ? 'NEEDS_ATTENTION' : providers.length ? 'READY' : 'NOT_CONFIGURED',
-            ownerModule: 'backoffice',
-            source: 'BACKOFFICE_REPAIR_GOVERNANCE',
-            route: '/system/modules',
-            summary: {
-                providerCount: providers.length,
-                unavailableProviderCount: unavailable.length,
-                providerCapabilityTtlMs: this.repairProviderCapabilityTtlMs(),
-                telemetry: Object.assign({}, this._repairTelemetry),
-                recentProviderEvents: (this._repairProviderEvents || []).slice(0, 10),
-                recentReceiptCount: (this._repairReceipts || []).length,
-                operatorCommands: [
-                    'Open Module Registry',
-                    'Review repair provider readiness',
-                    'Run dry-run before execution',
-                    'Refresh operational readiness',
-                ],
-            },
-            blockers: unavailable.map(provider => this.readinessBlocker(
-                'REPAIR_PROVIDER_NOT_READY',
-                'NEEDS_ATTENTION',
-                'REPAIR_GOVERNANCE',
-                'BACKOFFICE_REPAIR_GOVERNANCE',
-                'Open Module Registry',
-                'Readiness repair provider is not ready: ' + provider.ownerModule,
-                { repairOperation: 'repairProvider.refreshCapability', repairAction: 'REFRESH_REPAIR_PROVIDER',
-                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh repair provider' }
-            )),
-            nextAction: unavailable.length ? 'Open Module Registry and repair unavailable readiness repair providers.' :
-                providers.length ? 'Repair providers are registered and ready for governed dry-runs.' :
-                    'Register owner repair providers as modules expose executable readiness repairs.',
-        };
-    },
-    /** Executes or dry-runs one owner-declared readiness repair operation. */
-    executeRepair: async function (request) {
-        let repair = this.normalizeRepairRequest(request);
-        if (repair.repairContractVersion !== this._supportedRepairContractVersion) {
-            let unsupported = this.normalizeRepairResult(repair, {}, {
-                state: 'UNSUPPORTED_CONTRACT',
-                message: 'Readiness repair request contract version is unsupported.',
-                nextAction: 'Refresh Axis or upgrade the caller to the supported BackOffice repair contract.',
-            });
-            return this.recordRepairAttempt(unsupported, request);
-        }
-        if (this._repairResultsByKey[repair.idempotencyKey]) {
-            return this.normalizeRepairResult(repair, this._repairResultsByKey[repair.idempotencyKey], { idempotentReplay: true });
-        }
-        if (repair.batch && repair.dryRun !== true) {
-            let batchBlocked = this.normalizeRepairResult(repair, {}, {
-                state: 'BATCH_EXECUTION_DISABLED',
-                message: 'Batch repair execution is disabled until owner approvals, locking, and rollback are mature.',
-                nextAction: 'Run dry-runs and execute one owner repair target at a time.',
-            });
-            return this.recordRepairAttempt(batchBlocked, request);
-        }
-        if (repair.available !== true || !['AUTOMATIC', 'MANUAL'].includes(repair.eligibility)) {
-            let blocked = this.normalizeRepairResult(repair, {}, {
-                state: 'NOT_EXECUTABLE',
-                message: 'Repair is not executable because the owner did not declare an available governed operation.',
-                nextAction: 'Open the owning workspace and follow the manual recovery guidance.',
-            });
-            this._repairResultsByKey[repair.idempotencyKey] = blocked;
-            return this.recordRepairAttempt(blocked, request);
-        }
-        if (repair.highImpact && repair.dryRun !== true && !repair.operatorNote) {
-            let noteRequired = this.normalizeRepairResult(repair, {}, {
-                state: 'OPERATOR_NOTE_REQUIRED',
-                message: 'High-impact repair execution requires an operator note.',
-                nextAction: 'Add an operator note explaining the repair reason and retry.',
-            });
-            return this.recordRepairAttempt(noteRequired, request);
-        }
-        if (!this.hasRepairTargetIdentity(repair)) {
-            let validation = this.normalizeRepairResult(repair, {}, {
-                state: 'VALIDATION_FAILED',
-                message: 'Repair target identity is missing.',
-                nextAction: 'Retry with a stable target identifier such as releaseCode, profileCode, publicationCode, taskCode, mediaManifestCode, or sourceCode.',
-            });
-            return this.recordRepairAttempt(validation, request);
-        }
-        let providerEntry = this.repairProviderEntry(repair);
-        if (!providerEntry) {
-            let unavailable = this.normalizeRepairResult(repair, {}, {
-                state: repair.dryRun ? 'DRY_RUN' : 'PROVIDER_UNAVAILABLE',
-                message: repair.dryRun ? 'Dry run is valid, but no owner repair provider is registered for execution yet.' :
-                    'No owner repair provider is registered for this operation.',
-                nextAction: repair.dryRun ? 'Review the operation details; execution requires the owner module to register a repair provider.' :
-                    'Open the owning workspace or register the owner repair provider before executing.',
-            });
-            if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = unavailable;
-            return this.recordRepairAttempt(unavailable, request);
-        }
-        let providerValidation = this.validateRepairProviderCapability(providerEntry, repair);
-        if (providerValidation.state) {
-            let invalidProvider = this.normalizeRepairResult(repair, {}, providerValidation);
-            if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = invalidProvider;
-            return this.recordRepairAttempt(invalidProvider, request);
-        }
-        let lockResult = repair.dryRun ? undefined : this.acquireRepairLock(repair, request);
-        if (lockResult && lockResult.acquired === false) {
-            let locked = this.normalizeRepairResult(repair, {}, {
-                state: 'REPAIR_LOCKED',
-                message: 'Another repair is already running for this target.',
-                nextAction: 'Wait for the active repair lock to expire or complete, then refresh readiness.',
-                lock: lockResult.lock,
-                provider: providerValidation.provider,
-            });
-            return this.recordRepairAttempt(locked, request);
-        }
-        try {
-            let ownerResult = await this.invokeRepairProvider(providerEntry.provider, repair, request);
-            let normalized = this.normalizeRepairResult(repair, ownerResult, {
-                provider: providerValidation.provider,
-                lock: lockResult && lockResult.lock,
-            });
-            let receipt = this.recordRepairReceipt(normalized, request);
-            if (receipt) normalized.receipt = receipt;
-            if (!repair.dryRun) {
-                let eventEvidence = await this.publishRepairEvent(normalized, request);
-                normalized.events = Object.assign({}, normalized.events, {
-                    emitted: eventEvidence && eventEvidence.skipped !== true,
-                    reason: eventEvidence && eventEvidence.reason,
-                });
-                this._repairResultsByKey[repair.idempotencyKey] = normalized;
-            }
-            return this.recordRepairAttempt(normalized, request);
-        } catch (error) {
-            let failed = this.normalizeRepairResult(repair, {}, {
-                state: 'FAILED',
-                message: 'Owner repair provider failed before returning a governed result.',
-                nextAction: 'Open the owning workspace, review provider health, and retry only if the retry policy allows it.',
-                provider: providerValidation.provider,
-                lock: lockResult && lockResult.lock,
-                evidenceReference: error && error.code ? String(error.code) : undefined,
-            });
-            if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = failed;
-            return this.recordRepairAttempt(failed, request);
-        } finally {
-            if (lockResult && lockResult.acquired) this.releaseRepairLock(lockResult.targetKey, repair.idempotencyKey);
-        }
-    },
-    /** Creates a compact client-safe snapshot from the canonical readiness aggregate. */
-    operationalReadinessSnapshot: function (report) {
-        report = report || {};
-        let sections = [].concat(report.sections || []);
-        let blockers = sections.flatMap(section => [].concat(section.blockers || []).map(blocker => ({
-            section: section.key,
-            code: blocker.code || blocker.blockerCode,
-            severity: blocker.severity,
-            ownerType: blocker.ownerType,
-            source: blocker.source || section.source,
-            action: blocker.suggestedAction || blocker.action || section.nextAction,
-        })));
-        return {
-            contractVersion: 1,
-            source: 'backoffice.operationalReadiness.snapshot',
-            state: report.state,
-            checkedAt: report.checkedAt,
-            summary: report.summary,
-            blockerCount: blockers.length,
-            blockers: blockers.slice(0, 25),
-            sections: sections.map(section => ({
-                key: section.key,
-                title: section.title,
-                businessStatus: section.businessStatus,
-                ownerModule: section.ownerModule,
-                source: section.source,
-                blockerCount: [].concat(section.blockers || []).length,
-                nextAction: section.nextAction,
-            })),
-        };
-    },
-    /** Records snapshot and emits best-effort backend-owned readiness event evidence. */
-    recordOperationalReadinessSnapshot: function (report, context) {
-        context = context || {};
-        let snapshot = this.operationalReadinessSnapshot(report);
-        this._lastOperationalReadinessSnapshot = snapshot;
-        let event = {
-            id: String(snapshot.checkedAt || new Date().toISOString()) + ':' + String(snapshot.state || 'UNKNOWN'),
-            eventType: 'backoffice.operationalReadiness.snapshot',
-            label: 'Operational readiness',
-            state: snapshot.state,
-            checkedAt: snapshot.checkedAt,
-            blockerCount: snapshot.blockerCount,
-            source: snapshot.source,
-            tenant: context.tenant,
-            environment: context.environment,
-        };
-        this._operationalReadinessTimeline = [event]
-            .concat(this._operationalReadinessTimeline || [])
-            .filter((item, index, values) => values.findIndex(candidate => candidate.id === item.id) === index)
-            .slice(0, 20);
-        let publisher = SERVICE.DefaultBackofficeAuditService;
-        if (publisher && typeof publisher.record === 'function') {
-            Promise.resolve(publisher.record(event)).catch(() => false);
-        }
-        return snapshot;
-    },
-    /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
-    operationalReadinessReport: async function (request, context) {
-        context = context || {};
-        let startupValidation = context.startupValidation || this.startupValidationReport(request);
-        let startupBlockers = []
-            .concat((startupValidation.findings || []).map(finding => this.readinessBlocker(
-                finding.code,
-                finding.severity === 'ERROR' ? 'BLOCKED' : 'NEEDS_ATTENTION',
-                finding.ownerType,
-                'BACKOFFICE_STARTUP_VALIDATION',
-                finding.action,
-                finding.message,
-                { repairOperation: (finding.repair || {}).operation, repairAction: (finding.repair || {}).actionCode,
-                    repairAvailable: (finding.repair || {}).available === true, repairEligibility: (finding.repair || {}).eligibility,
-                    repairLabel: (finding.repair || {}).label }
-            )))
-            .concat((startupValidation.bootstrapChecks || {}).missing > 0 ? [this.readinessBlocker(
-                'BOOTSTRAP_CHECKS_MISSING',
-                'BLOCKED',
-                'CONFIGURATION',
-                'BACKOFFICE_STARTUP_VALIDATION',
-                'Repair bootstrap configuration',
-                'One or more bootstrap checks are missing.',
-                { repairOperation: 'runtimeConfiguration.update', repairAction: 'REPAIR_BOOTSTRAP_CONFIGURATION' }
-            )] : []);
-        let importSection = await this.importReadinessSection(request, context.applicationInitializationProfiles);
-        let profileStatusReport = context.applicationProfileStatusReport || await this.applicationProfileStatusEntries(request, context.applicationInitializationProfiles);
-        let sections = [
+          }),
+        );
+      } catch (error) {
+        let blocker = this.readinessBlocker(
+          "MEDIA_READINESS_PROVIDER_FAILED",
+          "NEEDS_ATTENTION",
+          "MEDIA_MODULE",
+          "MEDIA_READINESS",
+          "Open Media Management",
+          "Media readiness provider failed while scanning object, physical artifact, reference, or cleanup readiness.",
+          {
+            repairOperation: "media.readiness",
+            repairAction: "REFRESH_MEDIA_READINESS",
+            repairAvailable: true,
+            repairEligibility: "MANUAL",
+            repairLabel: "Refresh media readiness",
+            suggestedAction:
+              "Inspect Media runtime startup and refresh operational readiness.",
+            businessImpact:
+              "Axis cannot confirm media artifact/reference readiness until the Media owner provider responds.",
+            recoveryHint:
+              "Repair the Media runtime/provider failure, restart if needed, and refresh readiness.",
+          },
+        );
+        blocker.failureCode = String(
+          error.code || error.message || "MEDIA_READINESS_FAILED",
+        );
+        blockers.push(blocker);
+      }
+    }
+    let mediaStates = statuses.map((status) => {
+      let summary =
+        (status && status.capability && status.capability.publicationSummary) ||
+        {};
+      return summary.media ? String(summary.media) : "UNKNOWN";
+    });
+    let mediaStateCounts = this.countByValue(mediaStates, (state) => state);
+    let ready = mediaStates.filter(
+      (state) => state === "READY_OR_NOT_REQUIRED",
+    ).length;
+    let needsRepair = mediaStates.filter(
+      (state) => state === "NEEDS_REPAIR",
+    ).length;
+    let ownerSummary = (ownerReadiness && ownerReadiness.summary) || {};
+    return {
+      key: "media",
+      title: "Media objects and references",
+      businessStatus:
+        blockers.length || errors.length || needsRepair > 0
+          ? "NEEDS_ATTENTION"
+          : statuses.length || ownerReadiness
+            ? "READY"
+            : "NOT_CONFIGURED",
+      ownerModule: "media",
+      source: "MEDIA_MANIFEST",
+      route: "/media",
+      summary: {
+        profileCount: statuses.length,
+        readyOrNotRequiredCount: ready,
+        needsRepairCount: needsRepair,
+        blockerCount: blockers.length,
+        providerErrorCount: errors.length,
+        mediaStateCounts: mediaStateCounts,
+        ownerProviderAvailable: !!ownerReadiness,
+        mediaObjectProviderAvailable: ownerSummary.providerAvailable,
+        mediaReferenceProviderAvailable:
+          ownerSummary.referenceProviderAvailable,
+        mediaCleanupProviderAvailable: ownerSummary.cleanupProviderAvailable,
+        mediaObjectCount: ownerSummary.mediaCount || 0,
+        incompleteMetadataCount: ownerSummary.incompleteMetadataCount || 0,
+        missingPhysicalCount: ownerSummary.missingPhysicalCount || 0,
+        referenceCount: ownerSummary.referenceCount || 0,
+        brokenReferenceCount: ownerSummary.brokenReferenceCount || 0,
+        cleanupCandidateCount: ownerSummary.cleanupCandidateCount || 0,
+        draftCleanupStatus: ownerSummary.draftCleanupStatus,
+        rejectedDraftCleanupStatus: ownerSummary.rejectedDraftCleanupStatus,
+        acceptedEvidenceRetentionStatus:
+          ownerSummary.acceptedEvidenceRetentionStatus,
+        cleanupReviewRoute: "/media/cleanup-candidates",
+        replicationRoute: "/media/replication",
+        operatorCommands: [
+          "Open Media Management",
+          "Repair missing media objects from manifest",
+          "Reconcile product or content references",
+          "Refresh publication readiness",
+        ],
+      },
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Open Media Management or Setup & Accelerators and repair missing media references/assets."
+        : statuses.length
+          ? "Media references and required publication assets are ready or not required."
+          : "Configure application/media preparation profiles before validating media readiness.",
+    };
+  },
+  /** Reads Circa/eWaste owner readiness locally or from the registered eWaste runtime. */
+  eWasteAcceptanceReadiness: async function (request, context) {
+    let service = SERVICE.DefaultEWasteAcceptanceReadinessService;
+    if (service && typeof service.readiness === "function")
+      return service.readiness(context);
+    if (
+      !SERVICE.DefaultModuleService ||
+      typeof SERVICE.DefaultModuleService.invokeModule !== "function"
+    )
+      return undefined;
+    let authorization = this.authorizationHeader(request);
+    return SERVICE.DefaultModuleService.invokeModule({
+      moduleName: "eWaste",
+      local: false,
+      connectionName: "wasteServer",
+      connectionType: "abstract",
+      targetAuthority: {
+        server: "wasteServer",
+        runtimeRole: { code: "WASTE" },
+      },
+      methodName: "GET",
+      apiName: "/readiness/acceptance",
+      timeoutMs: 10000,
+      maxAttempts: 1,
+      header: authorization ? { Authorization: authorization } : {},
+      responseSelector: (response) =>
+        response && (response.data || response.result || response),
+    });
+  },
+  /** Includes Circa/eWaste owner readiness when the eWaste accelerator is present in the active runtime. */
+  eWasteAcceptanceSection: async function (request, context) {
+    context = context || {};
+    let hasEWasteConfig = !!CONFIG.get("eWaste");
+    let report;
+    try {
+      report = await this.eWasteAcceptanceReadiness(request, context);
+    } catch (error) {
+      let blocker = this.readinessBlocker(
+        "EWASTE_ACCEPTANCE_PROVIDER_FAILED",
+        "NEEDS_ATTENTION",
+        "EWASTE_ACCEPTANCE",
+        "EWASTE_ACCEPTANCE_READINESS",
+        "Open eWaste readiness",
+        "The eWaste acceptance readiness provider failed while building readiness evidence.",
+        {
+          repairOperation: "eWaste.acceptance.readiness",
+          repairAction: "REFRESH_EWASTE_ACCEPTANCE_READINESS",
+          suggestedAction:
+            "Inspect eWaste startup/configuration and refresh readiness.",
+          businessImpact:
+            "Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.",
+          recoveryHint:
+            "Repair the owning eWaste provider error, restart if needed, and refresh readiness.",
+        },
+      );
+      blocker.failureCode = String(
+        error.code || error.message || "EWASTE_ACCEPTANCE_READINESS_FAILED",
+      );
+      return {
+        key: "eWasteAcceptance",
+        title: "Circa/eWaste acceptance readiness",
+        businessStatus: "NEEDS_ATTENTION",
+        ownerModule: "eWaste",
+        source: "EWASTE_ACCEPTANCE_READINESS",
+        route: "/waste/review-queue",
+        summary: { providerAvailable: false, blockerCount: 1 },
+        blockers: [blocker],
+        nextAction:
+          "Open eWaste readiness and repair the owner provider failure.",
+      };
+    }
+    if (!hasEWasteConfig && !report) return undefined;
+    if (!report) {
+      let blocker = this.readinessBlocker(
+        "EWASTE_ACCEPTANCE_PROVIDER_NOT_CONFIGURED",
+        "NEEDS_ATTENTION",
+        "EWASTE_ACCEPTANCE",
+        "EWASTE_ACCEPTANCE_READINESS",
+        "Start eWaste readiness provider",
+        "The eWaste acceptance readiness provider is not available in this runtime.",
+        {
+          repairOperation: "eWaste.acceptance.readiness",
+          repairAction: "START_EWASTE_ACCEPTANCE_READINESS",
+          suggestedAction:
+            "Activate the eWaste accelerator runtime and refresh operational readiness.",
+          businessImpact:
+            "Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.",
+          recoveryHint:
+            "Start the owning eWaste runtime and refresh Axis readiness.",
+        },
+      );
+      return {
+        key: "eWasteAcceptance",
+        title: "Circa/eWaste acceptance readiness",
+        businessStatus: "NEEDS_ATTENTION",
+        ownerModule: "eWaste",
+        source: "EWASTE_ACCEPTANCE_READINESS",
+        route: "/waste/review-queue",
+        summary: { providerAvailable: false, blockerCount: 1 },
+        blockers: [blocker],
+        nextAction:
+          "Start the owning eWaste readiness provider and refresh readiness.",
+      };
+    }
+    let blockers = [].concat((report || {}).blockers || []).map((item) => {
+      item = item || {};
+      return this.readinessBlocker(
+        item.code || item.blockerCode || "EWASTE_ACCEPTANCE_NOT_READY",
+        item.severity || "NEEDS_ATTENTION",
+        "EWASTE_ACCEPTANCE",
+        item.source || "EWASTE_ACCEPTANCE_READINESS",
+        item.action || "Open eWaste readiness",
+        item.message || "Circa/eWaste acceptance readiness needs attention.",
+        {
+          repairAvailable: item.repair && item.repair.available === true,
+          repairOperation: item.repair && item.repair.operation,
+          repairAction:
+            item.repair && (item.repair.action || item.repair.actionCode),
+          repairEligibility: item.repair && item.repair.eligibility,
+          repairLabel: item.repair && item.repair.label,
+          suggestedAction:
+            item.suggestedAction || item.action || "Open eWaste readiness",
+          businessImpact:
+            item.businessImpact ||
+            "Circa/eWaste acceptance can be blocked until the owner readiness item is resolved.",
+          recoveryHint:
+            item.recoveryHint ||
+            item.suggestedAction ||
+            item.action ||
+            "Open eWaste readiness and follow the owner guidance.",
+        },
+      );
+    });
+    return {
+      key: "eWasteAcceptance",
+      title: "Circa/eWaste acceptance readiness",
+      businessStatus: blockers.length
+        ? "NEEDS_ATTENTION"
+        : String((report || {}).businessStatus || "NOT_CONFIGURED"),
+      ownerModule: "eWaste",
+      source: "EWASTE_ACCEPTANCE_READINESS",
+      route: "/waste/review-queue",
+      summary: Object.assign(
+        { providerAvailable: true },
+        (report || {}).summary || {},
+        { blockerCount: blockers.length },
+      ),
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Open eWaste readiness and resolve Telegram, AI, media or scenario blockers."
+        : (report || {}).nextAction ||
+          "Circa/eWaste acceptance readiness is clear.",
+    };
+  },
+  /** Summarizes nSearch/read-source configuration without requiring custom-project runtime settings. */
+  searchConfigurationSummary: function () {
+    let search = CONFIG.get("search") || {};
+    let defaultOptions = (search.default || {}).options || {};
+    let runtimeRoleConfig = CONFIG.get("runtimeRole") || {};
+    let runtimeRole =
+      runtimeRoleConfig.code ||
+      runtimeRoleConfig.name ||
+      runtimeRoleConfig.roleCode ||
+      undefined;
+    let runtimeProfile =
+      runtimeRole && search.runtimeRoleProfiles
+        ? search.runtimeRoleProfiles[String(runtimeRole)]
+        : undefined;
+    let profileEntries = Object.entries(runtimeProfile || {}).filter(
+      (entry) => {
+        let value = entry[1] || {};
+        return value.options && value.options.enabled === true;
+      },
+    );
+    let defaultEnabled = defaultOptions.enabled === true;
+    let fallbackEnabled = defaultOptions.fallback === true;
+    let engine = defaultOptions.engine || "database";
+    return {
+      runtimeRole: runtimeRole ? String(runtimeRole) : "UNKNOWN",
+      engine: String(engine),
+      defaultSearchEnabled: defaultEnabled,
+      defaultFallbackEnabled: fallbackEnabled,
+      runtimeProfileCount: profileEntries.length,
+      runtimeProfileCodes: profileEntries.map((entry) => String(entry[0])),
+      readSourcePolicy: fallbackEnabled
+        ? "SEARCH_WITH_DATABASE_FALLBACK"
+        : defaultEnabled || profileEntries.length > 0
+          ? "SEARCH_ENGINE"
+          : "DATABASE_OR_OWNER_DEFAULT",
+    };
+  },
+  /** Returns bounded discovery/search diagnostics from owner services. */
+  searchReadinessEvidence: function (context) {
+    context = context || {};
+    let diagnostics =
+      SERVICE.DefaultBackofficeDiscoveryService &&
+      typeof SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics ===
+        "function"
+        ? SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics()
+        : {};
+    let ownerReadiness;
+    if (
+      SERVICE.DefaultSearchConfigurationService &&
+      typeof SERVICE.DefaultSearchConfigurationService.readiness === "function"
+    ) {
+      try {
+        ownerReadiness =
+          SERVICE.DefaultSearchConfigurationService.readiness(context);
+      } catch (error) {
+        ownerReadiness = {
+          businessStatus: "NEEDS_ATTENTION",
+          blockers: [
             {
-                key: 'bootstrap',
-                title: 'Bootstrap and admin access',
-                businessStatus: startupValidation.state === 'READY' ? 'READY' : startupValidation.state,
-                ownerModule: 'backoffice',
-                source: 'BACKOFFICE_STARTUP_VALIDATION',
-                route: '/dashboard',
-                summary: {
-                    findingCount: (startupValidation.summary || {}).total || 0,
-                    missingBootstrapChecks: ((startupValidation.bootstrapChecks || {}).missing || 0),
-                    acknowledged: (startupValidation.summary || {}).acknowledged || 0,
-                },
-                blockers: startupBlockers,
-                nextAction: startupBlockers.length ? 'Resolve startup validation findings on the Axis dashboard.' : 'Startup validation is clear.',
+              code: "SEARCH_READINESS_PROVIDER_FAILED",
+              severity: "NEEDS_ATTENTION",
+              source: "NSEARCH_CONFIGURATION",
+              action: "Open Search controls",
+              message:
+                "Search readiness provider failed while reading search/read-source policy.",
+              repair: {
+                operation: "search.readiness",
+                action: "REFRESH_SEARCH_READINESS",
+                label: "Refresh search readiness",
+                available: true,
+                eligibility: "MANUAL",
+              },
             },
-            this.moduleRuntimeSection(context.modules, context.availability),
-            importSection,
-            this.publishingSection(profileStatusReport),
-            this.approvalSection(profileStatusReport),
-            this.documentationSection(context.documentationSources, context.documentationPublication),
-            await this.mediaSection(profileStatusReport, context),
-            await this.eWasteAcceptanceSection(request, context),
-            this.searchSection(context),
-            this.assistantSection(),
-            this.applicationSection(profileStatusReport, context.applicationInitializationProfiles),
-            this.repairGovernanceSection(),
-            this.acceptanceSection(profileStatusReport, context),
-        ].filter(Boolean);
-        let summary = sections.reduce((result, section) => {
-            result.total++;
-            result[section.businessStatus] = (result[section.businessStatus] || 0) + 1;
-            result.blockers += (section.blockers || []).length;
-            return result;
-        }, { total: 0, blockers: 0 });
-        summary.recoveryMatrix = this.operationalRecoveryMatrix(sections);
-        let report = {
-            contractVersion: 1,
-            state: summary.BLOCKED || summary.NOT_READY ? 'NOT_READY' : summary.NEEDS_ATTENTION || summary.NOT_EXPOSED ? 'NEEDS_ATTENTION' : 'READY',
-            checkedAt: new Date().toISOString(),
-            source: 'backoffice.operationalReadiness',
-            summary: summary,
-            sections: sections,
+          ],
+          summary: {
+            failureCode: String(
+              error.code || error.message || "SEARCH_READINESS_FAILED",
+            ),
+          },
         };
-        let snapshot = this.recordOperationalReadinessSnapshot(report, Object.assign({}, context, {
-            tenant: request && request.tenant,
-        }));
-        report.summary = Object.assign({}, report.summary, {
-            latestSnapshot: {
-                state: snapshot.state,
-                checkedAt: snapshot.checkedAt,
-                blockerCount: snapshot.blockerCount,
-            },
-            timeline: this.operationalReadinessTimeline(),
+      }
+    }
+    let searchReady;
+    if (
+      SERVICE.DefaultSearchConfigurationService &&
+      typeof SERVICE.DefaultSearchConfigurationService.getSearchReadiness ===
+        "function"
+    ) {
+      try {
+        searchReady =
+          SERVICE.DefaultSearchConfigurationService.getSearchReadiness();
+      } catch (error) {
+        searchReady = false;
+      }
+    }
+    let moduleEntries = Object.entries(context.modules || {}).reduce(
+      (result, entry) =>
+        result.concat(
+          (entry[1] || []).map((item) =>
+            Object.assign({ moduleName: entry[0] }, item),
+          ),
+        ),
+      [],
+    );
+    let activeSearchModules = moduleEntries.filter((item) =>
+      /search/i.test(String(item.moduleName || item.module || item.name || "")),
+    );
+    let activeDiscoveryModules = moduleEntries.filter((item) =>
+      /discovery/i.test(
+        String(item.moduleName || item.module || item.name || ""),
+      ),
+    );
+    return {
+      diagnostics: diagnostics || {},
+      searchReady: searchReady,
+      ownerReadiness: ownerReadiness,
+      activeSearchModuleCount: activeSearchModules.length,
+      activeDiscoveryModuleCount: activeDiscoveryModules.length,
+    };
+  },
+  /** Builds owner-backed readiness for search indexes and database/search read-source policy. */
+  searchSection: function (context) {
+    let configuration = this.searchConfigurationSummary();
+    let evidence = this.searchReadinessEvidence(context);
+    let diagnostics = evidence.diagnostics || {};
+    let ownerReadiness = evidence.ownerReadiness || {};
+    let ownerSummary = ownerReadiness.summary || {};
+    let blockers = []
+      .concat(ownerReadiness.blockers || [])
+      .map((item) =>
+        this.readinessBlocker(
+          item.code || item.blockerCode || "SEARCH_READINESS_BLOCKER",
+          item.severity || "NEEDS_ATTENTION",
+          "SEARCH",
+          item.source || "NSEARCH_CONFIGURATION",
+          item.action || "Open Search controls",
+          item.message || "Search/read-source readiness needs attention.",
+          {
+            repairAvailable: item.repair && item.repair.available === true,
+            repairOperation: item.repair && item.repair.operation,
+            repairAction:
+              item.repair && (item.repair.action || item.repair.actionCode),
+            repairEligibility: item.repair && item.repair.eligibility,
+            repairLabel: item.repair && item.repair.label,
+            suggestedAction:
+              item.suggestedAction || item.action || "Open Search controls",
+            businessImpact:
+              item.businessImpact ||
+              "Pages or workbenches configured to render from search may show empty or stale results until repaired.",
+            recoveryHint:
+              item.recoveryHint ||
+              "Refresh or rebuild search indexes, then refresh readiness.",
+          },
+        ),
+      );
+    if (
+      evidence.searchReady === false &&
+      !blockers.some((blocker) => blocker.code === "SEARCH_ENGINE_UNAVAILABLE")
+    )
+      blockers.push(
+        this.readinessBlocker(
+          "SEARCH_ENGINE_UNAVAILABLE",
+          "NEEDS_ATTENTION",
+          "SEARCH",
+          "NSEARCH_RUNTIME",
+          "Open Search controls",
+          "One or more initialized search engine clients are unavailable.",
+          {
+            repairOperation: "search.refreshEngines",
+            repairAction: "REFRESH_SEARCH_ENGINE",
+            repairAvailable: true,
+            repairEligibility: "MANUAL",
+            repairLabel: "Refresh search engine",
+            suggestedAction:
+              "Open Search controls, verify the active read-source policy, and repair the unavailable engine.",
+            businessImpact:
+              "Pages or workbenches configured to render from search may show empty or stale results until the search engine is healthy.",
+            recoveryHint:
+              "Switch read-source policy to database fallback or repair/reindex the search engine, then refresh readiness.",
+          },
+        ),
+      );
+    if ((diagnostics.failures || 0) > 0 || diagnostics.lastFailureCode) {
+      let blocker = this.readinessBlocker(
+        "DISCOVERY_CONTRACT_SYNC_FAILED",
+        "NEEDS_ATTENTION",
+        "DISCOVERY",
+        "BACKOFFICE_DISCOVERY",
+        "Open Discovery controls",
+        "BackOffice discovery has recent contract synchronization failures.",
+        {
+          repairOperation: "discovery.refreshContracts",
+          repairAction: "REFRESH_DISCOVERY_CONTRACTS",
+          repairAvailable: true,
+          repairEligibility: "MANUAL",
+          repairLabel: "Refresh discovery contracts",
+          suggestedAction:
+            "Open Discovery controls, refresh owner module contracts, and inspect the latest failure code.",
+          businessImpact:
+            "Axis may miss routes, schemas, or owner workspaces when discovery contracts are stale.",
+          recoveryHint:
+            "Refresh owner module contracts, then refresh runtime readiness.",
+        },
+      );
+      blocker.lastFailureCode = diagnostics.lastFailureCode
+        ? String(diagnostics.lastFailureCode)
+        : undefined;
+      blocker.lastFailureAt = diagnostics.lastFailureAt;
+      blockers.push(blocker);
+    }
+    let hasConfiguredSearch =
+      configuration.defaultSearchEnabled ||
+      configuration.runtimeProfileCount > 0 ||
+      evidence.activeSearchModuleCount > 0 ||
+      evidence.activeDiscoveryModuleCount > 0 ||
+      (diagnostics.attempts || 0) > 0 ||
+      (diagnostics.activeSnapshots || 0) > 0;
+    return {
+      key: "search",
+      title: "Search indexes and read-source policy",
+      businessStatus: blockers.length
+        ? "NEEDS_ATTENTION"
+        : hasConfiguredSearch
+          ? "READY"
+          : "NOT_CONFIGURED",
+      ownerModule: "search",
+      source: "NSEARCH_CONFIGURATION",
+      route: "/discovery",
+      summary: {
+        runtimeRole: configuration.runtimeRole,
+        engine: configuration.engine,
+        readSourcePolicy: configuration.readSourcePolicy,
+        defaultSearchEnabled: configuration.defaultSearchEnabled,
+        defaultFallbackEnabled: configuration.defaultFallbackEnabled,
+        runtimeProfileCount: configuration.runtimeProfileCount,
+        ownerProviderAvailable: !!evidence.ownerReadiness,
+        ownerBusinessStatus: ownerReadiness.businessStatus,
+        configuredModuleCount: ownerSummary.configuredModuleCount,
+        initializedEngineCount: ownerSummary.initializedEngineCount,
+        inactiveEngineCount: ownerSummary.inactiveEngineCount,
+        axisConfigurationVisible: ownerSummary.axisConfigurationVisible,
+        configurationRoute: ownerSummary.configurationRoute || "/discovery",
+        repairActions: ownerSummary.repairActions || [],
+        activeSearchModuleCount: evidence.activeSearchModuleCount,
+        activeDiscoveryModuleCount: evidence.activeDiscoveryModuleCount,
+        discoveryAttempts: diagnostics.attempts || 0,
+        discoveryFailures: diagnostics.failures || 0,
+        discoveryLastSuccessAt: diagnostics.lastSuccessAt,
+        discoveryLastFailureAt: diagnostics.lastFailureAt,
+        renderingPolicy:
+          ownerSummary.readSourcePolicy || configuration.readSourcePolicy,
+        indexFreshness:
+          ownerSummary.indexFreshness ||
+          (diagnostics.lastSuccessAt ? "OBSERVED" : "UNKNOWN"),
+        projectionFreshness: ownerSummary.projectionFreshness,
+        operatorCommands: [
+          "Open Discovery/Search controls",
+          "Review database/search rendering policy",
+          "Refresh owner contracts or rebuild index",
+          "Refresh operational readiness",
+        ],
+      },
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Open Discovery/Search controls and reconcile search engine or contract synchronization failures."
+        : hasConfiguredSearch
+          ? "Search/read-source readiness evidence is available."
+          : "Enable an owner search/read-source profile when the runtime must render from search indexes.",
+    };
+  },
+  /** Builds owner-backed readiness for Axis Assistant knowledge sources and indexing. */
+  assistantSection: async function (request) {
+    let service = SERVICE.DefaultCopilotKnowledgeRuntimeService;
+    if (!service || typeof service.readiness !== "function") {
+      let blocker = this.readinessBlocker(
+        "COPILOT_KNOWLEDGE_PROVIDER_NOT_CONFIGURED",
+        "INFO",
+        "ASSISTANT_KNOWLEDGE",
+        "COPILOT_KNOWLEDGE_READINESS",
+        "Open Assistant Knowledge",
+        "Assistant knowledge provider is not configured for this runtime.",
+        {
+          repairOperation: "copilotKnowledge.configureSources",
+          repairAction: "CONFIGURE_KNOWLEDGE_SOURCES",
+          repairAvailable: false,
+          suggestedAction:
+            "Activate Copilot Knowledge only when Axis Assistant should answer from governed sources.",
+          businessImpact:
+            "Axis Assistant will not answer from governed Nodics knowledge until sources and indexing are configured.",
+          recoveryHint:
+            "Register governed knowledge sources, enable retrieval and ingestion, then index them.",
+        },
+      );
+      return {
+        key: "assistant",
+        title: "Assistant knowledge sources",
+        businessStatus: "NOT_CONFIGURED",
+        ownerModule: "copilotKnowledge",
+        source: "COPILOT_KNOWLEDGE_READINESS",
+        route: "/assistant",
+        summary: {
+          providerAvailable: false,
+          blockerCount: 1,
+          reason: "PROVIDER_NOT_CONFIGURED",
+          operatorCommands: [
+            "Open Assistant Knowledge",
+            "Register governed sources",
+            "Trigger indexing",
+            "Refresh operational readiness",
+          ],
+        },
+        blockers: [blocker],
+        nextAction:
+          "Activate Copilot Knowledge when Axis Assistant should answer from governed knowledge sources.",
+      };
+    }
+    let report;
+    try {
+      report = await service.readiness(request);
+      if (
+        !report ||
+        !["READY", "NEEDS_ATTENTION", "NOT_CONFIGURED"].includes(
+          report.businessStatus,
+        ) ||
+        !Array.isArray(report.blockers)
+      )
+        throw new Error("COPILOT_KNOWLEDGE_READINESS_UNCONFIRMED");
+    } catch (error) {
+      let blocker = this.readinessBlocker(
+        "COPILOT_KNOWLEDGE_PROVIDER_UNAVAILABLE",
+        "NEEDS_ATTENTION",
+        "ASSISTANT_KNOWLEDGE",
+        "COPILOT_KNOWLEDGE_READINESS",
+        "Open Assistant Knowledge",
+        "Assistant knowledge readiness could not be read from the owning Copilot Knowledge service.",
+        {
+          repairOperation: "copilotKnowledge.readiness",
+          repairAction: "REFRESH_KNOWLEDGE_READINESS",
+          repairAvailable: true,
+          repairEligibility: "MANUAL",
+          repairLabel: "Refresh knowledge readiness",
+          suggestedAction:
+            "Open Assistant Knowledge and verify Copilot Knowledge module startup and configuration.",
+          businessImpact:
+            "Axis Assistant cannot determine whether governed sources are ready, so answers may be blocked.",
+          recoveryHint:
+            "Verify Copilot Knowledge runtime startup/configuration, then refresh readiness.",
+        },
+      );
+      blocker.failureCode = String(
+        error.code || error.message || "COPILOT_KNOWLEDGE_READINESS_FAILED",
+      );
+      return {
+        key: "assistant",
+        title: "Assistant knowledge sources",
+        businessStatus: "NEEDS_ATTENTION",
+        ownerModule: "copilotKnowledge",
+        source: "COPILOT_KNOWLEDGE_READINESS",
+        route: "/assistant",
+        summary: { providerAvailable: false, blockerCount: 1 },
+        blockers: [blocker],
+        nextAction:
+          "Open Assistant Knowledge and repair the Copilot Knowledge readiness provider.",
+      };
+    }
+    let blockers = [].concat((report || {}).blockers || []).map((item) => {
+      item = item || {};
+      return this.readinessBlocker(
+        item.code || "COPILOT_KNOWLEDGE_NOT_READY",
+        item.severity || "NEEDS_ATTENTION",
+        "ASSISTANT_KNOWLEDGE",
+        item.source || "COPILOT_KNOWLEDGE_READINESS",
+        item.action || "Open Assistant Knowledge",
+        item.message || "Assistant knowledge source readiness needs attention.",
+        {
+          repairAvailable: item.repair && item.repair.available === true,
+          repairOperation: item.repair && item.repair.operation,
+          repairAction:
+            item.repair && (item.repair.action || item.repair.actionCode),
+          repairEligibility: item.repair && item.repair.eligibility,
+          repairLabel: item.repair && item.repair.label,
+          suggestedAction: item.action || "Open Assistant Knowledge",
+          businessImpact:
+            item.businessImpact ||
+            "Axis Assistant may refuse to answer because governed knowledge sources are missing, stale, or not indexed.",
+          recoveryHint:
+            item.recoveryHint ||
+            "Register the source, trigger indexing, and refresh knowledge readiness.",
+        },
+      );
+    });
+    return {
+      key: "assistant",
+      title: "Assistant knowledge sources",
+      businessStatus: blockers.length
+        ? "NEEDS_ATTENTION"
+        : String((report || {}).businessStatus || "NOT_CONFIGURED"),
+      ownerModule: "copilotKnowledge",
+      source: "COPILOT_KNOWLEDGE_READINESS",
+      route: "/assistant",
+      summary: {
+        providerAvailable: true,
+        evidence: report.evidence || "PROCESS_LOCAL",
+        coverage: report.coverage || "LEGACY_REGISTRY",
+        hasMore: report.hasMore === true,
+        observedAt: report.observedAt || null,
+        inspectionRequiredSourceCount:
+          report.inspectionRequiredSourceCount || 0,
+        cleanupPendingSourceCount: report.cleanupPendingSourceCount || 0,
+        retrievalEnabled: (report || {}).retrievalEnabled === true,
+        ingestionEnabled: (report || {}).ingestionEnabled === true,
+        sourceRegistryEnabled: (report || {}).sourceRegistryEnabled === true,
+        sourceCount: (report || {}).sourceCount || 0,
+        enabledSourceCount: (report || {}).enabledSourceCount || 0,
+        indexedSourceCount: (report || {}).indexedSourceCount || 0,
+        notIndexedSourceCount: (report || {}).notIndexedSourceCount || 0,
+        failedSourceCount:
+          report.evidence === "DURABLE_GENERATION"
+            ? null
+            : report.failedSourceCount || 0,
+        failureEvidence: report.failureEvidence || "PROCESS_LOCAL",
+        lastRefreshAt: (report || {}).lastRefreshAt,
+        providerConfigured: (report || {}).providerConfigured === true,
+        enabledProviderCount: (report || {}).enabledProviderCount || 0,
+        selectedProviderCode: (report || {}).selectedProviderCode,
+        modelConfigured: (report || {}).modelConfigured === true,
+        modelName: (report || {}).modelName,
+        blockerCount: blockers.length,
+        operatorCommands: [
+          "Open Assistant Knowledge",
+          "Register or enable governed source",
+          "Trigger indexing",
+          "Refresh operational readiness",
+        ],
+      },
+      blockers: blockers,
+      nextAction: blockers.length
+        ? "Open Assistant Knowledge and resolve source registry or indexing blockers."
+        : (report || {}).businessStatus === "READY"
+          ? "Assistant knowledge sources are configured and indexed."
+          : "Configure Copilot Knowledge retrieval and enabled sources before relying on Assistant answers.",
+    };
+  },
+  /** Returns the bounded in-memory operational readiness timeline for Axis and support diagnostics. */
+  operationalReadinessTimeline: function () {
+    return (this._operationalReadinessTimeline || []).slice();
+  },
+  /** Normalizes one requested owner repair without trusting frontend state. */
+  normalizeRepairRequest: function (request) {
+    let input = (request && request.readinessRepair) || {};
+    let repair = input.repair || {};
+    let operation = String(input.operation || repair.operation || "").trim();
+    let action = String(
+      input.action || repair.action || repair.actionCode || "",
+    ).trim();
+    let ownerModule = String(input.ownerModule || "").trim();
+    let idempotencyKey = String(input.idempotencyKey || "").trim();
+    if (!operation || !action || !ownerModule || !idempotencyKey) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Readiness repair requires operation, action, ownerModule, and idempotencyKey",
+      );
+    }
+    let eligibility = String(
+      input.eligibility || repair.eligibility || "NOT_AVAILABLE",
+    );
+    let available = input.available === true || repair.available === true;
+    let context =
+      input.context &&
+      typeof input.context === "object" &&
+      !Array.isArray(input.context)
+        ? input.context
+        : {};
+    return {
+      repairContractVersion: Number(
+        input.repairContractVersion || repair.repairContractVersion || 1,
+      ),
+      idempotencyKey: idempotencyKey,
+      dryRun: input.dryRun !== false,
+      operation: operation,
+      action: action,
+      ownerModule: ownerModule,
+      ownerType: input.ownerType ? String(input.ownerType) : undefined,
+      source: input.source
+        ? String(input.source)
+        : "BACKOFFICE_OPERATIONAL_READINESS",
+      blockerCode: input.blockerCode ? String(input.blockerCode) : undefined,
+      route: input.route ? String(input.route) : undefined,
+      eligibility: eligibility,
+      available: available,
+      label: String(input.label || repair.label || action),
+      reason: input.reason ? String(input.reason) : undefined,
+      correlationId: String(
+        input.correlationId ||
+          (request && request.correlationId) ||
+          idempotencyKey,
+      ),
+      timeoutMs: Number.isInteger(input.timeoutMs)
+        ? Math.max(1000, Math.min(input.timeoutMs, 120000))
+        : 30000,
+      targetIdentifiers: this.normalizeRepairTargetIdentifiers(
+        input.targetIdentifiers || context.targetIdentifiers || {},
+      ),
+      preview:
+        input.preview &&
+        typeof input.preview === "object" &&
+        !Array.isArray(input.preview)
+          ? input.preview
+          : undefined,
+      prerequisites: [].concat(
+        input.prerequisites || context.prerequisites || [],
+      ),
+      batch: input.batch === true,
+      highImpact: input.highImpact === true,
+      operatorNote: input.operatorNote ? String(input.operatorNote) : undefined,
+      environmentPolicy: input.environmentPolicy
+        ? String(input.environmentPolicy)
+        : undefined,
+      context: context,
+    };
+  },
+  /** Normalizes stable target identifiers; display labels are never enough to execute a repair. */
+  normalizeRepairTargetIdentifiers: function (identifiers) {
+    identifiers =
+      identifiers &&
+      typeof identifiers === "object" &&
+      !Array.isArray(identifiers)
+        ? identifiers
+        : {};
+    return [
+      "releaseCode",
+      "profileCode",
+      "publicationCode",
+      "taskCode",
+      "mediaManifestCode",
+      "sourceCode",
+    ].reduce((result, key) => {
+      if (identifiers[key]) result[key] = String(identifiers[key]);
+      return result;
+    }, {});
+  },
+  /** Returns true when at least one stable target identifier is supplied. */
+  hasRepairTargetIdentity: function (repair) {
+    return Object.keys(repair.targetIdentifiers || {}).length > 0;
+  },
+  /** Registers an owner repair provider through framework/module startup or tests. */
+  registerRepairProvider: function (ownerModule, provider, metadata) {
+    ownerModule = String(ownerModule || "").trim();
+    if (!ownerModule)
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Repair provider ownerModule is required",
+      );
+    if (
+      !provider ||
+      (typeof provider.executeRepair !== "function" &&
+        typeof provider.executeReadinessRepair !== "function")
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Repair provider requires executeRepair or executeReadinessRepair",
+      );
+    }
+    this._repairProviderRegistry[ownerModule] = Object.assign(
+      {
+        ownerModule: ownerModule,
+        registeredAt: this.now(),
+        lifecycleState: "REGISTERED",
+        provider: provider,
+      },
+      metadata || {},
+    );
+    delete this._repairProviderCapabilityCache[ownerModule];
+    this._repairTelemetry.registered += 1;
+    this._repairTelemetry.providerRefreshes += 1;
+    this.recordRepairProviderEvent("REGISTERED", ownerModule, metadata);
+    return this.repairProviderDescriptor(
+      this._repairProviderRegistry[ownerModule],
+    );
+  },
+  /** Removes one owner repair provider registration. */
+  unregisterRepairProvider: function (ownerModule) {
+    ownerModule = String(ownerModule || "").trim();
+    delete this._repairProviderRegistry[ownerModule];
+    delete this._repairProviderCapabilityCache[ownerModule];
+    this._repairTelemetry.unregistered += 1;
+    this._repairTelemetry.providerRefreshes += 1;
+    this.recordRepairProviderEvent("UNREGISTERED", ownerModule, {});
+    return true;
+  },
+  /** Records a compact provider lifecycle event for Module Registry and support diagnostics. */
+  recordRepairProviderEvent: function (event, ownerModule, metadata) {
+    let item = {
+      eventType: "backoffice.readinessRepair.provider",
+      event: event,
+      ownerModule: ownerModule,
+      providerCode:
+        metadata && metadata.providerCode
+          ? String(metadata.providerCode)
+          : ownerModule,
+      checkedAt: this.now(),
+    };
+    this._repairProviderEvents = [item]
+      .concat(this._repairProviderEvents || [])
+      .slice(0, 25);
+    if (
+      SERVICE.DefaultBackofficeAuditService &&
+      typeof SERVICE.DefaultBackofficeAuditService.record === "function"
+    ) {
+      Promise.resolve(SERVICE.DefaultBackofficeAuditService.record(item)).catch(
+        () => false,
+      );
+    }
+    return item;
+  },
+  /** Returns a client-safe provider descriptor. */
+  repairProviderDescriptor: function (entry, capability) {
+    entry = entry || {};
+    capability = capability || {};
+    return {
+      ownerModule: String(
+        entry.ownerModule || capability.ownerModule || "unknown",
+      ),
+      providerCode: String(
+        entry.providerCode ||
+          capability.providerCode ||
+          entry.ownerModule ||
+          "unknown",
+      ),
+      lifecycleState: String(
+        capability.lifecycleState ||
+          entry.lifecycleState ||
+          (capability.available === false ? "UNAVAILABLE" : "READY"),
+      ),
+      registeredAt: entry.registeredAt,
+      repairContractVersion: Number(
+        capability.repairContractVersion ||
+          entry.repairContractVersion ||
+          this._supportedRepairContractVersion,
+      ),
+      supportedOperations: []
+        .concat(
+          capability.supportedOperations ||
+            capability.supportedRepairOperations ||
+            entry.supportedOperations ||
+            [],
+        )
+        .map((item) => ({
+          operation: String((item || {}).operation || ""),
+          action: (item || {}).action ? String(item.action) : undefined,
+        }))
+        .filter((item) => item.operation),
+      message: capability.message ? String(capability.message) : undefined,
+      nextAction: capability.nextAction
+        ? String(capability.nextAction)
+        : undefined,
+    };
+  },
+  /** Returns registered repair providers without exposing executable instances. */
+  repairProviderRegistry: function () {
+    return Object.keys(this._repairProviderRegistry || {})
+      .sort()
+      .map((ownerModule) =>
+        this.repairProviderDescriptor(
+          this._repairProviderRegistry[ownerModule],
+        ),
+      );
+  },
+  /** Returns the provider capability cache TTL in milliseconds. */
+  repairProviderCapabilityTtlMs: function () {
+    let operations = this.getConfiguration() || {};
+    let repair = operations.repair || {};
+    return Math.max(1000, Number(repair.providerCapabilityTtlMs || 30000));
+  },
+  /** Resolves provider candidates through registry first and legacy framework service names second. */
+  repairProviderEntries: function (repair) {
+    let entries = [];
+    let registered =
+      this._repairProviderRegistry &&
+      this._repairProviderRegistry[repair.ownerModule];
+    if (registered && registered.provider) entries.push(registered);
+    [
+      ["backoffice", SERVICE.DefaultBackofficeReadinessRepairService],
+      [
+        "operationalReadiness",
+        SERVICE.DefaultOperationalReadinessRepairService,
+      ],
+    ].forEach((pair) => {
+      if (pair[1])
+        entries.push({
+          ownerModule: pair[0],
+          providerCode: pair[0],
+          provider: pair[1],
+          lifecycleState: "READY",
         });
-        return report;
-    },
-    /** Records auditable acknowledgement for one active startup finding. */
-    acknowledgeFinding: function (request) {
-        let input = request && request.startupFindingAcknowledgement || {};
-        let code = String(input.code || '').trim();
-        let reason = String(input.reason || '').trim();
-        let propertyPath = input.propertyPath ? String(input.propertyPath) : undefined;
-        if (!code || reason.length < 8) {
-            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Startup finding acknowledgement requires code and reason');
-        }
-        let report = this.startupValidationReport(request);
-        let finding = report.findings.find(item => item.code === code && (!propertyPath || item.propertyPath === propertyPath));
-        if (!finding) {
-            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Startup finding is not active or cannot be acknowledged');
-        }
-        if (finding.dismissible !== true || finding.auditRequired !== true) {
-            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Startup finding is not auditable/dismissible');
-        }
-        let acknowledgedAt = new Date().toISOString();
-        let record = {
-            acknowledged: true,
-            code: finding.code,
-            severity: finding.severity,
-            owner: finding.owner,
-            ownerType: finding.ownerType,
-            propertyPath: finding.propertyPath,
-            reason: reason,
-            reasonCode: input.reasonCode ? String(input.reasonCode) : 'OPERATOR_REVIEWED',
-            acknowledgedBy: this.principal(request),
-            acknowledgedAt: acknowledgedAt,
-            tenant: request && request.tenant,
-            correlationId: request && request.correlationId,
-        };
-        this._findingAcknowledgements[this.acknowledgementKey(record.tenant, record.code, record.propertyPath)] = record;
-        if (SERVICE.DefaultBackofficeAuditService && typeof SERVICE.DefaultBackofficeAuditService.record === 'function') {
-            Promise.resolve(SERVICE.DefaultBackofficeAuditService.record({
-                eventType: 'backoffice.startupFinding.acknowledge',
-                outcome: 'acknowledged',
-                findingCode: record.code,
-                propertyPath: record.propertyPath,
-                principalId: record.acknowledgedBy,
-                tenant: record.tenant,
-                correlationId: record.correlationId,
-                reasonCode: record.reasonCode,
-            })).catch(() => false);
-        }
-        return Promise.resolve(record);
-    },
-    /** Validates cross-setting invariants without reading or returning secrets. */
-    validateConfiguration: function () {
-        let registry = CONFIG.get('backofficeRegistry') || {};
-        let operations = registry.operations || {};
-        let availability = registry.availability || {};
-        let failures = [];
-        if (Number(registry.leaseTtlMs || 0) <= Number(registry.sweepIntervalMs || 0)) failures.push('LEASE_TTL_NOT_GREATER_THAN_SWEEP');
-        if (operations.requireDistributedStore === true && (!registry.store || registry.store.mode !== 'distributed')) failures.push('DISTRIBUTED_STORE_REQUIRED');
-        if (registry.store && registry.store.mode === 'distributed' && (!registry.store.moduleName || !registry.store.engineName || !registry.store.keyPrefix)) {
-            failures.push('DISTRIBUTED_STORE_COORDINATES_INVALID');
-        }
-        if (Number(availability.maxConcurrentObservations || 0) < 1 || Number(availability.maxQueuedObservations || 0) < 1) {
-            failures.push('AVAILABILITY_PRESSURE_LIMIT_INVALID');
-        }
-        if (Number(availability.staleAfterMs || 0) <= Number(availability.timeoutMs || 0)) failures.push('AVAILABILITY_FRESHNESS_INVALID');
-        let thresholds = operations.thresholds || {};
-        ['availabilityFailurePercent', 'availabilityQueuePercent', 'discoveryFailurePercent'].forEach(name => {
-            let value = Number(thresholds[name]);
-            if (!Number.isFinite(value) || value < 0 || value > 100) failures.push('OPERATION_THRESHOLD_INVALID');
-        });
-        if (Number(operations.minimumSamples || 0) < 1) failures.push('OPERATION_SAMPLE_LIMIT_INVALID');
-        let production = operations.production || {};
-        if (production.enabled === true) {
-            let audit = registry.audit || {};
-            let alerts = operations.alerts || {};
-            if (!registry.store || registry.store.mode !== 'distributed') failures.push('PRODUCTION_DISTRIBUTED_STORE_REQUIRED');
-            if (production.requireHttpsOnly !== false &&
-                ((registry.allowedSchemes || []).length !== 1 || registry.allowedSchemes[0] !== 'https')) failures.push('PRODUCTION_HTTPS_REQUIRED');
-            if (production.requireHostAllowlists !== false &&
-                (!Array.isArray((registry.discovery || {}).allowedHosts) || registry.discovery.allowedHosts.length === 0 ||
-                    !Array.isArray(availability.allowedHosts) || availability.allowedHosts.length === 0)) failures.push('PRODUCTION_HOST_ALLOWLIST_REQUIRED');
-            if (production.requireStrictAudit !== false &&
-                (audit.enabled !== true || audit.failClosed !== true || audit.requireAcknowledgement !== true || !audit.publisherService)) {
-                failures.push('PRODUCTION_AUDIT_DELIVERY_REQUIRED');
-            }
-            if (production.requireStrictAudit !== false && audit.publisherService &&
-                (!SERVICE[audit.publisherService] || typeof SERVICE[audit.publisherService].record !== 'function')) {
-                failures.push('PRODUCTION_AUDIT_PUBLISHER_UNAVAILABLE');
-            }
-            if (production.requireStrictAlerts !== false &&
-                (alerts.enabled !== true || alerts.failClosed !== true || alerts.requireAcknowledgement !== true || !alerts.publisherService)) {
-                failures.push('PRODUCTION_ALERT_DELIVERY_REQUIRED');
-            }
-            if (production.requireStrictAlerts !== false && alerts.publisherService &&
-                (!SERVICE[alerts.publisherService] || typeof SERVICE[alerts.publisherService].record !== 'function')) {
-                failures.push('PRODUCTION_ALERT_PUBLISHER_UNAVAILABLE');
-            }
-            let administration = registry.administration || {};
-            if (administration.rejectServiceTokens !== true || administration.requirePrincipal !== true) failures.push('PRODUCTION_HUMAN_ADMIN_REQUIRED');
-        }
-        return { valid: failures.length === 0, failures: failures };
-    },
-    /** Derives stable alerts from sanitized counters already owned by registry subsystems. */
-    assess: function (diagnostics) {
-        diagnostics = diagnostics || {};
-        let configuration = this.validateConfiguration();
-        let policy = this.getConfiguration();
-        let threshold = policy.thresholds || {};
-        let minimum = Number(policy.minimumSamples || 10);
-        let alerts = configuration.failures.slice();
-        let store = diagnostics.store || {};
-        let storeMetrics = store.metrics || {};
-        if (store.available === false) alerts.push('REGISTRY_STORE_UNAVAILABLE');
-        let storeErrorLimit = Number(threshold.storeErrors === undefined ? 1 : threshold.storeErrors);
-        let conflictLimit = Number(threshold.conditionalDeleteConflicts === undefined ? 10 : threshold.conditionalDeleteConflicts);
-        if (Number(storeMetrics.errors || 0) >= storeErrorLimit) alerts.push('REGISTRY_STORE_ERRORS');
-        if (Number(storeMetrics.conditionalDeleteConflicts || 0) >= conflictLimit) alerts.push('LEASE_RENEWAL_CONFLICTS');
-        let availability = diagnostics.availability || {};
-        let availabilityMetrics = availability.metrics || {};
-        if (Number(availabilityMetrics.attempts || 0) >= minimum && Number(availabilityMetrics.failures || 0) * 100 /
-            Number(availabilityMetrics.attempts || 1) >= Number(threshold.availabilityFailurePercent === undefined ? 25 : threshold.availabilityFailurePercent)) alerts.push('AVAILABILITY_FAILURE_RATE');
-        let queueLimit = Number(((CONFIG.get('backofficeRegistry') || {}).availability || {}).maxQueuedObservations || 1);
-        if (Number(availability.queued || 0) * 100 / queueLimit >= Number(threshold.availabilityQueuePercent === undefined ? 80 : threshold.availabilityQueuePercent)) alerts.push('AVAILABILITY_QUEUE_SATURATED');
-        let discovery = diagnostics.discovery || {};
-        if (Number(discovery.attempts || 0) >= minimum && Number(discovery.failures || 0) * 100 /
-            Number(discovery.attempts || 1) >= Number(threshold.discoveryFailurePercent === undefined ? 25 : threshold.discoveryFailurePercent)) alerts.push('DISCOVERY_FAILURE_RATE');
-        if (Number((diagnostics.security || {}).throttled || 0) >= Number(threshold.refreshThrottles === undefined ? 1 : threshold.refreshThrottles)) alerts.push('ADMIN_REFRESH_THROTTLED');
-        alerts = Array.from(new Set(alerts)).sort();
-        let state = configuration.valid && store.available !== false ? alerts.length > 0 ? 'DEGRADED' : 'READY' : 'NOT_READY';
-        return { state: state, alerts: alerts, checkedAt: new Date().toISOString() };
-    },
-    /** Publishes one sanitized changed operational assessment through the configured environment adapter. */
-    publishAssessment: function (assessment) {
-        let configuration = this.getConfiguration().alerts || {};
-        if (configuration.enabled !== true) return Promise.resolve(false);
-        let payload = { eventType: 'backoffice.operational.assessment', state: assessment.state,
-            alerts: [].concat(assessment.alerts || []).map(String).sort(), checkedAt: assessment.checkedAt };
-        let signature = payload.state + ':' + payload.alerts.join(',');
-        if (signature === this._lastPublishedSignature) return Promise.resolve(false);
-        let publisher = configuration.publisherService && SERVICE[configuration.publisherService];
-        if (!publisher || typeof publisher.record !== 'function') {
-            let unavailable = new Error('BackOffice operational alert publisher is unavailable');
-            unavailable.code = 'ALERT_PUBLISHER_UNAVAILABLE';
-            return configuration.failClosed === true ? Promise.reject(unavailable) : Promise.resolve(false);
-        }
-        return Promise.resolve(publisher.record(payload)).then(acknowledgement => {
-            if (configuration.requireAcknowledgement === true && !acknowledgement) {
-                let error = new Error('BackOffice operational alert publisher did not acknowledge delivery');
-                error.code = 'ALERT_DELIVERY_UNACKNOWLEDGED';
-                throw error;
-            }
-            this._lastPublishedSignature = signature;
-            return acknowledgement;
-        }).catch(error => {
-            if (configuration.failClosed === true) throw error;
-            return false;
+    });
+    let ownerToken = String(repair.ownerModule || "").replace(
+      /[^A-Za-z0-9]/g,
+      "",
+    );
+    if (ownerToken) {
+      let serviceName =
+        "Default" +
+        ownerToken.charAt(0).toUpperCase() +
+        ownerToken.slice(1) +
+        "ReadinessRepairService";
+      if (SERVICE[serviceName])
+        entries.push({
+          ownerModule: repair.ownerModule,
+          providerCode: serviceName,
+          provider: SERVICE[serviceName],
+          lifecycleState: "READY",
         });
     }
+    let seen = new Set();
+    return entries.filter((entry) => {
+      let provider = entry && entry.provider;
+      if (
+        !provider ||
+        (typeof provider.executeRepair !== "function" &&
+          typeof provider.executeReadinessRepair !== "function")
+      )
+        return false;
+      let key = entry.providerCode || entry.ownerModule || provider;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  },
+  /** Resolves an owner-declared repair provider; BackOffice never guesses repair work. */
+  repairProvider: function (repair) {
+    let entry = this.repairProviderEntry(repair);
+    return entry && entry.provider;
+  },
+  /** Resolves an owner-declared repair provider registry entry. */
+  repairProviderEntry: function (repair) {
+    return this.repairProviderEntries(repair).find(
+      (entry) => entry && entry.provider,
+    );
+  },
+  /** Reads optional provider capability/health metadata without requiring every provider to implement it. */
+  repairProviderCapability: function (provider, repair, entry) {
+    if (!provider) return {};
+    let ownerModule = String(
+      (repair && repair.ownerModule) || (entry && entry.ownerModule) || "",
+    );
+    let cacheKey =
+      ownerModule +
+      ":" +
+      String((repair && repair.operation) || "*") +
+      ":" +
+      String((repair && repair.action) || "*");
+    let cached = this._repairProviderCapabilityCache[cacheKey];
+    if (cached && cached.expiresAtMs > Date.now()) return cached.capability;
+    let capability = {};
+    if (typeof provider.repairCapability === "function")
+      capability = provider.repairCapability(repair) || {};
+    else if (typeof provider.readinessRepairCapability === "function")
+      capability = provider.readinessRepairCapability(repair) || {};
+    else if (typeof provider.selfTest === "function")
+      capability = { selfTestAvailable: true };
+    if (ownerModule)
+      this._repairProviderCapabilityCache[cacheKey] = {
+        capability: capability,
+        expiresAtMs: Date.now() + this.repairProviderCapabilityTtlMs(),
+        cachedAt: this.now(),
+      };
+    return capability;
+  },
+  /** Validates provider capability metadata before execution. */
+  validateRepairProviderCapability: function (entry, repair) {
+    let provider = (entry && entry.provider) || entry;
+    let capability = this.repairProviderCapability(provider, repair, entry);
+    let version = Number(capability.repairContractVersion || 1);
+    if (version !== this._supportedRepairContractVersion)
+      return {
+        state: "UNSUPPORTED_CONTRACT",
+        message: "Owner repair provider contract version is unsupported.",
+        nextAction:
+          "Upgrade the owner repair provider or BackOffice repair contract before executing.",
+        provider: this.repairProviderDescriptor(entry, capability),
+      };
+    let lifecycleState = String(
+      capability.lifecycleState || (entry && entry.lifecycleState) || "READY",
+    );
+    if (["DISABLED", "MISCONFIGURED", "UNAVAILABLE"].includes(lifecycleState))
+      return {
+        state:
+          lifecycleState === "MISCONFIGURED"
+            ? "PROVIDER_MISCONFIGURED"
+            : "PROVIDER_UNAVAILABLE",
+        message: String(
+          capability.message || "Owner repair provider is not ready.",
+        ),
+        nextAction: String(
+          capability.nextAction ||
+            "Open Module Registry or the owning configuration workspace and repair provider readiness.",
+        ),
+        provider: this.repairProviderDescriptor(entry, capability),
+      };
+    let supported = [].concat(
+      capability.supportedOperations ||
+        capability.supportedRepairOperations ||
+        [],
+    );
+    if (supported.length > 0) {
+      let match = supported.some((item) => {
+        item = item || {};
+        return (
+          String(item.operation || "") === repair.operation &&
+          (!item.action || String(item.action) === repair.action)
+        );
+      });
+      if (!match)
+        return {
+          state: "NOT_SUPPORTED",
+          message:
+            "Owner repair provider does not support this operation/action pair.",
+          nextAction:
+            "Open the owning workspace or choose a supported repair action.",
+          provider: this.repairProviderDescriptor(entry, capability),
+        };
+    }
+    if (capability.available === false)
+      return {
+        state: "PROVIDER_UNAVAILABLE",
+        message: String(
+          capability.message ||
+            "Owner repair provider is not currently available.",
+        ),
+        nextAction: String(
+          capability.nextAction ||
+            "Retry after the owner repair provider reports healthy.",
+        ),
+        provider: this.repairProviderDescriptor(entry, capability),
+      };
+    return { provider: this.repairProviderDescriptor(entry, capability) };
+  },
+  /** Returns a stable repair target key for locks, receipts, and telemetry. */
+  repairTargetKey: function (repair) {
+    let ids = this.normalizeRepairTargetIdentifiers(repair.targetIdentifiers);
+    let encoded = Object.keys(ids)
+      .sort()
+      .map((key) => key + "=" + ids[key])
+      .join("&");
+    return [repair.ownerModule, repair.operation, repair.action, encoded]
+      .map((value) => String(value || ""))
+      .join("|");
+  },
+  /** Attempts to acquire an execution lock for a repair target. */
+  acquireRepairLock: function (repair, request) {
+    let targetKey = this.repairTargetKey(repair);
+    let now = Date.now();
+    let existing = this._repairLocksByTarget[targetKey];
+    if (existing && existing.expiresAtMs > now)
+      return {
+        acquired: false,
+        targetKey: targetKey,
+        lock: Object.assign({}, existing, {
+          expiresAtMs: undefined,
+          expiresAt: new Date(existing.expiresAtMs).toISOString(),
+        }),
+      };
+    let expiresAtMs =
+      now + Math.max(5000, Number(repair.timeoutMs || 30000) + 30000);
+    let lock = {
+      targetKey: targetKey,
+      ownerModule: repair.ownerModule,
+      operation: repair.operation,
+      action: repair.action,
+      idempotencyKey: repair.idempotencyKey,
+      correlationId: repair.correlationId,
+      acquiredAt: this.now(),
+      expiresAtMs: expiresAtMs,
+      principal: this.principal(request),
+    };
+    this._repairLocksByTarget[targetKey] = lock;
+    return {
+      acquired: true,
+      targetKey: targetKey,
+      lock: Object.assign({}, lock, {
+        expiresAtMs: undefined,
+        expiresAt: new Date(expiresAtMs).toISOString(),
+      }),
+    };
+  },
+  /** Releases a target execution lock owned by the current idempotency key. */
+  releaseRepairLock: function (targetKey, idempotencyKey) {
+    let existing = this._repairLocksByTarget[targetKey];
+    if (existing && existing.idempotencyKey === idempotencyKey)
+      delete this._repairLocksByTarget[targetKey];
+  },
+  /** Returns policy/safety metadata for a repair request. */
+  repairSafety: function (repair, result) {
+    result = result || {};
+    let safetyLevel =
+      result.safety && result.safety.level
+        ? String(result.safety.level)
+        : repair.highImpact
+          ? "HIGH_IMPACT"
+          : repair.batch
+            ? "BATCH_DISABLED"
+            : "SAFE";
+    return {
+      level: safetyLevel,
+      destructiveDisabled:
+        safetyLevel === "DESTRUCTIVE_DISABLED" ||
+        repair.action === "DELETE" ||
+        repair.action === "REMOVE",
+      highImpact: repair.highImpact === true,
+      batchExecutionAllowed: false,
+    };
+  },
+  /** Creates a normalized human and machine repair plan from provider output. */
+  normalizeRepairPlan: function (repair, result) {
+    result = result || {};
+    let plan =
+      result.plan &&
+      typeof result.plan === "object" &&
+      !Array.isArray(result.plan)
+        ? result.plan
+        : {};
+    return {
+      businessSteps: []
+        .concat(plan.businessSteps || result.businessSteps || [])
+        .filter(Boolean)
+        .map((item) => String(item))
+        .slice(0, 12),
+      machineSteps: []
+        .concat(plan.machineSteps || result.machineSteps || [])
+        .filter(Boolean)
+        .map((item) => {
+          item =
+            item && typeof item === "object" && !Array.isArray(item)
+              ? item
+              : { action: item };
+          return {
+            action: String(item.action || repair.action),
+            ownerModule: String(item.ownerModule || repair.ownerModule),
+            target: item.target ? String(item.target) : undefined,
+          };
+        })
+        .slice(0, 12),
+    };
+  },
+  /** Publishes a best-effort repair event for cluster/runtime refresh. */
+  publishRepairEvent: function (result, request) {
+    if (
+      !SERVICE.DefaultEventService ||
+      typeof SERVICE.DefaultEventService.publish !== "function"
+    ) {
+      return Promise.resolve({
+        skipped: true,
+        reason: "event_service_unavailable",
+      });
+    }
+    return SERVICE.DefaultEventService.publish({
+      tenant: (request && request.tenant) || "default",
+      event: "operationalReadinessRepairChanged",
+      data: {
+        state: result.state,
+        ownerModule: result.ownerModule,
+        operation: result.operation,
+        action: result.action,
+        targetIdentifiers: result.targetIdentifiers,
+        receiptCode: result.receipt && result.receipt.receiptCode,
+        refreshScopes: result.events && result.events.refreshScopes,
+      },
+      correlationId: result.correlationId,
+    }).catch((error) => ({
+      skipped: true,
+      reason: "event_publish_failed",
+      errorCode: error.code,
+    }));
+  },
+  /** Records a durable-shape in-memory receipt until persistence is introduced. */
+  recordRepairReceipt: function (result, request) {
+    if (result.dryRun || result.idempotentReplay) return undefined;
+    let receipt = {
+      receiptCode: ["repair", result.ownerModule, Date.now()]
+        .map((value) => String(value || "unknown"))
+        .join(":"),
+      receiptType: "OPERATIONAL_READINESS_REPAIR",
+      state: result.state,
+      ownerModule: result.ownerModule,
+      operation: result.operation,
+      action: result.action,
+      targetIdentifiers: result.targetIdentifiers,
+      evidenceReference: result.evidenceReference,
+      correlationId: result.correlationId,
+      idempotencyKey: result.idempotencyKey,
+      principal: this.principal(request),
+      checkedAt: result.checkedAt,
+    };
+    this._repairReceipts = [receipt]
+      .concat(this._repairReceipts || [])
+      .slice(0, 50);
+    if (
+      SERVICE.DefaultBackofficeRepairReceiptService &&
+      typeof SERVICE.DefaultBackofficeRepairReceiptService.save === "function"
+    ) {
+      Promise.resolve(
+        SERVICE.DefaultBackofficeRepairReceiptService.save({
+          tenant: request && request.tenant,
+          authData: request && request.authData,
+          query: { receiptCode: receipt.receiptCode },
+          model: receipt,
+        }),
+      ).catch(() => false);
+    }
+    return receipt;
+  },
+  /** Returns bounded client-safe repair receipts. */
+  repairReceipts: function () {
+    return (this._repairReceipts || []).slice();
+  },
+  /** Returns the owner-provider execution function. */
+  invokeRepairProvider: async function (provider, repair, request) {
+    if (typeof provider.executeRepair === "function")
+      return provider.executeRepair(repair, request);
+    return provider.executeReadinessRepair(repair, request);
+  },
+  /** Normalizes repair execution result from owner modules into the BackOffice contract. */
+  normalizeRepairResult: function (repair, result, options) {
+    options = options || {};
+    result = result || {};
+    let state = String(
+      result.state ||
+        options.state ||
+        (repair.dryRun ? "DRY_RUN" : "COMPLETED"),
+    );
+    let preview =
+      result.preview &&
+      typeof result.preview === "object" &&
+      !Array.isArray(result.preview)
+        ? result.preview
+        : repair.preview && typeof repair.preview === "object"
+          ? repair.preview
+          : {};
+    let provider = result.provider || options.provider;
+    let refreshScopes = []
+      .concat(
+        result.refreshScopes ||
+          (result.events && result.events.refreshScopes) ||
+          [],
+      )
+      .filter(Boolean)
+      .map((item) => String(item))
+      .slice(0, 12);
+    return {
+      contractVersion: 1,
+      repairContractVersion: this._supportedRepairContractVersion,
+      idempotencyKey: repair.idempotencyKey,
+      correlationId: repair.correlationId,
+      dryRun: repair.dryRun === true,
+      state: state,
+      operation: repair.operation,
+      action: repair.action,
+      ownerModule: repair.ownerModule,
+      ownerType: repair.ownerType,
+      source: repair.source,
+      blockerCode: repair.blockerCode,
+      provider:
+        provider && typeof provider === "object" && !Array.isArray(provider)
+          ? this.repairProviderDescriptor(provider, provider)
+          : undefined,
+      targetIdentifiers: this.normalizeRepairTargetIdentifiers(
+        result.targetIdentifiers || repair.targetIdentifiers,
+      ),
+      prerequisites: []
+        .concat(result.prerequisites || repair.prerequisites || [])
+        .slice(0, 20),
+      preview: {
+        changedCount: Number.isInteger(preview.changedCount)
+          ? preview.changedCount
+          : undefined,
+        skippedCount: Number.isInteger(preview.skippedCount)
+          ? preview.skippedCount
+          : undefined,
+        targetCodes: []
+          .concat(preview.targetCodes || [])
+          .filter(Boolean)
+          .map((item) => String(item))
+          .slice(0, 25),
+      },
+      transaction: {
+        atomic: result.transaction && result.transaction.atomic === true,
+        rollbackAvailable:
+          result.transaction && result.transaction.rollbackAvailable === true,
+        rollbackHint:
+          result.transaction && result.transaction.rollbackHint
+            ? String(result.transaction.rollbackHint)
+            : "No automatic rollback was declared for this repair result.",
+        compensatingAction:
+          result.transaction && result.transaction.compensatingAction
+            ? String(result.transaction.compensatingAction)
+            : undefined,
+      },
+      policy: {
+        environment:
+          result.policy && result.policy.environment
+            ? String(result.policy.environment)
+            : repair.environmentPolicy,
+        approvalRequired:
+          result.policy && result.policy.approvalRequired === true,
+        approvalRoute:
+          result.policy && result.policy.approvalRoute
+            ? String(result.policy.approvalRoute)
+            : undefined,
+        disabled: result.policy && result.policy.disabled === true,
+      },
+      retryPolicy: {
+        safeToRetry:
+          result.retryPolicy && result.retryPolicy.safeToRetry !== undefined
+            ? result.retryPolicy.safeToRetry === true
+            : state !== "COMPLETED",
+        reuseIdempotencyKey:
+          result.retryPolicy &&
+          result.retryPolicy.reuseIdempotencyKey !== undefined
+            ? result.retryPolicy.reuseIdempotencyKey === true
+            : true,
+      },
+      safety: this.repairSafety(repair, result),
+      plan: this.normalizeRepairPlan(repair, result),
+      lock: options.lock,
+      receipt:
+        result.receipt &&
+        typeof result.receipt === "object" &&
+        !Array.isArray(result.receipt)
+          ? result.receipt
+          : undefined,
+      events: {
+        emitted: false,
+        refreshScopes: refreshScopes,
+        invalidatesReadiness:
+          state === "COMPLETED" || state === "PARTIAL_SUCCESS",
+      },
+      changedCount: Number.isInteger(result.changedCount)
+        ? result.changedCount
+        : 0,
+      skippedCount: Number.isInteger(result.skippedCount)
+        ? result.skippedCount
+        : 0,
+      blockersRemaining: Number.isInteger(result.blockersRemaining)
+        ? result.blockersRemaining
+        : state === "COMPLETED"
+          ? 0
+          : 1,
+      retryable:
+        result.retryable === undefined
+          ? state !== "COMPLETED"
+          : result.retryable === true,
+      nextAction: String(
+        result.nextAction ||
+          options.nextAction ||
+          (repair.dryRun
+            ? "Review dry-run evidence, confirm the repair, then execute with the same owner operation."
+            : "Refresh operational readiness and review remaining blockers."),
+      ),
+      evidenceReference: result.evidenceReference
+        ? String(result.evidenceReference)
+        : options.evidenceReference,
+      message: String(
+        result.message ||
+          options.message ||
+          (repair.dryRun
+            ? "Dry run completed for the owner repair operation."
+            : "Repair operation completed."),
+      ),
+      checkedAt: this.now(),
+      idempotentReplay: options.idempotentReplay === true,
+    };
+  },
+  /** Records a bounded operator-safe repair attempt and audit event. */
+  recordRepairAttempt: function (result, request) {
+    let attempt = Object.assign({}, result, {
+      principal: this.principal(request),
+      tenant: request && request.tenant,
+    });
+    this._repairAttempts = [attempt]
+      .concat(this._repairAttempts || [])
+      .slice(0, 25);
+    if (result.dryRun) this._repairTelemetry.dryRuns += 1;
+    else this._repairTelemetry.executed += 1;
+    if (result.state === "COMPLETED") this._repairTelemetry.completed += 1;
+    else if (result.state === "FAILED") this._repairTelemetry.failed += 1;
+    else if (
+      [
+        "NOT_EXECUTABLE",
+        "PROVIDER_UNAVAILABLE",
+        "VALIDATION_FAILED",
+        "BATCH_EXECUTION_DISABLED",
+      ].includes(result.state)
+    ) {
+      this._repairTelemetry.blocked += 1;
+    }
+    let publisher = SERVICE.DefaultBackofficeAuditService;
+    if (publisher && typeof publisher.record === "function") {
+      Promise.resolve(
+        publisher.record(
+          Object.assign(
+            {
+              eventType: "backoffice.operationalReadiness.repair",
+              label: "Operational readiness repair",
+            },
+            attempt,
+          ),
+        ),
+      ).catch(() => false);
+    }
+    return result;
+  },
+  /** Returns recent bounded repair attempts for dashboard refresh/debug payloads. */
+  repairHistory: function (request) {
+    let input = (request && request.query) || request || {};
+    let limit = Math.min(Math.max(Number(input.limit || 25), 1), 100);
+    return (this._repairAttempts || [])
+      .filter((item) => {
+        if (input.ownerModule && item.ownerModule !== String(input.ownerModule))
+          return false;
+        if (input.operation && item.operation !== String(input.operation))
+          return false;
+        if (input.state && item.state !== String(input.state)) return false;
+        if (input.principal && item.principal !== String(input.principal))
+          return false;
+        return true;
+      })
+      .slice(0, limit);
+  },
+  /** Builds a client-safe dependency graph for repair planning and Axis visualization. */
+  repairDependencyGraph: function (repairs) {
+    repairs = [].concat(repairs || []);
+    let nodes = {};
+    let edges = [];
+    repairs.forEach((repair, index) => {
+      repair = repair || {};
+      let repairId =
+        "repair:" +
+        index +
+        ":" +
+        String(repair.ownerModule || "unknown") +
+        ":" +
+        String(repair.operation || "unknown");
+      nodes[repairId] = {
+        id: repairId,
+        type: "REPAIR",
+        ownerModule: repair.ownerModule,
+        operation: repair.operation,
+        action: repair.action,
+      };
+      []
+        .concat(repair.prerequisites || [])
+        .forEach((dependency, dependencyIndex) => {
+          let dependencyId =
+            "dependency:" +
+            index +
+            ":" +
+            dependencyIndex +
+            ":" +
+            String(dependency.code || dependency.operation || dependency);
+          nodes[dependencyId] = {
+            id: dependencyId,
+            type: "DEPENDENCY",
+            code: String(dependency.code || dependency.operation || dependency),
+          };
+          edges.push({
+            from: dependencyId,
+            to: repairId,
+            relation: "REQUIRED_BEFORE",
+          });
+        });
+    });
+    return { nodes: Object.values(nodes), edges: edges };
+  },
+  /** Produces a dry-run batch plan without executing owner repairs. */
+  planRepairBatch: function (request) {
+    let repairs = [].concat(
+      (request && request.repairs) ||
+        (request && request.readinessRepairs) ||
+        [],
+    );
+    let normalized = repairs.map((item, index) =>
+      this.normalizeRepairRequest({
+        readinessRepair: Object.assign(
+          {
+            idempotencyKey: "repair-batch-plan-" + index,
+            dryRun: true,
+          },
+          item || {},
+        ),
+      }),
+    );
+    return {
+      contractVersion: 1,
+      state: normalized.length ? "DRY_RUN" : "EMPTY",
+      repairCount: normalized.length,
+      executableCount: normalized.filter(
+        (item) =>
+          item.available === true &&
+          ["MANUAL", "AUTOMATIC"].includes(item.eligibility),
+      ).length,
+      highImpactCount: normalized.filter((item) => item.highImpact).length,
+      graph: this.repairDependencyGraph(normalized),
+      nextAction: normalized.length
+        ? "Review the dependency graph and execute one governed owner repair at a time until batch approval/rollback maturity is enabled."
+        : "Select readiness repair actions before planning a batch.",
+    };
+  },
+  /** Returns repair governance summary for Module Registry and Axis readiness panels. */
+  repairGovernanceSection: function () {
+    let providers = this.repairProviderRegistry();
+    let unavailable = providers.filter((provider) =>
+      ["UNAVAILABLE", "MISCONFIGURED", "DISABLED"].includes(
+        provider.lifecycleState,
+      ),
+    );
+    return {
+      key: "repairGovernance",
+      title: "Repair governance",
+      businessStatus: unavailable.length
+        ? "NEEDS_ATTENTION"
+        : providers.length
+          ? "READY"
+          : "NOT_CONFIGURED",
+      ownerModule: "backoffice",
+      source: "BACKOFFICE_REPAIR_GOVERNANCE",
+      route: "/system/modules",
+      summary: {
+        providerCount: providers.length,
+        unavailableProviderCount: unavailable.length,
+        providerCapabilityTtlMs: this.repairProviderCapabilityTtlMs(),
+        telemetry: Object.assign({}, this._repairTelemetry),
+        recentProviderEvents: (this._repairProviderEvents || []).slice(0, 10),
+        recentReceiptCount: (this._repairReceipts || []).length,
+        operatorCommands: [
+          "Open Module Registry",
+          "Review repair provider readiness",
+          "Run dry-run before execution",
+          "Refresh operational readiness",
+        ],
+      },
+      blockers: unavailable.map((provider) =>
+        this.readinessBlocker(
+          "REPAIR_PROVIDER_NOT_READY",
+          "NEEDS_ATTENTION",
+          "REPAIR_GOVERNANCE",
+          "BACKOFFICE_REPAIR_GOVERNANCE",
+          "Open Module Registry",
+          "Readiness repair provider is not ready: " + provider.ownerModule,
+          {
+            repairOperation: "repairProvider.refreshCapability",
+            repairAction: "REFRESH_REPAIR_PROVIDER",
+            repairAvailable: true,
+            repairEligibility: "MANUAL",
+            repairLabel: "Refresh repair provider",
+          },
+        ),
+      ),
+      nextAction: unavailable.length
+        ? "Open Module Registry and repair unavailable readiness repair providers."
+        : providers.length
+          ? "Repair providers are registered and ready for governed dry-runs."
+          : "Register owner repair providers as modules expose executable readiness repairs.",
+    };
+  },
+  /** Executes or dry-runs one owner-declared readiness repair operation. */
+  executeRepair: async function (request) {
+    let repair = this.normalizeRepairRequest(request);
+    if (repair.repairContractVersion !== this._supportedRepairContractVersion) {
+      let unsupported = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: "UNSUPPORTED_CONTRACT",
+          message: "Readiness repair request contract version is unsupported.",
+          nextAction:
+            "Refresh Axis or upgrade the caller to the supported BackOffice repair contract.",
+        },
+      );
+      return this.recordRepairAttempt(unsupported, request);
+    }
+    if (this._repairResultsByKey[repair.idempotencyKey]) {
+      return this.normalizeRepairResult(
+        repair,
+        this._repairResultsByKey[repair.idempotencyKey],
+        { idempotentReplay: true },
+      );
+    }
+    if (repair.batch && repair.dryRun !== true) {
+      let batchBlocked = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: "BATCH_EXECUTION_DISABLED",
+          message:
+            "Batch repair execution is disabled until owner approvals, locking, and rollback are mature.",
+          nextAction:
+            "Run dry-runs and execute one owner repair target at a time.",
+        },
+      );
+      return this.recordRepairAttempt(batchBlocked, request);
+    }
+    if (
+      repair.available !== true ||
+      !["AUTOMATIC", "MANUAL"].includes(repair.eligibility)
+    ) {
+      let blocked = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: "NOT_EXECUTABLE",
+          message:
+            "Repair is not executable because the owner did not declare an available governed operation.",
+          nextAction:
+            "Open the owning workspace and follow the manual recovery guidance.",
+        },
+      );
+      this._repairResultsByKey[repair.idempotencyKey] = blocked;
+      return this.recordRepairAttempt(blocked, request);
+    }
+    if (repair.highImpact && repair.dryRun !== true && !repair.operatorNote) {
+      let noteRequired = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: "OPERATOR_NOTE_REQUIRED",
+          message: "High-impact repair execution requires an operator note.",
+          nextAction:
+            "Add an operator note explaining the repair reason and retry.",
+        },
+      );
+      return this.recordRepairAttempt(noteRequired, request);
+    }
+    if (!this.hasRepairTargetIdentity(repair)) {
+      let validation = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: "VALIDATION_FAILED",
+          message: "Repair target identity is missing.",
+          nextAction:
+            "Retry with a stable target identifier such as releaseCode, profileCode, publicationCode, taskCode, mediaManifestCode, or sourceCode.",
+        },
+      );
+      return this.recordRepairAttempt(validation, request);
+    }
+    let providerEntry = this.repairProviderEntry(repair);
+    if (!providerEntry) {
+      let unavailable = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: repair.dryRun ? "DRY_RUN" : "PROVIDER_UNAVAILABLE",
+          message: repair.dryRun
+            ? "Dry run is valid, but no owner repair provider is registered for execution yet."
+            : "No owner repair provider is registered for this operation.",
+          nextAction: repair.dryRun
+            ? "Review the operation details; execution requires the owner module to register a repair provider."
+            : "Open the owning workspace or register the owner repair provider before executing.",
+        },
+      );
+      if (!repair.dryRun)
+        this._repairResultsByKey[repair.idempotencyKey] = unavailable;
+      return this.recordRepairAttempt(unavailable, request);
+    }
+    let providerValidation = this.validateRepairProviderCapability(
+      providerEntry,
+      repair,
+    );
+    if (providerValidation.state) {
+      let invalidProvider = this.normalizeRepairResult(
+        repair,
+        {},
+        providerValidation,
+      );
+      if (!repair.dryRun)
+        this._repairResultsByKey[repair.idempotencyKey] = invalidProvider;
+      return this.recordRepairAttempt(invalidProvider, request);
+    }
+    let lockResult = repair.dryRun
+      ? undefined
+      : this.acquireRepairLock(repair, request);
+    if (lockResult && lockResult.acquired === false) {
+      let locked = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: "REPAIR_LOCKED",
+          message: "Another repair is already running for this target.",
+          nextAction:
+            "Wait for the active repair lock to expire or complete, then refresh readiness.",
+          lock: lockResult.lock,
+          provider: providerValidation.provider,
+        },
+      );
+      return this.recordRepairAttempt(locked, request);
+    }
+    try {
+      let ownerResult = await this.invokeRepairProvider(
+        providerEntry.provider,
+        repair,
+        request,
+      );
+      let normalized = this.normalizeRepairResult(repair, ownerResult, {
+        provider: providerValidation.provider,
+        lock: lockResult && lockResult.lock,
+      });
+      let receipt = this.recordRepairReceipt(normalized, request);
+      if (receipt) normalized.receipt = receipt;
+      if (!repair.dryRun) {
+        let eventEvidence = await this.publishRepairEvent(normalized, request);
+        normalized.events = Object.assign({}, normalized.events, {
+          emitted: eventEvidence && eventEvidence.skipped !== true,
+          reason: eventEvidence && eventEvidence.reason,
+        });
+        this._repairResultsByKey[repair.idempotencyKey] = normalized;
+      }
+      return this.recordRepairAttempt(normalized, request);
+    } catch (error) {
+      let failed = this.normalizeRepairResult(
+        repair,
+        {},
+        {
+          state: "FAILED",
+          message:
+            "Owner repair provider failed before returning a governed result.",
+          nextAction:
+            "Open the owning workspace, review provider health, and retry only if the retry policy allows it.",
+          provider: providerValidation.provider,
+          lock: lockResult && lockResult.lock,
+          evidenceReference:
+            error && error.code ? String(error.code) : undefined,
+        },
+      );
+      if (!repair.dryRun)
+        this._repairResultsByKey[repair.idempotencyKey] = failed;
+      return this.recordRepairAttempt(failed, request);
+    } finally {
+      if (lockResult && lockResult.acquired)
+        this.releaseRepairLock(lockResult.targetKey, repair.idempotencyKey);
+    }
+  },
+  /** Creates a compact client-safe snapshot from the canonical readiness aggregate. */
+  operationalReadinessSnapshot: function (report) {
+    report = report || {};
+    let sections = [].concat(report.sections || []);
+    let blockers = sections.flatMap((section) =>
+      [].concat(section.blockers || []).map((blocker) => ({
+        section: section.key,
+        code: blocker.code || blocker.blockerCode,
+        severity: blocker.severity,
+        ownerType: blocker.ownerType,
+        source: blocker.source || section.source,
+        action: blocker.suggestedAction || blocker.action || section.nextAction,
+      })),
+    );
+    return {
+      contractVersion: 1,
+      source: "backoffice.operationalReadiness.snapshot",
+      state: report.state,
+      checkedAt: report.checkedAt,
+      summary: report.summary,
+      blockerCount: blockers.length,
+      blockers: blockers.slice(0, 25),
+      sections: sections.map((section) => ({
+        key: section.key,
+        title: section.title,
+        businessStatus: section.businessStatus,
+        ownerModule: section.ownerModule,
+        source: section.source,
+        blockerCount: [].concat(section.blockers || []).length,
+        nextAction: section.nextAction,
+      })),
+    };
+  },
+  /** Records snapshot and emits best-effort backend-owned readiness event evidence. */
+  recordOperationalReadinessSnapshot: function (report, context) {
+    context = context || {};
+    let snapshot = this.operationalReadinessSnapshot(report);
+    this._lastOperationalReadinessSnapshot = snapshot;
+    let event = {
+      id:
+        String(snapshot.checkedAt || new Date().toISOString()) +
+        ":" +
+        String(snapshot.state || "UNKNOWN"),
+      eventType: "backoffice.operationalReadiness.snapshot",
+      label: "Operational readiness",
+      state: snapshot.state,
+      checkedAt: snapshot.checkedAt,
+      blockerCount: snapshot.blockerCount,
+      source: snapshot.source,
+      tenant: context.tenant,
+      environment: context.environment,
+    };
+    this._operationalReadinessTimeline = [event]
+      .concat(this._operationalReadinessTimeline || [])
+      .filter(
+        (item, index, values) =>
+          values.findIndex((candidate) => candidate.id === item.id) === index,
+      )
+      .slice(0, 20);
+    let publisher = SERVICE.DefaultBackofficeAuditService;
+    if (publisher && typeof publisher.record === "function") {
+      Promise.resolve(publisher.record(event)).catch(() => false);
+    }
+    return snapshot;
+  },
+  /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
+  operationalReadinessReport: async function (request, context) {
+    context = context || {};
+    let startupValidation =
+      context.startupValidation || this.startupValidationReport(request);
+    let startupBlockers = []
+      .concat(
+        (startupValidation.findings || []).map((finding) =>
+          this.readinessBlocker(
+            finding.code,
+            finding.severity === "ERROR" ? "BLOCKED" : "NEEDS_ATTENTION",
+            finding.ownerType,
+            "BACKOFFICE_STARTUP_VALIDATION",
+            finding.action,
+            finding.message,
+            {
+              repairOperation: (finding.repair || {}).operation,
+              repairAction: (finding.repair || {}).actionCode,
+              repairAvailable: (finding.repair || {}).available === true,
+              repairEligibility: (finding.repair || {}).eligibility,
+              repairLabel: (finding.repair || {}).label,
+            },
+          ),
+        ),
+      )
+      .concat(
+        (startupValidation.bootstrapChecks || {}).missing > 0
+          ? [
+              this.readinessBlocker(
+                "BOOTSTRAP_CHECKS_MISSING",
+                "BLOCKED",
+                "CONFIGURATION",
+                "BACKOFFICE_STARTUP_VALIDATION",
+                "Repair bootstrap configuration",
+                "One or more bootstrap checks are missing.",
+                {
+                  repairOperation: "runtimeConfiguration.update",
+                  repairAction: "REPAIR_BOOTSTRAP_CONFIGURATION",
+                },
+              ),
+            ]
+          : [],
+      );
+    let importSection = await this.importReadinessSection(
+      request,
+      context.applicationInitializationProfiles,
+    );
+    let profileStatusReport =
+      context.applicationProfileStatusReport ||
+      (await this.applicationProfileStatusEntries(
+        request,
+        context.applicationInitializationProfiles,
+      ));
+    let sections = [
+      {
+        key: "bootstrap",
+        title: "Bootstrap and admin access",
+        businessStatus:
+          startupValidation.state === "READY"
+            ? "READY"
+            : startupValidation.state,
+        ownerModule: "backoffice",
+        source: "BACKOFFICE_STARTUP_VALIDATION",
+        route: "/dashboard",
+        summary: {
+          findingCount: (startupValidation.summary || {}).total || 0,
+          missingBootstrapChecks:
+            (startupValidation.bootstrapChecks || {}).missing || 0,
+          acknowledged: (startupValidation.summary || {}).acknowledged || 0,
+        },
+        blockers: startupBlockers,
+        nextAction: startupBlockers.length
+          ? "Resolve startup validation findings on the Axis dashboard."
+          : "Startup validation is clear.",
+      },
+      this.moduleRuntimeSection(context.modules, context.availability),
+      importSection,
+      this.publishingSection(profileStatusReport),
+      this.approvalSection(profileStatusReport),
+      this.documentationSection(
+        context.documentationSources,
+        context.documentationPublication,
+      ),
+      await this.mediaSection(profileStatusReport, context),
+      await this.eWasteAcceptanceSection(request, context),
+      this.searchSection(context),
+      await this.assistantSection(request),
+      this.applicationSection(
+        profileStatusReport,
+        context.applicationInitializationProfiles,
+      ),
+      this.repairGovernanceSection(),
+      this.acceptanceSection(profileStatusReport, context),
+    ].filter(Boolean);
+    let summary = sections.reduce(
+      (result, section) => {
+        result.total++;
+        result[section.businessStatus] =
+          (result[section.businessStatus] || 0) + 1;
+        result.blockers += (section.blockers || []).length;
+        return result;
+      },
+      { total: 0, blockers: 0 },
+    );
+    summary.recoveryMatrix = this.operationalRecoveryMatrix(sections);
+    let report = {
+      contractVersion: 1,
+      state:
+        summary.BLOCKED || summary.NOT_READY
+          ? "NOT_READY"
+          : summary.NEEDS_ATTENTION || summary.NOT_EXPOSED
+            ? "NEEDS_ATTENTION"
+            : "READY",
+      checkedAt: new Date().toISOString(),
+      source: "backoffice.operationalReadiness",
+      summary: summary,
+      sections: sections,
+    };
+    let snapshot = this.recordOperationalReadinessSnapshot(
+      report,
+      Object.assign({}, context, {
+        tenant: request && request.tenant,
+      }),
+    );
+    report.summary = Object.assign({}, report.summary, {
+      latestSnapshot: {
+        state: snapshot.state,
+        checkedAt: snapshot.checkedAt,
+        blockerCount: snapshot.blockerCount,
+      },
+      timeline: this.operationalReadinessTimeline(),
+    });
+    return report;
+  },
+  /** Records auditable acknowledgement for one active startup finding. */
+  acknowledgeFinding: function (request) {
+    let input = (request && request.startupFindingAcknowledgement) || {};
+    let code = String(input.code || "").trim();
+    let reason = String(input.reason || "").trim();
+    let propertyPath = input.propertyPath
+      ? String(input.propertyPath)
+      : undefined;
+    if (!code || reason.length < 8) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Startup finding acknowledgement requires code and reason",
+      );
+    }
+    let report = this.startupValidationReport(request);
+    let finding = report.findings.find(
+      (item) =>
+        item.code === code &&
+        (!propertyPath || item.propertyPath === propertyPath),
+    );
+    if (!finding) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Startup finding is not active or cannot be acknowledged",
+      );
+    }
+    if (finding.dismissible !== true || finding.auditRequired !== true) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Startup finding is not auditable/dismissible",
+      );
+    }
+    let acknowledgedAt = new Date().toISOString();
+    let record = {
+      acknowledged: true,
+      code: finding.code,
+      severity: finding.severity,
+      owner: finding.owner,
+      ownerType: finding.ownerType,
+      propertyPath: finding.propertyPath,
+      reason: reason,
+      reasonCode: input.reasonCode
+        ? String(input.reasonCode)
+        : "OPERATOR_REVIEWED",
+      acknowledgedBy: this.principal(request),
+      acknowledgedAt: acknowledgedAt,
+      tenant: request && request.tenant,
+      correlationId: request && request.correlationId,
+    };
+    this._findingAcknowledgements[
+      this.acknowledgementKey(record.tenant, record.code, record.propertyPath)
+    ] = record;
+    if (
+      SERVICE.DefaultBackofficeAuditService &&
+      typeof SERVICE.DefaultBackofficeAuditService.record === "function"
+    ) {
+      Promise.resolve(
+        SERVICE.DefaultBackofficeAuditService.record({
+          eventType: "backoffice.startupFinding.acknowledge",
+          outcome: "acknowledged",
+          findingCode: record.code,
+          propertyPath: record.propertyPath,
+          principalId: record.acknowledgedBy,
+          tenant: record.tenant,
+          correlationId: record.correlationId,
+          reasonCode: record.reasonCode,
+        }),
+      ).catch(() => false);
+    }
+    return Promise.resolve(record);
+  },
+  /** Validates cross-setting invariants without reading or returning secrets. */
+  validateConfiguration: function () {
+    let registry = CONFIG.get("backofficeRegistry") || {};
+    let operations = registry.operations || {};
+    let availability = registry.availability || {};
+    let failures = [];
+    if (
+      Number(registry.leaseTtlMs || 0) <= Number(registry.sweepIntervalMs || 0)
+    )
+      failures.push("LEASE_TTL_NOT_GREATER_THAN_SWEEP");
+    if (
+      operations.requireDistributedStore === true &&
+      (!registry.store || registry.store.mode !== "distributed")
+    )
+      failures.push("DISTRIBUTED_STORE_REQUIRED");
+    if (
+      registry.store &&
+      registry.store.mode === "distributed" &&
+      (!registry.store.moduleName ||
+        !registry.store.engineName ||
+        !registry.store.keyPrefix)
+    ) {
+      failures.push("DISTRIBUTED_STORE_COORDINATES_INVALID");
+    }
+    if (
+      Number(availability.maxConcurrentObservations || 0) < 1 ||
+      Number(availability.maxQueuedObservations || 0) < 1
+    ) {
+      failures.push("AVAILABILITY_PRESSURE_LIMIT_INVALID");
+    }
+    if (
+      Number(availability.staleAfterMs || 0) <=
+      Number(availability.timeoutMs || 0)
+    )
+      failures.push("AVAILABILITY_FRESHNESS_INVALID");
+    let thresholds = operations.thresholds || {};
+    [
+      "availabilityFailurePercent",
+      "availabilityQueuePercent",
+      "discoveryFailurePercent",
+    ].forEach((name) => {
+      let value = Number(thresholds[name]);
+      if (!Number.isFinite(value) || value < 0 || value > 100)
+        failures.push("OPERATION_THRESHOLD_INVALID");
+    });
+    if (Number(operations.minimumSamples || 0) < 1)
+      failures.push("OPERATION_SAMPLE_LIMIT_INVALID");
+    let production = operations.production || {};
+    if (production.enabled === true) {
+      let audit = registry.audit || {};
+      let alerts = operations.alerts || {};
+      if (!registry.store || registry.store.mode !== "distributed")
+        failures.push("PRODUCTION_DISTRIBUTED_STORE_REQUIRED");
+      if (
+        production.requireHttpsOnly !== false &&
+        ((registry.allowedSchemes || []).length !== 1 ||
+          registry.allowedSchemes[0] !== "https")
+      )
+        failures.push("PRODUCTION_HTTPS_REQUIRED");
+      if (
+        production.requireHostAllowlists !== false &&
+        (!Array.isArray((registry.discovery || {}).allowedHosts) ||
+          registry.discovery.allowedHosts.length === 0 ||
+          !Array.isArray(availability.allowedHosts) ||
+          availability.allowedHosts.length === 0)
+      )
+        failures.push("PRODUCTION_HOST_ALLOWLIST_REQUIRED");
+      if (
+        production.requireStrictAudit !== false &&
+        (audit.enabled !== true ||
+          audit.failClosed !== true ||
+          audit.requireAcknowledgement !== true ||
+          !audit.publisherService)
+      ) {
+        failures.push("PRODUCTION_AUDIT_DELIVERY_REQUIRED");
+      }
+      if (
+        production.requireStrictAudit !== false &&
+        audit.publisherService &&
+        (!SERVICE[audit.publisherService] ||
+          typeof SERVICE[audit.publisherService].record !== "function")
+      ) {
+        failures.push("PRODUCTION_AUDIT_PUBLISHER_UNAVAILABLE");
+      }
+      if (
+        production.requireStrictAlerts !== false &&
+        (alerts.enabled !== true ||
+          alerts.failClosed !== true ||
+          alerts.requireAcknowledgement !== true ||
+          !alerts.publisherService)
+      ) {
+        failures.push("PRODUCTION_ALERT_DELIVERY_REQUIRED");
+      }
+      if (
+        production.requireStrictAlerts !== false &&
+        alerts.publisherService &&
+        (!SERVICE[alerts.publisherService] ||
+          typeof SERVICE[alerts.publisherService].record !== "function")
+      ) {
+        failures.push("PRODUCTION_ALERT_PUBLISHER_UNAVAILABLE");
+      }
+      let administration = registry.administration || {};
+      if (
+        administration.rejectServiceTokens !== true ||
+        administration.requirePrincipal !== true
+      )
+        failures.push("PRODUCTION_HUMAN_ADMIN_REQUIRED");
+    }
+    return { valid: failures.length === 0, failures: failures };
+  },
+  /** Derives stable alerts from sanitized counters already owned by registry subsystems. */
+  assess: function (diagnostics) {
+    diagnostics = diagnostics || {};
+    let configuration = this.validateConfiguration();
+    let policy = this.getConfiguration();
+    let threshold = policy.thresholds || {};
+    let minimum = Number(policy.minimumSamples || 10);
+    let alerts = configuration.failures.slice();
+    let store = diagnostics.store || {};
+    let storeMetrics = store.metrics || {};
+    if (store.available === false) alerts.push("REGISTRY_STORE_UNAVAILABLE");
+    let storeErrorLimit = Number(
+      threshold.storeErrors === undefined ? 1 : threshold.storeErrors,
+    );
+    let conflictLimit = Number(
+      threshold.conditionalDeleteConflicts === undefined
+        ? 10
+        : threshold.conditionalDeleteConflicts,
+    );
+    if (Number(storeMetrics.errors || 0) >= storeErrorLimit)
+      alerts.push("REGISTRY_STORE_ERRORS");
+    if (Number(storeMetrics.conditionalDeleteConflicts || 0) >= conflictLimit)
+      alerts.push("LEASE_RENEWAL_CONFLICTS");
+    let availability = diagnostics.availability || {};
+    let availabilityMetrics = availability.metrics || {};
+    if (
+      Number(availabilityMetrics.attempts || 0) >= minimum &&
+      (Number(availabilityMetrics.failures || 0) * 100) /
+        Number(availabilityMetrics.attempts || 1) >=
+        Number(
+          threshold.availabilityFailurePercent === undefined
+            ? 25
+            : threshold.availabilityFailurePercent,
+        )
+    )
+      alerts.push("AVAILABILITY_FAILURE_RATE");
+    let queueLimit = Number(
+      ((CONFIG.get("backofficeRegistry") || {}).availability || {})
+        .maxQueuedObservations || 1,
+    );
+    if (
+      (Number(availability.queued || 0) * 100) / queueLimit >=
+      Number(
+        threshold.availabilityQueuePercent === undefined
+          ? 80
+          : threshold.availabilityQueuePercent,
+      )
+    )
+      alerts.push("AVAILABILITY_QUEUE_SATURATED");
+    let discovery = diagnostics.discovery || {};
+    if (
+      Number(discovery.attempts || 0) >= minimum &&
+      (Number(discovery.failures || 0) * 100) /
+        Number(discovery.attempts || 1) >=
+        Number(
+          threshold.discoveryFailurePercent === undefined
+            ? 25
+            : threshold.discoveryFailurePercent,
+        )
+    )
+      alerts.push("DISCOVERY_FAILURE_RATE");
+    if (
+      Number((diagnostics.security || {}).throttled || 0) >=
+      Number(
+        threshold.refreshThrottles === undefined
+          ? 1
+          : threshold.refreshThrottles,
+      )
+    )
+      alerts.push("ADMIN_REFRESH_THROTTLED");
+    alerts = Array.from(new Set(alerts)).sort();
+    let state =
+      configuration.valid && store.available !== false
+        ? alerts.length > 0
+          ? "DEGRADED"
+          : "READY"
+        : "NOT_READY";
+    return {
+      state: state,
+      alerts: alerts,
+      checkedAt: new Date().toISOString(),
+    };
+  },
+  /** Publishes one sanitized changed operational assessment through the configured environment adapter. */
+  publishAssessment: function (assessment) {
+    let configuration = this.getConfiguration().alerts || {};
+    if (configuration.enabled !== true) return Promise.resolve(false);
+    let payload = {
+      eventType: "backoffice.operational.assessment",
+      state: assessment.state,
+      alerts: []
+        .concat(assessment.alerts || [])
+        .map(String)
+        .sort(),
+      checkedAt: assessment.checkedAt,
+    };
+    let signature = payload.state + ":" + payload.alerts.join(",");
+    if (signature === this._lastPublishedSignature)
+      return Promise.resolve(false);
+    let publisher =
+      configuration.publisherService && SERVICE[configuration.publisherService];
+    if (!publisher || typeof publisher.record !== "function") {
+      let unavailable = new Error(
+        "BackOffice operational alert publisher is unavailable",
+      );
+      unavailable.code = "ALERT_PUBLISHER_UNAVAILABLE";
+      return configuration.failClosed === true
+        ? Promise.reject(unavailable)
+        : Promise.resolve(false);
+    }
+    return Promise.resolve(publisher.record(payload))
+      .then((acknowledgement) => {
+        if (configuration.requireAcknowledgement === true && !acknowledgement) {
+          let error = new Error(
+            "BackOffice operational alert publisher did not acknowledge delivery",
+          );
+          error.code = "ALERT_DELIVERY_UNACKNOWLEDGED";
+          throw error;
+        }
+        this._lastPublishedSignature = signature;
+        return acknowledgement;
+      })
+      .catch((error) => {
+        if (configuration.failClosed === true) throw error;
+        return false;
+      });
+  },
 };

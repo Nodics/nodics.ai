@@ -25,6 +25,10 @@ const routerConfig = require('../src/router/routers');
 const cronJobController = 'DefaultCronJobController';
 const cronJobLifecyclePermission = 'cronjob.lifecycle.manage';
 const expectedRoutes = [
+    { key: '/schedules/drafts/capabilities', method: 'GET', controller: 'DefaultCronJobScheduleDraftController', operation: 'capabilities', secured: true, permission: cronJobLifecyclePermission },
+    { key: '/schedules/drafts/preview', method: 'POST', controller: 'DefaultCronJobScheduleDraftController', operation: 'preview', secured: true, permission: cronJobLifecyclePermission },
+    { key: '/schedules/drafts', method: 'POST', controller: 'DefaultCronJobScheduleDraftController', operation: 'create', secured: true, permission: cronJobLifecyclePermission },
+    { key: '/schedules/drafts/inspect', method: 'POST', controller: 'DefaultCronJobScheduleDraftController', operation: 'inspect', secured: true, permission: cronJobLifecyclePermission },
     { key: '/job/create', method: 'POST', controller: cronJobController, operation: 'createJob', secured: true, permission: cronJobLifecyclePermission },
     { key: '/job/create/:jobCode', method: 'POST', controller: cronJobController, operation: 'createJob', secured: true, permission: cronJobLifecyclePermission },
     { key: '/job/update', method: 'PATCH', controller: cronJobController, operation: 'updateJob', secured: true, permission: cronJobLifecyclePermission },
@@ -44,7 +48,9 @@ const expectedRoutes = [
 
 assertRouteContracts(routerConfig, expectedRoutes);
 flattenRoutes(routerConfig).forEach(route => {
-    if (route.operation && route.operation !== 'getJob') {
+    const draftCapabilities = route.key === '/schedules/drafts/capabilities' &&
+        route.controller === 'DefaultCronJobScheduleDraftController' && route.operation === 'capabilities';
+    if (route.operation && route.operation !== 'getJob' && !draftCapabilities) {
         assert.notStrictEqual(route.method, 'GET', 'CronJob lifecycle mutation routes must not use GET');
         assert.strictEqual(route.permission, cronJobLifecyclePermission, 'CronJob lifecycle mutation routes must declare governed permission');
     }

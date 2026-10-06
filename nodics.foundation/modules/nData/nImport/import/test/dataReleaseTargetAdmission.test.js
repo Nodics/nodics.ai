@@ -163,6 +163,7 @@ test("unavailable and nonpositive configured owners fail closed; customized owne
     "lifecycle",
     "moduleName",
     "operation",
+    "releaseCode",
     "schemaName",
   ]);
   assert.equal(f.imports.length, 0);

@@ -214,5 +214,21 @@ module.exports = {
      */
     activateRuntimeConfigurationActivationRequest: function (request) {
         return SERVICE.DefaultConfigurationService.activateRuntimeConfigurationActivationRequest(request);
+    },
+
+    /** Dispatches due approved changes through the existing configuration owner.
+     * @param {Object} request Authorized command.
+     * @returns {Promise<Object>} Dispatch result.
+     */
+    activateDueRuntimeConfigurationRequests: function (request) {
+        return SERVICE.DefaultConfigurationService.activateDueRuntimeConfigurationRequests(request);
+    },
+
+    /** Requests evidence-only recovery from the configuration owner.
+     * @param {Object} request Authorized operator command.
+     * @returns {Promise<Object>} Recovery receipt.
+     */
+    reconcileRuntimePropertyActivation: function (request) {
+        return SERVICE.DefaultConfigurationService.reconcileRuntimePropertyActivation(request);
     }
 };

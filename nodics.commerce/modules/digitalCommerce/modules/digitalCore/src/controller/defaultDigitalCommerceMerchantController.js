@@ -30,7 +30,7 @@ module.exports = {
     };
     const promise = Promise.resolve()
       .then(() => {
-        if (["validate", "confirm"].includes(operation)) {
+        if (["validate", "confirm", "inspectReceipt"].includes(operation)) {
           SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
           SERVICE.DefaultLoggerService.inheritRequestPrivacy(input, request);
         }
@@ -42,6 +42,7 @@ module.exports = {
             "queue",
             "workspace",
             "confirm",
+            "inspectReceipt",
           ].includes(operation)
         )
           throw new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID");
@@ -78,5 +79,9 @@ module.exports = {
   /** Confirms fulfillment through the configured provider. */
   confirm: function (r, c) {
     return this.invoke("confirm", r, c);
+  },
+  /** Inspects a source-bound original receipt without a redemption side effect. */
+  inspectReceipt: function (r, c) {
+    return this.invoke("inspectReceipt", r, c);
   },
 };

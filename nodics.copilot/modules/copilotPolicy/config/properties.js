@@ -18,6 +18,15 @@
  */
 module.exports = {
     copilot: { policy: {
+        administration: { delegations: [], presentation: {
+            title: 'Copilot Settings', refresh: 'Refresh settings', awaiting: 'Awaiting runtime approval',
+            tenantScope: 'Tenant-wide setting. Affects all enterprises on this runtime.', enterpriseScope: 'Enterprise',
+            checkProvider: 'Check configured model', maximum: 'Maximum', reason: 'Reason for change', schedule: 'Earliest activation (optional)',
+            review: 'Review proposal', reviewTitle: 'Review changes', submit: 'Submit for approval', readOnly: 'Read-only access.',
+            empty: 'No settings available in this context.', history: 'Configuration requests', historyRefresh: 'Refresh request history',
+            historyEmpty: 'No enterprise-bound requests in this page.', previous: 'Previous page', next: 'Next page', page: 'Page',
+            before: 'Before', after: 'After', section: 'Settings section'
+        } },
         clarifyAmbiguousRequests: true, confirmationTtlMs: 300000,
         mutationPermissions: ['copilot.mutation.prepare', 'copilot.mutation.execute'],
         redactFields: ['password', 'secret', 'token', 'authorization'],

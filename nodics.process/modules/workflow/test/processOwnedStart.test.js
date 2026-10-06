@@ -95,7 +95,17 @@ function reviewerFixture() {
 test('immutable actor policy permits a different authorised reviewer in the correct enterprise', () => {
     const f = reviewerFixture(); lifecycle.assertTaskActorPolicy(f.request, f.instance, f.policy, { approved: true });
 });
-for (const patch of [{ loginId: 'APPLICANT@example.test' }, { entCode: 'another' }, { tenant: 'another' },
+for (const loginId of ['applicant@example.test', 'APPLICANT@example.test', 'admin']) {
+    test('authorised requester can review its own request: '+loginId, () => {
+        const f = reviewerFixture();
+        f.request.authData.loginId = loginId;
+        f.instance.context.requestedBy = loginId.toLowerCase();
+        assert.doesNotThrow(() => lifecycle.assertTaskActorPolicy(f.request, f.instance, f.policy, { approved: true }));
+        f.request.authData.permissions = [];
+        assert.throws(() => lifecycle.assertTaskActorPolicy(f.request, f.instance, f.policy, { approved: true }));
+    });
+}
+for (const patch of [{ entCode: 'another' }, { tenant: 'another' },
     { principalType: 'customer' }, { tokenType: 'service' }, { permissions: [] }, { isSystem: true }]) {
     test('task reviewer boundary rejects '+JSON.stringify(patch), () => {
         const f = reviewerFixture(); Object.assign(f.request.authData, patch);

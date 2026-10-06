@@ -59,6 +59,11 @@ a missing user token. Process remains responsible for `process.instance.start`.
 The deterministic instance identity binds domain, root, immutable source,
 correlation, configured definition/action and pending publication revision.
 Requests carry only this bounded context and the configured definition code.
+The bridge does not send a transport `Idempotency-Key`: that header enrolls
+Process in the separately deployment-qualified command-receipt protocol. Native
+instance identity and its immutable start fingerprint provide this bridge's
+replay contract even when optional command receipts are disabled. Starts remain
+single-attempt; neither receipt policy nor caller authority is changed.
 
 ## Integration Prerequisites
 
@@ -106,6 +111,13 @@ does not modify Process services, routes, domain graphs or shared configuration.
 
 ## Authority And Recovery
 
+Read-only operations diagnostics include `pending` using the existing bounded
+repository selection and safe reference projection, independently of `stuck`.
+This allows recovery of the original publication identity after an interrupted
+client session, including records with no usable age timestamp. Pending is not
+failure, approval, liveness evidence or permission to replay. Inspect the exact
+publication and Process state before any explicitly selected recovery action.
+
 ### Native Requester Binding
 
 A domain may select `requesterBinding: 'NATIVE_ACTOR'`, with `reviewNodeCode`
@@ -133,8 +145,10 @@ context and version; they are not repinned or upgraded. They cannot silently
 start a newly requester-bound cycle. New bound cycles require the native maker
 and the current qualified candidate; legacy domains without the policy retain
 their existing behavior. Process independently enforces the published policy's
-review permission, tenant/enterprise, no-self-review, typed approval decision
+review permission, tenant/enterprise, native requester provenance, typed approval decision
 and required rejection reason. Source tests do not qualify deployed providers.
+The requester may approve with the required access rights; requester binding
+records provenance and does not impose separation of users.
 
 Callbacks carry exactly `{ instanceCode, executionCode }`. The incoming principal
 must be a verified Workflow runtime. The target uses its own scoped runtime

@@ -686,6 +686,21 @@ const service = require("../src/service/identity/defaultMandatoryIdentityBootstr
     "auth.internal.token.read", "profile.enterprise.search", "communication.request", "communication.verification.execute",
   ], "Platform receives its resolved policy, never extra caller permissions");
   assert(!wasteGrant.runtimeScope.permissions.includes("communication.request"), "Platform-only permissions cannot reach sibling grants");
+  const credentialScopes = service.servicePrincipalCredentialScopes({
+    servicePrincipalScopes: { apiAdmin: ["auth.internal.token.read"], other: ["other.read"] },
+  }, "apiAdmin");
+  assert(credentialScopes.includes("rules.approval.callback"), "Local credential covers the approved sibling scope");
+  assert(credentialScopes.includes("communication.request"));
+  assert(!credentialScopes.includes("callerOnly.execute"));
+  assert.deepStrictEqual(service.servicePrincipalCredentialScopes({
+    servicePrincipalScopes: { other: ["other.read"] },
+  }, "other"), ["other.read"], "unrelated principals never inherit runtime authority");
+  const localBootstrapEnabled = service.isLocalRuntimeCredentialBootstrapEnabled;
+  service.isLocalRuntimeCredentialBootstrapEnabled = () => false;
+  assert.deepStrictEqual(service.servicePrincipalCredentialScopes({
+    servicePrincipalScopes: { apiAdmin: ["auth.internal.token.read"] },
+  }, "apiAdmin"), ["auth.internal.token.read"], "non-Local credentials remain operator-owned");
+  service.isLocalRuntimeCredentialBootstrapEnabled = localBootstrapEnabled;
   assert.deepStrictEqual(platformGrant.runtimeScope.modules, ["profile", "backoffice", "platform", "identityCore", "axis"]);
   assert(!platformGrant.runtimeScope.modules.includes("inactiveDiscoveredModule"));
   const unchanged = await service.reconcileLocalRuntimeDeploymentGrant({ tenant: "default" }, {

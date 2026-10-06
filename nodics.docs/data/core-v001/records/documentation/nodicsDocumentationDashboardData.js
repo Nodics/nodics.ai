@@ -334,7 +334,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 49,
-      "pages": 143,
+      "pages": 159,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -668,7 +668,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 49,
-      "pages": 143,
+      "pages": 159,
       "searchable": true,
       "expandable": true
     },
@@ -3190,22 +3190,28 @@ module.exports = {
         "order": 30
       },
       {
+        "code": "cron.inactive-schedule-drafts",
+        "title": "Inactive Process Schedule Drafts",
+        "summary": "Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation.",
+        "order": 40
+      },
+      {
         "code": "process.cronjob-data-authoring",
         "title": "CronJob Data Authoring",
         "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
-        "order": 40
+        "order": 50
       },
       {
         "code": "process.process-cron-runtime",
         "title": "Process and Cronjob Shared Runtime",
         "summary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
-        "order": 50
+        "order": 60
       },
       {
         "code": "process.scheduled-automation",
         "title": "Scheduled Automation and Cron Triggers",
         "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
-        "order": 60
+        "order": 70
       }
     ],
     "journeyLinks": [
@@ -3225,6 +3231,11 @@ module.exports = {
         "route": "/docs/framework/cron-project-customization"
       },
       {
+        "label": "Inactive Process Schedule Drafts",
+        "targetPage": "cron.inactive-schedule-drafts",
+        "route": "/docs/framework/cron/inactive-schedule-drafts"
+      },
+      {
         "label": "CronJob Data Authoring",
         "targetPage": "process.cronjob-data-authoring",
         "route": "/docs/framework/process-cronjob-data-authoring"
@@ -3233,15 +3244,10 @@ module.exports = {
         "label": "Process and Cronjob Shared Runtime",
         "targetPage": "process.process-cron-runtime",
         "route": "/docs/framework/process/process-cron-runtime"
-      },
-      {
-        "label": "Scheduled Automation and Cron Triggers",
-        "targetPage": "process.scheduled-automation",
-        "route": "/docs/framework/process/scheduled-automation"
       }
     ],
     "statusSummary": {
-      "pages": 6,
+      "pages": 7,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -3649,6 +3655,96 @@ module.exports = {
         "title": "Tooling Runtime Contracts",
         "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
         "order": 20
+      },
+      {
+        "code": "copilot.retention-lifecycle",
+        "title": "Copilot Conversation Retention and Recovery",
+        "summary": "Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures.",
+        "order": 30
+      },
+      {
+        "code": "copilot.knowledge-generation-recovery",
+        "title": "Copilot Knowledge Progress and Recovery",
+        "summary": "Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries.",
+        "order": 40
+      },
+      {
+        "code": "copilot.recorded-manual-refresh",
+        "title": "Recorded Manual Knowledge Refresh",
+        "summary": "Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness.",
+        "order": 50
+      },
+      {
+        "code": "copilot.original-business-results",
+        "title": "Original Business Results and Safe Continuation",
+        "summary": "Inspect native original command receipts and approve only never-started rows after uncertain business execution.",
+        "order": 60
+      },
+      {
+        "code": "copilot.standalone-business-actions",
+        "title": "Existing Enterprise Invitations and Product Prices",
+        "summary": "Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners.",
+        "order": 70
+      },
+      {
+        "code": "copilot.secure-coupon-fulfillment",
+        "title": "Secure Coupon Fulfillment",
+        "summary": "Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay.",
+        "order": 80
+      },
+      {
+        "code": "copilot.rules-inspection",
+        "title": "Rules Inspection in Copilot",
+        "summary": "Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads.",
+        "order": 90
+      },
+      {
+        "code": "copilot.process-inspection",
+        "title": "Process Inspection in Copilot",
+        "summary": "Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions.",
+        "order": 100
+      },
+      {
+        "code": "copilot.collection-inspection",
+        "title": "Collection Inspection In Conversation",
+        "summary": "Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads.",
+        "order": 110
+      },
+      {
+        "code": "copilot.process-task-actions",
+        "title": "Process Task Actions in Copilot",
+        "summary": "Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection.",
+        "order": 120
+      },
+      {
+        "code": "copilot.process-trigger-actions",
+        "title": "Process Trigger Actions in Copilot",
+        "summary": "Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery.",
+        "order": 130
+      },
+      {
+        "code": "copilot.process-lifecycle-actions",
+        "title": "Process Definition and Instance Actions in Copilot",
+        "summary": "Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts.",
+        "order": 140
+      },
+      {
+        "code": "copilot.governed-schema-actions",
+        "title": "Governed Selected-Schema Actions in Copilot",
+        "summary": "Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts.",
+        "order": 150
+      },
+      {
+        "code": "copilot.order-notification-operations",
+        "title": "Order Notification Operations in Copilot",
+        "summary": "Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay.",
+        "order": 160
+      },
+      {
+        "code": "copilot.import-inspection",
+        "title": "Data-release Inspection in Copilot",
+        "summary": "Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media.",
+        "order": 170
       }
     ],
     "journeyLinks": [
@@ -3661,10 +3757,30 @@ module.exports = {
         "label": "Tooling Runtime Contracts",
         "targetPage": "foundation.tooling-runtime-contracts",
         "route": "/docs/framework/foundation-tooling-runtime-contracts"
+      },
+      {
+        "label": "Copilot Conversation Retention and Recovery",
+        "targetPage": "copilot.retention-lifecycle",
+        "route": "/docs/framework/copilot/retention-lifecycle"
+      },
+      {
+        "label": "Copilot Knowledge Progress and Recovery",
+        "targetPage": "copilot.knowledge-generation-recovery",
+        "route": "/docs/framework/copilot/knowledge-generation-recovery"
+      },
+      {
+        "label": "Recorded Manual Knowledge Refresh",
+        "targetPage": "copilot.recorded-manual-refresh",
+        "route": "/docs/framework/copilot/recorded-manual-refresh"
+      },
+      {
+        "label": "Original Business Results and Safe Continuation",
+        "targetPage": "copilot.original-business-results",
+        "route": "/docs/framework/copilot/original-business-results"
       }
     ],
     "statusSummary": {
-      "pages": 2,
+      "pages": 17,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

@@ -67,8 +67,8 @@ module.exports = {
                 response,
                 new CLASSES.NodicsError(
                     'ERR_FIND_00003',
-                    'Model not available within tenant: ' + request.tenant
-                )
+                    'Model not available within tenant: ' + request.tenant,
+                ),
             );
         } else if (
             searchOptions &&
@@ -80,8 +80,8 @@ module.exports = {
                 response,
                 new CLASSES.NodicsError(
                     'ERR_FIND_00003',
-                    'Invalid projection object'
-                )
+                    'Invalid projection object',
+                ),
             );
         } else if (
             searchOptions &&
@@ -91,7 +91,10 @@ module.exports = {
             process.error(
                 request,
                 response,
-                new CLASSES.NodicsError('ERR_FIND_00003', 'Invalid sort object')
+                new CLASSES.NodicsError(
+                    'ERR_FIND_00003',
+                    'Invalid sort object',
+                ),
             );
         } else {
             try {
@@ -116,7 +119,7 @@ module.exports = {
         if (
             SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(
                 request.authData,
-                rawSchema.accessGroups
+                rawSchema.accessGroups,
             ) >= CONFIG.get('accessPoints').readAccessPoint
         ) {
             SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, 'read')
@@ -128,8 +131,8 @@ module.exports = {
                 response,
                 new CLASSES.NodicsError(
                     'ERR_AUTH_00003',
-                    'current user do not have access to this resource'
-                )
+                    'current user do not have access to this resource',
+                ),
             );
         }
     },
@@ -158,6 +161,30 @@ module.exports = {
     buildOptions: function (request, response, process) {
         this.LOG.debug('Building query searchOptions');
         let inputOptions = request.searchOptions || {};
+        if (request.internalPersistence !== undefined) {
+            try {
+                this.resolveReadMethod(request);
+                if (
+                    !Number.isSafeInteger(inputOptions.pageSize) ||
+                    inputOptions.pageSize < 1 ||
+                    inputOptions.pageSize > 1000 ||
+                    inputOptions.pageNumber !== 1 ||
+                    Object.keys(inputOptions).some(
+                        (key) => !['pageSize', 'pageNumber'].includes(key),
+                    )
+                )
+                    throw new CLASSES.NodicsError(
+                        'ERR_FIND_00003',
+                        'Durable read requires a bounded first page',
+                    );
+                request.searchOptions = { limit: inputOptions.pageSize };
+                request.options = { ...request.options, skipItemCache: true };
+                process.nextSuccess(request, response);
+            } catch (error) {
+                process.error(request, response, error);
+            }
+            return;
+        }
         request.query = request.query || {};
         let pageSize = inputOptions.pageSize || CONFIG.get('defaultPageSize');
         let pageNumber =
@@ -207,7 +234,7 @@ module.exports = {
             process.error(
                 request,
                 response,
-                new CLASSES.NodicsError('ERR_AUTH_00003')
+                new CLASSES.NodicsError('ERR_AUTH_00003'),
             );
             return;
         }
@@ -233,15 +260,15 @@ module.exports = {
                 request.cacheKeyHash ||
                 SERVICE.DefaultCacheConfigurationService.createItemKey(request);
             this.LOG.debug(
-                'Model cache lookup for key: ' + request.cacheKeyHash
+                'Model cache lookup for key: ' + request.cacheKeyHash,
             );
             SERVICE.DefaultCacheService.get({
                 tenant: request.tenant,
                 moduleName: request.schemaModel.moduleName,
                 channelName: SERVICE.DefaultCacheService.getSchemaCacheChannel(
-                    request.schemaModel.schemaName
+                    request.schemaModel.schemaName,
                 ),
-                key: request.cacheKeyHash
+                key: request.cacheKeyHash,
             })
                 .then((value) => {
                     this.LOG.debug('Fulfilled from model cache');
@@ -256,7 +283,7 @@ module.exports = {
                     this.applyReadAccessPolicies(
                         request,
                         response,
-                        cachePolicyProcess
+                        cachePolicyProcess,
                     );
                 })
                 .catch((error) => {
@@ -289,15 +316,15 @@ module.exports = {
             interceptors = _.merge(
                 interceptors,
                 SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
-                    schemaName
-                )
+                    schemaName,
+                ),
             );
         });
         if (interceptors && interceptors.preGet) {
             SERVICE.DefaultInterceptorService.executeInterceptors(
                 [].concat(interceptors.preGet),
                 request,
-                response
+                response,
             )
                 .then((success) => {
                     process.nextSuccess(request, response);
@@ -306,7 +333,7 @@ module.exports = {
                     process.error(
                         request,
                         response,
-                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00005')
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00005'),
                     );
                 });
         } else {
@@ -330,15 +357,15 @@ module.exports = {
                 validators,
                 SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
                     request.tenant,
-                    schemaName
-                )
+                    schemaName,
+                ),
             );
         });
         if (validators && validators.preGet) {
             SERVICE.DefaultValidatorService.executeValidators(
                 [].concat(validators.preGet),
                 request,
-                response
+                response,
             )
                 .then((success) => {
                     process.nextSuccess(request, response);
@@ -347,7 +374,7 @@ module.exports = {
                     process.error(
                         request,
                         response,
-                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00005')
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00005'),
                     );
                 });
         } else {
@@ -374,7 +401,7 @@ module.exports = {
                     query: success.query,
                     options: success.options,
                     count: success.count,
-                    result: success.result
+                    result: success.result,
                 };
                 process.nextSuccess(request, response);
             })
@@ -382,13 +409,38 @@ module.exports = {
                 process.error(request, response, error);
             });
     },
+    /** Qualifies private durable reads before any ordinary or versioned method selection. @param {Object} request Secured read. @returns {void} Throws on unsupported private reads. */
+    assertReadSafety: function (request) {
+        if (request.internalPersistence !== undefined) {
+            const capability = request.schemaModel.persistenceCapabilities?.();
+            if (
+                request.internalPersistence !== 'DURABLE_JOURNAL' ||
+                request.transactionContext ||
+                request.schemaModel.rawSchema?.router?.enabled !== false ||
+                request.schemaModel.rawSchema?.cache?.enabled !== false ||
+                request.schemaModel.rawSchema?.event?.enabled !== false ||
+                request.schemaModel.rawSchema?.credentialRetirement !==
+                    undefined ||
+                request.schemaModel.versioned ||
+                request.options?.recursive === true ||
+                capability?.contractVersion !== 1 ||
+                capability.durableJournal !== true ||
+                capability.primaryMajorityReadback !== true
+            )
+                throw new CLASSES.NodicsError(
+                    'ERR_FIND_00003',
+                    'Qualified durable journal read required',
+                );
+        }
+    },
     /** Resolves ordinary reads; explicit version-aware policies require the owning service variant before any cache lookup. */
     resolveReadMethod: function (request) {
+        this.assertReadSafety(request);
         const mode = (request.schemaModel.rawSchema || {}).versionedReadMode;
         if (mode !== undefined && mode !== 'HISTORY') {
             throw new CLASSES.NodicsError(
                 'ERR_FIND_00003',
-                'Version-aware read capability is unavailable'
+                'Version-aware read capability is unavailable',
             );
         }
         return 'getItems';
@@ -413,7 +465,7 @@ module.exports = {
                 response: response,
                 models: response.success.result,
                 index: 0,
-                callback: SERVICE.DefaultModelService.populateNestedModels
+                callback: SERVICE.DefaultModelService.populateNestedModels,
             })
                 .then((success) => {
                     process.nextSuccess(request, response);
@@ -422,7 +474,7 @@ module.exports = {
                     process.error(
                         request,
                         response,
-                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00003')
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'),
                     );
                 });
         } else {
@@ -447,7 +499,7 @@ module.exports = {
         ) {
             SERVICE.DefaultSchemaVirtualPropertiesHandlerService.populateVirtualProperties(
                 virtualProperties,
-                response.success.result
+                response.success.result,
             );
             process.nextSuccess(request, response);
         } else {
@@ -471,15 +523,15 @@ module.exports = {
                 validators,
                 SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
                     request.tenant,
-                    schemaName
-                )
+                    schemaName,
+                ),
             );
         });
         if (validators && validators.postGet) {
             SERVICE.DefaultValidatorService.executeValidators(
                 [].concat(validators.postGet),
                 request,
-                response
+                response,
             )
                 .then((success) => {
                     process.nextSuccess(request, response);
@@ -491,8 +543,8 @@ module.exports = {
                         new CLASSES.NodicsError(
                             error,
                             null,
-                            error.code || 'ERR_FIND_00006'
-                        )
+                            error.code || 'ERR_FIND_00006',
+                        ),
                     );
                 });
         } else {
@@ -515,15 +567,15 @@ module.exports = {
             interceptors = _.merge(
                 interceptors,
                 SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
-                    schemaName
-                )
+                    schemaName,
+                ),
             );
         });
         if (interceptors && interceptors.postGet) {
             SERVICE.DefaultInterceptorService.executeInterceptors(
                 [].concat(interceptors.postGet),
                 request,
-                response
+                response,
             )
                 .then((success) => {
                     process.nextSuccess(request, response);
@@ -535,8 +587,8 @@ module.exports = {
                         new CLASSES.NodicsError(
                             error,
                             null,
-                            error.code || 'ERR_FIND_00006'
-                        )
+                            error.code || 'ERR_FIND_00006',
+                        ),
                     );
                 });
         } else {
@@ -566,15 +618,15 @@ module.exports = {
                 'function'
                 ? SERVICE.DefaultCachePolicyService.isItemCacheable(
                       request,
-                      response.success
+                      response.success,
                   )
                 : {
                       cacheable: UTILS.isItemCashable(
                           response.success.result,
-                          request.schemaModel
+                          request.schemaModel,
                       ),
                       reason: 'legacyPolicy',
-                      reasonCode: 'RSN_CACHE_00010'
+                      reasonCode: 'RSN_CACHE_00010',
                   };
         request.cachePolicyDecision = cacheDecision;
         if (cacheDecision.cacheable) {
@@ -582,11 +634,11 @@ module.exports = {
                 tenant: request.tenant,
                 moduleName: request.schemaModel.moduleName,
                 channelName: SERVICE.DefaultCacheService.getSchemaCacheChannel(
-                    request.schemaModel.schemaName
+                    request.schemaModel.schemaName,
                 ),
                 key: request.cacheKeyHash,
                 value: response.success,
-                ttl: request.schemaModel.cache.ttl
+                ttl: request.schemaModel.cache.ttl,
             })
                 .then((success) => {
                     this.LOG.info('Item saved in item cache');
@@ -605,7 +657,7 @@ module.exports = {
                 'Skipping item cache write: ' +
                     cacheDecision.reasonCode +
                     ' ' +
-                    cacheDecision.reason
+                    cacheDecision.reason,
             );
         }
         process.nextSuccess(request, response);
@@ -629,7 +681,7 @@ module.exports = {
         }
         SERVICE.DefaultSchemaReadAccessPolicyService.applyReadPolicies(
             request,
-            response
+            response,
         )
             .then((success) => {
                 process.nextSuccess(request, response);
@@ -641,9 +693,9 @@ module.exports = {
                     new CLASSES.NodicsError(
                         error,
                         null,
-                        error.code || 'ERR_FIND_00006'
-                    )
+                        error.code || 'ERR_FIND_00006',
+                    ),
                 );
             });
-    }
+    },
 };

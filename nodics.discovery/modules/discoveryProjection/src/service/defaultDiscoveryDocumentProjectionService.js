@@ -19,6 +19,20 @@
  * @override Projects may replace projection persistence/search behavior while preserving doSave/doSearch request semantics.
  */
 module.exports = {
+    /** Refreshes search visibility through the existing nSearch pipeline. @param {Object} request Trusted projection request. @returns {Promise<Object>} Provider acknowledgement. */
+    doRefresh: function (request) {
+        try {
+            request.searchModel = this.getSearchModel(request);
+            return SERVICE.DefaultPipelineService.start('doRefreshIndexInitializerPipeline', request, {});
+        } catch (error) { return Promise.reject(new CLASSES.SearchError(error)); }
+    },
+    /** Removes an owner-qualified derived projection query through nSearch. @param {Object} request Trusted bounded removal request. @returns {Promise<Object>} Provider acknowledgement. */
+    doRemoveByQuery: function (request) {
+        try {
+            request.searchModel = this.getSearchModel(request);
+            return SERVICE.DefaultPipelineService.start('doRemoveModelsByQueryInitializerPipeline', request, {});
+        } catch (error) { return Promise.reject(new CLASSES.SearchError(error)); }
+    },
     /**
      * Resolves the nSearch model for the Discovery document projection index.
      *

@@ -1,5 +1,28 @@
 # database
 
+Private create-once records use [explicit insert-only generated saves](llm/examples/insert-only-save.md).
+
+The shared save/update admission also applies after `vService` loads. Provider
+selectors cannot bypass private journal qualification, insert-only claims or
+private credential retirement. Run the merged-layer tests when changing these
+paths; qualifying the database base alone is insufficient.
+Omitting a query alone does not prevent primary-key upsert.
+
+Qualified private journal owners may select `internalPersistence: 'DURABLE_JOURNAL'`
+on generated insert-only save, exact conditional update and bounded first-page
+readback. Public, side-effecting, managed/versioned and credential schemas cannot
+use that mutation path. Adapter capability qualification, ordinary authorization
+and validation remain mandatory; arbitrary driver options or transactions cannot
+be mixed into this mode. See the same insert-only guide and durable pipeline tests.
+Acknowledgement comparisons use the adapter's existing schema-normalized write
+values, including date objects; different persisted values still fail closed.
+Native command receipts retain a separate scalar claim predicate before handing
+the model to generated saves. Added defaults must not become completion filters.
+Opted-in generated create, update, and delete wrap their existing native paths;
+update/delete completion requires exactly one affected row. This is private
+original-result evidence, not global CRUD idempotency or replay authority.
+See [native command receipts](llm/contracts/native-command-receipts.md).
+
 Nested generated saves isolate CMS replacement options by effective schema owner;
 ordinary indexes are not implicit save identities. Incomplete primary identities
 preserve ordinary insert intent so existing defaults/preSave owners can generate

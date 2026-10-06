@@ -37,5 +37,5 @@ for (const [name, route] of Object.entries(routes)) {
     assert(!route.key.includes('workbench'));
 }
 assert.strictEqual(routers.common.schemaApi, undefined);
-assert.deepStrictEqual(Object.keys(routes).sort(), ['bulk', 'capabilities', 'deleteImpact', 'remove', 'safeSearch', 'save', 'update']);
+assert.deepStrictEqual(Object.keys(routes).sort(), ['bulk', 'capabilities', 'deleteImpact', 'inspectCommandReceipt', 'remove', 'safeSearch', 'save', 'update']);
 console.log('Canonical schema API router security contract validated');

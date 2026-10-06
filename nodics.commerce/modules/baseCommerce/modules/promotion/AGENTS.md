@@ -10,6 +10,10 @@ real priced-source acceptance pass. References or display names are not grants.
 
 Preserve Commerce ownership, tenant security, exact evidence, idempotency, audit and generation discipline. Read the current active source and owning contracts before changes.
 
+Coupon checkout must retain the selected Store's activated-policy authority.
+Release must explicitly remove persisted reservation fields through the generated
+owner; preserve CAS/readback rather than treating undefined fields as deletion.
+
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
 

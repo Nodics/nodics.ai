@@ -59,3 +59,29 @@ Run `test/versionedReadResponseContract.test.js` for default/override behavior,
 pre-cache denial, immutable lookup and provider failure propagation. Provider
 tests separately qualify current-record query semantics; these tests alone do
 not establish migration or publication activation.
+
+## Layered Persistence Safety
+
+The database owner implements `persistModel`, `persistUpdates`, `insertModel`,
+`updateDurableJournal` and `assertReadSafety`. vService keeps its existing
+success/error envelopes and single-row save projection, but delegates persistence
+to those effective members. Its `resolveSaveMethod` and `resolveUpdateMethod`
+choose versioned versus ordinary provider methods only after private admission.
+Its read selector calls `assertReadSafety` before reading schema version policy.
+Missing versioned provider methods reject; there is no ordinary-write fallback.
+
+Private durable requests require qualified unversioned, nonmanaged, unrouted,
+uncached, event-disabled journals and the owning provider protocol. Unknown
+protocols, transactions, public schemas, recursive operations and unqualified
+providers reject before dispatch. Save requires explicit boolean insert-only
+intent; update retains exact original scalar predicates and no upsert. The
+private credential-retirement path remains owned by the concurrency service.
+Ordinary managed counters and existing versioned business records retain their
+distinct lifecycles. This does not make generic business saves create-only.
+
+The insert-only and durable-journal database suites test the merged variant,
+including duplicate claims, failed acknowledgements, invalid protocols,
+unsupported model types and private retirement delegation. Startup tests verify
+member provenance from the actual service loader. The two opt-in MongoDB tests
+qualify managed CAS and private journal insert/conditional completion/readback in
+separate temporary databases; neither is full application or failover acceptance.

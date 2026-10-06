@@ -138,7 +138,7 @@ test('partial rejection preserves reports, optionally fails startup, and explici
     Object.assign(f.ingestion.startup, { failOnRejectedFiles: true, rejectionMessage: 'PROJECT_STARTUP_REJECTED' });
     await assert.rejects(f.service.ingestOnStart(), { code: 'ERR_CPK_00009', message: 'PROJECT_STARTUP_REJECTED' });
     assert.equal(attempts, 3, 'failure stops later sources');
-    assert.equal(f.service.state.reports.get('first').filesRejected, 1);
+    assert.equal(f.service.state.reports.get(f.service.reportKey('test-tenant', 'first')).filesRejected, 1);
     SERVICE.DefaultCopilotKnowledgeIngestionService.ingestSource = async request => {
         attempts++;
         return { sourceCode: request.source.code, state: 'PROJECTED', filesRejected: 0 };
@@ -156,6 +156,6 @@ test('provider failure propagates and later sources are not attempted', async t 
     };
     await assert.rejects(f.service.ingestOnStart(), error => error === failure);
     assert.equal(f.calls.length, 1);
-    assert.equal(f.service.state.reports.get('first').state, 'FAILED');
+    assert.equal(f.service.state.reports.get(f.service.reportKey('test-tenant', 'first')).state, 'FAILED');
     assert.deepEqual(f.logs, []);
 });

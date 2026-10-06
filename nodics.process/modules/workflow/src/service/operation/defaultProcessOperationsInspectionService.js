@@ -136,7 +136,7 @@ module.exports = {
     listInstances: async function (request) {
         let response = await this.instanceService().get(this.serviceRequest(request, {
             query: this.safeQuery(request, ['definitionCode', 'status']),
-            searchOptions: { limit: this.listLimit(request), sort: { startedAt: -1 } }
+            searchOptions: { pageSize: this.listLimit(request), pageNumber: 1, sort: { startedAt: -1 } }
         }));
         return { code: 'SUC_PROCESS_00000', data: response.result || [] };
     },
@@ -150,7 +150,7 @@ module.exports = {
     getInstance: async function (request) {
         let response = await this.instanceService().get(this.serviceRequest(request, {
             query: { code: this.assertCode(request.instanceCode) },
-            searchOptions: { limit: 2 }
+            searchOptions: { pageSize: 2, pageNumber: 1 }
         }));
         let instance = response.result && response.result[0];
         if (!instance) throw new CLASSES.NodicsError('ERR_PROCESS_00007', 'Process instance was not found');
@@ -166,7 +166,7 @@ module.exports = {
     listTasks: async function (request) {
         let response = await this.taskService().get(this.serviceRequest(request, {
             query: this.safeQuery(request, ['instanceCode', 'status', 'assignee']),
-            searchOptions: { limit: this.listLimit(request), sort: { dueAt: 1 } }
+            searchOptions: { pageSize: this.listLimit(request), pageNumber: 1, sort: { dueAt: 1 } }
         }));
         const tasks = await SERVICE.DefaultProcessRuntimeLifecycleService.projectTaskDecisions(
             request, response.result || []
@@ -183,7 +183,7 @@ module.exports = {
     getTask: async function (request) {
         let response = await this.taskService().get(this.serviceRequest(request, {
             query: { code: this.assertCode(request.taskCode) },
-            searchOptions: { limit: 2 }
+            searchOptions: { pageSize: 2, pageNumber: 1 }
         }));
         let task = response.result && response.result[0];
         if (!task) throw new CLASSES.NodicsError('ERR_PROCESS_00008', 'Process task was not found');
@@ -195,7 +195,7 @@ module.exports = {
     listIncidents: async function (request) {
         let response = await this.incidentService().get(this.serviceRequest(request, {
             query: this.safeQuery(request, ['instanceCode', 'definitionCode', 'nodeCode', 'status', 'errorCode']),
-            searchOptions: { limit: this.listLimit(request), sort: { lastErrorAt: -1 } }
+            searchOptions: { pageSize: this.listLimit(request), pageNumber: 1, sort: { lastErrorAt: -1 } }
         }));
         return { code: 'SUC_PROCESS_00000', data: response.result || [] };
     },
@@ -203,7 +203,7 @@ module.exports = {
     /** Reads one Process-owned recovery incident. */
     getIncident: async function (request) {
         let response = await this.incidentService().get(this.serviceRequest(request, {
-            query: { code: this.assertCode(request.incidentCode) }, searchOptions: { limit: 2 }
+            query: { code: this.assertCode(request.incidentCode) }, searchOptions: { pageSize: 2, pageNumber: 1 }
         }));
         let incident = response.result && response.result[0];
         if (!incident) throw new CLASSES.NodicsError('ERR_PROCESS_00022', 'Process recovery incident was not found');
@@ -219,7 +219,7 @@ module.exports = {
     listAuditEvents: async function (request) {
         let response = await this.auditService().get(this.serviceRequest(request, {
             query: this.safeQuery(request, ['definitionCode', 'instanceCode', 'eventType', 'outcome']),
-            searchOptions: { limit: this.listLimit(request), sort: { createdAt: -1 } }
+            searchOptions: { pageSize: this.listLimit(request), pageNumber: 1, sort: { createdAt: -1 } }
         }));
         return { code: 'SUC_PROCESS_00000', data: response.result || [] };
     }

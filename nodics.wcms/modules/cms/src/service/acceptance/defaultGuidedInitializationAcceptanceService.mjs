@@ -65,7 +65,7 @@ export async function runGuidedInitializationAcceptance({
       request: (baseUrl, route, options) => request(baseUrl + route, options),
       baseUrl: processUrl, headers, definitionCode: 'cmsPublicationApproval',
       correlation: { key: 'publicationCode', value: publicationCode }, nodeCode: 'publicationReview',
-      decision: { approved: true, action: 'APPROVE', reason },
+      decision: { approved: true, reason },
       instanceUnavailable: `Publication workflow instance is unavailable for ${publicationCode}`,
       taskUnavailable: `Publication approval task is unavailable for ${publicationCode}`,
     });

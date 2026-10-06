@@ -57,12 +57,20 @@ global.CONFIG = {
 let storedRequests = {};
 let auditEntries = [];
 global.SERVICE = {
+    DefaultConfigurationBindingService: require('../../nConfig/src/service/defaultConfigurationBindingService'),
     DefaultConfigurationActivationRequestService: {
         save: request => {
             storedRequests[request.model.code] = _.cloneDeep(request.model);
-            return Promise.resolve({ result: [request.model] });
+            return Promise.resolve({ code: 'SUC_TEST', result: request.model });
+        },
+        update: async request => {
+            const row = storedRequests[request.query.code];
+            const matched = row && Object.entries(request.query).every(([key, value]) => row[key] === value);
+            if (matched) storedRequests[row.code] = { ...row, ..._.cloneDeep(request.model) };
+            return { code: 'SUC_TEST', result: { matchedCount: matched ? 1 : 0 } };
         },
         get: request => Promise.resolve({
+            code: 'SUC_TEST',
             result: storedRequests[request.query.code] ? [_.cloneDeep(storedRequests[request.query.code])] : []
         })
     },
@@ -159,6 +167,27 @@ const rollbackService = require('../src/service/audit/defaultRuntimeConfiguratio
         tenant: 'default', authData: { code: 'operator' },
         activationRequest: { activationRequestCode: 'propertyRequestTampered' }
     }), /failed integrity validation/);
+
+    const stale = await SERVICE.DefaultRuntimeConfigurationActivationRequestService.createActivationRequest({
+        tenant: 'default', authData: { code: 'requester' },
+        activationRequest: { code: 'stalePropertyRequest', configurationType: 'propertyConfiguration', configuration: { budgetLimit: 100 } }
+    });
+    await SERVICE.DefaultRuntimeConfigurationActivationRequestService.approveActivationRequest({
+        tenant: 'default', authData: { code: 'approver' }, activationRequest: { activationRequestCode: stale.data.code }
+    });
+    tenantProperties.default.budgetLimit = 50;
+    await assert.rejects(() => SERVICE.DefaultRuntimeConfigurationActivationRequestService.activateApprovedRequest({
+        tenant: 'default', authData: { code: 'operator' }, activationRequest: { activationRequestCode: stale.data.code }
+    }), /changed after approval/);
+    assert.strictEqual(tenantProperties.default.budgetLimit, 50, 'A concurrent value must not be overwritten by an old approval');
+    assert.strictEqual(storedRequests.stalePropertyRequest.status, 'ACTIVATING', 'A claimed failure cannot be replayed');
+
+    const preview = SERVICE.DefaultRuntimeConfigurationPreviewService.createPropertyPreview({ configuration: { budgetLimit: 75 }, tenant: 'default' });
+    const audit = SERVICE.DefaultRuntimeConfigurationAuditService.recordActivation;
+    SERVICE.DefaultRuntimeConfigurationAuditService.recordActivation = async () => { throw new Error('audit unavailable'); };
+    await assert.rejects(() => SERVICE.DefaultConfigurationService.applyPropertyConfiguration({ tenant: 'default' }, { budgetLimit: 75 }, preview), /audit unavailable/);
+    SERVICE.DefaultRuntimeConfigurationAuditService.recordActivation = audit;
+    assert.strictEqual(tenantProperties.default.budgetLimit, 75, 'An audit failure is an uncertain applied result, not rollback');
 
     console.log('Runtime property configuration governance validated');
 })().catch(error => {

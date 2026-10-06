@@ -1,5 +1,11 @@
 # Pricing contracts
 
+PriceRow create receipts use private `pricingCommandReceipt` storage and the
+existing generated controller path under default-disabled `commandReceipts`
+admission. Inspection requires current schema write/Staged authoring authority;
+it never republishes, recalculates or creates a price. See
+[original business results](../../../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+
 ## Native Merchant Priced Evidence
 
 Read [native merchant priced evidence v1](native-merchant-priced-evidence-v1.md)

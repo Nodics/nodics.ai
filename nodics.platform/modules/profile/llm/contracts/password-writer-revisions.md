@@ -91,6 +91,17 @@ and nested-save paths. This inventory is not an installed custom-writer audit.
 
 ## Owner Helpers And Recovery Limits
 
+Reference Employee data may select `DefaultEmployeeService.ensureReferenceAll`
+instead of `saveAll`. The bounded batch reads code/login conflicts uncached
+through the generated service under the original import authority. An exact
+active native Employee is a zero-write acknowledgement: source passwords, groups
+and profile values are never reapplied. Inactive, linked, service, ambiguous and
+conflicting identities reject. New records use generated insert-only save with
+all credential guards intact; uncertain writes are not retried in the operation.
+Only record codes leave the method. Later layers must preserve these rules.
+This helper does not grant membership, reset credentials or reconcile access.
+The focused fixture is `../../test/employeeReferenceImport.test.js`.
+
 `DefaultPasswordSaveInterceptorService.managedPolicy(tenant)` resolves the prepared
 `PasswordModel` from the existing configured Profile module owner. It never
 infers counter ownership from the presence of a `revision` property. Missing

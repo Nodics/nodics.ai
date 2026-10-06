@@ -123,14 +123,8 @@ module.exports = {
     stateChangeRemoved: function (request, response, process) {
         this.LOG.debug('Changing job state to removed');
         let jobDefinition = request.definition;
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.REMOVED.key
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.REMOVED.key
         }).then(success => {
             process.nextSuccess(request, response);
         }).catch(error => {

@@ -410,7 +410,7 @@ module.exports = {
                     !require('node:util').isDeepStrictEqual(review[0].policy.actorPolicy, actor))) {
                 evidence.availability = 'BLOCKED';
                 return block('PROCESS_MEDIA_DECISION_POLICY_REQUIRED',
-                    'Update the explicit media:mediaPublicationWorkflow release to 1.0.1 and verify its published native maker-checker and approval decision policy. Existing v1 tasks are not upgraded.');
+                    'Update the explicit media:mediaPublicationWorkflow release to 1.0.1 and verify its published native permission-based reviewer and approval decision policy. Existing v1 tasks are not upgraded.');
             }
             if (
                 !fresh ||

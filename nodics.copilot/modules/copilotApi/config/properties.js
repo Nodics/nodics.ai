@@ -17,6 +17,24 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  process: {
+    actionAdapters: {
+      definitions: {
+        "copilotApi.refreshKnowledge": {
+          moduleName: "copilotApi",
+          operation: "refreshKnowledge",
+          description: "Refresh one explicitly assigned knowledge source",
+          remote: {
+            moduleName: "copilotApi",
+            target: "copilotKnowledge",
+            runtimeRole: "COPILOT",
+            apiName: "/workflow/actions/refreshKnowledge",
+            recordAttempts: true,
+          },
+        },
+      },
+    },
+  },
   responseHandler: {
     copilotSseResponseHandler: "DefaultCopilotSseResponseHandlerService",
   },
@@ -33,6 +51,7 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      moduleInternal: {},
       copilotApi: {
         enabled: true,
       },

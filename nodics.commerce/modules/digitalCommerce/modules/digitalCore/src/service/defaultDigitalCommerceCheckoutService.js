@@ -156,6 +156,7 @@ module.exports = {
                 await promotionService.confirmCouponCodeSale({
                     tenant: request.tenant,
                     enterpriseCode: request.enterpriseCode,
+                    storeCode: request.storeCode,
                     ownerId: request.ownerId,
                     authData: request.authData,
                     correlationId: request.correlationId,

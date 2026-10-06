@@ -302,7 +302,7 @@ test("guidance preserves draft state and trusted context; revisions, ownership a
   const draft = {
     revision: 3,
     submissionStatus: "MEDIA_STAGED",
-    submittedFacts: { name: "Item" },
+    submittedFacts: { name: "Item", privateCustomerReference: "not-for-the-model" },
     metadata: {
       confirmationRevision: 3,
       estimate: { value: 2 },
@@ -353,6 +353,8 @@ test("guidance preserves draft state and trusted context; revisions, ownership a
         assert.equal(context.idempotencyKey, request.idempotencyKey);
         assert.equal(context.conversationCode, "saved");
         assert.equal(settings.fixedMessage, "Trusted copy");
+        assert.deepEqual(settings.context, { facts: { name: "Item" }, stage: "MEDIA_STAGED" });
+        assert.equal(context.facts, undefined);
         return {
           conversationCode: "saved",
           message: settings.fixedMessage,
@@ -415,8 +417,10 @@ test("pre-draft guidance returns the Copilot contract without writing a Waste dr
       },
     },
     DefaultCopilotCustomerGuidanceService: {
-      reply: async (request) => {
-        assert.equal(request.stage, "BEFORE_DRAFT");
+      reply: async (request, settings) => {
+        assert.equal(settings.context.stage, "BEFORE_DRAFT");
+        assert.deepEqual(settings.context.facts, {});
+        assert.equal(request.stage, undefined);
         assert.equal(request.conversationCode, "before");
         return reply;
       },

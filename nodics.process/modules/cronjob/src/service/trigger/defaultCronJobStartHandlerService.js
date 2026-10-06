@@ -124,15 +124,9 @@ module.exports = {
         this.LOG.debug('Changing job state to active');
         let jobDefinition = request.definition;
         jobDefinition.activeTime = new Date();
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.ACTIVE.key,
-                activeTime: jobDefinition.activeTime
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.ACTIVE.key,
+            activeTime: jobDefinition.activeTime
         }).then(success => {
             process.nextSuccess(request, response);
         }).catch(error => {

@@ -14,6 +14,10 @@ This generated capability boundary must preserve Nodics structure, layering, con
 
 Location Core owns physical-place runtime validation and delegates storage to the generated `DefaultLocationService`. Keep the behavior layer in `DefaultLocationOperationService`; do not place validation directly in controllers or generated persistence services.
 
+Keep secured route permissions assignable through Profile's canonical catalogue
+in nAuth. Catalogue membership is not a default group grant or enabled exposure.
+Run `test/locationPermissionCatalog.test.js` when route grants change.
+
 Reject direct `tenant` or `tenantCode` fields in Location business payloads. Use runtime tenant only as request/storage context, and use enterprise association fields when ownership or operator meaning is required.
 
 Reject comma-separated coordinates and unlabeled coordinate arrays. Store `latitude` and `longitude` as separate numeric fields in that sequence.

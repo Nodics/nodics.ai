@@ -18,6 +18,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Provider read variants reuse `guardProtectedRead` and `projectReadResult` for
+  the actual prepared receiver and original request. Authorization before query
+  and current result privacy after query are independent requirements. Never
+  deliver raw aggregate rows when the ordinary read owner would deny or redact.
+
 - Offline installed-version migration uses
   `DefaultMongodbInstalledVersionMigrationService`, not startup reconciliation.
   Read its [contract](llm/contracts/installed-version-migration-contract.md).
@@ -51,7 +56,7 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Qualify transactions only on a replica set or sharded cluster. A standalone
   MongoDB process is not transaction-capable even when the driver exposes
   `startSession`.
-- Preserve snapshot reads, majority writes, bounded commit time, session
+- Preserve snapshot reads, majority plus journaled writes, bounded commit time, session
   cleanup, and session propagation to every operation.
 
 Use the keyed boolean `schemaProperties` contract; preserve zero/false constraints

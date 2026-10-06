@@ -1,5 +1,7 @@
 # Scheduled Automation and Cron Triggers
 
+Functional owner: `nodics.process`.
+
 Scheduled automation connects time-based execution to business workflows. Nodics
 keeps the ownership boundary explicit:
 
@@ -61,6 +63,25 @@ content-type: application/json
 Process starts the referenced workflow and records audit evidence. Cronjob
 remains responsible for deciding when to call this endpoint and how to retry
 scheduler failures.
+
+## Scheduler State and Business Authority
+
+Three different checks apply; none substitutes for another:
+
+1. The employee reviews and confirms a schedule using their own Cron permissions.
+2. Cron persists its own wrapper state through `persistRuntimeState`. Only an
+   owner-created wrapper can write the fixed state/status/timestamp/log fields.
+   The owner supplies canonical internal identity and fixes tenant, code and node.
+   A missing or ambiguous update acknowledgement fails the operation.
+3. Every new tick obtains current operational admission and forwards the verified
+   runtime principal to Process. Process and the destination module independently
+   authorize the requested business work and source policy.
+
+An active timer is not proof of a successful business action. Inspect the original
+Cron lifecycle receipt, the Process instance, and the destination's attempt history
+separately. Do not reactivate or rerun a command solely because its response was lost.
+Completion bookkeeping remains available for admitted work during drain; this does
+not allow another target execution after business deactivation.
 
 ## Cron-owned job declaration
 

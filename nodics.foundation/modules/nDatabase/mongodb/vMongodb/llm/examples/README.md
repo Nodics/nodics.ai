@@ -33,3 +33,21 @@ Prefer small examples that show proper layered customization, configuration over
 - A patch may repeat the same code but cannot rename it or inject `_id`.
 - A concurrent successor causing duplicate-key insertion propagates failure.
   Without a transaction, inspect any partial batch outcomes before retrying.
+## Qualify a Current-Version Read Extension
+
+1. Compose the ordinary and versioned model through the native hierarchy.
+2. Preserve `guardProtectedRead(input)` before executing aggregation. The actual
+   prepared schema's `readProtection` resolves its native owner; no client flag
+   can bypass that owner.
+3. Preserve latest-before-filter selection, bounded count/paging validation and
+   trusted transaction context.
+4. Pass the resulting native envelope through `projectReadResult(input, result)`
+   before returning it. A later-layer privacy owner may redact or refuse the
+   result; never return the unprojected response after an error.
+5. Run `test/currentVersionReadContract.test.js`. It tests native pre-query
+   denial, missing owners, result redaction and rejected result access, plus
+   existing count/paging/history behavior. An explicit local MongoDB URI enables
+   disposable real-provider testing; a skipped live case is not evidence.
+
+Do not route private durable journals through this method or implement a second
+permission registry. Those guarantees are not presentation customizations.

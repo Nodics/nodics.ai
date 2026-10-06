@@ -24,13 +24,37 @@ module.exports = {
         return {
             enabled: true, capabilityId: 'nodics-copilot', displayName: 'Nodics Copilot',
             category: 'platform', icon: 'assistant', contractVersion: 1, minimumClientContractVersion: 1,
-            roles: ['ASSISTANT_PROVIDER'], requiredPermissions: ['copilot.assistant.use'],
+            roles: ['ASSISTANT_PROVIDER'], requiredPermissions: [],
             navigation: [{
-                id: 'assistant', label: 'Nodics Copilot', route: '/assistant', icon: 'assistant', order: 50,
-                group: { id: 'operations', label: 'Operations', order: 600 }, perspectives: ['operations'],
+                id: 'copilot-workspace', label: 'Copilot Workspace', route: '/copilot', icon: 'assistant', order: 40,
+                group: { id: 'ai-copilot', label: 'AI & Copilot', order: 550 }, perspectives: ['operations'],
+                contexts: ['environment', 'tenant', 'enterprise'], featureState: 'ACTIVE',
+                requiredPermissions: ['copilot.assistant.read'],
+                backendWorkspace: { renderer: 'axis.workspace.native', contractVersion: 1, workspaceCode: 'copilot.workspace', viewCode: 'overview', title: 'Copilot Workspace' }
+            }, {
+                id: 'assistant', label: 'Copilot Conversation', route: '/assistant', icon: 'assistant', order: 50,
+                group: { id: 'ai-copilot', label: 'AI & Copilot', order: 550 }, perspectives: ['operations'],
                 contexts: ['environment', 'tenant', 'enterprise'], featureState: 'ACTIVE',
                 requiredPermissions: ['copilot.assistant.use']
-            }]
+            }, {
+                id: 'copilot-knowledge', label: 'Knowledge Studio', route: '/copilot/knowledge', icon: 'assistant', order: 60,
+                group: { id: 'ai-copilot', label: 'AI & Copilot', order: 550 }, perspectives: ['operations'],
+                contexts: ['environment', 'tenant', 'enterprise'], featureState: 'ACTIVE',
+                requiredPermissions: ['copilot.knowledge.internal.read'],
+                backendWorkspace: { renderer: 'axis.workspace.native', contractVersion: 1, workspaceCode: 'copilot.knowledge', viewCode: 'sources', title: 'Knowledge Studio' }
+            }, {
+                id: 'copilot-activity', label: 'Copilot Activity', route: '/copilot/activity', icon: 'assistant', order: 70,
+                group: { id: 'ai-copilot', label: 'AI & Copilot', order: 550 }, perspectives: ['operations'],
+                contexts: ['environment', 'tenant', 'enterprise'], featureState: 'ACTIVE',
+                requiredPermissions: ['copilot.activity.read'],
+                backendWorkspace: { renderer: 'axis.workspace.native', contractVersion: 1, workspaceCode: 'copilot.activity', viewCode: 'conversations', title: 'Copilot Activity' }
+            }, {
+                id: 'copilot-usage', label: 'Usage and budgets', route: '/copilot/usage', icon: 'assistant', order: 65,
+                group: { id: 'ai-copilot', label: 'AI & Copilot', order: 550 }, perspectives: ['operations'],
+                contexts: ['environment', 'tenant', 'enterprise'], featureState: 'ACTIVE',
+                requiredPermissions: ['copilot.assistant.read'],
+                backendWorkspace: { renderer: 'axis.workspace.native', contractVersion: 1, workspaceCode: 'copilot.usage', viewCode: 'overview', title: 'Usage and budgets' }
+            }, JSON.parse(JSON.stringify(require('../../data/backoffice/administration.json')))]
         };
     }
 };

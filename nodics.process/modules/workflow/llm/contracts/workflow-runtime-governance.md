@@ -58,7 +58,7 @@ it is not installed provider, recovery or cross-owner acceptance evidence.
 ## Conditional Human Task Claims
 
 Claim resolves the stored definition/version/node and published actor policy before
-writing. Governed reviewer tasks enforce enterprise/permission/no-self-review and
+writing. Governed reviewer tasks enforce enterprise/permission admission and
 cannot claim for another assignee; use the separate assignment operation where
 permitted. Claim CAS includes original status, instance, node and assignee, requires
 one acknowledged write, then rereads stored claim before audit/success. Completion
@@ -248,8 +248,10 @@ Malformed policy/input or unavailable evidence raises `ERR_PROCESS_00028`.
 
 Published task policy may contain exactly `actorPolicy: { permission,
 enterpriseContextField, requesterContextField }`. Completion requires a current
-human access principal in the instance enterprise, the named permission and a
-different login from the recorded requester. Decisions accept Boolean `approved`
+human access principal in the instance enterprise and the named permission.
+The recorded requester may also review when authorized; requester identity is
+retained provenance, not an automatic exclusion. This includes administrators
+through their actual grants, not a hardcoded login-name bypass. Decisions accept Boolean `approved`
 and an optional bounded reason; rejection requires a nonblank reason. Invalid
 authority or decision raises `ERR_PROCESS_00029` before completion writes. Omitted
 actorPolicy preserves existing task behavior; callers cannot replace pinned policy.
@@ -264,14 +266,14 @@ published version, not edits to an in-flight task.
 
 Tasks with a pinned `actorPolicy` additionally project
 `reviewerEligibility:{eligible,reasonCode,message}` from the exact existing
-completion actor check. Reasons are `ELIGIBLE`, `DIFFERENT_REVIEWER_REQUIRED`,
+completion actor check. Reasons are `ELIGIBLE`,
 `REVIEWER_NOT_AUTHORISED`, `TASK_NOT_ACTIONABLE` and `INSTANCE_NOT_ACTIONABLE`.
 Only RUNNING/WAITING instances can project positive eligibility, matching the
 existing completion gate even when a task itself remains OPEN.
 This is advisory current-read
 evidence, never a permission, claim or completion receipt. Clients disable
 decision controls when false and show the safe owner message; every submission
-still rechecks authority. Requesters require a different authorised reviewer.
+still rechecks authority. Requesters and other reviewers use the same access checks.
 Legacy policies without actor admission omit this field rather than claiming
 eligibility. Stored/forged presentation fields are discarded.
 
@@ -319,8 +321,8 @@ fields; no purpose or category field is accepted:
 
 This describes completion payload semantics, not new decision authority.
 The descriptor alone grants no reviewer permission, enterprise admission or
-maker-checker protection. Where declared, `actorPolicy` independently checks the
-current human principal, tenant, enterprise, permission and no-self-review.
+requester provenance. Where declared, `actorPolicy` independently checks the
+current human principal, tenant, enterprise, permission and recorded requester.
 Existing task admission, state and transition checks remain independent.
 The decision payload remains only `{ approved: boolean, reason?: string }`;
 rejection requires a nonblank reason and any provided reason is at most 1000
@@ -335,6 +337,14 @@ fallback. Malformed actor or decision policy raises `ERR_PROCESS_00029`. Legacy
 pinned policy with neither declaration omits decisionContract, including any
 forged stored value. Completion also uses the pinned decision declaration rather
 than one supplied in stored task approval metadata.
+Legacy completed decisions may include the old `action` label only as exactly
+`APPROVE` for true or `REJECT` for false. A conflicting, unknown or non-string
+label refuses before callback transport. This compatibility applies only to
+versions without a typed decision contract. It never replaces the stored
+boolean, completed actor/time, unique predecessor task or pinned graph proof.
+Recovery reuses that original evidence; it never edits the completed decision.
+New callers should submit approved/reason only. The local publication callback
+does not forward descriptive labels to CMS.
 Projection accepts at most 100 tasks and deduplicates instance/version reads
 within that call only. There is no global policy cache or registry.
 
@@ -361,7 +371,16 @@ This projection change neither implements nor executes that migration.
 Requester identifiers must share the namespace used by `assertTaskActor`
 (`auth.loginId`). Owners must prove native authenticated requester provenance;
 copying an identifier selected from principalId/code/loginId without alignment,
-or accepting a browser requester field, does not qualify maker-checker.
+or accepting a browser requester field, does not qualify audit provenance.
+
+The access-rights correction applies to existing pending tasks without rewriting
+their pinned version, requester, decision or history: the three-field actorPolicy
+declares permission and identity context, not a separate-reviewer requirement.
+Refresh task evidence after upgrading Process, then claim and approve normally.
+An authorized requester passes; the same requester without the named permission,
+a service/customer principal or a different tenant/enterprise still fails before
+task writes. Rejection still requires a reason. Later-layer reviewer customization
+must preserve these authority checks and may not infer grants from login names.
 
 `modules/workflow/test/processTaskDecisionContract.test.js` contains twelve isolated
 fixtures for the exact DTO, legacy omission, node precedence, malformed policy,

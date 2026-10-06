@@ -123,14 +123,8 @@ module.exports = {
     stateChangePaused: function (request, response, process) {
         this.LOG.debug('Changing job state to paused');
         let jobDefinition = request.definition;
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.PAUSED.key
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.PAUSED.key
         }).then(success => {
             process.nextSuccess(request, response);
         }).catch(error => {

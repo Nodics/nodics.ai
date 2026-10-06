@@ -1,5 +1,11 @@
 # elastic Module
 
+Dedicated immutable-index retirement uses the existing connection, exact UUIDs,
+full shard acknowledgement and transport retries disabled. Separate reviewed
+erasure supports qualified API-key-only writer decommissioning and one exact
+index deletion, never recreation or credential changes. See
+[Knowledge Progress and Recovery](../../../../nodics.docs/docs/pages/nodics.copilot/knowledge-generation-recovery.md).
+
 **Maturity: Guarded provider.** The adapter has deterministic connection and
 operation contracts, but production use requires a configured external cluster
 and guarded live qualification.

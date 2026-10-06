@@ -247,8 +247,8 @@ async function fixture() {
 test("forward Init authority receives human/guest identities while dynamic tenants receive only service identities and groups", async () => {
   const f = await fixture();
   const manifest = require("../data/manifest.json");
-  assert.equal(manifest.sections["init-v001"].version, "0.0.2");
-  assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v008");
+  assert.equal(manifest.sections["init-v001"].version, "0.0.3");
+  assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v009");
   assert.equal(
     manifest.retainedRoots["init-v001"].sections["init-v001"].version,
     "0.0.0",
@@ -259,19 +259,19 @@ test("forward Init authority receives human/guest identities while dynamic tenan
   );
   releases.validateRetainedRoots(path.resolve(__dirname, "../data"), manifest);
   const headerPath =
-    require.resolve("../data/init-v008/headers/user/defaultUsersHeader");
+    require.resolve("../data/init-v009/headers/user/defaultUsersHeader");
   delete require.cache[headerPath];
   const headers = require(headerPath).profile;
   const selector = SERVICE.DefaultFileDataImportProcessService;
   NODICS.getActiveTenants = () => ["default", "dynamic"];
   const humans = Object.values(
-    require("../data/init-v008/records/user/defaultEmployeeData"),
+    require("../data/init-v009/records/user/defaultEmployeeData"),
   );
   const services = Object.values(
-    require("../data/init-v008/records/user/defaultServiceEmployeeData"),
+    require("../data/init-v009/records/user/defaultServiceEmployeeData"),
   );
   const guests = Object.values(
-    require("../data/init-v008/records/user/defaultCutomerData"),
+    require("../data/init-v009/records/user/defaultCutomerData"),
   );
   assert.equal(humans.length, 5);
   assert(humans.every((r) => r.principalType === "human"));
@@ -289,7 +289,7 @@ test("forward Init authority receives human/guest identities while dynamic tenan
     );
   }
   const groups =
-    require("../data/init-v008/headers/groups/defaultUserGroupsHeader").profile
+    require("../data/init-v009/headers/groups/defaultUserGroupsHeader").profile
       .defaultUserGroups;
   for (const header of [headers.defaultServiceEmployee, groups]) {
     assert.deepEqual(
@@ -380,7 +380,7 @@ test("actual layered Init header preparation respects replacement tenant selecto
       data: {
         headerFiles: {
           users: [
-            require.resolve("../data/init-v008/headers/user/defaultUsersHeader"),
+            require.resolve("../data/init-v009/headers/user/defaultUsersHeader"),
             customPath,
           ],
         },
@@ -571,7 +571,7 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.equal(
     f.configuration.identityGovernance.migration.assessment.bootstrapReview
       .sources[0].version,
-    "0.0.2",
+    "0.0.3",
   );
 });
 

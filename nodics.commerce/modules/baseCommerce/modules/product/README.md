@@ -1,5 +1,8 @@
 # Product
 
+Opt-in native create receipts retain original command identity without changing
+Product authoring authority. See [original results and continuation](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+
 ## Governed Catalogue Publication
 
 Customer delivery can be rolled out to exact tenant/store pairs with

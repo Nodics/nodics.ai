@@ -65,5 +65,17 @@ module.exports = {
     ERR_JOB_00008: {
         code: '424',
         message: 'Cron process trigger execution dependency failed'
+    },
+    ERR_JOB_00009: {
+        code: '400',
+        message: 'Schedule draft or review is invalid or no longer available'
+    },
+    ERR_JOB_00010: {
+        code: '403',
+        message: 'Schedule draft access is not permitted'
+    },
+    ERR_JOB_00011: {
+        code: '409',
+        message: 'Schedule draft outcome is uncertain; inspect the original save without retrying'
     }
 };

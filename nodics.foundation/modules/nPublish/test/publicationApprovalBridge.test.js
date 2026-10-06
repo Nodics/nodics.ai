@@ -117,6 +117,33 @@ test('approval uses configured domain and original caller on the existing Proces
     assert.notEqual(workflow.reference({ ...f.stored, revision: 4 }), f.stored.workflowRef);
 });
 
+test('approval preserves native Process identity without implicitly enrolling in optional command receipts', async () => {
+    const f = fixture('otherDomain', 'otherOwner');
+    f.request.httpRequest.headers = { authorization: 'Bearer original-access-token' };
+    const instanceCommands = require('../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessInstanceCommandReceiptService');
+    const receiptProtocol = require('../../nDatabase/database/src/service/schema/defaultModelCommandReceiptService');
+    let nativeStarts = 0;
+    SERVICE.DefaultModelCommandReceiptService = { ...receiptProtocol, enabled: () => false };
+    SERVICE.DefaultProcessRuntimeLifecycleService = {
+        bodyOf: request => request.httpRequest.body,
+        assertCode: code => code,
+        startInstance: async request => {
+            nativeStarts += 1;
+            const body = request.httpRequest.body;
+            assert.equal(body.instanceCode, f.stored.workflowRef);
+            return { instance: { code: body.instanceCode, definitionCode: body.definitionCode,
+                version: body.version || 1, context: body.context } };
+        }
+    };
+    SERVICE.DefaultModuleService.invokeModule = options => instanceCommands.execute({
+        ...f.request,
+        httpRequest: { body: options.requestBody, headers: options.idempotencyKey === undefined ? {} : { 'idempotency-key': options.idempotencyKey } }
+    }, 'start');
+    const result = await workflow.requestApproval(f.stored, f.request);
+    assert.equal(nativeStarts, 1);
+    assert.equal(result.instance.code, f.stored.workflowRef);
+});
+
 function requesterReader(f) {
     f.policy.reviewNodeCode = 'review';
     f.policy.reviewPermission = 'publish.lifecycle.approve';

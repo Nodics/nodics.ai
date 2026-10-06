@@ -14,6 +14,2288 @@
 /** @description Generated Nodics framework documentation page metadata. */
 module.exports = {
   "record0": {
+    "code": "nodicsDocsMetadatacopilotOrderNotificationOperations",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.order-notification-operations",
+    "title": "Order Notification Operations in Copilot",
+    "summary": "Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay.",
+    "businessSummary": "Order Notification Operations in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Order Notification Operations in Copilot records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/order-notification-operations.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotOrderNotificationOperations",
+    "targetRoute": "nodicsDocsRoutecopilotOrderNotificationOperations",
+    "articleComponent": "nodicsDocsComponentcopilotOrderNotificationOperations",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotordernotificationoperations",
+    "headings": [
+      {
+        "text": "Business Purpose",
+        "anchor": "copilotOrderNotificationOperations-1-business-purpose",
+        "level": 2
+      },
+      {
+        "text": "Audience and First Use",
+        "anchor": "copilotOrderNotificationOperations-2-audience-and-first-use",
+        "level": 2
+      },
+      {
+        "text": "Ownership",
+        "anchor": "copilotOrderNotificationOperations-3-ownership",
+        "level": 2
+      },
+      {
+        "text": "Required Configuration",
+        "anchor": "copilotOrderNotificationOperations-4-required-configuration",
+        "level": 2
+      },
+      {
+        "text": "Employee Journey",
+        "anchor": "copilotOrderNotificationOperations-5-employee-journey",
+        "level": 2
+      },
+      {
+        "text": "Inspect in conversation",
+        "anchor": "copilotOrderNotificationOperations-6-inspect-in-conversation",
+        "level": 3
+      },
+      {
+        "text": "Prepare a retry",
+        "anchor": "copilotOrderNotificationOperations-7-prepare-a-retry",
+        "level": 3
+      },
+      {
+        "text": "Approve and execute",
+        "anchor": "copilotOrderNotificationOperations-8-approve-and-execute",
+        "level": 3
+      },
+      {
+        "text": "Uncertain Outcomes",
+        "anchor": "copilotOrderNotificationOperations-9-uncertain-outcomes",
+        "level": 2
+      },
+      {
+        "text": "Rejections",
+        "anchor": "copilotOrderNotificationOperations-10-rejections",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "copilotOrderNotificationOperations-11-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Customization and Extension",
+        "anchor": "copilotOrderNotificationOperations-12-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotOrderNotificationOperations-13-verification",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "copilotOrderNotificationOperations-14-troubleshooting",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Copilot operation, Native owner call, Effect"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Check"
+      }
+    ],
+    "visualRequirements": [
+      "architecture-diagram",
+      "sequence-flow",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.original-business-results",
+      "copilot.process-inspection",
+      "copilot.governed-schema-actions"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/order-notification-operations.md",
+    "sourceChecksum": "83d3335dc327a463c8e996fbcc6b4d5373bdb1fa07679ddba4fa313257b9c4a0",
+    "sourceWordCount": 1324,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record1": {
+    "code": "nodicsDocsMetadatacopilotGovernedSchemaActions",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.governed-schema-actions",
+    "title": "Governed Selected-Schema Actions in Copilot",
+    "summary": "Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts.",
+    "businessSummary": "Governed Selected-Schema Actions in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Governed Selected-Schema Actions in Copilot records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/governed-schema-actions.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotGovernedSchemaActions",
+    "targetRoute": "nodicsDocsRoutecopilotGovernedSchemaActions",
+    "articleComponent": "nodicsDocsComponentcopilotGovernedSchemaActions",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotgovernedschemaactions",
+    "headings": [
+      {
+        "text": "Purpose",
+        "anchor": "copilotGovernedSchemaActions-1-purpose",
+        "level": 2
+      },
+      {
+        "text": "Audience and First Use",
+        "anchor": "copilotGovernedSchemaActions-2-audience-and-first-use",
+        "level": 2
+      },
+      {
+        "text": "Supported Commands",
+        "anchor": "copilotGovernedSchemaActions-3-supported-commands",
+        "level": 2
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotGovernedSchemaActions-4-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Permission Model",
+        "anchor": "copilotGovernedSchemaActions-5-permission-model",
+        "level": 2
+      },
+      {
+        "text": "Business User Journey",
+        "anchor": "copilotGovernedSchemaActions-6-business-user-journey",
+        "level": 2
+      },
+      {
+        "text": "Command Examples",
+        "anchor": "copilotGovernedSchemaActions-7-command-examples",
+        "level": 2
+      },
+      {
+        "text": "Create",
+        "anchor": "copilotGovernedSchemaActions-8-create",
+        "level": 3
+      },
+      {
+        "text": "Update",
+        "anchor": "copilotGovernedSchemaActions-9-update",
+        "level": 3
+      },
+      {
+        "text": "Delete",
+        "anchor": "copilotGovernedSchemaActions-10-delete",
+        "level": 3
+      },
+      {
+        "text": "Confirmation and Execution",
+        "anchor": "copilotGovernedSchemaActions-11-confirmation-and-execution",
+        "level": 2
+      },
+      {
+        "text": "Original-Result Recovery",
+        "anchor": "copilotGovernedSchemaActions-12-original-result-recovery",
+        "level": 2
+      },
+      {
+        "text": "Input and Review Boundaries",
+        "anchor": "copilotGovernedSchemaActions-13-input-and-review-boundaries",
+        "level": 2
+      },
+      {
+        "text": "Deliberate Exclusions",
+        "anchor": "copilotGovernedSchemaActions-14-deliberate-exclusions",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "copilotGovernedSchemaActions-15-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotGovernedSchemaActions-16-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Customization Contract",
+        "anchor": "copilotGovernedSchemaActions-17-customization-contract",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotGovernedSchemaActions-18-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Command, Native route, Result required"
+      },
+      {
+        "kind": "table",
+        "title": "Exclusion, Reason, Extension path"
+      },
+      {
+        "kind": "table",
+        "title": "Observation, Meaning, Action"
+      }
+    ],
+    "visualRequirements": [
+      "architecture-diagram",
+      "sequence-flow",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.collection-inspection",
+      "copilot.original-business-results",
+      "copilot.standalone-business-actions"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/governed-schema-actions.md",
+    "sourceChecksum": "91ec3195f29dff96442464b43aff7462785072c75e76fef1891c02d2fbfc4132",
+    "sourceWordCount": 1549,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record2": {
+    "code": "nodicsDocsMetadatacopilotProcessLifecycleActions",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.process-lifecycle-actions",
+    "title": "Process Definition and Instance Actions in Copilot",
+    "summary": "Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts.",
+    "businessSummary": "Process Definition and Instance Actions in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Process Definition and Instance Actions in Copilot records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/process-lifecycle-actions.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotProcessLifecycleActions",
+    "targetRoute": "nodicsDocsRoutecopilotProcessLifecycleActions",
+    "articleComponent": "nodicsDocsComponentcopilotProcessLifecycleActions",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocesslifecycleactions",
+    "headings": [
+      {
+        "text": "Purpose",
+        "anchor": "copilotProcessLifecycleActions-1-purpose",
+        "level": 2
+      },
+      {
+        "text": "Business Journey",
+        "anchor": "copilotProcessLifecycleActions-2-business-journey",
+        "level": 2
+      },
+      {
+        "text": "Definition Commands",
+        "anchor": "copilotProcessLifecycleActions-3-definition-commands",
+        "level": 2
+      },
+      {
+        "text": "Create a Draft",
+        "anchor": "copilotProcessLifecycleActions-4-create-a-draft",
+        "level": 3
+      },
+      {
+        "text": "Update, Validate, and Publish",
+        "anchor": "copilotProcessLifecycleActions-5-update-validate-and-publish",
+        "level": 3
+      },
+      {
+        "text": "Prepare or Discard a Later Draft",
+        "anchor": "copilotProcessLifecycleActions-6-prepare-or-discard-a-later-draft",
+        "level": 3
+      },
+      {
+        "text": "Instance Commands",
+        "anchor": "copilotProcessLifecycleActions-7-instance-commands",
+        "level": 2
+      },
+      {
+        "text": "Start",
+        "anchor": "copilotProcessLifecycleActions-8-start",
+        "level": 3
+      },
+      {
+        "text": "Cancel",
+        "anchor": "copilotProcessLifecycleActions-9-cancel",
+        "level": 3
+      },
+      {
+        "text": "Retry and Compensate",
+        "anchor": "copilotProcessLifecycleActions-10-retry-and-compensate",
+        "level": 3
+      },
+      {
+        "text": "Permissions and Configuration",
+        "anchor": "copilotProcessLifecycleActions-11-permissions-and-configuration",
+        "level": 2
+      },
+      {
+        "text": "Recovery",
+        "anchor": "copilotProcessLifecycleActions-12-recovery",
+        "level": 2
+      },
+      {
+        "text": "Input and Review Limits",
+        "anchor": "copilotProcessLifecycleActions-13-input-and-review-limits",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotProcessLifecycleActions-14-verification",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "copilotProcessLifecycleActions-15-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Safe Customization",
+        "anchor": "copilotProcessLifecycleActions-16-safe-customization",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotProcessLifecycleActions-17-common-mistakes",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Current state, Native outcome"
+      },
+      {
+        "kind": "table",
+        "title": "Command, Native permission"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Meaning and response"
+      }
+    ],
+    "visualRequirements": [
+      "architecture-diagram",
+      "sequence-flow",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.process-task-actions",
+      "copilot.process-trigger-actions",
+      "copilot.process-inspection",
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/process-lifecycle-actions.md",
+    "sourceChecksum": "3567dcbcc46d9a40113f3381866e5d7c464e29e447bef8ef221a1a17f9929cdd",
+    "sourceWordCount": 1659,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record3": {
+    "code": "nodicsDocsMetadatacopilotProcessTriggerActions",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.process-trigger-actions",
+    "title": "Process Trigger Actions in Copilot",
+    "summary": "Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery.",
+    "businessSummary": "Process Trigger Actions in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Process Trigger Actions in Copilot records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/process-trigger-actions.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotProcessTriggerActions",
+    "targetRoute": "nodicsDocsRoutecopilotProcessTriggerActions",
+    "articleComponent": "nodicsDocsComponentcopilotProcessTriggerActions",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocesstriggeractions",
+    "headings": [
+      {
+        "text": "Purpose and Ownership",
+        "anchor": "copilotProcessTriggerActions-1-purpose-and-ownership",
+        "level": 2
+      },
+      {
+        "text": "Business User Journey",
+        "anchor": "copilotProcessTriggerActions-2-business-user-journey",
+        "level": 2
+      },
+      {
+        "text": "Create a Trigger",
+        "anchor": "copilotProcessTriggerActions-3-create-a-trigger",
+        "level": 2
+      },
+      {
+        "text": "Update a Trigger",
+        "anchor": "copilotProcessTriggerActions-4-update-a-trigger",
+        "level": 2
+      },
+      {
+        "text": "Execute a Trigger",
+        "anchor": "copilotProcessTriggerActions-5-execute-a-trigger",
+        "level": 2
+      },
+      {
+        "text": "Archive a Trigger",
+        "anchor": "copilotProcessTriggerActions-6-archive-a-trigger",
+        "level": 2
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotProcessTriggerActions-7-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Recovery and Troubleshooting",
+        "anchor": "copilotProcessTriggerActions-8-recovery-and-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "copilotProcessTriggerActions-9-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Verification and Evidence Boundary",
+        "anchor": "copilotProcessTriggerActions-10-verification-and-evidence-boundary",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotProcessTriggerActions-11-common-mistakes",
+        "level": 2
+      }
+    ],
+    "diagrams": [],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Screen state, User action, Business effect"
+      },
+      {
+        "kind": "table",
+        "title": "Boundary, Required authority"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Meaning and next step"
+      }
+    ],
+    "visualRequirements": [
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.process-task-actions",
+      "copilot.process-inspection",
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/process-trigger-actions.md",
+    "sourceChecksum": "71ba52b33434bf2274a68a24c50931a7c4c685c1e2b240341aa54b764ab66193",
+    "sourceWordCount": 1780,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record4": {
+    "code": "nodicsDocsMetadatacopilotProcessTaskActions",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.process-task-actions",
+    "title": "Process Task Actions in Copilot",
+    "summary": "Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection.",
+    "businessSummary": "Process Task Actions in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Process Task Actions in Copilot records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/process-task-actions.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotProcessTaskActions",
+    "targetRoute": "nodicsDocsRoutecopilotProcessTaskActions",
+    "articleComponent": "nodicsDocsComponentcopilotProcessTaskActions",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocesstaskactions",
+    "headings": [
+      {
+        "text": "Purpose and Ownership",
+        "anchor": "copilotProcessTaskActions-1-purpose-and-ownership",
+        "level": 2
+      },
+      {
+        "text": "Employee Journey",
+        "anchor": "copilotProcessTaskActions-2-employee-journey",
+        "level": 2
+      },
+      {
+        "text": "Optional Natural Language",
+        "anchor": "copilotProcessTaskActions-3-optional-natural-language",
+        "level": 2
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotProcessTaskActions-4-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Execution and Original Results",
+        "anchor": "copilotProcessTaskActions-5-execution-and-original-results",
+        "level": 2
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "copilotProcessTaskActions-6-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotProcessTaskActions-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification and Evidence Limits",
+        "anchor": "copilotProcessTaskActions-8-verification-and-evidence-limits",
+        "level": 2
+      }
+    ],
+    "diagrams": [],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Intent, Example, Native effect"
+      },
+      {
+        "kind": "table",
+        "title": "Setting or grant, Responsibility"
+      },
+      {
+        "kind": "table",
+        "title": "Problem, Meaning, Next step"
+      }
+    ],
+    "visualRequirements": [
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.process-inspection",
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/process-task-actions.md",
+    "sourceChecksum": "a72f387319120ccbe9049adaafdeae5931273506d91321c987bea6c823bfdcba",
+    "sourceWordCount": 1585,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record5": {
+    "code": "nodicsDocsMetadatacopilotImportInspection",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.import-inspection",
+    "title": "Data-release Inspection in Copilot",
+    "summary": "Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media.",
+    "businessSummary": "Data-release Inspection in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Data-release Inspection in Copilot records owning module nodics.copilot, technical module copilotCapability, source path docs/pages/nodics.copilot/import-inspection.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotCapability",
+    "targetPage": "nodicsDocsPagecopilotImportInspection",
+    "targetRoute": "nodicsDocsRoutecopilotImportInspection",
+    "articleComponent": "nodicsDocsComponentcopilotImportInspection",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotimportinspection",
+    "headings": [
+      {
+        "text": "Purpose",
+        "anchor": "copilotImportInspection-1-purpose",
+        "level": 2
+      },
+      {
+        "text": "Business journey",
+        "anchor": "copilotImportInspection-2-business-journey",
+        "level": 2
+      },
+      {
+        "text": "Supported operations",
+        "anchor": "copilotImportInspection-3-supported-operations",
+        "level": 2
+      },
+      {
+        "text": "Configuration",
+        "anchor": "copilotImportInspection-4-configuration",
+        "level": 2
+      },
+      {
+        "text": "Authorization and privacy",
+        "anchor": "copilotImportInspection-5-authorization-and-privacy",
+        "level": 2
+      },
+      {
+        "text": "Why installation is not exposed",
+        "anchor": "copilotImportInspection-6-why-installation-is-not-exposed",
+        "level": 2
+      },
+      {
+        "text": "Failure and recovery",
+        "anchor": "copilotImportInspection-7-failure-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "copilotImportInspection-8-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotImportInspection-9-verification",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "copilotImportInspection-10-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Customization contract",
+        "anchor": "copilotImportInspection-11-customization-contract",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Copilot operation, Native owner call, Effect"
+      },
+      {
+        "kind": "table",
+        "title": "Operation family, Native permission"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Likely cause, Safe response"
+      }
+    ],
+    "visualRequirements": [
+      "sequence-flow",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.process-inspection",
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/import-inspection.md",
+    "sourceChecksum": "0e7a8dc7e725149597a8aa50ac1b43df845c4911c8ab55db25adebf6a3d7268a",
+    "sourceWordCount": 1256,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record6": {
+    "code": "nodicsDocsMetadatacopilotProcessInspection",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.process-inspection",
+    "title": "Process Inspection in Copilot",
+    "summary": "Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions.",
+    "businessSummary": "Process Inspection in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Process Inspection in Copilot records owning module nodics.copilot, technical module copilotCapability, source path docs/pages/nodics.copilot/process-inspection.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotCapability",
+    "targetPage": "nodicsDocsPagecopilotProcessInspection",
+    "targetRoute": "nodicsDocsRoutecopilotProcessInspection",
+    "articleComponent": "nodicsDocsComponentcopilotProcessInspection",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotprocessinspection",
+    "headings": [
+      {
+        "text": "Business outcome and boundaries",
+        "anchor": "copilotProcessInspection-1-business-outcome-and-boundaries",
+        "level": 2
+      },
+      {
+        "text": "Prerequisites and configuration",
+        "anchor": "copilotProcessInspection-2-prerequisites-and-configuration",
+        "level": 2
+      },
+      {
+        "text": "Step-by-step employee journey",
+        "anchor": "copilotProcessInspection-3-step-by-step-employee-journey",
+        "level": 2
+      },
+      {
+        "text": "Operation and native API contracts",
+        "anchor": "copilotProcessInspection-4-operation-and-native-api-contracts",
+        "level": 2
+      },
+      {
+        "text": "Data handling and recording",
+        "anchor": "copilotProcessInspection-5-data-handling-and-recording",
+        "level": 2
+      },
+      {
+        "text": "Failure and recovery",
+        "anchor": "copilotProcessInspection-6-failure-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "copilotProcessInspection-7-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "copilotProcessInspection-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Signed-in application verification",
+        "anchor": "copilotProcessInspection-9-signed-in-application-verification",
+        "level": 2
+      },
+      {
+        "text": "Verification: component and native tests",
+        "anchor": "copilotProcessInspection-10-verification-component-and-native-tests",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Property, Default, Meaning and limits"
+      },
+      {
+        "kind": "table",
+        "title": "Operation, Native permission, Workflow GET suffix, Configured identity"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom or code, Meaning, Safe next action"
+      },
+      {
+        "kind": "image",
+        "title": "Actual signed-in Process result in the Axis application"
+      },
+      {
+        "kind": "image",
+        "title": "Actual mobile Process form after backend restart"
+      },
+      {
+        "kind": "image",
+        "title": "Restricted employee refused a manually submitted Process command"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic Process inspection form at desktop width"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic Process inspection form at mobile width"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.rules-inspection",
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/process-inspection.md",
+    "sourceChecksum": "1e9f4dd73e59ecf956e3e1ac89b88bb809e30f6d8efbaf9cc2225afa565448e5",
+    "sourceWordCount": 2483,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record7": {
+    "code": "nodicsDocsMetadatacopilotRulesInspection",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.rules-inspection",
+    "title": "Rules Inspection in Copilot",
+    "summary": "Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads.",
+    "businessSummary": "Rules Inspection in Copilot explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Rules Inspection in Copilot records owning module nodics.copilot, technical module copilotCapability, source path docs/pages/nodics.copilot/rules-inspection.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotCapability",
+    "targetPage": "nodicsDocsPagecopilotRulesInspection",
+    "targetRoute": "nodicsDocsRoutecopilotRulesInspection",
+    "articleComponent": "nodicsDocsComponentcopilotRulesInspection",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotrulesinspection",
+    "headings": [
+      {
+        "text": "Supported operations",
+        "anchor": "copilotRulesInspection-1-supported-operations",
+        "level": 2
+      },
+      {
+        "text": "Administrator setup",
+        "anchor": "copilotRulesInspection-2-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Inspect a rule",
+        "anchor": "copilotRulesInspection-3-inspect-a-rule",
+        "level": 2
+      },
+      {
+        "text": "Owner flow",
+        "anchor": "copilotRulesInspection-4-owner-flow",
+        "level": 2
+      },
+      {
+        "text": "Failure and recovery",
+        "anchor": "copilotRulesInspection-5-failure-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "copilotRulesInspection-6-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "copilotRulesInspection-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotRulesInspection-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Choice, Native GET path under the Rules connection, Additional employee permission"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic Rules inspection form at desktop width"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic Rules inspection form at mobile width"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Meaning, Action"
+      },
+      {
+        "kind": "image",
+        "title": "Actual signed-in Rules result in Axis"
+      },
+      {
+        "kind": "image",
+        "title": "Recorded inspection restored on mobile after backend restart"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/rules-inspection.md",
+    "sourceChecksum": "7bae94a1d9f9cbe8b829d34752723a95a67edb16d168bd7fcd99f25e68e57f0b",
+    "sourceWordCount": 1822,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record8": {
+    "code": "nodicsDocsMetadatacopilotSecureCouponFulfillment",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.secure-coupon-fulfillment",
+    "title": "Secure Coupon Fulfillment",
+    "summary": "Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay.",
+    "businessSummary": "Secure Coupon Fulfillment explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Secure Coupon Fulfillment records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/secure-coupon-fulfillment.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotSecureCouponFulfillment",
+    "targetRoute": "nodicsDocsRoutecopilotSecureCouponFulfillment",
+    "articleComponent": "nodicsDocsComponentcopilotSecureCouponFulfillment",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotsecurecouponfulfillment",
+    "headings": [
+      {
+        "text": "Availability and prerequisites",
+        "anchor": "copilotSecureCouponFulfillment-1-availability-and-prerequisites",
+        "level": 2
+      },
+      {
+        "text": "Configure and open",
+        "anchor": "copilotSecureCouponFulfillment-2-configure-and-open",
+        "level": 2
+      },
+      {
+        "text": "Complete a redemption",
+        "anchor": "copilotSecureCouponFulfillment-3-complete-a-redemption",
+        "level": 2
+      },
+      {
+        "text": "Review redemption activity",
+        "anchor": "copilotSecureCouponFulfillment-4-review-redemption-activity",
+        "level": 2
+      },
+      {
+        "text": "Screen and owner flow",
+        "anchor": "copilotSecureCouponFulfillment-5-screen-and-owner-flow",
+        "level": 2
+      },
+      {
+        "text": "Recover an uncertain result",
+        "anchor": "copilotSecureCouponFulfillment-6-recover-an-uncertain-result",
+        "level": 2
+      },
+      {
+        "text": "API and privacy contract",
+        "anchor": "copilotSecureCouponFulfillment-7-api-and-privacy-contract",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "copilotSecureCouponFulfillment-8-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "copilotSecureCouponFulfillment-9-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotSecureCouponFulfillment-10-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Requirement, Owner and configuration"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Interpretation and next step"
+      },
+      {
+        "kind": "table",
+        "title": "Entry, Purpose"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.original-business-results",
+      "copilot.standalone-business-actions"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/secure-coupon-fulfillment.md",
+    "sourceChecksum": "22983f0b69985d23b07394a1a70ff25d8f9d9ebfc32d125b71ca338234d77fdd",
+    "sourceWordCount": 1677,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record9": {
+    "code": "nodicsDocsMetadatacopilotStandaloneBusinessActions",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.standalone-business-actions",
+    "title": "Existing Enterprise Invitations and Product Prices",
+    "summary": "Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners.",
+    "businessSummary": "Existing Enterprise Invitations and Product Prices explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Existing Enterprise Invitations and Product Prices records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/standalone-business-actions.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotStandaloneBusinessActions",
+    "targetRoute": "nodicsDocsRoutecopilotStandaloneBusinessActions",
+    "articleComponent": "nodicsDocsComponentcopilotStandaloneBusinessActions",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotstandalonebusinessactions",
+    "headings": [
+      {
+        "text": "Business Outcome",
+        "anchor": "copilotStandaloneBusinessActions-1-business-outcome",
+        "level": 2
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotStandaloneBusinessActions-2-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Manage Admission in Axis",
+        "anchor": "copilotStandaloneBusinessActions-3-manage-admission-in-axis",
+        "level": 2
+      },
+      {
+        "text": "Reviewed Controls on Desktop and Mobile",
+        "anchor": "copilotStandaloneBusinessActions-4-reviewed-controls-on-desktop-and-mobile",
+        "level": 3
+      },
+      {
+        "text": "Invite Employees Step by Step",
+        "anchor": "copilotStandaloneBusinessActions-5-invite-employees-step-by-step",
+        "level": 2
+      },
+      {
+        "text": "Create Prices Step by Step",
+        "anchor": "copilotStandaloneBusinessActions-6-create-prices-step-by-step",
+        "level": 2
+      },
+      {
+        "text": "API and Execution Contract",
+        "anchor": "copilotStandaloneBusinessActions-7-api-and-execution-contract",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting and Recovery",
+        "anchor": "copilotStandaloneBusinessActions-8-troubleshooting-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "copilotStandaloneBusinessActions-9-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotStandaloneBusinessActions-10-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotStandaloneBusinessActions-11-verification",
+        "level": 2
+      },
+      {
+        "text": "Native Authoring Acceptance",
+        "anchor": "copilotStandaloneBusinessActions-12-native-authoring-acceptance",
+        "level": 3
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "image",
+        "title": "Standalone invitation and price reviews on desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Completed invitation and approved price on mobile"
+      },
+      {
+        "kind": "table",
+        "title": "Setting, Default, Effect"
+      },
+      {
+        "kind": "image",
+        "title": "Reviewing inspection while new writes remain paused"
+      },
+      {
+        "kind": "image",
+        "title": "Mobile request awaiting independent runtime approval"
+      },
+      {
+        "kind": "table",
+        "title": "Observation, Meaning, Next step"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/standalone-business-actions.md",
+    "sourceChecksum": "912fac3c6b35b6024dd0814f627e61e4dc408402324c82c363a48107a13bc189",
+    "sourceWordCount": 2491,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record10": {
+    "code": "nodicsDocsMetadatacopilotCollectionInspection",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.collection-inspection",
+    "title": "Collection Inspection In Conversation",
+    "summary": "Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads.",
+    "businessSummary": "Collection Inspection In Conversation explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Collection Inspection In Conversation records owning module nodics.copilot, technical module copilotKnowledge, source path docs/pages/nodics.copilot/collection-inspection.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotKnowledge",
+    "targetPage": "nodicsDocsPagecopilotCollectionInspection",
+    "targetRoute": "nodicsDocsRoutecopilotCollectionInspection",
+    "articleComponent": "nodicsDocsComponentcopilotCollectionInspection",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotcollectioninspection",
+    "headings": [
+      {
+        "text": "Business Outcome",
+        "anchor": "copilotCollectionInspection-1-business-outcome",
+        "level": 2
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotCollectionInspection-2-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Business User Steps",
+        "anchor": "copilotCollectionInspection-3-business-user-steps",
+        "level": 2
+      },
+      {
+        "text": "Technical Impact Steps",
+        "anchor": "copilotCollectionInspection-4-technical-impact-steps",
+        "level": 2
+      },
+      {
+        "text": "Authority And Recording Flow",
+        "anchor": "copilotCollectionInspection-5-authority-and-recording-flow",
+        "level": 2
+      },
+      {
+        "text": "Failure And Recovery",
+        "anchor": "copilotCollectionInspection-6-failure-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "Customize And Extend Safely",
+        "anchor": "copilotCollectionInspection-7-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotCollectionInspection-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification Boundary",
+        "anchor": "copilotCollectionInspection-9-verification-boundary",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Inspection, Native owner call, Returned evidence"
+      },
+      {
+        "kind": "table",
+        "title": "Observation, Meaning and next step"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.original-business-results"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/collection-inspection.md",
+    "sourceChecksum": "d551cc38228a08d4cccbffcbbaeb6fffe1e7cab7bf008edcfbc9e0ed89b50b8a",
+    "sourceWordCount": 1473,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record11": {
+    "code": "nodicsDocsMetadatacopilotOriginalBusinessResults",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.original-business-results",
+    "title": "Original Business Results and Safe Continuation",
+    "summary": "Inspect native original command receipts and approve only never-started rows after uncertain business execution.",
+    "businessSummary": "Original Business Results and Safe Continuation explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Original Business Results and Safe Continuation records owning module nodics.copilot, technical module copilotWorkbench, source path docs/pages/nodics.copilot/original-business-results.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotWorkbench",
+    "targetPage": "nodicsDocsPagecopilotOriginalBusinessResults",
+    "targetRoute": "nodicsDocsRoutecopilotOriginalBusinessResults",
+    "articleComponent": "nodicsDocsComponentcopilotOriginalBusinessResults",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotoriginalbusinessresults",
+    "headings": [
+      {
+        "text": "Business Outcome",
+        "anchor": "copilotOriginalBusinessResults-1-business-outcome",
+        "level": 2
+      },
+      {
+        "text": "Signed-In Local Enterprise Evidence",
+        "anchor": "copilotOriginalBusinessResults-2-signed-in-local-enterprise-evidence",
+        "level": 3
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotOriginalBusinessResults-3-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Employee Journey",
+        "anchor": "copilotOriginalBusinessResults-4-employee-journey",
+        "level": 2
+      },
+      {
+        "text": "State Diagram",
+        "anchor": "copilotOriginalBusinessResults-5-state-diagram",
+        "level": 2
+      },
+      {
+        "text": "API Contract",
+        "anchor": "copilotOriginalBusinessResults-6-api-contract",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "copilotOriginalBusinessResults-7-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Customization and Extension",
+        "anchor": "copilotOriginalBusinessResults-8-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotOriginalBusinessResults-9-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotOriginalBusinessResults-10-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "image",
+        "title": "Original result inspection on desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Fresh continuation approval on mobile"
+      },
+      {
+        "kind": "image",
+        "title": "Completed enterprise and invitations in full Axis"
+      },
+      {
+        "kind": "image",
+        "title": "Completed action at mobile width"
+      },
+      {
+        "kind": "table",
+        "title": "Owner, Method and Path, Body"
+      },
+      {
+        "kind": "table",
+        "title": "Observation, Meaning and Action"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.retention-lifecycle"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/original-business-results.md",
+    "sourceChecksum": "7c4fde40a3b89e034060e14139e510239867c00bb84fa572e87215fe62053f18",
+    "sourceWordCount": 1723,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record12": {
+    "code": "nodicsDocsMetadatacopilotRecordedManualRefresh",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.recorded-manual-refresh",
+    "title": "Recorded Manual Knowledge Refresh",
+    "summary": "Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness.",
+    "businessSummary": "Recorded Manual Knowledge Refresh explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Recorded Manual Knowledge Refresh records owning module nodics.copilot, technical module copilotKnowledge, source path docs/pages/nodics.copilot/recorded-manual-refresh.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotKnowledge",
+    "targetPage": "nodicsDocsPagecopilotRecordedManualRefresh",
+    "targetRoute": "nodicsDocsRoutecopilotRecordedManualRefresh",
+    "articleComponent": "nodicsDocsComponentcopilotRecordedManualRefresh",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotrecordedmanualrefresh",
+    "headings": [
+      {
+        "text": "Business Outcome",
+        "anchor": "copilotRecordedManualRefresh-1-business-outcome",
+        "level": 2
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotRecordedManualRefresh-2-administrator-setup",
+        "level": 2
+      },
+      {
+        "text": "Business User Steps",
+        "anchor": "copilotRecordedManualRefresh-3-business-user-steps",
+        "level": 2
+      },
+      {
+        "text": "Execution And Recovery",
+        "anchor": "copilotRecordedManualRefresh-4-execution-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "API Contract",
+        "anchor": "copilotRecordedManualRefresh-5-api-contract",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "copilotRecordedManualRefresh-6-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "copilotRecordedManualRefresh-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotRecordedManualRefresh-8-verification",
+        "level": 2
+      },
+      {
+        "text": "Sanitized Visual Evidence",
+        "anchor": "copilotRecordedManualRefresh-9-sanitized-visual-evidence",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Setting, Owner, Meaning"
+      },
+      {
+        "kind": "table",
+        "title": "Observation, Meaning, Next step"
+      },
+      {
+        "kind": "table",
+        "title": "POST path, Body, Result"
+      },
+      {
+        "kind": "image",
+        "title": "Recorded refresh inspection on desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Recorded refresh inspection on mobile"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "copilot.knowledge-generation-recovery",
+      "cron.inactive-schedule-drafts"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/recorded-manual-refresh.md",
+    "sourceChecksum": "68c94564911752eafe18c2709c84d88373567964cbdea497e3a26fff23fd6d56",
+    "sourceWordCount": 1491,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record13": {
+    "code": "nodicsDocsMetadatacronInactiveScheduleDrafts",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "cron.inactive-schedule-drafts",
+    "title": "Inactive Process Schedule Drafts",
+    "summary": "Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation.",
+    "businessSummary": "Inactive Process Schedule Drafts explains the business purpose, supported decisions, operational impact, and controls for the Cron Operations journey.",
+    "technicalSummary": "Inactive Process Schedule Drafts records owning module nodics.process, technical module cronjob, source path docs/pages/nodics.process/inactive-schedule-drafts.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.process",
+    "technicalModule": "cronjob",
+    "targetPage": "nodicsDocsPagecronInactiveScheduleDrafts",
+    "targetRoute": "nodicsDocsRoutecronInactiveScheduleDrafts",
+    "articleComponent": "nodicsDocsComponentcronInactiveScheduleDrafts",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacroninactivescheduledrafts",
+    "headings": [
+      {
+        "text": "Business Outcome",
+        "anchor": "cronInactiveScheduleDrafts-1-business-outcome",
+        "level": 2
+      },
+      {
+        "text": "Prepare the Deployment",
+        "anchor": "cronInactiveScheduleDrafts-2-prepare-the-deployment",
+        "level": 2
+      },
+      {
+        "text": "Create an Inactive Draft",
+        "anchor": "cronInactiveScheduleDrafts-3-create-an-inactive-draft",
+        "level": 2
+      },
+      {
+        "text": "Prepare a Draft From Knowledge Studio",
+        "anchor": "cronInactiveScheduleDrafts-4-prepare-a-draft-from-knowledge-studio",
+        "level": 2
+      },
+      {
+        "text": "Recover an Uncertain Save",
+        "anchor": "cronInactiveScheduleDrafts-5-recover-an-uncertain-save",
+        "level": 2
+      },
+      {
+        "text": "API and Limits",
+        "anchor": "cronInactiveScheduleDrafts-6-api-and-limits",
+        "level": 2
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "cronInactiveScheduleDrafts-7-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "cronInactiveScheduleDrafts-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification and Evidence Boundary",
+        "anchor": "cronInactiveScheduleDrafts-9-verification-and-evidence-boundary",
+        "level": 2
+      },
+      {
+        "text": "Reviewed Activation and Recovery",
+        "anchor": "cronInactiveScheduleDrafts-10-reviewed-activation-and-recovery",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "image",
+        "title": "Reviewed schedule activation"
+      },
+      {
+        "kind": "image",
+        "title": "Mobile schedule activation review"
+      },
+      {
+        "kind": "image",
+        "title": "Source-linked inactive draft on desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Source-linked inactive draft on mobile"
+      },
+      {
+        "kind": "table",
+        "title": "Method and Path, Input, Result"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Meaning, Safe Response"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic inactive schedule review on desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic inactive schedule review on mobile"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "cron.operations",
+      "process.scheduled-automation",
+      "copilot.knowledge-generation-recovery"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.process/inactive-schedule-drafts.md",
+    "sourceChecksum": "5882d66cd10b753d18d8fc76b047637c007256416cef0e9bf1cf431c1f3c948a",
+    "sourceWordCount": 2452,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record14": {
+    "code": "nodicsDocsMetadatacopilotKnowledgeGenerationRecovery",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.knowledge-generation-recovery",
+    "title": "Copilot Knowledge Progress and Recovery",
+    "summary": "Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries.",
+    "businessSummary": "Copilot Knowledge Progress and Recovery explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Copilot Knowledge Progress and Recovery records owning module nodics.copilot, technical module copilotKnowledge, source path docs/pages/nodics.copilot/knowledge-generation-recovery.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotKnowledge",
+    "targetPage": "nodicsDocsPagecopilotKnowledgeGenerationRecovery",
+    "targetRoute": "nodicsDocsRoutecopilotKnowledgeGenerationRecovery",
+    "articleComponent": "nodicsDocsComponentcopilotKnowledgeGenerationRecovery",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotknowledgegenerationrecovery",
+    "headings": [
+      {
+        "text": "Business Outcome",
+        "anchor": "copilotKnowledgeGenerationRecovery-1-business-outcome",
+        "level": 2
+      },
+      {
+        "text": "Before Starting",
+        "anchor": "copilotKnowledgeGenerationRecovery-2-before-starting",
+        "level": 2
+      },
+      {
+        "text": "Inspect a Refresh",
+        "anchor": "copilotKnowledgeGenerationRecovery-3-inspect-a-refresh",
+        "level": 2
+      },
+      {
+        "text": "Retire a Stalled Publication",
+        "anchor": "copilotKnowledgeGenerationRecovery-4-retire-a-stalled-publication",
+        "level": 2
+      },
+      {
+        "text": "Review Obsolete Cleanup",
+        "anchor": "copilotKnowledgeGenerationRecovery-5-review-obsolete-cleanup",
+        "level": 2
+      },
+      {
+        "text": "Retire a Dedicated Legacy Index",
+        "anchor": "copilotKnowledgeGenerationRecovery-6-retire-a-dedicated-legacy-index",
+        "level": 2
+      },
+      {
+        "text": "Administrator Setup",
+        "anchor": "copilotKnowledgeGenerationRecovery-7-administrator-setup",
+        "level": 3
+      },
+      {
+        "text": "Business and Operator Steps",
+        "anchor": "copilotKnowledgeGenerationRecovery-8-business-and-operator-steps",
+        "level": 3
+      },
+      {
+        "text": "Permanently Remove a Retired Index",
+        "anchor": "copilotKnowledgeGenerationRecovery-9-permanently-remove-a-retired-index",
+        "level": 2
+      },
+      {
+        "text": "Operator Prerequisites",
+        "anchor": "copilotKnowledgeGenerationRecovery-10-operator-prerequisites",
+        "level": 3
+      },
+      {
+        "text": "Business User Steps",
+        "anchor": "copilotKnowledgeGenerationRecovery-11-business-user-steps",
+        "level": 3
+      },
+      {
+        "text": "Customization and Failure Cases",
+        "anchor": "copilotKnowledgeGenerationRecovery-12-customization-and-failure-cases",
+        "level": 3
+      },
+      {
+        "text": "Limits and Recovery",
+        "anchor": "copilotKnowledgeGenerationRecovery-13-limits-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "Reproduce Isolated Erasure Qualification",
+        "anchor": "copilotKnowledgeGenerationRecovery-14-reproduce-isolated-erasure-qualification",
+        "level": 3
+      },
+      {
+        "text": "Authenticated Runtime and Axis Component Qualification",
+        "anchor": "copilotKnowledgeGenerationRecovery-15-authenticated-runtime-and-axis-component-qualification",
+        "level": 3
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "copilotKnowledgeGenerationRecovery-16-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotKnowledgeGenerationRecovery-17-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotKnowledgeGenerationRecovery-18-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Phase, Meaning, What It Does Not Prove"
+      },
+      {
+        "kind": "table",
+        "title": "Evidence, Cleanup Eligibility"
+      },
+      {
+        "kind": "table",
+        "title": "Configuration, Purpose"
+      },
+      {
+        "kind": "image",
+        "title": "Desktop permanent-removal review"
+      },
+      {
+        "kind": "image",
+        "title": "Mobile original-removal result"
+      },
+      {
+        "kind": "image",
+        "title": "Authenticated component inspection after restart, desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Authenticated component inspection after restart, mobile"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic legacy retirement review on desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic legacy retirement review on mobile"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic Knowledge Studio acknowledged-write progress on desktop"
+      },
+      {
+        "kind": "image",
+        "title": "Synthetic Knowledge Studio acknowledged-write progress on mobile"
+      }
+    ],
+    "visualRequirements": [
+      "diagram"
+    ],
+    "relatedPages": [
+      "copilot.retention-lifecycle",
+      "cron.operations"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/knowledge-generation-recovery.md",
+    "sourceChecksum": "577832fb4307ff99e32335fb285e68b7067fc898fac2800ecf64adf87966e9c2",
+    "sourceWordCount": 3955,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record15": {
+    "code": "nodicsDocsMetadatacopilotRetentionLifecycle",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "copilot.retention-lifecycle",
+    "title": "Copilot Conversation Retention and Recovery",
+    "summary": "Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures.",
+    "businessSummary": "Copilot Conversation Retention and Recovery explains the business purpose, supported decisions, operational impact, and controls for the AI Copilot journey.",
+    "technicalSummary": "Copilot Conversation Retention and Recovery records owning module nodics.copilot, technical module copilotConversation, source path docs/pages/nodics.copilot/retention-lifecycle.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.copilot",
+    "technicalModule": "copilotConversation",
+    "targetPage": "nodicsDocsPagecopilotRetentionLifecycle",
+    "targetRoute": "nodicsDocsRoutecopilotRetentionLifecycle",
+    "articleComponent": "nodicsDocsComponentcopilotRetentionLifecycle",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacopilotretentionlifecycle",
+    "headings": [
+      {
+        "text": "Independent Audit Retention",
+        "anchor": "copilotRetentionLifecycle-1-independent-audit-retention",
+        "level": 2
+      },
+      {
+        "text": "Deployment and Policy",
+        "anchor": "copilotRetentionLifecycle-2-deployment-and-policy",
+        "level": 3
+      },
+      {
+        "text": "Operator Journey",
+        "anchor": "copilotRetentionLifecycle-3-operator-journey",
+        "level": 3
+      },
+      {
+        "text": "API and Customization",
+        "anchor": "copilotRetentionLifecycle-4-api-and-customization",
+        "level": 3
+      },
+      {
+        "text": "Verified Interface",
+        "anchor": "copilotRetentionLifecycle-5-verified-interface",
+        "level": 3
+      },
+      {
+        "text": "Ownership",
+        "anchor": "copilotRetentionLifecycle-6-ownership",
+        "level": 2
+      },
+      {
+        "text": "Deployment Steps",
+        "anchor": "copilotRetentionLifecycle-7-deployment-steps",
+        "level": 2
+      },
+      {
+        "text": "Administrator Journey",
+        "anchor": "copilotRetentionLifecycle-8-administrator-journey",
+        "level": 2
+      },
+      {
+        "text": "Recovery and Holds",
+        "anchor": "copilotRetentionLifecycle-9-recovery-and-holds",
+        "level": 2
+      },
+      {
+        "text": "Close an Active Conversation",
+        "anchor": "copilotRetentionLifecycle-10-close-an-active-conversation",
+        "level": 3
+      },
+      {
+        "text": "Resume a Stopped Retention Operation",
+        "anchor": "copilotRetentionLifecycle-11-resume-a-stopped-retention-operation",
+        "level": 3
+      },
+      {
+        "text": "Secured API",
+        "anchor": "copilotRetentionLifecycle-12-secured-api",
+        "level": 2
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "copilotRetentionLifecycle-13-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "copilotRetentionLifecycle-14-verification",
+        "level": 2
+      },
+      {
+        "text": "Common Mistakes",
+        "anchor": "copilotRetentionLifecycle-15-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Axis Capture Evidence",
+        "anchor": "copilotRetentionLifecycle-16-axis-capture-evidence",
+        "level": 2
+      },
+      {
+        "text": "Source and Publication State",
+        "anchor": "copilotRetentionLifecycle-17-source-and-publication-state",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "image",
+        "title": "Independent audit deletion review"
+      },
+      {
+        "kind": "image",
+        "title": "Mobile audit review"
+      },
+      {
+        "kind": "image",
+        "title": "Original audit receipt recovery after a lost response"
+      },
+      {
+        "kind": "table",
+        "title": "Suffix, Exact body, Effect"
+      },
+      {
+        "kind": "table",
+        "title": "Mistake, Required response"
+      },
+      {
+        "kind": "image",
+        "title": "Desktop retention review with separate confirmation"
+      },
+      {
+        "kind": "image",
+        "title": "Mobile retention review with wrapped controls"
+      }
+    ],
+    "visualRequirements": [
+      "diagram"
+    ],
+    "relatedPages": [
+      "cron.operations",
+      "tooling.ai-developer-enablement"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.copilot/retention-lifecycle.md",
+    "sourceChecksum": "c9de563a13f3b46c57a5c2f15833b8cc9a9724244a22bb4184258f5d6cd81039",
+    "sourceWordCount": 2574,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record16": {
     "code": "nodicsDocsMetadataacceleratorsCircaCollectionReference",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-collection-reference",
@@ -126,7 +2408,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record1": {
+  "record17": {
     "code": "nodicsDocsMetadataacceleratorsCircaEnterpriseReference",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-enterprise-reference",
@@ -235,7 +2517,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record2": {
+  "record18": {
     "code": "nodicsDocsMetadataacceleratorsCircaSourceInventory",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-source-inventory",
@@ -357,7 +2639,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record3": {
+  "record19": {
     "code": "nodicsDocsMetadataacceleratorsCircaCatalogueReference",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-catalogue-reference",
@@ -462,7 +2744,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record4": {
+  "record20": {
     "code": "nodicsDocsMetadataacceleratorsCircaConfigurationReference",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-configuration-reference",
@@ -562,7 +2844,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record5": {
+  "record21": {
     "code": "nodicsDocsMetadataacceleratorsCircaOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-overview",
@@ -679,7 +2961,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record6": {
+  "record22": {
     "code": "nodicsDocsMetadataacceleratorsCircaDataNetwork",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-data-network",
@@ -779,7 +3061,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record7": {
+  "record23": {
     "code": "nodicsDocsMetadataacceleratorsCircaSubmissionJourney",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-submission-journey",
@@ -888,7 +3170,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record8": {
+  "record24": {
     "code": "nodicsDocsMetadataacceleratorsCircaOperationsRewards",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-operations-rewards",
@@ -993,7 +3275,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record9": {
+  "record25": {
     "code": "nodicsDocsMetadataacceleratorsCircaCouponsCommerce",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-coupons-commerce",
@@ -1126,7 +3408,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record10": {
+  "record26": {
     "code": "nodicsDocsMetadataacceleratorsCircaCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-customization",
@@ -1231,7 +3513,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record11": {
+  "record27": {
     "code": "nodicsDocsMetadataacceleratorsCircaDeploymentVerification",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.circa-deployment-verification",
@@ -1336,7 +3618,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record12": {
+  "record28": {
     "code": "nodicsDocsMetadatadocsGateway",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.gateway",
@@ -1435,7 +3717,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record13": {
+  "record29": {
     "code": "nodicsDocsMetadataframeworkOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.what-is-nodics",
@@ -1543,7 +3825,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record14": {
+  "record30": {
     "code": "nodicsDocsMetadataframeworkWhyNodicsExists",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.why-nodics-exists",
@@ -1645,7 +3927,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record15": {
+  "record31": {
     "code": "nodicsDocsMetadataframeworkHowNodicsWorks",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.how-nodics-works",
@@ -1747,7 +4029,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record16": {
+  "record32": {
     "code": "nodicsDocsMetadataframeworkAdoptionAndFirstJourney",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.adoption-and-first-journey",
@@ -1880,7 +4162,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record17": {
+  "record33": {
     "code": "nodicsDocsMetadatadocsDocumentationRoadmap",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.documentation-roadmap",
@@ -2011,7 +4293,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record18": {
+  "record34": {
     "code": "nodicsDocsMetadatadocsDocumentationPrinciples",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.documentation-principles",
@@ -2126,7 +4408,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record19": {
+  "record35": {
     "code": "nodicsDocsMetadatadocsReaderJourneyAndCoverage",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.reader-journey-and-coverage",
@@ -2232,7 +4514,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record20": {
+  "record36": {
     "code": "nodicsDocsMetadatadocsDocumentationPublishingModel",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.documentation-publishing-model",
@@ -2334,7 +4616,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record21": {
+  "record37": {
     "code": "nodicsDocsMetadataframeworkModularArchitecture",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.modular-architecture",
@@ -2518,7 +4800,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record22": {
+  "record38": {
     "code": "nodicsDocsMetadataframeworkRuntimeServerComposition",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.runtime-server-composition",
@@ -2614,7 +4896,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record23": {
+  "record39": {
     "code": "nodicsDocsMetadataframeworkModuleLoadingServicePrecedence",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.module-loading-service-precedence",
@@ -2718,7 +5000,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record24": {
+  "record40": {
     "code": "nodicsDocsMetadataframeworkArchitectureDecisionGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.architecture-decision-guide",
@@ -2819,7 +5101,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record25": {
+  "record41": {
     "code": "nodicsDocsMetadataplatformModuleRegistry",
     "product": "nodicsDocumentationProduct",
     "documentId": "platform.module-registry",
@@ -2972,7 +5254,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record26": {
+  "record42": {
     "code": "nodicsDocsMetadatafoundationOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.overview",
@@ -3138,7 +5420,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record27": {
+  "record43": {
     "code": "nodicsDocsMetadataapplicationsSuite",
     "product": "nodicsDocumentationProduct",
     "documentId": "applications.suite",
@@ -3244,7 +5526,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record28": {
+  "record44": {
     "code": "nodicsDocsMetadatasolutionsTaskExecutionEngine",
     "product": "nodicsDocumentationProduct",
     "documentId": "solutions.task-execution-engine",
@@ -3366,7 +5648,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record29": {
+  "record45": {
     "code": "nodicsDocsMetadatasolutionsDataEngineeringAnalyticsPlatform",
     "product": "nodicsDocumentationProduct",
     "documentId": "solutions.data-engineering-analytics-platform",
@@ -3488,7 +5770,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record30": {
+  "record46": {
     "code": "nodicsDocsMetadataacceleratorsAgoraIndustryTemplates",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.agora-industry-templates",
@@ -3607,7 +5889,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record31": {
+  "record47": {
     "code": "nodicsDocsMetadataacceleratorsAgoraApparelProductDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.agora-apparel-product-data-authoring",
@@ -3777,7 +6059,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record32": {
+  "record48": {
     "code": "nodicsDocsMetadataframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-quick-start",
@@ -3885,7 +6167,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record33": {
+  "record49": {
     "code": "nodicsDocsMetadataframeworkFreshSchemaSetupJourney",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.fresh-schema-setup-journey",
@@ -3986,7 +6268,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record34": {
+  "record50": {
     "code": "nodicsDocsMetadataframeworkLocalRuntimeTroubleshooting",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-runtime-troubleshooting",
@@ -4087,7 +6369,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record35": {
+  "record51": {
     "code": "nodicsDocsMetadatainstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "documentId": "installer.installed-runtime-application-builder",
@@ -4193,7 +6475,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record36": {
+  "record52": {
     "code": "nodicsDocsMetadatabuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "documentId": "builder.workspace-generation",
@@ -4312,7 +6594,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record37": {
+  "record53": {
     "code": "nodicsDocsMetadataprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.visual-designer",
@@ -4431,7 +6713,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record38": {
+  "record54": {
     "code": "nodicsDocsMetadataaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "axis.business-customization",
@@ -4550,7 +6832,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record39": {
+  "record55": {
     "code": "nodicsDocsMetadataplatformOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "platform.overview",
@@ -4687,7 +6969,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record40": {
+  "record56": {
     "code": "nodicsDocsMetadatasecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "security.identity-access-governance",
@@ -4994,7 +7276,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record41": {
+  "record57": {
     "code": "nodicsDocsMetadataconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "configuration.runtime-behavior-management",
@@ -5206,7 +7488,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record42": {
+  "record58": {
     "code": "nodicsDocsMetadataconfigurationFrameworkStartupLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "configuration.framework-startup-lifecycle",
@@ -5428,7 +7710,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record43": {
+  "record59": {
     "code": "nodicsDocsMetadataroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "routing.api-governance",
@@ -5584,7 +7866,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record44": {
+  "record60": {
     "code": "nodicsDocsMetadataroutingApiRequestLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "routing.api-request-lifecycle",
@@ -5725,7 +8007,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record45": {
+  "record61": {
     "code": "nodicsDocsMetadatafoundationErrorHandlingStatusCodes",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.error-handling-status-codes",
@@ -5900,7 +8182,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record46": {
+  "record62": {
     "code": "nodicsDocsMetadataruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "documentId": "runtime.governed-change",
@@ -6019,7 +8301,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record47": {
+  "record63": {
     "code": "nodicsDocsMetadatalocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "documentId": "localization.internationalization",
@@ -6150,7 +8432,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record48": {
+  "record64": {
     "code": "nodicsDocsMetadataschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "schema.data-modeling-management",
@@ -6360,8 +8642,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/schema-data-modeling.md",
-    "sourceChecksum": "a7d66200d00bc04158b6892c2ecf98b98f4db952f152ebf15201c8c581d69c57",
-    "sourceWordCount": 4430,
+    "sourceChecksum": "f253fc68ed592b8b5b6b4aa8fedbc51084516dc02528ee1bfc6ceeb7769b9c45",
+    "sourceWordCount": 4583,
     "audience": [
       "business",
       "architect",
@@ -6387,7 +8669,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record49": {
+  "record65": {
     "code": "nodicsDocsMetadatapersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "documentId": "persistence.provider-data-access-layer",
@@ -6502,7 +8784,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record50": {
+  "record66": {
     "code": "nodicsDocsMetadatacacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "cache.runtime-state-management",
@@ -6626,7 +8908,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record51": {
+  "record67": {
     "code": "nodicsDocsMetadataframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.customization-guide",
@@ -6729,7 +9011,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record52": {
+  "record68": {
     "code": "nodicsDocsMetadataframeworkBackendExtensionPatterns",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.backend-extension-patterns",
@@ -6832,7 +9114,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record53": {
+  "record69": {
     "code": "nodicsDocsMetadataframeworkAxisContentCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.axis-content-customization",
@@ -6933,7 +9215,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record54": {
+  "record70": {
     "code": "nodicsDocsMetadataprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.developer-customization",
@@ -7049,7 +9331,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record55": {
+  "record71": {
     "code": "nodicsDocsMetadataprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.custom-project-extension",
@@ -7149,7 +9431,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record56": {
+  "record72": {
     "code": "nodicsDocsMetadatacommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.base-foundations",
@@ -7267,7 +9549,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record57": {
+  "record73": {
     "code": "nodicsDocsMetadatawcmsOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.overview",
@@ -7371,7 +9653,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record58": {
+  "record74": {
     "code": "nodicsDocsMetadatawcmsContentCatalogModel",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.content-catalog-model",
@@ -7472,7 +9754,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record59": {
+  "record75": {
     "code": "nodicsDocsMetadatawcmsPageDesignerComponents",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.page-designer-components",
@@ -7573,7 +9855,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record60": {
+  "record76": {
     "code": "nodicsDocsMetadatawcmsSitePublicationVisibility",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.site-publication-visibility",
@@ -7674,7 +9956,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record61": {
+  "record77": {
     "code": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "catalog.product-discovery-management",
@@ -7810,7 +10092,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record62": {
+  "record78": {
     "code": "nodicsDocsMetadatadiscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "documentId": "discovery.search-indexing",
@@ -7941,7 +10223,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record63": {
+  "record79": {
     "code": "nodicsDocsMetadatawcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-management",
@@ -8048,7 +10330,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record64": {
+  "record80": {
     "code": "nodicsDocsMetadatawcmsMediaStorageDelivery",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-storage-delivery",
@@ -8157,7 +10439,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record65": {
+  "record81": {
     "code": "nodicsDocsMetadatawcmsMediaImportPublication",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-import-publication",
@@ -8266,7 +10548,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record66": {
+  "record82": {
     "code": "nodicsDocsMetadatainventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "inventory.stock-management",
@@ -8397,7 +10679,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record67": {
+  "record83": {
     "code": "nodicsDocsMetadatapricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "pricing.promotions-tax-management",
@@ -8533,7 +10815,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record68": {
+  "record84": {
     "code": "nodicsDocsMetadatacommerceOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.overview",
@@ -8639,7 +10921,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record69": {
+  "record85": {
     "code": "nodicsDocsMetadatacommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.cart-order",
@@ -8755,7 +11037,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record70": {
+  "record86": {
     "code": "nodicsDocsMetadatacommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.payment-fulfillment",
@@ -8868,7 +11150,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record71": {
+  "record87": {
     "code": "nodicsDocsMetadatafulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "fulfillment.shipping-management",
@@ -8999,7 +11281,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record72": {
+  "record88": {
     "code": "nodicsDocsMetadataorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "order.management-lifecycle",
@@ -9130,7 +11412,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record73": {
+  "record89": {
     "code": "nodicsDocsMetadatacommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.returns-refunds",
@@ -9248,7 +11530,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record74": {
+  "record90": {
     "code": "nodicsDocsMetadataengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.customer-reviews",
@@ -9360,7 +11642,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record75": {
+  "record91": {
     "code": "nodicsDocsMetadataengagementReviewModerationGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.review-moderation-governance",
@@ -9469,7 +11751,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record76": {
+  "record92": {
     "code": "nodicsDocsMetadataengagementReviewAggregationRecovery",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.review-aggregation-recovery",
@@ -9578,7 +11860,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record77": {
+  "record93": {
     "code": "nodicsDocsMetadataengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.customer-feedback",
@@ -9707,7 +11989,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record78": {
+  "record94": {
     "code": "nodicsDocsMetadataengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.unified-operations",
@@ -9843,7 +12125,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record79": {
+  "record95": {
     "code": "nodicsDocsMetadataengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.governed-automation",
@@ -9963,7 +12245,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record80": {
+  "record96": {
     "code": "nodicsDocsMetadataengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.enterprise-operations",
@@ -10082,7 +12364,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record81": {
+  "record97": {
     "code": "nodicsDocsMetadatacommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "communication.overview",
@@ -10208,7 +12490,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record82": {
+  "record98": {
     "code": "nodicsDocsMetadataeventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "documentId": "events.messaging-cluster-coordination",
@@ -10332,7 +12614,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record83": {
+  "record99": {
     "code": "nodicsDocsMetadataprocessOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.overview",
@@ -10464,7 +12746,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record84": {
+  "record100": {
     "code": "nodicsDocsMetadataprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.runtime-lifecycle",
@@ -10588,7 +12870,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record85": {
+  "record101": {
     "code": "nodicsDocsMetadataprocessWorkflowOrchestrationPatterns",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.workflow-orchestration-patterns",
@@ -10749,7 +13031,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record86": {
+  "record102": {
     "code": "nodicsDocsMetadataprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.first-workflow",
@@ -10859,7 +13141,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record87": {
+  "record103": {
     "code": "nodicsDocsMetadataprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.first-human-task",
@@ -10891,27 +13173,40 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Backend-owned approval decisions",
+        "anchor": "processFirstHumanTask-4-backend-owned-approval-decisions",
+        "level": 3
+      },
+      {
         "text": "Developer customization",
-        "anchor": "processFirstHumanTask-4-developer-customization",
+        "anchor": "processFirstHumanTask-5-developer-customization",
         "level": 2
       },
       {
         "text": "End-to-end task example",
-        "anchor": "processFirstHumanTask-5-end-to-end-task-example",
+        "anchor": "processFirstHumanTask-6-end-to-end-task-example",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "processFirstHumanTask-6-common-mistakes",
+        "anchor": "processFirstHumanTask-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "processFirstHumanTask-8-customize-and-extend-safely",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "processFirstHumanTask-7-verification",
+        "anchor": "processFirstHumanTask-9-verification",
         "level": 2
       }
     ],
     "diagrams": [
+      {
+        "language": "mermaid"
+      },
       {
         "language": "mermaid"
       }
@@ -10936,8 +13231,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.process/first-human-task.md",
-    "sourceChecksum": "011a1d24f41901d10e24a5466b67baead643d812598803c4e413fcf2ad0e6417",
-    "sourceWordCount": 811,
+    "sourceChecksum": "952c8c603784d18787ae668d1df0bc41ded292f60b5d93ed5be095214d66def1",
+    "sourceWordCount": 1411,
     "audience": [
       "business",
       "architect",
@@ -10963,7 +13258,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record88": {
+  "record104": {
     "code": "nodicsDocsMetadataprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.business-value",
@@ -11077,7 +13372,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record89": {
+  "record105": {
     "code": "nodicsDocsMetadatapipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "documentId": "pipeline.business-logic-orchestration",
@@ -11276,7 +13571,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record90": {
+  "record106": {
     "code": "nodicsDocsMetadatacronOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "cron.operations",
@@ -11363,8 +13658,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.process/cronjob-operations.md",
-    "sourceChecksum": "d12171a4416afd05c2873e578cc7bb0f83db70621f48b3297cbb6fadfddb865a",
-    "sourceWordCount": 592,
+    "sourceChecksum": "f95ee4a891c7fd4a06c72dc47d6b4a7a5fa3872f9445a5661899bd519a690663",
+    "sourceWordCount": 676,
     "audience": [
       "business",
       "architect",
@@ -11390,7 +13685,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record91": {
+  "record107": {
     "code": "nodicsDocsMetadatacronNodeResponsibilityTee",
     "product": "nodicsDocumentationProduct",
     "documentId": "cron.node-responsibility-tee",
@@ -11495,7 +13790,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record92": {
+  "record108": {
     "code": "nodicsDocsMetadatacronProjectCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "cron.project-customization",
@@ -11600,7 +13895,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record93": {
+  "record109": {
     "code": "nodicsDocsMetadataprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.process-cron-runtime",
@@ -11711,7 +14006,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record94": {
+  "record110": {
     "code": "nodicsDocsMetadataprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.scheduled-automation",
@@ -11743,28 +14038,33 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Scheduler State and Business Authority",
+        "anchor": "processScheduledAutomation-4-scheduler-state-and-business-authority",
+        "level": 2
+      },
+      {
         "text": "Cron-owned job declaration",
-        "anchor": "processScheduledAutomation-4-cron-owned-job-declaration",
+        "anchor": "processScheduledAutomation-5-cron-owned-job-declaration",
         "level": 2
       },
       {
         "text": "What business users should see in Axis",
-        "anchor": "processScheduledAutomation-5-what-business-users-should-see-in-axis",
+        "anchor": "processScheduledAutomation-6-what-business-users-should-see-in-axis",
         "level": 2
       },
       {
         "text": "Customization and extension guidance",
-        "anchor": "processScheduledAutomation-6-customization-and-extension-guidance",
+        "anchor": "processScheduledAutomation-7-customization-and-extension-guidance",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "processScheduledAutomation-7-common-mistakes",
+        "anchor": "processScheduledAutomation-8-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "processScheduledAutomation-8-verification",
+        "anchor": "processScheduledAutomation-9-verification",
         "level": 2
       }
     ],
@@ -11794,8 +14094,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.process/scheduled-automation.md",
-    "sourceChecksum": "aef323b6002cac0865e9d03df4c4b7d846f4f7adc7b601e52fe7f85b6804bcaa",
-    "sourceWordCount": 603,
+    "sourceChecksum": "57b00dee8b9d45fb04af92e2cc1ac542d0e2fbe826f5a41c7af15b0701fd73fc",
+    "sourceWordCount": 764,
     "audience": [
       "business",
       "architect",
@@ -11821,7 +14121,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record95": {
+  "record111": {
     "code": "nodicsDocsMetadatadataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "documentId": "data.import-export-migration",
@@ -12081,7 +14381,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record96": {
+  "record112": {
     "code": "nodicsDocsMetadataprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.action-adapters",
@@ -12177,7 +14477,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record97": {
+  "record113": {
     "code": "nodicsDocsMetadataframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.devops-runtime",
@@ -12293,7 +14593,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record98": {
+  "record114": {
     "code": "nodicsDocsMetadataframeworkRuntimeReleaseRollback",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.runtime-release-rollback",
@@ -12402,7 +14702,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record99": {
+  "record115": {
     "code": "nodicsDocsMetadataframeworkLocalBrowserAcceptanceJourney",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-browser-acceptance-journey",
@@ -12511,7 +14811,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record100": {
+  "record116": {
     "code": "nodicsDocsMetadataframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-verification-checklist",
@@ -12625,7 +14925,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record101": {
+  "record117": {
     "code": "nodicsDocsMetadatacommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.enterprise-operations",
@@ -12740,7 +15040,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record102": {
+  "record118": {
     "code": "nodicsDocsMetadataprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.incident-recovery",
@@ -12856,7 +15156,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record103": {
+  "record119": {
     "code": "nodicsDocsMetadataprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.devops-topology",
@@ -12971,7 +15271,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record104": {
+  "record120": {
     "code": "nodicsDocsMetadataprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.qa-regression-guide",
@@ -13077,7 +15377,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record105": {
+  "record121": {
     "code": "nodicsDocsMetadataframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.capability-documentation-maturity-pattern",
@@ -13196,7 +15496,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record106": {
+  "record122": {
     "code": "nodicsDocsMetadatadocsOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.overview",
@@ -13309,7 +15609,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record107": {
+  "record123": {
     "code": "nodicsDocsMetadatawcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.publishing-lifecycle",
@@ -13423,7 +15723,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record108": {
+  "record124": {
     "code": "nodicsDocsMetadataapplicationsNexusDataContentGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "applications.nexus-data-content-guide",
@@ -13541,7 +15841,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record109": {
+  "record125": {
     "code": "nodicsDocsMetadataapplicationsAxisSetupErrorContracts",
     "product": "nodicsDocumentationProduct",
     "documentId": "applications.axis-setup-error-contracts",
@@ -13648,7 +15948,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record110": {
+  "record126": {
     "code": "nodicsDocsMetadatawcmsCmsSourceMapAuthoringContract",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.cms-source-map-authoring-contract",
@@ -13761,7 +16061,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record111": {
+  "record127": {
     "code": "nodicsDocsMetadatawcmsMediaOperationsRunbook",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-operations-runbook",
@@ -13878,7 +16178,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record112": {
+  "record128": {
     "code": "nodicsDocsMetadatadataImportExportProviderGuides",
     "product": "nodicsDocumentationProduct",
     "documentId": "data.import-export-provider-guides",
@@ -13990,7 +16290,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record113": {
+  "record129": {
     "code": "nodicsDocsMetadatacommerceDataAuthoringFulfillment",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.data-authoring-fulfillment",
@@ -14103,7 +16403,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record114": {
+  "record130": {
     "code": "nodicsDocsMetadatadocsDocumentationPublishingRunbook",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.documentation-publishing-runbook",
@@ -14212,7 +16512,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record115": {
+  "record131": {
     "code": "nodicsDocsMetadataplatformModuleRegistryJourney",
     "product": "nodicsDocumentationProduct",
     "documentId": "platform.module-registry-journey",
@@ -14381,7 +16681,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record116": {
+  "record132": {
     "code": "nodicsDocsMetadatacommerceSearchGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.search-guide",
@@ -14489,7 +16789,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record117": {
+  "record133": {
     "code": "nodicsDocsMetadatalocalizationRuntimeAuthoring",
     "product": "nodicsDocumentationProduct",
     "documentId": "localization.runtime-authoring",
@@ -14597,7 +16897,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record118": {
+  "record134": {
     "code": "nodicsDocsMetadatacommercePaymentProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.payment-provider-boundaries",
@@ -14705,7 +17005,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record119": {
+  "record135": {
     "code": "nodicsDocsMetadataloyaltyWalletsRewardsLedger",
     "product": "nodicsDocumentationProduct",
     "documentId": "loyalty.wallets-rewards-ledger",
@@ -14884,7 +17184,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record120": {
+  "record136": {
     "code": "nodicsDocsMetadatacommerceShoppingListCommerceBoundary",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.shopping-list-commerce-boundary",
@@ -15006,7 +17306,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record121": {
+  "record137": {
     "code": "nodicsDocsMetadatafoundationNmsRuntimeMonitoring",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.nms-runtime-monitoring",
@@ -15112,7 +17412,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record122": {
+  "record138": {
     "code": "nodicsDocsMetadatafoundationServiceRuntimeOverrides",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.service-runtime-overrides",
@@ -15245,7 +17545,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record123": {
+  "record139": {
     "code": "nodicsDocsMetadatafoundationModuleToModuleCommunication",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.module-to-module-communication",
@@ -15402,7 +17702,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record124": {
+  "record140": {
     "code": "nodicsDocsMetadatafoundationCacheProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.cache-provider-runbooks",
@@ -15513,7 +17813,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record125": {
+  "record141": {
     "code": "nodicsDocsMetadatafoundationDatabaseProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.database-provider-boundaries",
@@ -15625,7 +17925,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record126": {
+  "record142": {
     "code": "nodicsDocsMetadatasecurityOtpSecurityFlow",
     "product": "nodicsDocumentationProduct",
     "documentId": "security.otp-security-flow",
@@ -15741,7 +18041,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record127": {
+  "record143": {
     "code": "nodicsDocsMetadatacommunicationProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "documentId": "communication.provider-runbooks",
@@ -15911,7 +18211,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record128": {
+  "record144": {
     "code": "nodicsDocsMetadataengagementContactSubmissionOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.contact-submission-operations",
@@ -16019,7 +18319,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record129": {
+  "record145": {
     "code": "nodicsDocsMetadataprocessWorkflowBpmSourceMap",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.workflow-bpm-source-map",
@@ -16128,7 +18428,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record130": {
+  "record146": {
     "code": "nodicsDocsMetadataprocessCronjobDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.cronjob-data-authoring",
@@ -16236,7 +18536,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record131": {
+  "record147": {
     "code": "nodicsDocsMetadataframeworkReleaseUpgradeCompatibility",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.release-upgrade-compatibility",
@@ -16372,7 +18672,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record132": {
+  "record148": {
     "code": "nodicsDocsMetadatacommerceFulfillmentCoreSourceMap",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.fulfillment-core-source-map",
@@ -16480,7 +18780,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record133": {
+  "record149": {
     "code": "nodicsDocsMetadataacceleratorsDomainCommerceSourceMap",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.domain-commerce-source-map",
@@ -16588,7 +18888,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record134": {
+  "record150": {
     "code": "nodicsDocsMetadatafoundationToolingRuntimeContracts",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.tooling-runtime-contracts",
@@ -16761,7 +19061,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record135": {
+  "record151": {
     "code": "nodicsDocsMetadatafoundationEmsRuntimeClientRunbook",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.ems-runtime-client-runbook",
@@ -16869,7 +19169,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record136": {
+  "record152": {
     "code": "nodicsDocsMetadatareferenceInternalSourceBoundaryRegister",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.internal-source-boundary-register",
@@ -16977,7 +19277,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record137": {
+  "record153": {
     "code": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "documentId": "tooling.ai-developer-enablement",
@@ -17101,7 +19401,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record138": {
+  "record154": {
     "code": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-map-glossary",
@@ -17229,7 +19529,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record139": {
+  "record155": {
     "code": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-backed-documentation-coverage-audit",
@@ -17410,7 +19710,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record140": {
+  "record156": {
     "code": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.documentation-gap-backlog",
@@ -17531,7 +19831,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record141": {
+  "record157": {
     "code": "nodicsDocsMetadatawasteImpactProviders",
     "product": "nodicsDocumentationProduct",
     "documentId": "waste.impact-providers",
@@ -17647,7 +19947,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record142": {
+  "record158": {
     "code": "nodicsDocsMetadatacommunicationEmailSmsTemplates",
     "product": "nodicsDocumentationProduct",
     "documentId": "communication.email-sms-templates",

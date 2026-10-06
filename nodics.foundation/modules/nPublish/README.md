@@ -7,6 +7,12 @@ reconciliation can inspect uncertain deployments without a target version. See
 Target atomicity, pointer concurrency and retained content remain provider-owned.
 Operations reconciliation preserves an explicit publication scope across audit,
 target and CMS outbox work; invalid supplied scopes reject before effects.
+Read-only diagnostics include redacted pending references independently of the
+stuck-age threshold. The [Process bridge](llm/contracts/process-approval-bridge.md)
+uses native exact-instance replay without implicitly enabling optional receipts.
+Approval follows actual access rights, including when the requester is also the
+reviewer. Requester binding preserves audit provenance; it does not prohibit
+same-user approval. Process still validates human identity, scope and permission.
 
 `nPublish` provides framework publishing support for runtime/module activation patterns. It is the place for generic publish-time contracts, schemas, routes, and pipeline hooks that support publishable module variants.
 

@@ -1,5 +1,21 @@
 # wasteCollection Contracts
 
+Collection-point create receipts use private `wasteCollectionCommandReceipt`
+storage under default-disabled `commandReceipts` admission. The existing native
+generated create retains location/reference and current schema authority.
+Inspection never infers original success from an existing centre. See
+[original business results](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+
+`wasteCollectionPoint.commandReceipt.insertOnly: true` narrows the existing
+generated HTTP create to insertion. nDatabase sets the generated save option;
+Waste adds no driver or duplicate persistence path. Preserve the unique primary
+identity index. A fresh command key or approval cannot update an existing centre.
+Receipt recording remains independently default-disabled; creation stays
+insert-only in either mode. Existing PATCH and internal import contracts remain
+unchanged. Failed/unconfirmed creation does not prove original success merely
+because the centre exists. Current Copilot receipt recovery keeps that case
+unknown and prohibits replay.
+
 Waste Collection owns collection point semantics and accepted material rules.
 Location owns map, coordinates, search, and materialization workflow.
 

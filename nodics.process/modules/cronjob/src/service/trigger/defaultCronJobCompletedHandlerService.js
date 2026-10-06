@@ -124,15 +124,9 @@ module.exports = {
         this.LOG.debug('Changing job state to completed');
         let jobDefinition = request.definition;
         jobDefinition.stopTime = new Date();
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.STOPED.key,
-                stopTime: jobDefinition.stopTime
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.STOPED.key,
+            stopTime: jobDefinition.stopTime
         }).then(success => {
             process.nextSuccess(request, response);
         }).catch(error => {

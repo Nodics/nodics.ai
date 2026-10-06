@@ -1,5 +1,11 @@
 # nodics.copilot Agents
 
+Copilot is framework-owned and accelerator-independent. Follow Knowledge's
+`modules/copilotKnowledge/llm/contracts/runtime-knowledge-configuration-contract.md`:
+active modules supply runtime candidates, not source catalogs in application code.
+Use existing nDynamo governance for selections; domain adapters own business facts
+and commands, never the shared knowledge registry or lifecycle implementation.
+
 ## Inheritance
 
 - Follow the repository agent contract: `../AGENTS.md`.

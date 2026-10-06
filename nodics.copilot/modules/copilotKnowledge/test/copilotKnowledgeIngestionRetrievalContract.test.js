@@ -29,55 +29,139 @@ const secretInspection = require('../src/service/defaultCopilotKnowledgeSecretIn
 const chunks = require('../src/service/defaultCopilotKnowledgeChunkService');
 const registryService = require('../src/service/defaultCopilotKnowledgeSourceRegistryService');
 const knowledgeService = require('../src/service/defaultCopilotKnowledgeService');
-const knowledgeConfiguration = require('../config/properties').copilot.knowledge;
+const knowledgeConfiguration = require('../config/properties').copilot
+    .knowledge;
 const policy = require('../../copilotPolicy/src/service/defaultCopilotPolicyService');
-const policyConfiguration = require('../../copilotPolicy/config/properties').copilot.policy;
+const policyConfiguration = require('../../copilotPolicy/config/properties')
+    .copilot.policy;
 const discoveryBuilder = require('../../../../nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryDocumentBuilderService');
 
 test('module lifecycle registers only non-public repository source types with Discovery', async () => {
     const registrations = [];
     global.SERVICE = {
-        DefaultDiscoverySourceRegistryService: { register: (ownerType, sourceType, provider) => registrations.push({ ownerType, sourceType, provider }) },
-        DefaultCopilotRepositoryKnowledgeSourceProviderService: repositoryProvider
+        DefaultDiscoverySourceRegistryService: {
+            register: (ownerType, sourceType, provider) =>
+                registrations.push({ ownerType, sourceType, provider }),
+        },
+        DefaultCopilotRepositoryKnowledgeSourceProviderService:
+            repositoryProvider,
     };
     try {
         await require('../nodics').postInit({});
-        assert.deepEqual(registrations.map(item => item.sourceType), ['README', 'AGENTS_CONTRACT', 'LLM_CONTRACT', 'SOURCE_CODE', 'CUSTOMER_PROJECT', 'CURATED_MEMORY']);
-        assert.equal(registrations.some(item => item.sourceType === 'PUBLISHED_DOCUMENTATION'), false);
-        assert.equal(registrations.every(item => item.ownerType === 'COPILOT_KNOWLEDGE'), true);
+        assert.deepEqual(
+            registrations.map((item) => item.sourceType),
+            [
+                'README',
+                'INTERNAL_DOCUMENTATION',
+                'AGENTS_CONTRACT',
+                'LLM_CONTRACT',
+                'SOURCE_CODE',
+                'CUSTOMER_PROJECT',
+                'CURATED_MEMORY',
+            ],
+        );
+        assert.equal(
+            registrations.some(
+                (item) => item.sourceType === 'PUBLISHED_DOCUMENTATION',
+            ),
+            false,
+        );
+        assert.equal(
+            registrations.every(
+                (item) => item.ownerType === 'COPILOT_KNOWLEDGE',
+            ),
+            true,
+        );
     } finally {
         delete global.SERVICE;
     }
 });
 
-const source = overrides => Object.assign({
-    code: 'framework-readmes', repository: 'test-repository', project: 'nodics', module: 'nodics.copilot', owner: 'nodics.copilot',
-    version: 'commit-1', sourceType: 'README', classification: 'INTERNAL', paths: ['**/*.md'],
-    allowedChannels: ['EMPLOYEE'], requiredPermissions: ['copilot.knowledge.internal.read'],
-    secretScanPolicy: 'REQUIRED', enabled: true
-}, overrides || {});
+const source = (overrides) =>
+    Object.assign(
+        {
+            code: 'framework-readmes',
+            repository: 'test-repository',
+            project: 'nodics',
+            module: 'nodics.copilot',
+            owner: 'nodics.copilot',
+            version: 'commit-1',
+            sourceType: 'README',
+            classification: 'INTERNAL',
+            paths: ['**/*.md'],
+            allowedChannels: ['EMPLOYEE'],
+            requiredPermissions: ['copilot.knowledge.internal.read'],
+            secretScanPolicy: 'REQUIRED',
+            enabled: true,
+        },
+        overrides || {},
+    );
 
-test('repository ingestion is bounded, rejects secrets, and projects only safe chunks through Discovery', async t => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-copilot-knowledge-'));
+test('repository ingestion is bounded, rejects secrets, and projects only safe chunks through Discovery', async (t) => {
+    const root = fs.mkdtempSync(
+        path.join(os.tmpdir(), 'nodics-copilot-knowledge-'),
+    );
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
     fs.mkdirSync(path.join(root, 'docs'), { recursive: true });
-    fs.mkdirSync(path.join(root, 'node_modules', 'ignored'), { recursive: true });
-    fs.writeFileSync(path.join(root, 'README.md'), '# Nodics\n\nNodics framework overview.');
-    fs.writeFileSync(path.join(root, 'docs', 'private.md'), '# Private\n\napi_key="1234567890abcdefghijklmnop"');
-    fs.writeFileSync(path.join(root, 'node_modules', 'ignored', 'README.md'), '# Dependency\n\nMust not be indexed.');
-    const registryConfig = knowledgeConfiguration.sourceRegistry;
-    const normalized = registryService.normalize(source(), registryConfig, policy);
-    const system = policy.normalizeSecurityContext({ channel: 'SYSTEM', actor: 'knowledge-indexer', permissions: ['copilot.knowledge.source.manage'] }, policyConfiguration);
-    const projected = [];
-    const report = await ingestion.ingestSource({
-        source: normalized, securityContext: system, policyConfiguration: policyConfiguration,
-        configuration: Object.assign({}, knowledgeConfiguration.ingestion, { enabled: true }),
-        repositoryRoots: { 'test-repository': root }, indexTenant: 'default', indexVersion: 'test-1'
-    }, {
-        policyService: policy, sourceProviders: { REPOSITORY: repositoryProvider }, secretInspectionService: secretInspection,
-        chunkService: chunks, discoveryDocumentBuilderService: discoveryBuilder,
-        discoveryProjectionService: { doSave: async request => projected.push(request.model) }
+    fs.mkdirSync(path.join(root, 'node_modules', 'ignored'), {
+        recursive: true,
     });
+    fs.writeFileSync(
+        path.join(root, 'README.md'),
+        '# Nodics\n\nNodics framework overview.',
+    );
+    fs.writeFileSync(
+        path.join(root, 'docs', 'private.md'),
+        '# Private\n\napi_key="1234567890abcdefghijklmnop"',
+    );
+    fs.writeFileSync(
+        path.join(root, 'node_modules', 'ignored', 'README.md'),
+        '# Dependency\n\nMust not be indexed.',
+    );
+    const registryConfig = knowledgeConfiguration.sourceRegistry;
+    const normalized = registryService.normalize(
+        source(),
+        registryConfig,
+        policy,
+    );
+    const system = policy.normalizeSecurityContext(
+        {
+            channel: 'SYSTEM',
+            actor: 'knowledge-indexer',
+            permissions: ['copilot.knowledge.source.manage'],
+        },
+        policyConfiguration,
+    );
+    const projected = [];
+    const report = await ingestion.ingestSource(
+        {
+            source: normalized,
+            securityContext: system,
+            policyConfiguration: policyConfiguration,
+            configuration: Object.assign({}, knowledgeConfiguration.ingestion, {
+                enabled: true,
+            }),
+            repositoryRoots: { 'test-repository': root },
+            indexTenant: 'default',
+            indexVersion: 'test-1',
+        },
+        {
+            policyService: policy,
+            sourceProviders: { REPOSITORY: repositoryProvider },
+            secretInspectionService: secretInspection,
+            chunkService: chunks,
+            discoveryDocumentBuilderService: discoveryBuilder,
+            discoveryProjectionService: {
+                doSave: async (request) => {
+                    projected.push(request.model);
+                    return {
+                        code: 'SUC_SRCH_00000',
+                        result: [{ code: request.model.code, indexed: true }],
+                    };
+                },
+            },
+        },
+    );
     assert.equal(report.state, 'PROJECTED');
     assert.equal(report.filesRead, 2);
     assert.equal(report.filesAccepted, 1);
@@ -85,101 +169,481 @@ test('repository ingestion is bounded, rejects secrets, and projects only safe c
     assert.deepEqual(report.rejected[0].findingCodes, ['ASSIGNED_SECRET']);
     assert.equal(projected.length, 1);
     assert.equal(projected[0].payload.relativePath, 'README.md');
-    assert.equal(projected[0].payload.content.includes('1234567890abcdefghijklmnop'), false);
+    assert.equal(
+        projected[0].payload.content.includes('1234567890abcdefghijklmnop'),
+        false,
+    );
     assert.equal(projected[0].payload.classification, 'INTERNAL');
 });
 
 test('repository provider refuses public source definitions', async () => {
-    await assert.rejects(repositoryProvider.read(source({ sourceType: 'PUBLISHED_DOCUMENTATION', classification: 'PUBLIC' }), { repositoryRoots: {}, configuration: knowledgeConfiguration.ingestion }), /COPILOT_PUBLIC_REPOSITORY_SOURCE_FORBIDDEN/);
+    await assert.rejects(
+        repositoryProvider.read(
+            source({
+                sourceType: 'PUBLISHED_DOCUMENTATION',
+                classification: 'PUBLIC',
+            }),
+            {
+                repositoryRoots: {},
+                configuration: knowledgeConfiguration.ingestion,
+            },
+        ),
+        /COPILOT_PUBLIC_REPOSITORY_SOURCE_FORBIDDEN/,
+    );
 });
 
-test('repository partitions narrow extensions, exclusions, and file limits without widening global policy', async t => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-copilot-partition-'));
+test('authored documentation and frontend formats are read as strict UTF-8, never binary replacement text', async t => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-text-formats-'));
+    t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+    const formats = ['.mdx', '.rst', '.adoc', '.mjs', '.cjs', '.jsx', '.css', '.scss', '.html', '.xml', '.sql', '.graphql', '.sh'];
+    for (const extension of formats) fs.writeFileSync(path.join(root, 'authored' + extension), 'Safe authored source');
+    const partition = source({ paths: ['**/*'], sourceType: 'SOURCE_CODE', classification: 'RESTRICTED' });
+    const options = { repositoryRoots: { 'test-repository': root }, configuration: knowledgeConfiguration.ingestion };
+    assert.equal((await repositoryProvider.read(partition, options)).length, formats.length);
+    for (const bytes of [Buffer.from([0xff, 0xfe]), Buffer.from([65, 0, 66])]) {
+        fs.writeFileSync(path.join(root, 'invalid.md'), bytes);
+        await assert.rejects(repositoryProvider.read(partition, options), /TEXT_FORMAT_INVALID/);
+    }
+});
+
+test('projection failures and uncertain acknowledgements stop indexing without a success report or replay', async () => {
+    const normalized = registryService.normalize(
+        source(),
+        knowledgeConfiguration.sourceRegistry,
+        policy,
+    );
+    const request = {
+        source: normalized,
+        securityContext: policy.normalizeSecurityContext(
+            {
+                channel: 'SYSTEM',
+                actor: 'indexer',
+                permissions: ['copilot.knowledge.source.manage'],
+            },
+            policyConfiguration,
+        ),
+        configuration: { ...knowledgeConfiguration.ingestion, enabled: true },
+        indexTenant: 'tenant',
+    };
+    for (const response of [
+        undefined,
+        {},
+        {
+            code: 'SUC_SRCH_00000',
+            errors: [{ code: 'ERR_SEARCH' }],
+            result: [],
+        },
+        {
+            code: 'SUC_SRCH_00001',
+            errors: [{ code: 'ERR_SEARCH' }],
+            result: [{}],
+        },
+        { code: 'SUC_SRCH_00000', result: [{ code: 'foreign' }] },
+        { code: 'SUC_SRCH_00000', result: [] },
+        { code: 'SUC_SRCH_00000', result: [{}] },
+    ]) {
+        let writes = 0;
+        const dependencies = {
+            policyService: policy,
+            sourceProviders: {
+                REPOSITORY: {
+                    read: async () => [
+                        {
+                            relativePath: 'README.md',
+                            content: 'Bounded safe evidence',
+                        },
+                    ],
+                },
+            },
+            secretInspectionService: secretInspection,
+            chunkService: chunks,
+            discoveryDocumentBuilderService: discoveryBuilder,
+            discoveryProjectionService: {
+                doSave: async () => {
+                    writes++;
+                    return response;
+                },
+            },
+        };
+        await assert.rejects(
+            ingestion.ingestSource(request, dependencies),
+            /PROJECTION_UNCONFIRMED/,
+        );
+        assert.equal(writes, 1);
+        const preview = await ingestion.ingestSource(
+            { ...request, dryRun: true },
+            dependencies,
+        );
+        assert.equal(preview.state, 'PREPARED');
+        assert.equal(writes, 1);
+    }
+});
+
+test('repository partitions narrow extensions, exclusions, and file limits without widening global policy', async (t) => {
+    const root = fs.mkdtempSync(
+        path.join(os.tmpdir(), 'nodics-copilot-partition-'),
+    );
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
     fs.mkdirSync(path.join(root, 'src', 'generated'), { recursive: true });
-    fs.writeFileSync(path.join(root, 'src', 'allowed.js'), 'module.exports = true;');
-    fs.writeFileSync(path.join(root, 'src', 'blocked.ts'), 'export const blocked = true;');
-    fs.writeFileSync(path.join(root, 'src', 'generated', 'ignored.js'), 'module.exports = false;');
+    fs.writeFileSync(
+        path.join(root, 'src', 'allowed.js'),
+        'module.exports = true;',
+    );
+    fs.writeFileSync(
+        path.join(root, 'src', 'blocked.ts'),
+        'export const blocked = true;',
+    );
+    fs.writeFileSync(
+        path.join(root, 'src', 'generated', 'ignored.js'),
+        'module.exports = false;',
+    );
     const partition = source({
-        sourceType: 'SOURCE_CODE', classification: 'RESTRICTED', paths: ['src/**/*.js', 'src/**/*.ts'],
-        excludedPaths: ['src/generated'], allowedExtensions: ['.js', '.exe'], limits: { maximumFiles: 2, maximumFileBytes: 128, maximumSourceBytes: 256 }
+        sourceType: 'SOURCE_CODE',
+        classification: 'RESTRICTED',
+        paths: ['src/**/*.js', 'src/**/*.ts'],
+        excludedPaths: ['src/generated'],
+        allowedExtensions: ['.js', '.exe'],
+        limits: {
+            maximumFiles: 2,
+            maximumFileBytes: 128,
+            maximumSourceBytes: 256,
+        },
     });
     const files = await repositoryProvider.read(partition, {
         repositoryRoots: { 'test-repository': root },
-        configuration: Object.assign({}, knowledgeConfiguration.ingestion, { maximumFilesPerSource: 10, maximumFileBytes: 1024, maximumSourceBytes: 4096 })
+        configuration: Object.assign({}, knowledgeConfiguration.ingestion, {
+            maximumFilesPerSource: 10,
+            maximumFileBytes: 1024,
+            maximumSourceBytes: 4096,
+        }),
     });
-    assert.deepEqual(files.map(file => file.relativePath), ['src/allowed.js']);
-    const effective = repositoryProvider.effectiveConfiguration(partition, knowledgeConfiguration.ingestion);
+    assert.deepEqual(
+        files.map((file) => file.relativePath),
+        ['src/allowed.js'],
+    );
+    const effective = repositoryProvider.effectiveConfiguration(
+        partition,
+        knowledgeConfiguration.ingestion,
+    );
     assert.deepEqual(effective.allowedExtensions, ['.js']);
     assert.equal(effective.maximumFilesPerSource, 2);
     assert.equal(effective.maximumFileBytes, 128);
     assert.equal(effective.maximumSourceBytes, 256);
-    assert.equal(repositoryProvider.matchesPattern('modules/core/test', '**/test'), true);
-    assert.equal(repositoryProvider.matchesPattern('modules/core/llm/generated', '**/llm/generated'), true);
+    assert.equal(
+        repositoryProvider.matchesPattern('modules/core/test', '**/test'),
+        true,
+    );
+    assert.equal(
+        repositoryProvider.matchesPattern(
+            'modules/core/llm/generated',
+            '**/llm/generated',
+        ),
+        true,
+    );
 });
 
 test('retrieval filters before Discovery and reauthorizes every returned result', async () => {
-    const registry = registryService.createRegistry([
-        source({ code: 'public-docs', repository: 'nodics.docs', sourceType: 'PUBLISHED_DOCUMENTATION', classification: 'PUBLIC', paths: ['online'], public: true, lifecycle: 'ONLINE', allowedChannels: ['PUBLIC', 'EMPLOYEE'], requiredPermissions: [] }),
-        source(),
-        source({ code: 'framework-agents', sourceType: 'AGENTS_CONTRACT', classification: 'RESTRICTED', paths: ['**/AGENTS.md'], requiredPermissions: ['copilot.knowledge.restricted.read'] })
-    ], knowledgeConfiguration.sourceRegistry, policy);
+    const registry = registryService.createRegistry(
+        [
+            source({
+                code: 'public-docs',
+                repository: 'nodics.docs',
+                sourceType: 'PUBLISHED_DOCUMENTATION',
+                classification: 'PUBLIC',
+                paths: ['online'],
+                public: true,
+                lifecycle: 'ONLINE',
+                allowedChannels: ['PUBLIC', 'EMPLOYEE'],
+                requiredPermissions: [],
+            }),
+            source(),
+            source({
+                code: 'framework-agents',
+                sourceType: 'AGENTS_CONTRACT',
+                classification: 'RESTRICTED',
+                paths: ['**/AGENTS.md'],
+                requiredPermissions: ['copilot.knowledge.restricted.read'],
+            }),
+        ],
+        knowledgeConfiguration.sourceRegistry,
+        policy,
+    );
     const records = registry.sources.map((item, index) => ({
         score: 1 - index / 10,
         payload: {
-            code: item.code + '|chunk-1', sourceCode: item.code, sourceType: item.sourceType, classification: item.classification,
-            repository: item.repository, project: item.project, module: item.module, owner: item.owner, relativePath: item.paths[0], version: item.version,
-            title: item.code, content: 'Evidence for ' + item.code, contentDigest: 'a'.repeat(64)
-        }
+            code: item.code + '|chunk-1',
+            sourceCode: item.code,
+            sourceType: item.sourceType,
+            classification: item.classification,
+            sourcePolicyDigest: item.sourcePolicyDigest,
+            repository: item.repository,
+            project: item.project,
+            module: item.module,
+            owner: item.owner,
+            relativePath: item.paths[0],
+            version: item.version,
+            title: item.code,
+            content: 'Evidence for ' + item.code,
+            contentDigest: 'a'.repeat(64),
+        },
     }));
     const searches = [];
     const dependencies = {
-        registryService: registryService, policyService: policy, knowledgeService: knowledgeService,
-        discoveryRuntimeService: { search: async request => { searches.push(request); return records; } }
+        registryService: registryService,
+        policyService: policy,
+        knowledgeService: knowledgeService,
+        discoveryRuntimeService: {
+            search: async (request) => {
+                searches.push(request);
+                return records;
+            },
+        },
     };
-    const retrievalConfig = Object.assign({}, knowledgeConfiguration.retrieval, { enabled: true });
-    const publicContext = policy.normalizeSecurityContext({ channel: 'PUBLIC' }, policyConfiguration);
-    const publicResult = await retrieval.search({ query: 'What is Nodics?', indexTenant: 'default', registry: registry, securityContext: publicContext, policyConfiguration: policyConfiguration, configuration: retrievalConfig, indexConfiguration: { indexName: 'copilotKnowledge' } }, dependencies);
-    assert.deepEqual(searches[0].searchQuery.filters['payload.sourceCode.keyword'], ['public-docs']);
-    assert.deepEqual(publicResult.evidence.map(item => item.provenance.sourceCode), ['public-docs']);
-    assert.equal(publicResult.evidence.some(item => item.provenance.sourceCode === 'framework-agents'), false);
-    const axisContext = policy.normalizeSecurityContext({ channel: 'EMPLOYEE', actor: 'admin', tenant: 'default', permissions: ['copilot.knowledge.internal.read'] }, policyConfiguration);
-    const axisResult = await retrieval.search({ query: 'Explain the framework', indexTenant: 'default', registry: registry, securityContext: axisContext, policyConfiguration: policyConfiguration, configuration: retrievalConfig, indexConfiguration: { indexName: 'copilotKnowledge' } }, dependencies);
-    assert.deepEqual(searches[1].searchQuery.filters['payload.sourceCode.keyword'], ['public-docs', 'framework-readmes']);
-    assert.deepEqual(axisResult.evidence.map(item => item.provenance.sourceCode), ['public-docs', 'framework-readmes']);
-    assert.equal(axisResult.citations.every(item => item.provenance.contentDigest), true);
-    assert.equal(axisResult.citations.every(item => item.citationId && item.locator && item.navigationType === 'NONE'), true);
+    const retrievalConfig = Object.assign(
+        {},
+        knowledgeConfiguration.retrieval,
+        { enabled: true },
+    );
+    const publicContext = policy.normalizeSecurityContext(
+        { channel: 'PUBLIC' },
+        policyConfiguration,
+    );
+    const publicResult = await retrieval.search(
+        {
+            query: 'What is Nodics?',
+            indexTenant: 'default',
+            registry: registry,
+            securityContext: publicContext,
+            policyConfiguration: policyConfiguration,
+            configuration: retrievalConfig,
+            indexConfiguration: { indexName: 'copilotKnowledge' },
+        },
+        dependencies,
+    );
+    assert.deepEqual(
+        searches[0].searchQuery.filters['payload.sourceCode.keyword'],
+        ['public-docs'],
+    );
+    assert.deepEqual(
+        searches[0].searchQuery.filters['payload.sourcePolicyDigest.keyword'],
+        [registry.sources[0].sourcePolicyDigest],
+    );
+    assert.deepEqual(
+        publicResult.evidence.map((item) => item.provenance.sourceCode),
+        ['public-docs'],
+    );
+    assert.equal(
+        publicResult.evidence.some(
+            (item) => item.provenance.sourceCode === 'framework-agents',
+        ),
+        false,
+    );
+    const axisContext = policy.normalizeSecurityContext(
+        {
+            channel: 'EMPLOYEE',
+            actor: 'admin',
+            tenant: 'default',
+            permissions: ['copilot.knowledge.internal.read'],
+        },
+        policyConfiguration,
+    );
+    const axisResult = await retrieval.search(
+        {
+            query: 'Explain the framework',
+            indexTenant: 'default',
+            registry: registry,
+            securityContext: axisContext,
+            policyConfiguration: policyConfiguration,
+            configuration: retrievalConfig,
+            indexConfiguration: { indexName: 'copilotKnowledge' },
+        },
+        dependencies,
+    );
+    assert.deepEqual(
+        searches[1].searchQuery.filters['payload.sourceCode.keyword'],
+        ['public-docs', 'framework-readmes'],
+    );
+    assert.deepEqual(
+        axisResult.evidence.map((item) => item.provenance.sourceCode),
+        ['public-docs', 'framework-readmes'],
+    );
+    assert.equal(
+        axisResult.citations.every((item) => item.provenance.contentDigest),
+        true,
+    );
+    assert.equal(
+        axisResult.citations.every(
+            (item) =>
+                item.citationId &&
+                item.locator &&
+                item.navigationType === 'NONE',
+        ),
+        true,
+    );
 });
 
 test('retrieval does not call Discovery when no source is authorized', async () => {
-    const registry = registryService.createRegistry([source()], knowledgeConfiguration.sourceRegistry, policy);
-    const publicContext = policy.normalizeSecurityContext({ channel: 'PUBLIC' }, policyConfiguration);
+    const registry = registryService.createRegistry(
+        [source()],
+        knowledgeConfiguration.sourceRegistry,
+        policy,
+    );
+    const publicContext = policy.normalizeSecurityContext(
+        { channel: 'PUBLIC' },
+        policyConfiguration,
+    );
     let called = false;
-    const result = await retrieval.search({ query: 'internal details', indexTenant: 'default', registry: registry, securityContext: publicContext, policyConfiguration: policyConfiguration, configuration: Object.assign({}, knowledgeConfiguration.retrieval, { enabled: true }), indexConfiguration: { indexName: 'copilotKnowledge' } }, {
-        registryService: registryService, policyService: policy, knowledgeService: knowledgeService,
-        discoveryRuntimeService: { search: async () => { called = true; return []; } }
-    });
+    const result = await retrieval.search(
+        {
+            query: 'internal details',
+            indexTenant: 'default',
+            registry: registry,
+            securityContext: publicContext,
+            policyConfiguration: policyConfiguration,
+            configuration: Object.assign({}, knowledgeConfiguration.retrieval, {
+                enabled: true,
+            }),
+            indexConfiguration: { indexName: 'copilotKnowledge' },
+        },
+        {
+            registryService: registryService,
+            policyService: policy,
+            knowledgeService: knowledgeService,
+            discoveryRuntimeService: {
+                search: async () => {
+                    called = true;
+                    return [];
+                },
+            },
+        },
+    );
     assert.equal(called, false);
     assert.equal(result.insufficientEvidence, true);
     assert.deepEqual(result.evidence, []);
 });
 
+test('changed exclusions invalidate indexed chunks before evidence reaches the model, even at the same source version', async () => {
+    const original = registryService.createRegistry(
+        [source()],
+        knowledgeConfiguration.sourceRegistry,
+        policy,
+    );
+    const changed = registryService.createRegistry(
+        [source({ excludedPaths: ['private'] })],
+        knowledgeConfiguration.sourceRegistry,
+        policy,
+    );
+    assert.notEqual(
+        original.sources[0].sourcePolicyDigest,
+        changed.sources[0].sourcePolicyDigest,
+    );
+    const records = chunks
+        .chunk(
+            {
+                relativePath: 'private/README.md',
+                content: 'Restricted old content',
+            },
+            original.sources[0],
+            knowledgeConfiguration.ingestion,
+        )
+        .map((payload) => ({ payload }));
+    let called = false;
+    const context = policy.normalizeSecurityContext(
+        {
+            channel: 'EMPLOYEE',
+            actor: 'employee',
+            tenant: 'default',
+            permissions: ['copilot.knowledge.internal.read'],
+        },
+        policyConfiguration,
+    );
+    const result = await retrieval.search(
+        {
+            query: 'content',
+            indexTenant: 'default',
+            registry: changed,
+            securityContext: context,
+            configuration: {
+                ...knowledgeConfiguration.retrieval,
+                enabled: true,
+            },
+        },
+        {
+            registryService,
+            policyService: policy,
+            knowledgeService,
+            discoveryRuntimeService: {
+                search: async (request) => {
+                    called = true;
+                    assert.deepEqual(
+                        request.searchQuery.filters[
+                            'payload.sourcePolicyDigest.keyword'
+                        ],
+                        [changed.sources[0].sourcePolicyDigest],
+                    );
+                    return records;
+                },
+            },
+        },
+    );
+    assert.equal(called, true);
+    assert.deepEqual(result.evidence, []);
+    delete records[0].payload.sourcePolicyDigest;
+    assert.equal(
+        retrieval.resultAllowed(
+            records[0],
+            original,
+            context,
+            policyConfiguration,
+            policy,
+        ),
+        false,
+    );
+});
 
-test('generated server copies never consume the authored repository source budget', async t => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-generated-knowledge-'));
+test('generated server copies never consume the authored repository source budget', async (t) => {
+    const root = fs.mkdtempSync(
+        path.join(os.tmpdir(), 'nodics-generated-knowledge-'),
+    );
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
     const server = 'envs/selectedLocal/platformServer';
     const authored = server + '/config/properties.js';
     fs.mkdirSync(path.dirname(path.join(root, authored)), { recursive: true });
     fs.writeFileSync(path.join(root, authored), 'module.exports = {};');
-    for (const directory of ['src/service/gen', 'src/controller/gen', 'src/facade/gen', 'generated/openapi']) {
+    for (const directory of [
+        'src/service/gen',
+        'src/controller/gen',
+        'src/facade/gen',
+        'generated/openapi',
+    ]) {
         fs.mkdirSync(path.join(root, server, directory), { recursive: true });
-        for (let index = 0; index < 3; index++) fs.writeFileSync(path.join(root, server, directory, index + '.js'), 'generated');
+        for (let index = 0; index < 3; index++)
+            fs.writeFileSync(
+                path.join(root, server, directory, index + '.js'),
+                'generated',
+            );
     }
-    const partition = source({ sourceType: 'SOURCE_CODE', paths: [server + '/**/*.js'], allowedExtensions: ['.js'], limits: { maximumFiles: 1 } });
-    const options = { repositoryRoots: { 'test-repository': root }, configuration: knowledgeConfiguration.ingestion };
+    const partition = source({
+        sourceType: 'SOURCE_CODE',
+        paths: [server + '/**/*.js'],
+        allowedExtensions: ['.js'],
+        limits: { maximumFiles: 1 },
+    });
+    const options = {
+        repositoryRoots: { 'test-repository': root },
+        configuration: knowledgeConfiguration.ingestion,
+    };
     const files = await repositoryProvider.read(partition, options);
-    assert.deepEqual(files.map(file => file.relativePath), [authored]);
-    fs.writeFileSync(path.join(root, server, 'config', 'extra.js'), 'module.exports = {};');
-    await assert.rejects(repositoryProvider.read(partition, options), /COPILOT_KNOWLEDGE_SOURCE_FILE_LIMIT_EXCEEDED/);
+    assert.deepEqual(
+        files.map((file) => file.relativePath),
+        [authored],
+    );
+    fs.writeFileSync(
+        path.join(root, server, 'config', 'extra.js'),
+        'module.exports = {};',
+    );
+    await assert.rejects(
+        repositoryProvider.read(partition, options),
+        /COPILOT_KNOWLEDGE_SOURCE_FILE_LIMIT_EXCEEDED/,
+    );
 });

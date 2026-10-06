@@ -98,6 +98,10 @@ eligibility, running-job protection, target permissions, logging, or failure
 handling. A human bearer token can authorize a CronJob command; module calls
 performed by the job use the separate tenant-scoped internal service-token flow.
 
+Scheduler bookkeeping uses owner-bound `persistRuntimeState`, never business
+execution authority. The [detailed guide](../../../nodics.docs/docs/pages/nodics.process/scheduled-automation.md)
+defines its permitted fields, exact acknowledgement and drain guarantees.
+
 Axis can present a Cron operation panel, but it remains a client. Saving a job
 uses the Cron-owned generated `cronJob` schema route, and lifecycle buttons call
 Cron-owned command routes. Axis must not create an alternate scheduler state,
@@ -113,6 +117,10 @@ When a Cron job declares `jobDetail.processTrigger`, Cron may start a governed
 Process trigger through Process APIs. The Cron definition still owns schedule
 and execution timing. Process owns the trigger relationship, started instance,
 task creation, and audit timeline.
+Configured business context is retained, but Cron supplies `source: 'cronjob'`,
+the actual job/tenant, scheduled expression and fire time after merging it. A
+frontend source label or configured conflicting field cannot override that
+provenance. Process and the target still perform independent authorization.
 
 ## Resilience And Recovery
 
@@ -178,6 +186,10 @@ environment.
 
 ## Continue
 
+- Inactive Process schedule drafts: [contract](llm/contracts/inactive-schedule-drafts.md)
+  and [step-by-step guide](../../../nodics.docs/docs/pages/nodics.process/inactive-schedule-drafts.md).
+  Deployment-approved targets can be reviewed and inserted without scheduling.
+  This optional command defaults off and never activates a job.
 - Process capability family: [nodics.process](../../README.md)
 - Profile and service identity: [profile](../../../nodics.platform/modules/profile/README.md)
 - Messaging and events: [nEms](../../../nodics.foundation/modules/nEms/README.md)

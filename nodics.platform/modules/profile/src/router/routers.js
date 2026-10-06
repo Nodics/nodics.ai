@@ -530,6 +530,20 @@ module.exports = {
       },
     },
     loadDefaults: {
+      inspectCreationReceipt: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
+        permission: 'profile.enterprise.create', apiExposure: 'profileManagement',
+        cache: { enabled: false }, requestPrivacy: { sensitive: true },
+        key: '/enterprises/commands/inspect', method: 'POST',
+        controller: 'DefaultEnterpriseManagementController', operation: 'inspectCreationReceipt',
+      },
+      inspectInvitationReceipt: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
+        permission: 'profile.enterpriseAccess.assign', apiExposure: 'profileManagement',
+        cache: { enabled: false }, requestPrivacy: { sensitive: true },
+        key: '/enterprises/:enterpriseCode/access-assignments/commands/inspect', method: 'POST',
+        controller: 'DefaultEnterpriseManagementController', operation: 'inspectInvitationReceipt',
+      },
       getInternalAuthToken: {
         secured: true,
         accessGroups: ["userGroup"],

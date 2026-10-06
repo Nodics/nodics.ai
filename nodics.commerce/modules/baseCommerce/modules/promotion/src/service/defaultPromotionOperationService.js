@@ -491,6 +491,11 @@ module.exports = {
       previous.revision < 0
     )
       throw new Error("Revisioned coupon persistence owner is required");
+    const cleared = Object.keys(model).filter(key => model[key] === undefined);
+    const mutation = cleared.length ? {
+      $set: Object.fromEntries(Object.entries(model).filter(([, value]) => value !== undefined)),
+      $unset: Object.fromEntries(cleared.map(key => [key, ""])),
+    } : model;
     const command = {
       tenant: request.tenant,
       authData: this.serviceAuthData(request),
@@ -500,7 +505,7 @@ module.exports = {
         revision: previous.revision,
         status: previous.status,
       }),
-      model,
+      model: mutation,
     };
     const response = SERVICE.DefaultCouponSellerAuthorizationService
       ? await SERVICE.DefaultCouponSellerAuthorizationService.writeCoupon(
@@ -542,7 +547,9 @@ module.exports = {
         coupon,
       );
     }
-    const response = await service.get({
+    const publication = SERVICE.DefaultPromotionPublicationService;
+    const activated = publication?.deliveryEnabled(request) === true;
+    const response = activated ? undefined : await service.get({
       tenant: request.tenant,
       authData: this.serviceAuthData(request),
       query: governedSeller
@@ -557,8 +564,10 @@ module.exports = {
       options: { recursive: false, skipItemCache: true },
       searchOptions: { pageSize: 2 },
     });
-    this.assertLifecycleEnvelope(response);
-    const value = response.result,
+    if (!activated) this.assertLifecycleEnvelope(response);
+    const value = activated
+      ? (await this.promotions(request)).filter(policy => policy.code === coupon.promotionCode)
+      : response.result,
       rows = Array.isArray(value) ? value : value?.code ? [value] : [];
     const campaign = rows.length === 1 ? rows[0] : undefined;
     if (

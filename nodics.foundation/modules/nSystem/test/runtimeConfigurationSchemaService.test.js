@@ -267,6 +267,72 @@ const service = require('../src/service/config/defaultRuntimeConfigurationSchema
     ).valid, false);
     assert.throws(() => customized.encryptSensitiveValue('test-private-secret'), error => error.code === 'ERR_SYS_00002');
 
+    // A fresh runtime must hydrate its declared credentials, not depend on a prior save event.
+    const priorOwner = SERVICE.DefaultRuntimeConfigurationValueService;
+    const priorNodics = global.NODICS;
+    const record = service.createRuntimeConfigurationRecord({ tenant: 'electronicsTenant' },
+        'telegramExternalIdentity', schema, { botToken: '987654321:restart-test-secret' });
+    let records = [record];
+    let reads = 0;
+    global.NODICS = { getActiveTenants: () => ['electronicsTenant'] };
+    SERVICE.DefaultRuntimeConfigurationValueService = {
+        get: async request => {
+            reads++;
+            assert.equal(request.tenant, 'electronicsTenant');
+            assert.equal(request.query.code, record.code);
+            assert.equal(request.searchOptions.limit, 2);
+            return { result: records };
+        }
+    };
+    try {
+        const before = tenantPatches.length;
+        const events = publishedEvents.length;
+        await service.restorePersistedConfiguration();
+        assert.equal(reads, 1);
+        assert.equal(tenantPatches.length, before + 1);
+        assert.equal(tenantPatches.at(-1).configuration.runtimeConfiguration.credentials['telegram.bot.circa'].value,
+            '987654321:restart-test-secret');
+        assert.equal(publishedEvents.length, events);
+        records = [];
+        await service.restorePersistedConfiguration();
+        records = [{ ...record, active: false }];
+        await service.restorePersistedConfiguration();
+        assert.equal(tenantPatches.length, before + 1);
+        for (const changes of [{ tenant: 'another' }, { ownerModule: 'another' },
+            { schemaCode: 'another' }, { scope: { level: 'enterprise', code: 'another' } }]) {
+            records = [{ ...record, ...changes }];
+            await assert.rejects(() => service.restorePersistedConfiguration(), /scope mismatch/);
+        }
+        records = [record, record];
+        await assert.rejects(() => service.restorePersistedConfiguration(), /Ambiguous/);
+        records = [record];
+        encryptionKey = undefined;
+        await assert.rejects(() => service.restorePersistedConfiguration(), /encryption key/);
+        encryptionKey = configuredKey;
+        delete SERVICE.DefaultRuntimeConfigurationValueService;
+        assert.equal(await service.restorePersistedConfiguration(), true);
+    } finally {
+        SERVICE.DefaultRuntimeConfigurationValueService = priorOwner;
+        global.NODICS = priorNodics;
+        encryptionKey = configuredKey;
+    }
+
+    const lifecycle = require('../nodics');
+    const priorPropertyOwner = SERVICE.DefaultRuntimePropertyPersistenceService;
+    const priorSchemaOwner = SERVICE.DefaultRuntimeConfigurationSchemaService;
+    const order = [];
+    try {
+        SERVICE.DefaultRuntimePropertyPersistenceService = { restore: async () => order.push('properties') };
+        SERVICE.DefaultRuntimeConfigurationSchemaService = { restorePersistedConfiguration: async () => order.push('schemas') };
+        assert.equal(await lifecycle.postInit(), true);
+        assert.deepEqual(order, ['properties', 'schemas']);
+        SERVICE.DefaultRuntimeConfigurationSchemaService.restorePersistedConfiguration = async () => { throw Error('fixture restore refused'); };
+        await assert.rejects(() => lifecycle.postInit(), /fixture restore refused/);
+    } finally {
+        SERVICE.DefaultRuntimePropertyPersistenceService = priorPropertyOwner;
+        SERVICE.DefaultRuntimeConfigurationSchemaService = priorSchemaOwner;
+    }
+
     console.log('Runtime configuration schema service contract validated');
 })().catch((error) => {
     console.error(error);

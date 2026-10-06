@@ -81,8 +81,17 @@ test.beforeEach(() => {
       isPermissionGranted: (p, g) => g.includes(p),
     },
     DefaultModuleService: {
-      invokeModule: async (r) =>
-        r.apiName === "/identity/scopes/me"
+      invokeModule: async (r) => {
+        if (r.apiName !== "/identity/scopes/me") {
+          assert.equal(r.apiName, "/references/read");
+          assert.deepEqual(r.requestBody, {
+            type: "enterprise",
+            codes: ["merchant-enterprise"],
+          });
+          assert.equal(r.methodName, "POST");
+          assert.equal(r.maxAttempts, 1);
+        }
+        return r.apiName === "/identity/scopes/me"
           ? { data: scope }
           : {
               result: [
@@ -92,7 +101,8 @@ test.beforeEach(() => {
                   active: true,
                 },
               ],
-            },
+            };
+      },
     },
     DefaultDigitalEntitlementService: {
       get: async (r) => ({
@@ -193,6 +203,37 @@ test("enterprise employee validates the existing customer code and confirms one 
   );
   assert.equal(JSON.stringify(result).includes("secret-provider-hash"), false);
   assert.equal(JSON.stringify(result).includes("CUSTOMER-CODE"), false);
+});
+test("read-only receipt inspection requires the original committed receipt and never invokes fulfillment again", async () => {
+  const r = await validated();
+  await merchant.confirm(r);
+  SERVICE.DefaultDigitalCommerceMerchantScreenProviderService = {
+    ...SERVICE.DefaultDigitalCommerceMerchantScreenProviderService,
+    confirm: async () => {
+      throw new Error("must not run");
+    },
+  };
+  const result = await merchant.inspectReceipt(r);
+  assert.equal(result.state, "COMPLETED");
+  assert.equal(result.confirmationKey, r.idempotencyKey);
+  assert.equal(result.receiptCode, row.evidence.merchantRedemption.receiptCode);
+  assert.doesNotMatch(
+    JSON.stringify(result),
+    /CUSTOMER-CODE|secret-provider-hash|buyer/,
+  );
+  await assert.rejects(
+    merchant.inspectReceipt({ ...r, idempotencyKey: "different-command" }),
+  );
+  await assert.rejects(
+    merchant.inspectReceipt({
+      ...r,
+      payload: { ...r.payload, merchantReceiptReference: "OTHER-RECEIPT" },
+    }),
+  );
+  receipts.clear();
+  assert.equal((await merchant.inspectReceipt(r)).state, "UNCONFIRMED");
+  permission = false;
+  await assert.rejects(merchant.inspectReceipt(r));
 });
 test("customer identity, missing permission and another enterprise scope cannot access fulfillment", async () => {
   await assert.rejects(
@@ -395,4 +436,57 @@ test("Promotion eligibility failure and an inactive issuer fail closed before cl
     /enterprise is unavailable/,
   );
   assert.equal(coupon, "DELIVERED");
+});
+test("issuer reference lookup rejects duplicate owner identities before claim", async () => {
+  SERVICE.DefaultModuleService.invokeModule = async (r) =>
+    r.apiName === "/identity/scopes/me"
+      ? { data: scope }
+      : {
+          result: [
+            { code: "merchant-enterprise" },
+            { code: "merchant-enterprise" },
+          ],
+        };
+  await assert.rejects(
+    merchant.validate(employee({ couponToken: "CUSTOMER-CODE" })),
+    /enterprise is unavailable/,
+  );
+  assert.equal(coupon, "DELIVERED");
+});
+test("issuer reference failures cannot hide behind a matching returned record", async () => {
+  const result = [{ code: "merchant-enterprise", name: "Merchant Enterprise" }];
+  for (const response of [
+    { code: "ERR_READ", result },
+    { data: { success: false, result } },
+    { result: { errors: ["unavailable"], result } },
+  ]) {
+    SERVICE.DefaultModuleService.invokeModule = async (r) =>
+      r.apiName === "/identity/scopes/me" ? { data: scope } : response;
+    await assert.rejects(
+      merchant.validate(employee({ couponToken: "CUSTOMER-CODE" })),
+      /enterprise is unavailable/,
+    );
+    assert.equal(coupon, "DELIVERED");
+  }
+});
+test("framework storage timestamps do not replace or invalidate original fulfillment time", async () => {
+  const r = await validated();
+  const save = SERVICE.DefaultDigitalDeliveryService.save;
+  SERVICE.DefaultDigitalDeliveryService.save = async (request) => {
+    request.model.created = new Date("2026-01-01T00:00:00.000Z");
+    request.model.updated = new Date("2026-01-02T00:00:00.000Z");
+    return save(request);
+  };
+  await merchant.confirm(r);
+  const saved = receipts.values().next().value;
+  assert.equal(
+    new Date(saved.deliveredAt).toISOString(),
+    row.evidence.merchantRedemption.confirmedAt,
+  );
+  assert.notEqual(
+    new Date(saved.updated).toISOString(),
+    row.evidence.merchantRedemption.confirmedAt,
+  );
+  const inspected = await merchant.inspectReceipt(r);
+  assert.equal(inspected.state, "COMPLETED");
 });

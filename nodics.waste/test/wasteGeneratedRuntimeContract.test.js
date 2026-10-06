@@ -29,9 +29,12 @@ test('Waste schemas materialize governed services including service-only reward 
         'wasteVerification', 'wasteReceipt', 'wasteImpact', 'wasteReward', 'wasteMovement', 'wasteCompliance']) {
         const source = require('../modules/' + moduleName + '/src/schemas/schemas')[moduleName];
         for (const name of requiredSchemas[moduleName]) assert(source[name], moduleName + '.' + name);
-        schemas[moduleName] = Object.fromEntries(Object.keys(source).map(name => [name, name !== 'wasteRewardAssessment']));
+        schemas[moduleName] = Object.fromEntries(
+            Object.entries(source).map(([name, schema]) => [name, schema.router?.enabled === true]),
+        );
     }
     verify({ moduleRoots: ['nodics.waste'], activeModules: ['nodics.waste'], role: 'WASTE', schemas,
+        scopedJournalSchemas: ['wasteCollection.wasteCollectionCommandReceipt'],
         entities: { SERVICE: ['DefaultWasteDataContributionPolicyService', 'DefaultWasteAcceptancePolicyService',
             'DefaultWasteSubmissionLifecycleService', 'DefaultWasteImpactCalculationService', 'DefaultWasteBackofficeCapabilityService'],
         FACADE: ['DefaultWasteInternalFacade'], CONTROLLER: ['DefaultWasteInternalController'] },

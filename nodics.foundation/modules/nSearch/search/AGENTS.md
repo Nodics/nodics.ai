@@ -22,3 +22,10 @@ This capability declares an inert model-service inventory for [governed Local re
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
 
 Database fallback defaults to false. A caller/deployment may intentionally select fallback through the existing search options. Search activation and provider selection remain explicit.
+
+A declared `indexDef.retirement` is a historical binding, not startup provisioning
+authority. Register its model for original inspection without creating an index,
+updating mappings or replacing an active schema's search pointer, even when the
+retirement declaration is malformed. The retirement owner validates eligibility;
+startup must never recreate erased data targets. Run
+`test/retirementBindingStartup.test.js` and logical/physical binding regressions.

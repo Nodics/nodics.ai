@@ -44,3 +44,19 @@ root, version, enablement, publication state and customer scope remain explicit
 source-definition responsibilities. Unknown templates and unsupported template
 keys fail closed. Adding a template neither registers a source nor activates
 Copilot on an unselected runtime.
+
+## Selected Native Inspections
+
+Database source selection is a narrowing boundary, not mutation authority.
+Schema details and capabilities use fixed canonical read contracts through the
+original employee transport. Technical delete-impact inspection additionally
+requires independent `copilot.mutation.prepare` and native delete advertisement.
+Recheck current source policy and independent grants before and after the native
+inspection. No alternative route or provider fallback is permitted.
+
+Return only bounded visible field definitions or target-count/blocked summary.
+Exclude defaults, values, related collections, transport metadata and schema
+internals; scan the final projection for secrets. An observed operation or an
+unblocked preview does not grant execution, prove complete business impact or
+establish mutation completion. The conversation owner retains recording/replay
+authority and excludes these exchanges from subsequent model history.

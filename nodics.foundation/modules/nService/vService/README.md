@@ -8,6 +8,11 @@ Variant changes should be minimal, layered, and test-backed. Avoid duplicating b
 
 ## Capability Status
 
+Generated private journal reads, inserts and conditional updates retain the
+database owner's safety gates after this variant loads. Versioned provider
+selection does not enable versioned journals or turn insertion into upsert.
+See [layered persistence safety](llm/contracts/README.md#layered-persistence-safety).
+
 Schemas may explicitly select `versionedReadMode: 'CURRENT'` after installed-data
 qualification. The get variant selects the owning provider's current-record
 read method without copying authorization, caching or response handling. Exact
@@ -44,7 +49,7 @@ from the framework root. Nonversioned managed schemas reuse the database
 concurrency owner; see [managed mutation delegation](llm/contracts/README.md#managed-mutation-delegation).
 Set `NODICS_MONGODB_TEST_URI` to an explicitly authorized test MongoDB endpoint
 to include real-provider CAS verification in a uniquely named temporary database.
-Without that variable, only the live case is skipped. The fixture drops its own
+Without that variable, the two live cases are skipped. Each fixture drops its own
 database and does not bootstrap application runtimes or access application data.
 
 Run:

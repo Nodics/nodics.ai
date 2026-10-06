@@ -108,10 +108,32 @@ module.exports = {
         const context = { tenant: request.tenant, enterpriseCode: request.enterpriseCode,
             storeCode: request.storeCode, authData: this.serviceAuthData(request),
             now: request.now, correlationId: request.correlationId };
+        let currency;
+        if (pricing.enabled !== false && priceService && typeof priceService.summarize === 'function') {
+            if (!SERVICE.DefaultStoreService || typeof SERVICE.DefaultStoreService.get !== 'function') {
+                throw new Error('Activated Product selling currency owner is unavailable');
+            }
+            const response = await SERVICE.DefaultStoreService.get({
+                tenant: request.tenant, authData: context.authData,
+                query: { tenant: request.tenant, code: request.storeCode },
+                options: { recursive: false, skipItemCache: true },
+                searchOptions: { pageSize: 2, pageNumber: 1 }
+            });
+            const stores = response && response.result;
+            const store = Array.isArray(stores) && stores.length === 1 ? stores[0] : undefined;
+            const owner = store && store.enterpriseRef;
+            if (!store || store.tenant !== request.tenant || store.code !== request.storeCode ||
+                (owner !== undefined && owner?.code !== enterpriseCode) ||
+                store.status !== 'ACTIVE' || store.active === false ||
+                typeof store.defaultCurrency !== 'string' || !/^[A-Z][A-Z0-9_]{2,15}$/.test(store.defaultCurrency)) {
+                throw new Error('Activated Product selling currency is unavailable');
+            }
+            currency = store.defaultCurrency;
+        }
         const [prices, availability] = await Promise.all([
             pricing.enabled !== false && priceService && typeof priceService.summarize === 'function'
                 ? priceService.summarize({ ...context, productCodes: [...products.keys()],
-                    currency: pricing.defaultCurrency, quantity: pricing.defaultQuantity || '1' }) : {},
+                    currency, quantity: pricing.defaultQuantity || '1' }) : {},
             inventory.enabled !== false && inventoryService && typeof inventoryService.summarize === 'function'
                 ? inventoryService.summarize({ ...context, products: [...products].map(([productCode, skus]) =>
                     ({ productCode, skus: [...skus] })) }) : {}

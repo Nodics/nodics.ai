@@ -6,11 +6,11 @@ This generated report maps current source boundaries to published documentation 
 
 | Metric | Count |
 | --- | --- |
-| Catalogue documents | 143 |
+| Catalogue documents | 159 |
 | Source boundaries scanned | 203 |
-| Needs page or owner mapping | 16 |
-| Needs deeper section | 4 |
-| Covered | 175 |
+| Needs page or owner mapping | 10 |
+| Needs deeper section | 5 |
+| Covered | 180 |
 | Internal-only candidate | 8 |
 | Classified backlog items | 22 |
 
@@ -45,31 +45,26 @@ This generated report maps current source boundaries to published documentation 
 
 | Classification | Score | Source boundary | Current matches | Key signals |
 | --- | ---: | --- | --- | --- |
-| needs-page-or-owner-mapping | 97 | `nodics.ai/nodics.rulesEngine` | None | schemas:1, services:17, controllers:2, routers:2, dataRecords:1, tests:10 |
-| needs-page-or-owner-mapping | 42 | `nodics.ai/nodics.copilot/modules/copilotProviders` | None | schemas:1, services:7, routers:2, tests:3 |
-| needs-page-or-owner-mapping | 34 | `nodics.ai/nodics.rulesEngine/modules/rulesApi` | None | services:3, controllers:2, routers:2, dataRecords:1, tests:3 |
-| needs-page-or-owner-mapping | 29 | `nodics.ai/nodics.copilot/modules/copilotCapability` | None | schemas:1, services:4, routers:2, tests:1 |
+| needs-page-or-owner-mapping | 61 | `nodics.ai/nodics.copilot/modules/copilotProviders` | None | schemas:1, services:10, routers:2, tests:8 |
+| needs-page-or-owner-mapping | 38 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/copilotProvider` | None | schemas:1, services:5, routers:2, tests:4 |
 | needs-page-or-owner-mapping | 29 | `nodics.ai/nodics.waste/modules/wasteMaterial` | None | schemas:1, services:1, dataHeaders:1, dataRecords:4, tests:2 |
-| needs-page-or-owner-mapping | 25 | `nodics.ai/nodics.rulesEngine/modules/rulesDefinition` | None | schemas:1, services:4, tests:3 |
 | needs-page-or-owner-mapping | 25 | `nodics.ai/nodics.rulesEngine/modules/rulesEvaluation` | None | services:7, tests:2 |
 | needs-page-or-owner-mapping | 23 | `nodics.ai/nodics.copilot/modules/copilotEvaluation` | None | schemas:1, services:2, routers:2, tests:1 |
-| needs-page-or-owner-mapping | 23 | `nodics.ai/nodics.copilot/modules/copilotPolicy` | None | schemas:1, services:2, routers:2, tests:1 |
-| needs-page-or-owner-mapping | 23 | `nodics.ai/nodics.copilot/modules/copilotWorkbench` | None | schemas:1, services:2, routers:2, tests:1 |
-| needs-page-or-owner-mapping | 21 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/copilotProvider` | None | schemas:1, services:2, routers:2 |
 | needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationApproval` | None | schemas:1, services:1, routers:2 |
 | needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationDraft` | None | schemas:1, services:1, routers:2 |
 | needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationProjection` | None | schemas:1, services:1, routers:2 |
 | needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationSearch` | None | schemas:1, services:1, routers:2 |
 | needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationType` | None | schemas:1, services:1, routers:2 |
+| needs-deeper-section | 97 | `nodics.ai/nodics.rulesEngine` | copilot.rules-inspection | schemas:1, services:17, controllers:2, routers:2, dataRecords:1, tests:10 |
 | needs-deeper-section | 64 | `nodics.ai/nodics.location/modules/locationMap` | accelerators.circa-deployment-verification | schemas:1, services:5, controllers:1, routers:2, dataHeaders:2, dataRecords:6, tests:3 |
 | needs-deeper-section | 54 | `nodics.ai/nodics.wcms/modules/wcmsExperience` | framework.modular-architecture | schemas:1, services:5, controllers:2, routers:2, tests:8 |
 | needs-deeper-section | 51 | `nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore` | commerce.enterprise-operations, commerce.payment-provider-boundaries | schemas:1, services:4, controllers:1, routers:2, tests:10 |
-| needs-deeper-section | 48 | `nodics.ai/nodics.copilot/modules/copilotKnowledge` | framework.modular-architecture | schemas:1, services:9, routers:2, tests:3 |
+| needs-deeper-section | 42 | `nodics.ai/nodics.foundation/modules/nCache/redisCache` | foundation.cache-provider-runbooks | schemas:1, services:5, routers:2, tests:6 |
 | internal-only-candidate | 11 | `nodics.ai/nodics.rulesEngine/modules/rulesCore` | None | services:3, tests:1 |
+| internal-only-candidate | 7 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/ollamaProvider` | None | services:1, tests:2 |
 | internal-only-candidate | 7 | `nodics.ai/nodics.waste/modules/wasteCompliance` | None | schemas:1 |
 | internal-only-candidate | 7 | `nodics.ai/nodics.waste/modules/wasteMovement` | None | schemas:1 |
 | internal-only-candidate | 7 | `nodics.ai/nodics.waste/modules/wasteReceipt` | None | schemas:1 |
-| internal-only-candidate | 5 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/ollamaProvider` | None | services:1, tests:1 |
 | internal-only-candidate | 5 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/openAiProvider` | None | services:1, tests:1 |
 | internal-only-candidate | 3 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/claudeProvider` | None | services:1 |
 | internal-only-candidate | 3 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/geminiProvider` | None | services:1 |

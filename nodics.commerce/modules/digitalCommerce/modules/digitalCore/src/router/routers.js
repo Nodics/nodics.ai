@@ -143,7 +143,13 @@ module.exports.digitalCore.merchant.validate = {
   key: "/merchant/redemptions/validate",
   operation: "validate",
 };
-module.exports.digitalCore.merchant.workspace = {
+module.exports.digitalCore.merchant.inspectReceipt = {
+  ...module.exports.digitalCore.merchant.confirm,
+  key: "/merchant/redemptions/:code/receipt/query",
+  operation: "inspectReceipt",
+  cache: { enabled: false },
+};
+module.exports.digitalCore.merchant.merchantWorkspace = {
   ...module.exports.digitalCore.merchant.queue,
   key: "/merchant/redemptions/workspace",
   operation: "workspace",

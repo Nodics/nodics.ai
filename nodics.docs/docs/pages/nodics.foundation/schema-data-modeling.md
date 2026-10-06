@@ -309,6 +309,24 @@ tenant/database loading that source, including separate Online installations.
 CURRENT reads do not activate a published release. The maintenance result always
 leaves `writersMayRestart: false` pending this handoff.
 
+Qualify read privacy separately from version selection:
+
+1. Retain the prepared schema's `readProtection` and its existing native owner.
+   CURRENT reads invoke the same provider read guard as ordinary reads before
+   aggregation. Missing or denied hooks must produce no provider query.
+2. Keep the original employee/tenant request throughout selection. Choosing the
+   newest record does not grant access to that record or its fields.
+3. Apply the native provider-result projector before returning the aggregate
+   envelope. A changed or rejected result policy must not deliver raw rows.
+4. Test authorized, denied, missing-owner and redacted-result cases alongside
+   latest-before-filter/count/paging tests. Private durable journals stay on
+   their unversioned protocol and cannot use CURRENT aggregation.
+
+The MongoDB variant reuses `guardProtectedRead` and `projectReadResult`; it does
+not own a second permission registry. These protections also apply to native
+read APIs consumed by Copilot. Run the opt-in current-version MongoDB test in
+disposable storage and then the affected authenticated application journey.
+
 ### Failure And Recovery
 
 Missing outage evidence, source/index drift, storage failure, wrong worker or

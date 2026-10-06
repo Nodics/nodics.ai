@@ -325,7 +325,7 @@ module.exports = {
     "childJourneyLinks": [],
     "childStatusSummary": {
       "childCount": 49,
-      "pages": 143
+      "pages": 159
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -4210,6 +4210,7 @@ module.exports = {
         "cron.operations",
         "cron.node-responsibility-tee",
         "cron.project-customization",
+        "cron.inactive-schedule-drafts",
         "process.cronjob-data-authoring",
         "process.process-cron-runtime",
         "process.scheduled-automation"
@@ -4236,22 +4237,28 @@ module.exports = {
         "order": 30
       },
       {
+        "code": "cron.inactive-schedule-drafts",
+        "title": "Inactive Process Schedule Drafts",
+        "summary": "Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation.",
+        "order": 40
+      },
+      {
         "code": "process.cronjob-data-authoring",
         "title": "CronJob Data Authoring",
         "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
-        "order": 40
+        "order": 50
       },
       {
         "code": "process.process-cron-runtime",
         "title": "Process and Cronjob Shared Runtime",
         "summary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
-        "order": 50
+        "order": 60
       },
       {
         "code": "process.scheduled-automation",
         "title": "Scheduled Automation and Cron Triggers",
         "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
-        "order": 60
+        "order": 70
       }
     ],
     "childJourneyLinks": [
@@ -4271,6 +4278,11 @@ module.exports = {
         "route": "/docs/framework/cron-project-customization"
       },
       {
+        "label": "Inactive Process Schedule Drafts",
+        "targetPage": "cron.inactive-schedule-drafts",
+        "route": "/docs/framework/cron/inactive-schedule-drafts"
+      },
+      {
         "label": "CronJob Data Authoring",
         "targetPage": "process.cronjob-data-authoring",
         "route": "/docs/framework/process-cronjob-data-authoring"
@@ -4279,16 +4291,11 @@ module.exports = {
         "label": "Process and Cronjob Shared Runtime",
         "targetPage": "process.process-cron-runtime",
         "route": "/docs/framework/process/process-cron-runtime"
-      },
-      {
-        "label": "Scheduled Automation and Cron Triggers",
-        "targetPage": "process.scheduled-automation",
-        "route": "/docs/framework/process/scheduled-automation"
       }
     ],
     "childStatusSummary": {
-      "childCount": 6,
-      "pages": 6
+      "childCount": 7,
+      "pages": 7
     },
     "nodeOrder": 390,
     "expandable": true,
@@ -4915,7 +4922,22 @@ module.exports = {
       "navigationDepth": 2,
       "pages": [
         "tooling.ai-developer-enablement",
-        "foundation.tooling-runtime-contracts"
+        "foundation.tooling-runtime-contracts",
+        "copilot.retention-lifecycle",
+        "copilot.knowledge-generation-recovery",
+        "copilot.recorded-manual-refresh",
+        "copilot.original-business-results",
+        "copilot.standalone-business-actions",
+        "copilot.secure-coupon-fulfillment",
+        "copilot.rules-inspection",
+        "copilot.process-inspection",
+        "copilot.collection-inspection",
+        "copilot.process-task-actions",
+        "copilot.process-trigger-actions",
+        "copilot.process-lifecycle-actions",
+        "copilot.governed-schema-actions",
+        "copilot.order-notification-operations",
+        "copilot.import-inspection"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecaiAndDeveloperTooling",
@@ -4931,6 +4953,96 @@ module.exports = {
         "title": "Tooling Runtime Contracts",
         "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
         "order": 20
+      },
+      {
+        "code": "copilot.retention-lifecycle",
+        "title": "Copilot Conversation Retention and Recovery",
+        "summary": "Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures.",
+        "order": 30
+      },
+      {
+        "code": "copilot.knowledge-generation-recovery",
+        "title": "Copilot Knowledge Progress and Recovery",
+        "summary": "Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries.",
+        "order": 40
+      },
+      {
+        "code": "copilot.recorded-manual-refresh",
+        "title": "Recorded Manual Knowledge Refresh",
+        "summary": "Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness.",
+        "order": 50
+      },
+      {
+        "code": "copilot.original-business-results",
+        "title": "Original Business Results and Safe Continuation",
+        "summary": "Inspect native original command receipts and approve only never-started rows after uncertain business execution.",
+        "order": 60
+      },
+      {
+        "code": "copilot.standalone-business-actions",
+        "title": "Existing Enterprise Invitations and Product Prices",
+        "summary": "Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners.",
+        "order": 70
+      },
+      {
+        "code": "copilot.secure-coupon-fulfillment",
+        "title": "Secure Coupon Fulfillment",
+        "summary": "Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay.",
+        "order": 80
+      },
+      {
+        "code": "copilot.rules-inspection",
+        "title": "Rules Inspection in Copilot",
+        "summary": "Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads.",
+        "order": 90
+      },
+      {
+        "code": "copilot.process-inspection",
+        "title": "Process Inspection in Copilot",
+        "summary": "Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions.",
+        "order": 100
+      },
+      {
+        "code": "copilot.collection-inspection",
+        "title": "Collection Inspection In Conversation",
+        "summary": "Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads.",
+        "order": 110
+      },
+      {
+        "code": "copilot.process-task-actions",
+        "title": "Process Task Actions in Copilot",
+        "summary": "Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection.",
+        "order": 120
+      },
+      {
+        "code": "copilot.process-trigger-actions",
+        "title": "Process Trigger Actions in Copilot",
+        "summary": "Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery.",
+        "order": 130
+      },
+      {
+        "code": "copilot.process-lifecycle-actions",
+        "title": "Process Definition and Instance Actions in Copilot",
+        "summary": "Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts.",
+        "order": 140
+      },
+      {
+        "code": "copilot.governed-schema-actions",
+        "title": "Governed Selected-Schema Actions in Copilot",
+        "summary": "Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts.",
+        "order": 150
+      },
+      {
+        "code": "copilot.order-notification-operations",
+        "title": "Order Notification Operations in Copilot",
+        "summary": "Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay.",
+        "order": 160
+      },
+      {
+        "code": "copilot.import-inspection",
+        "title": "Data-release Inspection in Copilot",
+        "summary": "Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media.",
+        "order": 170
       }
     ],
     "childJourneyLinks": [
@@ -4943,11 +5055,31 @@ module.exports = {
         "label": "Tooling Runtime Contracts",
         "targetPage": "foundation.tooling-runtime-contracts",
         "route": "/docs/framework/foundation-tooling-runtime-contracts"
+      },
+      {
+        "label": "Copilot Conversation Retention and Recovery",
+        "targetPage": "copilot.retention-lifecycle",
+        "route": "/docs/framework/copilot/retention-lifecycle"
+      },
+      {
+        "label": "Copilot Knowledge Progress and Recovery",
+        "targetPage": "copilot.knowledge-generation-recovery",
+        "route": "/docs/framework/copilot/knowledge-generation-recovery"
+      },
+      {
+        "label": "Recorded Manual Knowledge Refresh",
+        "targetPage": "copilot.recorded-manual-refresh",
+        "route": "/docs/framework/copilot/recorded-manual-refresh"
+      },
+      {
+        "label": "Original Business Results and Safe Continuation",
+        "targetPage": "copilot.original-business-results",
+        "route": "/docs/framework/copilot/original-business-results"
       }
     ],
     "childStatusSummary": {
-      "childCount": 2,
-      "pages": 2
+      "childCount": 17,
+      "pages": 17
     },
     "nodeOrder": 460,
     "expandable": true,
@@ -5100,6 +5232,1113 @@ module.exports = {
     "active": true
   },
   "record50": {
+    "code": "nodicsDocsNodePagecopilotOrderNotificationOperations",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Order Notification Operations in Copilot",
+    "nodeSummary": "Inspect bounded Digital Core order-notification evidence and explicitly retry eligible purchased or refunded delivery intents with revision-bound review and no automatic replay.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/order-notification-operations",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotOrderNotificationOperations",
+    "targetPage": "nodicsDocsPagecopilotOrderNotificationOperations",
+    "targetRoute": "nodicsDocsRoutecopilotOrderNotificationOperations",
+    "nodeOrder": 10160,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "order",
+      "notification",
+      "delivery",
+      "purchased",
+      "refunded",
+      "retry",
+      "receipt"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotOriginalBusinessResults",
+      "nodicsDocsNodePagecopilotProcessInspection",
+      "nodicsDocsNodePagecopilotGovernedSchemaActions"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record51": {
+    "code": "nodicsDocsNodePagecopilotGovernedSchemaActions",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Governed Selected-Schema Actions in Copilot",
+    "nodeSummary": "Configure and use single-record generated create, update, and delete through selected Knowledge collections, complete review, native permissions, and original receipts.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/governed-schema-actions",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotGovernedSchemaActions",
+    "targetPage": "nodicsDocsPagecopilotGovernedSchemaActions",
+    "targetRoute": "nodicsDocsRoutecopilotGovernedSchemaActions",
+    "nodeOrder": 10150,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "schema",
+      "record",
+      "create",
+      "update",
+      "delete",
+      "collection",
+      "receipt"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotCollectionInspection",
+      "nodicsDocsNodePagecopilotOriginalBusinessResults",
+      "nodicsDocsNodePagecopilotStandaloneBusinessActions"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record52": {
+    "code": "nodicsDocsNodePagecopilotProcessLifecycleActions",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Process Definition and Instance Actions in Copilot",
+    "nodeSummary": "Govern process definition drafts, publication, instance starts, cancellation, incident retry and compensation through complete review and original native receipts.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/process-lifecycle-actions",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotProcessLifecycleActions",
+    "targetPage": "nodicsDocsPagecopilotProcessLifecycleActions",
+    "targetRoute": "nodicsDocsRoutecopilotProcessLifecycleActions",
+    "nodeOrder": 10140,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "process",
+      "definition",
+      "instance",
+      "publish",
+      "retry",
+      "compensate",
+      "receipt"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotProcessTaskActions",
+      "nodicsDocsNodePagecopilotProcessTriggerActions",
+      "nodicsDocsNodePagecopilotProcessInspection",
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record53": {
+    "code": "nodicsDocsNodePagecopilotProcessTriggerActions",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Process Trigger Actions in Copilot",
+    "nodeSummary": "Review trigger metadata changes and explicit workflow starts with original employee authority and native receipt recovery.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/process-trigger-actions",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotProcessTriggerActions",
+    "targetPage": "nodicsDocsPagecopilotProcessTriggerActions",
+    "targetRoute": "nodicsDocsRoutecopilotProcessTriggerActions",
+    "nodeOrder": 10130,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "process",
+      "trigger",
+      "workflow",
+      "archive",
+      "execute",
+      "receipt"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotProcessTaskActions",
+      "nodicsDocsNodePagecopilotProcessInspection",
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record54": {
+    "code": "nodicsDocsNodePagecopilotProcessTaskActions",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Process Task Actions in Copilot",
+    "nodeSummary": "Review and confirm fixed human task commands through native Workflow permissions, durable original receipts and uncertainty-safe inspection.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/process-task-actions",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotProcessTaskActions",
+    "targetPage": "nodicsDocsPagecopilotProcessTaskActions",
+    "targetRoute": "nodicsDocsRoutecopilotProcessTaskActions",
+    "nodeOrder": 10120,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "process",
+      "tasks",
+      "claim",
+      "assign",
+      "complete",
+      "cancel",
+      "receipt"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotProcessInspection",
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record55": {
+    "code": "nodicsDocsNodePagecopilotImportInspection",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Data-release Inspection in Copilot",
+    "nodeSummary": "Inspect admitted nImport release catalogues, run summaries and validation-only plans without installing releases or importing media.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/import-inspection",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotImportInspection",
+    "targetPage": "nodicsDocsPagecopilotImportInspection",
+    "targetRoute": "nodicsDocsRoutecopilotImportInspection",
+    "nodeOrder": 10170,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "import",
+      "data release",
+      "catalogue",
+      "preflight",
+      "validation"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotProcessInspection",
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record56": {
+    "code": "nodicsDocsNodePagecopilotProcessInspection",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Process Inspection in Copilot",
+    "nodeSummary": "Inspect admitted workflow definitions, versions, instances, tasks and incidents through native employee-authorized reads without executing workflow actions.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/process-inspection",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotProcessInspection",
+    "targetPage": "nodicsDocsPagecopilotProcessInspection",
+    "targetRoute": "nodicsDocsRoutecopilotProcessInspection",
+    "nodeOrder": 10100,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "process",
+      "workflow",
+      "inspection",
+      "tasks",
+      "incidents"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotRulesInspection",
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record57": {
+    "code": "nodicsDocsNodePagecopilotRulesInspection",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Rules Inspection in Copilot",
+    "nodeSummary": "Inspect admitted rule and score-band summaries, versions and audit metadata through native employee-authorized reads.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/rules-inspection",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotRulesInspection",
+    "targetPage": "nodicsDocsPagecopilotRulesInspection",
+    "targetRoute": "nodicsDocsRoutecopilotRulesInspection",
+    "nodeOrder": 10090,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "rules",
+      "inspection",
+      "audit",
+      "versions",
+      "score-band"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record58": {
+    "code": "nodicsDocsNodePagecopilotSecureCouponFulfillment",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Secure Coupon Fulfillment",
+    "nodeSummary": "Validate, review and confirm native merchant fulfillment, then inspect original receipts after uncertain outcomes without replay.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/secure-coupon-fulfillment",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotSecureCouponFulfillment",
+    "targetPage": "nodicsDocsPagecopilotSecureCouponFulfillment",
+    "targetRoute": "nodicsDocsRoutecopilotSecureCouponFulfillment",
+    "nodeOrder": 10080,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "coupon",
+      "merchant",
+      "fulfillment",
+      "redemption",
+      "receipt"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotOriginalBusinessResults",
+      "nodicsDocsNodePagecopilotStandaloneBusinessActions"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record59": {
+    "code": "nodicsDocsNodePagecopilotStandaloneBusinessActions",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Existing Enterprise Invitations and Product Prices",
+    "nodeSummary": "Prepare, review and execute standalone invitations and price rows through native Profile and Pricing owners.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/standalone-business-actions",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotStandaloneBusinessActions",
+    "targetPage": "nodicsDocsPagecopilotStandaloneBusinessActions",
+    "targetRoute": "nodicsDocsRoutecopilotStandaloneBusinessActions",
+    "nodeOrder": 10070,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "invitations",
+      "prices",
+      "review",
+      "ollama"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record60": {
+    "code": "nodicsDocsNodePagecopilotCollectionInspection",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Collection Inspection In Conversation",
+    "nodeSummary": "Inspect selected native schemas, capabilities and bounded technical deletion impact through governed conversation reads.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/collection-inspection",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotCollectionInspection",
+    "targetPage": "nodicsDocsPagecopilotCollectionInspection",
+    "targetRoute": "nodicsDocsRoutecopilotCollectionInspection",
+    "nodeOrder": 10110,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "schema",
+      "capabilities",
+      "impact",
+      "collections"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotOriginalBusinessResults"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record61": {
+    "code": "nodicsDocsNodePagecopilotOriginalBusinessResults",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Original Business Results and Safe Continuation",
+    "nodeSummary": "Inspect native original command receipts and approve only never-started rows after uncertain business execution.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/original-business-results",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotOriginalBusinessResults",
+    "targetPage": "nodicsDocsPagecopilotOriginalBusinessResults",
+    "targetRoute": "nodicsDocsRoutecopilotOriginalBusinessResults",
+    "nodeOrder": 10060,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "receipts",
+      "recovery",
+      "continuation"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotRetentionLifecycle"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record62": {
+    "code": "nodicsDocsNodePagecopilotRecordedManualRefresh",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Recorded Manual Knowledge Refresh",
+    "nodeSummary": "Review and confirm source refreshes through Process, inspect original attempts after uncertainty, and distinguish execution evidence from physical readiness.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/recorded-manual-refresh",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotRecordedManualRefresh",
+    "targetPage": "nodicsDocsPagecopilotRecordedManualRefresh",
+    "targetRoute": "nodicsDocsRoutecopilotRecordedManualRefresh",
+    "nodeOrder": 10050,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "manual",
+      "refresh",
+      "history",
+      "recovery"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotKnowledgeGenerationRecovery",
+      "nodicsDocsNodePagecronInactiveScheduleDrafts"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record63": {
+    "code": "nodicsDocsNodePagecronInactiveScheduleDrafts",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Inactive Process Schedule Drafts",
+    "nodeSummary": "Review deployment-approved Process targets, save inactive Cron definitions once, and inspect uncertain saves without replay or activation.",
+    "nodeContentArea": {
+      "route": "/docs/framework/cron/inactive-schedule-drafts",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacronInactiveScheduleDrafts",
+    "targetPage": "nodicsDocsPagecronInactiveScheduleDrafts",
+    "targetRoute": "nodicsDocsRoutecronInactiveScheduleDrafts",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "cron",
+      "schedule",
+      "draft",
+      "copilot",
+      "recovery"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecronOperations",
+      "nodicsDocsNodePageprocessScheduledAutomation",
+      "nodicsDocsNodePagecopilotKnowledgeGenerationRecovery"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record64": {
+    "code": "nodicsDocsNodePagecopilotKnowledgeGenerationRecovery",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Copilot Knowledge Progress and Recovery",
+    "nodeSummary": "Acknowledged chunk progress, guarded writer retirement, quiescence-qualified obsolete cleanup and explicit uncertainty, with operator steps and customization boundaries.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/knowledge-generation-recovery",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotKnowledgeGenerationRecovery",
+    "targetPage": "nodicsDocsPagecopilotKnowledgeGenerationRecovery",
+    "targetRoute": "nodicsDocsRoutecopilotKnowledgeGenerationRecovery",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "knowledge",
+      "progress",
+      "cleanup",
+      "recovery"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecopilotRetentionLifecycle",
+      "nodicsDocsNodePagecronOperations"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record65": {
+    "code": "nodicsDocsNodePagecopilotRetentionLifecycle",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Copilot Conversation Retention and Recovery",
+    "nodeSummary": "Explicit reviewed retention, legal-hold intersection, bounded transactional pages, original-operation recovery and frozen stop, with deployment qualification and sanitized Axis captures.",
+    "nodeContentArea": {
+      "route": "/docs/framework/copilot/retention-lifecycle",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacopilotRetentionLifecycle",
+    "targetPage": "nodicsDocsPagecopilotRetentionLifecycle",
+    "targetRoute": "nodicsDocsRoutecopilotRetentionLifecycle",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "copilot",
+      "retention",
+      "legal hold",
+      "recovery",
+      "conversation"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecronOperations",
+      "nodicsDocsNodePagetoolingAiDeveloperEnablement"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record66": {
     "code": "nodicsDocsNodePageacceleratorsCircaCollectionReference",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5168,7 +6407,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record51": {
+  "record67": {
     "code": "nodicsDocsNodePageacceleratorsCircaEnterpriseReference",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5237,7 +6476,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record52": {
+  "record68": {
     "code": "nodicsDocsNodePageacceleratorsCircaSourceInventory",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5306,7 +6545,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record53": {
+  "record69": {
     "code": "nodicsDocsNodePageacceleratorsCircaCatalogueReference",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5375,7 +6614,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record54": {
+  "record70": {
     "code": "nodicsDocsNodePageacceleratorsCircaConfigurationReference",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5444,7 +6683,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record55": {
+  "record71": {
     "code": "nodicsDocsNodePageacceleratorsCircaOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5517,7 +6756,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record56": {
+  "record72": {
     "code": "nodicsDocsNodePageacceleratorsCircaDataNetwork",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5587,7 +6826,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record57": {
+  "record73": {
     "code": "nodicsDocsNodePageacceleratorsCircaSubmissionJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5657,7 +6896,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record58": {
+  "record74": {
     "code": "nodicsDocsNodePageacceleratorsCircaOperationsRewards",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5728,7 +6967,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record59": {
+  "record75": {
     "code": "nodicsDocsNodePageacceleratorsCircaCouponsCommerce",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5799,7 +7038,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record60": {
+  "record76": {
     "code": "nodicsDocsNodePageacceleratorsCircaCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5869,7 +7108,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record61": {
+  "record77": {
     "code": "nodicsDocsNodePageacceleratorsCircaDeploymentVerification",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5939,7 +7178,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record62": {
+  "record78": {
     "code": "nodicsDocsNodePagedocsGateway",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6017,7 +7256,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record63": {
+  "record79": {
     "code": "nodicsDocsNodePageframeworkWhatIsNodics",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6098,7 +7337,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record64": {
+  "record80": {
     "code": "nodicsDocsNodePageframeworkWhyNodicsExists",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6178,7 +7417,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record65": {
+  "record81": {
     "code": "nodicsDocsNodePageframeworkHowNodicsWorks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6258,7 +7497,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record66": {
+  "record82": {
     "code": "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6338,7 +7577,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record67": {
+  "record83": {
     "code": "nodicsDocsNodePagedocsDocumentationRoadmap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6418,7 +7657,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record68": {
+  "record84": {
     "code": "nodicsDocsNodePagedocsDocumentationPrinciples",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6498,7 +7737,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record69": {
+  "record85": {
     "code": "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6578,7 +7817,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record70": {
+  "record86": {
     "code": "nodicsDocsNodePagedocsDocumentationPublishingModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6658,7 +7897,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record71": {
+  "record87": {
     "code": "nodicsDocsNodePageframeworkModularArchitecture",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6738,7 +7977,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record72": {
+  "record88": {
     "code": "nodicsDocsNodePageframeworkRuntimeServerComposition",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6815,7 +8054,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record73": {
+  "record89": {
     "code": "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6894,7 +8133,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record74": {
+  "record90": {
     "code": "nodicsDocsNodePageframeworkArchitectureDecisionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6971,7 +8210,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record75": {
+  "record91": {
     "code": "nodicsDocsNodePageplatformModuleRegistry",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7048,7 +8287,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record76": {
+  "record92": {
     "code": "nodicsDocsNodePagefoundationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7124,7 +8363,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record77": {
+  "record93": {
     "code": "nodicsDocsNodePageapplicationsSuite",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7203,7 +8442,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record78": {
+  "record94": {
     "code": "nodicsDocsNodePagesolutionsTaskExecutionEngine",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7287,7 +8526,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record79": {
+  "record95": {
     "code": "nodicsDocsNodePagesolutionsDataEngineeringAnalyticsPlatform",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7372,7 +8611,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record80": {
+  "record96": {
     "code": "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7453,7 +8692,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record81": {
+  "record97": {
     "code": "nodicsDocsNodePageacceleratorsAgoraApparelProductDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7538,7 +8777,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record82": {
+  "record98": {
     "code": "nodicsDocsNodePageframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7617,7 +8856,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record83": {
+  "record99": {
     "code": "nodicsDocsNodePageframeworkFreshSchemaSetupJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7694,7 +8933,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record84": {
+  "record100": {
     "code": "nodicsDocsNodePageframeworkLocalRuntimeTroubleshooting",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7771,7 +9010,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record85": {
+  "record101": {
     "code": "nodicsDocsNodePageinstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7851,7 +9090,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record86": {
+  "record102": {
     "code": "nodicsDocsNodePagebuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7928,7 +9167,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record87": {
+  "record103": {
     "code": "nodicsDocsNodePageprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8004,7 +9243,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record88": {
+  "record104": {
     "code": "nodicsDocsNodePageaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8081,7 +9320,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record89": {
+  "record105": {
     "code": "nodicsDocsNodePageplatformOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8157,7 +9396,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record90": {
+  "record106": {
     "code": "nodicsDocsNodePagesecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8234,7 +9473,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record91": {
+  "record107": {
     "code": "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8314,7 +9553,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record92": {
+  "record108": {
     "code": "nodicsDocsNodePageconfigurationFrameworkStartupLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8406,7 +9645,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record93": {
+  "record109": {
     "code": "nodicsDocsNodePageroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8498,7 +9737,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record94": {
+  "record110": {
     "code": "nodicsDocsNodePageroutingApiRequestLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8590,7 +9829,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record95": {
+  "record111": {
     "code": "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8687,7 +9926,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record96": {
+  "record112": {
     "code": "nodicsDocsNodePageruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8764,7 +10003,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record97": {
+  "record113": {
     "code": "nodicsDocsNodePagelocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8841,7 +10080,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record98": {
+  "record114": {
     "code": "nodicsDocsNodePageschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8918,7 +10157,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record99": {
+  "record115": {
     "code": "nodicsDocsNodePagepersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8995,7 +10234,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record100": {
+  "record116": {
     "code": "nodicsDocsNodePagecacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9072,7 +10311,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record101": {
+  "record117": {
     "code": "nodicsDocsNodePageframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9151,7 +10390,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record102": {
+  "record118": {
     "code": "nodicsDocsNodePageframeworkBackendExtensionPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9231,7 +10470,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record103": {
+  "record119": {
     "code": "nodicsDocsNodePageframeworkAxisContentCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9308,7 +10547,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record104": {
+  "record120": {
     "code": "nodicsDocsNodePageprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9384,7 +10623,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record105": {
+  "record121": {
     "code": "nodicsDocsNodePageprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9460,7 +10699,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record106": {
+  "record122": {
     "code": "nodicsDocsNodePagecommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9536,7 +10775,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record107": {
+  "record123": {
     "code": "nodicsDocsNodePagewcmsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9616,7 +10855,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record108": {
+  "record124": {
     "code": "nodicsDocsNodePagewcmsContentCatalogModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9693,7 +10932,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record109": {
+  "record125": {
     "code": "nodicsDocsNodePagewcmsPageDesignerComponents",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9770,7 +11009,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record110": {
+  "record126": {
     "code": "nodicsDocsNodePagewcmsSitePublicationVisibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9848,7 +11087,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record111": {
+  "record127": {
     "code": "nodicsDocsNodePagecatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9925,7 +11164,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record112": {
+  "record128": {
     "code": "nodicsDocsNodePagediscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10002,7 +11241,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record113": {
+  "record129": {
     "code": "nodicsDocsNodePagewcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10080,7 +11319,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record114": {
+  "record130": {
     "code": "nodicsDocsNodePagewcmsMediaStorageDelivery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10155,7 +11394,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record115": {
+  "record131": {
     "code": "nodicsDocsNodePagewcmsMediaImportPublication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10230,7 +11469,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record116": {
+  "record132": {
     "code": "nodicsDocsNodePageinventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10307,7 +11546,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record117": {
+  "record133": {
     "code": "nodicsDocsNodePagepricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10384,7 +11623,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record118": {
+  "record134": {
     "code": "nodicsDocsNodePagecommerceOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10461,7 +11700,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record119": {
+  "record135": {
     "code": "nodicsDocsNodePagecommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10538,7 +11777,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record120": {
+  "record136": {
     "code": "nodicsDocsNodePagecommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10614,7 +11853,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record121": {
+  "record137": {
     "code": "nodicsDocsNodePagefulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10691,7 +11930,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record122": {
+  "record138": {
     "code": "nodicsDocsNodePageorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10768,7 +12007,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record123": {
+  "record139": {
     "code": "nodicsDocsNodePagecommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10844,7 +12083,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record124": {
+  "record140": {
     "code": "nodicsDocsNodePageengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10922,7 +12161,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record125": {
+  "record141": {
     "code": "nodicsDocsNodePageengagementReviewModerationGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10997,7 +12236,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record126": {
+  "record142": {
     "code": "nodicsDocsNodePageengagementReviewAggregationRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11072,7 +12311,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record127": {
+  "record143": {
     "code": "nodicsDocsNodePageengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11148,7 +12387,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record128": {
+  "record144": {
     "code": "nodicsDocsNodePageengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11224,7 +12463,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record129": {
+  "record145": {
     "code": "nodicsDocsNodePageengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11300,7 +12539,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record130": {
+  "record146": {
     "code": "nodicsDocsNodePageengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11376,7 +12615,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record131": {
+  "record147": {
     "code": "nodicsDocsNodePagecommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11453,7 +12692,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record132": {
+  "record148": {
     "code": "nodicsDocsNodePageeventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11530,7 +12769,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record133": {
+  "record149": {
     "code": "nodicsDocsNodePageprocessOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11608,7 +12847,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record134": {
+  "record150": {
     "code": "nodicsDocsNodePageprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11685,7 +12924,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record135": {
+  "record151": {
     "code": "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11778,7 +13017,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record136": {
+  "record152": {
     "code": "nodicsDocsNodePageprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11855,7 +13094,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record137": {
+  "record153": {
     "code": "nodicsDocsNodePageprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11931,7 +13170,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record138": {
+  "record154": {
     "code": "nodicsDocsNodePageprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12007,7 +13246,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record139": {
+  "record155": {
     "code": "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12097,7 +13336,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record140": {
+  "record156": {
     "code": "nodicsDocsNodePagecronOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12175,7 +13414,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record141": {
+  "record157": {
     "code": "nodicsDocsNodePagecronNodeResponsibilityTee",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12252,7 +13491,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record142": {
+  "record158": {
     "code": "nodicsDocsNodePagecronProjectCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12328,7 +13567,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record143": {
+  "record159": {
     "code": "nodicsDocsNodePageprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12361,7 +13600,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessProcessCronRuntime",
     "targetPage": "nodicsDocsPageprocessProcessCronRuntime",
     "targetRoute": "nodicsDocsRouteprocessProcessCronRuntime",
-    "nodeOrder": 10050,
+    "nodeOrder": 10060,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12404,7 +13643,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record144": {
+  "record160": {
     "code": "nodicsDocsNodePageprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12437,7 +13676,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessScheduledAutomation",
     "targetPage": "nodicsDocsPageprocessScheduledAutomation",
     "targetRoute": "nodicsDocsRouteprocessScheduledAutomation",
-    "nodeOrder": 10060,
+    "nodeOrder": 10070,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12480,7 +13719,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record145": {
+  "record161": {
     "code": "nodicsDocsNodePagedataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12557,7 +13796,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record146": {
+  "record162": {
     "code": "nodicsDocsNodePageprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12633,7 +13872,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record147": {
+  "record163": {
     "code": "nodicsDocsNodePageframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12713,7 +13952,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record148": {
+  "record164": {
     "code": "nodicsDocsNodePageframeworkRuntimeReleaseRollback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12788,7 +14027,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record149": {
+  "record165": {
     "code": "nodicsDocsNodePageframeworkLocalBrowserAcceptanceJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12863,7 +14102,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record150": {
+  "record166": {
     "code": "nodicsDocsNodePageframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12943,7 +14182,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record151": {
+  "record167": {
     "code": "nodicsDocsNodePagecommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13019,7 +14258,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record152": {
+  "record168": {
     "code": "nodicsDocsNodePageprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13095,7 +14334,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record153": {
+  "record169": {
     "code": "nodicsDocsNodePageprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13171,7 +14410,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record154": {
+  "record170": {
     "code": "nodicsDocsNodePageprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13247,7 +14486,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record155": {
+  "record171": {
     "code": "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13323,7 +14562,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record156": {
+  "record172": {
     "code": "nodicsDocsNodePagedocsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13402,7 +14641,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record157": {
+  "record173": {
     "code": "nodicsDocsNodePagewcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13478,7 +14717,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record158": {
+  "record174": {
     "code": "nodicsDocsNodePageapplicationsNexusDataContentGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13558,7 +14797,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record159": {
+  "record175": {
     "code": "nodicsDocsNodePageapplicationsAxisSetupErrorContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13638,7 +14877,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record160": {
+  "record176": {
     "code": "nodicsDocsNodePagewcmsCmsSourceMapAuthoringContract",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13718,7 +14957,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record161": {
+  "record177": {
     "code": "nodicsDocsNodePagewcmsMediaOperationsRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13798,7 +15037,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record162": {
+  "record178": {
     "code": "nodicsDocsNodePagedataImportExportProviderGuides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13878,7 +15117,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record163": {
+  "record179": {
     "code": "nodicsDocsNodePagecommerceDataAuthoringFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13959,7 +15198,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record164": {
+  "record180": {
     "code": "nodicsDocsNodePagedocsDocumentationPublishingRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14039,7 +15278,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record165": {
+  "record181": {
     "code": "nodicsDocsNodePageplatformModuleRegistryJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14118,7 +15357,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record166": {
+  "record182": {
     "code": "nodicsDocsNodePagecommerceSearchGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14197,7 +15436,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record167": {
+  "record183": {
     "code": "nodicsDocsNodePagelocalizationRuntimeAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14276,7 +15515,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record168": {
+  "record184": {
     "code": "nodicsDocsNodePagecommercePaymentProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14355,7 +15594,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record169": {
+  "record185": {
     "code": "nodicsDocsNodePageloyaltyWalletsRewardsLedger",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14439,7 +15678,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record170": {
+  "record186": {
     "code": "nodicsDocsNodePagecommerceShoppingListCommerceBoundary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14520,7 +15759,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record171": {
+  "record187": {
     "code": "nodicsDocsNodePagefoundationNmsRuntimeMonitoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14599,7 +15838,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record172": {
+  "record188": {
     "code": "nodicsDocsNodePagefoundationServiceRuntimeOverrides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14680,7 +15919,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record173": {
+  "record189": {
     "code": "nodicsDocsNodePagefoundationModuleToModuleCommunication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14763,7 +16002,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record174": {
+  "record190": {
     "code": "nodicsDocsNodePagefoundationCacheProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14842,7 +16081,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record175": {
+  "record191": {
     "code": "nodicsDocsNodePagefoundationDatabaseProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14921,7 +16160,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record176": {
+  "record192": {
     "code": "nodicsDocsNodePagesecurityOtpSecurityFlow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15000,7 +16239,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record177": {
+  "record193": {
     "code": "nodicsDocsNodePagecommunicationProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15080,7 +16319,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record178": {
+  "record194": {
     "code": "nodicsDocsNodePageengagementContactSubmissionOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15159,7 +16398,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record179": {
+  "record195": {
     "code": "nodicsDocsNodePageprocessWorkflowBpmSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15239,7 +16478,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record180": {
+  "record196": {
     "code": "nodicsDocsNodePageprocessCronjobDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15272,7 +16511,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessCronjobDataAuthoring",
     "targetPage": "nodicsDocsPageprocessCronjobDataAuthoring",
     "targetRoute": "nodicsDocsRouteprocessCronjobDataAuthoring",
-    "nodeOrder": 10040,
+    "nodeOrder": 10050,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -15318,7 +16557,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record181": {
+  "record197": {
     "code": "nodicsDocsNodePageframeworkReleaseUpgradeCompatibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15397,7 +16636,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record182": {
+  "record198": {
     "code": "nodicsDocsNodePagecommerceFulfillmentCoreSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15476,7 +16715,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record183": {
+  "record199": {
     "code": "nodicsDocsNodePageacceleratorsDomainCommerceSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15555,7 +16794,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record184": {
+  "record200": {
     "code": "nodicsDocsNodePagefoundationToolingRuntimeContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15634,7 +16873,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record185": {
+  "record201": {
     "code": "nodicsDocsNodePagefoundationEmsRuntimeClientRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15713,7 +16952,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record186": {
+  "record202": {
     "code": "nodicsDocsNodePagereferenceInternalSourceBoundaryRegister",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15793,7 +17032,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record187": {
+  "record203": {
     "code": "nodicsDocsNodePagetoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15870,7 +17109,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record188": {
+  "record204": {
     "code": "nodicsDocsNodePagereferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15947,7 +17186,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record189": {
+  "record205": {
     "code": "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -16028,7 +17267,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record190": {
+  "record206": {
     "code": "nodicsDocsNodePagereferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -16108,7 +17347,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record191": {
+  "record207": {
     "code": "nodicsDocsNodePagewasteImpactProviders",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -16187,7 +17426,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record192": {
+  "record208": {
     "code": "nodicsDocsNodePagecommunicationEmailSmsTemplates",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",

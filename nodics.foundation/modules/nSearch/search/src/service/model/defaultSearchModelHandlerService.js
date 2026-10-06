@@ -234,7 +234,8 @@ module.exports = {
                     _self.registerSearchModels(options.rawSearchModelDef[options.moduleName], searchModel);
                     _self.registerSearchModels(options.rawSearchModelDef[indexName] || options.rawSearchModelDef[indexDef.indexName], searchModel);
                     options.moduleObject.searchModels[options.tntCode][searchModelName] = searchModel;
-                    if (indexDef.schemaName) {
+                    const retirementBinding = Object.hasOwn(indexDef, 'retirement');
+                    if (indexDef.schemaName && !retirementBinding) {
                         let schemaModel = NODICS.getModels(options.moduleName, options.tntCode)[indexDef.schemaName.toUpperCaseFirstChar() + 'Model'];
                         if (schemaModel) {
                             schemaModel.searchModelName = searchModelName;
@@ -243,6 +244,11 @@ module.exports = {
                         }
                     }
                     let physicalIndexName = searchModel.indexName.toLowerCase();
+                    if (retirementBinding) {
+                        // Historical bindings survive erasure for original-result inspection only.
+                        _self.prepareTypeSearchModels(options).then(resolve).catch(reject);
+                        return;
+                    }
                     if (!options.searchEngine.isActiveIndex(physicalIndexName)) {
                         searchModel.doCreateIndex({}).then(success => {
                             options.searchEngine.addIndex(physicalIndexName, {});
@@ -419,6 +425,10 @@ module.exports = {
                     let searchModel = NODICS.getSearchModels(options.moduleName, options.tntCode)[searchModelName];
                     if (searchModel) {
                         let indexDef = searchModel.indexDef;
+                        if (Object.hasOwn(indexDef, 'retirement')) {
+                            _self.updateIndexTypeSchema(options).then(resolve).catch(reject);
+                            return;
+                        }
                         let indexName = searchModel.indexName;
                         let typeName = searchModel.typeName;
                         let indexObj = options.searchEngine.getIndex(indexName);

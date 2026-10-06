@@ -25,7 +25,7 @@ module.exports = {
     trigger: "preSave",
     active: "true",
     index: -30,
-    handler: "DefaultProcessRuntimeLifecycleService.protectTaskRetirement",
+    handler: "DefaultProcessRuntimeLifecycleService.protectTaskRetirementSave",
   },
   protectTaskRetirementUpdate: {
     type: "schema",
@@ -49,7 +49,7 @@ module.exports = {
     trigger: "preSave",
     active: "true",
     index: -30,
-    handler: "DefaultProcessRuntimeLifecycleService.protectInstanceRetirement",
+    handler: "DefaultProcessRuntimeLifecycleService.protectInstanceRetirementSave",
   },
   protectInstanceRetirementUpdate: {
     type: "schema",

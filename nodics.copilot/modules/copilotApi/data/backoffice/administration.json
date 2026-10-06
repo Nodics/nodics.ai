@@ -1,0 +1,16 @@
+{
+  "id": "copilot-administration",
+  "label": "Copilot Settings",
+  "route": "/copilot/settings",
+  "icon": "settings",
+  "order": 80,
+  "group": { "id": "ai-copilot", "label": "AI & Copilot", "order": 550 },
+  "perspectives": ["operations"],
+  "contexts": ["environment", "tenant", "enterprise"],
+  "featureState": "ACTIVE",
+  "requiredPermissions": ["copilot.configuration.read"],
+  "backendWorkspace": {
+    "renderer": "axis.workspace.native", "contractVersion": 1,
+    "workspaceCode": "copilot.administration", "viewCode": "overview", "title": "Copilot Settings"
+  }
+}

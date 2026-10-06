@@ -1,5 +1,10 @@
 # locationCore
 
+Secured creation/update use independent `location.location.create/update`
+permissions, recognized by Profile's shared catalogue but not granted by default.
+See the [route contract](llm/contracts/README.md#route-contract) and run
+`node --test test/locationPermissionCatalog.test.js` when changing route grants.
+
 `locationCore` owns reusable physical-place identity and the first runtime
 behavior slice for Location.
 

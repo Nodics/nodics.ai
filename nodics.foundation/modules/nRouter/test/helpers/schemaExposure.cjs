@@ -66,7 +66,7 @@ module.exports = function verifySchemaExposure(entries) {
                 continue;
             }
             assert.deepEqual(routes.map(route => route.operation).sort(),
-                ['bulk', 'capabilities', 'deleteImpact', 'remove', 'safeSearch', 'save', 'update'], label);
+                ['bulk', 'capabilities', 'deleteImpact', 'inspectCommandReceipt', 'remove', 'safeSearch', 'save', 'update'], label);
             for (const route of routes) {
                 assert.equal(route.schemaGoverned, true, label);
                 assert.equal(route.secured, true, label);
@@ -77,6 +77,11 @@ module.exports = function verifySchemaExposure(entries) {
                         ? 'system.schema.view' : 'system.schema.manage'
                 ], label);
                 assert.equal(route.moduleName, moduleName, label);
+                if (route.operation === 'inspectCommandReceipt') {
+                    assert.equal(route.requestPrivacy.sensitive, true);
+                    assert.equal(route.cache.enabled, false);
+                    assert.deepEqual(route.authTokenTypes, ['access']);
+                }
                 assert(route.url.includes('/' + moduleName + '/v0/'), label);
             }
             for (const override of [

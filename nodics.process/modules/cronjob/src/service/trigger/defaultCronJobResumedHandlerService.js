@@ -123,14 +123,8 @@ module.exports = {
     stateChangeResumed: function (request, response, process) {
         this.LOG.debug('Changing job state to resume');
         let jobDefinition = request.definition;
-        SERVICE.DefaultCronJobService.update({
-            tenant: jobDefinition.tenant,
-            query: {
-                code: jobDefinition.code
-            },
-            model: {
-                state: ENUMS.CronJobState.ACTIVE.key
-            }
+        SERVICE.DefaultCronJobRuntimeService.persistRuntimeState(request.job, {
+            state: ENUMS.CronJobState.ACTIVE.key
         }).then(success => {
             process.nextSuccess(request, response);
         }).catch(error => {

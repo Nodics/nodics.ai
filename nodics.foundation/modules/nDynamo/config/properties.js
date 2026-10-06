@@ -21,6 +21,17 @@ module.exports = {
     policyTenant: "default",
   },
   runtimePropertyGovernance: {
+    readFence: { enabled: false, owners: {} },
+    scheduledActivation: {
+      enabled: false,
+      maximumBatch: 25,
+    },
+    persistence: {
+      enabled: false,
+      requireDurableJournal: false,
+      maximumChanges: 1000,
+      maximumBytes: 1048576,
+    },
     sensitivePathPatterns: [
       "password",
       "passwd",

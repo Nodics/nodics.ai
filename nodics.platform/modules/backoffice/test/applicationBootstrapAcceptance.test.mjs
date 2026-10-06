@@ -285,6 +285,7 @@ test('documentation publication uses selected profiles, Process approval and Onl
         if (route.endsWith('/claim')) return {};
         if (route.endsWith('/complete')) {
           assert.equal(JSON.parse(request.body).decision.approved, true);
+          assert.deepEqual(Object.keys(JSON.parse(request.body).decision).sort(), ['approved', 'reason']);
           ready = true;
           return {};
         }

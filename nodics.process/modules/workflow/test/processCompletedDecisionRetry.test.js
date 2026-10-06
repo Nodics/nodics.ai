@@ -122,6 +122,17 @@ function fixture(approved = true) {
         assert(f.audits.every(item => item.actor === 'recovery-operator'));
         checks++;
     }
+    for (const approved of [true, false]) {
+        const f = fixture(approved);
+        f.task.decision.action = approved ? 'APPROVE' : 'REJECT';
+        const original = clone(f.task);
+        await lifecycle.retryInstance(f.request);
+        assert.strictEqual(f.instance.status, 'COMPLETED');
+        assert.deepStrictEqual(f.task, original);
+        assert.strictEqual(f.descriptors[0].approved, approved);
+        assert.strictEqual(Object.hasOwn(f.descriptors[0], 'action'), false);
+        checks++;
+    }
     const invalid = [
         f => { f.task.status = 'CANCELLED'; },
         f => { f.task.instanceCode = 'other-instance'; },
@@ -133,6 +144,14 @@ function fixture(approved = true) {
         f => { f.task.decision.outcome = 'x'.repeat(257); },
         f => { f.task.decision.outcome = ' '; },
         f => { f.task.decision.arbitraryGrant = true; },
+        f => { f.task.decision.action = 'REJECT'; },
+        f => { f.task.decision.action = 'APPROVE_AND_ACTIVATE'; },
+        f => { f.task.decision.action = { approved: true }; },
+        f => {
+            f.task.decision.action = 'APPROVE';
+            f.version.policy = { decisionContract: { contractVersion: 1, kind: 'APPROVAL', approveLabel: 'Approve',
+                rejectLabel: 'Reject', reasonLabel: 'Reason', rejectionReasonRequired: true, maximumReasonLength: 1000 } };
+        },
         f => {
             f.task.decision.outcome = 'approved-from-documentation-dashboard';
             f.version.policy = { decisionContract: { contractVersion: 1, kind: 'APPROVAL', approveLabel: 'Approve',

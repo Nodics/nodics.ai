@@ -1,5 +1,10 @@
 # Checkout Core Contracts
 
+Digital sale confirmation resolves Store context from the authenticated persisted
+cart before forwarding it to Digital Core. Never select purchase-time campaign
+authority from caller-supplied Store context. Empty digital reservations need no
+sale call; nonempty reservations require the owner and cannot silently succeed.
+
 ## Checkout Contract Acceptance
 
 The capability-owned OpenAPI acceptance is read-only, with inert imports/help.

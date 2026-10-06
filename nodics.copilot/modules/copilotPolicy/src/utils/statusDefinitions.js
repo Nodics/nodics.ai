@@ -17,6 +17,10 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 module.exports = {
+    ERR_CPL_00008: { code: '403', message: 'Copilot configuration administration is not available for this scope.' },
+    ERR_CPL_00009: { code: '400', message: 'The proposed Copilot configuration is invalid.' },
+    ERR_CPL_00010: { code: '503', message: 'Durable runtime configuration governance is unavailable.' },
+    ERR_CPL_00011: { code: '409', message: 'Refresh settings and review the configuration proposal again.' },
     ERR_CPL_00000: { code: '400', message: 'The request needs more business information.' },
     ERR_CPL_00001: { code: '409', message: 'The prepared mutation requires explicit confirmation.' },
     ERR_CPL_00002: { code: '403', message: 'The actor cannot execute this mutation.' },
