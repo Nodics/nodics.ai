@@ -48,7 +48,9 @@ test('actual Profile forward baseline is discovered before dependent group delta
             'profile:init-v001', 'profile:init-v002', 'profile:init-v003', 'profile:init-v004', 'profile:init-v005',
             'profile:employeeApplicationReview',
         ]);
-        assert.equal(found[0].sourceRoot, 'init-v008');
+        const manifest = JSON.parse(fs.readFileSync(path.join(owner.path, 'data/manifest.json'), 'utf8'));
+        assert.equal(found[0].sourceRoot, manifest.sections['init-v001'].sourceRoot);
+        assert.notEqual(found[0].sourceRoot, 'init-v001', 'the baseline must use its forward source release');
         assert(found.every(release => !release.invalidManifest), 'all current immutable release manifests remain valid');
     } finally {
         Object.assign(global, previous);
