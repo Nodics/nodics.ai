@@ -22,8 +22,27 @@ module.exports = {
     /** Requires explicit qualified Online scope; no runtime or schema-maintenance bypass is inferred. */
     assertTarget: function (request) { this.manifests().assertScope(request, 'ONLINE'); },
     /** Verifies one retained manifest through existing cleanup authority; never repairs activation or purges bytes. */
-    reconcile: function (input, request) {
+    reconcile: async function (input, request) {
         this.assertTarget(request);
+        if (!input || typeof input !== 'object') throw this.manifests().invalid('Exact retained Media identity is required');
+        if (input && input.assets !== undefined) {
+            const maximum = Number(this.manifests().policy().maximumAssets || 100);
+            if (!Number.isSafeInteger(maximum) || maximum < 1 || !Array.isArray(input.assets) ||
+                !input.assets.length || input.assets.length > maximum ||
+                Object.keys(input).some(key => key !== 'assets') ||
+                input.assets.some(asset => !asset || Object.keys(asset).some(key => !['mediaCode', 'manifestCode'].includes(key)) ||
+                    typeof asset.mediaCode !== 'string' || typeof asset.manifestCode !== 'string' ||
+                    !/^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$/.test(asset.mediaCode || '') ||
+                    !/^[a-f0-9]{64}$/.test(asset.manifestCode || '')) ||
+                new Set(input.assets.map(asset => asset.mediaCode)).size !== input.assets.length) {
+                throw this.manifests().invalid('Bounded unique retained Media identities are required');
+            }
+            const results = [];
+            for (const asset of input.assets) {
+                results.push(await SERVICE.DefaultMediaCleanupLifecycleService.reconcileRetainedPublication(asset, request));
+            }
+            return { results };
+        }
         if (input.operationKey !== undefined || input.operation !== undefined) return this.reconcileOperation(input, request);
         return SERVICE.DefaultMediaCleanupLifecycleService.reconcileRetainedPublication(input, request);
     },
@@ -61,6 +80,20 @@ module.exports = {
     /** Returns content-free target status for nPublish prior-version capture. */
     getStatus: async function (input, request) {
         this.assertTarget(request);
+        if (input && input.mediaCodes !== undefined) {
+            const maximum = Number(this.manifests().policy().maximumAssets || 100);
+            if (input.mediaCode !== undefined || !Array.isArray(input.mediaCodes) ||
+                !Number.isSafeInteger(maximum) || maximum < 1 || !input.mediaCodes.length ||
+                input.mediaCodes.length > maximum || new Set(input.mediaCodes).size !== input.mediaCodes.length ||
+                input.mediaCodes.some(code => typeof code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$/.test(code))) {
+                throw this.manifests().invalid('Bounded unique Media target identities are required');
+            }
+            const statuses = [];
+            for (const mediaCode of input.mediaCodes) {
+                statuses.push({ mediaCode, status: await this.getStatus({ mediaCode }, request) });
+            }
+            return { statuses };
+        }
         if (!input || typeof input.mediaCode !== 'string' || !input.mediaCode) throw this.manifests().invalid('Media target identity is required');
         let pointer = await this.pointer(input.mediaCode, request);
         return pointer ? { version: pointer.manifestCode, revision: pointer.revision,

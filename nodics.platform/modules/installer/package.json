@@ -19,7 +19,8 @@
       "service",
       "test",
       "documentation",
-      "llm"
+      "llm",
+      "data"
     ],
     "runtime": {
       "router": true,

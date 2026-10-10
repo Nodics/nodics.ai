@@ -86,7 +86,14 @@ test("real registration builder admits configured Profile metadata without raisi
       contract.validateEnterpriseSetupContinuation(workspace.setupContinuation),
       true,
     );
-    assert.equal(registration.authorityClaims.length, 26);
+    assert.equal(registration.authorityClaims.length, 28);
+    assert.deepEqual(
+      registration.authorityClaims
+        .filter((claim) => claim.claimName === "profileCommandReceipt")
+        .map((claim) => claim.kind)
+        .sort(),
+      ["schema", "service"],
+    );
     assert.equal(contract.validateRegistration(registration), true);
     assert.equal(
       contract.validateRegistrationBatch(

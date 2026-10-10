@@ -280,6 +280,21 @@ async function assertOperation(operation, input, expectedClientOperation, expect
         index: 'enterpriseindex'
     });
 
+    const modern = createSearchModel();
+    const client = modern.searchModel.searchEngine.getConnection();
+    client.indices.delete = async function (query, options) {
+        assert.equal(options, undefined, 'Modern clients must not receive a callback as transport options');
+        modern.calls.push({ operation: 'indices.delete', query });
+        return { acknowledged: true };
+    };
+    assert.deepStrictEqual(await modern.searchModel.doRemoveIndex({ options: { timeout: '5s' } }), { acknowledged: true });
+    assert.deepStrictEqual(modern.calls, [{ operation: 'indices.delete', query: {
+        ignore_unavailable: true, timeout: '5s', index: 'enterpriseindex'
+    } }]);
+    const failure = new Error('Provider deletion failed');
+    client.indices.delete = async function () { throw failure; };
+    await assert.rejects(modern.searchModel.doRemoveIndex({}), error => error === failure);
+
     console.log('Elastic search model operation contract validated');
 })().catch(error => {
     console.error(error);

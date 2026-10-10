@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "database",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "database",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 3,
+      "components": 3,
+      "routes": 3,
+      "releaseChecksum": "b0f5454c77e3f67add17221d4fbac6596771248d7ffa048f02293afc1be0dab8",
+      "generatedHashes": {
+        "docs-v001/records/documentation/databaseDocumentationNodeData.js": "25f28490a6fb3b0fafe9164b78ece800842a84fc8e9a841a8e21467e08b96e1d",
+        "docs-v001/records/documentation/databaseDocumentationPageMetadataData.js": "e8e3f3107d0badacdb1ebe0ed34a15bf20d167b84e35db142336a21ace7975d9",
+        "docs-v001/records/documentation/databaseDocumentationPublicationStateData.js": "855107cb6310c7e478d64f2e6810fb6f939e12740e44e86ebbd6a606d226a597",
+        "docs-v001/records/documentation/databaseDocumentationSearchMetadataData.js": "0e788b6cdd2af96df730eb6b98013689013714fed3d037b0196ef5a660b07077",
+        "docs-v001/records/documentation/databaseDocumentationComponentData.js": "4e0d66e56f538f6b3f8180a725447e30b997349baa587f67638783007266b93e",
+        "docs-v001/records/documentation/databaseDocumentationPageData.js": "ceed7041fc1b2fed42dec22eba924c936f3652c37578d0ccb48fb901d42bab24",
+        "docs-v001/records/documentation/databaseDocumentationRouteData.js": "d3b56074a590992ffe1bf6e89eceff1ca2a83dbc854db9f6089101d937fbf06c",
+        "docs-v001/headers/100_databaseDocumentationContentPackHeader.js": "ea81a19b69d8b77db666e219f52cc5fc2ecf1f9962731dbe58de8df7d6de9d2b"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

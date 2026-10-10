@@ -1,7 +1,25 @@
 # Pricing
 
+Exact decimal arithmetic comes from the pure nCommon `exactAmount` utility.
+Pricing retains its mergeable `DefaultExactAmountService` interface and owns
+currency, rounding and pricing policy; the shared utility grants no financial
+or runtime authority.
+
+Native merchant evidence supports exact receipt-bound vendor coupons while
+retaining issuer-owned Cart/Store/activated Pricing authority. It uses the existing
+private fixed route and Promotion receipt owners, not a general cross-enterprise
+lookup. See [membership and refusal](llm/contracts/native-merchant-priced-evidence-v1.md).
+An exact deployment allowlist can admit a body-selected business issuer while
+keeping original runtime auth unchanged. `merchantEvidence.businessCallers` is
+disabled by default and grants no customer membership or general CRUD authority.
+
+Independently prepared Stores may select exact retained policy roots through
+`publication.delivery.rootCodesByStore`. See
+[Store-scoped delivery](llm/contracts/pricing-lifecycle-and-publication.md#publication-qualification-boundary);
+selection is not publication or acceptance evidence.
+
 PriceRow native create receipts are default-disabled and preserve Pricing's
-existing authoring checks. See [original results and continuation](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+existing authoring checks. See [original results and continuation](data/docs-v001/records/documentation/pricingDocumentationComponentData.js).
 
 Pricing owns exact, tenant-scoped price books, quantity tiers, validity windows, deterministic row selection, conflict explanations, and immutable price-decision evidence. Customer-group and channel specificity may be added by later-loaded modules without changing the stable selection and evidence boundary. Archived gComm is reference-only.
 

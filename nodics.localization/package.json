@@ -1,44 +1,44 @@
 {
-    "name": "nodics.localization",
-    "index": "40.99",
-    "description": "Standard Nodics runtime localization functional module group.",
-    "main": "nodics.js",
-    "version": "0.0.0",
-    "private": true,
-    "license": "SEE LICENSE IN LICENSE",
-    "nodics": {
-        "kind": "group",
-        "displayName": "Nodics Localization",
-        "runtimeModule": true,
-        "loadableByNodicsModuleLoader": true,
-        "owns": [
-            "composition",
-            "configuration",
-            "test",
-            "llm"
-        ],
-        "runtime": {
-            "router": false,
-            "publish": false,
-            "web": false
-        },
-        "extends": [
-            "nodics.foundation"
-        ],
-        "functionalModule": {
-            "identity": "nodics.localization",
-            "displayName": "Localization",
-            "type": "STANDARD",
-            "protected": false
-        }
-    },
-    "requiredModules": [
-        "localizationCore",
-        "localizationApi"
+  "name": "nodics.localization",
+  "index": "40.99",
+  "description": "Standard Nodics runtime localization functional module group.",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "group",
+    "displayName": "Nodics Localization",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
     ],
-    "scripts": {
-        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
-        "test": "npm run check:syntax && node test/localizationCompositionContract.test.js && node test/localizationModuleMetadataContract.test.js && node test/localizationCustomizationContract.test.js && node test/localizationAdopterContributionContract.test.js && node test/localizationReleaseAcceptanceContract.test.js && npm --prefix modules/localizationCore test && npm --prefix modules/localizationApi test",
-        "qualification:verify": "npm test"
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "extends": [
+      "nodics.foundation"
+    ],
+    "functionalModule": {
+      "identity": "nodics.localization",
+      "displayName": "Localization",
+      "type": "STANDARD",
+      "protected": false
     }
+  },
+  "requiredModules": [
+    "localizationCore",
+    "localizationApi"
+  ],
+  "scripts": {
+    "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+    "test": "npm run check:syntax && node test/localizationCompositionContract.test.js && node test/localizationModuleMetadataContract.test.js && node test/localizationCustomizationContract.test.js && node test/localizationAdopterContributionContract.test.js && node test/localizationReleaseAcceptanceContract.test.js && npm --prefix modules/localizationCore test && npm --prefix modules/localizationApi test",
+    "qualification:verify": "npm test"
+  }
 }

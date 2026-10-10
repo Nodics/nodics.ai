@@ -17,11 +17,11 @@ global.CONFIG = { get: () => undefined };
 global.SERVICE = {};
 global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
 
-const pack = server => ({ code: 'baseCommerce:core-reference', owner: 'baseCommerce',
-    targetModule: 'baseCommerce', targetServer: server, required: true, trigger: 'ACTIVATION', dataType: 'core' });
+const pack = server => ({ code: 'store:core-reference', owner: 'store',
+    targetModule: 'store', targetServer: server, required: true, trigger: 'ACTIVATION', dataType: 'core' });
 const observation = server => ({ projectCode: 'project', functionalModule: 'nodics.commerce',
     displayName: 'Commerce', registeredVersion: '0.0.0', moduleIndex: '90.99', required: false,
-    technicalModules: ['baseCommerce'], activationDataPackages: [pack(server)], observedServer: 'local:' + server + ':default' });
+    technicalModules: ['store'], activationDataPackages: [pack(server)], observedServer: 'local:' + server + ':default' });
 const request = revision => ({ tenant: 'tenant-one', authData: { principalId: 'operator' },
     params: { functionalModule: 'nodics.commerce' },
     body: { project: 'project', expectedRevision: revision, reason: 'User-approved test activation' } });

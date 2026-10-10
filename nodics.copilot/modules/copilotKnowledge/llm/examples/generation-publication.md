@@ -13,7 +13,7 @@ Process and Cronjob still own jobs, schedules and execution history.
 ## Deployment Migration
 
 Dedicated legacy-index retirement now has a separate reviewed provider-backed
-journey. See [Knowledge Progress and Recovery](../../../../../nodics.docs/docs/pages/nodics.copilot/knowledge-generation-recovery.md#retire-a-dedicated-legacy-index).
+journey. See [Knowledge Progress and Recovery](../../data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js#retire-a-dedicated-legacy-index).
 It verifies policy-current replacement generations, claims once, write-blocks the
 old dedicated index through nSearch, and supports original receipt inspection.
 Retirement retains old data and never implies physical erasure or completion for

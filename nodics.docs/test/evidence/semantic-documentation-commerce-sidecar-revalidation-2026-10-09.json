@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "scope": "Promotion, Digital Core and Fulfillment Core source CMS QA plus Payment derived metadata; current closure items only, no historical review rewrites.",
+  "boundary": "No runtime, database, import, publication, carrier, browser, native E2E or financial acceptance. All existing liveAcceptance fields preserved byte-for-byte as values. No blanket source/document pin refresh.",
+  "items": [
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Existing authoring dependencies, creation lanes, publication/search separation and browser-proof limitations remain accurate. Reviewed supplemental owner diagrams/tables explain exact issuer merchant phases, coupon-bound COMMIT versus missing canonical RELEASE, original-sale asset refund versus physical custody, and the deliberately refusing ITEM delivery owner. Unsupported real delivery and absent installed/native qualification are explicit, not hidden as successful implementation.",
+      "evidence": [
+        {
+          "documentId": "promotion.campaigns-coupon-issuance",
+          "anchors": [
+            "promotion-issuer-merchant-scope",
+            "promotion-coupon-bound-benefit-accounting"
+          ]
+        },
+        {
+          "documentId": "digital.purchase-delivery-reveal",
+          "anchors": [
+            "digital-issuer-merchant-confirmation",
+            "digital-original-sale-ownership-refund"
+          ]
+        },
+        {
+          "documentId": "fulfillment.shipping-management",
+          "anchors": [
+            "physical-cancellation-return-owner-bridge",
+            "physical-return-receipt-inspection",
+            "fulfillment-item-delivery-boundary"
+          ]
+        }
+      ],
+      "sourceFindings": [
+        "Targeted 2026-10-09 sidecar review: the unchanged cross-framework authoring anchors still separate Staged authoring/publication/search from operational stock and physical completion. Supplemental canonical owner sections now distinguish original issuer staff from exact vendor persistence, Digital private confirmation phases and original secure coupon/batch/consent membership; no general vendor/issuer-management grant is inferred.",
+        "Coupon-bound monetary COMMIT is integrated through exact original merchant receipt and explicit ISSUED_COUPON_BENEFIT_V1 purpose. Qualified Promotion transaction fences unused CLAIMED coupon revision, ledger insert and issuer counter CAS; REDEEMED recovery requires the actual original COMMIT. RELEASE receiver exists, but resolveBudgetRequest admits COMMIT only: no canonical RELEASE caller or used-benefit inverse workflow is supplied.",
+        "Fulfillment ITEM evaluate validates bounded detached selectors then always refuses ERR_FULFILLMENT_ITEM_DELIVERY_UNCONFIRMED; available:false names absent authenticated Shipment allocation receipt source. Manual handover, generic DELIVERED, returned-package inspection, sandbox and caller receipt/flags cannot qualify delivered ITEM benefits.",
+        "Original-sale ownership refund is source-implemented for one complete quantity-one wasteCore/DIGITAL_OWNERSHIP entry only: retained before-onward-transfer policy, original Order approval/paymentAuthority, Waste lock, original seller EARN reversal, Payment buyer original-capture refund and terminal owner readback. Physical custody, relisting, fee/carbon, generic entitlement refund and coupon refund policy remain separate. Source fixtures and pack validation are not installed/native E2E."
+      ]
+    },
+    {
+      "item": "Payment Core and provider split",
+      "requestedAction": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Current execution and full-original-capture refund source agree with unchanged canonical Payment prose. Corrected only derived projections and saved-byte hashes. Successful refund has no reconciliation record; non-success requires the generated exact-intent reconciliation owner. Original Loyalty and bound offline CARD remain separately guarded; no real gateway or settlement acceptance.",
+      "articleBlocksChanged": false,
+      "sourcePinsChanged": false
+    },
+    {
+      "item": "Internal-only classification register",
+      "disposition": "UNCHANGED_EXISTING_SOURCE_REVIEW",
+      "rationale": "The only affected shared evidence is the unchanged Payment article. Its exact block checksum still equals the current closure pin; no classification, other source hash or live field was renewed. This does not claim a new review of all forty classifications."
+    }
+  ],
+  "canonicalDocuments": [
+    {
+      "documentId": "promotion.campaigns-coupon-issuance",
+      "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationComponentData.js",
+      "articleBlocksSha256": "15d71c4c14d7461f05c382036dfa5edbe141a6ecb5e95af63bdaa95a99538e0a"
+    },
+    {
+      "documentId": "digital.purchase-delivery-reveal",
+      "owner": "nodics.commerce/modules/digitalCommerce/modules/digitalCore",
+      "componentFile": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v001/records/documentation/digitalCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "a876f00a0dafeae4435d2ab71de52c58e4443f58551d90e87ac15e1ce60fd8ac"
+    },
+    {
+      "documentId": "fulfillment.shipping-management",
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "aeefbe169af0a5502a27a303ab8a8b14379d327f8d3132e175b703f5aa22f63d"
+    },
+    {
+      "documentId": "commerce.fulfillment-core-source-map",
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "e40ca5047eccded617ffae730f878edb7b6d045116e4d4211deb0e75af68e6c4"
+    },
+    {
+      "documentId": "commerce.payment-provider-boundaries",
+      "owner": "nodics.commerce/modules/payment/modules/paymentCore",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4"
+    }
+  ],
+  "sourceFileSha256": {
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionMerchantScopeService.js": "f0d6d95bfe4390d7565e43fee077322f913d0820da8b3a2a6f285173335131c4",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionCouponBudgetService.js": "5a9b88cb3846c42357cf82e7176e30d7b9c6f0b6995453c9ab225951759a54b3",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/issuer-merchant-stock-admission.md": "42879959de62ec87ba0b7eb2aa491e60f2c405ffb710178ed0cac091f954142a",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-bound-issuer-budget.md": "106a4b2d5847ab2334354b58d88ebcb9e6308058a2a6cdaffaee6f61bf1d7de2",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js": "1edd3caf90260e5d2d7ce994283b95ee45339b588739fc35c4610a6ec52d1543",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService.js": "5e1769e8242a2bc1b46fb7c20f90cb15a7547941944eb18ce48d2f9688060e6c",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceRefundService.js": "dc6c84a2a9b2d524727ea0187783189235be1a2b3fbf8af40a6d99c73e73cc14",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md": "3d0d1ceb9309b708d9cca98e48cd5fddc952289edeeecefbc912172060acc9a6",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemDeliveryEvidenceService.js": "719c6cf5e30d31a5a0006df35aaea0dc38674e1697245eb946f56acbc4822af6",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md": "b539250bca9718d4e6736fc545449c849c990e3a4ef89e6a88f32fcfd49b449a"
+  },
+  "checks": {
+    "paymentOriginalCaptureSandbox": "17/17 PASS",
+    "cmsReferenceOwnershipFocused": "33/33 PASS",
+    "canonicalOwnerPacks": "4/4 PASS",
+    "docsCheck": "176 PASS",
+    "docsValidate": "176 PASS"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  }
+}

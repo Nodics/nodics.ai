@@ -24,6 +24,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Custom installers must call `DefaultDataReleaseService.readContributionPayload`
+  with a fixed owning installer code and JSON basename. Never trust incoming
+  paths or declared file lists. Preserve exact current release qualification,
+  source containment, bounded byte reads and aggregate checksum verification;
+  this read-only method grants no installation or business authority.
+
 - Preserve the private, awaited startup Init context used by the default
   Enterprise seed hook. No body/source/options marker may mint it; revoke on
   success or failure. Do not infer remote readiness from publication receipts.
@@ -73,6 +79,14 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Never give the local importer a source-controlled content-pack directory.
   Validate the release and copy it into server-owned staging because local
   import processing moves files.
+- Stage only the selected manifest's declared headers, records and assets inside
+  its content root. Recheck hashes before staging; reject sibling files, escaping
+  symlinks and source changes. Documentation uses an optional `docs-v001`
+  CONTENT_PACK, never conventional Init/Core/Sample discovery or another importer.
+- Content-pack headers must be direct `headers/*Header.js` or `*Headers.js` files,
+  discoverable by the existing local initializer. Reject nested/misnamed headers
+  and selections without any discoverable header before import dispatch; neither
+  ignored header bytes nor a zero-work run may qualify installation.
 - A published local content-pack repository must commit its directly importable
   data and manifest. Consumers must not build it, create client-owned staging,
   or submit arbitrary filesystem paths; only nImport creates temporary

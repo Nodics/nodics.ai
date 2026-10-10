@@ -1,5 +1,151 @@
 # Enterprise Merchant Redemption
 
+Unclassified validation failures retain `ERR_DIGITAL_MERCHANT_INVALID`. The
+controller may return a registered `ERR_DIGITAL_MERCHANT_DIAGNOSTIC_*` status
+from the actual failing validation object
+(staff, input, issuer admission, coupon, entitlement, merchant, Store, scope,
+purchase state, rights or validation binding). Private error text, coupon tokens
+and record fields never cross this boundary. Copied errors or caller-provided
+diagnostic fields are not evidence; other merchant operations remain masked.
+Issuer admission may append Promotion's fixed substage from the same original
+failure object. An unknown substage is omitted, never copied into the response.
+Private nRouter responses use only the registered status message, not custom
+exception text. The append-only status map preserves this suppression boundary.
+
+## Staff And Persisted Identity Admission
+
+`DefaultDigitalCommerceMerchantService.context` retains the original signed
+enterprise. Every supplied tenant alias (`tenantCode`, `authData.tenant`,
+`authData.tenantCode`) must equal the routed tenant. Every supplied enterprise
+alias on the request or authentication must agree; an empty/conflicting alias is
+not ignored in favour of another field. When present, `tokenType` must be
+`access`. Existing routed contexts without that optional claim retain their
+legacy path, but staff still need an original bounded Bearer header, human login
+and the independent router operation permission. No payload field supplies the
+tenant, enterprise, staff identity or effective scopes.
+
+Before awaiting Profile, the owner detaches authentication, payload and query
+values from the caller. Each staff admission calls `/identity/scopes/me` again
+with the original Bearer and enterprise header. Every transport/result envelope
+is checked for failure, including a negative acknowledgement, before unwrapping.
+A failed outer envelope cannot be made successful by placing matching scopes in
+`data` or `result`. At most seven wrapper levels are accepted; the terminal value
+is still checked and deeper envelopes refuse rather than returning unchecked data.
+
+The resulting principal must match the employee login; a supplied principal type
+must be human. Both scope arrays are required, a supplied `scopeCount` must match,
+and the combined result is bounded to 1,000 assignments. Larger owner results
+require a separately qualified complete-read contract, never truncation. All
+entries, including sparse/malformed DENY entries, require bounded non-empty
+selectors and well-formed optional qualifiers. Canonical Profile blank optional
+qualifiers (`undefined`, `null` or empty string) retain their unrestricted meaning;
+required selectors cannot be blank. An explicit effect must agree
+with its array; inactive evidence refuses. Results are detached before use.
+These are consumer admission checks, not a second Profile scope resolver or a
+local cache of employee/group assignments.
+
+```mermaid
+sequenceDiagram
+    participant Axis
+    participant Digital as Digital Core
+    participant Profile
+    participant Promotion
+    participant Entitlement as Generated Entitlement Owner
+    Axis->>Digital: Validate presented coupon
+    Digital->>Digital: Check original signed aliases, human and permission
+    Digital->>Profile: Current scopes with original bearer and enterprise
+    Profile-->>Digital: Effective ALLOW and DENY evidence
+    Digital->>Digital: Reject failed envelopes or incomplete evidence
+    Digital->>Promotion: Lookup purchased unit in unchanged signed scope
+    Promotion-->>Digital: Exact purchased coupon
+    Digital->>Entitlement: Bounded provider-unit lookup in same scope
+    Entitlement-->>Digital: Persisted entitlement
+    Digital->>Digital: Verify unit, tenant, enterprise, buyer, Product and Order
+    Digital->>Promotion: Reread exact purchased unit
+    Digital->>Profile: Resolve active canonical issuer
+    Digital->>Digital: Check issuer/outlet ALLOW with DENY precedence
+    Digital->>Promotion: Validate exact current purchased rights
+    Digital-->>Axis: Safe short-lived validation, no claim or redemption
+```
+
+Relevant explicit DENY still wins over ALLOW. A wildcard capability applies to
+the merchant operation; it cannot make a denial disappear. An enterprise
+qualifier must match the issuer even for STORE or broader scopes. Qualified
+outlet fulfillment still requires a positive exact STORE grant independently.
+
+Successful generated reads are necessary but not sufficient. The merchant
+owner verifies persisted tenant, operational enterprise, coupon provider,
+entitlement/unit/Product/Order identities, buyer and nonnegative safe revision.
+Customer reads also compare the persisted buyer with the authenticated owner.
+Before resolving an issuer, the returned coupon must match the entitlement's
+exact unit, tenant, operational enterprise, buyer, Product and original Order.
+Profile lookup keeps the routed tenant unchanged. An optional `Enterprise.tenant`
+in its projection is a business Tenant relationship, not the lookup partition;
+do not reject a legitimate issuer because those differ. Profile owns reference
+isolation and active filtering, and the returned identity must match exactly.
+Marker writes require the original ACTIVE entitlement and UNCLAIMED/CLAIMED
+claim state, with room for a safe revision successor. The generated CAS selector
+pins tenant, operational enterprise, exact code, revision, status and claimStatus;
+zero matches refuse rather than retrying. Exact successor and patch readback must
+also preserve the original buyer, unit/provider, Product/SKU, Order/entry, delivery
+type, purchase dates and retained policy. Changed purchase identity cannot be
+acknowledged before continuing to claim, provider confirmation or redemption.
+
+| Evidence failure | Required outcome |
+| --- | --- |
+| Conflicting scope aliases or invalid staff transport | Refuse before Profile or record access |
+| Failed Profile envelope with apparently valid scopes | Refuse before coupon lookup |
+| Missing, malformed, contradictory or oversized scope evidence | Refuse; never discard a denial |
+| Foreign/missing persisted entitlement identity | Refuse before merchant resolution |
+| Coupon/entitlement purchase binding differs | Refuse before issuer reference lookup |
+| Current relevant DENY after a prior successful operation | Refuse using the new Profile response |
+
+`test/merchantStaffAuthorityContract.test.js` exercises the actual admission and
+identity members with isolated owner ports, including failure envelopes, caller
+mutation during awaits, fresh denial, email-shaped buyer identities and foreign
+purchase evidence. The existing merchant journey, receipt recovery and priced/
+outlet contracts remain regression gates. These checks are source validation,
+not installed cross-runtime qualification.
+
+**Delegated purchased stock has a separate exact owner handoff.** The implemented
+[issuer merchant bridge](../../../../../baseCommerce/modules/promotion/llm/contracts/issuer-merchant-stock-admission.md)
+privately resolves original secure issuance and purchase identity while keeping
+staff authentication issuer-scoped and generic queries unchanged. It rechecks
+current employee/outlet authority and original live consent on every operation.
+Read admission grants no writes: only actual `confirm` phases mint private exact
+mutation commands, and provider acknowledgement precedes receipt persistence.
+Monetary redemption requires the separate coupon-bound issuer COMMIT. Native
+installed acceptance and an authenticated ITEM provider remain distinct gates.
+Already-redeemed benefit reversals are explicitly unsupported in the approved
+local-demo scope: no canonical RELEASE caller exists or is enabled. Policy-read
+admission alone grants none of those authorities.
+
+## Explicit Local Item Simulation
+
+Promotion's [separate simulation mode](../../../../../baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md#explicit-local-simulation)
+uses Fulfillment's default-off, canonical LOCAL/selected-environment allowlist.
+It does not qualify real delivery. The ITEM provider checks fresh signed staff,
+issuer, Store and original instruction, then passes the exact `pricedAuthority`
+object to `validateCoupon`. SIMULATED_ITEMS is accepted only while the real
+Promotion simulator selection is admitted; it must retain simulated/unverified
+tags and exactly the original benefit binding and Store revision. A changed mode,
+bundle, hash, reference or outlet cannot be acknowledged as the original result.
+
+Confirmation and queue summaries, and both pending/completed original receipt
+inspection, preserve `simulated: true`, `deliveryVerified: false` and
+`evidenceMode: LOCAL_SIMULATION`. A REDEEMED entitlement means this coordinated
+demo redemption completed, not that physical goods were delivered. The benefit
+has no deliveredAt or monetary amount; existing merchant command timestamps are
+coordination metadata, not carrier proof. Frontends must display explicit local
+simulation/unverified goods rather than a money discount or verified fulfillment.
+
+The actual MerchantScope source fixture covers the complete isolated simulator
+flow through validation, claim, protected receipt, redemption, replay and query.
+It preserves issuer staff identity, vendor storage and encrypted coupon stock.
+Native installed private persistence, real Profile/Store authority, authorized
+publication and signed-in browser acceptance remain separate gates. Used-benefit
+inverses remain disabled; unused coupon and original asset refunds are independent.
+
 ## Runtime Contract Corrections
 
 Merchant workspace uses the module-unique logical router name `merchantWorkspace`;

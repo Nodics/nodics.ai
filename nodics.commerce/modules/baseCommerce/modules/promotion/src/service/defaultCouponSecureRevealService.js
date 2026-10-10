@@ -32,58 +32,23 @@ module.exports = {
             groups: ['serviceAccountUserGroup'],
         });
     },
-    /** Reveals a purchased coupon through an encrypted token or vault reference. @param {Object} request Reveal request. @returns {Promise<Object>} Reveal result. */
+    /** Reveals a privately authenticated delivered purchase through retained encrypted issuance only. @param {Object} request Reveal request. @returns {Promise<Object>} Private reveal result. */
     reveal: async function (request) {
-        if (
-            !request ||
-            !request.tenant ||
-            !request.ownerId ||
-            !request.couponCode
-        )
-            throw new Error('Tenant, owner, and coupon code are required');
+        const digital = SERVICE.DefaultDigitalCommerceEntitlementService;
+        request = digital.revealContext(request);
         const coupon =
             await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(
                 request,
                 request.couponCode,
             );
-        if (!coupon) throw new Error('Coupon was not found');
-        if (
-            coupon.soldTo !== request.ownerId &&
-            coupon.reservedFor !== request.ownerId
-        )
-            throw new Error('Coupon belongs to another customer');
-        if (!['DELIVERED', 'CLAIMED'].includes(coupon.status))
-            throw new Error('Coupon is not delivered');
+        await digital.authorizeCouponReveal(request, coupon);
         if (coupon.purchasePolicy) {
-            SERVICE.DefaultPromotionOperationService.purchasedCampaign(coupon);
+            SERVICE.DefaultPromotionOperationService.purchasedCampaign(coupon, { code: coupon.promotionCode });
             if (Date.parse(coupon.validTo) <= Date.now())
                 throw new Error('The purchased coupon has expired');
         }
-        if (coupon.protectedToken) {
-            return {
-                couponCode: coupon.code,
-                status: 'REVEALED',
-                token: coupon.protectedToken,
-                tokenSource: 'PROTECTED_TOKEN',
-                correlationId: request.correlationId,
-            };
-        }
-        if (coupon.tokenVaultRef) {
-            return {
-                couponCode: coupon.code,
-                status: 'REVEAL_DEFERRED',
-                tokenAvailable: false,
-                tokenVaultRef: coupon.tokenVaultRef,
-                reasonCode: 'TOKEN_VAULT_PROVIDER_REQUIRED',
-                correlationId: request.correlationId,
-            };
-        }
-        return {
-            couponCode: coupon.code,
-            status: 'REVEAL_DEFERRED',
-            tokenAvailable: false,
-            reasonCode: 'COUPON_TOKEN_NOT_STORED_IN_ROW',
-            correlationId: request.correlationId,
-        };
+        const token = await SERVICE.DefaultCouponSecureIssuanceService.revealToken(request, coupon);
+        return { couponCode: coupon.code, status: 'REVEALED', token, tokenSource: 'AUTHENTICATED_RETENTION',
+            correlationId: request.correlationId };
     },
 };

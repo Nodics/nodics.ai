@@ -19,7 +19,7 @@ fresh source/replacement authority and nSearch-qualified historical writer
 decommissioning. Discovery owns the one-shot claim on the original private
 receipt; uncertain outcomes remain inspection-only. Never infer completed erasure
 from absence alone or send physical index/key identities to Axis. See the
-[operator guide](../../../../../nodics.docs/docs/pages/nodics.copilot/knowledge-generation-recovery.md#permanently-remove-a-retired-index).
+[operator guide](../../data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js#permanently-remove-a-retired-index).
 
 - `secure-source-registry-contract.md` defines mandatory registration,
   classification, scope, immutability, and pre-retrieval behavior.

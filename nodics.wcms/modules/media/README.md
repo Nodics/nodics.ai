@@ -2,7 +2,18 @@
 
 Media owns governed asset records, folders, formats, storage providers, upload, download, delivery, publication transfer, references, and media sets.
 
+Service-authenticated retained status supports bounded unique pointer batches
+through its existing read-only API. Exact retained byte checks also use a bounded
+ordered batch on the existing reconcile route, without repair or deletion.
+Approval and activation remain separate owner checks; see the
+[publication contract](llm/contracts/media-library-publication.md#read-only-pointer-batches).
+
 ## Governed Library
+
+The unreleased approval contribution is `media:mediaPublicationWorkflow` at
+`0.0.1` in `init-v001`. Explicit installation uses the init catalogue's observed
+version and existing nImport drift checks. Process graph version numbers are
+separate; repair guidance must not pin historical data release versions.
 
 Axis Media Library and All Media use the existing backend-operations workspace,
 not generated schema CRUD. Media supplies scoped, permission-checked metadata
@@ -80,9 +91,9 @@ for composition, connection and API prerequisites.
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.wcms/media-management.md`
-- `nodics.docs/docs/pages/nodics.wcms/publishing-lifecycle.md`
-- `nodics.docs/docs/pages/nodics.foundation/data-import-export-migration.md`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js`
 
 ## Verification
 

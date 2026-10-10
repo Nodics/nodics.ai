@@ -50,7 +50,10 @@ const userHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/
 const enterpriseData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/enterprise/defaultEnterpriseData'));
 const tenantData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/enterprise/defaultTenantsData'));
 const groupData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
-const userData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData'));
+const userData = {
+    ...require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData')),
+    ...require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultServiceEmployeeData'))
+};
 const importService = require('../src/service/import/defaultImportService');
 const diagnostics = require('../src/service/diagnostics/defaultImportDiagnosticsService');
 

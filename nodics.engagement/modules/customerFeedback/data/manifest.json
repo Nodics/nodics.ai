@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "customerFeedback",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "customerFeedback",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "0b35f52b922185ad168ade1c2324cfedaf9426648dda90c53e7beebfa5b4ceb6",
+      "generatedHashes": {
+        "docs-v001/records/documentation/customerFeedbackDocumentationNodeData.js": "3971b58cb2b2d704f88cb192efba03f592b1609f447cae57d1501426e9c55a13",
+        "docs-v001/records/documentation/customerFeedbackDocumentationPageMetadataData.js": "3ef5149e35e596ff74a1d481d98e6a91797fd808f9df06a08d72e178a105ec66",
+        "docs-v001/records/documentation/customerFeedbackDocumentationPublicationStateData.js": "9525a3b2240d882419f78b835611ba6004313807545f388eb2101b7ce8433446",
+        "docs-v001/records/documentation/customerFeedbackDocumentationSearchMetadataData.js": "605c239112c746e700951433d5015830ef805b4730b96e3ae38d4306b096499d",
+        "docs-v001/records/documentation/customerFeedbackDocumentationComponentData.js": "00f26d500a59dfebac50addbdc3c5fe1eaffafa37a495caabc5968a3eb2fdfc6",
+        "docs-v001/records/documentation/customerFeedbackDocumentationPageData.js": "da16d048e39e64b3d4fe7de6519b6c6fd8e3663ac37ec7cf57e3712961a2506d",
+        "docs-v001/records/documentation/customerFeedbackDocumentationRouteData.js": "e8b334ed5b2418c065ea45409b3e9dc051baee5deba95278c4bdc4fff06baabd",
+        "docs-v001/headers/100_customerFeedbackDocumentationContentPackHeader.js": "8c3bcd62ea4fce28c9a4b17f7461a025aee6a0effbb4b7593c2654f303449d67"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

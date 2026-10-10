@@ -19,7 +19,7 @@ Do not implement APIs outside that contract without updating the action ledger
 first.
 
 Detailed module documentation is maintained in
-[docs/pages/installed-runtime-application-builder-apis.md](docs/pages/installed-runtime-application-builder-apis.md).
+[../../../nodics.platform/modules/installer/data/docs-v001/records/documentation/installerDocumentationComponentData.js](data/docs-v001/records/documentation/installerDocumentationComponentData.js).
 
 ## Responsibilities
 

@@ -12,6 +12,14 @@
 "use strict";
 /** @module checkoutCore/utils/statusDefinitions @description Customer-safe Checkout payment outcome failures. @layer utility @owner checkoutCore */
 module.exports = {
+  ERR_CHECKOUT_COMPENSATION_REQUIRED: {
+    code: "409",
+    message: "The original checkout requires explicit compensation recovery. Do not place it again.",
+  },
+  ERR_CHECKOUT_COMPENSATION_UNCONFIRMED: {
+    code: "409",
+    message: "Original checkout compensation evidence or recovery confirmation is unavailable.",
+  },
   ERR_CHECKOUT_PAYMENT_DECLINED: {
     code: "402",
     message:

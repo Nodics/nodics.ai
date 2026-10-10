@@ -324,6 +324,59 @@ test('claimed approval reaches Online through real lifecycle and preserves the i
     assert.equal(evidence.taskCode, 'review-task-a');
 });
 
+test('selected multi-enterprise deployment uses claimed business scope without rewriting signed identity', async () => {
+    const f = fixture();
+    Object.assign(f.request.authData, { entCode: 'deployment-owner', tokenType: 'service', principalType: 'service',
+        runtimeScope: { instanceCode: 'process-instance-a' }, userGroups: [] });
+    f.settings.publish.approvalWorkflow.runtimeEnterpriseScope = { enabled: true, enterpriseCodes: ['enterprise-a'] };
+    const original = structuredClone(f.request);
+    assert.equal((await f.apply()).output.state, 'ONLINE');
+    assert.deepEqual(f.request, original);
+    const local = f.calls.find(call => call[0] === 'get')[1];
+    assert.equal(local.enterpriseCode, 'enterprise-a');
+    assert.equal(local.authData.entCode, 'deployment-owner');
+    assert.equal(local.authData.principalId, original.authData.principalId);
+});
+
+test('unselected or malformed multi-enterprise authority refuses before private persistence', async () => {
+    for (const policy of [undefined, { enabled: false, enterpriseCodes: ['enterprise-a'] },
+        { enabled: true, enterpriseCodes: ['foreign'] }, { enabled: true, enterpriseCodes: ['*'] },
+        { enabled: true, enterpriseCodes: ['enterprise-a', 'enterprise-a'] }]) {
+        const f = fixture();
+        Object.assign(f.request.authData, { entCode: 'deployment-owner', tokenType: 'service', principalType: 'service',
+            runtimeScope: { instanceCode: 'process-instance-a' }, userGroups: [] });
+        f.settings.publish.approvalWorkflow.runtimeEnterpriseScope = policy;
+        await assert.rejects(f.apply());
+        assert.equal(f.calls.some(call => ['elevate', 'get', 'transition'].includes(call[0])), false);
+    }
+    const f = fixture();
+    f.settings.publish.approvalWorkflow.runtimeEnterpriseScope = { enabled: true, enterpriseCodes: ['enterprise-a'] };
+    assert.throws(() => workflow.context(f.stored, f.request, 'enterprise-a'));
+});
+
+test('legacy cross-enterprise journals require an independently qualified sealed source owner', async () => {
+    for (const owner of [undefined, 'foreign', 'enterprise-a']) {
+        const f = fixture();
+        delete f.stored.entCode;
+        Object.assign(f.request.authData, { entCode: 'deployment-owner', tokenType: 'service', principalType: 'service',
+            runtimeScope: { instanceCode: 'process-instance-a' }, userGroups: [] });
+        f.settings.publish.approvalWorkflow.runtimeEnterpriseScope = { enabled: true, enterpriseCodes: ['enterprise-a'] };
+        if (owner !== undefined) f.provider.getPublicationEnterprise = async (publication, request) => {
+            assert.equal(publication.sourceVersion, 'immutable-1');
+            assert.equal(request.authData.entCode, 'deployment-owner');
+            return owner;
+        };
+        if (owner === 'enterprise-a') {
+            assert.equal((await f.apply()).output.state, 'ONLINE');
+            assert.equal(f.stored.enterpriseCode, undefined);
+            assert.equal(f.stored.entCode, undefined);
+        } else {
+            await assert.rejects(f.apply(), /sealed source owner/);
+            assert.equal(f.calls.some(call => ['transition', 'activate'].includes(call[0])), false);
+        }
+    }
+});
+
 test('claimed rejection never activates and its committed replay is idempotent', async () => {
     const f = fixture();
     f.execution.body.decision = { approved: false, action: 'REJECT' };

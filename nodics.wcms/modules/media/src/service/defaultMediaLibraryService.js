@@ -410,7 +410,7 @@ module.exports = {
                     !require('node:util').isDeepStrictEqual(review[0].policy.actorPolicy, actor))) {
                 evidence.availability = 'BLOCKED';
                 return block('PROCESS_MEDIA_DECISION_POLICY_REQUIRED',
-                    'Update the explicit media:mediaPublicationWorkflow release to 1.0.1 and verify its published native permission-based reviewer and approval decision policy. Existing v1 tasks are not upgraded.');
+                    'Inspect the explicit media:mediaPublicationWorkflow release in the init catalogue and verify its published native permission-based reviewer and approval decision policy. Existing tasks are not upgraded; installed immutable releases cannot be overwritten.');
             }
             if (
                 !fresh ||
@@ -621,7 +621,7 @@ module.exports = {
     /** Initiates existing nPublish approval from an explicit freshly verified version; never approves or activates. */
     requestPublication: async function (input, request) {
         this.assertOperator(request, 'media.storage.policy.view');
-        this.assertInput(input, ['mediaCode', 'versionId', 'publicationCode']);
+        this.assertInput(input, ['mediaCode', 'versionId', 'publicationCode', 'expectedChecksum']);
         const authorization =
             request.httpRequest &&
             request.httpRequest.headers &&
@@ -654,7 +654,9 @@ module.exports = {
         if (
             row.active !== true ||
             row.status !== 'READY' ||
-            row.versionId !== versionId
+            row.versionId !== versionId ||
+            (input.expectedChecksum !== undefined &&
+                (!/^[a-f0-9]{64}$/.test(input.expectedChecksum) || row.checksum !== input.expectedChecksum))
         )
             this.fail();
         const result =
@@ -663,7 +665,8 @@ module.exports = {
                 {
                     mediaCode: input.mediaCode,
                     versionId,
-                    publicationCode: input.publicationCode
+                    publicationCode: input.publicationCode,
+                    ...(input.expectedChecksum === undefined ? {} : { expectedChecksum: input.expectedChecksum })
                 },
                 request
             );
@@ -686,6 +689,7 @@ module.exports = {
             versionId,
             state: publication.state,
             revision: publication.revision,
+            ...(publication.workflowRef ? { workflowRef: publication.workflowRef } : {}),
             approvalRequired: true
         };
     }

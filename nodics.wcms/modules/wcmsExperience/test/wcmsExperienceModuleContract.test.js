@@ -27,7 +27,9 @@ assert(packageDefinition.nodics.loadableByNodicsModuleLoader);
 assert(schemas.wcmsExperience, 'schemas must be wrapped under the module key for loader customization');
 assert(schemas.wcmsExperience.cmsExperiencePlacement, 'cmsExperiencePlacement schema must belong to wcmsExperience');
 assert.equal(schemas.wcmsExperience.cmsExperiencePlacement.model, true);
-assert.equal(schemas.wcmsExperience.cmsExperiencePlacement.router.enabled, false);
+// Generated route availability is separate from nRouter exposure and authorization.
+assert.equal(schemas.wcmsExperience.cmsExperiencePlacement.router.enabled, true);
+assert.equal(schemas.wcmsExperience.cmsExperiencePlacement.router.groups.schemaOperations, true);
 assert.equal(schemas.wcmsExperience.cmsExperiencePlacement.definition.component.required, true);
 
 let registered;

@@ -17,7 +17,7 @@ Business aggregate forms, wildcard allowlists, bulk operations, read-only/Online
 authoring, credential-shaped keys, and caller-selected routing fail closed.
 Original-result recovery reads the schema owner's private command receipt and
 never replays the mutation. See the
-[canonical guide](../../../../../nodics.docs/docs/pages/nodics.copilot/governed-schema-actions.md).
+[canonical guide](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js).
 
 Fixed trigger create/update/archive/execute uses
 `DefaultCopilotProcessTriggerActionService`, its independently disabled target,
@@ -42,7 +42,7 @@ intent set, then sends one confirmed retry request. Transport uncertainty invoke
 one read-only native inspection and remains `UNCONFIRMED`; it never proves success
 or authorizes replay. The target and recovery paths are independently disabled by
 default. See the
-[order-notification guide](../../../../../nodics.docs/docs/pages/nodics.copilot/order-notification-operations.md)
+[order-notification guide](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js)
 and `test/copilotOrderNotificationAction.test.js`.
 
 Original-result recovery is separately default-disabled. Native journals retain
@@ -51,7 +51,7 @@ Missing/STARTED receipts never authorize replay. Reconciliation preserves the
 original actor, plan, target and native permissions, then CAS-transitions the
 action. Only COMPLETED and NOT_STARTED rows permit a fresh confirmation; the
 executor skips completed rows. See the
-[step-by-step guide](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+[step-by-step guide](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js).
 
 `DefaultCopilotActionExecutionService` owns the bounded synchronous action claim
 and row-outcome projection. It is not a workflow engine, transaction coordinator,
@@ -91,6 +91,16 @@ retry queue, compensation service, or replacement for the domain APIs.
   CAS-transitions an owned uncertain action. An expired approval may be inspected,
   never executed again. Missing or mismatched evidence leaves the outcome unknown.
   See [secure coupon fulfillment](../examples/secure-coupon-fulfillment.md).
+- Coupon queue rows and both pending/completed receipt responses preserve the
+  source-authored simulation triad only when all three own enumerable data fields
+  are exact: `simulated: true`, `deliveryVerified: false`,
+  `evidenceMode: LOCAL_SIMULATION`. Partial, contradictory, coerced or inherited
+  tags fail before action reconciliation; accessors are not invoked. Absent tags
+  remain absent and never imply verified delivery. Identity, environment and
+  caller flags cannot supply missing owner tags. ITEM preparation/execution,
+  including simulated ITEM plans, remain unsupported; the existing benefit
+  parser supports only PRICED_CART. This projection adds no schema, provider,
+  mutation, retry or qualification authority.
 - The legacy pure workbench `execute` helper does not provide durable claim
   semantics. API mutations must use the action execution service through Core.
 

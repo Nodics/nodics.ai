@@ -73,6 +73,11 @@ startup. See [retirement bindings](llm/contracts/README.md#historical-retirement
 
 ## Engine Adapter Checklist
 
+Offline Local maintenance reads authored bindings without starting engines or
+loading persisted index overrides. It delegates physical effects to the configured
+provider under nTooling admission; tenant record reset and immutable retirement
+remain separate. See the [binding contract](llm/contracts/README.md#offline-native-local-bindings).
+
 When adding a new search engine:
 
 - keep facades, controllers, routes, cache policy, and generated search APIs

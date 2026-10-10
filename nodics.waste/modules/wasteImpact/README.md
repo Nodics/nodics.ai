@@ -14,7 +14,7 @@ Mock assessments remain `ESTIMATED` with provenance and
 `publicClaimAllowed: false`. The default factor `1` is illustrative. Real
 provider qualification and public claims require separate domain policy.
 
-- [Canonical provider guide](../../../nodics.docs/docs/pages/nodics.waste/impact-providers.md)
+- [Canonical provider guide](data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
 - [Provider contract](llm/contracts/README.md)
 - [Examples](llm/examples/README.md)
 

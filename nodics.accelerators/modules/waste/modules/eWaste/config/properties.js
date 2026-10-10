@@ -460,6 +460,12 @@ module.exports = {
     marketplace: {
       autoPublishListings: false,
       orderCodePrefix: "EWASTE_ORDER_",
+      digitalOwnership: {
+        enabled: false,
+        qualified: false,
+        allowedServicePrincipals: [],
+        targets: {},
+      },
     },
     conversation: {
       rewardGuidance:

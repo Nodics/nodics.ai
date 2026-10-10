@@ -12,5 +12,6 @@
 /** @module cart/utils/statusDefinitions @description Customer-safe Cart inventory rejection. @layer utils @owner cart */
 module.exports = {
     ERR_CART_PRODUCT_UNAVAILABLE: { code: '409', message: 'Product SKU is unavailable in the selected catalogue' },
-    ERR_CART_INVENTORY_UNAVAILABLE: { code: '409', message: 'Inventory unavailable' }
+    ERR_CART_INVENTORY_UNAVAILABLE: { code: '409', message: 'Inventory unavailable' },
+    ERR_CART_VALIDATION_FAILED: { code: '422', message: 'Cart validation failed' }
 };

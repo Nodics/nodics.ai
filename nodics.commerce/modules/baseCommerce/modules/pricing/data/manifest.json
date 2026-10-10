@@ -1,30 +1,79 @@
 {
-    "contractVersion": 2,
-    "module": "pricing",
-    "sections": {
-        "pricingPublicationWorkflow": {
-            "kind": "DATA_RELEASE",
-            "selectionPolicy": "EXPLICIT",
-            "dataType": "init",
-            "version": "1.0.1",
-            "displayName": "Pricing Policy Publication Approval",
-            "description": "Forward Process approval contribution for exact retained policy.",
-            "owningDomain": "pricing",
-            "lifecycle": "OPERATIONAL_VERSIONED",
-            "destinationRole": "PROCESS",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "installer": "PROCESS_DEFINITION",
-            "sourceRoot": "init-v002",
-            "files": {
-                "init-v002/records/process/pricingPublicationWorkflowDefinitionData.js": "b8eb487458f4162e6d97a038c2e968e341591e79d703f9dcfa7dd46e24224719"
-            }
+  "contractVersion": 2,
+  "module": "pricing",
+  "sections": {
+    "pricingPublicationWorkflow": {
+      "kind": "DATA_RELEASE",
+      "selectionPolicy": "EXPLICIT",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Pricing Policy Publication Approval",
+      "description": "Forward Process approval contribution for exact retained policy.",
+      "owningDomain": "pricing",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "installer": "PROCESS_DEFINITION",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/process/pricingPublicationWorkflowDefinitionData.js": "b8eb487458f4162e6d97a038c2e968e341591e79d703f9dcfa7dd46e24224719"
+      }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "pricing",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "1eff96745d5d68f1d7f9f64308582f8bc89d326bbbdd60ba6a9228a5ff1c57bc",
+      "generatedHashes": {
+        "docs-v001/records/documentation/pricingDocumentationNodeData.js": "95234fc20fab7da78686d74d8d6ee9f8495e2672f67c024c05af739f97f317e6",
+        "docs-v001/records/documentation/pricingDocumentationPageMetadataData.js": "dc31c65d968ff5c2201b870d1a4e3f8b94a8208f89a5a1e90618985898219867",
+        "docs-v001/records/documentation/pricingDocumentationPublicationStateData.js": "26d137379be1529551ee65bbcd059eb19013f8130b3b2f015a0d962d588e1b9e",
+        "docs-v001/records/documentation/pricingDocumentationSearchMetadataData.js": "166b024a9e19e7bea026d584898233412c32ff107abcd2bba4e14342e0ce0b83",
+        "docs-v001/records/documentation/pricingDocumentationComponentData.js": "2c85bdaa8c8331753f01a59697f30a96d2434b98d9c6643b1aba8e1183b13410",
+        "docs-v001/records/documentation/pricingDocumentationPageData.js": "1675b68ee50becd8958ce5477990a8d348b742cac9964f29b168dd26cd2e7c86",
+        "docs-v001/records/documentation/pricingDocumentationRouteData.js": "4a0900f9f1af44a9d26ce38b9d44a4e340d068ad85b45beb5db063b39fef2b77",
+        "docs-v001/headers/100_pricingDocumentationContentPackHeader.js": "5cf99541d7aa2421a5d54eeaeca1cc5009fc0ccdd9fe7543f686f34669a5d440"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

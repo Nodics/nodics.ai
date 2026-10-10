@@ -1,0 +1,1683 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-07",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "REVIEW_COMPLETE_FOR_NINE_BOUNDED_ITEMS",
+  "frameworkRoot": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+  "originalReview": {
+    "file": "nodics.docs/test/evidence/semantic-documentation-review-2026-10-07.json",
+    "sha256": "d03589a466b8e1ed0498a87459e40204d3557f3795f279f0ae3726e536dd8949",
+    "untouched": true,
+    "requestedActions": "Copied exactly from each original item; no original disposition or evidence was overwritten."
+  },
+  "summary": {
+    "totalItems": 9,
+    "PASS_SOURCE_REVIEW": 9,
+    "canonicalDocumentsBound": 15,
+    "editedArticleBodies": 11,
+    "editedComponentDataFiles": 10,
+    "inspectedSourceFiles": 68,
+    "liveAcceptance": "NOT_EXECUTED",
+    "approval": "NOT_GRANTED",
+    "publication": "NOT_PERFORMED"
+  },
+  "method": {
+    "boundary": "Manual semantic/editorial reread of nine requested gaps against current schema/service/router/configuration/contract source; not keyword matching, application acceptance or an implementation change.",
+    "authority": "Existing owning docs-v001 CMS ComponentData properties.blocks only. No Markdown duplicate or competing documentation authority.",
+    "passMeaning": "Requested explanation corrected against inspected source, with unsupported capabilities and missing orchestration explicit. PASS_SOURCE_REVIEW does not certify the documented runtime gaps or grant approval.",
+    "rereview": "Reread amended article bodies and cited supporting sections, rechecked source behavior and corrected examples; restored the existing Hazelcast lock/deadline subsection. Removed task-status narration from canonical articles.",
+    "hashContract": {
+      "articleBlocksSha256": "SHA-256 of JSON.stringify(current properties.blocks) for the exact canonical document.",
+      "sourceFileSha256": "SHA-256 of current full source file bytes; repository-relative paths."
+    },
+    "governance": "Applicable AGENTS/README and owner contracts inspected. Current source, not memory or package existence, controls behavioral conclusions.",
+    "actionsNotPerformed": [
+      "No application startup or provider operation.",
+      "No runtime implementation, commits, branches or memory edits.",
+      "No lifecycle, STAGED, approval, approver, receipt, onlineVersion or Online writes.",
+      "No manifests, release checksums, versions/cohort, navigation, configuration, original review, audit or test edits.",
+      "No edits to Axis/CMS/Media/Commerce/Localization/Engagement or circaDocumentation owners."
+    ]
+  },
+  "canonicalDocuments": {
+    "data.import-export-provider-guides": {
+      "owner": "nodics.foundation/modules/nData/nImport/import",
+      "componentFile": "nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js",
+      "articleBlocksSha256": "7b01c277944adf58a8811e0691e20394bd5a0c8d93c903a5dadd8d5d5fa065fd",
+      "sections": [
+        {
+          "anchor": "dataImportExportProviderGuides-2-provider-model",
+          "title": "Provider model"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-3-javascript-release-data",
+          "title": "JavaScript release data"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-4-json-csv-and-excel",
+          "title": "JSON, CSV, and Excel"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-5-export-contract",
+          "title": "Export contract"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        }
+      ]
+    },
+    "foundation.nms-runtime-monitoring": {
+      "owner": "nodics.foundation/modules/nNms",
+      "componentFile": "nodics.foundation/modules/nNms/data/docs-v001/records/documentation/nmsDocumentationComponentData.js",
+      "articleBlocksSha256": "d17fe306cd582bffe8700361cc221676dc8450a431516a97ddc6492af839ffd7",
+      "sections": [
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-2-monitoring-model",
+          "title": "Monitoring model"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-3-health-contract",
+          "title": "Health contract"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-6-common-mistakes",
+          "title": "Common mistakes"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-7-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "foundation.service-runtime-overrides": {
+      "owner": "nodics.foundation/modules/nService",
+      "componentFile": "nodics.foundation/modules/nService/data/docs-v001/records/documentation/nServiceDocumentationComponentData.js",
+      "articleBlocksSha256": "15fc42b45e55f2514485472cff5fb0f2e88073865b4cedf922dd4c3ec515d3c0",
+      "sections": [
+        {
+          "anchor": "foundationServiceRuntimeOverrides-2-resolution-flow",
+          "title": "Resolution flow"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-3-precedence-contract",
+          "title": "Precedence contract"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-4-operational-evidence",
+          "title": "Operational evidence"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        }
+      ]
+    },
+    "framework.module-loading-service-precedence": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "35331ab136034e25507c5e8c0f82a5309882d2b63c29b601770cbbed54712574",
+      "sections": [
+        {
+          "anchor": "frameworkModuleLoadingServicePrecedence-1-loading-order",
+          "title": "Loading order"
+        },
+        {
+          "anchor": "frameworkModuleLoadingServicePrecedence-3-customization-and-extension",
+          "title": "Customization and extension"
+        }
+      ]
+    },
+    "configuration.framework-startup-lifecycle": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "6bb8535904f5534dd216dabc479d1270688f2e7663f69f44c6cf7367f81417f6",
+      "sections": [
+        {
+          "anchor": "configurationFrameworkStartupLifecycle-7-file-and-artifact-loading",
+          "title": "File and artifact loading"
+        },
+        {
+          "anchor": "configurationFrameworkStartupLifecycle-11-entity-lifecycle-hooks",
+          "title": "Entity lifecycle hooks"
+        }
+      ]
+    },
+    "framework.release-upgrade-compatibility": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608",
+      "sections": [
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
+          "title": "Explaining an effective runtime"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+          "title": "Folder contract"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+          "title": "Compatibility rules"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+          "title": "Configuration behavior"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+          "title": "Upgrade flow"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+          "title": "Code and contract compatibility"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+          "title": "Security boundaries under customization"
+        }
+      ]
+    },
+    "foundation.cache-provider-runbooks": {
+      "owner": "nodics.foundation/modules/nCache/cache",
+      "componentFile": "nodics.foundation/modules/nCache/cache/data/docs-v001/records/documentation/cacheDocumentationComponentData.js",
+      "articleBlocksSha256": "3baa467c2331092b619134530d9ca3efe732ef8292e22c4a4a02bea247ee6cd0",
+      "sections": [
+        {
+          "anchor": "foundationCacheProviderRunbooks-3-configuration-contract",
+          "title": "Configuration contract"
+        },
+        {
+          "anchor": "foundationCacheProviderRunbooks-4-runbook",
+          "title": "Runbook"
+        },
+        {
+          "anchor": "foundationCacheProviderRunbooks-8-hazelcast-concurrent-mutations-and-deadlines",
+          "title": "Hazelcast concurrent mutations and deadlines"
+        }
+      ]
+    },
+    "foundation.redis-provider-operations": {
+      "owner": "nodics.foundation/modules/nCache/redisCache",
+      "componentFile": "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationComponentData.js",
+      "articleBlocksSha256": "8e709e0c9575ed2fd1af36c82ae45a0d16e383829e117d1c9bd0530cb35f5491",
+      "sections": [
+        {
+          "anchor": "foundationRedisProviderOperations-1-provider-ownership-and-activation",
+          "title": "Provider ownership and activation"
+        },
+        {
+          "anchor": "foundationRedisProviderOperations-2-values-ttl-and-atomic-operations",
+          "title": "Values TTL and atomic operations"
+        },
+        {
+          "anchor": "foundationRedisProviderOperations-3-lifecycle-invalidation-and-reset-safety",
+          "title": "Lifecycle invalidation and reset safety"
+        },
+        {
+          "anchor": "foundationRedisProviderOperations-4-verification-and-troubleshooting",
+          "title": "Verification and troubleshooting"
+        },
+        {
+          "anchor": "redis-cache-customize-and-extend-safely",
+          "title": "Customize and extend safely"
+        }
+      ]
+    },
+    "foundation.database-provider-boundaries": {
+      "owner": "nodics.foundation/modules/nDatabase/database",
+      "componentFile": "nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js",
+      "articleBlocksSha256": "f20833563e7fd09731aebe73132d43884b8a0c6e9bacdbbaf42cdf076852e04c",
+      "sections": [
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-1-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-2-boundary-model",
+          "title": "Boundary model"
+        },
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-4-provider-comparison",
+          "title": "Provider comparison"
+        },
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-8-customizing-mongodb-schema-keyword-selection",
+          "title": "Customizing MongoDB schema keyword selection"
+        }
+      ]
+    },
+    "persistence.provider-data-access-layer": {
+      "owner": "nodics.foundation/modules/nDatabase/database",
+      "componentFile": "nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js",
+      "articleBlocksSha256": "a8fc21ce74c0ceacefb1de8033c26efaa24fd7c19b97c0f21f9e1cb1ba917f21",
+      "sections": [
+        {
+          "anchor": "persistenceProviderDataAccessLayer-2-runtime-model",
+          "title": "Runtime model"
+        },
+        {
+          "anchor": "persistenceProviderDataAccessLayer-3-mongodb-provider-detail",
+          "title": "MongoDB provider detail"
+        },
+        {
+          "anchor": "persistenceProviderDataAccessLayer-5-operations-and-governance",
+          "title": "Operations and governance"
+        },
+        {
+          "anchor": "persistenceProviderDataAccessLayer-7-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "security.otp-security-flow": {
+      "owner": "nodics.foundation/modules/nOtp",
+      "componentFile": "nodics.foundation/modules/nOtp/data/docs-v001/records/documentation/otpDocumentationComponentData.js",
+      "articleBlocksSha256": "20bfb9f6783a5ba9008ef9f77bd46d10513d6002f96cd670a85f7d0eccae44f9",
+      "sections": [
+        {
+          "anchor": "securityOtpSecurityFlow-2-flow",
+          "title": "Flow"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-3-policy-contract",
+          "title": "Policy contract"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-4-configuration-behavior",
+          "title": "Configuration behavior"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-6-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-7-evidence-checklist",
+          "title": "Evidence checklist"
+        }
+      ]
+    },
+    "process.workflow-bpm-source-map": {
+      "owner": "nodics.foundation/modules/nbpm",
+      "componentFile": "nodics.foundation/modules/nbpm/data/docs-v001/records/documentation/bpmDocumentationComponentData.js",
+      "articleBlocksSha256": "2ccc0261b2ec890966b7848ae08be8255485c0d9a278dfcabdf543ff53034252",
+      "sections": [
+        {
+          "anchor": "processWorkflowBpmSourceMap-1-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-2-workflow-model",
+          "title": "Workflow model"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-3-contract",
+          "title": "Contract"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-6-evidence-checklist",
+          "title": "Evidence checklist"
+        }
+      ]
+    },
+    "process.runtime-lifecycle": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "12a962f27dd555f7ac17bd4f7be7c3c49978b1f8ba2646a8392cbb4b54ef4f48",
+      "sections": [
+        {
+          "anchor": "processRuntimeLifecycle-2-definition-lifecycle",
+          "title": "Definition lifecycle"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-3-starting-an-instance",
+          "title": "Starting an instance"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-4-task-lifecycle",
+          "title": "Task lifecycle"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-5-instance-detail-and-audit",
+          "title": "Instance detail and audit"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-6-scheduled-triggers",
+          "title": "Scheduled triggers"
+        }
+      ]
+    },
+    "process.action-adapters": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "684331782340723c2aceb84492be9459448c12693b0c4c1eb7a87a416cc630c3",
+      "sections": [
+        {
+          "anchor": "processActionAdapters-1-safe-default",
+          "title": "Safe default"
+        },
+        {
+          "anchor": "processActionAdapters-2-what-is-not-allowed",
+          "title": "What is not allowed"
+        },
+        {
+          "anchor": "processActionAdapters-5-adapter-operating-contract",
+          "title": "Adapter operating contract"
+        }
+      ]
+    },
+    "process.cronjob-data-authoring": {
+      "owner": "nodics.process/modules/cronjob",
+      "componentFile": "nodics.process/modules/cronjob/data/docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+      "articleBlocksSha256": "f19e77ee4127bfff751eb05409129401d9e5a3dbde4fca113b9dbcb8fbefdf2d",
+      "sections": [
+        {
+          "anchor": "processCronjobDataAuthoring-2-data-shape",
+          "title": "Data shape"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-3-header-contract",
+          "title": "Header contract"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-4-runtime-behavior",
+          "title": "Runtime behavior"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-6-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-8-verification",
+          "title": "Verification"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "item": "Import/export provider guides",
+      "backlogPriority": "P0",
+      "requestedAction": "Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "javascript": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "json": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "csv": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "excel": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "generatedExports": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "parserBehavior": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "safety": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "masking": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "customization": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Reread the import processors and both export implementations against the amended owner article. The keyed JavaScript overlay now has exact merged output; JSON array streaming, CSV options and Excel cell/sheet rules are distinct. Generated export authorization, optional policy transformation, bounded CSV/JSON rendering and Media handoff are explained without treating the standalone Excel renderer as integrated dispatch.",
+      "evidence": [
+        {
+          "documentId": "data.import-export-provider-guides",
+          "anchors": [
+            "dataImportExportProviderGuides-2-provider-model",
+            "dataImportExportProviderGuides-3-javascript-release-data",
+            "dataImportExportProviderGuides-4-json-csv-and-excel",
+            "dataImportExportProviderGuides-5-export-contract",
+            "dataImportExportProviderGuides-6-customization-and-extension-guidance"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+        "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js",
+        "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+      ],
+      "sourceFindings": [
+        "JavaScript mergeModels validates keyed plain maps, overlays by export key and mergeModel replaces array values; import header identity/deletion remains separate.",
+        "JSON processes streamed root arrays. CSV passes csvTypeParserOptions and encoding. ExcelJS loads a workbook, chooses the configured 1-based sheet or first sheet, trims headers and preserves formula/result objects rather than evaluating formulas.",
+        "DataExportService carries original actor/scope through owner reads and renders CSV/JSON; absence of DefaultSchemaReadAccessPolicyService returns cloned unmasked records, so mandatory masking is not guaranteed.",
+        "CSV values beginning =,+,-,@ are neutralized, but leading whitespace/tab/CR is not covered by that path. Standalone XLSX safeValue also handles tab/CR, but is not wired into generated export selection."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "EXPORT_POLICY_INTEGRATION_GAP: required masking cannot be claimed when the optional access-policy service is absent.",
+        "UNSUPPORTED_GENERATED_EXPORT_PROVIDER: standalone Excel rendering/package presence is not generated XLSX dispatch support.",
+        "CSV formula defenses are limited; qualify the real consuming spreadsheet and leading-whitespace/control-character cases. No live parser/export/Media acceptance was executed."
+      ],
+      "remediation": [
+        "Added two real JavaScript layers and exact array-replacing merged result.",
+        "Added concrete parser input/options/results and Excel header/blank/formula distinctions.",
+        "Separated original-actor authorization, policy absence, format dispatch, CSV/XLSX safety, limits/truncation and Media delivery ownership."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P0",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js",
+          "anchors": [
+            "mergeModel",
+            "mergeModels",
+            "selectSourceModels",
+            "handleFiles"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+          "anchors": [
+            "normalizeRequest",
+            "applyExportAccessPolicies",
+            "renderCsv",
+            "renderJson"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "NMS runtime monitoring",
+      "backlogPriority": "P1",
+      "requestedAction": "Document node monitoring, topology, health checks, runtime evidence, and operator recovery.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "nodeMonitoring": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "topology": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "healthChecks": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "runtimeEvidence": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "operatorRecovery": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Compared NMS manager/configuration/router behavior with startup activation and node event handling. The guide now distinguishes volatile peer topology/default-active state from health/readiness, states monitoring admission and inactive-peer behavior, and documents actual sender/router and stop-handler defects instead of offering an unsupported automatic recovery or dashboard claim.",
+      "evidence": [
+        {
+          "documentId": "foundation.nms-runtime-monitoring",
+          "anchors": [
+            "foundationNmsRuntimeMonitoring-2-monitoring-model",
+            "foundationNmsRuntimeMonitoring-3-health-contract",
+            "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+            "foundationNmsRuntimeMonitoring-6-common-mistakes",
+            "foundationNmsRuntimeMonitoring-7-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js",
+        "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js",
+        "nodics.foundation/modules/nNms/src/router/routers.js",
+        "nodics.foundation/modules/nNms/config/properties.js",
+        "nodics.foundation/nodics.js",
+        "nodics.foundation/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService.js",
+        "nodics.process/modules/cronjob/config/properties.js"
+      ],
+      "sourceFindings": [
+        "NMS records peer state in module.nms.nodes; a missing state defaults active and is not an affirmative health sample.",
+        "Monitoring is gated by ping configuration, active router modules and configured peer connections; the interval schedules checks rather than setting an HTTP deadline. Inactive peers are skipped.",
+        "notifyNode sends GET while secured notification routes declare POST; stopHealthCheck references an undefined moduleName. Both are runtime owner defects, not documentation fixes.",
+        "Node up/down handlers emit events; an inactive event is not a durable distributed lease or proof that another node safely completed work."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "NMS_RUNTIME_GAPS: notification method mismatch and undefined stop variable require owner implementation/qualification before recovery guarantees.",
+        "Volatile topology does not establish readiness, BackOffice/dashboard availability, automatic peer revival or durable exactly-once ownership.",
+        "No runtime, outage, multinode or browser qualification was executed."
+      ],
+      "remediation": [
+        "Added exact monitoring gates, node state behavior and secured route table.",
+        "Bounded recovery to source defects, inactive-peer skipping, restart loss and separate readiness/owner reconciliation."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P1",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js",
+          "anchors": [
+            "checkActiveNodes",
+            "checkActiveNode",
+            "stopHealthCheck",
+            "notifyNode"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nNms/src/router/routers.js",
+          "anchors": [
+            "POST notification/start/stop route declarations"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "Service runtime and override precedence",
+      "backlogPriority": "P1",
+      "requestedAction": "Document generated services, virtual service behavior, override precedence, and extension safety.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "generatedServices": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "virtualServiceBehavior": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "overrides": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "extensionSafety": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Reread service generation/loading, artifact contribution tracking, grouped hooks and vService read initialization. Replaced the metadata-only override illustration with real same-filename CommonJS exports, documented member-wise merging and inherited members, and corrected the cited precedence article. The evidence concerns local resolution, not an invented remote/mock vService path.",
+      "evidence": [
+        {
+          "documentId": "foundation.service-runtime-overrides",
+          "anchors": [
+            "foundationServiceRuntimeOverrides-2-resolution-flow",
+            "foundationServiceRuntimeOverrides-3-precedence-contract",
+            "foundationServiceRuntimeOverrides-4-operational-evidence",
+            "foundationServiceRuntimeOverrides-6-customization-and-extension-guidance"
+          ]
+        },
+        {
+          "documentId": "framework.module-loading-service-precedence",
+          "anchors": [
+            "frameworkModuleLoadingServicePrecedence-1-loading-order",
+            "frameworkModuleLoadingServicePrecedence-3-customization-and-extension"
+          ]
+        },
+        {
+          "documentId": "configuration.framework-startup-lifecycle",
+          "anchors": [
+            "configurationFrameworkStartupLifecycle-7-file-and-artifact-loading",
+            "configurationFrameworkStartupLifecycle-11-entity-lifecycle-hooks"
+          ]
+        },
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "anchors": [
+            "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js",
+        "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js",
+        "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js",
+        "nodics.foundation/modules/nConfig/src/utils/utils.js"
+      ],
+      "sourceFindings": [
+        "Generated baseline service/facade/controller artifacts load before indexed authored layers; lodash member merging preserves earlier methods not replaced by the later export.",
+        "Filename-derived identity, active module index and xNodics.memberOrigins/overrideTrace determine effective members; no automatic super-call or exception fallback is implied.",
+        "Initialization/finalization sequence is grouped services then facades then controllers, with Promise.all inside each group rather than deterministic peer-service ordering.",
+        "vService initializes version-aware CURRENT/HISTORY/exact-version reads and safety checks; it is not a remote or development fallback service."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "The two-layer JavaScript exports were statically reviewed, not installed into a selected server.",
+        "Existing Profile/bootstrap and remote-runtime material remains a separate unchanged contract, not live acceptance by this review.",
+        "Actual overlays require selected-server generation/restart, hook counts and member-origin qualification; parent handles shared-guide integration."
+      ],
+      "remediation": [
+        "Added base and overlay implementations plus expected retained validate and winning describe member.",
+        "Explained effective hooks, generated baseline, member origins and propagated override failures.",
+        "Replaced the cited module-precedence article's non-runtime service/extends metadata example."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P1",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js",
+          "anchors": [
+            "loadModules",
+            "loadServices",
+            "initEntities",
+            "initServices",
+            "finalizeEntities",
+            "finalizeServices"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+          "anchors": [
+            "recordArtifactContribution",
+            "memberOrigins",
+            "overrideTrace"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "Cache provider runbooks",
+      "backlogPriority": "P1",
+      "requestedAction": "Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "redis": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "hazelcast": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "nodeLocal": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "keyStrategy": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "invalidation": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "productionExpectations": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Compared cache configuration/engine admission and local, Redis and Hazelcast adapters with the amended runbooks. Added exact configuration, physical key/map/TTL behavior and tenant-scoped invalidation with protected-state failure rules. Restored and reread the existing Hazelcast concurrent-lock/deadline subsection; Redis detail stays with its canonical provider guide.",
+      "evidence": [
+        {
+          "documentId": "foundation.cache-provider-runbooks",
+          "anchors": [
+            "foundationCacheProviderRunbooks-3-configuration-contract",
+            "foundationCacheProviderRunbooks-4-runbook",
+            "foundationCacheProviderRunbooks-8-hazelcast-concurrent-mutations-and-deadlines"
+          ]
+        },
+        {
+          "documentId": "foundation.redis-provider-operations",
+          "anchors": [
+            "foundationRedisProviderOperations-1-provider-ownership-and-activation",
+            "foundationRedisProviderOperations-2-values-ttl-and-atomic-operations",
+            "foundationRedisProviderOperations-3-lifecycle-invalidation-and-reset-safety",
+            "foundationRedisProviderOperations-4-verification-and-troubleshooting"
+          ]
+        },
+        {
+          "documentId": "foundation.redis-provider-operations",
+          "anchors": [
+            "redis-cache-customize-and-extend-safely"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService.js",
+        "nodics.foundation/modules/nCache/cache/src/service/engine/defaultCacheEngineService.js",
+        "nodics.foundation/modules/nCache/nodeCache/src/service/cache/defaultLocalCacheService.js",
+        "nodics.foundation/modules/nCache/hazelcastCache/src/service/cache/defaultHazelcastCacheService.js",
+        "nodics.foundation/modules/nCache/redisCache/src/service/cache/defaultRedisCacheService.js",
+        "nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService.js",
+        "nodics.foundation/modules/nCache/cache/config/properties.js",
+        "nodics.foundation/modules/nCache/hazelcastCache/src/service/engine/defaultHazelcastCacheEngineService.js"
+      ],
+      "sourceFindings": [
+        "Channel and engine configuration deep-merges module deltas over defaults, validates concrete enabled adapters and rejects enabled-provider startup failure rather than silently choosing local.",
+        "Key creation includes channel, module/engine prefix, supplied tenant and logical key; TTL precedence preserves explicit zero. Local restart and separate-process state are not distributed cache durability.",
+        "Hazelcast uses JSON values in module/channel maps, seconds-to-milliseconds TTL and independent LockContext.run operations with bounded entry locks; cluster connection retries are bounded.",
+        "Redis consume requires GETDEL and rejects the unsupported capability without get/delete fallback. Scoped invalidation is not equivalent to resetting a shared provider."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Distributed atomicity/provider compatibility is bounded by the actual adapter, client and qualified deployment; single-member checks do not establish split-brain safety.",
+        "Unscoped local flush can flushAll; caller scope is a security/recovery requirement.",
+        "No Redis/Hazelcast/local provider operation, connection, failure simulation or browser validation was executed."
+      ],
+      "remediation": [
+        "Added local and Hazelcast configuration overlays with exact key/map/TTL examples.",
+        "Added hit/miss, restart, scope, invalidation and outage recovery runbooks without protected-state fallback.",
+        "Preserved Hazelcast concurrent/deadline guidance and linked the existing Redis operations sections."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P1",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService.js",
+          "anchors": [
+            "createStorageKey",
+            "createStoragePrefix",
+            "resolveTtl"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nCache/hazelcastCache/src/service/cache/defaultHazelcastCacheService.js",
+          "anchors": [
+            "withEntryLock",
+            "mapName",
+            "put",
+            "consume",
+            "flushByKeys",
+            "flushByPrefix"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "Database provider boundaries",
+      "backlogPriority": "P1",
+      "requestedAction": "Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "mongodb": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "virtualDatabase": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "cassandra": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "elasticsearchDatabase": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "configurationContracts": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "validation": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Reread concrete MongoDB configuration/connection/model handling, shared versioned schema and vMongodb storage behavior, and the empty Cassandra/elasticdb provider configurations and module inventories. Corrected the provider matrix and cited Mongo example: package names do not prove adapter support, vDatabase is versioned machinery, and unavailable transactions must reject rather than silently weaken atomicity.",
+      "evidence": [
+        {
+          "documentId": "foundation.database-provider-boundaries",
+          "anchors": [
+            "foundationDatabaseProviderBoundaries-1-source-map",
+            "foundationDatabaseProviderBoundaries-2-boundary-model",
+            "foundationDatabaseProviderBoundaries-4-provider-comparison",
+            "foundationDatabaseProviderBoundaries-8-customizing-mongodb-schema-keyword-selection"
+          ]
+        },
+        {
+          "documentId": "persistence.provider-data-access-layer",
+          "anchors": [
+            "persistenceProviderDataAccessLayer-2-runtime-model",
+            "persistenceProviderDataAccessLayer-3-mongodb-provider-detail",
+            "persistenceProviderDataAccessLayer-5-operations-and-governance",
+            "persistenceProviderDataAccessLayer-7-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nDatabase/mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService.js",
+        "nodics.foundation/modules/nDatabase/mongodb/src/service/model/defaultMongodbDatabaseModelHandlerService.js",
+        "nodics.foundation/modules/nDatabase/database/vDatabase/src/schemas/schemas.js",
+        "nodics.foundation/modules/nDatabase/database/vDatabase/src/service/interceptors/defaultVersionIdHandlerInterceptorService.js",
+        "nodics.foundation/modules/nDatabase/cassandradb/config/properties.js",
+        "nodics.foundation/modules/nDatabase/elasticdb/config/properties.js",
+        "nodics.foundation/modules/nDatabase/database/src/service/config/defaultDatabaseConfigurationService.js",
+        "nodics.foundation/modules/nDatabase/mongodb/config/properties.js",
+        "nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/schemas/model.js",
+        "nodics.foundation/modules/nDatabase/database/vDatabase/llm/contracts/per-schema-versioning-contract.md"
+      ],
+      "sourceFindings": [
+        "MongoDB has concrete connection/model behavior, BSON schema conversion, index preparation and topology capability discovery; transactions require logical sessions and replica-set/sharded topology.",
+        "database.default and database.<module> merge under tenant-effective nConfig; provider-specific master/test and handlers live in the selected mongodb block, with isolation/namespace binding enforced.",
+        "vDatabase declares abstract default.versioned schema and versionId initialization; vMongodb implements version-aware Mongo reads/writes rather than virtual/mock storage.",
+        "Cassandra and elasticdb provider configuration is empty and no concrete connection/model services are present in their module inventories; nSearch Elasticsearch projections are a separate owner.",
+        "schemaProperties is a keyed boolean selection; zero/false schema values survive, while arrays/null/nonboolean selectors reject."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "UNSUPPORTED_DATABASE_PROVIDER: Cassandra and elasticdb cannot be presented as usable qualified persistence adapters from these skeletal modules.",
+        "Actual Mongo topology, tenant namespace bindings, migration/backup/restore and versioned behavior need provider qualification.",
+        "No database connection, schema/index write, transaction, migration or restore was executed."
+      ],
+      "remediation": [
+        "Added implemented-versus-skeletal provider matrix and versioned-persistence boundaries.",
+        "Corrected actual Mongo deployment overlay in both primary and cited provider articles.",
+        "Retained keyed-boolean validation details and replaced silent transaction downgrade advice with refusal/recovery qualification."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P0",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nDatabase/mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService.js",
+          "anchors": [
+            "discoverCapabilities",
+            "executeTransaction"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nDatabase/database/src/service/config/defaultDatabaseConfigurationService.js",
+          "anchors": [
+            "resolveTenantDatabaseConfiguration"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nDatabase/database/vDatabase/src/schemas/schemas.js",
+          "anchors": [
+            "default.versioned"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nDatabase/cassandradb/config/properties.js",
+          "anchors": [
+            "empty module.exports"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nDatabase/elasticdb/config/properties.js",
+          "anchors": [
+            "empty module.exports"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "OTP and security flow",
+      "backlogPriority": "P1",
+      "requestedAction": "Document OTP generation, verification, expiry, retry, throttling, audit, and security controls.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "generation": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "verification": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "expiry": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "retry": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "throttling": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "audit": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "securityRequirements": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Reread nOtp delegation and the actual token generation/validation pipelines, not only OTP configuration. Corrected expiry/range and limit source, existing-token reuse, error outcomes and unawaited update ordering. The guide explicitly labels absent delivery/throttling/audit orchestration and the read-then-update atomicity gap; it does not claim single-use or brute-force resistance from configuration labels.",
+      "evidence": [
+        {
+          "documentId": "security.otp-security-flow",
+          "anchors": [
+            "securityOtpSecurityFlow-2-flow",
+            "securityOtpSecurityFlow-3-policy-contract",
+            "securityOtpSecurityFlow-4-configuration-behavior",
+            "securityOtpSecurityFlow-6-implementation-handoff",
+            "securityOtpSecurityFlow-7-evidence-checklist"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nOtp/src/service/DefaultOtpService.js",
+        "nodics.foundation/modules/nOtp/src/service/handler/defaultOtpHandlerService.js",
+        "nodics.foundation/modules/nOtp/config/properties.js",
+        "nodics.foundation/modules/nToken/src/service/DefaultTokenService.js",
+        "nodics.foundation/modules/nToken/src/service/pipelines/defaultValidateTokenPipelineService.js",
+        "nodics.foundation/modules/nToken/config/properties.js",
+        "nodics.foundation/modules/nToken/src/service/pipelines/defaultGenerateTokenPipelineService.js",
+        "nodics.foundation/modules/nOtp/README.md"
+      ],
+      "sourceFindings": [
+        "DefaultOtpService stamps OTP generation and delegates to nToken; the handler uses crypto.randomInt with an exclusive upper bound and expiry seconds.",
+        "Generation defaults model.limit from token.TOKEN.attemptLimit, not OTP.attemptLimit, and can reuse an existing active unexpired key/ops token.",
+        "Validation looks up active key/ops, accepts expiry at or after now and compares string values; it does not add an OTP-type predicate in the inspected lookup.",
+        "Validation calls process.nextSuccess/error before updating limit/deactivation, does not await persistence and only logs update failure; concurrent verification can pass twice or lose decrements.",
+        "No delivery, resend cooldown, account rate/lockout or challenge audit orchestration is present in the OTP service call path."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "OTP_ATOMICITY_GAP: intended singleUseToken/decrement flags do not provide atomic consume/attempt enforcement or guaranteed persisted lockout.",
+        "REQUIRED_INTEGRATION_GAP: delivery, cooldown/rate limits, subject/session/purpose policy and safe audit must be implemented/qualified by consuming owners.",
+        "No OTP generation/validation, raw code, security test or live acceptance was performed."
+      ],
+      "remediation": [
+        "Added exact generation/expiry/validation/limit behavior and a later-layer policy example.",
+        "Replaced unsupported single-use/throttle/audit claims with explicit integration/atomicity handoff.",
+        "Added redacted evidence and uncertain-update recovery boundaries without raw secrets."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P0",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nOtp/src/service/handler/defaultOtpHandlerService.js",
+          "anchors": [
+            "generateToken",
+            "generateExpiry"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nToken/src/service/pipelines/defaultGenerateTokenPipelineService.js",
+          "anchors": [
+            "model.limit",
+            "token.TOKEN.attemptLimit",
+            "existing-token lookup"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nToken/src/service/pipelines/defaultValidateTokenPipelineService.js",
+          "anchors": [
+            "key/ops/active lookup",
+            "process.nextSuccess",
+            "process.error",
+            "unawaited token update"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "Workflow and BPM source map",
+      "backlogPriority": "P1",
+      "requestedAction": "Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "definitions": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "transitions": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "tasks": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "callbacks": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "history": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "operatorVisibility": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Compared nbpm generic schema workflow dispatch with Process definition/instance/task/adapter/callback ownership and the CMS approval request boundary. The guide maps to real Process sections, uses the actual declarative cms.applyPublicationDecision action and bounded callback transport, and distinguishes stored completed-task decision authority from a caller-supplied approval flag or direct content mutation.",
+      "evidence": [
+        {
+          "documentId": "process.workflow-bpm-source-map",
+          "anchors": [
+            "processWorkflowBpmSourceMap-1-source-map",
+            "processWorkflowBpmSourceMap-2-workflow-model",
+            "processWorkflowBpmSourceMap-3-contract",
+            "processWorkflowBpmSourceMap-5-implementation-handoff",
+            "processWorkflowBpmSourceMap-6-evidence-checklist"
+          ]
+        },
+        {
+          "documentId": "process.runtime-lifecycle",
+          "anchors": [
+            "processRuntimeLifecycle-2-definition-lifecycle",
+            "processRuntimeLifecycle-3-starting-an-instance",
+            "processRuntimeLifecycle-4-task-lifecycle",
+            "processRuntimeLifecycle-5-instance-detail-and-audit",
+            "processRuntimeLifecycle-6-scheduled-triggers"
+          ]
+        },
+        {
+          "documentId": "process.action-adapters",
+          "anchors": [
+            "processActionAdapters-1-safe-default",
+            "processActionAdapters-2-what-is-not-allowed",
+            "processActionAdapters-5-adapter-operating-contract"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js",
+        "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+        "nodics.process/modules/workflow/config/properties.js"
+      ],
+      "sourceFindings": [
+        "nbpm chooses local initializeWorkflows or authenticated workflow PUT /item/init; CMS requestApproval separately uses Process POST /instances/publication-approval.",
+        "Process publishDraft validates the graph and creates an insertOnly immutable definition version; runtime starts pin a published version and retain task/attempt/incident history.",
+        "Allowlisted cms.applyPublicationDecision requires completed task evidence and resolves to DefaultProcessPublicationDecisionCallbackService.applyPublicationDecision, not the previously invented callback.",
+        "The callback validates target/token/reference/decision and sends POST /publication/process/decision with Process version evidence and deterministic idempotency. Domain authority still applies the decision.",
+        "Operator failure recovery uses Process detail/incidents and domain outcome inspection; retry cannot replace the original stored decision or guarantee compensation of business effects."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Process/CMS source was inspected read-only; no edits to their articles, implementation, approvals or publication state were made.",
+        "A canonical source map and owner API contracts do not establish browser task queues or production callback availability.",
+        "No workflow instance, task decision, callback, retry, CMS request or browser action was executed."
+      ],
+      "remediation": [
+        "Mapped exact nbpm, Process, callback, domain and publication sources and canonical Process anchors.",
+        "Replaced the fictitious callback string with actual declarative node.action and completed-task policy.",
+        "Added operator correlation, uncertain callback outcome and governed retry boundaries."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P1",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js",
+          "anchors": [
+            "publishToWorkflow",
+            "prepareInvocation"
+          ]
+        },
+        {
+          "file": "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js",
+          "anchors": [
+            "publishDraft"
+          ]
+        },
+        {
+          "file": "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+          "anchors": [
+            "applyPublicationDecision"
+          ]
+        },
+        {
+          "file": "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+          "anchors": [
+            "requiresCompletedTask",
+            "completedDecisionExecution"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "Cron job data authoring",
+      "backlogPriority": "P1",
+      "requestedAction": "Document job records, schedules, execution policy, retry, idempotency, and Process server ownership.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "jobRecords": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "schedules": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "executionPolicy": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "retry": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "idempotency": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "processServerOwnership": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Compared the example with Cron/base schema fields, actual enums/date normalization, timer wrapper and target dispatcher, then the inactive draft and reviewed lifecycle contracts. Replaced invented schedule/target/retry fields with an inactive complete job plus matching saveAll header; separated execution status, scheduler state, operational authority, per-wrapper concurrency and uncertain lifecycle recovery.",
+      "evidence": [
+        {
+          "documentId": "process.cronjob-data-authoring",
+          "anchors": [
+            "processCronjobDataAuthoring-2-data-shape",
+            "processCronjobDataAuthoring-3-header-contract",
+            "processCronjobDataAuthoring-4-runtime-behavior",
+            "processCronjobDataAuthoring-5-customization-and-extension-guidance",
+            "processCronjobDataAuthoring-6-implementation-handoff",
+            "processCronjobDataAuthoring-8-verification"
+          ]
+        },
+        {
+          "documentId": "process.runtime-lifecycle",
+          "anchors": [
+            "processRuntimeLifecycle-6-scheduled-triggers"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.process/modules/cronjob/src/schemas/schemas.js",
+        "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobRuntimeService.js",
+        "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleDraftService.js",
+        "nodics.process/modules/cronjob/src/lib/cronJob.js",
+        "nodics.process/modules/cronjob/src/utils/enums.js",
+        "nodics.process/modules/cronjob/src/service/trigger/defaultCronJobTriggerHandlerService.js",
+        "nodics.process/modules/cronjob/src/service/interceptor/defaultStartValueValidatorInterceptorService.js",
+        "nodics.process/modules/cronjob/src/service/interceptor/defaultJobActivatorInterceptorService.js",
+        "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleLifecycleService.js",
+        "nodics.process/modules/cronjob/llm/contracts/inactive-schedule-drafts.md",
+        "nodics.foundation/modules/nDatabase/database/src/schemas/schemas.js"
+      ],
+      "sourceFindings": [
+        "cronJob requires runOnNode, trigger, start, runOnInit/priority/status/state (with defaults); base requires code and superclass provides timestamps. The fixed ISO example is normalized by the date interceptor.",
+        "The timer uses trigger.expression/jobDetail and runtime/node admission; local _running prevents overlapping wrapper work, not distributed exactly-once execution.",
+        "Dispatcher supports processTrigger/startNode/internal/external and optional errorNode, not generic retryPolicy.maximumAttempts. Process trigger execution obtains owner operational auth and stamps fixed provenance after context.",
+        "Inactive draft creation is disabled by default, scoped/human-authorized, digest checked and insertOnly active:false/runOnInit:false.",
+        "Reviewed activation is separately disabled, revision-CAS bound, records intent before one dispatch and verifies exact timer; inspect/reconcile never redispatch."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Schema/example verification is static and accounts for the existing Date interceptor/default machinery, not an executed import.",
+        "Illustrative node0 and exampleTrigger require actual deployment/permission qualification; expression timezone is runtime-owned.",
+        "No import, timer, job, lifecycle receipt, activation/deactivation, Process execution or exactly-once acceptance was performed."
+      ],
+      "remediation": [
+        "Added complete inactive schema-shaped example with fixed date and exact matching owner header.",
+        "Corrected enums, target dispatch, timezone/admission and lack of generic retry guarantee.",
+        "Added disabled draft/activation, expectedRevision, idempotency, uncertain acknowledgement and pause/deactivation boundaries."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P0",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.process/modules/cronjob/src/schemas/schemas.js",
+          "anchors": [
+            "cronjob.cronJob.definition"
+          ]
+        },
+        {
+          "file": "nodics.process/modules/cronjob/src/utils/enums.js",
+          "anchors": [
+            "CronJobState.definition",
+            "CronJobStatus.definition"
+          ]
+        },
+        {
+          "file": "nodics.process/modules/cronjob/src/lib/cronJob.js",
+          "anchors": [
+            "trigger.expression",
+            "jobDetail",
+            "_running"
+          ]
+        },
+        {
+          "file": "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleLifecycleService.js",
+          "anchors": [
+            "expectedRevision",
+            "revision-CAS intent",
+            "inspect/reconcile"
+          ]
+        }
+      ]
+    },
+    {
+      "item": "Release and upgrade compatibility",
+      "backlogPriority": "P1",
+      "requestedAction": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "versionFreeze": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "upgradePath": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "rollback": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "checksumDrift": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "generatedManifestPolicy": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "customerExtensionCompatibility": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Reread release catalogue/execution and forward-manifest planning plus actual artifact precedence and publication rollback. Corrected mutable baseline to explicit version0.0.0, preserved freeze/drift policy and added a symbolic installed-to-forward upgrade with real releaseCodes/expectedReleases request shape and observable installation outcomes. Recovery now separates publication, code/config, data and external effects.",
+      "evidence": [
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "anchors": [
+            "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+            "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+            "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+            "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+            "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+            "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+            "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+        "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+        "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md",
+        "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+      ],
+      "sourceFindings": [
+        "isDevelopmentRelease identifies version0.0.0 only; installed nondevelopment same-version checksum drift rejects, while downgrade requires explicit allowDowngrade and is not rollback.",
+        "planForwardRelease requires newer semantic version/source sequence and immutable prior payload, retains historical roots/section identity and rejects frozen drift.",
+        "Catalogue/preflight/execute selection uses exact releaseCode and expectedReleases version; expectedReleases is not a digest signature. CURRENT is skipped and RUNNING cannot be taken over merely by timeout.",
+        "Failed/partial outcomes require secured import-run/installation reconciliation and owner idempotency; a retry is not guaranteed row-level resume.",
+        "Publication rollback delegates to the domain provider; it does not restore deployed overrides/configuration, imported/migrated records or external side effects."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "H1/H2/Hdev1/Hdev2 are explicitly symbolic explanatory values, not fabricated checksum evidence or executed receipt history.",
+        "No tooling generation, hash refresh, import, release execution, runtime rebuild, publication or rollback was performed.",
+        "Parent owns final cohort .34, derived integrity/shared bindings and normal approval/publication; current article/source hashes describe only this bounded editorial snapshot."
+      ],
+      "remediation": [
+        "Corrected baseline, freeze, drift/downgrade and retained-root policy.",
+        "Added concrete installed1.0.0-to1.1.0 selection/checkpoints and partial recovery distinctions.",
+        "Separated recovery surfaces and retained customer override/API/security/provider compatibility detail."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P1",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+          "anchors": [
+            "isDevelopmentRelease",
+            "getCatalogue",
+            "preflight",
+            "execute",
+            "preparePlan"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+          "anchors": [
+            "planForwardRelease",
+            "retainedRoots",
+            "immutable checksum drift"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+          "anchors": [
+            "rollback"
+          ]
+        }
+      ]
+    }
+  ],
+  "sourceFileSha256": {
+    "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js": "9008fbb9e34620162576b6cf5ff6d308db86a9858ff5bd76c4aec490e984292a",
+    "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js": "9fccac9c928a42536e8e531239b1648e3ecd3e91b50961e2f8d695bf682e7c7b",
+    "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js": "6db5f614512ac70e9e7dd3a6d91d34ee4b97ee32d1d9afea9905eed4b2c9c660",
+    "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js": "e51088c4dfe34366a347e11e22d0f2c2979128ba1136e77b7a9072611267bdf9",
+    "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js": "4cc3e29444502ce4e670625c90c004cba33f4430cd9bc27ab84744e1c70198cd",
+    "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js": "fe5af5c5a583bc34f98d062dab3f61e3826f043969b775bd022b355eb047487a",
+    "nodics.foundation/modules/nData/nImport/import/config/properties.js": "a1bd7094fc4e36d3d50203e8ee2699896e3c5e59df964db4eb0843df6577eea5",
+    "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js": "7448fb8528bd3e1dc6ccd67ec95e2c0346e254b83520a9b20a5ea8e00c3e8a27",
+    "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js": "c6e770e91319c3cf6a5b9b621dfa73c92a35adf67838e2e5b1742b7bb3a58331",
+    "nodics.foundation/modules/nNms/src/router/routers.js": "0ab4c670f6b5f1b552e17eb321936829ecfae6ec99a1c1aa7201a547b0c10733",
+    "nodics.foundation/modules/nNms/config/properties.js": "2c306fbdda9bf716f4aeb1c021993aace542b9195ebecbdd3737ab3677e2f99e",
+    "nodics.foundation/nodics.js": "7f733e41d1e53ce2a10d49339675229082b9129a0db60d2f89d5d33cee3cd6d7",
+    "nodics.foundation/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService.js": "0e00b292eb59355d217cc0ef6e467ed6ae4ef12c1f4df18e34013a651f751ce1",
+    "nodics.process/modules/cronjob/config/properties.js": "24b417ca4def09d245b1f17ffc67427e27ed0cb3bf669eb0745cdeb74427136c",
+    "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js": "58047c2664c51d479083450197cd3ab763486838427715d939fdbc1a4b649e56",
+    "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+    "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
+    "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
+    "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js": "26368b14b5b4924421bc6177ac107ce9c48ed189f58a74fa74cf4a9f122582d8",
+    "nodics.foundation/modules/nConfig/src/utils/utils.js": "0f78e4f4c645a281a0ba3d21fb8c0541665d3c0afa404530a0d3ce63275e124c",
+    "nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService.js": "5b39818cb226a87f95ff7ba613bded7b212075448ae028a0fdcb2454c7723583",
+    "nodics.foundation/modules/nCache/cache/src/service/engine/defaultCacheEngineService.js": "4cc82ba9f4b1939789f3f2c2de4fea3d4e8fb7a43ed8b20c01982337d20db620",
+    "nodics.foundation/modules/nCache/nodeCache/src/service/cache/defaultLocalCacheService.js": "b72d76897f80e06025fcddd113768db53324a1b801df94f38a1d78b11f413ab8",
+    "nodics.foundation/modules/nCache/hazelcastCache/src/service/cache/defaultHazelcastCacheService.js": "3a755789dde463a4020339f18366cf0eeaf3ca188b5ed44d659706f076626065",
+    "nodics.foundation/modules/nCache/redisCache/src/service/cache/defaultRedisCacheService.js": "f164af3d81ea947a28682d615cedd0ef9309bba20cc8e0ce4afe6985ff0a904e",
+    "nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService.js": "45ee5962095ba2dfa06d75991b6b7807c197f620823087242c9bd837e6d09668",
+    "nodics.foundation/modules/nCache/cache/config/properties.js": "1bd8e2b3f445cdc67da4748c6188fd529769a7100637b68882c7ee90ef765f8a",
+    "nodics.foundation/modules/nCache/hazelcastCache/src/service/engine/defaultHazelcastCacheEngineService.js": "b4f98e002cca61055275bd4dee38734f35def214a11eff7d8ee4d55f2c6cab76",
+    "nodics.foundation/modules/nDatabase/mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService.js": "f1ed03653b6650144737d6b44e0d3d09c3fa97d49f2dad7b4a15a26cff3533a8",
+    "nodics.foundation/modules/nDatabase/mongodb/src/service/model/defaultMongodbDatabaseModelHandlerService.js": "2a02c04ea34b5a7bc025abbd89ff42bb75913a272208d8c504ebe0e12a05ac58",
+    "nodics.foundation/modules/nDatabase/database/vDatabase/src/schemas/schemas.js": "0433213dd8cb86cd3f5f70c9caa789a7be217022d8c1256a82896e7c87f2456f",
+    "nodics.foundation/modules/nDatabase/database/vDatabase/src/service/interceptors/defaultVersionIdHandlerInterceptorService.js": "69c1d2b4a7d19885561e36b82648df569a385b567bf4fab553372e5a02440ed6",
+    "nodics.foundation/modules/nDatabase/cassandradb/config/properties.js": "265c951a9ad5d37706902780f14d238c9c1b324647a96bf2c56f81e94077b6c0",
+    "nodics.foundation/modules/nDatabase/elasticdb/config/properties.js": "472346e77a7f94c24e64bf3668f5515300bbed992388495aac8753691981d123",
+    "nodics.foundation/modules/nDatabase/database/src/service/config/defaultDatabaseConfigurationService.js": "5e6a216bd733c2047d95de85c55bb90787fe3b624412b63df45d7d1e0e321328",
+    "nodics.foundation/modules/nDatabase/mongodb/config/properties.js": "ed1d27cc9ebec4c6bfb710fb9ee94efab78a79d692a56a7c7bff3a3fb9dc5883",
+    "nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/schemas/model.js": "a46542f26196e7bc131502c1c5c3834745ea2c8c447a3aea5c363f05f391e3b2",
+    "nodics.foundation/modules/nDatabase/database/vDatabase/llm/contracts/per-schema-versioning-contract.md": "8e6f9d485a44ab05fff08f4b01aeb432f00c166ffee315742bbee43f8485ba65",
+    "nodics.foundation/modules/nOtp/src/service/DefaultOtpService.js": "7dcca1196faa28b4086029eac06a8d2db805a77fd0338047996248f842e60e55",
+    "nodics.foundation/modules/nOtp/src/service/handler/defaultOtpHandlerService.js": "f76742eaf3da03975eaca5e4f19a39c73b0f9258c1458fe750f29957c58248c6",
+    "nodics.foundation/modules/nOtp/config/properties.js": "09e7e8f8a486c31b198ab4fc27e87ae226a842054b63ef81e4e74b6a5ee4666a",
+    "nodics.foundation/modules/nToken/src/service/DefaultTokenService.js": "65f70e60a0f5ceef1898d6d24e5462f5b4b2fff6de261e6376e26b62aba2f9c6",
+    "nodics.foundation/modules/nToken/src/service/pipelines/defaultValidateTokenPipelineService.js": "804ab997383dc8eb581b27ea3fd59a108be1320eb26ef32ee85928d10ce8419f",
+    "nodics.foundation/modules/nToken/config/properties.js": "64211c73b0277595fcf10d4291e31418e29373d472e7a775da55ab8a2eaaedd8",
+    "nodics.foundation/modules/nToken/src/service/pipelines/defaultGenerateTokenPipelineService.js": "5df64b488d386c421cdf4ef0cb496337d946c3a54f4acddc9e584e3006df5a73",
+    "nodics.foundation/modules/nOtp/README.md": "b02cc69ae88469fd7a41dec28b9b7691ed2aeb812ebb8156f0c859909b9574a3",
+    "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js": "ae3010057215a7936f39293402028fddc84c08199aff644a844257dfd0a367dc",
+    "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js": "c2fd2ae6a1c208951e2b60aaedd96c705b61bbdd5c9230eb7856344e1d422482",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js": "a17dc3de5c1e0cf2da23fd094c008a31f58837215020b2592ac38dfeb15096ff",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js": "c98c0a6c4a2c66211257b0cc3a3f290eca50e999cd510bb6d966f2151d73021d",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js": "306a3bb3858f799184852f49ae0ba6e3188579f744cd0a2889005560f38744cd",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js": "1c4b5a6465cc23879513657175273e4a850121ca50296a019cfda5fe95ee8aec",
+    "nodics.process/modules/workflow/config/properties.js": "21b4f6b7982190a261ed1c4c1fee5ea816d060f69b4649fe6baf73236d2d66c1",
+    "nodics.process/modules/cronjob/src/schemas/schemas.js": "665cfbdbbbfef05f99e0c4853410c5586ae57913fb7942b49a17f8da7f241525",
+    "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobRuntimeService.js": "4709cc35631842fb7a422c1f913346add326da06a5e24373b9c84aff4fefd224",
+    "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleDraftService.js": "89a707ec51f610704cb1b353035b9d7070d8b32e03be6a83c668d4c704a71992",
+    "nodics.process/modules/cronjob/src/lib/cronJob.js": "518c57fb370c0afe947eed27474741220d3d80e66ab0264b779081f713e292ce",
+    "nodics.process/modules/cronjob/src/utils/enums.js": "532cea8161f27421aca701afe39a62cb52735e0481221a932520bd0fd7a8f451",
+    "nodics.process/modules/cronjob/src/service/trigger/defaultCronJobTriggerHandlerService.js": "7804a476784408478d7338875969046f8492af224ce6e3a12eedfaa919ed97ad",
+    "nodics.process/modules/cronjob/src/service/interceptor/defaultStartValueValidatorInterceptorService.js": "09ac1d8680cc4da53d0b36ae7a60b2a4f260ca888cb44795884e5ed21137f2d3",
+    "nodics.process/modules/cronjob/src/service/interceptor/defaultJobActivatorInterceptorService.js": "11778df287210c644ce5062e253581a079b5b3c465dc8197e07e53fd59b6681c",
+    "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleLifecycleService.js": "0f04d1781a84597ebe8fd4b632022e4570a3dc7254bf40ad975873d98682f82a",
+    "nodics.process/modules/cronjob/llm/contracts/inactive-schedule-drafts.md": "746612f580367fff462267e261c7b95d619e7c41b40cc2a447783d12c141aca2",
+    "nodics.foundation/modules/nDatabase/database/src/schemas/schemas.js": "a69e2ebf25b553b8a4d7bd06977c66ba76203e6e25986bec1459fe0f56b8390b",
+    "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "f3f67872ae2434dfa21366305cb8e599ed74c74274f5668b1de08e4591121d91",
+    "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+    "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+    "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "e167190eaa0265ef59f5956370e3f5ccc11006c2f54e012159c74c21742e1f71"
+  },
+  "validation": {
+    "closureContract": {
+      "status": "PASS_HASH_BOUND_CLOSURE_FOR_ALL_NINE",
+      "checker": "nodics.docs/scripts/semantic-review-contract.mjs#qualifySemanticReview",
+      "exactOriginalRequestedActions": true,
+      "minimumSourceFilesPerItem": 6,
+      "canonicalDocuments": 15,
+      "currentSourceFiles": 68,
+      "boundary": "Read-only contract qualification after manual semantic rereview; validates evidence identity, anchors and current hashes, not runtime behavior or semantic completeness by itself."
+    },
+    "changedComponentDataSyntax": {
+      "status": "PASS_STATIC_SYNTAX",
+      "files": 10
+    },
+    "newJavaScriptSnippets": {
+      "status": "PASS_STATIC_SYNTAX",
+      "count": 15,
+      "details": [
+        {
+          "documentId": "data.import-export-provider-guides",
+          "block": 8,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "data.import-export-provider-guides",
+          "block": 9,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "data.import-export-provider-guides",
+          "block": 14,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "foundation.nms-runtime-monitoring",
+          "block": 5,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "foundation.service-runtime-overrides",
+          "block": 9,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "foundation.service-runtime-overrides",
+          "block": 10,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "foundation.cache-provider-runbooks",
+          "block": 8,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "foundation.cache-provider-runbooks",
+          "block": 15,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "foundation.database-provider-boundaries",
+          "block": 8,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "persistence.provider-data-access-layer",
+          "block": 12,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "security.otp-security-flow",
+          "block": 9,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "process.cronjob-data-authoring",
+          "block": 5,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "process.cronjob-data-authoring",
+          "block": 10,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "block": 14,
+          "status": "SYNTAX_VALID"
+        },
+        {
+          "documentId": "framework.module-loading-service-precedence",
+          "block": 12,
+          "status": "SYNTAX_VALID"
+        }
+      ]
+    },
+    "cronExample": {
+      "status": "STATIC_SCHEMA_AND_HEADER_VALID",
+      "issues": [],
+      "fields": [
+        "code",
+        "name",
+        "active",
+        "runOnNode",
+        "runOnInit",
+        "trigger",
+        "start",
+        "priority",
+        "status",
+        "state",
+        "jobDetail"
+      ],
+      "dateNormalization": "Fixed ISO start accepted after existing Date interceptor; superclass timestamps use existing defaults.",
+      "cronSyntax": "Six numeric/wildcard fields reviewed as seconds/minutes/hours/day/month/week; no timer started."
+    },
+    "nonBlockPreservation": {
+      "status": "PASS",
+      "method": "Compare complete parsed CMS records after removing only the eleven authorized properties.blocks arrays against the pre-edit snapshot; lifecycle and all other properties/records remain included.",
+      "files": {
+        "nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js": {
+          "currentProtectedSha256": "503f46f26278341a6433341402f46a815c01ff72dbe151dea314a6574f9c8971",
+          "baselineProtectedSha256": "503f46f26278341a6433341402f46a815c01ff72dbe151dea314a6574f9c8971",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nNms/data/docs-v001/records/documentation/nmsDocumentationComponentData.js": {
+          "currentProtectedSha256": "280f87c15fd8352a9d42bce19ec414284599aee43b26387309738698899592d5",
+          "baselineProtectedSha256": "280f87c15fd8352a9d42bce19ec414284599aee43b26387309738698899592d5",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nService/data/docs-v001/records/documentation/nServiceDocumentationComponentData.js": {
+          "currentProtectedSha256": "f9dc2741d8ffae03ae345f8c5e745e16c7e8908f14e671007123354a39e1b76c",
+          "baselineProtectedSha256": "f9dc2741d8ffae03ae345f8c5e745e16c7e8908f14e671007123354a39e1b76c",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nCache/cache/data/docs-v001/records/documentation/cacheDocumentationComponentData.js": {
+          "currentProtectedSha256": "4771bd6c5fbe6dfa38eb86f04611dbc9bcb349de0e495a2b48a6a589272972c0",
+          "baselineProtectedSha256": "4771bd6c5fbe6dfa38eb86f04611dbc9bcb349de0e495a2b48a6a589272972c0",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js": {
+          "currentProtectedSha256": "d46c856797c1850f60a93fbacc477ea19f68774f801bc0da4c8fd095c75e8aae",
+          "baselineProtectedSha256": "d46c856797c1850f60a93fbacc477ea19f68774f801bc0da4c8fd095c75e8aae",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nOtp/data/docs-v001/records/documentation/otpDocumentationComponentData.js": {
+          "currentProtectedSha256": "67d606c44c2701ed4bdfeb36d048134e90a756568bf13ff5c2ead6cc44fe1044",
+          "baselineProtectedSha256": "67d606c44c2701ed4bdfeb36d048134e90a756568bf13ff5c2ead6cc44fe1044",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nbpm/data/docs-v001/records/documentation/bpmDocumentationComponentData.js": {
+          "currentProtectedSha256": "6ee113d448a268c2ec247ab435bd1789fd9ed8be4d0a062a4ed78384cd19ded1",
+          "baselineProtectedSha256": "6ee113d448a268c2ec247ab435bd1789fd9ed8be4d0a062a4ed78384cd19ded1",
+          "unchanged": true
+        },
+        "nodics.process/modules/cronjob/data/docs-v001/records/documentation/cronjobDocumentationComponentData.js": {
+          "currentProtectedSha256": "88a09ddec33c885329ed1bd2f2e1849609922ec228bf5e6af536b8f4fbcd215a",
+          "baselineProtectedSha256": "88a09ddec33c885329ed1bd2f2e1849609922ec228bf5e6af536b8f4fbcd215a",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js": {
+          "currentProtectedSha256": "95cd959d10fe58d54d8277780c3b06d34ce6f500ff87498194a2bca7accaf54e",
+          "baselineProtectedSha256": "95cd959d10fe58d54d8277780c3b06d34ce6f500ff87498194a2bca7accaf54e",
+          "unchanged": true
+        },
+        "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js": {
+          "currentProtectedSha256": "597cb59b6d7961defc026f59db2435d8dfb2acbeec23ef3cbe236bd84b0ca605",
+          "baselineProtectedSha256": "597cb59b6d7961defc026f59db2435d8dfb2acbeec23ef3cbe236bd84b0ca605",
+          "unchanged": true
+        }
+      }
+    },
+    "stagedPreservation": {
+      "status": "PASS_BYTE_PRESERVATION_FOR_SNAPSHOTTED_FILES",
+      "files": [
+        {
+          "file": "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationSearchMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationSearchMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationSearchMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationSearchMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationSearchMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationSearchMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationSearchMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationComponentData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationPublicationStateData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationNodeData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationPageMetadataData.js",
+          "unchanged": true
+        },
+        {
+          "file": "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationSearchMetadataData.js",
+          "unchanged": true
+        }
+      ],
+      "boundary": "Forty pre-edit STAGED-bearing owner files remained byte-identical. All changed ComponentData files additionally passed non-block preservation; no lifecycle field was edited."
+    },
+    "originalReview": {
+      "status": "UNCHANGED",
+      "sha256": "d03589a466b8e1ed0498a87459e40204d3557f3795f279f0ae3726e536dd8949"
+    },
+    "acceptanceBoundary": "Static data/syntax/schema/header checks and manual source review only. No test suite, timers, imports, release tools, provider operations, browser or approval/publication workflows ran."
+  },
+  "changedFiles": [
+    "nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js",
+    "nodics.foundation/modules/nNms/data/docs-v001/records/documentation/nmsDocumentationComponentData.js",
+    "nodics.foundation/modules/nService/data/docs-v001/records/documentation/nServiceDocumentationComponentData.js",
+    "nodics.foundation/modules/nCache/cache/data/docs-v001/records/documentation/cacheDocumentationComponentData.js",
+    "nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js",
+    "nodics.foundation/modules/nOtp/data/docs-v001/records/documentation/otpDocumentationComponentData.js",
+    "nodics.foundation/modules/nbpm/data/docs-v001/records/documentation/bpmDocumentationComponentData.js",
+    "nodics.process/modules/cronjob/data/docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+    "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+    "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+    "nodics.docs/test/evidence/semantic-documentation-corrections-b-2026-10-07.json"
+  ],
+  "integrationNotes": [
+    "Parent owns final cohort .34 after all edits; no version/cohort field was changed here.",
+    "Parent reconciles shared-guide bindings after its source reread. The two supporting edits are restricted to the cited nConfig precedence example and database-provider example/transaction refusal.",
+    "Derived summary/searchText/headings/source descriptors/checksums were deliberately not regenerated; parent performs integrity regeneration under its authority before publication.",
+    "Current canonical/source hashes bind this exact editorial snapshot. Recompute and genuinely rereview any affected evidence if subsequent integration changes cited blocks or source.",
+    "Original review and current staged authoring/publication state remain unchanged by these nine corrections. Normal owner approvals and publication remain required.",
+    "Genuine runtime boundaries remain: skeletal Cassandra/elasticdb database providers, generated XLSX integration absent, optional export masking integration, OTP atomicity/security orchestration gaps and NMS notification/stop defects."
+  ],
+  "parentBeginnerGuidanceReview": {
+    "date": "2026-10-07",
+    "documents": [
+      "foundation.cache-provider-runbooks",
+      "data.import-export-provider-guides",
+      "foundation.database-provider-boundaries",
+      "foundation.nms-runtime-monitoring",
+      "security.otp-security-flow",
+      "foundation.service-runtime-overrides",
+      "framework.release-upgrade-compatibility",
+      "process.workflow-bpm-source-map",
+      "process.cronjob-data-authoring"
+    ],
+    "scope": "Parent authored and reviewed topic-specific beginner reading paths without broadening supported capability or live claims. Commerce Search diagram also corrected to separate Product discovery results from CURRENT Commerce rule projection/ranking. Existing section anchors and source boundaries remain unchanged. Parent also authored and reviewed explicit operator/developer diagnosis and negative-test guidance under the exact source-map sections, preserving existing limitations."
+  }
+}

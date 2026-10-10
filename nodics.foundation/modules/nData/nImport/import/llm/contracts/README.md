@@ -233,3 +233,18 @@ valid; an unmatched or missing receipt is not successful import evidence.
 Partial repairs must not be converted into saves that require or rewrite
 credentials. Managed-counter schemas still require their existing `saveAll`
 revision contract. Later-layer dispatch overrides preserve these guarantees.
+# Manifest Path Discovery
+
+Collect each qualified release's declared header and record paths before
+basename grouping. Broad recursive scans can collapse same-named files in
+sibling sections before the manifest allowlist is applied. Preserve selected
+release order, containment, exact source qualification and legacy discovery for
+non-release callers. Never qualify `NO_DATA` or explicit zero-success imports as
+installed. A historical false-current standard release can recover only in
+Local through an explicitly requested `forceCurrent` operation, with unchanged
+version and checksum, its exact durable `NO_DATA` run and all six record counters
+explicitly zero. Bind this private qualification to the receipt's original run
+and revision before the normal fenced claim. Custom installers, ambiguous or
+incomplete history, non-Local deployments and any prior record work are excluded;
+never edit receipts or replay financial contributions. Ordinary immutable
+current releases remain non-replayable.

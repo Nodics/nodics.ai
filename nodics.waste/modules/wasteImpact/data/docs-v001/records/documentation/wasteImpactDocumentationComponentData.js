@@ -1,0 +1,471 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+'use strict';
+
+/** @description Canonical module-owned documentation CMS component records. */
+module.exports = {
+  "record0": {
+    "code": "nodicsDocsComponentwasteImpactProviders",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "waste.impact-providers",
+      "title": "Waste impact providers and mock carbon estimates",
+      "route": "/docs/framework/waste-impact-providers",
+      "section": "framework-architecture-and-design",
+      "sectionTitle": "Framework Architecture and Design",
+      "group": "framework-architecture-and-design",
+      "groupTitle": "Framework Architecture and Design",
+      "parentId": "framework-architecture-and-design",
+      "hierarchyPath": [
+        "Framework Architecture and Design",
+        "Waste impact providers and mock carbon estimates"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Configure illustrative carbon calculations, preserve provenance, and replace the mock through the standard provider and configuration hierarchy.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.8",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "framework.modular-architecture",
+        "framework.customization-guide"
+      ],
+      "sourceEvidence": [
+        "../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+        "config/properties.js",
+        "src/service/defaultWasteImpactCalculationService.js",
+        "src/service/defaultWasteImpactMockProviderService.js",
+        "test/wasteImpactProviderContract.test.js",
+        "package.json",
+        "src/schemas",
+        "src/service"
+      ],
+      "visualRequirements": [
+        "architecture-diagram",
+        "table",
+        "diagram"
+      ],
+      "searchKeywords": [
+        "waste",
+        "carbon",
+        "impact",
+        "provider",
+        "mock",
+        "configuration"
+      ],
+      "topicKeywords": [
+        "Waste",
+        "Carbon estimates",
+        "Impact providers"
+      ],
+      "headings": [
+        {
+          "text": "Purpose and ownership",
+          "anchor": "wasteImpactProviders-1-purpose-and-ownership",
+          "level": 2
+        },
+        {
+          "text": "Execution and prerequisites",
+          "anchor": "wasteImpactProviders-2-execution-and-prerequisites",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "wasteImpactProviders-3-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Replacing the mock with an authorized provider",
+          "anchor": "wasteImpactProviders-4-replacing-the-mock-with-an-authorized-provider",
+          "level": 2
+        },
+        {
+          "text": "Failure, recovery and operational evidence",
+          "anchor": "wasteImpactProviders-5-failure-recovery-and-operational-evidence",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "wasteImpactProviders-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "wasteImpactProviders-7-verification",
+          "level": 2
+        },
+        {
+          "text": "Environmental properties and credit status",
+          "anchor": "wasteImpactProviders-8-environmental-properties-and-credit-status",
+          "level": 2
+        },
+        {
+          "text": "Immutable assessment history and acceptance",
+          "anchor": "wasteImpactProviders-9-immutable-assessment-history-and-acceptance",
+          "level": 2
+        },
+        {
+          "text": "Sourced energy and prospective input metrics",
+          "anchor": "wasteImpactProviders-10-sourced-energy-and-prospective-input-metrics",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Purpose and ownership",
+          "anchor": "wasteImpactProviders-1-purpose-and-ownership"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, an impact assessment records a calculated environmental metric and the inputs behind it. The business value is a reproducible estimate that can support demonstrations and integration development while an authorized provider is selected. The functional owner is `nodics.waste`; its technical owner `wasteImpact` supplies the contract, dispatcher and mock implementation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The mock multiplies kilograms by an illustrative configured factor and returns `KG_CO2E`. It always reports `ESTIMATED`, `isMock: true`, and `publicClaimAllowed: false`. The supplied factor `1` is a simulation default, not a researched emissions coefficient. An assessment does not create a carbon credit, wallet balance, reward, approval, or public claim. Business users need a consuming journey; this service does not add a new customer screen."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Accelerator, provider and project policies retain ownership of real coefficients, methodologies and claims. Configuration is not restricted to a sample-data module. Use the normal framework, project/module, environment, server, node and supported tenant/runtime configuration hierarchy. `nConfig` remains the sole configuration authority; `SERVICE` remains the provider service registry."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Execution and prerequisites",
+          "anchor": "wasteImpactProviders-2-execution-and-prerequisites"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Activate Waste and load its services through the existing runtime hierarchy. An `EXTERNAL_PROVIDER` profile chooses provider execution. Static, weight and quantity profiles keep their existing behavior; they do not automatically use the configured mock. Consumers should await either calculation path."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  A[Trusted caller and reviewed facts] --> B[wasteImpact calculation service]\n  C[Effective CONFIG] --> B\n  B --> D[Selected SERVICE provider]\n  D --> E[Validated assessment and provenance]\n  E --> F[Caller owns persistence and subsequent policy]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Minimal service invocation inside an initialized runtime:"
+        },
+        {
+          "kind": "code",
+          "language": "javascript",
+          "text": "const result = await SERVICE.DefaultWasteImpactCalculationService.calculate({\n    resultCode: 'assessment-001',\n    sourceRef: { module: 'wasteSubmission', schema: 'wasteSubmission', code: 'submission-001' },\n    profile: { code: 'mock-impact', formulaType: 'EXTERNAL_PROVIDER', revision: 1 },\n    facts: { verifiedWeight: 2.5, weightUnit: 'KG', categoryCode: 'DEVICE' },\n    evidenceRefs: [],\n    idempotencyKey: 'assessment-once', correlationId: 'trace-001'\n}, trustedRuntimeContext);"
+        },
+        {
+          "kind": "paragraph",
+          "text": "With module defaults, this yields `2.500` KG_CO2E and an estimated assessment. The secured Waste API facade supports the same asynchronous result. Its controller obtains tenant context from `authData.tenant`; a tenant or provider field in the HTTP body cannot change effective settings. Existing route security and authorization still apply. The calculation itself does not fetch or authorize arbitrary source records: callers must supply reviewed facts and an authorized source/profile. There is no new persistence or idempotency store."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customize and extend safely",
+          "anchor": "wasteImpactProviders-3-customize-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "In an already registered later-loaded module, add only the needed delta to `config/properties.js`. This is a configuration excerpt, not an installable module. The owning runtime must include the module in its existing boot chain."
+        },
+        {
+          "kind": "code",
+          "language": "javascript",
+          "text": "module.exports = { wasteImpact: { calculation: {\n    timeoutMs: 3000,\n    failureMode: 'ERROR',\n    mock: {\n        factorSetVersion: 'illustrative-device-v2',\n        factors: { default: null, categories: { DEVICE: 2 } },\n        defaultWeightsKg: { categories: { DEVICE: 0.5 } },\n        precision: 3,\n        roundingMode: 'HALF_UP'\n    }\n} } };"
+        },
+        {
+          "kind": "paragraph",
+          "text": "After the supported configuration reload or runtime restart, 2.5 kilograms in category DEVICE produces `5.000`. With no weight and quantity 3, the configured unit weight yields 1.5 kilograms and `3.000`. An unknown category without an item-specific rule fails because the default factor was explicitly disabled. Recover by supplying a matching rule and version or corrected input. Restore the previous configuration delta to roll back; historical assessments retain their original provenance. Existing later-layer rules continue to merge normally."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Setting under wasteImpact.calculation",
+            "Behavior"
+          ],
+          "rows": [
+            [
+              "providerService",
+              "Loaded service name; default DefaultWasteImpactMockProviderService"
+            ],
+            [
+              "timeoutMs",
+              "Integer 1 through 2147483647; default 5000"
+            ],
+            [
+              "failureMode",
+              "ERROR throws; RESULT returns FAILED with empty metrics"
+            ],
+            [
+              "mock.factors",
+              "itemTypes, then categories, then default; zero remains valid"
+            ],
+            [
+              "mock.defaultWeightsKg",
+              "Same lookup order; used only when weight is absent"
+            ],
+            [
+              "mock.missingWeightMode",
+              "ERROR or ESTIMATE_FROM_QUANTITY; quantity fallback requires a configured positive weight"
+            ],
+            [
+              "mock.precision",
+              "Integer 0 through 12, default 3"
+            ],
+            [
+              "mock.roundingMode",
+              "HALF_UP, FLOOR or CEIL"
+            ],
+            [
+              "mock.factorSetVersion",
+              "Version identifying illustrative factor policy"
+            ],
+            [
+              "mock.metricCode",
+              "Output metric code, default ESTIMATED_CO2E_SAVED_KG"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Weight precedence is verifiedWeight, receivedWeight, then weight. Explicit zero is valid and never falls through. Inputs must use kilograms; unit conversion belongs upstream. Invalid selected rules fail rather than falling through to a less specific rule. Quantity estimation records the quantity, unit weight and rule source. Decimal multiplication and rounding avoid binary floating-point boundary artifacts after finite-number normalization. Precision-scaled results above Number.MAX_SAFE_INTEGER are rejected, so this is not arbitrary-precision scientific accounting. Do not use copied configuration registries, dynamic require paths, browser policy or framework edits to customize an application."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Replacing the mock with an authorized provider",
+          "anchor": "wasteImpactProviders-4-replacing-the-mock-with-an-authorized-provider"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A developer adds a loader-visible adapter such as `src/service/partnerCarbonProviderService.js` in the owning later-loaded module, then selects `providerService: 'PartnerCarbonProviderService'` through the same configuration hierarchy. The adapter implements `calculate(request, context)`. It may return an object or Promise. `context.settings` and the request are detached immutable snapshots; `context.runtimeContext` carries the trusted scope and `context.signal` supports cooperative cancellation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The adapter receives sourceRef, profile, facts, evidenceRefs, idempotencyKey and correlationId. It returns this protocol shape (illustrative response):"
+        },
+        {
+          "kind": "code",
+          "language": "javascript",
+          "text": "{\n    provider: { code: 'PARTNER_CARBON', version: '1', isMock: false },\n    formulaVersion: 'provider-method-v1',\n    calculationStatus: 'CONFIRMED',\n    metrics: [{ metricCode: 'ASSESSED_CO2E', value: '7.250', unitOfMeasure: 'KG_CO2E' }],\n    assessmentRef: 'provider-assessment-001',\n    methodologyRef: 'provider-method-001'\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Metrics require unique nonempty codes, units and finite decimal values. Values remain nonnegative unless a configured environmental indicator explicitly allows a signed value for that exact code and unit. Optional calculation.input and calculation.parameters carry the allowlisted weight/factor provenance defined in the service contract. Other raw provider fields are not retained. Public claims remain disabled even for a confirmed response; confirmation is not certification. Partial exported-method overrides also use the normal service loader. The facade resolves the effective calculation service, so those overrides remain reachable without copying it."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Selecting an adapter does not qualify an external provider. Its operator must configure secure credential references, enforce its methodology, propagate cancellation and idempotency, and qualify its external contract. No real provider account or network integration is included in the mock implementation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Failure, recovery and operational evidence",
+          "anchor": "wasteImpactProviders-5-failure-recovery-and-operational-evidence"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Invalid configuration, missing services, malformed metrics, provider errors and timeouts have stable module-owned error codes. There is no implicit retry or fallback to mock. Default ERROR mode throws a normalized error; RESULT mode returns a FAILED assessment with empty metrics and an errorCode. Invalid base configuration fails before dispatch even in RESULT mode. Raw provider error messages and credentials are not included in the normalized result."
+        },
+        {
+          "kind": "paragraph",
+          "text": "An operator should trace correlationId, idempotencyKey, provider version, formulaVersion and the input/configuration fingerprints. The configuration fingerprint covers selected identity and recorded applied calculation parameters, not secret settings or every arbitrary adapter option. An adapter should encode methodology changes in its formula/version references. Save result provenance through the caller's normal governed persistence path. This service neither writes records nor exports logs, dashboards, or automatic alerts."
+        },
+        {
+          "kind": "paragraph",
+          "text": "On timeout, cooperative adapters receive an abort signal. An adapter that ignores it may continue external work after the caller receives failure; handle that through provider cancellation and reconciliation. Correct configuration or provider health before retrying with the caller's idempotency policy. Rollback must preserve assessment history and cannot relabel old simulated results as provider-confirmed evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "wasteImpactProviders-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating the illustrative default factor as an emissions coefficient.",
+            "Assuming a provider result creates rewards or certified credits.",
+            "Putting provider selection in payload data or requiring a customer module.",
+            "Changing an existing WEIGHT_FACTOR profile and expecting provider dispatch.",
+            "Supplying grams without normalizing to kilograms.",
+            "Calling local contract tests proof of live external-provider qualification."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "wasteImpactProviders-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "From the framework root run:"
+        },
+        {
+          "kind": "code",
+          "language": "bash",
+          "text": "npm --prefix nodics.waste test\nnode nodics.foundation/modules/nConfig/test/layeredCustomizationContract.test.js"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The provider suite covers default and category/item calculations, explicit zero, missing/invalid inputs, quantity estimation, decimal boundaries, configuration deltas, trusted tenant isolation, immutable snapshots, stable fingerprints, asynchronous adapter replacement, partial overrides, missing adapters, timeout, invalid responses and normalized failure modes. Existing Waste tests protect built-in formulas and API envelopes. The nConfig contract separately checks actual layered configuration and artifact-loading mechanics."
+        },
+        {
+          "kind": "paragraph",
+          "text": "These checks establish local contract behavior. They do not prove a live HTTP runtime, imported sample dataset, provider account, customer UI or production readiness. Framework maintainers and AI tools must regenerate module context when source changes and maintain and validate canonical CMS documentation packs before release. CMS source changes, release integrity checks, rendered review and governed publication are separate evidence; this source page alone does not publish it."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Environmental properties and credit status",
+          "anchor": "wasteImpactProviders-8-environmental-properties-and-credit-status"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Environmental disclosure is optional additive result metadata, configured under `wasteImpact.calculation.environmentalAssessment`. Generic defaults disable it; the eWaste accelerator enables eleven emissions, resource and recovery indicators. The disclosure maps existing provider metric codes into customer labels, units and evidence requirements. It does not supply new formulas, measurements or factors. Operators can replace mappings to match a qualified adapter through normal layered configuration; provider selection and metric computation retain their existing owners."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For example, a provider returning `WATER_SAVED_L: 0` with unit `L` produces a real zero display value. Omitting that metric produces null and `NOT_ASSESSED` with its evidence requirements. The mock CO2e result is `ILLUSTRATIVE`; other missing indicators do not inherit its factor or quantity. A signed net emissions benefit requires `allowNegative: true` on its mapping. Negative benefits remain visible; unit mismatches and unexpected negative quantities fail validation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The result retains input/factor provenance, optional methodology, assessment, geography, baseline, treatment, boundary, year and dataset references. These provider-supplied references are context, not independent validation. Consumer screens distinguish estimates, demonstrations and missing evidence. Approved assets retain their existing `impactRef` to the owner-persisted result."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Credit eligibility and issuance stay `NOT_ASSESSED`, with null quantity and registry reference. Converting an estimated kilogram value into tonnes does not establish credits. Registry verification and issuance require a separate governed integration. No ledger or public-claim permission is introduced here."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A mapping has a stable key and `metricCode`, `label`, `unitOfMeasure`, `requirements` array and optional boolean `allowNegative`. The enclosing configuration requires `enabled: true`, a `version` string and an `indicators` object. Use at most 32 unique metric codes, labels of at most 120 characters and at most eight requirements of 180 characters each. Correct invalid mappings or units and rerun the assessment; no implicit fallback generates missing environmental values."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Immutable assessment history and acceptance",
+          "anchor": "wasteImpactProviders-9-immutable-assessment-history-and-acceptance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "`DefaultWasteImpactAssessmentService` owns persisted reassessment and acceptance operations. It composes the existing calculator and generated Waste repositories; provider adapters still perform no persistence. Staff commands resolve an approved submission and exactly one associated asset, then enforce Profile permission and collection-point scope. Reads require `waste.review.queue.read`, reassessment requires `waste.verification.record`, and acceptance requires `waste.review.approve`."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A reassessment reads stored reviewed facts and current trusted provider configuration. It creates a new `wasteImpactResult` with asset reference, previous accepted reference, input facts, source revision, reason, actor and command fingerprint. It never changes the accepted `asset.impactRef`, original `metadata.approvedEstimate`, or reward state. An explicit acceptance changes `impactRef` and its read snapshot `acceptedEstimate`, while preserving original approval evidence. `wasteImpactSelection` records each acceptance. Results and selections are read-only in generic schema authoring; assets must be mutated through their owning lifecycle operations."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Exact asset revisions and actor-bound idempotency keys serialize commands. An asset-persisted pending command freezes the result/event before downstream persistence. Recovery completes that snapshot even after provider configuration changes. A failed provider result remains visible in history but cannot be accepted. Selection requires completed original reward settlement; changed input facts reject a stale candidate. Replaying an old successful selection never restores it over a newer accepted result."
+        },
+        {
+          "kind": "paragraph",
+          "text": "History is paginated (20 records per page), includes the legacy approval result and returns the accepted result independently of the current page. Customer callers must first authorize current asset ownership before calling `historyForAsset`; staff callers use the scoped `history` entry point. The public projection excludes actor, command key and raw input facts. No reassessment or acceptance issues credits, revalues a wallet, or changes a settled reward. The original approval result remains the reward settlement source even after subsequent assessment selection."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Provider and dataset identity are separate. Preserve provider code/version, formula version, source dataset/version, original and normalized factors, geography, baseline, treatment, boundary, weight source/range/confidence and timestamps. `CARBON_EQUIVALENT_TCO2E` is a unit conversion metric, never an issued-credit quantity. Electronic WARM coefficients and mappings belong to the eWaste provider adapter."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Sourced energy and prospective input metrics",
+          "anchor": "wasteImpactProviders-10-sourced-energy-and-prospective-input-metrics"
+        },
+        {
+          "kind": "paragraph",
+          "text": "WARM provider version 2 also calculates energy savings from EPA WARM v16 Energy Impacts Exhibit 7-12, using `(landfill - recycling) * kWhPerMillionBtu / kgPerShortTon`. Energy is calculated independently, never converted from CO2e. Factors are in million Btu per US short ton; the International Table Btu conversion is 293.0710701722222 kWh per million Btu. This is life-cycle energy across fuels, not a promise of electricity savings on the customer's bill."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The provider emits baseline emissions and prospective recycling input mass/count. Input mass is not a recovery yield or confirmed landfill diversion. It retains the same measured/declared/inferred input precedence, quantity-once rule and saved range bounds. Missing water, transport and treatment-outcome metrics stay null. Client presentation must distinguish these from calculated zero and must not show failed, illustrative or stale result values as benefits. Original assessments are preserved; re-estimation uses the existing authorized revision-aware operation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Small chargers now have an explicit size-scoped REFERENCE_SCENARIO using the WARM peripherals proxy. This is not a validated charger-specific coefficient. Unknown weight uses configured modelling bounds of 50–150 g per item, informed by published 87.7 g and 92.5 g adapter examples; these are not measured or statistical confidence bounds. Measured/declared weight and valid image weight ranges take precedence; invalid inputs never fall back. Source links, version and explanation are preserved in the saved assessment. Disable referenceScenarios.CHARGER.enabled or supply a directly supported item mapping in a later layer to replace the proxy."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Source: https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P101982A.txt (Exhibit 7-12). Conversion reference: https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir81-2401.pdf. Tests include independent energy arithmetic, quantity and range propagation, invalid conversions, unsupported categories, preserved unknowns and no credit issuance."
+        }
+      ],
+      "searchText": "Waste impact providers and mock carbon estimates Configure illustrative carbon calculations, preserve provenance, and replace the mock through the standard provider and configuration hierarchy. # Waste impact providers and mock carbon estimates\n\n## Purpose and ownership\n\nFor beginners, an impact assessment records a calculated environmental metric and the inputs behind it. The business value is a reproducible estimate that can support demonstrations and integration development while an authorized provider is selected. The functional owner is `nodics.waste`; its technical owner `wasteImpact` supplies the contract, dispatcher and mock implementation.\n\nThe mock multiplies kilograms by an illustrative configured factor and returns `KG_CO2E`. It always reports `ESTIMATED`, `isMock: true`, and `publicClaimAllowed: false`. The supplied factor `1` is a simulation default, not a researched emissions coefficient. An assessment does not create a carbon credit, wallet balance, reward, approval, or public claim. Business users need a consuming journey; this service does not add a new customer screen.\n\nAccelerator, provider and project policies retain ownership of real coefficients, methodologies and claims. Configuration is not restricted to a sample-data module. Use the normal framework, project/module, environment, server, node and supported tenant/runtime configuration hierarchy. `nConfig` remains the sole configuration authority; `SERVICE` remains the provider service registry.\n\n## Execution and prerequisites\n\nActivate Waste and load its services through the existing runtime hierarchy. An `EXTERNAL_PROVIDER` profile chooses provider execution. Static, weight and quantity profiles keep their existing behavior; they do not automatically use the configured mock. Consumers should await either calculation path.\n\n```mermaid\nflowchart LR\n  A[Trusted caller and reviewed facts] --> B[wasteImpact calculation service]\n  C[Effective CONFIG] --> B\n  B --> D[Selected SERVICE provider]\n  D --> E[Validated assessment and provenance]\n  E --> F[Caller owns persistence and subsequent policy]\n```\n\nMinimal service invocation inside an initialized runtime:\n\n```javascript\nconst result = await SERVICE.DefaultWasteImpactCalculationService.calculate({\n    resultCode: 'assessment-001',\n    sourceRef: { module: 'wasteSubmission', schema: 'wasteSubmission', code: 'submission-001' },\n    profile: { code: 'mock-impact', formulaType: 'EXTERNAL_PROVIDER', revision: 1 },\n    facts: { verifiedWeight: 2.5, weightUnit: 'KG', categoryCode: 'DEVICE' },\n    evidenceRefs: [],\n    idempotencyKey: 'assessment-once', correlationId: 'trace-001'\n}, trustedRuntimeContext);\n```\n\nWith module defaults, this yields `2.500` KG_CO2E and an estimated assessment. The secured Waste API facade supports the same asynchronous result. Its controller obtains tenant context from `authData.tenant`; a tenant or provider field in the HTTP body cannot change effective settings. Existing route security and authorization still apply. The calculation itself does not fetch or authorize arbitrary source records: callers must supply reviewed facts and an authorized source/profile. There is no new persistence or idempotency store.\n\n## Customize and extend safely\n\nIn an already registered later-loaded module, add only the needed delta to `config/properties.js`. This is a configuration excerpt, not an installable module. The owning runtime must include the module in its existing boot chain.\n\n```javascript\nmodule.exports = { wasteImpact: { calculation: {\n    timeoutMs: 3000,\n    failureMode: 'ERROR',\n    mock: {\n        factorSetVersion: 'illustrative-device-v2',\n        factors: { default: null, categories: { DEVICE: 2 } },\n        defaultWeightsKg: { categories: { DEVICE: 0.5 } },\n        precision: 3,\n        roundingMode: 'HALF_UP'\n    }\n} } };\n```\n\nAfter the supported configuration reload or runtime restart, 2.5 kilograms in category DEVICE produces `5.000`. With no weight and quantity 3, the configured unit weight yields 1.5 kilograms and `3.000`. An unknown category without an item-specific rule fails because the default factor was explicitly disabled. Recover by supplying a matching rule and version or corrected input. Restore the previous configuration delta to roll back; historical assessments retain their original provenance. Existing later-layer rules continue to merge normally.\n\n| Setting under wasteImpact.calculation | Behavior |\n| --- | --- |\n| providerService | Loaded service name; default DefaultWasteImpactMockProviderService |\n| timeoutMs | Integer 1 through 2147483647; default 5000 |\n| failureMode | ERROR throws; RESULT returns FAILED with empty metrics |\n| mock.factors | itemTypes, then categories, then default; zero remains valid |\n| mock.defaultWeightsKg | Same lookup order; used only when weight is absent |\n| mock.missingWeightMode | ERROR or ESTIMATE_FROM_QUANTITY; quantity fallback requires a configured positive weight |\n| mock.precision | Integer 0 through 12, default 3 |\n| mock.roundingMode | HALF_UP, FLOOR or CEIL |\n| mock.factorSetVersion | Version identifying illustrative factor policy |\n| mock.metricCode | Output metric code, default ESTIMATED_CO2E_SAVED_KG |\n\nWeight precedence is verifiedWeight, receivedWeight, then weight. Explicit zero is valid and never falls through. Inputs must use kilograms; unit conversion belongs upstream. Invalid selected rules fail rather than falling through to a less specific rule. Quantity estimation records the quantity, unit weight and rule source. Decimal multiplication and rounding avoid binary floating-point boundary artifacts after finite-number normalization. Precision-scaled results above Number.MAX_SAFE_INTEGER are rejected, so this is not arbitrary-precision scientific accounting. Do not use copied configuration registries, dynamic require paths, browser policy or framework edits to customize an application.\n\n## Replacing the mock with an authorized provider\n\nA developer adds a loader-visible adapter such as `src/service/partnerCarbonProviderService.js` in the owning later-loaded module, then selects `providerService: 'PartnerCarbonProviderService'` through the same configuration hierarchy. The adapter implements `calculate(request, context)`. It may return an object or Promise. `context.settings` and the request are detached immutable snapshots; `context.runtimeContext` carries the trusted scope and `context.signal` supports cooperative cancellation.\n\nThe adapter receives sourceRef, profile, facts, evidenceRefs, idempotencyKey and correlationId. It returns this protocol shape (illustrative response):\n\n```javascript\n{\n    provider: { code: 'PARTNER_CARBON', version: '1', isMock: false },\n    formulaVersion: 'provider-method-v1',\n    calculationStatus: 'CONFIRMED',\n    metrics: [{ metricCode: 'ASSESSED_CO2E', value: '7.250', unitOfMeasure: 'KG_CO2E' }],\n    assessmentRef: 'provider-assessment-001',\n    methodologyRef: 'provider-method-001'\n}\n```\n\nMetrics require unique nonempty codes, units and finite decimal values. Values remain nonnegative unless a configured environmental indicator explicitly allows a signed value for that exact code and unit. Optional calculation.input and calculation.parameters carry the allowlisted weight/factor provenance defined in the service contract. Other raw provider fields are not retained. Public claims remain disabled even for a confirmed response; confirmation is not certification. Partial exported-method overrides also use the normal service loader. The facade resolves the effective calculation service, so those overrides remain reachable without copying it.\n\nSelecting an adapter does not qualify an external provider. Its operator must configure secure credential references, enforce its methodology, propagate cancellation and idempotency, and qualify its external contract. No real provider account or network integration is included in the mock implementation.\n\n## Failure, recovery and operational evidence\n\nInvalid configuration, missing services, malformed metrics, provider errors and timeouts have stable module-owned error codes. There is no implicit retry or fallback to mock. Default ERROR mode throws a normalized error; RESULT mode returns a FAILED assessment with empty metrics and an errorCode. Invalid base configuration fails before dispatch even in RESULT mode. Raw provider error messages and credentials are not included in the normalized result.\n\nAn operator should trace correlationId, idempotencyKey, provider version, formulaVersion and the input/configuration fingerprints. The configuration fingerprint covers selected identity and recorded applied calculation parameters, not secret settings or every arbitrary adapter option. An adapter should encode methodology changes in its formula/version references. Save result provenance through the caller's normal governed persistence path. This service neither writes records nor exports logs, dashboards, or automatic alerts.\n\nOn timeout, cooperative adapters receive an abort signal. An adapter that ignores it may continue external work after the caller receives failure; handle that through provider cancellation and reconciliation. Correct configuration or provider health before retrying with the caller's idempotency policy. Rollback must preserve assessment history and cannot relabel old simulated results as provider-confirmed evidence.\n\n## Common mistakes\n\n- Treating the illustrative default factor as an emissions coefficient.\n- Assuming a provider result creates rewards or certified credits.\n- Putting provider selection in payload data or requiring a customer module.\n- Changing an existing WEIGHT_FACTOR profile and expecting provider dispatch.\n- Supplying grams without normalizing to kilograms.\n- Calling local contract tests proof of live external-provider qualification.\n\n## Verification\n\nFrom the framework root run:\n\n```bash\nnpm --prefix nodics.waste test\nnode nodics.foundation/modules/nConfig/test/layeredCustomizationContract.test.js\n```\n\nThe provider suite covers default and category/item calculations, explicit zero, missing/invalid inputs, quantity estimation, decimal boundaries, configuration deltas, trusted tenant isolation, immutable snapshots, stable fingerprints, asynchronous adapter replacement, partial overrides, missing adapters, timeout, invalid responses and normalized failure modes. Existing Waste tests protect built-in formulas and API envelopes. The nConfig contract separately checks actual layered configuration and artifact-loading mechanics.\n\nThese checks establish local contract behavior. They do not prove a live HTTP runtime, imported sample dataset, provider account, customer UI or production readiness. Framework maintainers and AI tools must regenerate module context when source changes and maintain and validate canonical CMS documentation packs before release. CMS source changes, release integrity checks, rendered review and governed publication are separate evidence; this source page alone does not publish it.\n\n## Environmental properties and credit status\n\nEnvironmental disclosure is optional additive result metadata, configured under `wasteImpact.calculation.environmentalAssessment`. Generic defaults disable it; the eWaste accelerator enables eleven emissions, resource and recovery indicators. The disclosure maps existing provider metric codes into customer labels, units and evidence requirements. It does not supply new formulas, measurements or factors. Operators can replace mappings to match a qualified adapter through normal layered configuration; provider selection and metric computation retain their existing owners.\n\nFor example, a provider returning `WATER_SAVED_L: 0` with unit `L` produces a real zero display value. Omitting that metric produces null and `NOT_ASSESSED` with its evidence requirements. The mock CO2e result is `ILLUSTRATIVE`; other missing indicators do not inherit its factor or quantity. A signed net emissions benefit requires `allowNegative: true` on its mapping. Negative benefits remain visible; unit mismatches and unexpected negative quantities fail validation.\n\nThe result retains input/factor provenance, optional methodology, assessment, geography, baseline, treatment, boundary, year and dataset references. These provider-supplied references are context, not independent validation. Consumer screens distinguish estimates, demonstrations and missing evidence. Approved assets retain their existing `impactRef` to the owner-persisted result.\n\nCredit eligibility and issuance stay `NOT_ASSESSED`, with null quantity and registry reference. Converting an estimated kilogram value into tonnes does not establish credits. Registry verification and issuance require a separate governed integration. No ledger or public-claim permission is introduced here.\n\nA mapping has a stable key and `metricCode`, `label`, `unitOfMeasure`, `requirements` array and optional boolean `allowNegative`. The enclosing configuration requires `enabled: true`, a `version` string and an `indicators` object. Use at most 32 unique metric codes, labels of at most 120 characters and at most eight requirements of 180 characters each. Correct invalid mappings or units and rerun the assessment; no implicit fallback generates missing environmental values.\n\n## Immutable assessment history and acceptance\n\n`DefaultWasteImpactAssessmentService` owns persisted reassessment and acceptance operations. It composes the existing calculator and generated Waste repositories; provider adapters still perform no persistence. Staff commands resolve an approved submission and exactly one associated asset, then enforce Profile permission and collection-point scope. Reads require `waste.review.queue.read`, reassessment requires `waste.verification.record`, and acceptance requires `waste.review.approve`.\n\nA reassessment reads stored reviewed facts and current trusted provider configuration. It creates a new `wasteImpactResult` with asset reference, previous accepted reference, input facts, source revision, reason, actor and command fingerprint. It never changes the accepted `asset.impactRef`, original `metadata.approvedEstimate`, or reward state. An explicit acceptance changes `impactRef` and its read snapshot `acceptedEstimate`, while preserving original approval evidence. `wasteImpactSelection` records each acceptance. Results and selections are read-only in generic schema authoring; assets must be mutated through their owning lifecycle operations.\n\nExact asset revisions and actor-bound idempotency keys serialize commands. An asset-persisted pending command freezes the result/event before downstream persistence. Recovery completes that snapshot even after provider configuration changes. A failed provider result remains visible in history but cannot be accepted. Selection requires completed original reward settlement; changed input facts reject a stale candidate. Replaying an old successful selection never restores it over a newer accepted result.\n\nHistory is paginated (20 records per page), includes the legacy approval result and returns the accepted result independently of the current page. Customer callers must first authorize current asset ownership before calling `historyForAsset`; staff callers use the scoped `history` entry point. The public projection excludes actor, command key and raw input facts. No reassessment or acceptance issues credits, revalues a wallet, or changes a settled reward. The original approval result remains the reward settlement source even after subsequent assessment selection.\n\nProvider and dataset identity are separate. Preserve provider code/version, formula version, source dataset/version, original and normalized factors, geography, baseline, treatment, boundary, weight source/range/confidence and timestamps. `CARBON_EQUIVALENT_TCO2E` is a unit conversion metric, never an issued-credit quantity. Electronic WARM coefficients and mappings belong to the eWaste provider adapter.\n\n## Sourced energy and prospective input metrics\n\nWARM provider version 2 also calculates energy savings from EPA WARM v16 Energy Impacts Exhibit 7-12, using `(landfill - recycling) * kWhPerMillionBtu / kgPerShortTon`. Energy is calculated independently, never converted from CO2e. Factors are in million Btu per US short ton; the International Table Btu conversion is 293.0710701722222 kWh per million Btu. This is life-cycle energy across fuels, not a promise of electricity savings on the customer's bill.\n\nThe provider emits baseline emissions and prospective recycling input mass/count. Input mass is not a recovery yield or confirmed landfill diversion. It retains the same measured/declared/inferred input precedence, quantity-once rule and saved range bounds. Missing water, transport and treatment-outcome metrics stay null. Client presentation must distinguish these from calculated zero and must not show failed, illustrative or stale result values as benefits. Original assessments are preserved; re-estimation uses the existing authorized revision-aware operation.\n\nSmall chargers now have an explicit size-scoped REFERENCE_SCENARIO using the WARM peripherals proxy. This is not a validated charger-specific coefficient. Unknown weight uses configured modelling bounds of 50–150 g per item, informed by published 87.7 g and 92.5 g adapter examples; these are not measured or statistical confidence bounds. Measured/declared weight and valid image weight ranges take precedence; invalid inputs never fall back. Source links, version and explanation are preserved in the saved assessment. Disable referenceScenarios.CHARGER.enabled or supply a directly supported item mapping in a later layer to replace the proxy.\n\nSource: https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P101982A.txt (Exhibit 7-12). Conversion reference: https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir81-2401.pdf. Tests include independent energy arithmetic, quantity and range propagation, invalid conversions, unsupported categories, preserved unknowns and no credit issuance.\n",
+      "previous": {
+        "title": "Documentation Gap Backlog",
+        "route": "/docs/framework/reference-documentation-gap-backlog"
+      },
+      "next": {
+        "title": "Email and SMS Templates",
+        "route": "/docs/framework/communication-email-sms-templates"
+      },
+      "source": {
+        "repository": "nodics.ai",
+        "functionalModule": "nodics.waste",
+        "technicalModule": "wasteImpact",
+        "owner": "wasteImpact",
+        "sourcePath": "data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js",
+        "path": "data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js",
+        "wordCount": 2202,
+        "checksum": "532e829a7982434683fc04f5f427701656b2c97b05a2c6bdc40f0844b3926c0d"
+      },
+      "slug": "waste-impact-providers",
+      "locale": "en",
+      "navigationGroup": "Modularity and Ownership",
+      "navigationGroupCode": "modularity-and-ownership",
+      "navigationGroupOrder": 10,
+      "navigationOrder": 90,
+      "references": [
+        {
+          "documentId": "framework.modular-architecture",
+          "owner": "nodics.docs"
+        },
+        {
+          "documentId": "framework.customization-guide",
+          "owner": "nodics.docs"
+        }
+      ]
+    },
+    "active": true
+  }
+};

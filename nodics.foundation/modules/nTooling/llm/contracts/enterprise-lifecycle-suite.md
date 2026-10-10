@@ -1,7 +1,7 @@
 # Enterprise Lifecycle Suite
 
 The existing `tooling.testSuites` now declares `enterprise-lifecycle` with
-198 explicit fixture paths. The existing Test Suite Command Service
+203 explicit fixture paths. The existing Test Suite Command Service
 executes these ordinary `node` steps in isolated child processes; no runner,
 registry, glob discovery, runtime activation or acceptance authority is added.
 Registering this suite does not execute it. Behavioral execution was NOT RUN
@@ -10,9 +10,21 @@ separately and is not implied by registration.
 
 ## Historical Source Inventory
 
+### Commerce Safety Registration (2026-10-08)
+
+The current inventory is **203 entries and 203 unique fixture paths**. Five
+Commerce safety fixtures extend the previous 198-entry inventory: Product digital
+availability, Inventory return authority, Order reverse safety, Payment refund
+safety and Payment CARD original-capture contracts. The existing coverage guard
+requires each exactly once and reachable through `full`. These isolated owner-port
+fixtures perform no installed database, warehouse or provider operations. Direct
+execution evidence is recorded separately; registration does not qualify physical
+returns or CARD financial execution. The prior batch registered four files but
+left the count guard stale; this reconciliation adopts all five explicitly.
+
 ### Tenant Runtime Completion Registration (2026-10-02)
 
-The current inventory is **198 entries and 198 unique fixture paths**.
+That inventory contained **198 entries and 198 unique fixture paths**.
 `tenantNamespaceHandshakeContract.test.js` and
 `tenantStartupCompletionContract.test.js` are explicit lifecycle steps, reachable
 through `full` and checked exactly once by the existing coverage guard. Their

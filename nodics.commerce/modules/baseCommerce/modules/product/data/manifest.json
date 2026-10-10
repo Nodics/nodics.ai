@@ -1,44 +1,108 @@
 {
-    "contractVersion": 2,
-    "module": "product",
-    "sections": {
-        "productPublicationWorkflow": {
-            "kind": "DATA_RELEASE", "selectionPolicy": "EXPLICIT", "dataType": "init", "version": "2.0.0",
-            "displayName": "Product Publication Approval", "description": "Exact catalogue review through Process and nPublish.",
-            "owningDomain": "product", "lifecycle": "OPERATIONAL_VERSIONED", "destinationRole": "PROCESS",
-            "environmentScope": ["ALL"], "sensitivity": "INTERNAL", "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE", "initialPublicationPolicy": "NONE", "removalPolicy": "RETAIN",
-            "installer": "PROCESS_DEFINITION", "sourceRoot": "init-v002",
-            "files": { "init-v002/records/process/productPublicationWorkflowDefinitionData.js": "42b7789deec9e2e13d2c82bd8d0bd790510bf608e19d5e574f11310b6160e6e3" }
-        },
-        "sample-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "sample",
-            "version": "0.0.0",
-            "description": "Product sample data",
-            "owningDomain": "product",
-            "lifecycle": "PUBLISHABLE",
-            "destinationRole": "COMMERCE_STAGED",
-            "environmentScope": [
-                "LOCAL",
-                "DEVELOPMENT",
-                "TEST"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "REQUIRED",
-            "initialPublicationPolicy": "ADMIN_INITIATED",
-            "removalPolicy": "UNPUBLISH_OR_RETIRE",
-            "files": {
-                "sample-v001/records/product/sampleCategoryData.js": "59ffe49c8ba4d854322dcff39a5471de1b68dc7358d34c7d790c949195b0d695",
-                "sample-v001/records/product/sampleCategoryLocalizationData.js": "4d7dddbaf70a19d4cbf91e14b7217020b89ca17f34847c19e02ead91b7e481de",
-                "sample-v001/records/product/sampleProductData.js": "0e51045e6c4c30db5141ba50106d3f723160b88e1704237d7ef554e760e58dff",
-                "sample-v001/records/product/sampleProductLocalizationData.js": "273af1c12f8de887d5e116b8c46ed61a91f59fe801faf372c8c6b5f36a4d406b",
-                "sample-v001/records/product/sampleProductVariantData.js": "42406e0fa30a6cc77e60e4244d02641a38fed1009255737bc134dc489a95bc1d",
-                "sample-v001/records/product/sampleProductVariantLocalizationData.js": "c6f879f1dd174bbdda9782b294bd75932d0cfabaa39c1dc4687cf4d748df5a24",
-                "sample-v001/headers/product/sampleProductLocalizationDataHeader.js": "ca84a1c970d64c8c4ce2cc757f79dc55d586ae0b621bf58fb989323bc0f77154"
-            },
-            "sourceRoot": "sample-v001"
+  "contractVersion": 2,
+  "module": "product",
+  "sections": {
+    "productPublicationWorkflow": {
+      "kind": "DATA_RELEASE",
+      "selectionPolicy": "EXPLICIT",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Product Publication Approval",
+      "description": "Exact catalogue review through Process and nPublish.",
+      "owningDomain": "product",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "installer": "PROCESS_DEFINITION",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/process/productPublicationWorkflowDefinitionData.js": "42b7789deec9e2e13d2c82bd8d0bd790510bf608e19d5e574f11310b6160e6e3"
+      }
+    },
+    "sample-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "version": "0.0.1",
+      "description": "Product sample data",
+      "owningDomain": "product",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "COMMERCE_STAGED",
+      "environmentScope": [
+        "LOCAL",
+        "DEVELOPMENT",
+        "TEST"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/records/product/sampleCategoryData.js": "59ffe49c8ba4d854322dcff39a5471de1b68dc7358d34c7d790c949195b0d695",
+        "sample-v001/records/product/sampleCategoryLocalizationData.js": "4d7dddbaf70a19d4cbf91e14b7217020b89ca17f34847c19e02ead91b7e481de",
+        "sample-v001/records/product/sampleProductData.js": "0e51045e6c4c30db5141ba50106d3f723160b88e1704237d7ef554e760e58dff",
+        "sample-v001/records/product/sampleProductLocalizationData.js": "273af1c12f8de887d5e116b8c46ed61a91f59fe801faf372c8c6b5f36a4d406b",
+        "sample-v001/records/product/sampleProductVariantData.js": "42406e0fa30a6cc77e60e4244d02641a38fed1009255737bc134dc489a95bc1d",
+        "sample-v001/records/product/sampleProductVariantLocalizationData.js": "c6f879f1dd174bbdda9782b294bd75932d0cfabaa39c1dc4687cf4d748df5a24",
+        "sample-v001/headers/product/sampleProductLocalizationDataHeader.js": "ca84a1c970d64c8c4ce2cc757f79dc55d586ae0b621bf58fb989323bc0f77154"
+      },
+      "sourceRoot": "sample-v001"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "product",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "654e1d3117fe84bd88da3db502462d42df48de6bb13dfe4ae1b77165a9acd40a",
+      "generatedHashes": {
+        "docs-v001/records/documentation/productDocumentationNodeData.js": "47971cedf8b5f012434e9782af37b76bf3907f8ce86783351b857560b8833965",
+        "docs-v001/records/documentation/productDocumentationPageMetadataData.js": "9768ea4422345b072370d5eec8e74a208680a088c06b8b8e84d30528f9b0073d",
+        "docs-v001/records/documentation/productDocumentationPublicationStateData.js": "3de04a4fb4e564272188457f53804f565f09a35e66f5665bb0128c08354ac67c",
+        "docs-v001/records/documentation/productDocumentationSearchMetadataData.js": "76dd38991b5023321ab773823c3a017fd0f2530902c90970bf837e3c432b2b26",
+        "docs-v001/records/documentation/productDocumentationComponentData.js": "9b284a05b20c66f9f92fbf939a9e87d718b91dc1ef895d5b6c6b3ca866f5eb53",
+        "docs-v001/records/documentation/productDocumentationPageData.js": "0b84361256a34893756272411e7bdd3dc790fabf6d735fb4d84e5bbcd5d194a0",
+        "docs-v001/records/documentation/productDocumentationRouteData.js": "bf1b25d8c93f6a1b52f30731ab088db34fad8055206ffcbff8dc455ac20e6e6c",
+        "docs-v001/headers/100_productDocumentationContentPackHeader.js": "7d976c38451f6ea2969538394673d4c5fb245d6eaa4aeaf1393c16fed1387c36"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

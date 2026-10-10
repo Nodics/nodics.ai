@@ -5,7 +5,7 @@
     "core-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "core",
-      "version": "0.0.0",
+      "version": "0.0.1",
       "description": "Authentication and Authorization core data",
       "owningDomain": "auth",
       "lifecycle": "REFERENCE",

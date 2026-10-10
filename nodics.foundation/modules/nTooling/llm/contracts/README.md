@@ -1,5 +1,24 @@
 # nTooling AI Contracts
 
+Documentation catalogues resolve explicit `CONTENT_PACK.includes` with nImport's
+existing checksum/containment authority. Preserve each article's physical owner,
+stable ID, route and anchor; do not assemble a second canonical source tree.
+Explicit `referenceCatalogues` resolves validation-only targets through the same
+local repository resolver and checksum/containment checks. Bound the selection,
+reject duplicate/mismatched packs and conflicting canonical identities, and check
+the complete selected reference graph's owners and anchors. It does not expand
+staging, import records/assets or delivery scope. Never import a missing target
+implicitly. Caller-supplied owner roots cannot expand the selected composition.
+Authoring validation may retain draft records; reviewed STAGED routes are normal
+publication inputs, not Online authority. Immutable CMS/Media activation and
+normal Process approval govern public delivery. Inactive draft routes remain
+excluded from site selection.
+The existing record validator permits absent reviewer, approver and publisher
+fields only for DRAFT/STAGED records in AUTHORING scope. Author provenance,
+checksums, workflow and decision policy remain mandatory; null audit fields still
+refuse. Later lifecycle states and PUBLIC_DELIVERY retain their existing actor
+checks. Validation must never populate an approval actor or advance lifecycle.
+
 - [Registered enterprise lifecycle suite and deferred safety classification](enterprise-lifecycle-suite.md)
 
 This index routes developers to nTooling's command, generation, qualification and reference-change contracts.

@@ -17,7 +17,8 @@
       "service",
       "test",
       "llm",
-      "utility"
+      "utility",
+      "data"
     ],
     "runtime": {
       "router": false,

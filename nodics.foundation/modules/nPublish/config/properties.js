@@ -30,6 +30,14 @@ module.exports = {
   },
 
   publish: {
+    approvalWorkflow: {
+      runtimeEnterpriseScope: { enabled: false, enterpriseCodes: [] },
+    },
+    setup: {
+      maximumItems: 256, maximumBytes: 524288, permissions: {},
+      observation: { enabled: false, maximumPlanBytes: 524288, maximumSourceBytes: 8388608,
+        maximumSourcePayloadBytes: 4194304, plans: {}, callers: {}, profilePlans: {}, targetObservers: {} },
+    },
     lifecycle: {
       initialState: "STAGED",
       onlineState: "ONLINE",

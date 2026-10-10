@@ -10,7 +10,9 @@
       "owningDomain": "cronjob",
       "lifecycle": "OPERATIONAL_VERSIONED",
       "destinationRole": "PROCESS",
-      "environmentScope": ["ALL"],
+      "environmentScope": [
+        "ALL"
+      ],
       "sensitivity": "INTERNAL",
       "versioningPolicy": "IMMUTABLE",
       "publicationPolicy": "NONE",
@@ -23,6 +25,63 @@
         "core-v001/headers/jobs/defaultIndexerJobsHeader.js": "f59244ace8f61a34ca34fd8caac1f8329c38a71af9fb4fb48b37dc605d1fecb8"
       },
       "sourceRoot": "core-v001"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cronjob",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 5,
+      "components": 5,
+      "routes": 5,
+      "releaseChecksum": "6ec72a9456f5d24fcbfa5b8db757ab485c6be139aaa9b99ea2d1a94e4c03c66e",
+      "generatedHashes": {
+        "docs-v001/records/documentation/cronjobDocumentationNodeData.js": "48b850ac153858b3639f0ffaf1bb4d7e9bb1a596ff5a55b964f9c4ac3aa8521c",
+        "docs-v001/records/documentation/cronjobDocumentationPageMetadataData.js": "5aebd4e818b04aa6ab19f9ddf680e59a458f4c9242b6e81a9ed5c4f42a4d8734",
+        "docs-v001/records/documentation/cronjobDocumentationPublicationStateData.js": "f4e52d17fc01ba02982c859cd8d6db433f8a6a6cf436cef5c85869cf5b71a577",
+        "docs-v001/records/documentation/cronjobDocumentationSearchMetadataData.js": "804a471b11e52c52120ca56d67eb84f048e20b16cf012c35e8061d9bde70ef85",
+        "docs-v001/records/documentation/cronjobDocumentationComponentData.js": "18f846dac0890ffb448e9d88a021f70c25898132889ec48450992de249d902f8",
+        "docs-v001/records/documentation/cronjobDocumentationPageData.js": "77158b4f4e6667e926e6eb799fe457f312006ab6eae3056ce07ab941157ef3cc",
+        "docs-v001/records/documentation/cronjobDocumentationRouteData.js": "4023f8c5101ea012ed91428abe555694ddfa54b908878a71c629266faf2768bf",
+        "docs-v001/records/documentation/cronjobDocumentationMediaData.js": "730100ef316aa56201d0f033204ed4c4a20844bd982b9adc208d243745129a3d",
+        "docs-v001/headers/100_cronjobDocumentationContentPackHeader.js": "00bc29a8607d8473ab9a665824495c7dd9ade9f95ca57578e513b80b5e8f5105",
+        "docs-v001/assets/documentation/files/images/cron-schedule-draft-desktop.png": "ba547872c5630a22cf7e8386303a7459a155fd42c428162bdf81b2ba002876ea",
+        "docs-v001/assets/documentation/files/images/cron-schedule-draft-mobile.png": "4fd4bebb49ed19a5864a47a7ae31790d0655ec02d98b158a052d7c660898cc2f",
+        "docs-v001/assets/documentation/files/images/knowledge-source-schedules-desktop.png": "b88e17127740d6bf0e29b75fc7732049a7e6bf8c7fa88752d54ae2808de7de35",
+        "docs-v001/assets/documentation/files/images/knowledge-source-schedules-mobile.png": "509a3199e04f165b83b02db8ddd338819c9f25c4b0314c1bed686541e641da47",
+        "docs-v001/assets/documentation/files/images/schedule-lifecycle-desktop.png": "184c785bf4691137f89888b7694f03491e0872e6c7d7c826b45e31b3cc7378d8",
+        "docs-v001/assets/documentation/files/images/schedule-lifecycle-mobile.png": "17dee05ed20cf8f05b7e6da6fda1ac40017cb1b961f1eb158582154eebfe8d1e",
+        "docs-v001/assets/documentation/cronjobDocumentationAssetManifest.js": "7cfb4bf53b5d02eff9b9406c84ee18e61fdf671a91d64b0c4b969585ca80899a"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
     }
   }
 }

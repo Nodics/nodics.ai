@@ -1,5 +1,26 @@
 # nService AI Contracts
 
+## Runtime Enterprise Placement
+
+`enterpriseResolution.runtimeLookup.enabled` defaults false. When selected,
+incoming public enterprise resolution uses the retained default-tenant runtime
+token, validates it through the existing authorization owner, and invokes
+Profile's fixed `/internal/enterprise/resolve` with `{contractVersion: 1,
+enterpriseCode}`. The signed runtime enterprise stays in the transport header;
+public customer claims and body-supplied tenant/authentication never cross this
+boundary. Profile must explicitly select this deployment/business scope and
+prove active canonical Enterprise/Tenant placement in the signed tenant.
+
+An exact request for the signed runtime's own enterprise keeps the existing
+strict `/enterprise/get` path and its original projection. The business resolver
+returns no tenant properties. Neither path enables generic enterprise CRUD,
+cross-tenant lookup or source/provider fallback. The consumer independently
+checks a successful singular response, the selected business code and the active
+signed tenant. The original public request remains untouched. This is namespace
+placement, not customer authentication, membership, eligibility or a business-role
+grant. Native topology acceptance remains separate from
+`profileRuntimeEnterpriseResolutionContract.test.js`'s isolated ports.
+
 ## Optional release projection
 
 Registration honors the nImport DATA_RELEASE `selectionPolicy` contract.

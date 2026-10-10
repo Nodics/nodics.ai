@@ -1,0 +1,3998 @@
+{
+  "date": "2026-10-07",
+  "state": "DOCUMENTATION_QUALIFIED_BUSINESS_ACCEPTANCE_BLOCKED",
+  "environment": "native kickoffLocal",
+  "releasePins": {
+    "framework": "0.16.36",
+    "circa": "0.0.5",
+    "kickoff": "0.8.14",
+    "axis": "0.0.6"
+  },
+  "sourceReview": {
+    "frameworkDraftGuidesReviewed": 14,
+    "circaGuidesReviewed": 4,
+    "exactRequestedSemanticBacklog": {
+      "passed": 22,
+      "open": 0,
+      "evidence": "semantic-documentation-closure.json"
+    },
+    "historicalReviewsPreserved": true,
+    "broaderCoverageSummary": {
+      "totalModules": 203,
+      "documents": 173,
+      "needs-deeper-section": 1,
+      "covered": 195,
+      "shared-guide-mapped": 7,
+      "semanticReviewClosed": 22,
+      "semanticReviewOpen": 0
+    },
+    "broaderCoverageBoundary": "179 mention-based triage rows are not semantic certification; CheckoutCore retains one needs-deeper-section row."
+  },
+  "implementation": [
+    "Records and declared assets remain one optional content-pack import with independent CMS and Media Process approvals.",
+    "Circa headers are directly discoverable; nested or undiscoverable declared headers fail before dispatch.",
+    "Validation-only referenceCatalogues validate canonical owner and anchor without composing records, assets or visibility.",
+    "Exact Media readiness uses two pointer batches around one bounded integrity batch while retaining every physical byte check, final drift checks and legacy-owner fallback. Existing router limits and independent approvals are unchanged.",
+    "Manual semantic closure is bound to original scope, canonical article blocks, anchors and current non-data source bytes.",
+    "CMS publication excludes already-resolved stable codes during bounded descending-version reads so historical shared versions cannot hide other routes or assets.",
+    "Circa discovery scaffolding is reviewed STAGED under accelerator visibility; Axis discovers reviewed metadata but still requires owner READY and authorized Online delivery."
+  ],
+  "localValidation": {
+    "tooling": {
+      "passed": 188
+    },
+    "cmsMediaImport": {
+      "passed": 470,
+      "explicitOptInSkipped": 2,
+      "scope": "All recursive CMS, Media and nImport node:test suites, excluding the three separately executed Mocha suites.",
+      "earlierDifferentScope": {
+        "passed": 485,
+        "boundary": "Earlier overlapping scope before the integrity batch; counts are not additive."
+      }
+    },
+    "mediaMocha": {
+      "passed": 21
+    },
+    "axisFocused": {
+      "passed": 82,
+      "files": 13,
+      "typecheck": "PASSED",
+      "changedClientEslintAndFormatting": "PASSED",
+      "earlierFocusedRun": {
+        "passed": 94,
+        "boundary": "Earlier overlapping scope; counts are not additive."
+      }
+    },
+    "documentationSuite": "PASSED",
+    "kickoffFullSuite": "PASSED",
+    "frameworkSyntax": {
+      "files": 6068,
+      "failures": 0
+    },
+    "documentationGovernance": {
+      "files": 3855,
+      "exportedMethods": 11721,
+      "undocumented": 0
+    },
+    "generatedModuleContexts": {
+      "generated": 202,
+      "validated": 202
+    }
+  },
+  "native": {
+    "resetRepeatedThisPhase": false,
+    "captureQualification": "USER_CONFIRMED_EXISTING_LOCAL_BINDING",
+    "optionalImports": {
+      "date": "2026-10-07",
+      "environment": "native kickoffLocal",
+      "operation": "EXPLICIT_OWNER_API_DOCUMENTATION_QUALIFICATION",
+      "profiles": [
+        {
+          "profileCode": "docs-apparelproduct",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-domaincommercecore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-electronicsproduct",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-nexus-web",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-telcosubscription",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-ewaste",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-commercesearchcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-inventory",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-pricing",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-product",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-shoppinglist",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-checkoutcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-order",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-fulfillmentcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-paymentcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-commscore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotcapability",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotconversation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotknowledge",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotworkbench",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-discoveryruntime",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-contactsubmission",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-customerfeedback",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-customerreview",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-engagementcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-cache",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-ncommon",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-config",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-import",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-database",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-emsclient",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-nms",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-otp",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-pipeline",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-router",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-nservice",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-ntooling",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-bpm",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-localizationcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-loyaltywallet",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-backoffice",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-installer",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-profile",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-cronjob",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-workflow",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wasteimpact",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-cms",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-media",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wcms",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotprovider",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotevaluation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-rulesevaluation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wastematerial",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationapproval",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationdraft",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationprojection",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationsearch",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationtype",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationmap",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wcmsexperience",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-rediscache",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-foundation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "circadocs",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.0.5",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY"
+        }
+      ],
+      "state": "PASSED"
+    },
+    "successorReleaseImportSweep": {
+      "date": "2026-10-07",
+      "environment": "native kickoffLocal",
+      "operation": "EXPLICIT_OWNER_API_DOCUMENTATION_QUALIFICATION",
+      "profiles": [
+        {
+          "profileCode": "docs-apparelproduct",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-domaincommercecore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-electronicsproduct",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-nexus-web",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-telcosubscription",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-ewaste",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-commercesearchcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-inventory",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-pricing",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-product",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-shoppinglist",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-checkoutcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-order",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-fulfillmentcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-paymentcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-commscore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotcapability",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotconversation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotknowledge",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotworkbench",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-discoveryruntime",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-contactsubmission",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-customerfeedback",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-customerreview",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-engagementcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-cache",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-ncommon",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-config",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-import",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-database",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-emsclient",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-nms",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-otp",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-pipeline",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-router",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-nservice",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-ntooling",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-bpm",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-localizationcore",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-loyaltywallet",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-backoffice",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-installer",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-profile",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-cronjob",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-workflow",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wasteimpact",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-cms",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-media",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wcms",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotprovider",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-copilotevaluation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-rulesevaluation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wastematerial",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationapproval",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationdraft",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationprojection",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationsearch",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationtype",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-locationmap",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-wcmsexperience",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-rediscache",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "docs-foundation",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "IMPORTED"
+        },
+        {
+          "profileCode": "circadocs",
+          "publicationApprovals": 0,
+          "mediaApprovals": 0,
+          "releaseVersion": "0.0.5",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY"
+        }
+      ],
+      "state": "PASSED"
+    },
+    "optionalImportBoundary": "63 explicit selections applied sequentially to the same native deployment, not 63 isolated fresh deployments.",
+    "stagedOnlineIsolationBeforePublication": {
+      "environment": "native kickoffLocal",
+      "operation": "READ_ONLY_PRE_PUBLICATION_ISOLATION",
+      "date": "2026-10-07",
+      "sourceRelease": "0.16.34",
+      "sourceBlocksSha256": "6a8a1b2c9297117e2755cc47ccecc2ddbd1398f865183a59476d5331e810ed69",
+      "onlineBlocksSha256": "65fa81a4f0e368998b51f05285deac100d2ce0d0bc8351fc2f37bd65753e5592",
+      "previouslyPublishedGuide": "RETAINED_PREVIOUS_APPROVED_CONTENT",
+      "newlyReviewedRouteStatus": 404,
+      "newlyReviewedGuide": "NOT_PUBLIC_BEFORE_NORMAL_PUBLICATION",
+      "state": "PASSED"
+    },
+    "finalPublication": {
+      "state": "PASSED",
+      "profiles": [
+        {
+          "profileCode": "frameworkdocs",
+          "publicationApprovals": 1,
+          "mediaApprovals": 54,
+          "readiness": "READY",
+          "releaseVersion": "0.16.36",
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "state": "ONLINE",
+            "revision": 6
+          },
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publicDelivery": "AVAILABLE",
+          "deliveredAssets": 54
+        },
+        {
+          "profileCode": "circadocs",
+          "publicationApprovals": 1,
+          "mediaApprovals": 0,
+          "importState": "CURRENT",
+          "readiness": "READY",
+          "releaseVersion": "0.0.5",
+          "publication": {
+            "code": "cmsBaseline_circadocs_0_0_5",
+            "state": "ONLINE",
+            "revision": 6
+          },
+          "assets": 0,
+          "qualifiedAssets": 0,
+          "publicDelivery": "AVAILABLE",
+          "deliveredAssets": 0
+        }
+      ]
+    },
+    "publicCanonicalFrameworkArticles": {
+      "date": "2026-10-07",
+      "environment": "native kickoffLocal",
+      "operation": "PUBLIC_CANONICAL_DOCUMENTATION_AND_REFERENCES",
+      "documents": [
+        {
+          "documentId": "accelerators.agora-industry-templates",
+          "route": "/docs/framework/accelerators-agora-industry-templates",
+          "canonicalBlocksSha256": "dadf0ea1095edc7c9bc470d8b08b43ec7ea4b808c926f8ee67a6449690ce6f35",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.overview",
+          "route": "/docs/framework/commerce-overview",
+          "canonicalBlocksSha256": "29e20d82e065e8f03d528c07a1ac6596d98764e9b1a94292696f1bf58dd338ee",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.base-foundations",
+          "route": "/docs/framework/commerce-base-foundations",
+          "canonicalBlocksSha256": "5281efc2e4e2724e3c96751bad4c0cc0969338cd01a16e90cb21bad681b6c694",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.data-authoring-fulfillment",
+          "route": "/docs/framework/commerce-data-authoring-fulfillment",
+          "canonicalBlocksSha256": "86d843b8320f8ebec7fd26580b77c1108a27159e01febe79cf911894f8e39ce6",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "docs.gateway",
+          "route": "/docs",
+          "canonicalBlocksSha256": "0b6c2339ecbdcd634b010ddfbd60b00464514048016eadca16ee919b9b26ee48",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.what-is-nodics",
+          "route": "/docs/framework",
+          "canonicalBlocksSha256": "c59987cfc2ecf08be6d87cf8f2b360b0981e94e76a945a7e835a64cdee539930",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.why-nodics-exists",
+          "route": "/docs/framework/framework-why-nodics-exists",
+          "canonicalBlocksSha256": "f477929ea83d1906ec85de238fab149d3564d34e06b4153b47e07d68d75a1361",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.how-nodics-works",
+          "route": "/docs/framework/framework-how-nodics-works",
+          "canonicalBlocksSha256": "c77761476ae9e45b7aecd30bf885341490531842ec6396a172f35b5305e7e46c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.adoption-and-first-journey",
+          "route": "/docs/framework/framework-adoption-and-first-journey",
+          "canonicalBlocksSha256": "dd85296ec73141b87b1a40384e313746722dd60bb60ace30d715efdaf985a2cc",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "docs.documentation-roadmap",
+          "route": "/docs/framework/docs-documentation-roadmap",
+          "canonicalBlocksSha256": "cad36b443dd4b932a56ca93962175fc7d8b1fee6af4e4686881c352fdf5770cc",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "docs.documentation-principles",
+          "route": "/docs/framework/docs-documentation-principles",
+          "canonicalBlocksSha256": "141da755e3728dec8e4a2837aaee415e76d4ff8f34461babd9f33dbc483466ac",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "docs.reader-journey-and-coverage",
+          "route": "/docs/framework/docs-reader-journey-and-coverage",
+          "canonicalBlocksSha256": "9eef4de78cb27eb613cb495386bf31ee05327b22999ca32401312de56eecff91",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "docs.documentation-publishing-model",
+          "route": "/docs/framework/docs-documentation-publishing-model",
+          "canonicalBlocksSha256": "15b09bb192e76e8f4eec740b3bcfc7ddf0929ee4ec3b5e9cc8136d6c4ad7bef9",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "applications.suite",
+          "route": "/docs/framework/applications-suite",
+          "canonicalBlocksSha256": "40e793350d4f06e9c344a555ff79205450010d3147809dad4059c15e61f09f76",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "solutions.task-execution-engine",
+          "route": "/docs/framework/solutions-task-execution-engine",
+          "canonicalBlocksSha256": "440599e6c305cd6f0858f3df86ab9afef6e8a6bcb4c13ded4bb9e408e08d088c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "solutions.data-engineering-analytics-platform",
+          "route": "/docs/framework/solutions-data-engineering-analytics-platform",
+          "canonicalBlocksSha256": "e13cb48ef7ced83215ab5f05cc1109f06ee97e9f5714dcf7a17d420767e4e641",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.capability-documentation-maturity-pattern",
+          "route": "/docs/framework/framework-capability-documentation-maturity-pattern",
+          "canonicalBlocksSha256": "7cddac1572f26a9d897fd58d2d23b95e8427e47752e09b78aadb68f591a67ed4",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "docs.overview",
+          "route": "/docs/framework/docs-overview",
+          "canonicalBlocksSha256": "c89a6d62d49023c028a6c9f5feac034bc2e1fa6c215e85782fb830b6d79f2ace",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "docs.documentation-publishing-runbook",
+          "route": "/docs/framework/docs-documentation-publishing-runbook",
+          "canonicalBlocksSha256": "563d69c3be80f2fa3afeda4a440c7145b412fb7282193962ff8cd16f44192ef8",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "reference.internal-source-boundary-register",
+          "route": "/docs/framework/reference-internal-source-boundary-register",
+          "canonicalBlocksSha256": "7c07063075de6a247839cac5a57971c9d6a4495b7cf6452c22d6170791f67f4a",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 27,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "reference.source-map-glossary",
+          "route": "/docs/framework/reference-source-map-glossary",
+          "canonicalBlocksSha256": "30f5498c062aaf3da9e479a585b9cc9e88860ce03571080f6c9e8408f5476146",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "reference.source-backed-documentation-coverage-audit",
+          "route": "/docs/framework/reference-source-backed-documentation-coverage-audit",
+          "canonicalBlocksSha256": "01a5c9fd5e1a6820744e8f645ac82f0ae7ec2dd267147c8b16ed94af5712e632",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "reference.documentation-gap-backlog",
+          "route": "/docs/framework/reference-documentation-gap-backlog",
+          "canonicalBlocksSha256": "1d0348d48232b50cc6bcc1cb36ff80c10ee0aae20d174aea0ec2a1ea4cfcd060",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.modular-architecture",
+          "route": "/docs/framework/framework-modular-architecture",
+          "canonicalBlocksSha256": "df152bdc201c5c66195c33144625e64e22d3956cf9d1899f8fa37928a6a07b8f",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.architecture-decision-guide",
+          "route": "/docs/framework/framework-architecture-decision-guide",
+          "canonicalBlocksSha256": "94bff1bbf7446747190dbf8d57b4554bec6a8df5b686f314f1ce0480e528946c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.overview",
+          "route": "/docs/framework/foundation-overview",
+          "canonicalBlocksSha256": "2075439784ccd8c3c65ebdfa3a8a9dfd6837e23a55dc328d3640f50ba9bdf22c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.customization-guide",
+          "route": "/docs/framework/framework-customization-guide",
+          "canonicalBlocksSha256": "64b9d0d04649f98e072e08a791a80bf27bc259eca59d783d80ba785eb69085b7",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.backend-extension-patterns",
+          "route": "/docs/framework/framework-backend-extension-patterns",
+          "canonicalBlocksSha256": "08683d3e27089e3bc85d369d26e3203261f2e3f52db15acff812acc9f697acb2",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.axis-content-customization",
+          "route": "/docs/framework/framework-axis-content-customization",
+          "canonicalBlocksSha256": "49acbadb9153aed868f6414143c821730d290af9b149e3a815bd6327e8ec3650",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.agora-apparel-product-data-authoring",
+          "route": "/docs/framework/accelerators-agora-apparel-product-data-authoring",
+          "canonicalBlocksSha256": "a8693eea13bb3a8c6a1fd613d9184376b30a958ffd735896762a3ff62bf3366c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 7,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.domain-commerce-source-map",
+          "route": "/docs/framework/accelerators-domain-commerce-source-map",
+          "canonicalBlocksSha256": "c5aa775cce12919dcb44db2ae39e7c0cde508bac4e5c45146fc554dc64ff6662",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.agora-electronics-product-semantics",
+          "route": "/docs/framework/accelerators-agora-electronics-product-semantics",
+          "canonicalBlocksSha256": "1ba82d1567ba870612047036d671f2d9e531d902a193e1597d87fcc00d4e0e9b",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "applications.nexus-data-content-guide",
+          "route": "/docs/framework/applications-nexus-data-content-guide",
+          "canonicalBlocksSha256": "55d5270b30d7d6dbf3b7f5581bb3619450dba8ad9982b957b4ff60b329e058ba",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.agora-telco-service-journey",
+          "route": "/docs/framework/accelerators-agora-telco-service-journey",
+          "canonicalBlocksSha256": "c515a8f023463e6c0e2f35bc92fd68677467c09a98e52b4fb688e0320ed76e13",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-collection-reference",
+          "route": "/docs/framework/accelerators/circa/collection-reference",
+          "canonicalBlocksSha256": "00fa129411f2451d7f237bad213b3dd46becbb84a7f1b2796f13be83ab351edd",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-enterprise-reference",
+          "route": "/docs/framework/accelerators/circa/enterprise-reference",
+          "canonicalBlocksSha256": "564b8ad20e90ac5c9e1b76a6c262510474a63bfb0aee473374c7281d4eb315a6",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-source-inventory",
+          "route": "/docs/framework/accelerators/circa/source-inventory",
+          "canonicalBlocksSha256": "ee98323eecc13cf5f1cc83d3cffac88333bcb72dc370a74c2cf967c8b753da22",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-catalogue-reference",
+          "route": "/docs/framework/accelerators/circa/catalogue-reference",
+          "canonicalBlocksSha256": "25ac355792c6a918da05d41d1ef7e2777685a4cd56fd608deeadb7935d2b65a4",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-configuration-reference",
+          "route": "/docs/framework/accelerators/circa/configuration-reference",
+          "canonicalBlocksSha256": "eea157d764090bdd20526be96332617c53523e88794a2f9113506367e264730e",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-overview",
+          "route": "/docs/framework/accelerators/circa",
+          "canonicalBlocksSha256": "fe50c0b64c7ae4b5ccf1c86ffa3128915807f932ebb47caa529ec6e209a819ff",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-data-network",
+          "route": "/docs/framework/accelerators/circa/data-network",
+          "canonicalBlocksSha256": "34e52e42ea61434054d52743b2226514a89516ee3a4276f655141e32f990ebd9",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-submission-journey",
+          "route": "/docs/framework/accelerators/circa/submission",
+          "canonicalBlocksSha256": "87369b740507af4feb5b1153a3b765be0d977f88f496a638626695c54c340d8b",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-operations-rewards",
+          "route": "/docs/framework/accelerators/circa/operations",
+          "canonicalBlocksSha256": "44842e6baf1fac3c36e82ec18f0715b73152a89ec3a76db07cd970af2374d333",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-coupons-commerce",
+          "route": "/docs/framework/accelerators/circa/coupons-commerce",
+          "canonicalBlocksSha256": "d71abe97c8cd779f4104df31e1a6ea9209b34f290c8f626e57e1ef819934a7ae",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-customization",
+          "route": "/docs/framework/accelerators/circa/customization",
+          "canonicalBlocksSha256": "38ee6fe3f107a9ffec33b8ba7f07e09359615692d5402debd2a361abac6ac011",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "accelerators.circa-deployment-verification",
+          "route": "/docs/framework/accelerators/circa/deployment-verification",
+          "canonicalBlocksSha256": "38a11b3f4f765d3beff69912b5e9f30998fd5040d3e0bdb3d4cea88a6df38ee5",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.search-guide",
+          "route": "/docs/framework/commerce-search-guide",
+          "canonicalBlocksSha256": "18b3c5e27107dadab5f1e813beb9c159701c8a9af767395a2ea49f51b75d1c55",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "inventory.stock-management",
+          "route": "/docs/framework/inventory-stock-management",
+          "canonicalBlocksSha256": "05a4810413eb02ab8e710716d7b13f7d15af95d483c7037d9991962e9c674347",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "pricing.promotions-tax-management",
+          "route": "/docs/framework/pricing-promotions-tax-management",
+          "canonicalBlocksSha256": "b01d46a74e43cc5607f54ed8bc59245cc9828503a4ea6065708a0041cec8d3dc",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "catalog.product-discovery-management",
+          "route": "/docs/framework/catalog-product-discovery-management",
+          "canonicalBlocksSha256": "d6b81b545972e8d65b50fcc8d27720d9824b980e7be9ca15522036812727d9df",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.shopping-list-commerce-boundary",
+          "route": "/docs/framework/commerce-shopping-list-commerce-boundary",
+          "canonicalBlocksSha256": "72a2fb910da46fa3ade5581678b11b1ddd6fcc8f048f6be1f98feaa84d115515",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.cart-order",
+          "route": "/docs/framework/commerce-cart-order",
+          "canonicalBlocksSha256": "61dc61c5dc4ee185ba1a316878377326ffcbc0be9824228d6a86e7426e72964e",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.enterprise-operations",
+          "route": "/docs/framework/commerce-enterprise-operations",
+          "canonicalBlocksSha256": "dac50a0fffdb38b811bf3cf063a53933cd5c14326a120febc378cce946983664",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "order.management-lifecycle",
+          "route": "/docs/framework/order-management-lifecycle",
+          "canonicalBlocksSha256": "9e1b2d287d3da4640990c31b2068d7de23f524c8fce1fc0f468406f4a946d580",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.returns-refunds",
+          "route": "/docs/framework/commerce-returns-refunds",
+          "canonicalBlocksSha256": "95837ea3a5c4a8944dfe77ef65e25849123af7c5421f9a344411bc1444260bb1",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "fulfillment.shipping-management",
+          "route": "/docs/framework/fulfillment-shipping-management",
+          "canonicalBlocksSha256": "593e085d897e7b644c7f1282dc2ac80497df2d6069a9f5a1d3bc10779761958d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.fulfillment-core-source-map",
+          "route": "/docs/framework/commerce-fulfillment-core-source-map",
+          "canonicalBlocksSha256": "c587e8afed2e5fa36539bee19eb44682e2963e8a89b81f83fd49253a484ad115",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.payment-fulfillment",
+          "route": "/docs/framework/commerce-payment-fulfillment",
+          "canonicalBlocksSha256": "142974a4cbe7eed6f9d008ad4b5e6be240fc9f4b7087a87df77f7d850dd655a6",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "route": "/docs/framework/commerce-payment-provider-boundaries",
+          "canonicalBlocksSha256": "279741d928679cf0e69af38d76a93a524f8e78f5a18637dfe1d282606744f45a",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "communication.provider-runbooks",
+          "route": "/docs/framework/communication-provider-runbooks",
+          "canonicalBlocksSha256": "2d9df8c1c8e267e669e7665a9438e9c31fde23b4a47299d033fbac7b873d8dff",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "communication.overview",
+          "route": "/docs/framework/communication-overview",
+          "canonicalBlocksSha256": "62e23d5681f376f3f14b500b64482f3535efc55cd0893a29b4c7deec15573b6d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "communication.email-sms-templates",
+          "route": "/docs/framework/communication-email-sms-templates",
+          "canonicalBlocksSha256": "dde33cab20c8c3dafe3bf96494de307e40a88651d2265d9afa2342dcbf95014f",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.import-inspection",
+          "route": "/docs/framework/copilot/import-inspection",
+          "canonicalBlocksSha256": "ca0e459de6bca53fcf6ae9492d9f91ab261ef0c143cf67928b78d2a86859ca44",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.process-inspection",
+          "route": "/docs/framework/copilot/process-inspection",
+          "canonicalBlocksSha256": "c8494b929f923e364eb224fbf7fdf5ba20b69545d24e2221a37491c9b5454278",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.rules-inspection",
+          "route": "/docs/framework/copilot/rules-inspection",
+          "canonicalBlocksSha256": "052445be2f7f4d9de5bd5c6752077fda693e3ffe41a4a51ae448e1b8b28a087e",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.retention-lifecycle",
+          "route": "/docs/framework/copilot/retention-lifecycle",
+          "canonicalBlocksSha256": "5675c03b13260d12bd23a12469a54862f40204bafbfa1293f75064c55e9f175d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.collection-inspection",
+          "route": "/docs/framework/copilot/collection-inspection",
+          "canonicalBlocksSha256": "af1c40eaef18dcffbe6fcc2a5545cb59f87952f81896786a12c3a3b9e9d693d1",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.recorded-manual-refresh",
+          "route": "/docs/framework/copilot/recorded-manual-refresh",
+          "canonicalBlocksSha256": "78ca060cff30222276d9d24c5520e90c2b8144711ffc376ccc8911bf6e6f039f",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.knowledge-generation-recovery",
+          "route": "/docs/framework/copilot/knowledge-generation-recovery",
+          "canonicalBlocksSha256": "47f935e7ab635866b967d01dd1ec895039e1bdccf83e08ed1c1a2115fa8faeb4",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.order-notification-operations",
+          "route": "/docs/framework/copilot/order-notification-operations",
+          "canonicalBlocksSha256": "44143f74a2ef39e44d060ecabf7d39d90fa23416348c55939d16a4259beca6f1",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.governed-schema-actions",
+          "route": "/docs/framework/copilot/governed-schema-actions",
+          "canonicalBlocksSha256": "4d99e79b93c0b7f35474ae886f16d241a36be316c984b3735b6bb77610e70ac3",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.process-lifecycle-actions",
+          "route": "/docs/framework/copilot/process-lifecycle-actions",
+          "canonicalBlocksSha256": "60fd6b8509c53187605a8be0d62de28aec27cdfd75b33aac77ed136357f09ab6",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.process-trigger-actions",
+          "route": "/docs/framework/copilot/process-trigger-actions",
+          "canonicalBlocksSha256": "6dfa45709003dfafc3167fa61653f54f865a6b6ca5e0f831a8ec8aac6c7ec4c0",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.process-task-actions",
+          "route": "/docs/framework/copilot/process-task-actions",
+          "canonicalBlocksSha256": "98858e54c32f87ae2c55789a53895f662c47b8ff8a81294ade66c063192a2330",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.secure-coupon-fulfillment",
+          "route": "/docs/framework/copilot/secure-coupon-fulfillment",
+          "canonicalBlocksSha256": "78e1e78eca918b30f0a9e78ac39be334d64dc4886521ac75aea57289e5f8da79",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.standalone-business-actions",
+          "route": "/docs/framework/copilot/standalone-business-actions",
+          "canonicalBlocksSha256": "3d929eab70cb5407ee1448b1346d97f17a1e3e0e36b947e11b4849571587e7c1",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.original-business-results",
+          "route": "/docs/framework/copilot/original-business-results",
+          "canonicalBlocksSha256": "86af696030050d8977215bf365925a5e62f21b8383de4848118bd0de696efc4d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "discovery.search-indexing",
+          "route": "/docs/framework/discovery-search-indexing",
+          "canonicalBlocksSha256": "27c8f5e8a0b3f591b2f5aa83276449923fde2b3155108f78c048e74006eb6ff7",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.contact-submission-operations",
+          "route": "/docs/framework/engagement-contact-submission-operations",
+          "canonicalBlocksSha256": "e4cdd47b4e4d28f9eaa905393a2379c7c20b9fcb149f0fe5c3391b46f8aaeea4",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.customer-feedback",
+          "route": "/docs/framework/engagement-customer-feedback",
+          "canonicalBlocksSha256": "8677542bf66b39e25d93264b5fac69b2b8a05fcb83c462f9e9dd49cf81c8ba01",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.customer-reviews",
+          "route": "/docs/framework/engagement-customer-reviews",
+          "canonicalBlocksSha256": "48d3a1f95875c7b3b13c8b9f1a505584f2bd96179620fe77b935941ddd3736c4",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.review-moderation-governance",
+          "route": "/docs/framework/engagement-review-moderation-governance",
+          "canonicalBlocksSha256": "61c95b73cbe6c7fe88f3f9dbfc7dcb1822e75fff273fd454f661863f768e7000",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.review-aggregation-recovery",
+          "route": "/docs/framework/engagement-review-aggregation-recovery",
+          "canonicalBlocksSha256": "b0611cbb487f92941a2a378bee8bbe1d49eb793637b46cb1e878749cfa80c341",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.unified-operations",
+          "route": "/docs/framework/engagement-unified-operations",
+          "canonicalBlocksSha256": "07e61abf63cd50b676accb96c2e28829b4ea1d84458ac028480a1f94f25d8335",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.governed-automation",
+          "route": "/docs/framework/engagement-governed-automation",
+          "canonicalBlocksSha256": "77582ad4a2fba785eade946370438d393810af43ecf164f55d551b280dc75b67",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "engagement.enterprise-operations",
+          "route": "/docs/framework/engagement-enterprise-operations",
+          "canonicalBlocksSha256": "e86771b862f8dda3d69e50df63dc0073028368171207a0aeb0a105480f267fcb",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "cache.runtime-state-management",
+          "route": "/docs/framework/cache-runtime-state-management",
+          "canonicalBlocksSha256": "4c7fd890c475dbaede8290d4ba3ce0df2aa34a5e3315794118a904311b6c648b",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.cache-provider-runbooks",
+          "route": "/docs/framework/foundation-cache-provider-runbooks",
+          "canonicalBlocksSha256": "3baa467c2331092b619134530d9ca3efe732ef8292e22c4a4a02bea247ee6cd0",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.error-handling-status-codes",
+          "route": "/docs/framework/foundation-error-handling-status-codes",
+          "canonicalBlocksSha256": "bcff17b98ec3547aea8c550a6eac85f2f1b52ae1b2679e5f05e29fe6fa6af540",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.runtime-server-composition",
+          "route": "/docs/framework/framework-runtime-server-composition",
+          "canonicalBlocksSha256": "6de39a835053b2fa3f0a939d5250bbdd2b61000bbeae0c03a8fd929982730938",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.module-loading-service-precedence",
+          "route": "/docs/framework/framework-module-loading-service-precedence",
+          "canonicalBlocksSha256": "35331ab136034e25507c5e8c0f82a5309882d2b63c29b601770cbbed54712574",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "configuration.runtime-behavior-management",
+          "route": "/docs/framework/configuration-runtime-behavior-management",
+          "canonicalBlocksSha256": "2654b2fc6e4f8b257f6e9aa594f4d8b8e1982d752841c7fb8599d7ace24c685e",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "configuration.framework-startup-lifecycle",
+          "route": "/docs/framework/configuration-framework-startup-lifecycle",
+          "canonicalBlocksSha256": "6bb8535904f5534dd216dabc479d1270688f2e7663f69f44c6cf7367f81417f6",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 7,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "runtime.governed-change",
+          "route": "/docs/framework/runtime-governed-change",
+          "canonicalBlocksSha256": "fa7ee6157ce327083af4ad400a08e40a07542f99c410d5421308afe99939bcf1",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "data.import-export-migration",
+          "route": "/docs/framework/data-import-export-migration",
+          "canonicalBlocksSha256": "3457caa2c0c21ba2a20dd25be5fedec03b0424c866c38bea7f6075ebcfcf2028",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "data.import-export-provider-guides",
+          "route": "/docs/framework/data-import-export-provider-guides",
+          "canonicalBlocksSha256": "7b01c277944adf58a8811e0691e20394bd5a0c8d93c903a5dadd8d5d5fa065fd",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "schema.data-modeling-management",
+          "route": "/docs/framework/schema-data-modeling-management",
+          "canonicalBlocksSha256": "461dd3d81033786ea8f4152ee2765617dec069526c077ef1edfe9efad8fa885f",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "persistence.provider-data-access-layer",
+          "route": "/docs/framework/persistence-provider-data-access-layer",
+          "canonicalBlocksSha256": "a8fc21ce74c0ceacefb1de8033c26efaa24fd7c19b97c0f21f9e1cb1ba917f21",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.database-provider-boundaries",
+          "route": "/docs/framework/foundation-database-provider-boundaries",
+          "canonicalBlocksSha256": "f20833563e7fd09731aebe73132d43884b8a0c6e9bacdbbaf42cdf076852e04c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "events.messaging-cluster-coordination",
+          "route": "/docs/framework/events-messaging-cluster-coordination",
+          "canonicalBlocksSha256": "cd909cca1fda54cc7706f15bea5497219c185083909aacfd4855270c9848229d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.ems-runtime-client-runbook",
+          "route": "/docs/framework/foundation-ems-runtime-client-runbook",
+          "canonicalBlocksSha256": "91a2352115214adb7ae9d3c85f6ec54903b3aa5de9a63edbf06f8ce400641fab",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.nms-runtime-monitoring",
+          "route": "/docs/framework/foundation-nms-runtime-monitoring",
+          "canonicalBlocksSha256": "d17fe306cd582bffe8700361cc221676dc8450a431516a97ddc6492af839ffd7",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "security.otp-security-flow",
+          "route": "/docs/framework/security-otp-security-flow",
+          "canonicalBlocksSha256": "20bfb9f6783a5ba9008ef9f77bd46d10513d6002f96cd670a85f7d0eccae44f9",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "pipeline.business-logic-orchestration",
+          "route": "/docs/framework/pipeline-business-logic-orchestration",
+          "canonicalBlocksSha256": "c546905faa6e07fba9ba70c2f076db41e70deda551ddeca202de57b280318e6d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "routing.api-governance",
+          "route": "/docs/framework/routing-api-governance",
+          "canonicalBlocksSha256": "67bbb076e616d8f75e9dd5b6408fc02b7596edf7fc466a81059de3ec996d7c3b",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "routing.api-request-lifecycle",
+          "route": "/docs/framework/routing-api-request-lifecycle",
+          "canonicalBlocksSha256": "cdc66812e978f0947fad52c11de7b671ad1665533ecd7cfeb82e490b3edf14ae",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.service-runtime-overrides",
+          "route": "/docs/framework/foundation-service-runtime-overrides",
+          "canonicalBlocksSha256": "15fc42b45e55f2514485472cff5fb0f2e88073865b4cedf922dd4c3ec515d3c0",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 7,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.module-to-module-communication",
+          "route": "/docs/framework/foundation-module-to-module-communication",
+          "canonicalBlocksSha256": "e72d83635835eb91ece0990726cbac3373ddf75ba4f4ccdf4a1ec362d2fa1b5d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.local-quick-start",
+          "route": "/docs/framework/framework-local-quick-start",
+          "canonicalBlocksSha256": "24b59a834157ebd8ad30692ca9a0ddda6679e4327db36530f62b73e95dad90b9",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.fresh-schema-setup-journey",
+          "route": "/docs/framework/framework-fresh-schema-setup-journey",
+          "canonicalBlocksSha256": "b2a118541242e6ee2ecc4c2891faf301a81f281026787e1b610eef4ba6c3bb24",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.local-runtime-troubleshooting",
+          "route": "/docs/framework/framework-local-runtime-troubleshooting",
+          "canonicalBlocksSha256": "835bad13c26247349182a65d19fc4bc2aeb8b38a2c58be4fea42d1a75f6c21ad",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.devops-runtime",
+          "route": "/docs/framework/framework-devops-runtime",
+          "canonicalBlocksSha256": "c267af02cae1144c76f46a849985ba2e1da661e0b3b7d8348e705e67b6decc4b",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.runtime-release-rollback",
+          "route": "/docs/framework/framework-runtime-release-rollback",
+          "canonicalBlocksSha256": "1d254b851e7da3e92087e7ddfed5ffe661f4eb9853692a14b4bbe456b15a595e",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.local-browser-acceptance-journey",
+          "route": "/docs/framework/framework-local-browser-acceptance-journey",
+          "canonicalBlocksSha256": "6c4bdf4adb3bdcf84de7c3a7ef08ca7e7546abf30f504dbb8fec41d696e16553",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.local-verification-checklist",
+          "route": "/docs/framework/framework-local-verification-checklist",
+          "canonicalBlocksSha256": "e933a6994e4d1f2360e2121e393ffb703bdbde558f0ce77fd029d2f7388d7d92",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "route": "/docs/framework/framework-release-upgrade-compatibility",
+          "canonicalBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "tooling.ai-developer-enablement",
+          "route": "/docs/framework/tooling-ai-developer-enablement",
+          "canonicalBlocksSha256": "bf723dcbf7bdb69ce59cfabc9a622e08e71f9a2edd5493124cb4bd45dab4a89c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.tooling-runtime-contracts",
+          "route": "/docs/framework/foundation-tooling-runtime-contracts",
+          "canonicalBlocksSha256": "d1048b4d50e72dd3758be793d3c8027931bf6ac1d1202da497610033f0c881e1",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.workflow-bpm-source-map",
+          "route": "/docs/framework/process-workflow-bpm-source-map",
+          "canonicalBlocksSha256": "2ccc0261b2ec890966b7848ae08be8255485c0d9a278dfcabdf543ff53034252",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 5,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "localization.internationalization",
+          "route": "/docs/framework/localization-internationalization",
+          "canonicalBlocksSha256": "88d691729550d048b9707bc1cfc1f6b0bf86272d89ce1c9a818ada1af726d00f",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "localization.runtime-authoring",
+          "route": "/docs/framework/localization-runtime-authoring",
+          "canonicalBlocksSha256": "4a9399da9acd9c9e1e0bd8b9abfc1e9573ba1c3fc57ca984c4bd4ed709371e7d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "loyalty.wallets-rewards-ledger",
+          "route": "/docs/framework/loyalty-wallets-rewards-ledger",
+          "canonicalBlocksSha256": "33cb33f51c1d1aa2c30e6bc9337ce6b31fdc9687cdf250bddc97d8a49244e9a9",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "platform.module-registry",
+          "route": "/docs/framework/platform-module-registry",
+          "canonicalBlocksSha256": "1659a42135e558b38e53cc65578ed0e590368261c1d9605669303bea6269731d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "axis.business-customization",
+          "route": "/docs/framework/axis-business-customization",
+          "canonicalBlocksSha256": "1fc302586951d052a3fd71dffae2238d4e98cc98af707b1fcb80a80020d9a800",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "applications.axis-setup-error-contracts",
+          "route": "/docs/framework/applications-axis-setup-error-contracts",
+          "canonicalBlocksSha256": "e9399319f1067753afb8727971301885c69673cb7b6c81f17c8fae08faa033fe",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "platform.module-registry-journey",
+          "route": "/docs/framework/platform-module-registry-journey",
+          "canonicalBlocksSha256": "ebd86dfe487ea37d352f2dfef84efc23bfb51bf99f050fa453d5408795254908",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "installer.installed-runtime-application-builder",
+          "route": "/docs/framework/installer-installed-runtime-application-builder",
+          "canonicalBlocksSha256": "73677d45dc54f7f89618ad048177e04a765eb5e895e378433ec8fa2fec1116b3",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "builder.workspace-generation",
+          "route": "/docs/framework/builder-workspace-generation",
+          "canonicalBlocksSha256": "832fb11de7996e22a3cd85a0d86ebc844c5950f8336e768c199f34908460d8fd",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "platform.overview",
+          "route": "/docs/framework/platform-overview",
+          "canonicalBlocksSha256": "45d34b3275fc40e74f4fbaf05d87bcacae07409810cbde82bc5c95edbf69244d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "security.identity-access-governance",
+          "route": "/docs/framework/security-identity-access-governance",
+          "canonicalBlocksSha256": "33f2a09fcb2a96ed9348644bcc7e4dec0aad4e47ed866d05cb31df15d80cc937",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "cron.inactive-schedule-drafts",
+          "route": "/docs/framework/cron/inactive-schedule-drafts",
+          "canonicalBlocksSha256": "0e73472a4f567b2add9f092dcde2b429ccb64ada76fd18c0475428bf7e8864f7",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "cron.operations",
+          "route": "/docs/framework/cron-operations",
+          "canonicalBlocksSha256": "e210cc8d309a47e42c1d2a264444bd460072f06efa35f9cd39f93be1e1a69478",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "cron.node-responsibility-tee",
+          "route": "/docs/framework/cron-node-responsibility-tee",
+          "canonicalBlocksSha256": "edaa22bdfe13a33869297ed73378533ff162f3b79c4b19e6f62665c08f5acd98",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "cron.project-customization",
+          "route": "/docs/framework/cron-project-customization",
+          "canonicalBlocksSha256": "c87e9f1b42e151d0ed641ff445d345c8a5f2a71c948704f4ebc6e79694694395",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.cronjob-data-authoring",
+          "route": "/docs/framework/process-cronjob-data-authoring",
+          "canonicalBlocksSha256": "f19e77ee4127bfff751eb05409129401d9e5a3dbde4fca113b9dbcb8fbefdf2d",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.visual-designer",
+          "route": "/docs/framework/process/visual-designer",
+          "canonicalBlocksSha256": "3230c657e74625174198b9c67d9f5fcc0ea0a19c281a6b4729feb19ed3a9c8e1",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.developer-customization",
+          "route": "/docs/framework/process/developer-customization",
+          "canonicalBlocksSha256": "0936a33d3694cd64d16ac3f67cfb4b34b217631071257d9ed555d7d0eef97c74",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.custom-project-extension",
+          "route": "/docs/framework/process/custom-project-extension",
+          "canonicalBlocksSha256": "3b9b133b38230de572370ce70bb6d90b7be5818726f70f61f234fccaaacc11e6",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.overview",
+          "route": "/docs/framework/process",
+          "canonicalBlocksSha256": "a15a305c26292f1c0e6ad8abb8d7f178e0715df9cc5c74ed394845fd401b720c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.runtime-lifecycle",
+          "route": "/docs/framework/process/runtime-lifecycle",
+          "canonicalBlocksSha256": "12a962f27dd555f7ac17bd4f7be7c3c49978b1f8ba2646a8392cbb4b54ef4f48",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.workflow-orchestration-patterns",
+          "route": "/docs/framework/process/workflow-orchestration-patterns",
+          "canonicalBlocksSha256": "9c05971e214dff5ef49bb8c14a598012b71f6734a7d90c5da344434d24c81080",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 9,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.first-workflow",
+          "route": "/docs/framework/process/first-workflow",
+          "canonicalBlocksSha256": "571e95dd09832f1e46f8d9e348188a6832328930f516e244019fd4f81c5c9a72",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.first-human-task",
+          "route": "/docs/framework/process/first-human-task",
+          "canonicalBlocksSha256": "668e67620bf611da98488c8e825ba58382737ad798055fc7d282ec6fcf788b5e",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.business-value",
+          "route": "/docs/framework/process/business-value",
+          "canonicalBlocksSha256": "7a4c88bca86c49810514e998f62ec019cdec9a54db682ef4795703dd939d21aa",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.process-cron-runtime",
+          "route": "/docs/framework/process/process-cron-runtime",
+          "canonicalBlocksSha256": "65a02104536462fc4a754061e44c77b946f8754e72fee0e1ca973b3c32cd3cb4",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.scheduled-automation",
+          "route": "/docs/framework/process/scheduled-automation",
+          "canonicalBlocksSha256": "d8efee55c7d9450e0e21d582bc6032a8725404538440d6407a8ee349469fd7b8",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.action-adapters",
+          "route": "/docs/framework/process/action-adapters",
+          "canonicalBlocksSha256": "684331782340723c2aceb84492be9459448c12693b0c4c1eb7a87a416cc630c3",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.incident-recovery",
+          "route": "/docs/framework/process/incident-recovery",
+          "canonicalBlocksSha256": "cd88ce487838151d123279ec03942a76b5f5100a071cfc3fd68cdc9fd5ecd993",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.devops-topology",
+          "route": "/docs/framework/process/devops-topology",
+          "canonicalBlocksSha256": "13a6a9c17b315370dfb2e27c67861e2bc572399df0b0c3be9e47427c82348ef0",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "process.qa-regression-guide",
+          "route": "/docs/framework/process/qa-regression-guide",
+          "canonicalBlocksSha256": "95e2d055b7b0cd45b73ab90941ecd017b57d4633c3db4c8d80b74dd25a8ccc9f",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "waste.impact-providers",
+          "route": "/docs/framework/waste-impact-providers",
+          "canonicalBlocksSha256": "5b8385b7c40ca7f52d79c317d37dddd011e6481a0d3aa0927bec1040eb4c491e",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "route": "/docs/framework/wcms-publishing-lifecycle",
+          "canonicalBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.cms-source-map-authoring-contract",
+          "route": "/docs/framework/wcms-cms-source-map-authoring-contract",
+          "canonicalBlocksSha256": "3773f3531bce19c6e93cc936fafa1d52c8b65eff90de1eb781a415d24f0cd9e6",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.media-management",
+          "route": "/docs/framework/wcms-media-management",
+          "canonicalBlocksSha256": "91000a7d48916f1e19ee20b34dce949d17080bfe8fe0ac2c48aa8dd8a4a07e1c",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.media-storage-delivery",
+          "route": "/docs/framework/wcms-media-storage-delivery",
+          "canonicalBlocksSha256": "a319f05be7ba854ac9329e529a422aa61143207b1214b6e82b1ec97e0fbf3a50",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.media-import-publication",
+          "route": "/docs/framework/wcms-media-import-publication",
+          "canonicalBlocksSha256": "9546aeef5cddb6bcf3a02fff64aa5bef7c8cc4d1d0525c47e402ba9bcb62fac4",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 1,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.media-operations-runbook",
+          "route": "/docs/framework/wcms-media-operations-runbook",
+          "canonicalBlocksSha256": "38692f9fd05f870eb94d7ac9b70a02f995845ede6cbb3af3024c226d2250c8d9",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.overview",
+          "route": "/docs/framework/wcms-overview",
+          "canonicalBlocksSha256": "bd1c8ba6d95a0ddf83961ebb5654bc535017f8ac6ec9f4cebb3af905984530a3",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 6,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.content-catalog-model",
+          "route": "/docs/framework/wcms-content-catalog-model",
+          "canonicalBlocksSha256": "6fcd30a006214069fe27522aaaf65c1c62073e181077b098053f0095ab1b0b79",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.page-designer-components",
+          "route": "/docs/framework/wcms-page-designer-components",
+          "canonicalBlocksSha256": "85463e4486d81cf594dc775ba1974dbd6eebce5f5ca74cd9fad4a549ebed6e3f",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.site-publication-visibility",
+          "route": "/docs/framework/wcms-site-publication-visibility",
+          "canonicalBlocksSha256": "31bcf01f5b0f0f50c82d24645bc5ed43a93a6a3b93379c7b791da9c42047eaa5",
+          "sourceLifecycleState": "ONLINE",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.provider-usage-budgets",
+          "route": "/docs/framework/copilot-provider-usage-budgets",
+          "canonicalBlocksSha256": "70252f14a6346e266d1b41ce398fff92d1e390d499ca5352beea90d4e11ab3ad",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "copilot.evaluation-release-gates",
+          "route": "/docs/framework/copilot-evaluation-release-gates",
+          "canonicalBlocksSha256": "4d40d5c4f66c24d24f182dfd7de5f2dfbe0bceb31b0ca32741ea03fcad2cdd03",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "rules.deterministic-evaluation",
+          "route": "/docs/framework/rules-deterministic-evaluation",
+          "canonicalBlocksSha256": "2b869d2eb4beef849bbfff0b38a549991d3432e689b0e2106de7e6919e9a23db",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "waste.material-taxonomy-evidence",
+          "route": "/docs/framework/waste-material-taxonomy-evidence",
+          "canonicalBlocksSha256": "a49caa913a96e54496602c418befdbc75a7213863f6f6f4548e3ac488d2fb6f0",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "location.approval-schema-boundary",
+          "route": "/docs/framework/location-approval-schema-boundary",
+          "canonicalBlocksSha256": "7a0c0ff55abd29f092f68c2192a7c110292e69b09c6f050ebd7a54b1149fee72",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "location.draft-schema-boundary",
+          "route": "/docs/framework/location-draft-schema-boundary",
+          "canonicalBlocksSha256": "b88c8789837b6f1eaf563c196d6cf4f5bc30c654810585f12e9d4e1158aec029",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "location.marker-projection-boundary",
+          "route": "/docs/framework/location-marker-projection-boundary",
+          "canonicalBlocksSha256": "be2f407f375f9e14c3bba00cbaeef4dbd1ac303cc58b20857407054af7d04174",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "location.search-projection-boundary",
+          "route": "/docs/framework/location-search-projection-boundary",
+          "canonicalBlocksSha256": "5a0430cd96d4132bfa9d73e08d67eff3480f60f67367087c25f885c29c5cb53b",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "location.taxonomy-schema-boundary",
+          "route": "/docs/framework/location-taxonomy-schema-boundary",
+          "canonicalBlocksSha256": "fcdc39b3b4d12a59361bcec7f9bcd5b190d1498da157aaa99d87009c6f8bcacc",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "location.shared-map-configuration",
+          "route": "/docs/framework/location-shared-map-configuration",
+          "canonicalBlocksSha256": "6cbb2fd4ed4872ac8e8731bf56ce05587adc1c64eaba6b0bbaa9f76807527c6b",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 3,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "wcms.experience-placement-delivery",
+          "route": "/docs/framework/wcms-experience-placement-delivery",
+          "canonicalBlocksSha256": "0b72749e3c61758b26c9e393a53bbc154957ff85bd3cb61430a184124944cd75",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 4,
+          "qualifiedExternalReferences": 0
+        },
+        {
+          "documentId": "foundation.redis-provider-operations",
+          "route": "/docs/framework/foundation-redis-provider-operations",
+          "canonicalBlocksSha256": "8e709e0c9575ed2fd1af36c82ae45a0d16e383829e117d1c9bd0530cb35f5491",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 2,
+          "qualifiedExternalReferences": 0
+        }
+      ],
+      "release": "0.16.36",
+      "state": "PASSED"
+    },
+    "publicCanonicalCircaArticles": {
+      "date": "2026-10-07",
+      "environment": "native kickoffLocal",
+      "operation": "PUBLIC_CANONICAL_DOCUMENTATION_AND_REFERENCES",
+      "documents": [
+        {
+          "documentId": "circa.catalogue",
+          "route": "/docs/circa-ewaste",
+          "canonicalBlocksSha256": "c342d519a5aa925755846d7ae8273b26307bb9be07443c65eed5cd691eef5f24",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 0,
+          "qualifiedExternalReferences": 2
+        },
+        {
+          "documentId": "circa.customer-journey",
+          "route": "/docs/circa-ewaste/circa-customer-journey",
+          "canonicalBlocksSha256": "ecf5e789f125fd76880a33001260d5357862f523faa7ddf80ae66c167acc0004",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 0,
+          "qualifiedExternalReferences": 6
+        },
+        {
+          "documentId": "circa.demo-data",
+          "route": "/docs/circa-ewaste/circa-demo-data",
+          "canonicalBlocksSha256": "dd9caf298068607fe77ecc6df4badb7b0301e1201d0b680e20c746ba8f60a184",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 0,
+          "qualifiedExternalReferences": 2
+        },
+        {
+          "documentId": "circa.customer-knowledge",
+          "route": "/docs/circa-ewaste/circa-customer-knowledge",
+          "canonicalBlocksSha256": "0dc161ea4c494c93648eb0ab3a8bb8eff8733c5632b5d5ddae65f2cde5aacb4b",
+          "sourceLifecycleState": "STAGED",
+          "publicDelivery": "EXACT_CANONICAL_ARTICLE",
+          "qualifiedReferences": 0,
+          "qualifiedExternalReferences": 2
+        }
+      ],
+      "externalReferenceSelection": {
+        "owner": "nodics.docs",
+        "site": "nodicsDocumentationSite",
+        "release": "0.16.36"
+      },
+      "release": "0.0.5",
+      "state": "PASSED"
+    },
+    "kickoffQualifiedProfile": {
+      "profileCode": "kickoffdocs",
+      "publicationApprovals": 1,
+      "mediaApprovals": 13,
+      "importState": "CURRENT",
+      "readiness": "READY",
+      "releaseVersion": "0.8.14",
+      "publication": {
+        "code": "cmsBaseline_kickoffdocs_0_8_14",
+        "state": "ONLINE",
+        "revision": 6
+      },
+      "assets": 13,
+      "qualifiedAssets": 13,
+      "publicDelivery": "AVAILABLE",
+      "deliveredAssets": 13
+    },
+    "kickoffEvidenceBoundary": "Only the successful Kickoff row is incorporated from a historical mixed-result run; its old Circa failure is not relabelled as passed.",
+    "frameworkRepeatedReadiness": {
+      "environment": "native kickoffLocal",
+      "date": "2026-10-07",
+      "operation": "READ_ONLY_EXACT_MEDIA_STABILITY",
+      "profileCode": "frameworkdocs",
+      "reads": [
+        {
+          "sequence": 1,
+          "elapsedMs": 676,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 2,
+          "elapsedMs": 1605,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 3,
+          "elapsedMs": 2515,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 4,
+          "elapsedMs": 1845,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 5,
+          "elapsedMs": 1815,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 6,
+          "elapsedMs": 1518,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 7,
+          "elapsedMs": 575,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 8,
+          "elapsedMs": 546,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 9,
+          "elapsedMs": 569,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 10,
+          "elapsedMs": 592,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 11,
+          "elapsedMs": 616,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 12,
+          "elapsedMs": 584,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 13,
+          "elapsedMs": 580,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 14,
+          "elapsedMs": 597,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 15,
+          "elapsedMs": 613,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 16,
+          "elapsedMs": 581,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 17,
+          "elapsedMs": 602,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 18,
+          "elapsedMs": 568,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 19,
+          "elapsedMs": 559,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 20,
+          "elapsedMs": 533,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 21,
+          "elapsedMs": 639,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 22,
+          "elapsedMs": 587,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 23,
+          "elapsedMs": 803,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 24,
+          "elapsedMs": 999,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 25,
+          "elapsedMs": 1312,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 26,
+          "elapsedMs": 1307,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 27,
+          "elapsedMs": 680,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 28,
+          "elapsedMs": 918,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 29,
+          "elapsedMs": 1028,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 30,
+          "elapsedMs": 1011,
+          "http": 200,
+          "releaseVersion": "0.16.36",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 54,
+          "qualifiedAssets": 54,
+          "publication": {
+            "code": "cmsBaseline_frameworkdocs_0_16_36",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        }
+      ],
+      "state": "PASSED"
+    },
+    "kickoffRepeatedReadiness": {
+      "environment": "native kickoffLocal",
+      "date": "2026-10-07",
+      "operation": "READ_ONLY_EXACT_MEDIA_STABILITY",
+      "profileCode": "kickoffdocs",
+      "reads": [
+        {
+          "sequence": 1,
+          "elapsedMs": 390,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 2,
+          "elapsedMs": 519,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 3,
+          "elapsedMs": 376,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 4,
+          "elapsedMs": 467,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 5,
+          "elapsedMs": 370,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 6,
+          "elapsedMs": 526,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 7,
+          "elapsedMs": 323,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 8,
+          "elapsedMs": 343,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 9,
+          "elapsedMs": 344,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        },
+        {
+          "sequence": 10,
+          "elapsedMs": 337,
+          "http": 200,
+          "releaseVersion": "0.8.14",
+          "releaseStatus": "CURRENT",
+          "readiness": "READY",
+          "mediaStatus": "READY",
+          "assets": 13,
+          "qualifiedAssets": 13,
+          "publication": {
+            "code": "cmsBaseline_kickoffdocs_0_8_14",
+            "revision": 6,
+            "state": "ONLINE"
+          }
+        }
+      ],
+      "state": "PASSED"
+    },
+    "finalPublicationRequestRecovery": {
+      "initialUpstreamError": {
+        "date": "2026-10-07",
+        "environment": "native kickoffLocal",
+        "operation": "EXPLICIT_OWNER_API_DOCUMENTATION_QUALIFICATION",
+        "profiles": [
+          {
+            "profileCode": "frameworkdocs",
+            "publicationApprovals": 0,
+            "mediaApprovals": 0
+          }
+        ],
+        "state": "FAILED",
+        "failure": {
+          "message": "OWNER_HTTP_409 /nodics/backoffice/v0/applications/frameworkdocs/initialization/initiate",
+          "ownerCode": "ERR_BOF_00085"
+        }
+      },
+      "boundary": "The original initiation returned HTTP 409/ERR_BOF_00085 while the canonical operation remained VALIDATING. The helper resumed through read-only status and then the actual Process task without replaying initiation. Long-running request completion/transport behavior is not certified by this recovery."
+    },
+    "mediaRateLimitRepair": {
+      "preservedBurstFailure": {
+        "environment": "native kickoffLocal",
+        "date": "2026-10-07",
+        "operation": "READ_ONLY_EXACT_MEDIA_STABILITY",
+        "profileCode": "frameworkdocs",
+        "reads": [
+          {
+            "sequence": 1,
+            "elapsedMs": 904,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 2,
+            "elapsedMs": 2589,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 3,
+            "elapsedMs": 2641,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 4,
+            "elapsedMs": 2660,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 5,
+            "elapsedMs": 1026,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 6,
+            "elapsedMs": 821,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 7,
+            "elapsedMs": 990,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 8,
+            "elapsedMs": 1221,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 9,
+            "elapsedMs": 605,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "MEDIA_DEPENDENCIES_PENDING",
+            "mediaStatus": "UNAVAILABLE",
+            "assets": 0,
+            "qualifiedAssets": 0,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          }
+        ],
+        "state": "FAILED",
+        "failure": "EXACT_STABLE_READINESS_NOT_CONFIRMED"
+      },
+      "safeOwnerDiagnosis": {
+        "environment": "native kickoffLocal",
+        "date": "2026-10-07",
+        "operation": "READ_ONLY_EXACT_MEDIA_STABILITY",
+        "profileCode": "frameworkdocs",
+        "reads": [
+          {
+            "sequence": 1,
+            "elapsedMs": 729,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 2,
+            "elapsedMs": 727,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 3,
+            "elapsedMs": 664,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 4,
+            "elapsedMs": 737,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 5,
+            "elapsedMs": 694,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 6,
+            "elapsedMs": 667,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 7,
+            "elapsedMs": 672,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 8,
+            "elapsedMs": 685,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 9,
+            "elapsedMs": 696,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "READY",
+            "mediaStatus": "READY",
+            "assets": 54,
+            "qualifiedAssets": 54,
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          },
+          {
+            "sequence": 10,
+            "elapsedMs": 336,
+            "http": 200,
+            "releaseVersion": "0.16.35",
+            "releaseStatus": "CURRENT",
+            "readiness": "MEDIA_DEPENDENCIES_PENDING",
+            "mediaStatus": "UNAVAILABLE",
+            "assets": 0,
+            "qualifiedAssets": 0,
+            "inspectionStage": "MEDIA_BYTES",
+            "ownerErrorCode": "ERR_RTR_00004",
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_35",
+              "revision": 6,
+              "state": "ONLINE"
+            }
+          }
+        ],
+        "state": "FAILED",
+        "failure": "EXACT_STABLE_READINESS_NOT_CONFIRMED"
+      },
+      "cause": "MEDIA_BYTES inspection returned ERR_RTR_00004; nRouter defines this as HTTP 429 rate limiting. Per-asset remote verification amplified each 54-asset readiness read into 56 requests.",
+      "repair": "The default owner uses three bounded authenticated calls with individual local integrity checks, strict ordered evidence and final pointer drift verification. No READY cache or rate-limit relaxation.",
+      "qualificationBoundary": "Repeated Local reads establish only this installed native binding, not a production load or availability SLA."
+    },
+    "historyCapacityRepair": {
+      "diagnosis": {
+        "retainedFrameworkRouteRows": 4741,
+        "distinctCodes": 173,
+        "distinctCodesWithinOriginal500RowRead": 29
+      },
+      "diagnosticBoundary": "Read-only persisted counts diagnosed truncation; final import, approval and delivery evidence uses canonical owner APIs only.",
+      "originalPartialPublication": {
+        "date": "2026-10-07",
+        "environment": "native kickoffLocal",
+        "operation": "EXPLICIT_OWNER_API_DOCUMENTATION_QUALIFICATION",
+        "profiles": [
+          {
+            "profileCode": "frameworkdocs",
+            "publicationApprovals": 1,
+            "mediaApprovals": 8,
+            "importState": "CURRENT",
+            "readiness": "READY",
+            "releaseVersion": "0.16.34",
+            "publication": {
+              "code": "cmsBaseline_frameworkdocs_0_16_34",
+              "state": "ONLINE",
+              "revision": 6
+            },
+            "assets": 8,
+            "qualifiedAssets": 8,
+            "publicDelivery": "AVAILABLE",
+            "deliveredAssets": 8
+          },
+          {
+            "profileCode": "circadocs",
+            "publicationApprovals": 1,
+            "mediaApprovals": 0,
+            "readiness": "READY",
+            "releaseVersion": "0.0.4",
+            "publication": {
+              "code": "cmsBaseline_circadocs_0_0_4",
+              "state": "ONLINE",
+              "revision": 6
+            },
+            "assets": 0,
+            "qualifiedAssets": 0,
+            "publicDelivery": "AVAILABLE",
+            "deliveredAssets": 0
+          }
+        ],
+        "state": "PASSED"
+      },
+      "originalStrictPublicComparison": "FAILED_OWNER_ANCHOR_REFERENCE_COMPARISON; preserved as an intermediate failure, not final acceptance.",
+      "forwardPublicationClientTimeout": {
+        "date": "2026-10-07",
+        "environment": "native kickoffLocal",
+        "operation": "EXPLICIT_OWNER_API_DOCUMENTATION_QUALIFICATION",
+        "profiles": [
+          {
+            "profileCode": "frameworkdocs",
+            "publicationApprovals": 0,
+            "mediaApprovals": 0,
+            "importState": "CURRENT"
+          }
+        ],
+        "state": "FAILED",
+        "failure": {
+          "message": "The operation was aborted due to timeout"
+        }
+      },
+      "recovery": "Read-only reconciliation of the existing VALIDATING operation, then its actual Process approval. No publication command replay or approval fabrication."
+    }
+  },
+  "browserReview": {
+    "date": "2026-10-07",
+    "state": "PASSED",
+    "environment": "native kickoffLocal / existing Axis admin session",
+    "scope": "Read-only browser acceptance of representative documentation views and a canonical cross-product link, not every article or a complete business journey.",
+    "observations": [
+      {
+        "route": "/docs/framework/wcms-publishing-lifecycle#wcms-exact-media-readiness-capacity",
+        "onlineVersion": "0.16.36",
+        "verified": [
+          "Framework hierarchical navigation",
+          "Actual Online verification identity",
+          "Updated bounded integrity explanation",
+          "Capacity heading and operator matrix",
+          "Coordinated approval flow and table present in the accessibility tree"
+        ],
+        "screenshot": "screenshots/final-framework-capacity-2026-10-07.jpg"
+      },
+      {
+        "route": "/docs/circa-ewaste#circaCatalogue-1-ownership-and-composition",
+        "onlineVersion": "0.0.5",
+        "verified": [
+          "Circa documentation discovery",
+          "All four Circa guide links",
+          "eWaste accelerator ownership and separate optional import explanation",
+          "Diagram and troubleshooting table",
+          "Canonical Product and Checkout body links"
+        ],
+        "screenshot": "screenshots/final-circa-ownership-2026-10-07.jpg"
+      },
+      {
+        "fromRoute": "/docs/circa-ewaste",
+        "clickedLink": "Product discovery and management",
+        "destination": "/docs/framework/catalog-product-discovery-management#catalogProductDiscoveryManagement-2-journey-and-ownership",
+        "onlineVersion": "0.16.36",
+        "verified": [
+          "Product Catalog and Discovery Management article rendered after route loading",
+          "Framework navigation replaced Circa navigation",
+          "Journey and ownership anchor exists and is reachable",
+          "Ownership prose, diagram and responsibility table rendered"
+        ],
+        "screenshot": "screenshots/final-circa-product-reference-2026-10-07.jpg"
+      }
+    ],
+    "boundaries": [
+      "No new credentials entered into the browser",
+      "No approval or publication command executed through the browser; those native operations are separately qualified through canonical owner APIs",
+      "No claim of full mobile, assistive-technology, production or all-article visual acceptance",
+      "CMS/Media approvals are never inferred from authoring lifecycle labels"
+    ]
+  },
+  "remaining": [
+    "Full Commerce/Circa/Agora business acceptance awaits an approved Local Profile eligibility policy and scope plus qualified reviewer/verifier sessions; customer signup returned HTTP 503.",
+    "Physical custody, final settlement, coupon delivery and outlet redemption, and real Telegram/device behavior remain unqualified.",
+    "Broader documentation depth is not certified by the closed 22-item scoped backlog; CheckoutCore depth and 179 mention-based triage boundaries remain explicit.",
+    "Source-documented runtime/provider limitations are not implemented features or live provider acceptance.",
+    "CMS, Media and Process coordination is not a cross-runtime atomic transaction."
+  ],
+  "safety": {
+    "guardsWeakened": false,
+    "fabricatedApprovals": false,
+    "credentialsIncluded": false,
+    "unrelatedResets": false
+  }
+}

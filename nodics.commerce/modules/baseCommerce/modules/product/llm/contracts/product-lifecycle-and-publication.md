@@ -27,7 +27,8 @@ reuses its exact sealed source. Normal Process approval remains mandatory.
 `resolve(publication, request)` requires `domain: product`, `rootType: product`
 and a nonnegative scalar source-version string. Each generated source model must
 be effectively versioned with `versionedReadMode: CURRENT`. Exact reads specify
-both logical code and integer `versionId`, retain caller authorization, and verify
+both logical code and integer `versionId`, retain caller authorization at the
+publication boundary, and verify
 stored content checksums. Business `revision` is never substituted for versionId.
 The immutable graph digest includes tenant/Product/Store scope and every exact
 source reference. Approval validation records this digest; activation resolves
@@ -96,9 +97,10 @@ An unavailable PDP returns the shared `ERR_FIND_00004` HTTP 404 through
 Pointer reads reuse Product discovery's existing internal service read context;
 public caller authData is not modified and no mutation authority is granted.
 Activated consumer reads refresh price and availability through the existing
-Product enrichment calls to Pricing and Inventory, preserving tenant, enterprise
-and selected store. Each result set uses one batched summary call per owner,
-deduplicating Product codes and SKUs; there is no per-row policy lookup. They do
+Product enrichment calls to Pricing, Inventory and DigitalCore, preserving tenant,
+enterprise and selected store. Each result set uses one Pricing batch and one
+physical Inventory batch, deduplicating Product codes and SKUs. Digital offers
+are excluded from that Inventory batch. They do
 not reuse potentially stale indexed summaries or mutate retained catalogue
 projections. Missing configured owner/summary/enrichment providers and policy
 reader failures reject delivery, never return indexed stock or price instead.
@@ -114,6 +116,36 @@ from those retained projections, requiring one consistent non-empty enterprise a
 and store. Authenticated enterprise mismatches reject. Public query/header
 enterprise values never select policy scope; the caller request remains unchanged.
 No Store seed or hardcoded enterprise fallback is used for this resolution.
+`consumerAvailability` classifies digital offers only from retained localized
+attributes and calls DigitalCore's internal `availabilityFromProjection` once
+per distinct Product at quantity one. This reuses Promotion's approved
+source-Product/Store policy and generated-batch resolution; request quantity,
+batch and promotion selectors never reach that owner. Promotion currently has a
+single-Product pool operation, so different digital Products require distinct
+owner calls; repeated rows do not. No per-row catalogue lookup is added.
+An eligible coupon returns `{available: true, status: 'IN_STOCK'}`; exhausted,
+sold or reserved supply returns false/OUT_OF_STOCK. All counts, batch/promotion
+references and protected fields are discarded. Missing/failed owners, malformed
+availability and conflicting physical/digital rows reject without indexed or
+warehouse fallback. Only DigitalCore's typed ERR_DIGITAL_AVAILABILITY_METADATA
+is contained per item as false/OUT_OF_STOCK in customer summaries, so a malformed
+offer cannot hide valid coupons. Direct Cart classification remains strict;
+saleMode is not canonical delivery metadata. Missing/unqualified owners and
+scope, SKU, permission or persistence faults are not swallowed. Coupon-only result sets do
+not require Inventory; mixed/physical sets preserve activated Inventory checks.
+The existing search-enrichment inventory enable flag still controls availability
+enrichment; disabling it does not restore indexed availability.
+This live correction applies to pointer-selected STALE projections only.
+Publication-time `enrich/availability` snapshots and legacy CURRENT discovery
+remain unchanged: do not query pinned digital supply while preparing new content,
+rewrite immutable projections, or expose prepared versions to fix a display.
+Later Product layers override `consumerAvailability`; DigitalCore layers override
+`availabilityFromProjection` through mergeable members while preserving owner
+validation and redaction. Run `test/productDigitalAvailabilityContract.test.js`,
+`test/productGovernedPublicationContract.test.js` and DigitalCore's
+`test/digitalCartAvailabilityContract.test.js` for positive, exhausted, mixed,
+scope/failure, batching and override evidence. These isolated tests do not prove
+native browser acceptance after integration/restart.
 Live policy-change and rollback checks must reuse the identical public URL,
 without cache-busting parameters.
 Internal variant-to-SKU resolution uses `DefaultProductDiscoveryService.resolveVariantSku`
@@ -175,6 +207,27 @@ generated-service doubles and does not establish those live guarantees.
 
 ### Owner Integration And Deployment Selection
 
+An authenticated human Staged publisher with `commerce.product.publish` uses
+Product's canonical local persistence authority for exact generated graph reads
+and the `publicationReferences`-only versioned root update. This does not grant
+the employee admin/operator groups or generic schema access. Root reads and seal
+writes require signed tenant/enterprise and exact Product identity. Dependencies
+may have the same enterprise or no enterprise field, reflecting the shared
+Category/localization contract; explicit foreign, null and empty enterprise
+values remain denied. Neutral reads require an unforgeable, request-local context
+created only after a verified root read. Current reads bind Product/Variant
+parents and referenced Category ancestry; immutable reads additionally require
+the exact sealed schema/code/version/hash. Returned rows independently match
+that membership before closure validation or a seal write. The helpers never
+admit arbitrary tenant-wide neutral reads or caller-supplied membership contexts.
+Foreign roots/dependencies and conflicting signed aliases cannot cause a successor write.
+The orchestration detaches the original input/authentication before awaiting;
+nPublish receives unchanged authenticated claims and owns approval as before.
+Existing ordinary generated-caller paths retain their schema authorization.
+`test/productPublicationPublisherAdmission.test.js` covers success, refusal and
+await-boundary mutation with real permission/access/identity owners and isolated
+persistence doubles; native signed deployment qualification remains separate.
+
 All six catalogue source schemas allow only search/read/create/update through
 generic schema maintenance. The existing schema authoring guard denies remove
 in every runtime role, including Staged: sealed publication dependencies must
@@ -197,7 +250,7 @@ The fixed `applyPublicationDecision` route calls the shared
 `actionKey: product.applyPublicationDecision`; submitted domain/decision fields
 cannot select authority. The existing claimed-action protocol checks Process
 provenance. Product contributes an explicitly selected `PROCESS_DEFINITION` data
-release, `productPublicationWorkflow` (`init-v002`, version `2.0.0`), and the fixed
+release, `productPublicationWorkflow` (`init-v001`, version `2.0.0`), and the fixed
 remote action binding. This is a forward immutable release: existing installed
 release payloads and checksums must not be changed to add the workflow.
 
@@ -302,6 +355,29 @@ The effective COMMERCE_STAGED graph supplies
   `tax`, `media`. Each is `{code, rootCode, sourceVersion, targetVersion}` for the exact governed
   release, not a fabricated test receipt or configurable success boolean.
 
+For a multi-product catalogue, `publications.product` is an array of exact
+receipt selectors, one per `productCodes` identity. Its root set must match the
+expected Product set exactly; repeated roots, publication identities, foreign
+roots and incomplete coverage reject before network calls. The original object
+form remains valid only for its single matching expected root. A representative
+receipt cannot prove that sibling Products were approved or activated. Deployment
+layers supply the complete typed array through nConfig (replace, not merge, the
+collection), or an authorized acceptance caller supplies the same exact fixture.
+Never infer remaining receipts from intended publication names or source data.
+
+`discoveryPagination` optionally selects `pageSize` (1..100, default 24) and
+`maximumProducts` (at least the expected count, at most 10000, default 1000).
+The suite traverses public discovery pages with the same Store and locale,
+checks search-index evidence on every page, validates stable page sizes and
+totals, and rejects repeated Product identities, contradictory next-page flags,
+early termination and bound exhaustion. Providers without total metadata require
+a terminal short page or explicit `hasNextPage: false`; a full first page is not
+completion. Missing expected roots are reported together, independently of their
+approved receipts, before PDP checks. Every expected PDP must then resolve its
+own safe Product identity. Results report expected, discovered and qualified
+Product receipt counts separately. These delivery checks do not replace direct
+target-pointer qualification or authorize a recovery write.
+
 Before any write, the secured nPublish GET API must return matching code, domain,
 root and source/target version, ONLINE state and APPROVED audit evidence for every
 owner. Commerce receipts are read on COMMERCE_STAGED; Media on WCMS_STAGED.
@@ -309,6 +385,14 @@ Source and target versions need not match: Product's target is an immutable grap
 digest. Product additionally requires the latest ONLINE audit details to contain
 a committed target receipt bound to the retained activation operation, publication,
 source, target and predecessor. Missing receipt evidence fails closed.
+
+nPublish omits an absent optional top-level `previousOnlineVersion` from typed
+storage. First activation may therefore omit that field only when the retained
+activation operation, latest ONLINE audit details and committed target receipt
+all explicitly agree on `previousOnlineVersion: null`. A successor requires the
+same nonempty predecessor in all four locations. Never normalize missing target,
+operation or audit predecessor evidence to null. This acceptance check is read-only
+and does not repair stored publications or reinterpret their approval.
 
 Default qualification issues no publication writes. Add
 `--legacy-projection-qualification` only to separately exercise legacy Staged
@@ -331,22 +415,19 @@ disabled by default. Each participating domain's effective provider registration
 workflow, transport and runtime grants must be qualified before executing this
 suite. Isolated tests using synthetic receipts do not establish live readiness.
 
-Source authorities: `nPublish/config/properties.js` starts with empty
-`publish.providers.domainAdapters` and `versionProviders` maps.
-`DefaultPublicationLifecycleService.create` calls `getDomainAdapter`; an absent
-domain raises `ERR_PUB_00002` before a lifecycle request can be created. Existing
-registrations are CMS, Editorial, Localization and Testimonial, not aliases for
-these six domains. Product search publication and the Pricing/Promotion/Inventory/
-Tax operational restore APIs are separate owner operations, not nPublish adapter
-registrations. Media's artifact manifest/import/receipt APIs likewise do not
-produce a `domain: media` nPublish lifecycle record. A CMS publication may include
-Media dependencies, but that does not satisfy a separate Media-domain receipt.
+`nPublish/config/properties.js` starts with empty provider maps; later active owner
+and deployment layers select actual adapters, version providers, Process workflows
+and transports. Product, Pricing, Promotion, Inventory, Tax and Media supply their
+own governed publication implementations. Inspect the effective Staged/Online
+graphs and installed source models instead of inferring missing integration from
+framework defaults or an older Local snapshot. An absent domain adapter still
+raises `ERR_PUB_00002` before lifecycle creation.
 
-The inspected Local composition additionally omits `publish` from Commerce
-Staged's active graph. WCMS Staged loads `publish` with CMS and Editorial adapters,
-not Media. Enabling nPublish alone therefore cannot satisfy the suite: owning
-adapter/version integration and governed approval/activation are also required.
-Do not prescribe entering receipt IDs as a working setup fix for this gap.
+Product search publication, policy operational restore and Media artifact import
+remain separate operations, never substitutes for owner approvals and committed
+activation receipts. A CMS release's Media dependencies require their independent
+Media lifecycles. Configuring exact receipt IDs helps only after those normal
+lifecycles genuinely exist; it never supplies missing authority or delivery.
 
 The suite retains effective Staged publication and Online ingestion route checks,
 nonempty published/projection/snapshot assertions, search-backed safe Online

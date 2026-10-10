@@ -41,10 +41,10 @@ and data compatibility.
   implement the commerce action itself.
 - `nodics.axis` owns the React renderer/editor surface only.
 - Runtime source must not be placed directly under `nodics.process/src`.
-- Backend-owned beginner documentation source lives under
-  `data/core-v001/source/documentation`. Generated/importable documentation records
-  must also stay backend-owned when the Process documentation content-pack
-  scaffold is introduced.
+- Capability documentation records live in the implementing child's
+  `data/docs-v001/records/documentation`: `modules/workflow` and
+  `modules/cronjob`. This composition-only group does not own an importable data
+  folder. Documentation remains optional and separate from business releases.
 
 ## Verification
 

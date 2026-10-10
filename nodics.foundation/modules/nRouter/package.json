@@ -1,42 +1,43 @@
 {
-    "name": "router",
-    "index": "1.11",
-    "description": "Register routers for all defined items",
-    "homepage": "http://www.nodics.com/",
-    "keywords": [
-        "Nodics",
-        "Framework",
-        "Routers"
+  "name": "router",
+  "index": "1.11",
+  "description": "Register routers for all defined items",
+  "homepage": "http://www.nodics.com/",
+  "keywords": [
+    "Nodics",
+    "Framework",
+    "Routers"
+  ],
+  "author": "Nodics Framework <nodics.framework@gmail.com>",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "GNU General Public License v3",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nodics/nodics.ai.git"
+  },
+  "dependencies": {},
+  "nodics": {
+    "kind": "capability",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "router",
+      "service",
+      "pipeline",
+      "utility",
+      "test",
+      "llm",
+      "data"
     ],
-    "author": "Nodics Framework <nodics.framework@gmail.com>",
-    "main": "nodics.js",
-    "version": "0.0.0",
-    "private": true,
-    "license": "GNU General Public License v3",
-    "scripts": {},
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Nodics/nodics.ai.git"
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
     },
-    "dependencies": {},
-    "nodics": {
-        "kind": "capability",
-        "runtimeModule": true,
-        "loadableByNodicsModuleLoader": true,
-        "owns": [
-            "configuration",
-            "router",
-            "service",
-            "pipeline",
-            "utility",
-            "test",
-            "llm"
-        ],
-        "runtime": {
-            "router": false,
-            "publish": false,
-            "web": false
-        },
-        "displayName": "API Routing"
-    }
+    "displayName": "API Routing"
+  }
 }

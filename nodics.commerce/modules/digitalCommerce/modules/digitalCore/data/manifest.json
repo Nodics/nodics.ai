@@ -1,0 +1,93 @@
+{
+  "contractVersion": 2,
+  "module": "digitalCore",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "digitalCore",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "aa5a3cf8e59f546dfa3947e8d9cb6496a4906dd98f8690f0496594a83d45c29b",
+      "generatedHashes": {
+        "docs-v001/records/documentation/digitalCoreDocumentationComponentData.js": "c8d38850e93c66c94addfaaeb611854e6266976f0a47e0664d0fecac68739d21",
+        "docs-v001/records/documentation/digitalCoreDocumentationNodeData.js": "e7ff541caf95ab18a5e72006a02632c314abc541072d3e46b9d2fa2d14603759",
+        "docs-v001/records/documentation/digitalCoreDocumentationPageData.js": "f8b8c804aba0afcb9b3e423e692a0df7d4ed2d45b4a29849d92d30704854fc87",
+        "docs-v001/records/documentation/digitalCoreDocumentationPageMetadataData.js": "89fa4c9d5119cf1f94e11ffff222941ac16150e110caaebb1b0f4a4e244aa8ef",
+        "docs-v001/records/documentation/digitalCoreDocumentationPublicationStateData.js": "9d0972afeb525b1af973b1c7c3c055e1e664d22c26b3f6dfe59a797fc4c14eae",
+        "docs-v001/records/documentation/digitalCoreDocumentationRouteData.js": "c39844385771f49d696eb2a6d72ce4de07d4966b1eba7fb4d0ed1f8f2c12dfe7",
+        "docs-v001/records/documentation/digitalCoreDocumentationSearchMetadataData.js": "539b46a5b399ab7efec5de14693e57a190cabae53987ef3b078b077532d7399b",
+        "docs-v001/headers/100_digitalCoreDocumentationContentPackHeader.js": "1c0e645747ca6ac7c5cf782088f5b3119d82402938b7851226d461edc6e28cf6"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ],
+      "referenceCatalogues": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "promotion",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cart",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "fulfillmentCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        }
+      ]
+    }
+  }
+}

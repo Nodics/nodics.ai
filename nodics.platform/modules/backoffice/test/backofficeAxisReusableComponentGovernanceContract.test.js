@@ -22,8 +22,17 @@ const repositoryRoot = path.resolve(__dirname, "../../../..");
 
 const cmsCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService"))
   .getCapability();
-const mediaCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService"))
-  .getCapability();
+const mediaConfiguration = require(path.join(repositoryRoot, "nodics.wcms/modules/media/config/properties"));
+const previousConfiguration = global.CONFIG;
+let mediaCapability;
+try {
+  global.CONFIG = { get: (name) => mediaConfiguration[name] };
+  mediaCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService"))
+    .getCapability();
+} finally {
+  if (previousConfiguration === undefined) delete global.CONFIG;
+  else global.CONFIG = previousConfiguration;
+}
 
 const capabilities = [
   cmsCapability,
@@ -57,12 +66,6 @@ const schemaBackedNavigation = [
   },
   {
     capability: mediaCapability,
-    id: "media",
-    moduleName: "media",
-    schemaName: "media",
-  },
-  {
-    capability: mediaCapability,
     id: "media-folders",
     moduleName: "media",
     schemaName: "mediaFolder",
@@ -74,6 +77,17 @@ const schemaBackedNavigation = [
     schemaName: "mediaFormat",
   },
 ];
+
+for (const id of ["media", "media-library"]) {
+  const entry = findNavigation(mediaCapability, id);
+  assert(entry, id + " governed Media library must exist");
+  assert.equal(entry.workbenchTarget, undefined);
+  assert.deepStrictEqual(entry.backendWorkspace, mediaConfiguration.media.library.workspace);
+}
+assert.deepStrictEqual(
+  findNavigation(mediaCapability, "media-publication-requests").backendWorkspace,
+  mediaConfiguration.media.library.publicationWorkspace,
+);
 
 function findNavigation(capability, id) {
   return (capability.navigation || []).find((item) => item.id === id);
@@ -104,6 +118,10 @@ capabilities.forEach((capability) => {
       "function",
       path.concat(key).join(".") + " must remain data-only metadata",
     );
+    if (key === "renderer" && path.at(-1) === "backendWorkspace") {
+      assert.strictEqual(value, "axis.workspace.backend-operations");
+      return;
+    }
     assert(
       ![
         "component",

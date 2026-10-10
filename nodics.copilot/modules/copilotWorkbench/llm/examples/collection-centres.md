@@ -100,7 +100,7 @@ not accepted.
   automatic replay or compensation. Completed rows remain immutable; only
   `NOT_STARTED` rows can receive a fresh continuation approval. An incomplete
   receipt remains unknown. See
-  [Original Business Results](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+  [Original Business Results](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js).
 
 ## Customization And Verification
 

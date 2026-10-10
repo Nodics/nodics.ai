@@ -132,6 +132,26 @@ optional. Protected translation keys and approval requirements remain enforced
 by their owning contracts. Existing registered/enabled state is preserved when
 a package changes from protected to optional; operators explicitly deactivate it.
 
+## Record And Documentation Ownership
+
+Runtime participation and functional visibility do not make a composition-only
+group the owner of its children's records. Keep business releases and optional
+documentation packs with the implementing capability, including its import
+headers, CMS metadata, routes and unique Media assets. A reading category may
+reference the same canonical guide from several journeys without copying it.
+
+`nodics.docs` is the explicit dedicated content-package exception: it owns shared
+CMS discovery/scaffolding, genuinely shared assets and cross-module overviews,
+with explicit composition of capability packs. This exception does not authorize
+Foundation, Commerce or accelerator grouping roots to own imported data.
+`nService` has its own actual service/pipeline implementation and may own guides
+for that implementation despite also grouping children. `nSetup` remains
+governance-only; references to its contracts do not require CMS data in this module.
+
+Validate canonical owner references and preserve existing document IDs, routes,
+anchors, Media identities and business payloads during a placement change.
+Business discovery must never automatically select a documentation `CONTENT_PACK`.
+
 ## Validation Requirements
 
 Changes to discovery, topology, generation, registration, or module metadata

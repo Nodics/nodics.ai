@@ -1,5 +1,10 @@
 # Workflow Agent Guide
 
+The CMS approval lazy installer selects its exact contribution version from the
+existing nImport catalogue and passes that observed version to execution. Never
+hard-code release pins or bypass drift checks; existing definitions are not
+reinstalled. Cover fresh bootstrap and later release versions in the approval test.
+
 Approval is access-rights based. The requesting human may also claim and approve
 when the current tenant, enterprise and required permissions allow it. Do not
 restore a same-user exclusion or special-case the login name `admin`. Keep native

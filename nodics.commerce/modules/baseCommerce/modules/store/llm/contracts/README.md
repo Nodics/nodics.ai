@@ -1,11 +1,76 @@
 # Store contracts
 
-`DefaultStoreContextService.resolveMerchantStore` reads through caller-authorized
-generated Store services and admits exactly one active tenant-consistent revisioned
-outlet with canonical Profile enterprise association. Caller storeCode is a selector,
-not evidence. Digital Core separately requires current Profile STORE permission/
-scope and Promotion eligibility; preserve these owners in later-layer extensions.
+`DefaultStoreContextService.resolveMerchantStore` admits exactly one active,
+tenant-consistent revisioned outlet with canonical Profile enterprise association.
+For human merchant operations it uses `DefaultStoreMerchantReadService.read`;
+service callers retain their existing generated Store access. Caller storeCode is
+a selector, not evidence. Digital Core remains the authority for fresh signed
+staff permission and Profile STORE scope; Promotion owns coupon eligibility.
 This source contract remains unqualified pending joint installed-owner acceptance.
+
+## Narrow Merchant Outlet Reads
+
+`DefaultStoreMerchantReadService.list/read` invokes Digital Core's canonical
+`staff` owner with the original bearer, identity and enterprise aliases. Neither
+caller-provided scopes nor an operator role are substitutes. Workspace derives
+at most 100 unique exact Store codes from direct Profile STORE ALLOW scopes,
+applies capability/permission/tenant/enterprise qualifiers and DENY precedence,
+and reads each selected Store independently. GLOBAL/TENANT/ENTERPRISE ALLOW alone
+never enumerates Store records. Known matching denials prevent the query. Actual
+Store enterprise association is checked against fresh Profile authority before
+any result leaves the generated read owner; an unqualified enterprise reference
+cannot reveal a foreign Store record. Scope revocation during the read refuses.
+
+Only Store gains `commerceMerchantUserGroup:1` (read access). Sales Channel, Point
+of Service, writes and the common `tenantOwned` policy are unchanged. Store's
+`readProtection` selects this owner in the existing generated pre-cache/query/
+count and result/export hooks. A narrow caller needs the exact short-lived
+in-flight owner request, unchanged original authentication and equality selector.
+Copies, arbitrary queries, generic exports, forged scopes and expired admissions
+refuse. Generated schema access and later-layer narrowing still apply; no runtime
+admin, operator, service identity or privileged schema-access bypass is created.
+
+Generated result protection refreshes Profile and retains only code, tenant,
+name, ACTIVE status, revision and canonical enterprise reference. Workspace
+returns code/name/revision only. Raw location, currency and custom Store fields
+are not part of the merchant projection. Ordinary effective admin/operator/
+service read grants retain their original Store access without Digital admission.
+Missing Digital/Store protection owners fail closed for narrow merchant callers.
+
+Mongo invokes the protected result hook on its raw `query/options/count/result`
+envelope before the generated get initializer adds `SUC_FIND_00000`. Only the
+first projection on the exact live private read may omit `code`: the prepared
+receiver and query/options object references must still be the original ones.
+Any present code must be a string success code; even an explicitly undefined
+code is not omission. Failure flags, negative acknowledgements, malformed error
+lists, mismatched count/rows and foreign or revoked scope still refuse. A later
+projection cannot reuse the omission. The final `readSelected` response always
+requires a string `SUC_` code and the private projection checkpoint; callers and
+arbitrary service overrides cannot obtain admission by returning a code-less
+envelope, copying a request or supplying a flag. Do not rewrite generic identity
+or weaken generated schema access to accommodate provider envelope timing.
+
+The cross-owner call is a fixed operation boundary: Store reuses Digital Core's
+existing merchant authority parser rather than copying Profile scope resolution
+or maintaining a second permission registry. There is no new route, credential,
+role installation, schema migration or qualification switch. Restart/generate
+the effective owner sources normally before native testing.
+
+Run `node --test nodics.commerce/modules/baseCommerce/modules/store/test/merchantReadAdmissionContract.test.js`
+from the framework root. These fixtures exercise real named schema policies,
+generated read access, option normalization and protected-read hooks plus real
+Digital staff/scope parsing against a controlled Profile response. They are not
+live Profile, database, private-capture or end-to-end qualification.
+
+`test/merchantGeneratedPipelineContract.test.js` additionally compiles the
+canonical generated Store service and executes the real pipeline engine,
+initializer, Mongo adapter and Store protection hooks with controlled external
+Profile and cursor/count fixtures. It checks both raw and final envelopes,
+unchanged normalized search-option identity, private-field projection, absent
+records, code/error/count failures, copied requests, substituted receivers,
+fresh scope denial, expired admission and strict final acknowledgement. This
+integration regression does not start servers, access a database or qualify a
+deployment; native workspace acceptance remains separate.
 
 Store master-data technical counters are framework-managed through the existing
 effective `backoffice.concurrency` metadata. Never manually increment them or

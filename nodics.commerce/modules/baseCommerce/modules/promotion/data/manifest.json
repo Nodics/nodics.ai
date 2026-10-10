@@ -1,30 +1,117 @@
 {
-    "contractVersion": 2,
-    "module": "promotion",
-    "sections": {
-        "promotionPublicationWorkflow": {
-            "kind": "DATA_RELEASE",
-            "selectionPolicy": "EXPLICIT",
-            "dataType": "init",
-            "version": "1.0.1",
-            "displayName": "Promotion Policy Publication Approval",
-            "description": "Forward Process approval contribution for exact retained policy.",
-            "owningDomain": "promotion",
-            "lifecycle": "OPERATIONAL_VERSIONED",
-            "destinationRole": "PROCESS",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "installer": "PROCESS_DEFINITION",
-            "sourceRoot": "init-v002",
-            "files": {
-                "init-v002/records/process/promotionPublicationWorkflowDefinitionData.js": "ad5dc795058f225d31f37cba22d63751e722d25de162ab0a629e949c3b395628"
-            }
+  "contractVersion": 2,
+  "module": "promotion",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "promotion",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "e971e54a07121687aeca3f2846a247ee9847d027b54089b6b99c8dbaab39b410",
+      "generatedHashes": {
+        "docs-v001/records/documentation/promotionDocumentationComponentData.js": "f0357eb5eef2faa3ae23ee96f2d97fde14be6ca28c995fd225f8f5afc9c52060",
+        "docs-v001/records/documentation/promotionDocumentationNodeData.js": "a498ccdb42950e78c79906bab4ab7bf09abcbc5f21a1c8f6dfa164e0930ec60e",
+        "docs-v001/records/documentation/promotionDocumentationPageData.js": "bad8ea9fb6aa86a39da8c18974ea489a11cb4985aa3e8591eb8f8ffccd3a99cd",
+        "docs-v001/records/documentation/promotionDocumentationPageMetadataData.js": "bd54e8a7f0fdb83feee20bb1f4d53dff28e8b6b975a0d719b28388a642a44eda",
+        "docs-v001/records/documentation/promotionDocumentationPublicationStateData.js": "8e9ef43b70eeac0e2bc083db86221b5ff40d20ded0ebaa7fc09dd6bfdfabe5dc",
+        "docs-v001/records/documentation/promotionDocumentationRouteData.js": "c341337bfdf4d72abc413a6ef4a79800f5c50b8cca109c5746b964b9aa77c46a",
+        "docs-v001/records/documentation/promotionDocumentationSearchMetadataData.js": "1ed472150f09c36280d3621d09100e2e9ac76b2c4b0558adc43ceca61acc0c6f",
+        "docs-v001/headers/100_promotionDocumentationContentPackHeader.js": "bcfa4311885656fddb5b5d52ae7dd3c869199c6137102ea4efd381ac29142c58"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ],
+      "referenceCatalogues": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cart",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "digitalCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "fulfillmentCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        }
+      ]
+    },
+    "promotionPublicationWorkflow": {
+      "kind": "DATA_RELEASE",
+      "selectionPolicy": "EXPLICIT",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Promotion Policy Publication Approval",
+      "description": "Forward Process approval contribution for exact retained policy.",
+      "owningDomain": "promotion",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "installer": "PROCESS_DEFINITION",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/process/promotionPublicationWorkflowDefinitionData.js": "ad5dc795058f225d31f37cba22d63751e722d25de162ab0a629e949c3b395628"
+      }
     }
+  }
 }

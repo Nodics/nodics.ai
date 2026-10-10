@@ -41,16 +41,21 @@ test('actual Profile forward baseline is discovered before dependent group delta
         global.NODICS = { getActiveModules: () => ['profile'], getRawModule: () => owner,
             getIndexedModules: () => new Map([['10', owner]]), isModuleActive: () => true,
             getSelectedEnvironmentName: () => 'test' };
-        global.CONFIG = { get: () => undefined };
+        global.CONFIG = { get: key => key === 'bootstrapIdentity' ? {
+            source: 'test', adminPassword: 'test-admin-password-12345',
+            servicePassword: 'test-service-password-12345', serviceApiKey: 'test-service-api-key-value-12345678901234567890'
+        } : key === 'authSecurity' ? { ...require('../../../../nAuth/config/properties').authSecurity, compatibility: { ...require('../../../../nAuth/config/properties').authSecurity.compatibility, allowLocalBootstrapIdentity: true } } : undefined };
         global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
         const found = releases.discoverReleases('init');
         assert.deepEqual(found.map(release => release.releaseCode), [
-            'profile:init-v001', 'profile:init-v002', 'profile:init-v003', 'profile:init-v004', 'profile:init-v005',
+            'profile:init-v001',
             'profile:employeeApplicationReview',
         ]);
         const manifest = JSON.parse(fs.readFileSync(path.join(owner.path, 'data/manifest.json'), 'utf8'));
         assert.equal(found[0].sourceRoot, manifest.sections['init-v001'].sourceRoot);
-        assert.notEqual(found[0].sourceRoot, 'init-v001', 'the baseline must use its forward source release');
+        assert.equal(found[0].sourceRoot, 'init-v001', 'the unreleased baseline contains the combined current authorization data');
+        assert(found[0].declaredFiles.some(file => file.endsWith('runtimeConfigurationUpdateUserGroupsData.js')));
+        assert(found[0].declaredFiles.some(file => file.endsWith('backofficeCircaUserGroupsData.js')));
         assert(found.every(release => !release.invalidManifest), 'all current immutable release manifests remain valid');
     } finally {
         Object.assign(global, previous);
@@ -95,9 +100,19 @@ test('project release inherits matching current source fields without replaying 
         global.SERVICE = {
             DefaultImportUtilityService: utility,
             DefaultDataInstallationService: {
-                get: async request => ({ result: [...installations.values()].filter(value => !request.query.code || value.code === request.query.code) }),
-                save: async request => { installations.set(request.model.code, request.model); return request.model; },
-                update: async request => { installations.set(request.model.code, request.model); return request.model; }
+                get: async request => ({ code: 'SUC_DBS_00000', result: [...installations.values()].filter(value => !request.query.code || value.code === request.query.code) }),
+                save: async request => {
+                    const stored = { ...request.model, revision: 1 };
+                    installations.set(stored.code, stored);
+                    return { code: 'SUC_DBS_00000', result: stored };
+                },
+                update: async request => {
+                    const existing = installations.get(request.query.code);
+                    if (!existing || (existing.revision || 0) !== request.query.revision)
+                        return { code: 'SUC_DBS_00000', result: { matchedCount: 0, modifiedCount: 0 } };
+                    installations.set(request.model.code, { ...request.model, revision: (existing.revision || 0) + 1 });
+                    return { code: 'SUC_DBS_00000', result: { matchedCount: 1, modifiedCount: 1 } };
+                }
             },
             DefaultPipelineService: { start: async (name, request) => {
                 writes.push(request.models.map(model => ({ ...model })));

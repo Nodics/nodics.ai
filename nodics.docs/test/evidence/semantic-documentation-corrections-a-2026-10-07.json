@@ -1,0 +1,1411 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-07",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_CORRECTION_REVIEW",
+  "reviewStatus": "COMPLETE_SOURCE_EDITORIAL_REVIEW",
+  "frameworkRoot": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+  "backlogDefinition": "nodics.docs/scripts/audit-source-coverage.mjs#frameworkDocumentationBacklog",
+  "originalReview": {
+    "path": "nodics.docs/test/evidence/semantic-documentation-review-2026-10-07.json",
+    "sha256": "d03589a466b8e1ed0498a87459e40204d3557f3795f279f0ae3726e536dd8949",
+    "modified": false,
+    "scope": "Follow-up for these nine exact original items only; the original 22-item historical review remains unchanged."
+  },
+  "sourceSnapshot": {
+    "head": "77564981431ae20ac0eb1019c1c8902dd66b7dc5",
+    "basis": "Current dirty working-tree canonical ComponentData article blocks and non-data owner source; per-article JSON.stringify(blocks) SHA-256 and raw source-file SHA-256 bind the reviewed bytes. HEAD alone does not identify them.",
+    "concurrentIntegration": "Preserved the concurrent internal classification/source-boundary work in nodics.docs, including non-block metadata and reference.internal-source-boundary-register. Existing CMS Media readiness/recovery sections were retained. No content or evidence from another correction scope was reverted.",
+    "integrityStatus": "NOT_REFRESHED: declared hashes/manifests/search text/versions/navigation/tests/audits/configuration and publication remain outside this correction scope. Parent integration must reconcile shared bindings against final bytes before any publication."
+  },
+  "summary": {
+    "totalItems": 9,
+    "PASS_SOURCE_REVIEW": 9,
+    "OPEN_CONTENT_GAP": 0,
+    "canonicalDocumentsCited": 10,
+    "nonDataSourceFilesCited": 66,
+    "passItems": [
+      "Axis setup and user-safe error contracts",
+      "CMS exact source map",
+      "Media operations runbook",
+      "Commerce product, price, inventory, and fulfillment authoring",
+      "Documentation publishing runbook",
+      "Commerce Search guide",
+      "Localization depth",
+      "Payment Core and provider split",
+      "Engagement and contact submission"
+    ],
+    "browserLiveAcceptance": "NOT_EXECUTED"
+  },
+  "method": {
+    "approach": "Reread the original remediation, current canonical owner blocks and implementing non-data source. Corrected existing section bodies/examples/source maps, then semantically rereviewed the saved records for every original requested concern, ownership, actual supported behavior, failure/recovery and unsupported/absent capabilities. File/anchor/hash checks validate bindings, not semantic closure by keyword.",
+    "passMeaning": "All explanations requested by the exact original requestedAction are now covered accurately within the named item scope. PASS_SOURCE_REVIEW does not certify every adjacent capability, implementation quality, installed provider, runtime/browser behavior or publication.",
+    "pathConvention": "componentFile and sourceFiles are framework-root-relative. evidence anchors are exact existing CMS heading anchors. blocksha256 and articleBlocksSha256 both hash JSON.stringify(properties.blocks); sourceFileSha256 hashes raw file bytes.",
+    "actionsPerformed": [
+      "apply_patch edits only selected existing ComponentData blocks and this follow-up evidence file.",
+      "Read-only loading/parsing of declarative ComponentData for exact article/body/heading checks; source inspection and deterministic hash binding.",
+      "Preserved all existing heading levels/text/anchors and reference/component identities; no new guide/navigation identity."
+    ],
+    "actionsNotPerformed": [
+      "No runtime/server startup, native import, browser/provider calls, approval, publication, production acceptance, commits or memory writes.",
+      "No runtime/source implementation, lifecycle/approval/Online-field mutation, hash/manifest/version/navigation/test/audit/configuration regeneration."
+    ]
+  },
+  "changedFiles": [
+    "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js",
+    "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+    "nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js",
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v001/records/documentation/commerceSearchCoreDocumentationComponentData.js",
+    "nodics.localization/modules/localizationCore/data/docs-v001/records/documentation/localizationCoreDocumentationComponentData.js",
+    "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+    "nodics.engagement/modules/contactSubmission/data/docs-v001/records/documentation/contactSubmissionDocumentationComponentData.js",
+    "nodics.docs/test/evidence/semantic-documentation-corrections-a-2026-10-07.json"
+  ],
+  "changedArticles": [
+    "applications.axis-setup-error-contracts",
+    "wcms.cms-source-map-authoring-contract",
+    "wcms.media-operations-runbook",
+    "commerce.data-authoring-fulfillment",
+    "docs.documentation-publishing-runbook",
+    "commerce.search-guide",
+    "localization.runtime-authoring",
+    "commerce.payment-provider-boundaries",
+    "engagement.contact-submission-operations",
+    "wcms.publishing-lifecycle"
+  ],
+  "preservationVerification": {
+    "expectedArticleBlocksMatched": 10,
+    "existingHeadingSetsMatched": 10,
+    "nonBlockMetadataUnchangedFiles": [
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js",
+      "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js",
+      "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v001/records/documentation/commerceSearchCoreDocumentationComponentData.js",
+      "nodics.localization/modules/localizationCore/data/docs-v001/records/documentation/localizationCoreDocumentationComponentData.js",
+      "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "nodics.engagement/modules/contactSubmission/data/docs-v001/records/documentation/contactSubmissionDocumentationComponentData.js"
+    ],
+    "concurrentChangesPreserved": [
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js#reference.internal-source-boundary-register"
+    ],
+    "originalReviewSha256Unchanged": true,
+    "scope": "Patch hunks changed only article blocks. Seven files retain the initial complete non-block metadata hash; the shared nodics.docs file contains preserved concurrent parent metadata/internal-register changes. No attempt was made to roll that work back."
+  },
+  "auditCoverageBoundary": {
+    "interpretation": "Nine corrected backlog requests are source-editorial passes, not a reassessment of all module coverage rows. The 179 mention-based modules are not all deep coverage. Other original items and shared stale bindings require their own integration/re-review."
+  },
+  "prioritizedGaps": [],
+  "remainingAcceptanceBoundaries": [
+    "Refresh final record/manifest/search integrity and reconcile all shared article bindings before integrating the strict all-22 regression gate.",
+    "Run separately authorized native import, rendering/browser, role/tenant, target-byte, provider and publication acceptance. Unsupported cloud/gateway integrations, absent settlement/verification workflows and cross-service atomicity limits remain explicitly documented, not claimed implemented."
+  ],
+  "items": [
+    {
+      "item": "Axis setup and user-safe error contracts",
+      "backlogPriority": "P0",
+      "requestedAction": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "statusStates": "COVERED_ORDERED_BACKEND_ENUM_MAPPING",
+        "setupBlockers": "COVERED_EXACT_CODES_AND_SAFE_MESSAGES",
+        "retryActions": "COVERED_AVAILABILITY_CONFIRMATION_AND_REPLAY_PRECONDITIONS",
+        "technicalEvidence": "COVERED_AUTHORIZED_BOUNDED_DIAGNOSTICS",
+        "userSafeMessages": "COVERED_PRIMARY_MESSAGE_VS_TECHNICAL_DETAIL"
+      },
+      "rationale": "The saved State model now explains actual businessStatus precedence across projection, Media qualification, preparation, readiness, publication and release updates rather than presenting a fictional state machine. Error contract maps invalid manifest, validation/rate-limit/unknown readiness, module/runtime and exact Media blockers to safe messages, owner actions, confirmation and replay prerequisites. Setup flow explicitly consumes the current backend DTO, permissions and repairActions; disabled handoffs are not frontend executable repair buttons.",
+      "evidence": [
+        {
+          "documentId": "applications.axis-setup-error-contracts",
+          "anchors": [
+            "applicationsAxisSetupErrorContracts-1-source-map",
+            "applicationsAxisSetupErrorContracts-2-state-model",
+            "applicationsAxisSetupErrorContracts-3-error-contract",
+            "applicationsAxisSetupErrorContracts-4-setup-flow",
+            "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+            "applicationsAxisSetupErrorContracts-6-common-mistakes",
+            "applicationsAxisSetupErrorContracts-7-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js"
+      ],
+      "sourceFindings": [
+        "capabilityBusinessStatus guards can return NEEDS_ATTENTION before otherwise ready/retired readiness; READY also requires confirmed publication.state ONLINE and no UPDATE_AVAILABLE.",
+        "capabilityRepairProjection distinguishes read-only REFRESH_READINESS, unavailable owner handoffs and explicitly confirmed Media repair. Axis cannot infer mutation authority from action metadata."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Backend projection accuracy does not prove a deployed Axis screen renders or enforces the contract; browser and permission acceptance remain separate."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "CMS exact source map",
+      "backlogPriority": "P0",
+      "requestedAction": "Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "authoring": "COVERED_EXACT_DESIGNER_METHODS_AND_SEQUENTIAL_SAVES",
+        "delivery": "COVERED_PUBLISHED_VS_LEGACY_RESOLVER",
+        "publicationManifest": "COVERED_EXACT_ORCHESTRATION_METHODS",
+        "migration": "COVERED_PREVIEW_APPLY_AUDIT_ROLLBACK_LIMITS",
+        "cache": "COVERED_INVALIDATION_AND_OPTIONAL_CACHE_ABSENCE",
+        "documentationGovernance": "COVERED_VALIDATION_PROJECTION_HANDOFF_BOUNDARY"
+      },
+      "rationale": "Source map now separates exact Designer, delivery, manifest, migration, cache and documentation-governance files/methods. Authoring explains validation before sequential saves and partial failure. Delivery distinguishes publication-enabled immutable resolution from the legacy active-record path. Migration explains recomputed preview/manualActions, APPLYING/APPLIED/NO_CHANGES/FAILED audit, reverse snapshot recovery and concurrency/field-restoration limits. Cache absence is a no-op, not freshness evidence; documentation READY is validation, not import/approval/publication.",
+      "evidence": [
+        {
+          "documentId": "wcms.cms-source-map-authoring-contract",
+          "anchors": [
+            "wcmsCmsSourceMapAuthoringContract-1-source-map",
+            "wcmsCmsSourceMapAuthoringContract-2-content-model",
+            "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+            "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+            "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+            "wcmsCmsSourceMapAuthoringContract-6-operational-checks",
+            "wcmsCmsSourceMapAuthoringContract-7-common-mistakes",
+            "wcmsCmsSourceMapAuthoringContract-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js",
+        "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryCacheInvalidationService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js",
+        "nodics.wcms/modules/cms/src/service/migration/defaultCmsMigrationService.js",
+        "nodics.wcms/modules/cms/src/service/documentation/defaultCmsDocumentationGovernanceService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+        "nodics.wcms/modules/cms/src/service/designer/defaultCmsDesignerCompositionService.js",
+        "nodics.wcms/modules/cms/src/router/routers.js"
+      ],
+      "sourceFindings": [
+        "saveDraftComposition saves generated owner records sequentially and invalidates only after the full successful path; partial failure can precede invalidation.",
+        "applyMigration recomputes preview and records before-images; rollbackMigration requires auditCode/snapshot and is not a globally atomic undo of concurrent edits or every introduced field.",
+        "resolvePage uses resolvePublishedManifest only when publication is enabled; employee shared composition rejects the legacy path.",
+        "validateAuthoringRecords validates hierarchy/access/visual/publication/search/checksum coverage; renderProjection/search/publicationHandoff do not create publication authority."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Optional nCache absence can return success without invalidating a cache; external CDN/browser freshness requires target evidence.",
+        "Migration rollback and publication pointer rollback are distinct recovery operations."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Media operations runbook",
+      "backlogPriority": "P0",
+      "requestedAction": "Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "upload": "COVERED_TRUSTED_DESCRIPTOR_ACKNOWLEDGEMENT_AND_VERSION_CONFLICT",
+        "importHydration": "COVERED_DECLARATIVE_RELEASE_ASSET_HYDRATION",
+        "storageProviders": "COVERED_IMPLEMENTED_LOCAL_NAS_AND_UNAVAILABLE_CLOUD",
+        "cleanupLifecycle": "COVERED_PREVIEW_HOLD_APPROVAL_RETAINED_GUARD_AND_NONATOMIC_PURGE",
+        "replicationQueue": "COVERED_IDENTITY_DUE_RETRY_CEILING_ESCALATION_AND_OPTIONAL_PERSISTENCE",
+        "deliveryFailures": "COVERED_METADATA_BYTES_ACCESS_AND_RETAINED_TARGET_DIAGNOSIS"
+      },
+      "rationale": "The guide retains import hydration and adds a trusted upload example, checksum/storage ownership, acknowledged version 0, stale/ambiguous-version and legal-hold refusal, plus file/database partial-failure limits. Providers are qualified accurately: Local filesystem, NAS delegation and unavailable default Cloud. Cleanup distinguishes non-persisting preview, candidate/passive stages, approval, retained cleanup refusal and non-atomic destructive outcomes. Replication identifies exact queue keys/statuses/due time/attempt ceiling and primary-first versus strict behavior; delivery diagnosis distinguishes metadata from target bytes and access-policy support.",
+      "evidence": [
+        {
+          "documentId": "wcms.media-operations-runbook",
+          "anchors": [
+            "wcmsMediaOperationsRunbook-1-business-problem",
+            "wcmsMediaOperationsRunbook-2-source-map",
+            "wcmsMediaOperationsRunbook-3-import-contract",
+            "wcmsMediaOperationsRunbook-4-storage-and-provider-model",
+            "wcmsMediaOperationsRunbook-5-publication-and-dr",
+            "wcmsMediaOperationsRunbook-6-operations",
+            "wcmsMediaOperationsRunbook-7-customization-and-extension-guidance",
+            "wcmsMediaOperationsRunbook-8-common-mistakes",
+            "wcmsMediaOperationsRunbook-9-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaUploadService.js",
+        "nodics.foundation/modules/nData/nImport/import/src/service/media/defaultMediaReleaseAssetHydrationService.js",
+        "nodics.wcms/modules/media/src/service/storage/provider/defaultCloudMediaStorageProviderService.js",
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaCleanupLifecycleService.js",
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaLifecycleCoordinationService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTransferService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+        "nodics.wcms/modules/media/src/service/storage/provider/defaultLocalMediaStorageProviderService.js",
+        "nodics.wcms/modules/media/src/service/storage/provider/defaultNasMediaStorageProviderService.js",
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaDeliveryService.js",
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaImportSourceResolverService.js"
+      ],
+      "sourceFindings": [
+        "upload checks current versionId before retained re-upload and verifies the initial acknowledged identity/version/storage key; bytes and metadata are separate operations.",
+        "Cloud operations reject ERR_MED_00032; NAS delegates Local and reports SHARED_FILESYSTEM, not a native NAS/failover guarantee.",
+        "Missing reference lookup returns false, and physical purge does not atomically recheck all live owner references; retained/versioned physical cleanup is guarded.",
+        "Replication retry records may be absent when queue persistence is unavailable; due retries are bounded and escalation is not hidden by primary copy success.",
+        "SIGNED delivery is explicitly unconfigured; retained Online delivery uses the target resolver/no-store, and legacy metadata lookup must be unambiguous."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Cloud implementation, shared-mount qualification, scheduling receipts and remote delivery/DR acceptance are not established.",
+        "A candidate/empty reference result is not universal safe-deletion evidence; cross-storage cleanup and publication are not globally atomic."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "backlogPriority": "P0",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "dataDependencies": "COVERED_OWNER_RELATIONS_AND_OPERATIONAL_EXCLUSIONS",
+        "creationLanes": "COVERED_SUPPORTED_RELEASE_AXIS_AND_SPECIALIZED_LISTING_BOUNDARIES",
+        "publication": "COVERED_STAGED_APPROVAL_VS_OPERATIONAL_STOCK",
+        "searchProjection": "COVERED_INDEPENDENT_OWNER_FRESHNESS",
+        "fulfillmentEvidence": "COVERED_ORDER_CONSIGNMENT_CARRIER_RETURN_REFUND_EVIDENCE",
+        "browserProof": "COVERED_SCENARIOS_EXECUTION_REMAINS_SEPARATE"
+      },
+      "rationale": "The owner map fixes Order under Checkout and removes concrete sibling/customer source paths. Authoring sequence separates Product/localization/Price/reference-policy releases from operational Inventory RECEIVE/ADJUST/RETURN, including Staged and direct snapshot exclusions. It distinguishes owner-backed Axis availability from the narrow service-token DIGITAL marketplace listing lane. Fulfillment explains order quantities/payment/warehouse, consignment/carrier references, controlled sandbox operation limits, and return receipt/refund reconciliation evidence. Product publication, search freshness, stock and browser proof are independent.",
+      "evidence": [
+        {
+          "documentId": "commerce.data-authoring-fulfillment",
+          "anchors": [
+            "commerceDataAuthoringFulfillment-1-source-map",
+            "commerceDataAuthoringFulfillment-2-data-bundle",
+            "commerceDataAuthoringFulfillment-3-authoring-sequence",
+            "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+            "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+            "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+            "commerceDataAuthoringFulfillment-7-common-mistakes",
+            "commerceDataAuthoringFulfillment-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js"
+      ],
+      "sourceFindings": [
+        "Inventory rejects stock mutation in COMMERCE_STAGED/STAGED and direct operational snapshots for balance/movement/reservation in OPERATIONAL_VERSIONED mode.",
+        "balanceAction replay identity does not make sequential balance/movement writes a proven cross-worker transaction.",
+        "Product listing creation is gated specialized DIGITAL/DIGITAL_COMMERCE behavior with source/owner/listing identity, not general Axis product CRUD.",
+        "Carrier sandbox execute requires enabled sandboxOnly policy, references and injected ports; liveQualified:true is refused, not certified.",
+        "Pricing createGoverned uses retained capture and shared publication authority, not operational inventory or frontend approval."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "No atomic transaction spans catalog publication, Inventory, carrier and Payment.",
+        "Browser sellability, live carrier support and settled refunds require separate operational evidence."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Documentation publishing runbook",
+      "backlogPriority": "P0",
+      "requestedAction": "Document canonical CMS data, optional CONTENT_PACK selection, Staged import, review, Online publication, rollback, and rendering.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "canonicalCms": "COVERED_EXISTING_CANONICAL_OWNER_RECORDS",
+        "optionalContentPack": "COVERED_EXISTING_EXPLICIT_SELECTION_AND_SHARED_FOUNDATION_RULES",
+        "stagedImport": "COVERED_EXISTING_GOVERNED_IMPORT",
+        "review": "COVERED_EXISTING_REVIEW_AND_OWNER_APPROVAL",
+        "onlinePublication": "COVERED_EXISTING_MANIFEST_AND_POINTER_BOUNDARY",
+        "rollback": "COVERED_CONCRETE_SHARED_CMS_BASELINE_PROCEDURE",
+        "rendering": "COVERED_POST_ROLLBACK_ARTICLE_NAVIGATION_ACCESS_SEARCH_MEDIA_CHECKS"
+      },
+      "rationale": "The existing runbook already covers canonical records, optional pack selection, Staged import, review and Online delivery. Review and Online activation now points to one concrete CMS Running example rollback procedure rather than inventing documentation authority. The shared procedure identifies current publication/revision and previousOnlineVersion, authenticated human BackOffice route, delegated internal CMS call and nPublish expectedRevision. It explains unavailable previous lineage, revision conflict, partial rollback failure and post-rollback pointer/manifest/article/navigation/access/search/physical-Media checks.",
+      "evidence": [
+        {
+          "documentId": "docs.documentation-publishing-runbook",
+          "anchors": [
+            "docsDocumentationPublishingRunbook-1-source-map",
+            "docsDocumentationPublishingRunbook-2-publishing-model",
+            "docsDocumentationPublishingRunbook-3-authoring-steps",
+            "docsDocumentationPublishingRunbook-4-generated-data-contract",
+            "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+            "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+            "docsDocumentationPublishingRunbook-7-common-mistakes",
+            "docsDocumentationPublishingRunbook-8-verification",
+            "docs-publishing-module-ownership-composition",
+            "docs-publishing-references-pictures-checks",
+            "docsPublishingRunbook-functional-visibility-and-record-ownership"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-3-running-example"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js",
+        "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js",
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+        "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js",
+        "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js",
+        "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js",
+        "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js"
+      ],
+      "sourceFindings": [
+        "BackOffice forwards applicationInitialization reason/correlation and delegated human requestedBy to a fixed profile-owned baseline endpoint; internal CMS rollback is not a public human-token shortcut.",
+        "CMS baseline rollback requires state ONLINE and previousOnlineVersion, then passes current expectedRevision to nPublish.rollback.",
+        "nPublish transitions ROLLING_BACK, invokes the version provider and domain hook, and records ROLLED_BACK or FAILED/ROLLBACK_FAILED; pointer recovery does not revert source/imported records or physical assets."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Source editing and this evidence do not refresh manifest integrity, install a content pack, approve or publish it.",
+        "A ROLLED_BACK label alone is not browser/Media/cache acceptance; the prior immutable target must be inspected."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Commerce Search guide",
+      "backlogPriority": "P1",
+      "requestedAction": "Document ranking rules, projections, publishing, index ownership, and storefront impact.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "rankingRules": "COVERED_VALID_CATEGORY_EXAMPLE_AND_IMPLEMENTED_FALLBACK",
+        "projections": "COVERED_PRODUCT_RULE_PROJECTION_SEPARATION",
+        "publishing": "COVERED_EXISTING_BOUNDED_PARTIAL_FAILURE_AND_RECOVERY",
+        "indexOwnership": "COVERED_NSEARCH_PROVIDER_VS_COMMERCE_RULE_OWNER",
+        "storefrontImpact": "COVERED_ORDERING_NO_RULE_AND_AVAILABILITY_BOUNDARIES"
+      },
+      "rationale": "The invalid category/top-level boost example is replaced with required code/tenant/name/store/scope/status/revision/actions and CATEGORY/categoryCode/BOOST weight. Earlier exclusions/market/analyzer promises are constrained to explicitly implemented external engines rather than fallback behavior. Intro/source map now distinguish Product discovery, Commerce rule projection/ranking and generic nSearch. Existing detailed scope, deterministic edge cases, bounded publication and sequential partial-failure sections remain intact, and stock/browser acceptance remain separate.",
+      "evidence": [
+        {
+          "documentId": "commerce.search-guide",
+          "anchors": [
+            "commerceSearchGuide-1-source-map",
+            "commerceSearchGuide-2-projection-flow",
+            "commerceSearchGuide-3-ranking-and-rules",
+            "commerceSearchGuide-4-customization-and-extension-guidance",
+            "commerceSearchGuide-5-implementation-handoff",
+            "commerceSearchGuide-6-evidence-checklist",
+            "commerceSearchGuide-7-common-mistakes",
+            "commerceSearchGuide-8-verification",
+            "commerce-search-guide-source-depth-1",
+            "commerce-search-guide-source-depth-2",
+            "commerce-search-guide-source-depth-3",
+            "commerce-search-guide-source-depth-4"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js"
+      ],
+      "sourceFindings": [
+        "The complete DRAFT rule is authoring data, not a CURRENT published projection; actions use productCode/actionType/weight.",
+        "loadRules/applies/actionScore/ranked/rank implement the documented fallback PIN/BOOST/BURY behavior, not exclusion or arbitrary analyzer support.",
+        "Publication checks the bounded rule set before sequential projection/index writes; partial publication is not globally atomic."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "No live index rebuild, storefront query or provider acceptance was executed.",
+        "A ranked/discoverable item does not establish current operational stock or checkout eligibility."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Localization depth",
+      "backlogPriority": "P1",
+      "requestedAction": "Document locale records, fallback behavior, content and product localization, import data, and API boundary.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "localeRecords": "COVERED_DISTINCT_CMS_PRODUCT_AND_UI_SCHEMAS_STATES",
+        "fallbackBehavior": "COVERED_WORKED_EXACT_PARTIAL_MISSING_UNSUPPORTED_RESULTS",
+        "contentLocalization": "COVERED_DECLARED_FIELDS_REQUIRED_LOCALES_SHARED_PROPERTY_MERGE",
+        "productLocalization": "COVERED_READY_SELECTION_COMPLETENESS_AND_NO_RESOLVER_BASE_MERGE",
+        "importData": "COVERED_OWNER_HEADERS_RECORDS_AND_UI_CONTRIBUTION_ENVELOPE",
+        "apiBoundary": "COVERED_PUBLIC_BUNDLE_VS_SECURED_MANAGEMENT_WITH_SCOPE_LIMITATIONS"
+      },
+      "rationale": "The universal fallback diagram is replaced with distinct CMS, Product and UI bundle algorithms. Worked policy cases explain exact/fallback selection, partial variants, missing values and owner-specific unsupported-locale behavior. Schema-shaped developer headers/records include lifecycle fields; UI contribution/value/release/pointer are separately explained without seeding approval. Public bundle route, trusted tenant versus query filters, namespace/exposure/key bounds, immutable release validation/checksum/ETag and secured author/review/build/publish/rollback operations are explicit, including service-level scope/locale guard limitations.",
+      "evidence": [
+        {
+          "documentId": "localization.runtime-authoring",
+          "anchors": [
+            "localizationRuntimeAuthoring-1-source-map",
+            "localizationRuntimeAuthoring-2-resolution-model",
+            "localizationRuntimeAuthoring-3-authoring-contract",
+            "localizationRuntimeAuthoring-4-customization-and-extension-guidance",
+            "localizationRuntimeAuthoring-5-implementation-handoff",
+            "localizationRuntimeAuthoring-6-evidence-checklist",
+            "localizationRuntimeAuthoring-7-common-mistakes",
+            "localizationRuntimeAuthoring-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js",
+        "nodics.localization/modules/localizationApi/src/router/routers.js",
+        "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js",
+        "nodics.localization/modules/localizationCore/src/schemas/schemas.js",
+        "nodics.wcms/modules/cms/src/schemas/schemas.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js",
+        "nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js",
+        "nodics.localization/modules/localizationCore/src/service/defaultLocalizationImportExportService.js",
+        "nodics.localization/modules/localizationCore/src/service/defaultLocalizationReleaseManagementService.js",
+        "nodics.localization/modules/localizationApi/src/controller/defaultLocalizationApiController.js",
+        "nodics.localization/modules/localizationApi/src/facade/defaultLocalizationApiFacade.js"
+      ],
+      "sourceFindings": [
+        "CMS merges one selected locale variant over shared properties; it does not merge fallback-locale fields into a partial exact variant.",
+        "Product resolve selects READY tenant-localized values without merging base fields; validate and completeness have distinct supported/required-locale enforcement.",
+        "UI build uses APPROVED values with STANDARD/PROJECT/TENANT precedence, not defaultMessage emission or CMS-style per-key fallback. Default-locale incompleteness blocks by default; non-default missing keys may be absent.",
+        "Public bundle request validation is bounded but does not itself prove requested locale/channel equals every loaded release field; pointer/repository isolation must be qualified."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Translation quality, public pointer isolation, browser locale behavior and external cache freshness need separate acceptance.",
+        "Schema declarations/valid import shapes do not grant approval or install a published UI bundle."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Payment Core and provider split",
+      "backlogPriority": "P1",
+      "requestedAction": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "paymentDecisions": "COVERED_SUPPORTED_OPERATIONS_IDEMPOTENCY_AND_REFUND_SCOPE",
+        "methodProviderSeparation": "COVERED_CARD_METHOD_OFFLINE_STRIPE_INTERNAL_WALLET_AND_PLACEHOLDER_PROVIDERS",
+        "reconciliation": "COVERED_STATUS_MAP_OPTIONAL_RECORD_PERSISTENCE_AND_ABSENT_SETTLEMENT_WORKER",
+        "safeCustomerPayloads": "COVERED_DECLARED_ALLOWLIST_AND_NON_ENFORCEMENT_LIMIT"
+      },
+      "rationale": "The guide separates method eligibility from provider execution, labels default Stripe offline and Visa/PayPal/CyberSource namespaces unimplemented, and identifies internal Loyalty behavior without claiming external certification. It explains supported operations, stable replay identity, process-local and repository/provider non-atomic limits, exact refund status mapping, original Loyalty capture restriction and optional reconciliation persistence. Customer example matches declared exposeOnly and explicitly remains a declaration-shaped projection rather than an implemented universal HTTP sanitizer. Missing settlement/polling/reconciliation completion behavior is stated rather than implied.",
+      "evidence": [
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-1-source-map",
+            "commercePaymentProviderBoundaries-2-boundary-model",
+            "commercePaymentProviderBoundaries-3-safe-payload-contract",
+            "commercePaymentProviderBoundaries-4-customization-and-extension-guidance",
+            "commercePaymentProviderBoundaries-5-implementation-handoff",
+            "commercePaymentProviderBoundaries-6-evidence-checklist",
+            "commercePaymentProviderBoundaries-7-common-mistakes",
+            "commercePaymentProviderBoundaries-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js"
+      ],
+      "sourceFindings": [
+        "Card prepare accepts opaque tok_ descriptors; offline Stripe simulation does not call a gateway. Provider package names do not establish integration.",
+        "execute uses tenant:key in-flight dedupe and sequential repository find -> adapter execution -> record; no multi-worker exactly-once guarantee follows.",
+        "Only REFUND_DELAYED/REFUND_FAILED/REFUND_RECONCILIATION_REQUIRED set reconciliationRequired; unknown adapter statuses are not automatically normalized safely.",
+        "Reconciliation is ACTION_REQUIRED or PENDING_PROVIDER_CONFIRMATION and may not be saved if the generated service is absent; the inspected services do not supply a settlement worker.",
+        "refundOrder currently requires matching original Loyalty capture/total/currency and uses a stable full-refund identity; it is not general partial-card refund execution."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Readiness declaration validation is not independent live certification, signed-callback execution or production traffic approval evidence.",
+        "A safe-field declaration is not proof every channel response enforces it; provider tokens/raw evidence/secrets must remain private."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Engagement and contact submission",
+      "backlogPriority": "P1",
+      "requestedAction": "Document contact forms, moderation, workflow, notification, audit, and recovery.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "contactForms": "COVERED_REAL_DEFINITION_VERSION_INPUT_AND_LOOKUP_LIMITS",
+        "moderation": "COVERED_PROTECTION_ROUTING_AND_ACTUAL_OPERATOR_ACTIONS",
+        "workflow": "COVERED_SEPARATE_PROCESS_HANDOFF_AND_NONATOMIC_DOMAIN_CREATION",
+        "notification": "COVERED_SEPARATE_INTENT_DELIVERY_AUTHORITY_AND_NO_IMPLICIT_WORKER",
+        "audit": "COVERED_DISTINCT_ACTIVITY_CONTACT_AND_PROVIDER_EVIDENCE_LIMITS",
+        "recovery": "COVERED_LEASE_REVISION_DUE_BACKOFF_CEILING_RETRY_RECONCILE_AND_PRIVACY"
+      },
+      "rationale": "The conceptual form/lifecycle is replaced with real definition/version fields, validated-output placeholders, configured allow-listed submission input, public acknowledgement and guest VERIFICATION_PENDING/OPEN outcomes. It states that ACTIVE lookup does not uniquely validate immutable forms or enforce a submit version, and no guest verification completion is established. Moderation/operator revision checks, queue/SLA routing, PROCESS handoff, notification and audit schemas remain separate authorities. Recovery documents eligibility, leases, conflicts, retry due times/backoff/ceiling/dead-letter, retained attempts, external-reference reconciliation and privacy-safe recovery without resubmitting completed contacts.",
+      "evidence": [
+        {
+          "documentId": "engagement.contact-submission-operations",
+          "anchors": [
+            "engagementContactSubmissionOperations-1-source-map",
+            "engagementContactSubmissionOperations-2-lifecycle",
+            "engagementContactSubmissionOperations-3-data-contract",
+            "engagementContactSubmissionOperations-4-customization-and-extension-guidance",
+            "engagementContactSubmissionOperations-5-implementation-handoff",
+            "engagementContactSubmissionOperations-6-evidence-checklist",
+            "engagementContactSubmissionOperations-7-common-mistakes",
+            "engagementContactSubmissionOperations-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactSubmissionOperationService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactRoutingService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRecoveryService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactOperatorService.js",
+        "nodics.engagement/modules/contactSubmission/src/schemas/schemas.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactValidationService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactFormQueryService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffDispatchService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRepositoryService.js",
+        "nodics.engagement/modules/engagementCore/src/schemas/schemas.js",
+        "nodics.engagement/modules/engagementApi/src/router/routers.js",
+        "nodics.engagement/modules/engagementApi/src/facade/defaultEngagementApiFacade.js"
+      ],
+      "sourceFindings": [
+        "Submit creates the Contact record then a separate handoff; initial adapter dispatch may precede persistence. No domain/process atomicity or external exactly-once promise follows.",
+        "Public acknowledgement exposes referenceCode/duplicate/verificationRequired, not internal Contact/handoff contents.",
+        "Recoverable work is PENDING/due RETRY_PENDING/expired-lease IN_PROGRESS; repository claims/completions require matching revisions and leases.",
+        "Retry permits FAILED/DEAD_LETTER/RETRY_PENDING, does not reset attempts, and can return CONFLICT. Reconcile requires externalReference and terminal adapter lookup before RECONCILED.",
+        "Activity/correspondence/attempt/resolution schemas are not evidence every transition writes every audit/notification record; Process/Communication retain their lifecycles."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Form version schema and ACTIVE lookup do not implement a full immutable form authoring/verification workflow.",
+        "Notification delivery, scheduler operation, provider lookup and public/tenant privacy enforcement need independently qualified owner acceptance."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P1"
+    }
+  ],
+  "canonicalDocuments": {
+    "applications.axis-setup-error-contracts": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
+      "route": "/docs/framework/applications-axis-setup-error-contracts",
+      "blocksha256": "2506513b4fc667c4088e07e8e0fc41b691a0d529e1db6779dbdc43bce021e4dc",
+      "articleBlocksSha256": "e9399319f1067753afb8727971301885c69673cb7b6c81f17c8fae08faa033fe",
+      "sections": [
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-2-state-model",
+          "title": "State model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-3-error-contract",
+          "title": "Error contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow",
+          "title": "Setup flow",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-6-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 16
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-7-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 18
+        }
+      ]
+    },
+    "wcms.cms-source-map-authoring-contract": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentwcmsCmsSourceMapAuthoringContract",
+      "route": "/docs/framework/wcms-cms-source-map-authoring-contract",
+      "blocksha256": "3773f3531bce19c6e93cc936fafa1d52c8b65eff90de1eb781a415d24f0cd9e6",
+      "articleBlocksSha256": "3773f3531bce19c6e93cc936fafa1d52c8b65eff90de1eb781a415d24f0cd9e6",
+      "sections": [
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-2-content-model",
+          "title": "Content model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+          "title": "Authoring contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+          "title": "Publication and delivery",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 14
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-6-operational-checks",
+          "title": "Operational checks",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 21
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 23
+        }
+      ]
+    },
+    "wcms.media-operations-runbook": {
+      "owner": "nodics.wcms/modules/media",
+      "componentFile": "nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentwcmsMediaOperationsRunbook",
+      "route": "/docs/framework/wcms-media-operations-runbook",
+      "blocksha256": "38692f9fd05f870eb94d7ac9b70a02f995845ede6cbb3af3024c226d2250c8d9",
+      "articleBlocksSha256": "38692f9fd05f870eb94d7ac9b70a02f995845ede6cbb3af3024c226d2250c8d9",
+      "sections": [
+        {
+          "anchor": "wcmsMediaOperationsRunbook-1-business-problem",
+          "title": "Business problem",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-2-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-3-import-contract",
+          "title": "Import contract",
+          "headingLevel": 2,
+          "blockIndex": 5
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-4-storage-and-provider-model",
+          "title": "Storage and provider model",
+          "headingLevel": 2,
+          "blockIndex": 11
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-5-publication-and-dr",
+          "title": "Publication and DR",
+          "headingLevel": 2,
+          "blockIndex": 14
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-6-operations",
+          "title": "Operations",
+          "headingLevel": 2,
+          "blockIndex": 17
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-7-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 22
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-8-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 24
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-9-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 26
+        }
+      ]
+    },
+    "commerce.data-authoring-fulfillment": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentcommerceDataAuthoringFulfillment",
+      "route": "/docs/framework/commerce-data-authoring-fulfillment",
+      "blocksha256": "86d843b8320f8ebec7fd26580b77c1108a27159e01febe79cf911894f8e39ce6",
+      "articleBlocksSha256": "86d843b8320f8ebec7fd26580b77c1108a27159e01febe79cf911894f8e39ce6",
+      "sections": [
+        {
+          "anchor": "commerceDataAuthoringFulfillment-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-2-data-bundle",
+          "title": "Data bundle",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-3-authoring-sequence",
+          "title": "Authoring sequence",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+          "title": "Header and record contract",
+          "headingLevel": 2,
+          "blockIndex": 8
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+          "title": "Fulfillment flow",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 17
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 21
+        }
+      ]
+    },
+    "docs.documentation-publishing-runbook": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentdocsDocumentationPublishingRunbook",
+      "route": "/docs/framework/docs-documentation-publishing-runbook",
+      "blocksha256": "56ab6500193080aeff8a264fd3e500e721f37e579a8677117ce0471f65730a69",
+      "articleBlocksSha256": "563d69c3be80f2fa3afeda4a440c7145b412fb7282193962ff8cd16f44192ef8",
+      "sections": [
+        {
+          "anchor": "docsDocumentationPublishingRunbook-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-2-publishing-model",
+          "title": "Publishing model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-3-authoring-steps",
+          "title": "Authoring steps",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-4-generated-data-contract",
+          "title": "Canonical data contract",
+          "headingLevel": 2,
+          "blockIndex": 8
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+          "title": "Review and Online activation",
+          "headingLevel": 2,
+          "blockIndex": 11
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 18
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 20
+        },
+        {
+          "anchor": "docs-publishing-module-ownership-composition",
+          "title": "Module Ownership and Optional Composition",
+          "headingLevel": 2,
+          "blockIndex": 22
+        },
+        {
+          "anchor": "docs-publishing-references-pictures-checks",
+          "title": "References, Pictures and Publication Checks",
+          "headingLevel": 2,
+          "blockIndex": 29
+        },
+        {
+          "anchor": "docsPublishingRunbook-functional-visibility-and-record-ownership",
+          "title": "Functional visibility and physical record ownership",
+          "headingLevel": 2,
+          "blockIndex": 35
+        }
+      ]
+    },
+    "commerce.search-guide": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v001/records/documentation/commerceSearchCoreDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentcommerceSearchGuide",
+      "route": "/docs/framework/commerce-search-guide",
+      "blocksha256": "ad0de7201a30578ed21f77356b925a6ea50844d154cde9f643700ad160c560e8",
+      "articleBlocksSha256": "18b3c5e27107dadab5f1e813beb9c159701c8a9af767395a2ea49f51b75d1c55",
+      "sections": [
+        {
+          "anchor": "commerceSearchGuide-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "commerceSearchGuide-2-projection-flow",
+          "title": "Projection flow",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "commerceSearchGuide-3-ranking-and-rules",
+          "title": "Ranking and rules",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "commerceSearchGuide-4-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 9
+        },
+        {
+          "anchor": "commerceSearchGuide-5-implementation-handoff",
+          "title": "Implementation handoff",
+          "headingLevel": 2,
+          "blockIndex": 11
+        },
+        {
+          "anchor": "commerceSearchGuide-6-evidence-checklist",
+          "title": "Evidence checklist",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "commerceSearchGuide-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "commerceSearchGuide-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 17
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-1",
+          "title": "Commerce Search rule selection and ownership",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-2",
+          "title": "Ranking actions deterministic order and edge cases",
+          "headingLevel": 2,
+          "blockIndex": 23
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-3",
+          "title": "Publication batching and partial failure",
+          "headingLevel": 2,
+          "blockIndex": 27
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-4",
+          "title": "Verification and adoption",
+          "headingLevel": 2,
+          "blockIndex": 31
+        }
+      ]
+    },
+    "localization.runtime-authoring": {
+      "owner": "nodics.localization/modules/localizationCore",
+      "componentFile": "nodics.localization/modules/localizationCore/data/docs-v001/records/documentation/localizationCoreDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentlocalizationRuntimeAuthoring",
+      "route": "/docs/framework/localization-runtime-authoring",
+      "blocksha256": "18a858ab69d0d7f2af24c495df7db088193926feb1df21256c75a02ce5a92f5a",
+      "articleBlocksSha256": "4a9399da9acd9c9e1e0bd8b9abfc1e9573ba1c3fc57ca984c4bd4ed709371e7d",
+      "sections": [
+        {
+          "anchor": "localizationRuntimeAuthoring-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-2-resolution-model",
+          "title": "Resolution model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-3-authoring-contract",
+          "title": "Authoring contract",
+          "headingLevel": 2,
+          "blockIndex": 7
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-4-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 12
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-5-implementation-handoff",
+          "title": "Implementation handoff",
+          "headingLevel": 2,
+          "blockIndex": 14
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-6-evidence-checklist",
+          "title": "Evidence checklist",
+          "headingLevel": 2,
+          "blockIndex": 17
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 21
+        }
+      ]
+    },
+    "commerce.payment-provider-boundaries": {
+      "owner": "nodics.commerce/modules/payment/modules/paymentCore",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentcommercePaymentProviderBoundaries",
+      "route": "/docs/framework/commerce-payment-provider-boundaries",
+      "blocksha256": "decb17cac3eb89efb13aebf624079cac366a882729aca8eed08414995b75bb46",
+      "articleBlocksSha256": "279741d928679cf0e69af38d76a93a524f8e78f5a18637dfe1d282606744f45a",
+      "sections": [
+        {
+          "anchor": "commercePaymentProviderBoundaries-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-2-boundary-model",
+          "title": "Boundary model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+          "title": "Safe payload contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-4-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 9
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+          "title": "Implementation handoff",
+          "headingLevel": 2,
+          "blockIndex": 12
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-6-evidence-checklist",
+          "title": "Evidence checklist",
+          "headingLevel": 2,
+          "blockIndex": 16
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 21
+        }
+      ]
+    },
+    "engagement.contact-submission-operations": {
+      "owner": "nodics.engagement/modules/contactSubmission",
+      "componentFile": "nodics.engagement/modules/contactSubmission/data/docs-v001/records/documentation/contactSubmissionDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentengagementContactSubmissionOperations",
+      "route": "/docs/framework/engagement-contact-submission-operations",
+      "blocksha256": "e4cdd47b4e4d28f9eaa905393a2379c7c20b9fcb149f0fe5c3391b46f8aaeea4",
+      "articleBlocksSha256": "e4cdd47b4e4d28f9eaa905393a2379c7c20b9fcb149f0fe5c3391b46f8aaeea4",
+      "sections": [
+        {
+          "anchor": "engagementContactSubmissionOperations-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-2-lifecycle",
+          "title": "Lifecycle",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-3-data-contract",
+          "title": "Data contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-4-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 11
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-5-implementation-handoff",
+          "title": "Implementation handoff",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-6-evidence-checklist",
+          "title": "Evidence checklist",
+          "headingLevel": 2,
+          "blockIndex": 18
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 22
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 24
+        }
+      ]
+    },
+    "wcms.publishing-lifecycle": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentwcmsPublishingLifecycle",
+      "route": "/docs/framework/wcms-publishing-lifecycle",
+      "blocksha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "articleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "sections": [
+        {
+          "anchor": "wcmsPublishingLifecycle-1-why-separate-staged-and-online",
+          "title": "Why separate Staged and Online",
+          "headingLevel": 2,
+          "blockIndex": 2
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-2-data-lifecycle-categories",
+          "title": "Data lifecycle categories",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-3-running-example",
+          "title": "Running example",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-4-site-bundle-shape",
+          "title": "Site bundle shape",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-5-initialization-and-reusable-site-bundles",
+          "title": "Initialization and reusable site bundles",
+          "headingLevel": 2,
+          "blockIndex": 21
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-6-security-and-integrity-rules",
+          "title": "Security and integrity rules",
+          "headingLevel": 2,
+          "blockIndex": 24
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-7-customization-boundary",
+          "title": "Customization boundary",
+          "headingLevel": 2,
+          "blockIndex": 26
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-8-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 28
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-9-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 30
+        },
+        {
+          "anchor": "wcms-coordinated-pack-asset-approvals",
+          "title": "Coordinated pack and asset approvals",
+          "headingLevel": 2,
+          "blockIndex": 34
+        },
+        {
+          "anchor": "wcms-exact-media-readiness-capacity",
+          "title": "Exact Media readiness and capacity",
+          "headingLevel": 2,
+          "blockIndex": 39
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "a82b1c70e5de05cf0c5d3e7311e8535a4bab996745fb69303bef90a584bc829b",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1",
+    "nodics.platform/modules/backoffice/src/router/routers.js": "71f4c69fa105c59c94d40e1b29efd8ba80b81dc7553f7a8f2d80d4e1f8aedc96",
+    "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js": "94b9b20470c1144e65ab0f6bdda35bbc8ecc8664d00ffc3b27732b712cefbbd8",
+    "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryCacheInvalidationService.js": "09fdbec5c3caa887f933ec1b650a76c0a9c7ef005fe112f895d1775c0e6818df",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js": "e42b73b47141d3a81765be6c7544ebc8dfa2940adecf5ebbcc3f9afc1b9e2958",
+    "nodics.wcms/modules/cms/src/service/migration/defaultCmsMigrationService.js": "aff50eda379674751597679a57bcfc4ea336dc8f02eed7ca6a9169986e9fffd7",
+    "nodics.wcms/modules/cms/src/service/documentation/defaultCmsDocumentationGovernanceService.js": "32d1ffb6d06f5e0fd64b8503248ae0d5efdba865483b672768136933907da02b",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js": "ebb2ad51a15069289ff18f6f697ebff6000ee3259a3a791199ad9cf8b5b6cac9",
+    "nodics.wcms/modules/cms/src/service/designer/defaultCmsDesignerCompositionService.js": "d4820dc01d9a0b327cbbb1f6146d1715c9d42f57fc01c5d3084b0313ba6b9218",
+    "nodics.wcms/modules/cms/src/router/routers.js": "bc87484f3fc5010f7cbc3a8385d122f758e0966832bd9f5047c4ae49da1549fe",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaUploadService.js": "339eb2a87650cdbeaa2fd19528b1ba401027ae206debd17a1fc950f39188a584",
+    "nodics.foundation/modules/nData/nImport/import/src/service/media/defaultMediaReleaseAssetHydrationService.js": "fbbef12595e01e6b78d59ce2995530ea46fab2361d3646bb7b1c3c4a77a17874",
+    "nodics.wcms/modules/media/src/service/storage/provider/defaultCloudMediaStorageProviderService.js": "0c28f03d05e0ee7856d25a1776258b03d61bf83d33af3d786524bcadea89deb0",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaCleanupLifecycleService.js": "539e603f8687a10727c16fc2484c38fc31aa940bc9b6d0f42ebc7c307612e08e",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaLifecycleCoordinationService.js": "0767f5d50f96cec53498ca50de57bb37873a443637e65bfa496c1fd9d05938de",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTransferService.js": "f2e5c5bd8128fc92d9975c135d5c0e5c9ac089fc83009e58de844fbaf70d9c9c",
+    "nodics.wcms/modules/media/src/service/storage/provider/defaultLocalMediaStorageProviderService.js": "60c6c343f6de27734bdcc63a80da4446cc17bd5bda28229ebf2ad9246388baa2",
+    "nodics.wcms/modules/media/src/service/storage/provider/defaultNasMediaStorageProviderService.js": "2f381a69cc919bb11770c6e7776ae45609a7e6e4981ab2c89f2c8540a4ed62a1",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaDeliveryService.js": "2632a33b3928240f1d8cd0c3d8becd29d156a6debac60f81cf2cace91c82d6b5",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaImportSourceResolverService.js": "9f87a2ff9df6adf9cae4c13066e30d4b31f97711e8a64efa3110680523a22eb3",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js": "2b7f151865e2ffdfdf6367e7f67cb04d33793521d4d23d8df49dc2271f99a18d",
+    "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js": "ccceb1a3435222922eb24b97b597fbc3274c7301e612429a4f94ae9b69a4872b",
+    "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js": "7a4c4403548396f5749baf9c9ed2c6d8bd7b2fbe6a467c9683b13fec8d6f3741",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js": "90f49f1136d1fdb59ad3215a5a14a78c87b8c88e8a0c8674d88a21d9c54cfbaa",
+    "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js": "738e99cb171af61029b2488937232b6059a2c56e1dc0a43f17e5c14249f41fb7",
+    "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+    "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "406446bfd139172108ebf8f41598b0460ba03f1e0c875706cb64f3d0d40a83c6",
+    "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js": "03ad3aa2c914e3f3fd3a0940b122b3c956e0e8dddae7e19f7c127680caff7b24",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js": "a14b9eec909b350847c321a4b9fcc88e89310c12e9c6d938eb151a577ac9fbf3",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js": "2e031108e1c4044f4e6ffb0998b7b91545054d2101d6e09caa99dfae9104041c",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js": "9556c3a906c26cbccd1d1380d298d138160fc468357a2d2e0851e97277d4d013",
+    "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js": "27bd59b64b2c0b09ae88013d0f7d26d613c90cda1560f5e55acbdc0561742c28",
+    "nodics.localization/modules/localizationApi/src/router/routers.js": "d04ffcf0db95e0c4758a3b44c9f3b10e80386029040c758d44e6ae31a3ee03bc",
+    "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js": "f4103e4ba53736843d81072b916436d20308f4579eb751ad7c0761e93d13ed5e",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js": "fcc0b54f9e034d013bb200821ee3cf3df685ba2da5b002ec0c434974e733fb04",
+    "nodics.localization/modules/localizationCore/src/schemas/schemas.js": "a4aedf375f00edb951960f7de9947ca1c4ce81e1ada74a3837e4e2f64db5109c",
+    "nodics.wcms/modules/cms/src/schemas/schemas.js": "cefbfa61ff6f1d828ef87e4b32ba5aadee154231574d32574899710502684ed1",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js": "47e9c222f5cd56402dfc97af0feab9534f7a03eae5746d288b8a575fe2349c1e",
+    "nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js": "d29513415baff52cf1f38467281de7586700c7e2541227e7c87aa822c7294bc5",
+    "nodics.localization/modules/localizationCore/src/service/defaultLocalizationImportExportService.js": "ea93b1be8d4e70e748ad2afaa86ef8105748a6768f8c5fae8caca5532f77abc8",
+    "nodics.localization/modules/localizationCore/src/service/defaultLocalizationReleaseManagementService.js": "080e56e01d7ac4b4658c2049e15b4d7265fbdb2dee7edb2ec9bc893c1112fedc",
+    "nodics.localization/modules/localizationApi/src/controller/defaultLocalizationApiController.js": "3617b35a1d5a025d7c38ba27b17ad36e6807d3d4e3bbb83eba4a9d9cd808bb68",
+    "nodics.localization/modules/localizationApi/src/facade/defaultLocalizationApiFacade.js": "4c547a55fbccd02857a9a34af7f1f16d71d56ee45b562be35f90144356d54b25",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js": "32c96ebdf484adce5be2cdf32df02e2249d8746c6b5c8a3abebb12af9326574e",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js": "7d3ace5bafb4679b6f4609dd55ef19d2229ae8bbf5f80b513fa6125ba84ef238",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js": "45fdcd1f4b182c083c2644af30b65d80a726e7dcd8ae17c4d0003370a963cda2",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js": "80b87cb3a76668b290c83688cc8f6e095e782279ba46997d4a69f62279962cbf",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js": "b452d6e9569ffe67d7d4f4566974c5140e4a62338ce4deef1b82121dc1f36696",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactSubmissionOperationService.js": "0595ea5aeb87b7206f7bc7f5c0561e2a556e53a2c934502c027e6968873f0513",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactRoutingService.js": "aa82a1ad4a31e106d4794a79f7cf3e9fdb87fc03219a0f6fff7c241d4d103930",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRecoveryService.js": "cc39324f4aa72d70215013156882335f423238822befdb31fe4d48bcd01888dc",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactOperatorService.js": "103147e012208f44fd3567ca2da83cb911972de4a0d2fb7e47eb0b37b50dc8cc",
+    "nodics.engagement/modules/contactSubmission/src/schemas/schemas.js": "d4afedcff636529f003a2955ee18f9759bffcc7e61a3ad46172211ba25f562c7",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactValidationService.js": "12dccdb44358abfa5760e649f32218e5d97ad84f3845f5781898af0ff487d6fd",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactFormQueryService.js": "f3c8f5959f407890858925c9178f0a0530664d66b5847b71a8d6cf733569e76a",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffDispatchService.js": "b4e20fcf689c767dc18f33da140050c2703c33b4ea944512da19c7362e9188cb",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRepositoryService.js": "959fdd44632f7baf87dece4d11d0a2d1935d3cf81d7e37d74f215a06da969a4a",
+    "nodics.engagement/modules/engagementCore/src/schemas/schemas.js": "85695ccc73836cde44418b53bd978b84ff964aaac54f4ec8c5274ad247d3223d",
+    "nodics.engagement/modules/engagementApi/src/router/routers.js": "b049c3876823bbc023147bb11c54e705f1dd3f4d1935760ea663b603cb38b549",
+    "nodics.engagement/modules/engagementApi/src/facade/defaultEngagementApiFacade.js": "d6438b0bc4b13b48e779f83f6af760e0164fbbf08dc508119cd850d5facd43f9",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+    "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js": "c84793cec04b6000e88e5f8bde862ac984f67ca4319565e44695e139508ca917",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
+    "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js": "b796caca48ab333de664e81ae84813359ce1a2097f6cad40fffca4f2480a9041",
+    "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js": "a975e46dabac84330246f06c452f2c7432d0bb01f6aec4f76445b66fd1d38668",
+    "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js": "7fd18d5d1e58e2ca33b9e52220d13fe91f96712a1ecced25b57d9a3058c526db"
+  },
+  "parentBeginnerGuidanceReview": {
+    "date": "2026-10-07",
+    "documents": [
+      "commerce.search-guide",
+      "commerce.payment-provider-boundaries",
+      "localization.runtime-authoring",
+      "applications.axis-setup-error-contracts"
+    ],
+    "scope": "Parent authored and reviewed topic-specific beginner reading paths without broadening supported capability or live claims. Commerce Search diagram also corrected to separate Product discovery results from CURRENT Commerce rule projection/ranking. Existing section anchors and source boundaries remain unchanged. Parent also authored and reviewed explicit operator/developer diagnosis and negative-test guidance under the exact source-map sections, preserving existing limitations."
+  },
+  "parentReferenceCatalogueReview": {
+    "date": "2026-10-07",
+    "scope": "Parent implemented and reviewed bounded validation-only referenceCatalogues, preserving existing nImport resolver/checksum/containment, canonical record authority, import composition and CMS/Media approval boundaries. Updated and reread the publishing runbook canonical data section, declaration example and scope limits. Normal rollback and publication authority remain unchanged; no live acceptance is inferred."
+  },
+  "parentHistoryCapacityReview": {
+    "date": "2026-10-07",
+    "disposition": "SOURCE_EDITORIAL_PASS",
+    "finding": "Repeated imports exposed a bounded history-before-identity truncation in CMS publication dependency reads.",
+    "inspected": [
+      "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+      "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js"
+    ],
+    "reviewedCanonicalAddition": "wcms-exact-media-readiness-capacity",
+    "preserved": [
+      "Original tenant and employee authority",
+      "Source query scope",
+      "Distinct dependency bounds",
+      "Exact immutable version loading",
+      "Normal CMS and Media Process approval",
+      "Generic schema-owned HISTORY/CURRENT semantics"
+    ],
+    "nativeBoundary": "Final forward release publication and all-article/asset qualification are recorded separately; this source review does not invent approval or delivery evidence."
+  },
+  "parentIntegrityBatchReview": {
+    "date": "2026-10-07",
+    "disposition": "SOURCE_EDITORIAL_PASS",
+    "inspected": [
+      "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js",
+      "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js",
+      "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js",
+      "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js"
+    ],
+    "reviewedCanonicalAddition": "wcms-exact-media-readiness-capacity",
+    "finding": "Native failure at MEDIA_BYTES carried safe ERR_RTR_00004, confirmed by nRouter as rate limiting. The default owner now uses three bounded remote calls, not N+2.",
+    "preserved": [
+      "Service-only target authorization",
+      "Tenant and original trusted context",
+      "Complete validation before owner reads",
+      "Every exact retained physical byte check",
+      "Ordered integrity acknowledgment",
+      "Final pointer drift check",
+      "Separate CMS and Media approvals",
+      "Legacy transport fallback",
+      "No READY cache or rate-limit change"
+    ],
+    "qualificationBoundary": "Focused source contracts passed; native restart and burst verification are recorded separately, not inferred from source review."
+  }
+}

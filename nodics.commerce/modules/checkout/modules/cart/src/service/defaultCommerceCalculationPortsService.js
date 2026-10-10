@@ -59,37 +59,6 @@ module.exports = {
     loadPriceRows: function (request, authData) {
         return this.list(SERVICE.DefaultPriceRowService, request.tenant, this.scopedQuery(request, { productCode: request.productCode, currency: request.currency }), 100, authData);
     },
-    /** Identifies inventory rows that represent digital coupon-code pools rather than physical warehouse stock. @param {Object} balance Inventory balance. @returns {boolean} Whether this row is a coupon-code pool. */
-    isCouponCodePoolBalance: function (balance) {
-        return Boolean(balance && (balance.inventoryStrategy === 'COUPON_CODE_POOL' || balance.digitalDeliveryType === 'COUPON_CODE' || balance.fulfillmentType === 'COUPON_CODE'));
-    },
-    /** Returns non-reserving availability evidence for coupon-code pool products. @param {Object} request Inventory request. @param {Array} balances Inventory balance rows. @returns {Object|undefined} Availability evidence. */
-    couponPoolAvailability: function (request, balances) {
-        const balance = (balances || []).find(item => this.isCouponCodePoolBalance(item));
-        if (!balance) return undefined;
-        const exact = SERVICE.DefaultExactAmountService;
-        return {
-            available: exact.compare(balance.available || '0', request.quantity) >= 0,
-            strategy: 'COUPON_CODE_POOL',
-            inventoryStrategy: 'COUPON_CODE_POOL',
-            digitalDeliveryType: 'COUPON_CODE',
-            reservableAt: 'CHECKOUT_BEFORE_PAYMENT',
-            guaranteed: false,
-            couponBatchCode: balance.couponBatchCode || balance.batchCode,
-            batchCode: balance.couponBatchCode || balance.batchCode,
-            promotionCode: balance.promotionCode,
-            availableQuantity: balance.available,
-            candidates: [{
-                sku: balance.sku,
-                available: balance.available,
-                revision: balance.revision,
-                inventoryStrategy: 'COUPON_CODE_POOL',
-                couponBatchCode: balance.couponBatchCode || balance.batchCode,
-                batchCode: balance.couponBatchCode || balance.batchCode,
-                promotionCode: balance.promotionCode
-            }]
-        };
-    },
     /** Selects a governed price row and returns replayable Pricing decision evidence. @param {Object} request Pricing request. @param {Object} cart Cart context. @param {Object} authData Internal auth data. @returns {Promise<Object>} Pricing decision. */
     price: async function (request, cart, authData) {
         if (request.priceQuoteCode) {
@@ -113,15 +82,25 @@ module.exports = {
         return SERVICE.DefaultPricingDecisionService.decide(Object.assign({}, request, { calculationVersion: '1', correlationId: cart.correlationId }), selection.selected, exact);
     },
     /** Creates Cart calculation ports backed by domain owners. @param {Object} cart Cart context. @returns {Object} Pricing, Inventory, Promotion and Tax ports. */
-    create: function (cart) {
+    create: function (cart, originalRequest) {
         const self = this; const exact = SERVICE.DefaultExactAmountService;
         const authData = this.serviceAuthData(cart);
+        const original = originalRequest ? { tenant: originalRequest.tenant, enterpriseCode: originalRequest.enterpriseCode,
+            storeCode: cart.storeCode, ownerId: originalRequest.ownerId,
+            authData: structuredClone(originalRequest.authData || {}) } : undefined;
         return {
             exact,
             pricing: async request => {
                 return self.price(request, cart, authData);
             },
             inventory: async request => {
+                const digital = SERVICE.DefaultDigitalCommerceCheckoutService;
+                if (digital) {
+                    if (typeof digital.availability !== 'function') throw new Error('Digital availability owner unavailable');
+                    const availability = await digital.availability({ ...self.ownerContext(request, cart, authData), locale: cart.locale },
+                        original ? { ...original, productCode: request.productCode } : undefined);
+                    if (availability !== undefined) return availability;
+                }
                 let warehouses;
                 if (self.activatedDelivery('inventory', cart)) {
                     request = self.ownerContext(request, cart, authData);
@@ -130,15 +109,16 @@ module.exports = {
                         .map(item => [item.policy.code, item.policy]));
                 }
                 const balances = await self.list(SERVICE.DefaultInventoryBalanceService, request.tenant, self.scopedQuery(request, { sku: request.sku }), 100, authData);
-                const couponPoolAvailability = self.couponPoolAvailability(request, balances);
-                if (couponPoolAvailability) return couponPoolAvailability;
                 const eligibleBalances = warehouses ? balances.filter(item => warehouses.has(item.warehouseCode))
                     .map(item => ({ ...item, priority: warehouses.get(item.warehouseCode).priority })) : balances;
                 const candidates = SERVICE.DefaultInventorySourcingService.source(request, eligibleBalances);
                 return { available: candidates.some(value => exact.compare(value.available, request.quantity) >= 0), strategy: 'PHYSICAL_STOCK', inventoryStrategy: 'PHYSICAL_STOCK', reservableAt: 'CHECKOUT_BEFORE_PAYMENT', guaranteed: false, candidates };
             },
             promotion: async request => {
-                if (self.activatedDelivery('promotion', cart)) request = self.ownerContext(request, cart, authData);
+                const activated = self.activatedDelivery('promotion', cart);
+                const quoteAuthData = activated && original ? structuredClone(original.authData) : authData;
+                if (activated)
+                    request = self.ownerContext(request, cart, quoteAuthData);
                 if (SERVICE.DefaultPromotionOperationService && SERVICE.DefaultPromotionOperationService.quote) {
                     return SERVICE.DefaultPromotionOperationService.quote({
                         tenant: request.tenant,
@@ -154,10 +134,10 @@ module.exports = {
                         targetType: 'CART',
                         correlationId: cart.correlationId,
                         idempotencyKey: request.idempotencyKey || cart.idempotencyKey,
-                        authData
+                        authData: quoteAuthData
                     });
                 }
-                if (self.activatedDelivery('promotion', cart)) throw new Error('Activated Promotion owner is unavailable');
+                if (activated) throw new Error('Activated Promotion owner is unavailable');
                 const values = await self.list(SERVICE.DefaultPromotionService, request.tenant, self.scopedQuery(request, { status: 'ACTIVE' }), 100, authData);
                 const selected = values.find(value => value.actions && value.actions.discountAmount && (!value.conditions || value.conditions.couponRequired !== true) && (!value.conditions || !value.conditions.minimumSubtotal || exact.compare(request.subtotal, value.conditions.minimumSubtotal) >= 0));
                 if (!selected) return { discountAmount: '0', reasonCode: 'NO_APPLICABLE_PROMOTION', sourceHash: 'none' };

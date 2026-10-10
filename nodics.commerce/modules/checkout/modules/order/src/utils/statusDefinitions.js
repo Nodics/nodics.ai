@@ -9,4 +9,13 @@
 
  */
 /** @module order/utils/statusDefinitions @description Defines stable manual purchase review validation responses. @layer utility @owner order */
-module.exports={ERR_ORDER_DISPUTE_INVALID:{code:"400",message:"Order review could not be processed"}};
+module.exports = {
+  ERR_ORDER_REFUND_EXCEPTION: { code: "409", message: "Original unused coupon refund exception is unqualified or requires reconciliation" },
+  ERR_ORDER_DISPUTE_INVALID: { code: "400", message: "Order review could not be processed" },
+  ERR_ORDER_REFUND_REPLAY_AUTHORITY: { code: "409", message: "Original completed refund replay authority requires reconciliation" },
+  ERR_ORDER_REFUND_REPLAY_STATE: { code: "409", message: "Original completed refund replay state requires reconciliation" },
+  ERR_ORDER_REFUND_PROJECTION_BINDING: { code: "409", message: "Original refund case projection binding requires reconciliation" },
+  ERR_ORDER_REFUND_PROJECTION_READ: { code: "409", message: "Original refund case projection read requires reconciliation" },
+  ERR_ORDER_REFUND_PROJECTION_WRITE: { code: "409", message: "Original refund case projection write requires reconciliation" },
+  ERR_ORDER_REFUND_PROJECTION_READBACK: { code: "409", message: "Original refund case projection readback requires reconciliation" },
+};

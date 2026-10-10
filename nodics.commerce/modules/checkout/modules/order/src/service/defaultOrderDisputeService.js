@@ -77,16 +77,34 @@ module.exports = {
       refund: row.evidence.refund,
     };
   },
+  /** Admits only a retained customer Cart Store or an explicit legacy prefix; request Store selectors never authorize review. */
+  policyAdmission: async function (request, order, policy) {
+    let storeCode;
+    if (order.cartCode && SERVICE.DefaultCartService) {
+      const response = await SERVICE.DefaultCartService.get({ ...this.storage(request),
+        query: { tenant: request.tenant, enterpriseCode: request.enterpriseCode, ownerId: order.ownerId, code: order.cartCode },
+        searchOptions: { pageSize: 2, pageNumber: 1 } });
+      if (!response || response.error || response.success === false || response.code?.startsWith("ERR_"))
+        this.fail("Retained Order Store evidence is unavailable");
+      const rows = this.rows(response);
+      if (rows.length !== 1 || rows[0].code !== order.cartCode || rows[0].tenant !== request.tenant ||
+        rows[0].enterpriseCode !== request.enterpriseCode || rows[0].ownerId !== order.ownerId ||
+        typeof rows[0].storeCode !== "string" || !rows[0].storeCode ||
+        order.evidence?.storeCode !== undefined && order.evidence.storeCode !== rows[0].storeCode)
+        this.fail("Retained Order Store binding is unavailable or changed");
+      storeCode = rows[0].storeCode;
+    } else if (order.evidence?.storeCode !== undefined) {
+      this.fail("Retained Order Cart Store cannot be verified");
+    }
+    const legacy = policy.orderCodePrefixes?.some(prefix => typeof prefix === "string" && prefix && order.code.startsWith(prefix));
+    if (policy.enabled !== true || !(storeCode && policy.storeCodes?.[storeCode] === true || legacy))
+      this.fail("This order is outside the review policy");
+    return storeCode;
+  },
   /** Authorizes a completed customer-owned order under the configured deployment policy. */
   order: async function (request) {
     if (request.authData.principalType !== "customer")
       this.fail("Please sign in as a customer");
-    if (
-      !this.policy().orderCodePrefixes?.some((prefix) =>
-        request.code?.startsWith(prefix),
-      )
-    )
-      this.fail("This order is outside the review policy");
     const order = await SERVICE.DefaultOrderOperationService.read({
       ...request,
       query: {},
@@ -94,6 +112,7 @@ module.exports = {
     const value = order.order || order;
     if (!value?.code || value.ownerId !== request.ownerId)
       this.fail("The order was not found");
+    await this.policyAdmission(request, value, this.policy());
     return value;
   },
   /** Lists the customer's case history after rechecking order ownership. */
@@ -119,7 +138,7 @@ module.exports = {
       p.confirmed !== true ||
       typeof key !== "string" ||
       !/^[A-Za-z0-9._:-]{8,180}$/.test(key) ||
-      !["CANCELLATION", "REFUND", "DISPUTE"].includes(p.requestedResolution) ||
+      !["CANCELLATION", "RETURN", "REFUND", "DISPUTE"].includes(p.requestedResolution) ||
       typeof p.comment !== "string" ||
       p.comment.trim().length < 10 ||
       p.comment.length > 2000
@@ -192,7 +211,7 @@ module.exports = {
     );
   },
   /** Resolves current employee grants and enterprise scope through Profile. */
-  staff: async function (input) {
+  staff: async function (input, permission = "commerce.dispute.review", capabilities = ["commerce", "order"]) {
     const request = this.context(input),
       auth = request.authData,
       router = SERVICE.DefaultSecuredRequestPipelineService;
@@ -201,7 +220,7 @@ module.exports = {
       !auth.loginId ||
       !request.authorization ||
       !router.isPermissionGranted(
-        "commerce.dispute.review",
+        permission,
         router.getGrantedPermissions(request),
         {},
       )
@@ -236,12 +255,12 @@ module.exports = {
       this.fail("Profile scope resolution is unavailable");
     const matches = (s) => {
       if (s.tenantCode && s.tenantCode !== request.tenant) return false;
-      if (s.capabilityCode && !["commerce", "order"].includes(s.capabilityCode))
+      if (s.capabilityCode && !capabilities.includes(s.capabilityCode))
         return false;
       if (
         s.permissionCode &&
         !router.isPermissionGranted(
-          "commerce.dispute.review",
+          permission,
           [s.permissionCode],
           {},
         )

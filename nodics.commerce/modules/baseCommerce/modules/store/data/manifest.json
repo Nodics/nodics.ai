@@ -1,0 +1,31 @@
+{
+  "contractVersion": 2,
+  "module": "store",
+  "sections": {
+    "core-reference": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "displayName": "Store Core Reference",
+      "description": "Store-owned operational store, sales-channel and point-of-service defaults.",
+      "owningDomain": "commerce",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "COMMERCE",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "core-v001/records/store/baseCommercePointOfServiceData.js": "2b8791c8e09834b4f3fda3c10899b3986100852f582a7140f230a1f2b4c4fafd",
+        "core-v001/records/store/baseCommerceSalesChannelData.js": "1ab04a8dd52f629f6d08f2eaedc0f464132b2258c51e767239002a0648bdc285",
+        "core-v001/records/store/baseCommerceStoreData.js": "072ed70f21058dc87acab47edad643c5868ad43d8bbd6a982cf7e14fcfbd23e0",
+        "core-v001/headers/store/baseCommerceCoreReferenceHeader.js": "c8476162e75bcd13546dcf4030528bdf0f0d9ef0e558aa652bdaf3ee2aad056f"
+      },
+      "sourceRoot": "core-v001"
+    }
+  }
+}

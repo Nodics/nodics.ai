@@ -72,6 +72,48 @@ test('transport uses explicit remote Media authority and internal token; missing
     for (const operation of ['deploy', 'rollback']) assert.throws(() => transport.validateResult(operation, input, null), /not acknowledged/);
 });
 
+test('pointer batches reuse authenticated target status and reject incomplete or foreign acknowledgments', async () => {
+    const f = fixture();
+    const input = { mediaCodes: ['hero', 'absent'] };
+    const valid = { statuses: [{ mediaCode: 'hero', status: { version: 'a'.repeat(64), revision: 1 } },
+        { mediaCode: 'absent', status: null }] };
+    let calls = 0;
+    SERVICE.DefaultModuleService = { invokeModule: async request => {
+        calls++;
+        assert.equal(request.apiName, '/publication/target/status');
+        assert.equal(request.header.Authorization, 'Bearer scoped-internal-token');
+        assert.deepEqual(request.requestBody, input);
+        return request.responseSelector({ result: valid });
+    } };
+    assert.deepEqual(await transport.getStatuses(input, f.context), valid);
+    assert.equal(calls, 1);
+    for (const result of [null, { statuses: [] }, { statuses: [...valid.statuses].reverse() },
+        { statuses: [valid.statuses[0], valid.statuses[0]] },
+        { statuses: [{ mediaCode: 'hero', status: { version: 'a'.repeat(64), revision: 0 } }, valid.statuses[1]] }]) {
+        assert.throws(() => transport.validateResult('getStatus', input, result), /not acknowledged/);
+    }
+});
+
+test('integrity batches reuse scoped reconciliation and require complete ordered physical evidence', async () => {
+    const f = fixture();
+    const input = { assets: [{ mediaCode: 'hero', manifestCode: 'a'.repeat(64) }, { mediaCode: 'two', manifestCode: 'b'.repeat(64) }] };
+    const valid = { results: input.assets.map(asset => ({ ...asset, intact: true, active: true, protected: true, repaired: false, deleted: false })) };
+    SERVICE.DefaultModuleService = { invokeModule: async request => {
+        assert.equal(request.apiName, '/publication/target/reconcile');
+        assert.equal(request.header.Authorization, 'Bearer scoped-internal-token');
+        assert.equal(request.header.tenant, 'one');
+        assert.deepEqual(request.requestBody, input);
+        return request.responseSelector({ result: valid });
+    } };
+    assert.deepEqual(await transport.reconcileVersions(input, f.context), valid);
+    for (const result of [null, { results: [] }, { results: [...valid.results].reverse() },
+        { results: [valid.results[0], valid.results[0]] },
+        ...['intact', 'active', 'protected', 'repaired', 'deleted'].map(key => ({ results: [{ ...valid.results[0], [key]: undefined }, valid.results[1]] }))]) {
+        assert.throws(() => transport.validateResult('reconcile', input, result), /not acknowledged/);
+    }
+    assert.doesNotThrow(() => transport.validateResult('reconcile', input, { results: [{ ...valid.results[0], intact: false }, valid.results[1]] }));
+});
+
 test('target controller uses trusted request context and target facade rejects human or foreign-tenant credentials', async () => {
     const f = fixture(); f.policy.runtimeRole = 'ONLINE'; let called = 0;
     SERVICE.DefaultMediaPublicationModuleTransportService = { authorize: async command => ({ authorized: true, fingerprint: retained.digest(command) }) };
@@ -133,10 +175,10 @@ test('target and callback routes require service tokens; Media Process release i
 test('same-code forward Media release uses existing installer upgrade and preserves immutable v1 source', async () => {
     fixture();
     const installer = require('../../../../nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionContributionService');
-    const oldPath = path.join(__dirname, '../data/init-v002/records/process/mediaPublicationWorkflowDefinitionData.js');
+    const oldPath = path.join(__dirname, 'fixtures/compatibility/mediaPublicationBeforeApproval.js');
     assert.equal(crypto.createHash('sha256').update(fs.readFileSync(oldPath)).digest('hex'), '44355063df521b219094703cee293b65df954352e5ced7b77b8b6153acbb5fe9');
     const release = require('../data/manifest.json').sections.mediaPublicationWorkflow;
-    assert.equal(release.version, '1.0.1');
+    assert.equal(release.version, '0.0.1');
     const definition = require('../data/' + Object.keys(release.files)[0]).definitions[0];
     const existing = { ...require(oldPath).definitions[0], status: 'PUBLISHED', currentVersion: 1,
         contributionOwner: 'media', contributionCode: 'media:mediaPublicationWorkflow',
@@ -160,7 +202,7 @@ test('same-code forward Media release uses existing installer upgrade and preser
 test('successor policy uses native Process access rights and typed rejection guards', () => {
     fixture();
     const runtime = require('../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
-    const definition = require('../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData').definitions[0];
+    const definition = require('../data/init-v001/records/process/mediaPublicationWorkflowDefinitionData').definitions[0];
     const policy = { ...definition.policy, ...definition.graph.nodes[1].policy };
     SERVICE.DefaultSecuredRequestPipelineService = {
         isPermissionGranted: (permission, grants) => grants.includes(permission),
@@ -245,7 +287,7 @@ test('governed operator entry captures once and delegates fixed-domain publicati
     const f = fixture();
     const provider = require('../src/service/publication/defaultMediaPublicationVersionProviderService');
     const publications = new Map(); const calls = []; let captures = 0;
-    const manifest = { code: 'a'.repeat(64), artifacts: { asset: { code: 'hero', versionId: 2 } } };
+    const manifest = { code: 'a'.repeat(64), artifacts: { asset: { code: 'hero', versionId: 2, checksum: 'b'.repeat(64) } } };
     SERVICE.DefaultMediaRetainedPublicationService = { ...retained, capture: async identity => {
         captures++; assert.deepEqual(identity, { code: 'hero', versionId: 2 }); return manifest;
     }, load: async () => manifest };
@@ -264,13 +306,14 @@ test('governed operator entry captures once and delegates fixed-domain publicati
             const result = publications.get(request.publicationCode);
             assert.equal(request.expectedRevision, result.revision);
             assert.equal(request.httpRequest.headers.authorization, 'Bearer fixture-starter');
-            if (result.state === 'VALIDATED') Object.assign(result, { state: 'PENDING_APPROVAL', revision: 3 });
+            if (result.state === 'VALIDATED') Object.assign(result, { state: 'PENDING_APPROVAL', revision: 3,
+                workflowRef: 'publicationApproval-' + 'd'.repeat(64) });
             else assert.equal(result.state, 'PENDING_APPROVAL');
             return result; }
     };
     SERVICE.DefaultMediaLibraryService = require('../src/service/defaultMediaLibraryService');
     SERVICE.DefaultModuleService = { invokeModule: async request => request.responseSelector({ data:
-        request.apiName.endsWith('/versions') ? [{ ...require('../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData').definitions[0], definitionCode: 'mediaPublicationApproval', active: true, status: 'PUBLISHED', version: 1 }] :
+        request.apiName.endsWith('/versions') ? [{ ...require('../data/init-v001/records/process/mediaPublicationWorkflowDefinitionData').definitions[0], definitionCode: 'mediaPublicationApproval', active: true, status: 'PUBLISHED', version: 1 }] :
             { code: 'mediaPublicationApproval', active: true, status: 'PUBLISHED', ownerModule: 'media', currentVersion: 1 } }) };
     FACADE.DefaultMediaLibraryFacade = require('../src/facade/defaultMediaLibraryFacade');
     SERVICE.DefaultSecuredRequestPipelineService = require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService');
@@ -280,15 +323,16 @@ test('governed operator entry captures once and delegates fixed-domain publicati
     SERVICE.DefaultMediaService = { get: async request => {
         assert.equal(request.tenant, 'one'); assert.equal(request.skipcache, true);
         assert.deepEqual(request.query.$or[0], { enterpriseCode: 'owner' });
-        return { result: [{ code: 'hero', versionId: 2, active: true, status: 'READY', enterpriseCode: 'owner' }] };
+        return { result: [{ code: 'hero', versionId: 2, checksum: 'b'.repeat(64), active: true, status: 'READY', enterpriseCode: 'owner' }] };
     } };
-    const input = { publicationCode: 'media-proof', mediaCode: 'hero', versionId: 2 };
+    const input = { publicationCode: 'media-proof', mediaCode: 'hero', versionId: 2, expectedChecksum: 'b'.repeat(64) };
     const request = { tenant: 'one', authData: { tenant: 'one', entCode: 'owner', tokenType: 'access',
         permissions: ['media.storage.policy.view', 'publish.lifecycle.create', 'publish.lifecycle.validate', 'publish.lifecycle.requestApproval', 'process.instance.start', 'process.definition.read'] },
         httpRequest: { body: input, headers: { authorization: 'Bearer fixture-starter' } } };
     await assert.rejects(controller.createRetainedPublication({ ...request, httpRequest: { body: { ...input, domain: 'forged', sourceVersion: 'forged' } } }));
     const first = await controller.createRetainedPublication(request);
     assert.equal(first.result.state, 'PENDING_APPROVAL');
+    assert.equal(first.result.workflowRef, 'publicationApproval-' + 'd'.repeat(64));
     const retried = await controller.createRetainedPublication(request);
     assert.equal(retried.result.revision, 3);
     assert.equal(captures, 1); assert.deepEqual(calls, ['create', 'validate', 'approval', 'approval']);
@@ -301,12 +345,19 @@ test('governed operator entry captures once and delegates fixed-domain publicati
         });
     }
     assert.deepEqual(calls, ['create', 'validate', 'approval', 'approval']);
+    await assert.rejects(controller.createRetainedPublication({ ...request, httpRequest: {
+        ...request.httpRequest, body: { ...input, expectedChecksum: 'c'.repeat(64) }
+    } }));
+    assert.deepEqual(calls, ['create', 'validate', 'approval', 'approval'], 'checksum mismatch must fail before publication effects');
+    await assert.rejects(provider.createGoverned({ ...input, publicationCode: 'new-checksum-mismatch', expectedChecksum: 'c'.repeat(64) }, request));
+    assert.equal(publications.has('new-checksum-mismatch'), false, 'capture mismatch must never create a publication');
+    await assert.rejects(provider.createGoverned({ ...input, expectedChecksum: 'c'.repeat(64) }, request));
     await assert.rejects(controller.createRetainedPublication({ ...request, tenant: 'other' }));
     await assert.rejects(controller.createRetainedPublication({ ...request, authData: f.context.authData }));
     f.policy.runtimeRole = 'ONLINE'; await assert.rejects(controller.createRetainedPublication(request));
     f.policy.runtimeRole = 'STAGED'; SERVICE.DefaultPublicationLifecycleService.getWorkflowProvider = () => null;
     await assert.rejects(controller.createRetainedPublication(request), error => error.code === 'ERR_MED_00023');
-    assert.equal(captures, 1);
+    assert.equal(captures, 2);
     const route = require('../src/router/routers').media.storagePolicy.createRetainedPublication;
     assert.deepEqual(route.authTokenTypes, ['access']); assert.equal(route.permission, 'publish.lifecycle.create');
     assert.equal(route.apiExposure, 'mediaManagement'); assert.equal(route.secured, true);

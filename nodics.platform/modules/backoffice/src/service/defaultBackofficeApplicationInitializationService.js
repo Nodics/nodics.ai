@@ -66,6 +66,8 @@ module.exports = {
       classification: step.classification,
       targetServer: step.targetServer,
       targetRuntimeRole: step.targetRuntimeRole,
+      phase: step.phase,
+      operatorEnterpriseCode: step.operatorEnterpriseCode,
     }));
     if (profile.contentPackCode)
       dataPackages.push({
@@ -121,7 +123,7 @@ module.exports = {
         order: item.order,
       })),
       dataPackages: dataPackages,
-      preparationSteps: preparationSteps,
+      preparationSteps: preparationSteps.map(step => ({ ...step, publicationPlan: undefined })),
       setupPlan: this.setupPlan(profile),
       activationPolicy: Object.assign(
         {
@@ -226,6 +228,7 @@ module.exports = {
           step.code,
           step.targetServer,
           step.targetRuntimeRole,
+          ...(step.phase === "AFTER_PUBLICATION" ? [step.phase] : []),
         ]);
         let previous = preparation.get(identity);
         preparation.set(identity, {
@@ -241,6 +244,7 @@ module.exports = {
           required: step.required || Boolean(previous && previous.required),
           type: step.type,
           owner: String(profile.owner),
+          phase: step.phase,
         });
       });
     if (profile.contentPackCode)
@@ -337,13 +341,24 @@ module.exports = {
   normalizePreparationStep: function (step, index) {
     if (!step || step.enabled === false) return undefined;
     let type = String(step.type || "DATA_RELEASE");
-    if (!["DATA_RELEASE", "MEDIA_ASSET_MANIFEST"].includes(type)) {
+    if (!["DATA_RELEASE", "MEDIA_ASSET_MANIFEST", "GOVERNED_PUBLICATIONS"].includes(type)) {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00081",
         "Application preparation step type is unsupported",
       );
     }
     let code = String(step.code || "");
+    const phase = step.phase === undefined ? "BEFORE_PUBLICATION" : step.phase;
+    if (!["BEFORE_PUBLICATION", "AFTER_PUBLICATION"].includes(phase) ||
+        (type === "MEDIA_ASSET_MANIFEST" && phase !== "BEFORE_PUBLICATION") ||
+        (type === "GOVERNED_PUBLICATIONS" && phase !== "AFTER_PUBLICATION")) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation phase is invalid");
+    }
+    if (step.operatorEnterpriseCode !== undefined &&
+        (phase !== "AFTER_PUBLICATION" || typeof step.operatorEnterpriseCode !== "string" ||
+          !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/.test(step.operatorEnterpriseCode))) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation operator scope is invalid");
+    }
     let dataType = String(
       step.dataType || (type === "MEDIA_ASSET_MANIFEST" ? "media" : ""),
     ).toLowerCase();
@@ -380,6 +395,8 @@ module.exports = {
     let normalized = {
       order: Number(step.order || index + 1),
       type: type,
+      phase,
+      operatorEnterpriseCode: step.operatorEnterpriseCode,
       code: code,
       kind: String(step.kind || "DATA_RELEASE"),
       label: String(step.label || ""),
@@ -393,6 +410,7 @@ module.exports = {
       manifestPath: type === "MEDIA_ASSET_MANIFEST" ? manifestPath : undefined,
       manifestModule:
         type === "MEDIA_ASSET_MANIFEST" ? manifestModule : undefined,
+      publicationPlan: type === "GOVERNED_PUBLICATIONS" ? structuredClone(step.publicationPlan) : undefined,
       folderCode: step.folderCode ? String(step.folderCode) : undefined,
       businessPurpose: step.businessPurpose
         ? String(step.businessPurpose)
@@ -400,6 +418,60 @@ module.exports = {
     };
     normalized.classification = this.dataPackageClassification(normalized);
     return normalized;
+  },
+  /** Validates a bounded single-stage selection; configured scope restricts dispatch and never grants owner permission. */
+  afterPublicationSelection: function (profile, request) {
+    const steps = this.preparationSteps(profile).filter(step => step.phase === "AFTER_PUBLICATION" && step.required !== false);
+    const code = request.applicationInitialization?.afterPublicationStepCode;
+    const scoped = steps.some(step => step.operatorEnterpriseCode !== undefined);
+    if (!scoped && code === undefined) return undefined;
+    if (!scoped || steps.length > 256 || new Set(steps.map(step => step.code)).size !== steps.length ||
+        steps.some(step => !step.operatorEnterpriseCode) ||
+        (code !== undefined && (typeof code !== "string" ||
+          !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(code) ||
+          !steps.some(step => step.code === code)))) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application after-publication selection is invalid");
+    }
+    if (code !== undefined && !this.isPreparationOperator(steps.find(step => step.code === code), request)) {
+      throw new CLASSES.NodicsError("ERR_BOF_00082", "The selected stage requires its signed human operator");
+    }
+    return { steps, code };
+  },
+  /** Limits narrow Commerce route groups to selected signed-operator AFTER stages; existing runtime administrators retain their independent authority. */
+  assertInitiationScope: function (selection, request) {
+    const groups = request.authData?.userGroups || [];
+    if (!Array.isArray(groups))
+      throw new CLASSES.NodicsError("ERR_BOF_00082", "Authenticated setup groups are unavailable");
+    if (!groups.length) return;
+    const security = SERVICE.DefaultSecuredRequestPipelineService;
+    if (typeof security?.getEffectiveUserGroupCodes !== "function")
+      throw new CLASSES.NodicsError("ERR_BOF_00082", "Authenticated setup groups are unavailable");
+    const effective = security.getEffectiveUserGroupCodes(groups);
+    if (!Array.isArray(effective))
+      throw new CLASSES.NodicsError("ERR_BOF_00082", "Authenticated setup groups are unavailable");
+    if (effective.includes("runtimeConfigAdminUserGroup")) return;
+    if (effective.some(group => ["commerceSetupPublisherUserGroup", "commerceCouponIssuerUserGroup"].includes(group)) &&
+        (!selection?.code || !this.isPreparationOperator(selection.steps.find(step => step.code === selection.code), request)))
+      throw new CLASSES.NodicsError("ERR_BOF_00082", "Commerce setup requires one selected signed operator stage");
+  },
+  /** Checks original access-token tenant/enterprise aliases without creating Profile identity, scopes or permission. */
+  isPreparationOperator: function (step, request) {
+    const auth = request.authData || {}, headers = request.httpRequest?.headers || {};
+    const enterprise = step.operatorEnterpriseCode;
+    if (!enterprise || auth.principalType !== "human" || auth.tokenType !== "access" || auth.isSystem ||
+        !(auth.principalId || auth.loginId || auth.code) || !auth.tenant || request.tenant !== auth.tenant ||
+        (auth.enterpriseCode || auth.entCode) !== enterprise ||
+        [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode,
+          headers.enterpriseCode, headers["x-enterprise-code"]].some(value => value !== undefined && value !== enterprise) ||
+        [auth.tenantCode, request.tenantCode, headers.tenant, headers["x-tenant-code"]]
+          .some(value => value !== undefined && value !== auth.tenant)) return false;
+    const bearer = headers.authorization || headers.Authorization;
+    return typeof bearer === "string" && bearer.length <= 65536 && /^Bearer [A-Za-z0-9._~+/-]+=*$/i.test(bearer);
+  },
+  /** Keeps required stages visible without querying another operator's owners or exposing retained source plans. */
+  pendingAfterPublicationSteps: function (selection, request) {
+    return selection.steps.map(step => ({ ...step, publicationPlan: undefined,
+      status: this.isPreparationOperator(step, request) ? "DEFERRED" : "AUTHORITY_PENDING" }));
   },
   /** Classifies setup packages for readiness and operator guidance without becoming an import authority. */
   dataPackageClassification: function (step) {
@@ -813,8 +885,18 @@ module.exports = {
   },
   /** Invokes one governed data-release validation or installation with the initiating human context. */
   invokeDataReleaseOperation: function (mode, group, request) {
+    const scoped = group.steps.filter(step => step.operatorEnterpriseCode !== undefined);
+    if (scoped.length && (group.steps.length !== 1 || !this.isPreparationOperator(scoped[0], request) ||
+        (mode === "execute" && request.applicationInitialization?.afterPublicationStepCode !== scoped[0].code))) {
+      throw new CLASSES.NodicsError("ERR_BOF_00082", "Scoped preparation requires one selected signed operator stage");
+    }
     let suffix = mode === "preflight" ? "validate" : "install";
     const authorization = this.authorizationHeader(request, true);
+    const configuredTimeout = (CONFIG.get("backofficeApplicationInitialization") || {}).dataReleaseTimeoutMs;
+    const timeoutMs = configuredTimeout === undefined ? 120000 : configuredTimeout;
+    if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1000 || timeoutMs > 600000) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application data release timeout is invalid");
+    }
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "import",
       // These operations intentionally use the governed HTTP import route, even in a consolidated runtime.
@@ -832,7 +914,7 @@ module.exports = {
         releaseCodes: group.steps.map((step) => step.code),
         expectedReleases: group.expectedReleases,
       },
-      timeoutMs: group.timeoutMs || 120000,
+      timeoutMs,
       maxAttempts: 1,
       idempotencyKey: mode === "execute" ? group.idempotencyKey : undefined,
       header: { Authorization: authorization },
@@ -864,7 +946,8 @@ module.exports = {
           !group ||
           group.targetServer !== step.targetServer ||
           group.targetRuntimeRole !== step.targetRuntimeRole ||
-          group.dataType !== step.dataType
+          group.dataType !== step.dataType ||
+          step.operatorEnterpriseCode !== undefined || group.steps.some(item => item.operatorEnterpriseCode !== undefined)
         ) {
           group = {
             targetServer: step.targetServer,
@@ -876,6 +959,7 @@ module.exports = {
               ":prepare:" +
               key +
               ":" +
+              (step.operatorEnterpriseCode !== undefined ? step.code + ":" : "") +
               String(
                 correlationId ||
                   (request.authData && request.authData.principalId) ||
@@ -1197,6 +1281,7 @@ module.exports = {
         repair: repair,
         runtimeDiagnostic: step.runtimeDiagnostic,
         releaseReceipt: step.releaseReceipt,
+        ownerBlocker: step.ownerBlocker,
       });
     });
     if (projection && projection.releaseStatus === "INVALID_RELEASE") {
@@ -2140,16 +2225,20 @@ module.exports = {
       return unavailable;
     }
   },
-  /** Reads owner-confirmed release, stored Media and runtime readiness without installing or publishing. */
-  preparationStatus: async function (profile, request) {
-    let steps = this.preparationSteps(profile);
-    let functionalModuleSteps = await this.functionalModulePreparationStatus(
-      profile,
-      request,
+  /** Reads one preparation phase without writes; invoke alone gates AFTER_PUBLICATION on fresh CMS/Media evidence. */
+  preparationStatus: async function (profile, request, phase = "BEFORE_PUBLICATION", options = {}) {
+    if (phase === "BEFORE_PUBLICATION" && options.sharedObservation !== false && this.hasSetupObservation(profile))
+      return this.sharedPreparationObservation(profile, request);
+    let steps = this.preparationSteps(profile).filter(
+      (step) => (step.phase || "BEFORE_PUBLICATION") === phase,
     );
+    let functionalModuleSteps = phase === "BEFORE_PUBLICATION"
+      ? await this.functionalModulePreparationStatus(profile, request) : [];
     if (!steps.length && !functionalModuleSteps.length)
       return { status: "CURRENT", steps: [] };
-    let projected = [];
+    let projected = steps.filter(step => step.required !== false && step.operatorEnterpriseCode !== undefined &&
+      !this.isPreparationOperator(step, request)).map(step => ({ ...step, publicationPlan: undefined, status: "AUTHORITY_PENDING" }));
+    steps = steps.filter(step => step.operatorEnterpriseCode === undefined || this.isPreparationOperator(step, request));
     let groups = this.preparationGroups(profile, request, steps);
     for (let group of groups) {
       try {
@@ -2165,11 +2254,33 @@ module.exports = {
         let byCode = Object.fromEntries(
           releases.map((release) => [release.releaseCode, release]),
         );
+        const evidence = (result && result.data) || result || {};
+        const contributionPlans = evidence.contributionPlans;
+        const plans = Array.isArray(contributionPlans) ? contributionPlans.slice(0, group.steps.length) : [];
+        const customReleases = releases.filter((release) => release.installer);
+        const validationBlocked = evidence.validation?.ready === false ||
+          (evidence.validation?.ready !== undefined && typeof evidence.validation.ready !== "boolean") ||
+          (contributionPlans !== undefined && !Array.isArray(contributionPlans)) ||
+          (Array.isArray(contributionPlans) && contributionPlans.length > group.steps.length) ||
+          plans.some((plan) => !plan || plan.ready !== true ||
+            !group.steps.some((step) => step.code === plan.releaseCode)) ||
+          new Set(plans.map((plan) => plan && plan.releaseCode)).size !== plans.length ||
+          customReleases.some((release) => evidence.validation?.ready !== true ||
+            !plans.some((plan) => plan.releaseCode === release.releaseCode && plan.ready === true));
         group.steps.forEach((step) => {
           let release = byCode[step.code] || {};
+          const plan = plans.find((item) => item && item.releaseCode === step.code);
+          const ownerCode = plan && plan.ready === false && plan.blocker && plan.blocker.code;
+          const ownerBlocker = validationBlocked ? {
+            owner: step.code,
+            code: typeof ownerCode === "string" && /^ERR_[A-Z0-9_]{1,64}$/.test(ownerCode)
+              ? ownerCode : "READINESS_VALIDATION_BLOCKED",
+            message: "Selected contribution prerequisites require owner review.",
+          } : undefined;
           projected.push(
             Object.assign({}, step, {
-              status: [
+              status: validationBlocked ? "VALIDATION_BLOCKED" :
+                phase === "AFTER_PUBLICATION" && release.status === "SOURCE_READY" ? "UNKNOWN" : [
                 "CURRENT",
                 "SOURCE_READY",
                 "NOT_INSTALLED",
@@ -2185,6 +2296,8 @@ module.exports = {
               installedVersion: release.installedVersion,
               description: release.description,
               releaseReceipt: this.preparationReleaseReceipt(release),
+              message: ownerBlocker && ownerBlocker.message,
+              ownerBlocker,
             }),
           );
         });
@@ -2242,6 +2355,7 @@ module.exports = {
           "READINESS_RATE_LIMITED",
           "VALIDATION_BLOCKED",
           "UNKNOWN",
+          "AUTHORITY_PENDING",
           "NOT_REGISTERED",
           "NOT_ACTIVE",
           "RUNTIME_OFFLINE",
@@ -2543,8 +2657,8 @@ module.exports = {
       "",
     );
   },
-  /** Builds the same confined asset descriptor for aggregate reads and explicit preparation. */
-  describeMediaAsset: function (step, asset, request) {
+  /** Pure confined source material for review; does not require or manufacture upload/human authority. */
+  describeMediaAssetSource: function (step, asset) {
     let filePath = this.safeManifestAssetPath(step, asset.fileName);
     let buffer = fs.readFileSync(filePath);
     let form = new FormData();
@@ -2594,6 +2708,21 @@ module.exports = {
           asset.code,
       ),
     );
+    const checksum = crypto.createHash("sha256").update(buffer).digest("hex");
+    const descriptor = Object.fromEntries(
+      Array.from(form.entries()).filter(([key]) => key !== "file"),
+    );
+    Object.assign(descriptor, {
+      checksum,
+      sizeBytes: buffer.length,
+      mimeType,
+      originalFileName: String(asset.fileName),
+    });
+    return { form, checksum, descriptor };
+  },
+  /** Keeps the original upload/human header guard separate from pure source review. */
+  describeMediaAsset: function (step, asset, request) {
+    const source = this.describeMediaAssetSource(step, asset);
     const headers = {
       Authorization: this.authorizationHeader(request, true),
       "x-enterprise-code":
@@ -2607,17 +2736,7 @@ module.exports = {
         "default",
       Origin: this.operatorOrigin(request),
     };
-    const checksum = crypto.createHash("sha256").update(buffer).digest("hex");
-    const descriptor = Object.fromEntries(
-      Array.from(form.entries()).filter(([key]) => key !== "file"),
-    );
-    Object.assign(descriptor, {
-      checksum,
-      sizeBytes: buffer.length,
-      mimeType,
-      originalFileName: String(asset.fileName),
-    });
-    return { form, headers, checksum, descriptor };
+    return { ...source, headers };
   },
   /** Explicit preparation reads exact current bytes before upload reuse or CAS replacement. */
   inspectMediaAsset: async function (step, asset, request) {
@@ -2733,21 +2852,23 @@ module.exports = {
     }
     return uploaded;
   },
-  /** Installs required preparation releases before requesting publication approval. */
-  prepareApplication: async function (profile, request, currentPreparation) {
+  /** Uses existing nImport for one phase; deferred callers must first qualify CMS/Media and refresh authority afterward. */
+  prepareApplication: async function (profile, request, currentPreparation, phase = "BEFORE_PUBLICATION") {
     let preparation =
-      currentPreparation || (await this.preparationStatus(profile, request));
+      currentPreparation || (await this.preparationStatus(profile, request, phase));
     if (preparation.status === "BLOCKED") {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00085",
         this.preparationBlockedMessage(preparation),
       );
     }
-    await this.prepareMediaAssets(profile, request);
+    if (phase === "BEFORE_PUBLICATION") await this.prepareMediaAssets(profile, request);
+    const selection = phase === "AFTER_PUBLICATION" ? this.afterPublicationSelection(profile, request) : undefined;
     let groups = this.preparationGroups(profile, request, preparation.steps)
       .map((group) =>
         Object.assign({}, group, {
           steps: group.steps.filter((step) => {
+            if (selection && step.code !== selection.code) return false;
             let current = preparation.steps.find(
               (item) =>
                 item.code === step.code &&
@@ -2815,7 +2936,10 @@ module.exports = {
             ? code
             : "OWNER_OPERATION_FAILED";
         groupReceipts.push({ ...receipt, status: "FAILED", failureCode });
-        const refreshed = await this.preparationStatus(profile, request).catch(
+        const refreshed = phase === "AFTER_PUBLICATION" ? {
+          status: "BLOCKED",
+          steps: preparation.steps.map((step) => ({ ...step, status: "UNAVAILABLE" })),
+        } : await this.preparationStatus(profile, request, phase).catch(
           () => ({
             status: "BLOCKED",
             steps: preparation.steps.map((step) => ({
@@ -2868,7 +2992,8 @@ module.exports = {
       }
     }
     return {
-      ...(await this.preparationStatus(profile, request)),
+      // The caller must recheck CMS/Media before another deferred owner preflight.
+      ...(phase === "AFTER_PUBLICATION" ? preparation : await this.preparationStatus(profile, request, phase)),
       groupReceipts,
     };
   },
@@ -2934,10 +3059,18 @@ module.exports = {
   },
   /** Runs only profile-owned setup preparation, then returns the refreshed readiness projection. */
   prepareCapability: async function (profileCode, request) {
+    if (request.applicationInitialization?.afterPublicationStepCode !== undefined)
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "After-publication selection is only valid for initialization");
     let profile = this.profile(profileCode);
+    const selection = this.afterPublicationSelection(profile, request);
     this.human(request);
-    let initialPreparation = await this.preparationStatus(profile, request);
+    let initialPreparation = await this.preparationStatus(profile, request, "BEFORE_PUBLICATION", {
+      sharedObservation: false,
+    });
     if (initialPreparation.status === "BLOCKED") {
+      if (selection) initialPreparation = { ...initialPreparation,
+        steps: initialPreparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
+        selectionRequired: false, selectableStepCodes: [] };
       return Object.assign(
         this.blockedProjection(profile, initialPreparation),
         {
@@ -2956,6 +3089,9 @@ module.exports = {
       initialPreparation,
     );
     if (prepared.status === "BLOCKED") {
+      if (selection) Object.assign(prepared, {
+        steps: prepared.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
+        selectionRequired: false, selectableStepCodes: [] });
       return {
         ...this.blockedProjection(profile, prepared),
         preparationOperation: this.prepareCapabilityEvidence(
@@ -3010,23 +3146,233 @@ module.exports = {
             )),
     };
   },
-  /** Invokes only the profile-owned fixed Staged baseline endpoint. */
-  /** Executes the documented bounded module operation. */
+  /** Observation is opt-in per exact profile; missing or malformed policy never manufactures authority. */
+  hasSetupObservation: function (profile) {
+    const policy = typeof CONFIG === "undefined" ? undefined : CONFIG.get("publish")?.setup?.observation;
+    return policy?.enabled === true && typeof policy.profilePlans?.[profile.code] === "string";
+  },
+  /** Reads a reviewed local plan on every call and checks its full current effective profile. */
+  setupObservationPlan: function (profile, request) {
+    const owner = SERVICE.DefaultPublicationSetupObservationService;
+    const code = CONFIG.get("publish")?.setup?.observation?.profilePlans?.[profile.code];
+    if (!this.hasSetupObservation(profile) || !owner || typeof owner.resolvePlan !== "function")
+      throw new CLASSES.NodicsError("ERR_BOF_00082");
+    const resolved = owner.resolvePlan(code);
+    if (resolved.plan.tenant !== request.tenant || resolved.plan.profileCode !== profile.code ||
+        resolved.reference?.moduleName !== profile.owner ||
+        resolved.plan.baselineCode !== profile.baselineCode || owner.digest(profile) !== resolved.plan.profileDigest)
+      throw new CLASSES.NodicsError("ERR_BOF_00081");
+    if (resolved.plan.baseline && (resolved.plan.baseline.server !== this.applicationTargetBinding(
+        profile.target.connectionName, profile.target.runtimeRole, "publish").connectionName ||
+        resolved.plan.baseline.runtimeRole !== profile.target.runtimeRole))
+      throw new CLASSES.NodicsError("ERR_BOF_00081");
+    const steps = this.preparationSteps(profile).filter(step => step.required !== false);
+    if (steps.length !== resolved.plan.stages.length || steps.some(step =>
+      !resolved.plan.stages.some(stage => stage.code === step.code &&
+        owner.digest(stage.descriptor) === owner.digest(owner.stepIdentity(step)) &&
+        stage.server === this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "publish").connectionName)))
+      throw new CLASSES.NodicsError("ERR_BOF_00081");
+    return { ...resolved, owner };
+  },
+  /** Uses the actual signed deployment token and fixed route, never the initiating human's token or claims. */
+  setupObservation: async function (profile, request, step, mode, operations) {
+    const before = this.setupObservationPlan(profile, request);
+    const stage = mode === "BASELINE" ? before.plan.baseline : before.plan.stages.find(item => item.code === step.code);
+    const target = mode === "TARGET" ? stage?.online : mode === "BASELINE" ? stage :
+      { server: stage?.server, runtimeRole: stage?.descriptor.targetRuntimeRole };
+    const token = NODICS.getInternalAuthToken(request.tenant);
+    if (!token || !stage || !target?.server || !target.runtimeRole) throw new CLASSES.NodicsError("ERR_BOF_00082");
+    const body = { contractVersion: 1, planCode: before.plan.code, revision: before.plan.revision,
+      checksum: before.checksum, stageCode: mode === "BASELINE" ? profile.baselineCode : step.code, mode };
+    if (mode === "TARGET") body.operations = operations;
+    const response = await SERVICE.DefaultModuleService.invokeModule({
+      moduleName: "publish", local: false, tenant: request.tenant,
+      ...this.applicationTargetBinding(target.server, target.runtimeRole, "publish"),
+      connectionType: "abstract", methodName: "POST", apiName: "/publications/setup/observe",
+      requestBody: body, header: { Authorization: "Bearer " + token, tenant: request.tenant },
+      timeoutMs: profile.target.timeoutMs, maxAttempts: 1,
+    });
+    const evidence = response?.data || response?.result || response;
+    const after = this.setupObservationPlan(profile, request);
+    if (before.checksum !== after.checksum || before.owner.digest(before.plan) !== after.owner.digest(after.plan) ||
+        !evidence || evidence.contractVersion !== 1 || typeof evidence.ready !== "boolean" ||
+        ["planCode", "revision", "checksum", "stageCode", "mode"].some(key => evidence[key] !== body[key]) ||
+        evidence.profileCode !== profile.code || evidence.baselineCode !== profile.baselineCode ||
+        evidence.tenant !== request.tenant || evidence.enterpriseCode !== stage.enterpriseCode ||
+        evidence.server !== target.server || evidence.runtimeRole !== target.runtimeRole)
+      throw new CLASSES.NodicsError("ERR_BOF_00081");
+    return evidence;
+  },
+  /** Exposes only fixed local failure codes, never remote diagnostics or authentication data. */
+  setupObservationReasonCode: function (error) {
+    return ["ERR_BOF_00081", "ERR_BOF_00082", "ERR_BOF_00083", "ERR_PUB_SETUP_OBSERVATION",
+      "ERR_AUTH_00002", "ERR_AUTH_00003", "ERR_RTR_00004", "ERR_TNT_00002", "ERR_TNT_00003"]
+      .includes(error?.code) ? error.code : "ERR_BOF_00083";
+  },
+  /** Aggregate-only foreign evidence cannot create selection authority or authorize an owner command. */
+  observeForeignPreparation: async function (profile, request, step) {
+    const pending = { ...step, publicationPlan: undefined, status: "AUTHORITY_PENDING" };
+    if (!this.hasSetupObservation(profile)) return pending;
+    try {
+      if (step.type === "GOVERNED_PUBLICATIONS") {
+        const source = await this.setupObservation(profile, request, step, "SOURCE");
+        if (!source.ready) return { ...pending, status: "VALIDATION_BLOCKED" };
+        const intended = step.publicationPlan.items;
+        if (!Array.isArray(source.items) || source.items.length !== intended.length ||
+            intended.some(item => source.items.filter(actual => ["code", "domain", "rootType", "rootCode", "sourceVersion"]
+              .every(key => actual[key] === item[key]) && actual.status === "CURRENT").length !== 1))
+          throw new CLASSES.NodicsError("ERR_BOF_00081");
+        const target = await this.setupObservation(profile, request, step, "TARGET",
+          source.items.map(item => ({ code: item.code, operationKey: item.operationKey })));
+        const final = await this.setupObservation(profile, request, step, "SOURCE");
+        const owner = SERVICE.DefaultPublicationSetupObservationService;
+        if (owner.digest(source) !== owner.digest(final) || !Array.isArray(target.items) || target.items.length !== source.items.length ||
+            source.items.some(item => target.items.filter(actual => ["code", "domain", "rootType", "rootCode", "sourceVersion",
+              "targetVersion", "operationKey", "previousOnlineVersion"].every(key => actual[key] === item[key]) &&
+                actual.status === "CURRENT").length !== 1)) throw new CLASSES.NodicsError("ERR_BOF_00081");
+        return { ...pending, status: source.ready && target.ready ? "CURRENT" : "VALIDATION_BLOCKED",
+          evidenceKind: "EXACT_PLAN_OWNER_OBSERVATION", publications: source.items };
+      }
+      const evidence = await this.setupObservation(profile, request, step, "INSTALLATION");
+      return { ...pending, status: evidence.ready ? "CURRENT" : "VALIDATION_BLOCKED",
+        installedVersion: evidence.version, evidenceKind: "EXACT_PLAN_INSTALLED_RELEASE" };
+    } catch (error) { return { ...pending, reasonCode: this.setupObservationReasonCode(error) }; }
+  },
+  /** Shared BEFORE inspection does not borrow a narrow human's import/CMS/Media mutation grants. */
+  sharedPreparationObservation: async function (profile, request) {
+    const steps = [];
+    for (const step of this.preparationSteps(profile).filter(item => item.phase === "BEFORE_PUBLICATION")) {
+      if (step.required === false) { steps.push({ ...step, status: "OPTIONAL" }); continue; }
+      try {
+        const evidence = await this.setupObservation(profile, request, step,
+          step.type === "MEDIA_ASSET_MANIFEST" ? "MEDIA" : "INSTALLATION");
+        steps.push({ ...step, status: evidence.ready ? step.type === "MEDIA_ASSET_MANIFEST" ? "SOURCE_READY" : "CURRENT" : "VALIDATION_BLOCKED",
+          evidenceKind: step.type === "MEDIA_ASSET_MANIFEST" ? evidence.evidenceKind : "EXACT_PLAN_INSTALLED_RELEASE",
+          installedVersion: evidence.version });
+      } catch (error) { steps.push({ ...step, status: "AUTHORITY_PENDING", reasonCode: this.setupObservationReasonCode(error) }); }
+    }
+    const functional = await this.functionalModulePreparationStatus(profile, request);
+    steps.push(...functional);
+    return { status: steps.filter(step => step.required !== false).every(step => ["CURRENT", "SOURCE_READY"].includes(step.status))
+      ? "CURRENT" : "BLOCKED", steps };
+  },
+  /** Checks or submits configured publication intents through the secured remote owner, using the resolved application timeout. Failures expose only fixed stages and bounded codes; they never qualify readiness. */
+  publicationPreparation: async function (profile, request, submit) {
+    const selection = this.afterPublicationSelection(profile, request);
+    const steps = this.preparationSteps(profile).filter(step => step.type === "GOVERNED_PUBLICATIONS" && step.required !== false);
+    const projected = [];
+    for (const step of steps) {
+      if (selection && !this.isPreparationOperator(step, request)) {
+        projected.push(await this.observeForeignPreparation(profile, request, step));
+        continue;
+      }
+      let phase = "configuration";
+      try {
+        if (step.targetRuntimeRole !== "COMMERCE_STAGED" || !step.publicationPlan) throw new CLASSES.NodicsError("ERR_BOF_00081");
+        phase = "targetBinding";
+        const binding = this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "publish");
+        phase = "authorization";
+        const authorization = this.authorizationHeader(request, true);
+        phase = "invocation";
+        const response = await SERVICE.DefaultModuleService.invokeModule({
+          moduleName: "publish", local: false,
+          ...binding,
+          connectionType: "abstract", methodName: "POST",
+          apiName: "/publications/setup/" + (submit && (!selection || selection.code === step.code) ? "submit" : "status"),
+          requestBody: step.publicationPlan,
+          header: { Authorization: authorization },
+          timeoutMs: profile.target.timeoutMs,
+          maxAttempts: 1,
+        });
+        phase = "evidence";
+        const evidence = response?.data || response?.result || response;
+        const intended = step.publicationPlan.items;
+        const valid = evidence?.contractVersion === 1 && Array.isArray(intended) && Array.isArray(evidence.items) &&
+          evidence.items.length === intended.length && intended.every(item => evidence.items.filter(actual =>
+            actual.domain === item.domain && actual.rootCode === item.rootCode).length === 1);
+        if (!valid || typeof evidence.ready !== "boolean" ||
+            evidence.ready !== evidence.items.every(item => item.status === "CURRENT")) throw new CLASSES.NodicsError("ERR_BOF_00081");
+        projected.push({ ...step, publicationPlan: undefined,
+          status: evidence.ready ? "CURRENT" : evidence.items.some(item => item.status === "REVIEW_REQUIRED") ? "VALIDATION_BLOCKED" :
+            evidence.items.some(item => ["NOT_REQUESTED", "SUBMISSION_REQUIRED"].includes(item.status)) ? "NOT_INSTALLED" : "RUNNING",
+          publications: evidence.items.map(item => ({ code: item.code, domain: item.domain, rootCode: item.rootCode,
+            status: item.status, state: item.state, revision: item.revision, workflowRef: item.workflowRef })),
+        });
+      } catch (error) {
+        const transport = phase === "invocation" &&
+          SERVICE.DefaultModuleService.classifyTransportFailure?.(error);
+        projected.push({ ...step, publicationPlan: undefined, status: "VALIDATION_BLOCKED",
+          message: "Required governed publication setup needs owner review.",
+          runtimeDiagnostic: { phase, targetModule: "publish",
+            failureCode: transport?.code || (typeof error?.code === "string" && /^ERR_[A-Z0-9_]{1,64}$/.test(error.code)
+              ? error.code : "ERR_BOF_00081") },
+        });
+      }
+    }
+    return { ready: projected.every(step => step.status === "CURRENT"), steps: projected };
+  },
+  /** Observes every required stage and executes at most the explicit local stage after fresh owner publication evidence. */
+  scopedAfterPublicationPreparation: async function (profile, request, submit) {
+    const selection = this.afterPublicationSelection(profile, request);
+    const publications = await this.publicationPreparation(profile, request, submit);
+    const operatorPublicationsReady = publications.steps
+      .filter(step => this.isPreparationOperator(step, request)).every(step => step.status === "CURRENT");
+    let preparation = operatorPublicationsReady ? await this.preparationStatus(profile, request, "AFTER_PUBLICATION") : {
+      status: "BLOCKED",
+      steps: this.pendingAfterPublicationSteps(selection, request).filter(step => step.type !== "GOVERNED_PUBLICATIONS"),
+    };
+    const selected = preparation.steps.find(step => step.code === selection.code);
+    let receipts = [];
+    if (submit && operatorPublicationsReady && selected?.type === "DATA_RELEASE" &&
+        ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(selected.status)) {
+      const installed = await this.prepareApplication(profile, request,
+        { status: "ACTION_REQUIRED", steps: [selected] }, "AFTER_PUBLICATION");
+      receipts = installed.groupReceipts || [];
+      // A fresh full invocation rechecks CMS/Media before any further deferred observation.
+      return { refreshRequired: true, groupReceipts: receipts, operationFailure: installed.operationFailure };
+    }
+    if (operatorPublicationsReady) preparation.steps = await Promise.all(preparation.steps.map(step =>
+      step.status === "AUTHORITY_PENDING" && step.type === "DATA_RELEASE"
+        ? this.observeForeignPreparation(profile, request, step) : step));
+    const steps = preparation.steps.filter(step => step.type !== "GOVERNED_PUBLICATIONS")
+      .concat(publications.steps).sort((left, right) => left.order - right.order);
+    const selectableStepCodes = steps.filter(step => this.isPreparationOperator(step, request) &&
+      ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(step.status) &&
+      (step.type === "GOVERNED_PUBLICATIONS" || operatorPublicationsReady)).map(step => step.code);
+    return { status: steps.some(step => ["AUTHORITY_PENDING", "VALIDATION_BLOCKED", "UNAVAILABLE", "UNKNOWN",
+      "INVALID_RELEASE", "DOWNGRADE_AVAILABLE", "READINESS_RATE_LIMITED"].includes(step.status)) ? "BLOCKED" :
+      steps.some(step => step.status === "RUNNING") ? "RUNNING" :
+        steps.every(step => step.status === "CURRENT") ? "CURRENT" : "ACTION_REQUIRED",
+      steps, selectableStepCodes, selectionRequired: true, groupReceipts: receipts };
+  },
+  /** Invokes CMS and every declared owner publication before operational initialization. */
   invoke: async function (operation, profileCode, request) {
     let profile = this.profile(profileCode);
+    const selection = this.afterPublicationSelection(profile, request);
+    if (operation === "initiate") this.assertInitiationScope(selection, request);
+    if (selection) {
+      if (selection.code !== undefined && !["status", "initiate"].includes(operation))
+        throw new CLASSES.NodicsError("ERR_BOF_00081", "After-publication selection is only valid for initialization");
+      request = { ...request, authData: { ...request.authData },
+        applicationInitialization: { ...request.applicationInitialization, afterPublicationStepCode: selection.code },
+        httpRequest: { ...request.httpRequest, headers: { ...request.httpRequest?.headers } } };
+    }
+    const deferredSteps = this.preparationSteps(profile).filter(
+      (step) => step.phase === "AFTER_PUBLICATION" && step.required !== false,
+    );
     let principal = operation === "status" ? undefined : this.human(request);
-    let initialPreparation = await this.preparationStatus(profile, request);
+    let initialPreparation = await this.preparationStatus(profile, request, "BEFORE_PUBLICATION", {
+      sharedObservation: operation === "status" || operation === "initiate" && selection?.code !== undefined,
+    });
     if (initialPreparation.status === "BLOCKED") {
+      if (selection) initialPreparation = { ...initialPreparation,
+        steps: initialPreparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
+        selectionRequired: false, selectableStepCodes: [] };
       return this.blockedProjection(profile, initialPreparation);
     }
     let preparationChanged =
       operation === "initiate" && initialPreparation.status !== "CURRENT";
-    let preparation =
-      operation === "initiate"
-        ? await this.prepareApplication(profile, request, initialPreparation)
-        : initialPreparation;
-    if (preparation.status === "BLOCKED")
-      return this.blockedProjection(profile, preparation);
+    let preparation = initialPreparation;
     let token = NODICS.getInternalAuthToken(request.tenant);
     if (!token)
       throw new CLASSES.NodicsError(
@@ -3080,7 +3426,7 @@ module.exports = {
       let binding = this.approvalRepairBinding(repairBefore);
       if (binding) body.approvalRepairBinding = binding;
     }
-    return SERVICE.DefaultModuleService.invokeModule({
+    const baselineRequest = {
       moduleName: profile.target.moduleName,
       local: false,
       ...this.applicationTargetBinding(
@@ -3106,8 +3452,41 @@ module.exports = {
             String(correlationId || principal)
           : undefined,
       header: { Authorization: "Bearer " + token },
-    })
-      .then((response) => {
+    };
+    let responsePromise;
+    if (selection && this.hasSetupObservation(profile)) {
+      responsePromise = this.setupObservation(profile, request, undefined, "BASELINE")
+        .then(evidence => ({ data: evidence.authority }));
+    }
+    if (!responsePromise && selection?.code !== undefined) {
+      responsePromise = SERVICE.DefaultModuleService.invokeModule({ ...baselineRequest,
+        methodName: "GET", requestBody: undefined, idempotencyKey: undefined,
+        apiName: "/publication/baselines/" + encodeURIComponent(profile.baselineCode) });
+    }
+    if (!responsePromise && operation === "initiate" && deferredSteps.length && preparation.status === "CURRENT") {
+      // An already Online baseline needs owner setup, not another approval request.
+      const observed = await SERVICE.DefaultModuleService.invokeModule({
+        ...baselineRequest, methodName: "GET", requestBody: undefined, idempotencyKey: undefined,
+        apiName: "/publication/baselines/" + encodeURIComponent(profile.baselineCode),
+      }).catch((error) => { throw this.targetDiagnostic(error, profile, request); });
+      const authority = (observed && (observed.data || observed.result || observed)) || {};
+      if (authority.readiness === "READY" && authority.publication?.state === "ONLINE" &&
+          authority.releaseStatus === "CURRENT" && input.forceRefresh !== true &&
+          ![].concat(authority.mediaDependencies?.dependencies || []).some((item) => item.status === "VERSION_UNPINNED"))
+        responsePromise = Promise.resolve(observed);
+    }
+    if (!responsePromise) {
+      if (operation === "initiate") preparation = await this.prepareApplication(profile, request, preparation);
+      if (preparation.status === "BLOCKED") {
+        if (selection) preparation = { ...preparation,
+          steps: preparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
+          selectionRequired: false, selectableStepCodes: [] };
+        return this.blockedProjection(profile, preparation);
+      }
+      responsePromise = SERVICE.DefaultModuleService.invokeModule(baselineRequest);
+    }
+    return responsePromise
+      .then(async (response) => {
         let authority =
           (response && (response.data || response.result || response)) || {};
         const mediaDependencies =
@@ -3130,6 +3509,75 @@ module.exports = {
                   "Media publication dependency evidence is not available from the CMS owner.",
               }
             : undefined);
+        let deferredActionable = false, publicationActionable = false;
+        let deferredObserved = false;
+        if (deferredSteps.length && authority.readiness === "READY" &&
+            authority.publication?.state === "ONLINE" && mediaDependencies?.qualified === true &&
+            authority.releaseStatus !== "INVALID_RELEASE" && (!selection || preparation.status === "CURRENT")) {
+          deferredObserved = true;
+          if (selection) {
+            const deferred = ["status", "initiate"].includes(operation)
+              ? await this.scopedAfterPublicationPreparation(profile, request, operation === "initiate")
+              : { status: "BLOCKED", steps: this.pendingAfterPublicationSteps(selection, request), selectableStepCodes: [] };
+            if (deferred.refreshRequired) {
+              const refreshed = await this.invoke("status", profileCode, request);
+              refreshed.preparation.groupReceipts = [].concat(preparation.groupReceipts || [], deferred.groupReceipts || []);
+              if (deferred.operationFailure) refreshed.preparation.operationFailure = deferred.operationFailure;
+              return refreshed;
+            }
+            deferredActionable = deferred.selectableStepCodes.length > 0;
+            preparation = { ...preparation, status: deferred.status,
+              steps: preparation.steps.concat(deferred.steps),
+              selectableStepCodes: deferred.selectableStepCodes, selectionRequired: true,
+              groupReceipts: [].concat(preparation.groupReceipts || [], deferred.groupReceipts || []) };
+          } else {
+          const publicationSetup = ["status", "initiate"].includes(operation)
+            ? await this.publicationPreparation(profile, request, operation === "initiate")
+            : { ready: false, steps: [] };
+          let deferred = ["status", "initiate"].includes(operation) && publicationSetup.ready
+            ? await this.preparationStatus(profile, request, "AFTER_PUBLICATION")
+            : publicationSetup.steps.length ? {
+              status: publicationSetup.steps.some(step => step.status === "VALIDATION_BLOCKED") ? "BLOCKED" :
+                publicationSetup.steps.some(step => step.status === "NOT_INSTALLED") ? "ACTION_REQUIRED" : "RUNNING",
+              steps: deferredSteps.filter(step => step.type !== "GOVERNED_PUBLICATIONS").map(step => ({
+                ...step, status: "DEFERRED", message: "Waiting for all required governed publications.",
+              })),
+            }
+            : { status: "BLOCKED", steps: deferredSteps.map((step) => ({
+              ...step, status: "UNKNOWN", message: "Refresh application readiness to inspect deferred setup.",
+            })) };
+          deferred.steps.push(...publicationSetup.steps);
+          publicationActionable = deferred.status === "ACTION_REQUIRED" && publicationSetup.steps.some(
+            step => step.status === "NOT_INSTALLED",
+          );
+          deferredActionable = publicationSetup.ready && deferred.status === "ACTION_REQUIRED" && deferred.steps.some(
+            (step) => ["NOT_INSTALLED", "UPDATE_AVAILABLE", "FAILED"].includes(step.status),
+          );
+          if (operation === "initiate" && deferredActionable) {
+            deferred = await this.prepareApplication(profile, request, deferred, "AFTER_PUBLICATION");
+            if (deferred.status !== "BLOCKED") {
+              // GET rechecks CMS, Media and every required receipt after the existing nImport operation.
+              const refreshed = await this.invoke("status", profileCode, request);
+              refreshed.preparation.groupReceipts = [].concat(
+                preparation.groupReceipts || [], deferred.groupReceipts || [],
+              );
+              return refreshed;
+            }
+          }
+          preparation = {
+            ...preparation,
+            status: [preparation.status, deferred.status].includes("BLOCKED") ? "BLOCKED" :
+              [preparation.status, deferred.status].includes("RUNNING") ? "RUNNING" :
+                preparation.status === "CURRENT" && deferred.status === "CURRENT" ? "CURRENT" : "ACTION_REQUIRED",
+            steps: preparation.steps.concat(deferred.steps),
+            groupReceipts: [].concat(preparation.groupReceipts || [], deferred.groupReceipts || []),
+            operationFailure: deferred.operationFailure || preparation.operationFailure,
+          };
+          }
+        }
+        if (selection && !deferredObserved) preparation = { ...preparation,
+          steps: preparation.steps.concat(this.pendingAfterPublicationSteps(selection, request)),
+          selectableStepCodes: [], selectionRequired: false };
         let readiness =
           preparation.status === "BLOCKED" ? "BLOCKED" : authority.readiness;
         if (
@@ -3139,6 +3587,14 @@ module.exports = {
         ) {
           readiness = "MEDIA_DEPENDENCIES_PENDING";
         }
+        if (deferredSteps.length && readiness === "READY" &&
+            (preparation.status !== "CURRENT" || !deferredSteps.every((required) => preparation.steps.some(
+              (step) => step.phase === "AFTER_PUBLICATION" && step.code === required.code &&
+                step.dataType === required.dataType &&
+                step.targetServer === required.targetServer && step.targetRuntimeRole === required.targetRuntimeRole &&
+                step.status === "CURRENT",
+            )))) readiness = deferredActionable || publicationActionable ? "IMPORTED" :
+              preparation.status === "RUNNING" ? "IMPORTING" : "BLOCKED";
         let preparationUpdateAvailable =
           preparation.status !== "CURRENT" &&
           preparation.status !== "RUNNING" &&
@@ -3171,8 +3627,11 @@ module.exports = {
           siteCode: profile.siteCode,
           profile: this.describe(profile, projection),
           allowedActions:
-            preparation.status === "BLOCKED"
+            selection && deferredActionable ? ["INITIALIZE"] :
+            preparation.status === "BLOCKED" || (deferredSteps.length && readiness === "BLOCKED")
               ? []
+              : deferredSteps.length && readiness === "IMPORTED" && authority.publication?.state === "ONLINE"
+                ? deferredActionable || publicationActionable ? ["INITIALIZE"] : []
               : readiness === "READY" ||
                   readiness === "MEDIA_DEPENDENCIES_PENDING"
                 ? [].concat(
@@ -3233,6 +3692,8 @@ module.exports = {
   },
   /** Reads or installs the profile-owned content pack through its fixed Staged target. */
   invokeContentPack: function (operation, profileCode, request) {
+    if (request.applicationInitialization?.afterPublicationStepCode !== undefined)
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "After-publication selection is only valid for initialization");
     let profile = this.profile(profileCode);
     if (profile.type !== "DOCUMENTATION_BUNDLE" || !profile.contentPackCode) {
       throw new CLASSES.NodicsError(

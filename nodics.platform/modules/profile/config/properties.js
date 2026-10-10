@@ -17,6 +17,7 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  profileRuntimeEnterpriseResolution: { enabled: false, runtimeRole: "PLATFORM", callers: [] },
   authSecurity: {
     sessionContextValidation: {
       qualified: false,
@@ -73,7 +74,7 @@ module.exports = {
           enabled: false,
           ownerService: "DefaultProfileBootstrapIdentityAssessmentService",
           maximumAgeMs: 300000,
-          sources: [{ releaseCode: "profile:init-v001", version: "0.0.3" }],
+          sources: [{ releaseCode: "profile:init-v001", version: "0.0.1" }],
         },
         pageSize: 100,
         maximumPages: 100,
@@ -207,6 +208,7 @@ module.exports = {
       suppressedLabel: "Suppress this notification",
     },
   },
+  profileCustomerEvidence: { enabled: false, runtimeRole: "PLATFORM", callers: [] },
   profileReferenceRead: {
     maximumCodes: 100,
     types: {
@@ -218,7 +220,7 @@ module.exports = {
       enterprise: {
         serviceName: "DefaultEnterpriseService",
         permission: "profile.enterprise.reference.read",
-        fields: ["code", "name"],
+        fields: ["code", "name", "active"],
       },
     },
   },
@@ -630,6 +632,42 @@ module.exports = {
         "updatedAt",
       ],
       roles: {
+        COMMERCE_SETUP_PUBLISHER: {
+          label: "Commerce Setup Publisher",
+          description:
+            "Submits enterprise product and promotion setup publications for independent review without approval or activation authority.",
+          groupCodes: ["commerceSetupPublisherUserGroup", "commercePublicationStarterUserGroup"],
+          scopeType: "ENTERPRISE",
+          delegable: true,
+          assignmentPermissions: [],
+        },
+        COMMERCE_COUPON_ISSUER: {
+          label: "Commerce Coupon Issuer",
+          description:
+            "Admits enterprise campaign budgets, manages delegated seller consent and issues bounded coupon batches through qualified owners.",
+          groupCodes: ["commerceCouponIssuerUserGroup"],
+          scopeType: "ENTERPRISE",
+          delegable: true,
+          assignmentPermissions: [],
+        },
+        COMMERCE_AXIS_REFUND_REVIEWER: {
+          label: "Commerce Axis Refund Reviewer",
+          description:
+            "Reviews enterprise purchase disputes and approved full refunds in Axis with narrowly scoped presentation access.",
+          groupCodes: ["commerceAxisRefundReviewerUserGroup"],
+          scopeType: "ENTERPRISE",
+          delegable: true,
+          assignmentPermissions: [],
+        },
+        COMMERCE_REFUND_REVIEWER: {
+          label: "Commerce Refund Reviewer",
+          description:
+            "Reviews enterprise purchase disputes, executes approved full refunds and records governed physical return operations.",
+          groupCodes: ["commerceRefundReviewerUserGroup"],
+          scopeType: "ENTERPRISE",
+          delegable: true,
+          assignmentPermissions: [],
+        },
         MERCHANT_OPERATOR: {
           label: "Merchant Operator",
           description:

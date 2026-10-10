@@ -179,6 +179,20 @@ module.exports = {
     }
     this.fail();
   },
+  /** Preserves only the complete native simulation triad. Absence is ordinary evidence, not verification; partial, inherited or contradictory tags fail closed. @param {Object} owner Native DTO. @returns {Object} Detached public tags only. */
+  simulationTags: function (owner) {
+    const keys = ["simulated", "deliveryVerified", "evidenceMode"];
+    if (!keys.some((key) => key in owner)) return {};
+    const descriptors = keys.map((key) => Object.getOwnPropertyDescriptor(owner, key));
+    if (
+      descriptors.some((descriptor) =>
+        !descriptor || !descriptor.enumerable || !Object.hasOwn(descriptor, "value")) ||
+      descriptors[0].value !== true ||
+      descriptors[1].value !== false ||
+      descriptors[2].value !== "LOCAL_SIMULATION"
+    ) this.fail();
+    return { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" };
+  },
   /** Sends one fixed-route owner call using the employee credential; never retries or exposes raw failures. @param {Object} request Trusted employee context. @param {Object} target Configured owner. @param {string} apiName Adapter-owned route. @param {Object|undefined} body Fixed payload. @param {string|undefined} key Original command reference. @returns {Promise<Object>} Owner evidence. */
   invoke: async function (request, target, apiName, body, key) {
     try {
@@ -309,7 +323,7 @@ module.exports = {
         typeof row.recoveryRequired !== "boolean"
       )
         this.fail();
-      return Object.fromEntries(
+      return { ...Object.fromEntries(
         [
           "entitlementCode",
           "productCode",
@@ -330,7 +344,7 @@ module.exports = {
         ]
           .filter((key) => row[key] !== undefined)
           .map((key) => [key, row[key]]),
-      );
+      ), ...this.simulationTags(row) };
     });
     const fresh = CONFIG.get("copilot");
     this.authorizeQueue(request, fresh);
@@ -379,6 +393,8 @@ module.exports = {
   },
   /** Creates a minimized complete business review; unsupported owner benefit shapes fail closed. @param {Object} owner Validated coupon evidence. @param {Object} input Human receipt/outlet. @returns {Object} Review and owner proof record. */
   proposal: function (owner, input) {
+    // Queue/receipt visibility does not enable simulated ITEM preparation or execution.
+    if (Object.keys(this.simulationTags(owner)).length) this.fail();
     const text = (value, maximum = 256) =>
       typeof value === "string" &&
       value.trim() &&
@@ -628,10 +644,12 @@ module.exports = {
     )
       this.fail();
     const core = SERVICE.DefaultCopilotOrchestrationService;
+    const tags = this.simulationTags(owner);
     if (owner.state === "UNCONFIRMED")
       return {
         confirmation: core.projectConfirmation(action),
         receiptState: "UNCONFIRMED",
+        ...tags,
       };
     if (
       owner.confirmationKey !== key ||
@@ -669,6 +687,7 @@ module.exports = {
       confirmation: core.projectConfirmation(updated),
       receiptState: "COMPLETED",
       receiptCode: owner.receiptCode,
+      ...tags,
     };
   },
   /** Rechecks the pinned owner proof and delegates one confirmed command through the existing atomic executor. @param {Object} action Owned approved action. @param {Object} request Confirmation command. @param {Object} configuration Current settings. @returns {Promise<Object>} Durable per-row outcome. */
@@ -731,6 +750,7 @@ module.exports = {
           { ...payload, confirmed: true },
           this.commandKey(key),
         );
+        if (Object.keys(this.simulationTags(owner)).length) this.fail();
         if (
           owner.entitlementCode !== code ||
           owner.claimStatus !== "REDEEMED" ||

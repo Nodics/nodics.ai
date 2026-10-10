@@ -1,0 +1,280 @@
+{
+  "contractVersion": 1,
+  "date": "2026-10-09",
+  "owner": "eWaste",
+  "scope": "SOURCE_ONLY_CMS_FORWARD_CORRECTION",
+  "sourceFreeze": "SOURCE_FROZEN_SHARED_VALIDATOR_CONFLICT_RECORDED",
+  "nativeActionsPerformed": false,
+  "configurationWritesPerformed": false,
+  "financialWritesPerformed": false,
+  "inventoryCorrection": {
+    "businessManifestSections": 30,
+    "requiredSignedPublicationSelections": 4,
+    "requiredDistinctPublicationRoots": 84,
+    "requiredCurrentCatalogueRoots": 46,
+    "correctedAssetSuccessorRoots": 5,
+    "unchangedCatalogueIntents": 41,
+    "optionalAssetSubsetAddsDistinctRoots": false,
+    "assetPublicationInputVersionId": 1,
+    "assetPublicationSourceVersion": "2",
+    "nativeBuildRestartImportPublicationOwner": "Main task",
+    "sourceEvidenceHashes": {
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/manifest.json": "b2b6bde919422722bfc3d39fe0457064962e68ea9923ca8dbc66f8665efbeea3",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/headers/circaCommerceCatalogHeader.js": "45a28a3fde1aade748d1f1d825003ee2a0485ef288020deb1f70e6898ff46d00",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductData.js": "1b3a79efa5a02bcdbc9e9ed34b3d9e76d0b941796680cfac1ed67cfb82940ee3",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantData.js": "829abd7ce2a995b9da0c779db8b0aa3554ed99893d8daa3560772d0b11326cca",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductLocalizationData.js": "fd87972ffe0b75795ee9f6268c7d9f3dc15229126e17bad017e687b50c26fd16",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaProductVariantLocalizationData.js": "5923a6c6ca9c9f9eb0a7871ee9ad3c6ef71d177c2083a0d315cede0ac15cefbc",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPriceRowData.js": "2891c9b75bbd5e54369072a514f0fd942107e88cd43592802e64bd991da17b1d",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/commerce/records/circaPromotionData.js": "900635f8d7597a9f02190d8fe5f69dcc453440e54e081f4742f9b7e3d2c7c9db",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/records/circaStoreData.js": "40a3bcc4a6558f415ff59492e32c407975e37f47d96fb10ae7cbaa01f9477548",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/src/service/defaultCircaDemoCommerceImportAdmissionService.js": "e6b12c41b543db86e4b4715d3c770b4f3af0f758de396781a9fe3d846c6578cc",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceForwardRelease.test.js": "96d10189c33330c2b405347d9c467fea09f4aae1bba1ccf3dd798f422d4d6fac",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/store/headers/circaStoreReferenceHeader.js": "47e7c02fe790173fc55b1371de74f1fdff9f55529d3119d160f1f6debe0c8f65",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-promotion-setup.md": "e056072467339c3c9fa4e02ac486b07e65af433d85129dfb9feb4774f9de34b4",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/records/publicationPlan.json": "b6f54c987be147f88a753fbe3ea252e4c3f4ebed96301deb16d5be4e4440f11f",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/operations/asset-policy/headers/circaDigitalOwnershipPolicyHeader.js": "58d7bbf03af55275fc36e0801901db54028cbc60569b27d94b267265d589ff0a",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaPromotionInstructionPack.test.js": "d94fbdbf1f0c85d1cf3a2624b610e1b0f8d58ce28d23b5af84c625249c8da752",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaDigitalOwnershipPolicyPack.test.js": "8b9278c73e5fe13da61249818b21a942118eed4882114afe19281ff3cd29cb5c",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/headers/circaOutletAccessHeader.js": "ef1f070e67ff2e4a9ceb2ea12ab3bcdb3c171981597e55593809880adeff5c45",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/outlet-access/records/circaMerchantOutletScopeData.js": "e996668088ae93b28ff553eaaaadfd3e2f9e1d2ada5db39548a7c6b53f7b5c80",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaMerchantOutletAccess.test.js": "62555e85a30c22766b4f86acf3631db46c24fec7e35ae206094595db20f8563d",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/llm/contracts/circa-predefined-commerce-staff.md": "e1206dc69015d27e8fadd8fca237ee9deabf5e911a3b4fdba1c01a07f42ecdee",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/headers/circaCommerceStaffAssignmentHeader.js": "3479cffee110bf428b7750b5a5830e757fbb862d4563903f5105d2decd83797a",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/staff-access/records/circaCommerceStaffAssignmentData.js": "4497132414b4e3f7dd3466fa6c06025fe537f4f335e84f0bcf35f4b463b9bf6d",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCommerceStaffAssignments.test.js": "072aeded65c68c8c2f4bf0ff921df7288a2304f748ae9992604d9c4954807b4d",
+      "../../../../../../nodics.kickoff/envs/kickoffLocal/platformServer/config/properties.js": "383f7339e53532f77cf9efa194cdcd5f0cef9516749fe41dd75464a0e487af42",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/asset-classification/headers/circaAssetClassificationHeader.js": "99badcb02e325866621fa44e1ca32b5dd9c533ba619e8895ab03680e5878cda6",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/asset-classification/records/circaAssetClassificationLocalizationData.js": "861955836d1e47e654093abdc6063693f383b5d28799d9388092dfc933462825",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/asset-publication/records/publicationPlan.json": "be9cec90b6bed7f8cc48ed160a929943d44d29782809f3957cb7b78e675bd851",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/data/sample-v001/publication/current-catalogue/records/publicationPlan.json": "8de3510f3a94f1146da2238e5311ffb9927b6fead8fb1858c3995b39a9183761",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaAssetClassificationForwardPack.test.js": "04747b3ff5f9faa5ffe6bd37a566d58eef1ad79840a81fe3c65915c72f087a3b",
+      "../../../../../../nodics.kickoff/modules/circa.ewaste/test/circaCatalogueCurrentPublicationPlan.test.js": "36e2bccb224400f16bcba866c279ff149daf998055162bdb56a9d50b18ca1b8c"
+    },
+    "exactLiveSourceManifestComparison": "PASS",
+    "sourceFrozenAt": "2026-10-09T11:40:30.505Z",
+    "workerChangedPaths": [
+      {
+        "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002ComponentData.js",
+        "sha256": "cc8e2f09f5420ee255effdac70a2baa8505cea450f65aa89663612543633d5c4"
+      },
+      {
+        "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002PageMetadataData.js",
+        "sha256": "e437740e0405b3a1c2e2ea92c4ae87a5066999f309ab3f29a36817194090c1c4"
+      },
+      {
+        "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002NodeData.js",
+        "sha256": "99e1991424e47cf161d8b007b7bee8881a62010f0f71d69a6d2c09b35c25596f"
+      },
+      {
+        "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002SearchMetadataData.js",
+        "sha256": "2bd03b7ce6aa8a2bed022d8499adc4ce4f081f92f75f6b6a792ca445caa8f168"
+      },
+      {
+        "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002PublicationStateData.js",
+        "sha256": "3cdcaa60b0ebdebc2d68a45de422a39229a883e36c047f865ea5f5e3c3cfd52e"
+      },
+      {
+        "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+        "sha256": "de3f67ca9618e26be82d16498253f6c011620bdd4304e2099b4f57306d1164a1"
+      },
+      {
+        "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js",
+        "sha256": "3cce6e951c3051f243d34723e397061b663d090463d8c42a054706bf0ff62c2d"
+      }
+    ]
+  },
+  "nativeObservation": {
+    "source": "Main-task report; not executed by this sidecar",
+    "preRebuildDocsEWasteStatus": "SANITIZED_409_TARGET_UNAVAILABLE",
+    "writes": false
+  },
+  "corrections": [
+    "Predefined reviewed Circa staff release replaces manual fresh-demo role wiring; standalone demo guide references canonical inventory.",
+    "Both customer-journey surfaces require CLAIM -> verify -> QUEUE -> reread revision -> CLAIM -> approve/reject, including the same reviewer.",
+    "Active successor inventory includes all 30 current Kickoff business sections, including classification, its optional publication subset, the full current catalogue plan and additive staff assignments.",
+    "Four required signed publication selections cover 84 distinct current roots. The required catalogue contains 46 roots, with five source-version-2 asset successors and 41 unchanged intents; the optional five-root subset overlaps it and never qualifies the full catalogue.",
+    "Adjacent successor catalogue and data-network text uses the current selection and count. Corrected article and derived metadata remain STAGED without fabricated approval actors."
+  ],
+  "frozenSource": {
+    "release": "0.0.1",
+    "files": 47,
+    "allByteHashesMatched": true,
+    "assetsUnchanged": true,
+    "releaseChecksums": {
+      "documentation": "ac159bf7a00757e8876cc3dd872e9e6c701091ce3c5ebc31d9665ae18e70a067",
+      "referenceDocumentation": "09b71b0c36190de655cf98b13f90ba5ef82b1025231b16328d2efc632d8adb52"
+    },
+    "fixtureChecksum": "20cdbc1aab571ea153fbf0d52eb22b96173d1e61b8440aa5c5d321b1ebd74e7b"
+  },
+  "activeReleases": {
+    "documentation": {
+      "version": "0.0.2",
+      "contentPath": "docs-v001",
+      "localReleaseChecksum": "03b8d80a15d2130722cbf716e5db18874430534aa943c2accd54269645970938",
+      "effectiveComposedChecksum": "891e76e60d5afeffcd6b2272892fa4e57f1e2e2076829947433fe2dd904de9a6",
+      "declaredFiles": 29,
+      "localPages": 12,
+      "originalIdentitiesPreserved": true,
+      "duplicateIncludedIdentities": false
+    },
+    "referenceDocumentation": {
+      "version": "0.0.2",
+      "contentPath": "docs-v001",
+      "localReleaseChecksum": "4f098e451a16a9ad5682af78015f37ef8d45e4168dbfdc7c19327a8d288d7d59",
+      "effectiveComposedChecksum": "4f098e451a16a9ad5682af78015f37ef8d45e4168dbfdc7c19327a8d288d7d59",
+      "declaredFiles": 18,
+      "localPages": 4,
+      "originalIdentitiesPreserved": true,
+      "duplicateIncludedIdentities": false
+    }
+  },
+  "publicationPinObservations": {
+    "docs-ewaste": {
+      "contentPackCode": "eWasteDocumentation",
+      "releaseVersion": "0.0.2",
+      "rootType": "site",
+      "rootCode": "nodicsDocumentationSite",
+      "sourceVersion": "0"
+    },
+    "circadocs": {
+      "contentPackCode": "circaDocumentation",
+      "releaseVersion": "0.0.2",
+      "rootType": "site",
+      "rootCode": "circaDocumentationSite",
+      "sourceVersion": "0"
+    },
+    "boundary": "Main owns these existing configuration descriptors and native sourceVersion/approval qualification."
+  },
+  "validation": [
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+      "command": "node --test nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDataManifestContract.test.js nodics.accelerators/modules/waste/modules/eWaste/test/eWasteManifestOwnershipContract.test.js",
+      "status": "PASS",
+      "tests": 12
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+      "command": "node --test nodics.waste/modules/wasteVerification/test/wasteReviewWorkspace.test.js",
+      "status": "PASS",
+      "tests": 17
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+      "command": "node nodics.foundation/modules/nData/nImport/import/test/contentPackService.test.js",
+      "status": "PASS"
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+      "command": "node nodics.foundation/modules/nData/nImport/import/test/contentPackVersionReconciliation.test.js",
+      "status": "PASS"
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs",
+      "command": "npm run docs:check",
+      "status": "PASS",
+      "validatedFrameworkPages": 176
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs",
+      "command": "npm run validate",
+      "status": "FAIL",
+      "rule": "publication-state-evidence",
+      "cause": "Shared record validator unconditionally requires reviewer, approver and publisher own properties on STAGED source records; forward release contract requires those approval fields to be absent. Includes the prior source-inventory/operations-rewards corrections and the additional catalogue/data-network corrections.",
+      "resolutionBoundary": "Shared nTooling validator is outside this worker scope. No actor fields, approvals, native receipts or validator exceptions were fabricated."
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.kickoff",
+      "command": "node --test modules/circa.ewaste/test/circaPublicationPlan.test.js modules/circa.ewaste/test/circaCatalogueCurrentPublicationPlan.test.js modules/circa.ewaste/test/circaAssetClassificationForwardPack.test.js",
+      "status": "PASS",
+      "tests": 17
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.kickoff",
+      "command": "node --test modules/circa.ewaste/test/circaDocumentationDataContract.test.js",
+      "status": "PASS",
+      "tests": 2
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.kickoff",
+      "command": "node --test modules/circa.ewaste/test/circaDocumentationDataContract.test.js modules/circa.ewaste/test/circaStoreReferencePack.test.js",
+      "status": "FAIL",
+      "cause": "Initial combined run: guide seller-consent wording mismatch, subsequently corrected with the standalone two-test guide run passing; Store guide line 171 dereferences sourceEvidence.some on included composed components without sourceEvidence. Six owner Store tests passed. Main owns Kickoff test corrections."
+    },
+    {
+      "cwd": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+      "command": "git diff --check -- nodics.accelerators/modules/waste/modules/eWaste",
+      "status": "PASS"
+    }
+  ],
+  "ownershipReview": {
+    "status": "PASS",
+    "existingCapabilities": "nImport CONTENT_PACK; nTooling text/digest/generation validation; canonical Profile/Waste owner operations",
+    "sourcePlacement": "Implementing eWaste module only",
+    "newRuntimeAuthorities": false,
+    "scope": "Successor CMS payloads, generated manifest evidence, nearest owner forward guidance and focused tests/fixtures",
+    "limits": "No import, runtime build, publication, Media delivery or signed-in UI acceptance was performed. Source catalogue/checksum/frozen-byte gates pass; broader shared record validation remains blocked on STAGED actor evidence. Kickoff Store guide test correction remains main-owned."
+  },
+  "changedFiles": [
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002ComponentData.js",
+      "sha256": "cc8e2f09f5420ee255effdac70a2baa8505cea450f65aa89663612543633d5c4"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002PageMetadataData.js",
+      "sha256": "e437740e0405b3a1c2e2ea92c4ae87a5066999f309ab3f29a36817194090c1c4"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002SearchMetadataData.js",
+      "sha256": "2bd03b7ce6aa8a2bed022d8499adc4ce4f081f92f75f6b6a792ca445caa8f168"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002PublicationStateData.js",
+      "sha256": "3cdcaa60b0ebdebc2d68a45de422a39229a883e36c047f865ea5f5e3c3cfd52e"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002NodeData.js",
+      "sha256": "99e1991424e47cf161d8b007b7bee8881a62010f0f71d69a6d2c09b35c25596f"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/101_eWasteDocumentationRelease002ContentPackHeader.js",
+      "sha256": "8d6612b04f9f87eb931558326ba42af3f7b730cb923bb498f5c9d1d9dca0eda8"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002ComponentData.js",
+      "sha256": "f5e6b0f77deb97695b9b7472523e42a7413350fb83a656a58d4f371e76f6e20e"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002PageMetadataData.js",
+      "sha256": "1ffb76a3b18a3e9144d537d74ac0145dca00d49a1088ce45dceb14f7e466e18e"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002SearchMetadataData.js",
+      "sha256": "1c15926a642a2f8445e15a0ffa1860ca45711d825e7653d191645da1489d7799"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002PublicationStateData.js",
+      "sha256": "fde92fa4d7fd0b97a0868007694c7db0461327db65d4f45857c1481643c81e56"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/circaDocumentationRelease002ContentPackHeader.js",
+      "sha256": "2a58bd5bc65a2e3c66d53aa2464d08bd7fc09659b95cc276aec717dc2523eab2"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+      "sha256": "de3f67ca9618e26be82d16498253f6c011620bdd4304e2099b4f57306d1164a1"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/AGENTS.md",
+      "sha256": "3d3504ca00bc3a12722f7710f67e29e6ac63b8161a847ca0a8b5a07813c4ccf9"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js",
+      "sha256": "3cce6e951c3051f243d34723e397061b663d090463d8c42a054706bf0ff62c2d"
+    },
+    {
+      "path": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/test/fixtures/documentationFrozen001.json",
+      "sha256": "20cdbc1aab571ea153fbf0d52eb22b96173d1e61b8440aa5c5d321b1ebd74e7b"
+    }
+  ]
+}

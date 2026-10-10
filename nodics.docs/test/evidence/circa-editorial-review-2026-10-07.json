@@ -1,0 +1,1378 @@
+{
+  "date": "2026-10-07",
+  "scope": "SOURCE_EDITORIAL_REVIEW",
+  "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+  "canonicalAuthority": "docs-v001 article Component records and synchronized Node/PageMetadata/SearchMetadata/PublicationState/Route records; not Markdown and not a sibling customer application",
+  "outcome": "PASS_WITH_EXPLICIT_INTEGRATION_AND_LIVE_QUALIFICATION_BOUNDARIES",
+  "evidenceBoundary": {
+    "sourceInspected": true,
+    "staticRecordReadbackAndJsonParsing": true,
+    "sourceTestsReadNotExecuted": true,
+    "runtimeCommandsExecuted": false,
+    "importsExecuted": false,
+    "receiptsInspected": false,
+    "receiptsWritten": false,
+    "processApprovalPerformed": false,
+    "publicationExecuted": false,
+    "browserOrNativeTestingPerformed": false,
+    "deployedOrLiveAcceptanceEstablished": false,
+    "fullRepositoryAudit": false
+  },
+  "reportedImportContext": {
+    "status": "USER_REPORTED_NOT_INDEPENDENTLY_VERIFIED",
+    "beforeFix": "One CURRENT installation receipt reportedly represented zero work because a nested header was ignored.",
+    "afterFix": "Corrected root-level cms header in referenceDocumentation 0.0.3 reportedly imports Site; publication reportedly returned SITE_EMPTY while routes were inactive.",
+    "sourceInspection": "At source inspection, the headers/circaDocumentationContentPackHeader.js root-level cms declaration and manifest referenceDocumentation version 0.0.3 were read only. Subsequent parent integration versions are not qualified by this editorial review.",
+    "reviewEffect": "This task makes reviewed owning routes active for normal subsequent selection; it neither validates that earlier receipt nor asserts a successful re-import/publication.",
+    "parentFollowup": "The parent subsequently reported preparation of final Circa 0.0.4 integration/public delivery verification. No 0.0.4 import, approval or live delivery outcome was independently inspected or certified here."
+  },
+  "changedFiles": [
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationComponentData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationNodeData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPageMetadataData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationSearchMetadataData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPublicationStateData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRouteData.js",
+    "nodics.docs/test/evidence/circa-editorial-review-2026-10-07.json"
+  ],
+  "sourceInstructionsRead": [
+    "AGENTS.md",
+    "README.md",
+    ".github/CONTRIBUTING.md",
+    "nodics.accelerators/AGENTS.md",
+    "nodics.accelerators/modules/waste/AGENTS.md",
+    "nodics.accelerators/modules/waste/modules/eWaste/AGENTS.md",
+    "nodics.accelerators/modules/waste/modules/eWaste/README.md",
+    "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/e-waste-domain.md",
+    "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/reference-compatibility.md",
+    "nodics.docs/AGENTS.md"
+  ],
+  "preservation": {
+    "documentIdsTitlesRoutesAndExistingSectionAnchors": "PRESERVED",
+    "usefulOwnerJourneysAndSafetyRecoveryLimits": "RETAINED_AND_SOURCE_QUALIFIED",
+    "customerSpecificUnsupportedDeploymentClaims": "CORRECTED_TO_REUSABLE_SOURCE_BEHAVIOR",
+    "hashesChecksumsCountsVersionsAndOnlineVersion": "UNCHANGED_PARENT_INTEGRATION_OWNS_REFRESH",
+    "authorsActorsReviewerApproverNamesApprovalAuditAndWorkflowMetadata": "UNCHANGED_NO_APPROVAL_OR_IDENTITY_WRITTEN",
+    "preexistingRouteDeliveryStateONLINE": "UNCHANGED_NOT_ASSIGNED_BY_THIS_TASK",
+    "routeAccessPolicies": "UNCHANGED_ACTIVE_IS_SELECTION_NOT_PUBLIC_ACCESS_GRANT",
+    "manifestsReleasesCohortConfigCentralNavigationTestsAndRuntimeSource": "NOT_EDITED",
+    "otherContentPackScaffoldFiles": "NOT_EDITED_OUTSIDE_SIX_ALLOWED_DOCUMENTATION_FILES",
+    "sharedDirtyWorktree": "NO_RESET_REVERT_COMMIT_OR_CLEANUP"
+  },
+  "staticValidation": {
+    "scope": "PASS",
+    "changedDocumentationFiles": 6,
+    "stagedLifecycleFields": 65,
+    "activeRoutes": 4,
+    "originalSectionAnchors": "PRESERVED",
+    "canonicalHeadingsAndSearch": "SYNCHRONIZED",
+    "protectedMetadata": "UNCHANGED",
+    "runtimeCommandsExecuted": false,
+    "testsExecuted": false,
+    "stagedAuthoringRecords": 58,
+    "embeddedNavigationLifecycles": 5,
+    "searchFacetLifecycles": 2,
+    "lifecycleCountsByFile": {
+      "circaDocumentationComponentData.js": 9,
+      "circaDocumentationNodeData.js": 6,
+      "circaDocumentationPageMetadataData.js": 4,
+      "circaDocumentationSearchMetadataData.js": 16,
+      "circaDocumentationPublicationStateData.js": 30,
+      "circaDocumentationRouteData.js": 0
+    },
+    "recordReadbackAndStaticParse": "PASS",
+    "finalEvidenceJsonReadback": "PASS",
+    "scopedGitDiffWhitespaceCheck": "PASS",
+    "relatedPages": "Canonical document IDs, owners and referenced section anchors inspected; not a deployed link/access test."
+  },
+  "guides": [
+    {
+      "date": "2026-10-07",
+      "documentId": "circa.catalogue",
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "title": "Circa Shop and Coupons",
+      "route": "/docs/circa-ewaste",
+      "result": "SOURCE_EDITORIAL_PASS",
+      "findings": [
+        {
+          "id": "CAT-01",
+          "status": "CORRECTED",
+          "problem": "Canonical accelerator article presented a customer-owned service and /circa.ewaste catalogue routes as reusable native endpoints.",
+          "correction": "Identified DefaultEWasteCatalogueService catalogue/product as service operations, the actual native marketplace route as a separate bounded discovery page, and required trusted project service selection for the full catalogue.",
+          "reviewedSectionAnchors": [
+            "circaCatalogue-1-ownership-and-composition",
+            "circaCatalogue-2-public-endpoints"
+          ]
+        },
+        {
+          "id": "CAT-02",
+          "status": "CORRECTED",
+          "problem": "Read completeness, availability, media and offer copy claims exceeded the source's checks.",
+          "correction": "Documented 12/48 page limits, 100/2000 scan bounds, exact-kind totals without atomic snapshots, FEATURED code order, bounded joins and inter-page cancellation; distinguished listed descriptor eligibility from stock admission and URL-shape checks from Media publication/host validation. Missing copy remains absent.",
+          "reviewedSectionAnchors": [
+            "circaCatalogue-3-reference-deployment-bounds",
+            "circaCatalogue-4-product-content"
+          ]
+        },
+        {
+          "id": "CAT-03",
+          "status": "CORRECTED",
+          "problem": "Customer frontend test and deployment claims were not evidence for this reusable owner.",
+          "correction": "Replaced them with source-test guidance clearly not executed, actionable selector/bound/owner failure recovery, explicit read-only limits and a later-layer page-size example that preserves inherited maxima and requires trusted mapping.",
+          "reviewedSectionAnchors": [
+            "circaCatalogue-5-validation",
+            "circa-catalogue-audience-owner-checks",
+            "circa-catalogue-customize-and-extend-safely",
+            "circa-catalogue-common-mistakes",
+            "circa-catalogue-verification"
+          ]
+        }
+      ],
+      "changedFiles": [
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationComponentData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationNodeData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPageMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationSearchMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPublicationStateData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRouteData.js"
+      ],
+      "reviewEvidenceFile": "nodics.docs/test/evidence/circa-editorial-review-2026-10-07.json",
+      "sourceEvidence": [
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/README.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 89
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/AGENTS.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 83
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/config/properties.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 480
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/e-waste-domain.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 470
+            }
+          ],
+          "inspection": "OWNER_CONTRACT_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteCatalogueService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 217
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteMarketplaceService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 330
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteRequestService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 61
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/controller/defaultEWasteExperienceController.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 239
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/router/routers.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 180
+            },
+            {
+              "start": 531,
+              "end": 623
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteCatalogueDiscovery.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 92,
+              "end": 267
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteCatalogueContract.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 57
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteMaterial/src/service/defaultWasteItemDescriptorService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 23,
+              "end": 244
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        }
+      ],
+      "canonicalOwnerReferences": [
+        {
+          "documentId": "catalog.product-discovery-management",
+          "owner": "product"
+        },
+        {
+          "documentId": "commerce.cart-order",
+          "owner": "checkoutCore"
+        }
+      ],
+      "exactReviewedSectionAnchors": [
+        "circaCatalogue-1-ownership-and-composition",
+        "circaCatalogue-2-public-endpoints",
+        "circaCatalogue-3-reference-deployment-bounds",
+        "circaCatalogue-4-product-content",
+        "circaCatalogue-5-validation",
+        "circa-catalogue-audience-owner-checks",
+        "circa-catalogue-customize-and-extend-safely",
+        "circa-catalogue-common-mistakes",
+        "circa-catalogue-verification"
+      ],
+      "staging": {
+        "authoringLifecycle": "STAGED",
+        "owningRouteActive": true,
+        "editoriallyReviewed": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publishedByThisTask": false,
+        "onlineVersionWritten": false,
+        "receiptWritten": false
+      },
+      "remainingQualificationBoundaries": [
+        "Full catalogue operations require explicit trusted server adapter selection; the native marketplace listing is not the same traversal.",
+        "Read-time eligibility/available flags are not stock, entitlement, checkout, independent Media publication or live customer acceptance."
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "circa.customer-journey",
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "title": "Circa customer journey",
+      "route": "/docs/circa-ewaste/circa-customer-journey",
+      "result": "SOURCE_EDITORIAL_PASS",
+      "findings": [
+        {
+          "id": "JRN-01",
+          "status": "CORRECTED",
+          "problem": "Fixed customer ports, credentials, model, dataset and historical live narratives were presented as accelerator instructions.",
+          "correction": "Retained the useful owner journey while replacing deployment-specific assertions with reusable composition, governed reference adoption, owner links and an explicit source-only evidence boundary.",
+          "reviewedSectionAnchors": [
+            "circaCustomerJourney-1-connected-circa-local-customer-journey",
+            "circaCustomerJourney-2-scope-and-authority",
+            "circaCustomerJourney-3-start-the-local-topology",
+            "circaCustomerJourney-4-governed-sample-import",
+            "circaCustomerJourney-5-restore-the-collection-network-after-a-local-reset",
+            "circaCustomerJourney-6-commerce-publication",
+            "circaCustomerJourney-10-evidence-and-current-state",
+            "circaCustomerJourney-12-domain-accelerator-consolidation"
+          ]
+        },
+        {
+          "id": "JRN-02",
+          "status": "CORRECTED",
+          "problem": "Universal fresh arrival and complete centre eligibility were implied without source wiring or algorithm coverage.",
+          "correction": "Made native Experience versus explicit Journey adapter selection visible, documented no default radius, inclusive distance/freshness bounds and optional accuracy, saved-draft preservation and completed-command replay. Public discovery is active/operating/public; Journey distance selection is not item-rule/opening-hour evaluation, and validateFacts does not independently enforce active or all acceptance templates.",
+          "reviewedSectionAnchors": [
+            "circaCustomerJourney-7-walk-through-the-experience",
+            "circaCustomerJourney-8-shared-web-and-telegram-submission-implementation-2026-09-09",
+            "circaCustomerJourney-11-deployment-gates"
+          ]
+        },
+        {
+          "id": "JRN-03",
+          "status": "CORRECTED",
+          "problem": "Independent review and reward success were stronger than default policy and owner operations establish.",
+          "correction": "Recorded false defaults for requireScopes/requireVerification/requireDifferentApprover, real employee claims, revisions/idempotency, release/reclaim handoff, separate evidence-read authorization, pending settlement and optional communication. Valid qualified INPUT_ONLY coverage is distinct from mandatory rejection of missing/failed/mock/empty assessments.",
+          "reviewedSectionAnchors": [
+            "circaCustomerJourney-13-operational-roles-and-independent-approval",
+            "circaCustomerJourney-16-account-and-channel-ownership"
+          ]
+        },
+        {
+          "id": "JRN-04",
+          "status": "CORRECTED",
+          "problem": "Customer-specific Commerce and channel paths risked duplicating owners or implying live qualification.",
+          "correction": "Linked existing Product/Cart/Order/Returns/Location/Impact docs, preserved physical receipt and entitlement boundaries, described disabled channel defaults and authenticated account proof, and added a project radius/strict reviewer policy example with wiring, scope, test and rollback prerequisites.",
+          "reviewedSectionAnchors": [
+            "circaCustomerJourney-9-local-telegram-launch-recovery",
+            "circaCustomerJourney-14-negotiated-purchases-and-merchant-operations",
+            "circaCustomerJourney-15-enterprise-merchant-fulfillment-and-refunds",
+            "circa-customer-journey-audience-owner-checks",
+            "circa-customer-journey-customize-and-extend-safely",
+            "circa-customer-journey-common-mistakes",
+            "circa-customer-journey-verification"
+          ]
+        }
+      ],
+      "changedFiles": [
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationComponentData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationNodeData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPageMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationSearchMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPublicationStateData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRouteData.js"
+      ],
+      "reviewEvidenceFile": "nodics.docs/test/evidence/circa-editorial-review-2026-10-07.json",
+      "sourceEvidence": [
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/README.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 89
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/AGENTS.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 83
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/config/properties.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 480
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/e-waste-domain.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 470
+            }
+          ],
+          "inspection": "OWNER_CONTRACT_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/reference-compatibility.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 86
+            }
+          ],
+          "inspection": "OWNER_CONTRACT_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteJourneyService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 361
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteJourneyContractService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 150
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteExperienceService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 485
+            },
+            {
+              "start": 490,
+              "end": 749
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteRequestService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 61
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/controller/defaultEWasteExperienceController.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 239
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/router/routers.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 180
+            },
+            {
+              "start": 531,
+              "end": 623
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteSubmissionPreparationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 76
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteChannelAuthenticationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 154
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteAcceptanceReadinessService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 315
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteOutcomeCommunicationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 171
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteOrderReversalService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 213
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteJourneyService.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 255
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWastePreparation.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 100
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteCollectionVisibilityContract.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 44
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteSubmission/src/service/defaultWasteSubmissionOperationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 44,
+              "end": 48
+            },
+            {
+              "start": 259,
+              "end": 318
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteCollection/src/service/defaultWasteCollectionCentreService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 284
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteCore/config/properties.js",
+          "reviewedLineRanges": [
+            {
+              "start": 190,
+              "end": 204
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteCore/src/service/defaultWasteOperationalAccessService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 13,
+              "end": 92
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteVerification/src/service/defaultWasteVerificationOperationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 130
+            },
+            {
+              "start": 335,
+              "end": 412
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteVerification/src/service/defaultWasteReviewWorkspaceService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 190,
+              "end": 354
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        }
+      ],
+      "canonicalOwnerReferences": [
+        {
+          "documentId": "location.shared-map-configuration",
+          "owner": "locationMap"
+        },
+        {
+          "documentId": "catalog.product-discovery-management",
+          "owner": "product"
+        },
+        {
+          "documentId": "commerce.cart-order",
+          "owner": "checkoutCore"
+        },
+        {
+          "documentId": "order.management-lifecycle",
+          "owner": "order"
+        },
+        {
+          "documentId": "commerce.returns-refunds",
+          "owner": "order"
+        },
+        {
+          "documentId": "waste.impact-providers",
+          "owner": "wasteImpact"
+        }
+      ],
+      "exactReviewedSectionAnchors": [
+        "circaCustomerJourney-1-connected-circa-local-customer-journey",
+        "circaCustomerJourney-2-scope-and-authority",
+        "circaCustomerJourney-3-start-the-local-topology",
+        "circaCustomerJourney-4-governed-sample-import",
+        "circaCustomerJourney-5-restore-the-collection-network-after-a-local-reset",
+        "circaCustomerJourney-6-commerce-publication",
+        "circaCustomerJourney-7-walk-through-the-experience",
+        "circaCustomerJourney-8-shared-web-and-telegram-submission-implementation-2026-09-09",
+        "circaCustomerJourney-9-local-telegram-launch-recovery",
+        "circaCustomerJourney-10-evidence-and-current-state",
+        "circaCustomerJourney-11-deployment-gates",
+        "circaCustomerJourney-12-domain-accelerator-consolidation",
+        "circaCustomerJourney-13-operational-roles-and-independent-approval",
+        "circaCustomerJourney-14-negotiated-purchases-and-merchant-operations",
+        "circaCustomerJourney-15-enterprise-merchant-fulfillment-and-refunds",
+        "circaCustomerJourney-16-account-and-channel-ownership",
+        "circa-customer-journey-audience-owner-checks",
+        "circa-customer-journey-customize-and-extend-safely",
+        "circa-customer-journey-common-mistakes",
+        "circa-customer-journey-verification"
+      ],
+      "staging": {
+        "authoringLifecycle": "STAGED",
+        "owningRouteActive": true,
+        "editoriallyReviewed": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publishedByThisTask": false,
+        "onlineVersionWritten": false,
+        "receiptWritten": false
+      },
+      "remainingQualificationBoundaries": [
+        "Native Experience confirmation does not automatically select Journey arrival enforcement.",
+        "Centre item eligibility, opening hours and complete acceptance-rule interpretation are not established by distance or public discovery.",
+        "Shared reviewer defaults do not require scopes, prior verification or distinct approver; real human permissions/claims and policy are deployment gates.",
+        "Physical-device/browser/Telegram/WhatsApp, impact provider, positive/zero/pending settlement and notification behavior remain unqualified here."
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "circa.demo-data",
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "title": "Circa demonstration dataset",
+      "route": "/docs/circa-ewaste/circa-demo-data",
+      "result": "SOURCE_EDITORIAL_PASS",
+      "findings": [
+        {
+          "id": "DATA-01",
+          "status": "CORRECTED",
+          "problem": "Application enterprises, offer counts, login conventions and customer release selections were mistaken for reusable accelerator reference data.",
+          "correction": "Replaced the false inventory with the current two families, ten categories, fourteen types, four collection presets, eight acceptance templates and four impact profiles. Distinguished explicit core 0.0.1 selection from optional documentation and customer business releases; retained battery profiles and advisory/publicClaimAllowed=false limits.",
+          "reviewedSectionAnchors": [
+            "circaDemoData-1-one-customer-demonstration",
+            "circaDemoData-2-dataset-inventory"
+          ]
+        },
+        {
+          "id": "DATA-02",
+          "status": "CORRECTED",
+          "problem": "CURRENT and preflight could be read as proof of actual installation; import sequence overstated automatic ownership execution.",
+          "correction": "Required actual per-destination work and exact baseline provenance; distinguished zero-work ignored-header recovery from real installation, cyclic taxonomy closure from strict record order, partial-success retries from transaction replay, and source neutrality from installed adoption eligibility.",
+          "reviewedSectionAnchors": [
+            "circaDemoData-3-import-sequence",
+            "circaDemoData-4-repeat-imports-and-recovery",
+            "circa-demo-data-audience-owner-checks"
+          ]
+        },
+        {
+          "id": "DATA-03",
+          "status": "CORRECTED",
+          "problem": "Customization lacked an executable source-shape distinction between sparse inheritance and whole-record contribution.",
+          "correction": "Added a minimal customer record0 display-name delta aligned to source root, logical filename and wasteMaterial/wasteCategory header; explained nImport source-key inheritance, replacing arrays, missing/non-current baseline rejection and resolveByCode whole-record replacement. Retained immutable history and forward owner tooling boundaries.",
+          "reviewedSectionAnchors": [
+            "circaDemoData-5-customization"
+          ]
+        },
+        {
+          "id": "DATA-04",
+          "status": "CORRECTED",
+          "problem": "Seed/admission narratives could imply issued stock, merchant consent or qualified staff.",
+          "correction": "Preserved explicit owner-only stock/issuance/rights/scope gates and linked Product/Cart docs without duplicating Commerce. Separated source test assertions from installed/native testing and normal parent publication.",
+          "reviewedSectionAnchors": [
+            "circaDemoData-6-local-demo-runtime-admission",
+            "circa-demo-data-common-mistakes",
+            "circa-demo-data-verification"
+          ]
+        }
+      ],
+      "changedFiles": [
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationComponentData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationNodeData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPageMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationSearchMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPublicationStateData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRouteData.js"
+      ],
+      "reviewEvidenceFile": "nodics.docs/test/evidence/circa-editorial-review-2026-10-07.json",
+      "sourceEvidence": [
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/README.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 89
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/AGENTS.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 83
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/config/properties.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 480
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/e-waste-domain.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 470
+            }
+          ],
+          "inspection": "OWNER_CONTRACT_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/reference-compatibility.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 86
+            }
+          ],
+          "inspection": "OWNER_CONTRACT_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 175
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/headers/waste/eWastePresetHeader.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 50
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteFamilyData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 38
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteCategoryData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 234
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteItemTypeData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 390
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteCollectionPresetData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 49
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAcceptanceRuleData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 46
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteEvidencePolicyData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 36
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteVerificationPolicyData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 28
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteImpactProfileData.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 86
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/circaDocumentationContentPackHeader.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 213
+            }
+          ],
+          "inspection": "SOURCE_DECLARATION_READ_NOT_IMPORTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteReferenceCompatibility.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 90
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteReferenceRelease.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 37
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWastePresetDataContract.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 158
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteSubmission/src/service/defaultWasteSubmissionOperationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 44,
+              "end": 48
+            },
+            {
+              "start": 259,
+              "end": 318
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        }
+      ],
+      "canonicalOwnerReferences": [
+        {
+          "documentId": "catalog.product-discovery-management",
+          "owner": "product"
+        },
+        {
+          "documentId": "commerce.cart-order",
+          "owner": "checkoutCore"
+        }
+      ],
+      "exactReviewedSectionAnchors": [
+        "circaDemoData-1-one-customer-demonstration",
+        "circaDemoData-2-dataset-inventory",
+        "circaDemoData-3-import-sequence",
+        "circaDemoData-4-repeat-imports-and-recovery",
+        "circaDemoData-5-customization",
+        "circaDemoData-6-local-demo-runtime-admission",
+        "circa-demo-data-audience-owner-checks",
+        "circa-demo-data-common-mistakes",
+        "circa-demo-data-verification"
+      ],
+      "staging": {
+        "authoringLifecycle": "STAGED",
+        "owningRouteActive": true,
+        "editoriallyReviewed": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publishedByThisTask": false,
+        "onlineVersionWritten": false,
+        "receiptWritten": false
+      },
+      "remainingQualificationBoundaries": [
+        "An earlier CURRENT zero-work result cannot prove installed destinations; no receipt was inspected or produced here.",
+        "Reference-only adoption with historical records and later overrides requires parent owner qualification.",
+        "No preset or illustrative quantity grants consent, reviewer eligibility, stock admission or business publication."
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "circa.customer-knowledge",
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "title": "Circa customer knowledge",
+      "route": "/docs/circa-ewaste/circa-customer-knowledge",
+      "result": "SOURCE_EDITORIAL_PASS",
+      "findings": [
+        {
+          "id": "KNOW-01",
+          "status": "CORRECTED",
+          "problem": "Customer guidance promised broad editing, automatic arrival enforcement and universal draft/photo retention.",
+          "correction": "Explained explicit Journey wiring and eligibility limits, name/description-only editing, no conversational taxonomy reclassification, and the difference between failed initial preparation and evidence preservation for an existing saved draft.",
+          "reviewedSectionAnchors": [
+            "circaCustomerKnowledge-1-location-and-arrival",
+            "circaCustomerKnowledge-2-photo-identification-and-correction"
+          ]
+        },
+        {
+          "id": "KNOW-02",
+          "status": "CORRECTED",
+          "problem": "Handling, independent review and carbon/reward language omitted key source limitations.",
+          "correction": "Documented supported size classes and bounded charger mapping, qualified reviewer policy rather than a universal independent default, system versus physical receipt, separate settlement and no certified carbon or safety guarantee. INPUT_ONLY is a disclosed limited assessment, not numerical coverage.",
+          "reviewedSectionAnchors": [
+            "circaCustomerKnowledge-3-handling-and-unknown-details",
+            "circaCustomerKnowledge-4-confirmation-and-review",
+            "circaCustomerKnowledge-5-benefits-and-ownership"
+          ]
+        },
+        {
+          "id": "KNOW-03",
+          "status": "CORRECTED",
+          "problem": "Publication of knowledge was liable to imply Copilot ingestion or live account/channel acceptance.",
+          "correction": "Explicitly stated that this page does not automatically index/retrieve/enforce Copilot guidance, channels require verified Profile proof and separate live qualification, and privacy/retention must come from actual policy. Added rewardGuidance later-layer example, stale-revision/1500-character rejection and revision/history preservation.",
+          "reviewedSectionAnchors": [
+            "circaCustomerKnowledge-6-accounts-privacy-and-recovery",
+            "circa-customer-knowledge-audience-owner-checks",
+            "circa-customer-knowledge-customize-and-extend-safely",
+            "circa-customer-knowledge-common-mistakes",
+            "circa-customer-knowledge-verification"
+          ]
+        }
+      ],
+      "changedFiles": [
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationComponentData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationNodeData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPageMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationSearchMetadataData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPublicationStateData.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRouteData.js"
+      ],
+      "reviewEvidenceFile": "nodics.docs/test/evidence/circa-editorial-review-2026-10-07.json",
+      "sourceEvidence": [
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/README.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 89
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/AGENTS.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 83
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/config/properties.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 480
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/e-waste-domain.md",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 470
+            }
+          ],
+          "inspection": "OWNER_CONTRACT_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteConversationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 268
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteExperienceService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 485
+            },
+            {
+              "start": 490,
+              "end": 749
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteJourneyService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 361
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteSubmissionPreparationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 76
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteChannelAuthenticationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 154
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteAcceptanceReadinessService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 315
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEWasteOutcomeCommunicationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 171
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteGuidanceHistory.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 90
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteConversationContract.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 95
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWastePreparation.test.js",
+          "reviewedLineRanges": [
+            {
+              "start": 1,
+              "end": 100
+            }
+          ],
+          "inspection": "TEST_SOURCE_AND_ASSERTIONS_READ_NOT_EXECUTED",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteCore/config/properties.js",
+          "reviewedLineRanges": [
+            {
+              "start": 190,
+              "end": 204
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteSubmission/src/service/defaultWasteSubmissionOperationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 44,
+              "end": 48
+            },
+            {
+              "start": 259,
+              "end": 318
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteVerification/src/service/defaultWasteVerificationOperationService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 14,
+              "end": 130
+            },
+            {
+              "start": 335,
+              "end": 412
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        },
+        {
+          "path": "nodics.waste/modules/wasteVerification/src/service/defaultWasteReviewWorkspaceService.js",
+          "reviewedLineRanges": [
+            {
+              "start": 190,
+              "end": 354
+            }
+          ],
+          "inspection": "SOURCE_READ",
+          "boundary": "Supports the bounded claims in this guide; not a full-module audit or runtime acceptance."
+        }
+      ],
+      "canonicalOwnerReferences": [
+        {
+          "documentId": "location.shared-map-configuration",
+          "owner": "locationMap"
+        },
+        {
+          "documentId": "waste.impact-providers",
+          "owner": "wasteImpact"
+        }
+      ],
+      "exactReviewedSectionAnchors": [
+        "circaCustomerKnowledge-1-location-and-arrival",
+        "circaCustomerKnowledge-2-photo-identification-and-correction",
+        "circaCustomerKnowledge-3-handling-and-unknown-details",
+        "circaCustomerKnowledge-4-confirmation-and-review",
+        "circaCustomerKnowledge-5-benefits-and-ownership",
+        "circaCustomerKnowledge-6-accounts-privacy-and-recovery",
+        "circa-customer-knowledge-audience-owner-checks",
+        "circa-customer-knowledge-customize-and-extend-safely",
+        "circa-customer-knowledge-common-mistakes",
+        "circa-customer-knowledge-verification"
+      ],
+      "staging": {
+        "authoringLifecycle": "STAGED",
+        "owningRouteActive": true,
+        "editoriallyReviewed": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publishedByThisTask": false,
+        "onlineVersionWritten": false,
+        "receiptWritten": false
+      },
+      "remainingQualificationBoundaries": [
+        "Guide existence does not configure Copilot retrieval or enforce advice.",
+        "Advisory location/manual choice cannot override an explicitly wired arrival policy; built-in eligibility remains limited.",
+        "Real reviewer/account/channel, retention, evidence authorization and live journey acceptance require their actual owners."
+      ]
+    }
+  ],
+  "editorialBlockers": [],
+  "parentIntegrationRequired": [
+    "Refresh derived counts/checksums/manifests and qualify the selected pack through the parent's existing integration process; these protected files and values were deliberately not changed.",
+    "Coordinate any other pack scaffold lifecycle changes outside the six authorized files and verify links/selection/access against the complete pack.",
+    "Run normal nImport, Process approval and publication; no approval names, receipts or onlineVersion were authored here.",
+    "Keep source/editorial success separate from installed destination work, actual centre eligibility, real reviewer policy/claims, stock/consent, provider and live channel/customer acceptance."
+  ]
+}

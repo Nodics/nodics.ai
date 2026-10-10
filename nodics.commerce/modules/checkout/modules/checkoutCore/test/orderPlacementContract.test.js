@@ -14,6 +14,40 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const placement = require('../src/service/defaultOrderPlacementService');
+const placementPorts = require('../src/service/defaultCheckoutPlacementPortsService');
+
+test('Checkout derives bound offline capture only from reviewed server policy, never browser mode', async t => {
+    const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE };
+    t.after(() => { global.CONFIG = previous.CONFIG; global.SERVICE = previous.SERVICE; });
+    let policy = { enabled: true, sandboxOnly: true, liveQualified: false, maturity: 'OFFLINE_CONFORMANCE' };
+    let role = 'COMMERCE', captured;
+    const adapter = { code: 'stripe-sandbox' };
+    global.CONFIG = { get: key => key === 'runtimeRole' ? role : key === 'stripeProvider' ? policy : {} };
+    global.SERVICE = { DefaultStripeSandboxAdapterService: adapter,
+        DefaultPaymentExecutionService: { execute: async request => { captured = request; return request; } } };
+    const owner = { ...placementPorts, paymentRepository: () => ({}) }, ports = owner.create();
+    const request = { tenant: 't', enterpriseCode: 'e', ownerId: 'buyer', authData: { entCode: 'e' },
+        idempotencyKey: 'placement-command', payload: { orderCode: 'order', cartCode: 'cart',
+            sandboxMode: 'FORGED_BROWSER_MODE', sandboxRefundOutcome: 'REFUND_SUCCEEDED', originalCaptureReceipt: {} } };
+    const authorization = { methodCode: 'CARD', providerCode: 'stripe-sandbox', providerReference: 'original-authorization', amount: '12.00', currency: 'USD' };
+    await ports.capturePayment(request, { code: 'order' }, authorization);
+    assert.equal(captured.sandboxMode, 'LOCAL_SANDBOX_DEMO');
+    assert.equal(captured.enterpriseCode, 'e'); assert.equal(captured.ownerId, 'buyer');
+    assert.equal(captured.idempotencyKey, 'placement-command:payment:capture');
+    assert.equal(captured.providerReference, 'original-authorization');
+    assert.equal(captured.originalCaptureReceipt, undefined); assert.equal(captured.sandboxRefundOutcome, undefined);
+    for (const patch of [{ enabled: false }, { sandboxOnly: false }, { liveQualified: true }, { maturity: 'LIVE' }]) {
+        const original = policy; policy = { ...policy, ...patch };
+        await ports.capturePayment(request, { code: 'order' }, authorization);
+        assert.equal(captured.sandboxMode, undefined); policy = original;
+    }
+    role = 'COMMERCE_STAGED';
+    await ports.capturePayment(request, { code: 'order' }, authorization);
+    assert.equal(captured.sandboxMode, undefined);
+    role = { code: 'COMMERCE' };
+    await ports.capturePayment(request, { code: 'order' }, authorization);
+    assert.equal(captured.sandboxMode, 'LOCAL_SANDBOX_DEMO');
+});
 
 test('Order placement passes authenticated context into idempotency checkpoint lookup', async () => {
     const authData = { tenant: 'default', userGroups: ['customerUserGroup'] };

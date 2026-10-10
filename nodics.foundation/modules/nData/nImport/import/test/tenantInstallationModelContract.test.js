@@ -37,7 +37,7 @@ test('new tenant receives installation/history models before release lookup, wit
         DefaultDataInstallationService: { get: async request => {
             assert.equal(request.tenant, tenant);
             assert.equal(module.models[tenant].master.DataInstallationModel.tenant, tenant);
-            return { result: [] };
+            return { code: 'SUC_DBS_00000', result: [] };
         } }
     };
     const owner = { ...builder, registerModelMiddleWare() {} };

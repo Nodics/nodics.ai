@@ -35,3 +35,8 @@ module.exports = { loyaltyWallet: {
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } })
 } };
+
+for (const schema of Object.values(module.exports.loyaltyWallet)) {
+    schema.transaction = { enabled: true, sideEffects: 'none' };
+    schema.indexes = { code: { key: { code: 1 }, mongodb: { enabled: true, options: { unique: true } } } };
+}

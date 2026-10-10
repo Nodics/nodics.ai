@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "electronicsProduct",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "electronicsProduct",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "405be2a1bdb5c13c7ee36e2e469ac0308405a5308bc491d4f5a90bc1fa79c9b2",
+      "generatedHashes": {
+        "docs-v001/records/documentation/electronicsProductDocumentationComponentData.js": "11ce1cccc02ba427a66401140b31a33d9f5916e1aa67339b0185f980c0edeee8",
+        "docs-v001/records/documentation/electronicsProductDocumentationPageMetadataData.js": "eb612bea489e9121f2dcb4f898511d3773946148b34767effe189ab7887d654d",
+        "docs-v001/records/documentation/electronicsProductDocumentationNodeData.js": "2fa4c7311f329ea16f14a56d0fd7d798e62f00c914b3542dec9a0ef278689fce",
+        "docs-v001/records/documentation/electronicsProductDocumentationPageData.js": "2cf3e5e8099d6b776fafd7d59ac84a6b034aaffb26698bb1accc784db7348070",
+        "docs-v001/records/documentation/electronicsProductDocumentationRouteData.js": "7179c76153d22be4661412fcd18f5e890e3a954e2b17cbc1733af6d4cd56e35b",
+        "docs-v001/records/documentation/electronicsProductDocumentationSearchMetadataData.js": "77847ea23a1827a0756259b29b47edddd944ad9fac7bba48f01420c895afa902",
+        "docs-v001/records/documentation/electronicsProductDocumentationPublicationStateData.js": "a09adb7fa20f9af31e6ac8dbbe76c44f393967c1b173fd6e26fc17d481b29445",
+        "docs-v001/headers/100_electronicsProductDocumentationContentPackHeader.js": "6cb3ae77133b27c859a07466e2415d4d909fc5777dd4226043c128bf0575a533"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

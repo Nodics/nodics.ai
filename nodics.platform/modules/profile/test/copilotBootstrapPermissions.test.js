@@ -23,7 +23,7 @@ test("forward bootstrap adopts current Copilot grants only for the existing runt
   const root = path.resolve(__dirname, "../data");
   const active = manifest.sections["init-v001"];
   const groups = require(path.join(root, active.sourceRoot, "records/groups/defaultBootstrapUserGroupsData"));
-  const previous = require("../data/init-v008/records/groups/defaultBootstrapUserGroupsData");
+  const previous = require("./fixtures/compatibility/bootstrapGroupsBeforeCopilot");
   const administrator = Object.values(groups).find((group) => group.code === "runtimeConfigAdminUserGroup");
   const added = [
     "copilot.knowledge.internal.read", "copilot.knowledge.restricted.read",
@@ -36,10 +36,7 @@ test("forward bootstrap adopts current Copilot grants only for the existing runt
     if (group.code !== administrator.code) assert.deepEqual(group, previous[key]);
     else assert.deepEqual(group.permissions, [...previous[key].permissions, ...added]);
   }
-  assert.equal(manifest.retainedRoots["init-v008"].sections["init-v001"].version, "0.0.2");
+  assert.equal(active.sourceRoot, "init-v001");
+  assert.equal(manifest.retainedRoots, undefined);
   release.validateRetainedRoots(root, manifest);
-  for (const [file, hash] of Object.entries(manifest.retainedRoots["init-v008"].sections["init-v001"].files)) {
-    if (!file.endsWith("defaultBootstrapUserGroupsData.js"))
-      assert.equal(active.files[file.replace("init-v008/", active.sourceRoot + "/")], hash);
-  }
 });

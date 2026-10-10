@@ -80,12 +80,26 @@ original revision; no client or project may disable these checks for editing.
 
 ## Transaction contract
 
+- The connection lifecycle registers inherited, fully identical resolved module
+  configurations against the tenant's opened default master/test wrappers. This
+  shares the actual client, not merely endpoint strings. Private weak provenance
+  binds reuse to the configuration at opening and the selected test-channel mode;
+  the existing database registry remains authoritative. Different effective
+  provider, database, credentials, options, tenant or channel remains isolated.
+  Namespace/binding admission still runs before opening or reusing handles;
+  shutdown closes each shared client once. Later layers customize the existing
+  connection owner, not a parallel pool or transaction identity fallback.
 - Use `DefaultDatabaseTransactionService`, never a driver session in business code.
 - Pass the opaque context unchanged through generated service requests.
 - Keep all records in the same resolved module/tenant database.
 - Fail closed when `multiRecordAtomic` is absent.
 - Prove commit, abort, expired context, wrong database, concurrency conflict,
   and live-provider topology before activation.
+- `test/databaseSharedRegistrationContract.test.js` joins real configuration,
+  connection registration, generated MongoDB model wrappers and opaque transaction
+  validation using a connection double. It is source evidence, not live topology
+  or posting acceptance. Rebuild/restart affected servers through the operator
+  owner before installed qualification; this change requires no data migration.
 
 ## Reference-integrity contract
 
@@ -174,7 +188,7 @@ callback behavior. Missing owners fail closed.
 
 Use `schemaApi.discoveryPermission`, secured `userGroup` access and the `schemaApi`
 exposure category. Axis never retries a removed route. See the detailed
-[schema API guide](../../../../../../nodics.docs/docs/pages/nodics.foundation/schema-data-modeling.md)
+[schema API guide](../../data/docs-v001/records/documentation/databaseDocumentationComponentData.js)
 for shapes, customization, provider limitations, rollout and verification.
 
 ## Required server build

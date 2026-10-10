@@ -231,7 +231,7 @@ connection aliases. Authority and consumers share the configured
 `authSecurity.securityStamp.cacheModuleName` for stamps and revocation markers.
 
 See the [runtime contract](llm/contracts/README.md) and the
-[detailed configuration and acceptance guide](../../../nodics.docs/docs/pages/nodics.foundation/service-runtime-overrides.md)
+[detailed configuration and acceptance guide](data/docs-v001/records/documentation/nServiceDocumentationComponentData.js)
 for proof, grants, tenant discovery, cache namespaces and live test commands.
 
 Keep common authority contexts bounded to explicitly selected modules; schema overrides and Profile-issued scopes remain authoritative. See the local contract.

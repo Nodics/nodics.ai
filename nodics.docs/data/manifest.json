@@ -1,12 +1,12 @@
 {
-  "contractVersion": 0,
+  "contractVersion": 2,
   "module": "nodics.docs",
   "sections": {
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "core-v001",
+      "contentPath": "docs-v001",
       "pack": "nodics.docs",
-      "version": "0.16.29",
+      "version": "0.0.1",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -19,37 +19,703 @@
       "initialPublicationPolicy": "ADMIN_INITIATED",
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
-      "sourceMode": "catalogue-markdown-source",
-      "sourceAuthority": "docs/catalogue.json",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
       "accessMode": "PUBLIC",
-      "pages": 159,
-      "components": 160,
-      "routes": 159,
-      "releaseChecksum": "d4eea6c651d74a0036ba3625b5503c2cc4a950fa22a9804ac863fc5dbe60f7be",
+      "pages": 29,
+      "components": 30,
+      "routes": 29,
+      "releaseChecksum": "4180ccd532b3f55fb564b9a194b2ff9d475e15124499eeee49fdf1fdd685e301",
       "generatedHashes": {
-        "core-v001/records/documentation/nodicsDocumentationSiteData.js": "2c3a262be1c3d672c36c0f9f89dc9117c8b04297af1e1501491c1c7afc7e8089",
-        "core-v001/records/documentation/nodicsDocumentationProductData.js": "bb26c293963281c2ab4c09653908db0a1be1c366cb19680b8a2ef5b6fe48d26f",
-        "core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js": "195dfa98fb6a08d8e4004f82fcdd7c75fd8d029ea0020ff6b4d35c1badc509e0",
-        "core-v001/records/documentation/nodicsDocumentationNavigationData.js": "ebec99ed3b4ec3b590dfa20f63d6b9a4e9595d3658826f087c407b4ce0a40720",
-        "core-v001/records/documentation/nodicsDocumentationDashboardData.js": "08af900f035aac6d4bc95eaa92c4313235c51d8ff1cfbb8528ac9d8e3ec516ba",
-        "core-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js": "883cda19fde2c3e291dff02df7b7d88ea84e333e97c93d12398aa998b1256b0a",
-        "core-v001/records/documentation/nodicsDocumentationNodeData.js": "ccc7c8dfc8e34b36dce06e1df2f1217cf77e86fda9aaefa63e4aa30d8359d8d9",
-        "core-v001/records/documentation/nodicsDocumentationPageMetadataData.js": "ebef506394530f8fe9082c9027b255cfa18ea56fd369b01a70826d104654ed76",
-        "core-v001/records/documentation/nodicsDocumentationPublicationStateData.js": "ae38cb1ecbdcf864815277186086d5b8779d60a368821df03915d925ad6f7607",
-        "core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js": "be0ac07a1a84fba44c531ce20a24ad6b2b16d9a08b239c7863aaf8af0cd6e747",
-        "core-v001/records/documentation/nodicsDocumentationTypeCodeData.js": "fb25cbec0a9705234f05032ef7a037078038c3b852f08ee2150443495fb7abfe",
-        "core-v001/records/documentation/nodicsDocumentationRendererData.js": "922f5191aca55816275e9757ce27641781f56f2bdf79d5e006d3691a26daa430",
-        "core-v001/records/documentation/nodicsDocumentationSlotData.js": "ad3c54af5bd34f7af7c8e9fe9f354076149057519a1147159d2e0cd5bdc56af7",
-        "core-v001/records/documentation/nodicsDocumentationTemplateBootstrapData.js": "9479fbf8958c8e9fe48d7752469080b85041cf488a2cdd340ba2ba841eb5d3fd",
-        "core-v001/records/documentation/nodicsDocumentationTemplateData.js": "9e2a160453f7f3308917d4869282df6a9932154cad2100427d1665d36a2db32a",
-        "core-v001/records/documentation/nodicsDocumentationComponentData.js": "2f2afc1c0bb49ca5315f5d7e411cb4c3ee2d98a4d56956475f70df1f5baaf23c",
-        "core-v001/records/documentation/nodicsDocumentationPageData.js": "8c6d85754b89d89841bea200e63398acaa4bb8b9a206e01cb134fbc260f5daee",
-        "core-v001/records/documentation/nodicsDocumentationRouteData.js": "98a3e85b03e8c79f792bdd654e0a17135e1eed46cd43179bf586c1c23bf958c9",
-        "core-v001/headers/nodicsDocumentationContentPackHeader.js": "d033a7607d7db1a64b923d817478a013f5dbd5a1bca1c6ab2ed978856f497c79"
-      }
+        "docs-v001/records/documentation/nodicsDocumentationNodeData.js": "7d40c97480759b1f30af1b5527cbb0d46836deca9bb100e19cdbb4ac4809c660",
+        "docs-v001/records/documentation/nodicsDocumentationPageMetadataData.js": "ba88375667c2c7c365e20215af61b6b9cd8078a795d257c4a537d5bd0f9e5878",
+        "docs-v001/records/documentation/nodicsDocumentationPublicationStateData.js": "2384240606275702698aecbcd58fe73c993204ebf42641262774f43f9772494f",
+        "docs-v001/records/documentation/nodicsDocumentationSearchMetadataData.js": "fe9ecf644c80567ac93f6d0e49018634e540e82ae0bb384577b1de660781d4fc",
+        "docs-v001/records/documentation/nodicsDocumentationComponentData.js": "0b6e833465ed50923c1e1a28b257b81f21d919294fe5b16bc2b5f19a4b5eaeaa",
+        "docs-v001/records/documentation/nodicsDocumentationPageData.js": "5f3d63461c024141ed8609d88babba5814bb50491f1e323ab10a396930890d7c",
+        "docs-v001/records/documentation/nodicsDocumentationRouteData.js": "e0b513b28d106d25c0e27ff75dd69577cae39b15f2489c08c34c21ea0bb2260b",
+        "docs-v001/records/documentation/nodicsDocumentationSiteData.js": "2c3a262be1c3d672c36c0f9f89dc9117c8b04297af1e1501491c1c7afc7e8089",
+        "docs-v001/records/documentation/nodicsDocumentationProductData.js": "bb26c293963281c2ab4c09653908db0a1be1c366cb19680b8a2ef5b6fe48d26f",
+        "docs-v001/records/documentation/nodicsDocumentationAccessPolicyData.js": "195dfa98fb6a08d8e4004f82fcdd7c75fd8d029ea0020ff6b4d35c1badc509e0",
+        "docs-v001/records/documentation/nodicsDocumentationNavigationData.js": "ebec99ed3b4ec3b590dfa20f63d6b9a4e9595d3658826f087c407b4ce0a40720",
+        "docs-v001/records/documentation/nodicsDocumentationDashboardData.js": "08af900f035aac6d4bc95eaa92c4313235c51d8ff1cfbb8528ac9d8e3ec516ba",
+        "docs-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js": "883cda19fde2c3e291dff02df7b7d88ea84e333e97c93d12398aa998b1256b0a",
+        "docs-v001/records/documentation/nodicsDocumentationTypeCodeData.js": "fb25cbec0a9705234f05032ef7a037078038c3b852f08ee2150443495fb7abfe",
+        "docs-v001/records/documentation/nodicsDocumentationRendererData.js": "922f5191aca55816275e9757ce27641781f56f2bdf79d5e006d3691a26daa430",
+        "docs-v001/records/documentation/nodicsDocumentationSlotData.js": "ad3c54af5bd34f7af7c8e9fe9f354076149057519a1147159d2e0cd5bdc56af7",
+        "docs-v001/records/documentation/nodicsDocumentationTemplateBootstrapData.js": "9479fbf8958c8e9fe48d7752469080b85041cf488a2cdd340ba2ba841eb5d3fd",
+        "docs-v001/records/documentation/nodicsDocumentationTemplateData.js": "9e2a160453f7f3308917d4869282df6a9932154cad2100427d1665d36a2db32a",
+        "docs-v001/records/documentation/nodicsDocumentationMediaData.js": "f534cf3de20661de966e967b38ffaeebe390faada2e0cfa259d78e5b0f5ced2e",
+        "docs-v001/headers/000_nodicsDocumentationContentPackHeader.js": "1b13352d33aca988d34c5be6570f2316879e524e45c7f12c649aa60e12ee0e06",
+        "docs-v001/assets/documentation/files/images/cloud-deployment-process.jpg": "564535cce2e19cd57c5bf57fbfef5d8e0a6b08a5c6b85aeb128dcbe8ffb98b1d",
+        "docs-v001/assets/documentation/files/images/cron-job-lifecycle.png": "8290d52e1e5c9041795fb39b5b729fb6c7086ff73635788795ee93ae1a375a52",
+        "docs-v001/assets/documentation/files/images/cronjob-process.jpg": "50550fb35544fd3b344f0f19986239356387500f7366819f69deec8f91323693",
+        "docs-v001/assets/documentation/files/images/data-export-process-flow.jpg": "0b2c7b6514e4095749704b1a9d6f5749567758859398c7e6f9e238937f2ec2f1",
+        "docs-v001/assets/documentation/files/images/data-import-process.jpg": "c2154b50090905f1830dc52281fb0745fad876a16a27293064dd67ca2e8a05ca",
+        "docs-v001/assets/documentation/files/images/enterprise-tenant-design.jpg": "17dc2f8e88fb6fe9562f2306734d6fc9b379014c6d14c7cddc6949d59612491b",
+        "docs-v001/assets/documentation/files/images/log-management-system.jpg": "671c80cf9200ba66755f82b3eaff3961343c968dc6cc0e22bc33ada2d648c8ff",
+        "docs-v001/assets/documentation/files/images/microservices-architecture.jpg": "a8a9fd05d8cb370f02458f81d445f1ee559732ea937717aa19833838a27e619f",
+        "docs-v001/assets/documentation/files/images/nodics-architecture.jpg": "164530e775a35b9c22c1314d87952f9de244390c8eaed310f3c69edc70b5226e",
+        "docs-v001/assets/documentation/files/images/api-cache-flow.jpg": "5f9dec9155c243c85506cdd132d57001e23de120e4bb069480eeb8a8e428e8e3",
+        "docs-v001/assets/documentation/files/images/ems-consumer-system.jpg": "61379238c526ed668981ae50eabedf5763e95df863bcd9b1a8e6568c57598160",
+        "docs-v001/assets/documentation/files/images/ems-producer-system.jpg": "460ae3584baee14cd036c782c1979cca40fade7f9259e3dcb4f5d84d55f37f91",
+        "docs-v001/assets/documentation/files/images/event-handler-process.jpg": "b52761cc826b3c37dfdb26d109a49c9c0fcdc8fcca2246598b6b46571afb08b4",
+        "docs-v001/assets/documentation/files/images/item-cache-flow.jpg": "b144786ede6898a81a68ebc1a90cd4b465d1a688c14dca919742c669925cf0d2",
+        "docs-v001/assets/documentation/files/images/request-process-design.jpg": "3a3376a50bb770d9ed24d036ee805734cbbadc661f84cda269396425fea32e65",
+        "docs-v001/assets/documentation/files/images/request-processor-flow.jpg": "7a70f1b6afe4cae0026bd995d23a41fdad3d030a9bd8d21811d1babca0680e41",
+        "docs-v001/assets/documentation/files/images/search-cache-flow.jpg": "bed208e5639cabdb443694d967978a9007151cca350f576e1fb9f93ee5b4ed9c",
+        "docs-v001/assets/documentation/assetManifest.js": "4e66342352465a5964a5049cc27d020b3a479046ec8084b3e927df8e3d88e22a"
+      },
+      "includes": [
+        {
+          "manifestPack": "promotion",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cart",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "digitalCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "apparelProduct",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.accelerators/modules/apparel/modules/apparelProduct/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "domainCommerceCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.accelerators/modules/domainCommerceCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "electronicsProduct",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "nexus.web",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "telcoSubscription",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.accelerators/modules/telco/modules/telcoSubscription/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "eWaste",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "commerceSearchCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "inventory",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/inventory/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "pricing",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/pricing/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "product",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/product/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "shoppingList",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/baseCommerce/modules/shoppingList/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "checkoutCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/checkout/modules/checkoutCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "order",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/checkout/modules/order/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "fulfillmentCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "paymentCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.commerce/modules/payment/modules/paymentCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "commsCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.communication/modules/commsCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "copilotCapability",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.copilot/modules/copilotCapability/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "copilotConversation",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.copilot/modules/copilotConversation/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "copilotKnowledge",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.copilot/modules/copilotKnowledge/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "copilotWorkbench",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.copilot/modules/copilotWorkbench/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "discoveryRuntime",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.discovery/modules/discoveryRuntime/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "contactSubmission",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.engagement/modules/contactSubmission/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "customerFeedback",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.engagement/modules/customerFeedback/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "customerReview",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.engagement/modules/customerReview/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "engagementCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.engagement/modules/engagementCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cache",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nCache/cache/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "nCommon",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nCommon/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "config",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nConfig/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "import",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nData/nImport/import/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "database",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nDatabase/database/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "emsClient",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nEms/emsClient/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "nms",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nNms/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "otp",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nOtp/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "pipeline",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nPipeline/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "router",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nRouter/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "nService",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nService/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "nTooling",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nTooling/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "bpm",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nbpm/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "localizationCore",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.localization/modules/localizationCore/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "loyaltyWallet",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.loyalty/modules/loyaltyWallet/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "backoffice",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.platform/modules/backoffice/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "installer",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.platform/modules/installer/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "profile",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.platform/modules/profile/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cronjob",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.process/modules/cronjob/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "workflow",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.process/modules/workflow/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "wasteImpact",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.waste/modules/wasteImpact/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "cms",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.wcms/modules/cms/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "media",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.wcms/modules/media/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "wcms",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.wcms/modules/wcms/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "copilotProvider",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "copilotEvaluation",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.copilot/modules/copilotEvaluation/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "rulesEvaluation",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.rulesEngine/modules/rulesEvaluation/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "wasteMaterial",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.waste/modules/wasteMaterial/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "locationApproval",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.location/modules/locationApproval/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "locationDraft",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.location/modules/locationDraft/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "locationProjection",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.location/modules/locationProjection/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "locationSearch",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.location/modules/locationSearch/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "locationType",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.location/modules/locationType/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "locationMap",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.location/modules/locationMap/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "wcmsExperience",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.wcms/modules/wcmsExperience/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        },
+        {
+          "manifestPack": "redisCache",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.foundation/modules/nCache/redisCache/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        }
+      ]
+    },
+    "foundation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "nodics.docs",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 29,
+      "components": 30,
+      "routes": 29,
+      "releaseChecksum": "4180ccd532b3f55fb564b9a194b2ff9d475e15124499eeee49fdf1fdd685e301",
+      "generatedHashes": {
+        "docs-v001/records/documentation/nodicsDocumentationNodeData.js": "7d40c97480759b1f30af1b5527cbb0d46836deca9bb100e19cdbb4ac4809c660",
+        "docs-v001/records/documentation/nodicsDocumentationPageMetadataData.js": "ba88375667c2c7c365e20215af61b6b9cd8078a795d257c4a537d5bd0f9e5878",
+        "docs-v001/records/documentation/nodicsDocumentationPublicationStateData.js": "2384240606275702698aecbcd58fe73c993204ebf42641262774f43f9772494f",
+        "docs-v001/records/documentation/nodicsDocumentationSearchMetadataData.js": "fe9ecf644c80567ac93f6d0e49018634e540e82ae0bb384577b1de660781d4fc",
+        "docs-v001/records/documentation/nodicsDocumentationComponentData.js": "0b6e833465ed50923c1e1a28b257b81f21d919294fe5b16bc2b5f19a4b5eaeaa",
+        "docs-v001/records/documentation/nodicsDocumentationPageData.js": "5f3d63461c024141ed8609d88babba5814bb50491f1e323ab10a396930890d7c",
+        "docs-v001/records/documentation/nodicsDocumentationRouteData.js": "e0b513b28d106d25c0e27ff75dd69577cae39b15f2489c08c34c21ea0bb2260b",
+        "docs-v001/records/documentation/nodicsDocumentationSiteData.js": "2c3a262be1c3d672c36c0f9f89dc9117c8b04297af1e1501491c1c7afc7e8089",
+        "docs-v001/records/documentation/nodicsDocumentationProductData.js": "bb26c293963281c2ab4c09653908db0a1be1c366cb19680b8a2ef5b6fe48d26f",
+        "docs-v001/records/documentation/nodicsDocumentationAccessPolicyData.js": "195dfa98fb6a08d8e4004f82fcdd7c75fd8d029ea0020ff6b4d35c1badc509e0",
+        "docs-v001/records/documentation/nodicsDocumentationNavigationData.js": "ebec99ed3b4ec3b590dfa20f63d6b9a4e9595d3658826f087c407b4ce0a40720",
+        "docs-v001/records/documentation/nodicsDocumentationDashboardData.js": "08af900f035aac6d4bc95eaa92c4313235c51d8ff1cfbb8528ac9d8e3ec516ba",
+        "docs-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js": "883cda19fde2c3e291dff02df7b7d88ea84e333e97c93d12398aa998b1256b0a",
+        "docs-v001/records/documentation/nodicsDocumentationTypeCodeData.js": "fb25cbec0a9705234f05032ef7a037078038c3b852f08ee2150443495fb7abfe",
+        "docs-v001/records/documentation/nodicsDocumentationRendererData.js": "922f5191aca55816275e9757ce27641781f56f2bdf79d5e006d3691a26daa430",
+        "docs-v001/records/documentation/nodicsDocumentationSlotData.js": "ad3c54af5bd34f7af7c8e9fe9f354076149057519a1147159d2e0cd5bdc56af7",
+        "docs-v001/records/documentation/nodicsDocumentationTemplateBootstrapData.js": "9479fbf8958c8e9fe48d7752469080b85041cf488a2cdd340ba2ba841eb5d3fd",
+        "docs-v001/records/documentation/nodicsDocumentationTemplateData.js": "9e2a160453f7f3308917d4869282df6a9932154cad2100427d1665d36a2db32a",
+        "docs-v001/records/documentation/nodicsDocumentationMediaData.js": "f534cf3de20661de966e967b38ffaeebe390faada2e0cfa259d78e5b0f5ced2e",
+        "docs-v001/headers/000_nodicsDocumentationContentPackHeader.js": "1b13352d33aca988d34c5be6570f2316879e524e45c7f12c649aa60e12ee0e06",
+        "docs-v001/assets/documentation/files/images/cloud-deployment-process.jpg": "564535cce2e19cd57c5bf57fbfef5d8e0a6b08a5c6b85aeb128dcbe8ffb98b1d",
+        "docs-v001/assets/documentation/files/images/cron-job-lifecycle.png": "8290d52e1e5c9041795fb39b5b729fb6c7086ff73635788795ee93ae1a375a52",
+        "docs-v001/assets/documentation/files/images/cronjob-process.jpg": "50550fb35544fd3b344f0f19986239356387500f7366819f69deec8f91323693",
+        "docs-v001/assets/documentation/files/images/data-export-process-flow.jpg": "0b2c7b6514e4095749704b1a9d6f5749567758859398c7e6f9e238937f2ec2f1",
+        "docs-v001/assets/documentation/files/images/data-import-process.jpg": "c2154b50090905f1830dc52281fb0745fad876a16a27293064dd67ca2e8a05ca",
+        "docs-v001/assets/documentation/files/images/enterprise-tenant-design.jpg": "17dc2f8e88fb6fe9562f2306734d6fc9b379014c6d14c7cddc6949d59612491b",
+        "docs-v001/assets/documentation/files/images/log-management-system.jpg": "671c80cf9200ba66755f82b3eaff3961343c968dc6cc0e22bc33ada2d648c8ff",
+        "docs-v001/assets/documentation/files/images/microservices-architecture.jpg": "a8a9fd05d8cb370f02458f81d445f1ee559732ea937717aa19833838a27e619f",
+        "docs-v001/assets/documentation/files/images/nodics-architecture.jpg": "164530e775a35b9c22c1314d87952f9de244390c8eaed310f3c69edc70b5226e",
+        "docs-v001/assets/documentation/files/images/api-cache-flow.jpg": "5f9dec9155c243c85506cdd132d57001e23de120e4bb069480eeb8a8e428e8e3",
+        "docs-v001/assets/documentation/files/images/ems-consumer-system.jpg": "61379238c526ed668981ae50eabedf5763e95df863bcd9b1a8e6568c57598160",
+        "docs-v001/assets/documentation/files/images/ems-producer-system.jpg": "460ae3584baee14cd036c782c1979cca40fade7f9259e3dcb4f5d84d55f37f91",
+        "docs-v001/assets/documentation/files/images/event-handler-process.jpg": "b52761cc826b3c37dfdb26d109a49c9c0fcdc8fcca2246598b6b46571afb08b4",
+        "docs-v001/assets/documentation/files/images/item-cache-flow.jpg": "b144786ede6898a81a68ebc1a90cd4b465d1a688c14dca919742c669925cf0d2",
+        "docs-v001/assets/documentation/files/images/request-process-design.jpg": "3a3376a50bb770d9ed24d036ee805734cbbadc661f84cda269396425fea32e65",
+        "docs-v001/assets/documentation/files/images/request-processor-flow.jpg": "7a70f1b6afe4cae0026bd995d23a41fdad3d030a9bd8d21811d1babca0680e41",
+        "docs-v001/assets/documentation/files/images/search-cache-flow.jpg": "bed208e5639cabdb443694d967978a9007151cca350f576e1fb9f93ee5b4ed9c",
+        "docs-v001/assets/documentation/assetManifest.js": "4e66342352465a5964a5049cc27d020b3a479046ec8084b3e927df8e3d88e22a"
+      },
+      "includes": []
     }
   }
 }

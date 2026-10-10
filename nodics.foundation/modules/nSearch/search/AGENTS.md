@@ -23,6 +23,14 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Database fallback defaults to false. A caller/deployment may intentionally select fallback through the existing search options. Search activation and provider selection remain explicit.
 
+Offline native Local maintenance resolves authored schema/index bindings through
+`DefaultSearchConfigurationService.readLocalResetBindings`, never engine startup
+or persisted-index expansion. This selects configuration, not exclusivity proof.
+nTooling retains exact-scope/outage admission; engine owners retain UUID/absence
+and deletion. Default-tenant, environment-prefixed names and process-local caches
+are the admitted boundary. Shared names, retirement and registered-tenant physical
+reset remain unqualified.
+
 A declared `indexDef.retirement` is a historical binding, not startup provisioning
 authority. Register its model for original inspection without creating an index,
 updating mappings or replacing an active schema's search pointer, even when the

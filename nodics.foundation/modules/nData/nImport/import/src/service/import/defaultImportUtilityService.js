@@ -79,6 +79,10 @@ module.exports = {
                 if (!moduleList || moduleList.length == 0) {
                     reject(new CLASSES.DataImportError('ERR_IMP_00003', 'Invalid list of modules to be proccesses'));
                 } else {
+                    if (Array.isArray(dataReleasePlan) && dataReleasePlan.length > 0) {
+                        resolve(_self.declaredReleaseFiles(moduleList, dataReleasePlan, 'headers'));
+                        return;
+                    }
                     let fileList = {};
                     _self.modulesForImport(moduleList, dataReleasePlan).forEach(moduleObject => {
                         let roots = _self.releaseRoots(moduleObject, dataType, dataReleasePlan);
@@ -133,6 +137,10 @@ module.exports = {
                 if (!moduleList || moduleList.length == 0) {
                     reject(new CLASSES.DataImportError('ERR_IMP_00003', 'Invalid list of modules to be proccesses'));
                 } else {
+                    if (Array.isArray(dataReleasePlan) && dataReleasePlan.length > 0) {
+                        resolve(_self.declaredReleaseFiles(moduleList, dataReleasePlan, 'data'));
+                        return;
+                    }
                     let fileList = {};
                     _self.modulesForImport(moduleList, dataReleasePlan).forEach(moduleObject => {
                         let roots = _self.releaseRoots(moduleObject, dataType, dataReleasePlan);
@@ -144,6 +152,33 @@ module.exports = {
                 reject(new CLASSES.DataImportError(error, 'while collecting system data files'));
             }
         });
+    },
+
+    /** Collects qualified manifest paths before basename grouping can discard sibling sections. */
+    declaredReleaseFiles: function (moduleList, dataReleasePlan, folderName) {
+        const folders = folderName === 'data' ? ['data', 'records'] : [folderName];
+        const files = {}, used = new Set();
+        for (const release of dataReleasePlan) {
+            if (!moduleList.includes(release.moduleName)) continue;
+            const moduleObject = NODICS.getRawModule(release.moduleName);
+            if (!moduleObject?.path) throw new Error('Qualified import source owner is unavailable');
+            const root = path.resolve(moduleObject.path, 'data');
+            for (const file of release.declaredFiles || []) {
+                if (!folders.some(folder => file.split('/').includes(folder))) continue;
+                const absolute = path.resolve(root, file), relative = path.relative(root, absolute);
+                if (!relative || relative.startsWith('..' + path.sep) || path.isAbsolute(relative) ||
+                    !fs.existsSync(absolute) || !fs.statSync(absolute).isFile())
+                    throw new Error('Qualified import source file is unavailable');
+                const basename = path.basename(absolute), stem = basename.slice(0, basename.lastIndexOf('.'));
+                const header = /Headers?$/.test(stem.replace(/\./g, ''));
+                if ((folderName === 'headers') !== header || used.has(absolute)) continue;
+                const name = header ? stem.replace(/\./g, '') : basename.split('.').shift() + '_' + basename.split('.').pop();
+                if (!files[name]) files[name] = [];
+                files[name].push(absolute);
+                used.add(absolute);
+            }
+        }
+        return files;
     },
 
     /**

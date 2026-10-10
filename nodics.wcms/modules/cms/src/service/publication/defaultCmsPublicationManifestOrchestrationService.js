@@ -49,6 +49,49 @@ module.exports = {
         if (!model) throw new CLASSES.NodicsError('CMS_PUBLICATION_DEPENDENCY_MISSING', 'Frozen CMS dependency version is unavailable');
         return model;
     },
+    /** Derives reader search from reachable exact frozen articles, never a stale shared scaffold or latest read. */
+    documentationNavigationProperties: function (properties, models, route) {
+        const entries = Object.entries(models);
+        const associations = new Map();
+        for (const [key, item] of entries) {
+            if (!key.startsWith('cmsComponentDetail:') || item.active === false) continue;
+            const source = item.source && item.source.code || item.source;
+            if (!associations.has(source)) associations.set(source, []);
+            associations.get(source).push(item.target && item.target.code || item.target);
+        }
+        const articles = new Map();
+        const scopedRoutes = entries.filter(([key, candidate]) => key.startsWith('cmsPageRoute:') && candidate.active !== false &&
+            candidate.routeType !== 'REDIRECT' && ['site', 'locale', 'channel', 'accessMode'].every(field => candidate[field] === route[field]));
+        for (const [, candidate] of scopedRoutes) {
+            const pageCode = candidate.page && candidate.page.code || candidate.page;
+            if (!models['cmsPage:' + pageCode] || models['cmsPage:' + pageCode].active === false) continue;
+            const pending = [pageCode], seen = new Set();
+            while (pending.length) {
+                const source = pending.pop();
+                if (seen.has(source)) continue;
+                seen.add(source);
+                for (const code of associations.get(source) || []) {
+                    const component = models['cmsComponent:' + code];
+                    if (!component || component.active === false) continue;
+                    pending.push(code);
+                    if (component.renderer !== 'documentation.component.article') continue;
+                    const variants = entries.filter(([key, variant]) => key.startsWith('cmsComponentLocalization:') && variant.componentCode === code)
+                        .map(([, variant]) => variant);
+                    const resolved = SERVICE.DefaultCmsContentLocalizationService
+                        ? SERVICE.DefaultCmsContentLocalizationService.resolve(component, variants, route.locale).properties : component.properties;
+                    if (!resolved || typeof resolved.code !== 'string' || !resolved.source?.owner || resolved.route !== candidate.path) continue;
+                    articles.set(resolved.code, articles.has(resolved.code) ? null : resolved);
+                }
+            }
+        }
+        return Object.assign({}, properties, { items: [].concat(properties && properties.items || []).flatMap(item => {
+            const article = item && articles.get(item.code);
+            if (!article || article.route !== item.route) return [];
+            const keywords = Array.isArray(article.searchKeywords) ? article.searchKeywords : [];
+            return [Object.assign({}, item, { title: article.title, summary: article.summary, searchKeywords: keywords,
+                searchText: typeof article.searchText === 'string' ? article.searchText : [article.title, article.summary, ...keywords].filter(Boolean).join(' ') })];
+        }) });
+    },
     /** Produces one detached client-safe page graph from preloaded exact frozen dependencies. */
     buildRouteSnapshot: function (models, route) {
         if (!route) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'Frozen CMS route is unavailable');
@@ -82,7 +125,8 @@ module.exports = {
                 return { code: component.code, typeCode: component.typeCode, active: component.active !== false, renderer: component.renderer,
                     rendererContractVersion: component.rendererContractVersion, rendererChannels: component.rendererChannels,
                     rendererDeprecated: component.rendererDeprecated, rendererReplacement: component.rendererReplacement,
-                    properties: this.deliveryProperties(resolved.properties), localization: resolved.localization,
+                    properties: this.deliveryProperties(component.renderer === 'documentation.component.navigation'
+                        ? this.documentationNavigationProperties(resolved.properties, models, route) : resolved.properties), localization: resolved.localization,
                     media: componentMedia.map(reference => ({ componentMediaCode: reference.componentMediaCode,
                         mediaCode: reference.mediaCode, mediaSetCode: reference.mediaSetCode, mediaType: reference.mediaType,
                         role: reference.role, slot: reference.slot, localeCode: reference.localeCode,
@@ -312,6 +356,7 @@ module.exports = {
     /** Returns the current Online pointer for a route scope. */
     getPointer: async function (route, request) {
         let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.get({ tenant: request.tenant, authData: request.authData,
+            options: { recursive: false, skipItemCache: true },
             transactionContext: request.transactionContext,
             query: { site: route.site, path: route.path, locale: route.locale, channel: route.channel, accessMode: route.accessMode, active: true },
             searchOptions: { limit: 1 } });
@@ -329,6 +374,7 @@ module.exports = {
     getSitePointers: async function (site, request) {
         let maximum = Number((((CONFIG.get('cms') || {}).publication || {}).maxBundleRoutes) || 200);
         let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.get({ tenant: request.tenant, authData: request.authData,
+            options: { recursive: false, skipItemCache: true },
             transactionContext: request.transactionContext, query: { site: site, active: true }, searchOptions: { limit: maximum } });
         let pointers = this.items(response);
         if (pointers.length > maximum) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_BOUNDARY', 'CMS site pointer boundary exceeded');
@@ -413,6 +459,7 @@ module.exports = {
     /** Loads one immutable manifest by code. */
     getManifest: async function (code, request) {
         let response = await SERVICE.DefaultCmsPublicationManifestService.get({ tenant: request.tenant, authData: request.authData,
+            options: { recursive: false, skipItemCache: true },
             transactionContext: request.transactionContext,
             query: { code: code }, searchOptions: { limit: 1 } });
         return this.items(response)[0];

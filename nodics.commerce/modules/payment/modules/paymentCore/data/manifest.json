@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "paymentCore",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "paymentCore",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "b2f5511357cd5922105dba14159e86ef7d333ff78703a7293fe3a6eda0f31092",
+      "generatedHashes": {
+        "docs-v001/records/documentation/paymentCoreDocumentationNodeData.js": "222eb1c73432f00495069dea13dc3354adc23500f0c8258d0b89d23a096a9ce6",
+        "docs-v001/records/documentation/paymentCoreDocumentationPageMetadataData.js": "a7fbefe4164abfd2856360317512ecfc65a88c4e743364d1a87d6e7175cf5ae7",
+        "docs-v001/records/documentation/paymentCoreDocumentationPublicationStateData.js": "39273808b62672aa3f78dd2617f4153af14923744560ca14ccf42325ac88546f",
+        "docs-v001/records/documentation/paymentCoreDocumentationSearchMetadataData.js": "466725a14f774f0bc0f576b9b572ab5924e84eae0a0fd99d33a3d21596d92aef",
+        "docs-v001/records/documentation/paymentCoreDocumentationComponentData.js": "de5155d902442c4639dca323f637c563f8b425940cebea75d8b2258d042c6908",
+        "docs-v001/records/documentation/paymentCoreDocumentationPageData.js": "cc6a3794330d1cf23db9d4ae7fbd885f0bc20332400c1e44dddbb8411822f076",
+        "docs-v001/records/documentation/paymentCoreDocumentationRouteData.js": "39d534b4b7e2ff1ca65420258756c3a4030953ba2121731ce20fdf190a86a23e",
+        "docs-v001/headers/100_paymentCoreDocumentationContentPackHeader.js": "6f681e5fa13a40fb0f0276ef09435b16018c1ba71b050de2c86dd52ae3d14e7c"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

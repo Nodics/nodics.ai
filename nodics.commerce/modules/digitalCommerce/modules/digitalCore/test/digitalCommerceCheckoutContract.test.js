@@ -76,6 +76,42 @@ test("Digital Commerce reserves one Promotion-owned coupon code per purchased co
   );
 });
 
+test("Digital reservation forwards only trusted Store context, never a payload override", async (t) => {
+  const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE };
+  t.after(() => Object.assign(global, previous));
+  global.CONFIG = { get: () => ({ maximumCouponUnitsPerCheckout: 100 }) };
+  const forwarded = [];
+  global.SERVICE = { DefaultPromotionOperationService: {
+    reserveCouponCodeForCheckout: async request => {
+      forwarded.push(request);
+      return { code: "unit", status: "RESERVED", idempotencyKey: request.idempotencyKey };
+    },
+  } };
+  const calculation = { entries: [{ code: "entry", productCode: "offer", sku: "SKU", quantity: "1",
+    availability: { inventoryStrategy: "COUPON_CODE_POOL", couponBatchCode: "batch", promotionCode: "campaign" } }] };
+  for (const storeCode of ["selected-store", undefined, "unselected-store"]) {
+    const request = { tenant: "tenant", enterpriseCode: "enterprise", ownerId: "buyer", storeCode,
+      authData: { tenant: "tenant", enterpriseCode: "enterprise", principalId: "buyer" },
+      idempotencyKey: "checkout", correlationId: "correlation",
+      payload: { orderCode: "order", cartCode: "cart", storeCode: "payload-store" } };
+    const original = structuredClone(request);
+    await checkoutService.reserveForCheckout(request, calculation);
+    const ownerRequest = forwarded.at(-1);
+    assert.equal(ownerRequest.storeCode, storeCode);
+    assert.equal(Object.hasOwn(ownerRequest.payload, "storeCode"), false);
+    assert.equal(ownerRequest.tenant, request.tenant);
+    assert.equal(ownerRequest.enterpriseCode, request.enterpriseCode);
+    assert.equal(ownerRequest.ownerId, request.ownerId);
+    assert.equal(ownerRequest.authData, request.authData);
+    assert.equal(ownerRequest.correlationId, request.correlationId);
+    assert.equal(ownerRequest.idempotencyKey, "checkout:digital:entry:0");
+    assert.deepEqual(ownerRequest.payload, { orderCode: "order", cartCode: "cart", entryCode: "entry",
+      productCode: "offer", sku: "SKU", batchCode: "batch", promotionCode: "campaign" });
+    assert.deepEqual(request, original);
+  }
+  assert.equal(forwarded.length, 3);
+});
+
 test("Digital Commerce releases Promotion-owned digital reservations during checkout compensation", async () => {
   const released = [];
   global.SERVICE = {
@@ -98,10 +134,12 @@ test("Digital Commerce releases Promotion-owned digital reservations during chec
 });
 
 test("Digital Commerce creates entitlements records delivery and reveals only through secure provider boundary", async () => {
-  global.CONFIG = { get: () => ({ maximumCouponUnitsPerCheckout: 100 }) };
+  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : ({ maximumCouponUnitsPerCheckout: 100 }) };
   const entitlements = [];
   const deliveries = [];
   global.SERVICE = {
+    DefaultLoggerService: { hasPrivateCaptureProtection: () => true, inheritRequestPrivacy: () => {} },
+    DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.digital.own.reveal'], isPermissionGranted: () => true },
     DefaultDigitalEntitlementService: {
       save: async (request) => {
         entitlements.push(request.model);
@@ -147,7 +185,7 @@ test("Digital Commerce creates entitlements records delivery and reveals only th
     ownerId: "customer-1",
     idempotencyKey: "checkout-1",
     correlationId: "corr-1",
-    authData: {},
+    authData: { tenant: 'default', enterpriseCode: 'enterpriseX', principalId: 'customer-1', principalType: 'customer', tokenType: 'access' },
     payload: { cartCode: "cart-1", orderCode: "order-1" },
   };
   const order = { code: "order-1" };
@@ -261,7 +299,14 @@ test("delivery never fabricates an entitlement from missing, duplicate or cross-
   assert.equal(saves, 0);
 });
 
-test("Digital Commerce customer APIs list owned entitlements and reveal through owner context", async () => {
+test("Digital Commerce customer APIs list owned entitlements and reveal through owner context", async (t) => {
+  const previousClasses = global.CLASSES;
+  t.after(() => { global.CLASSES = previousClasses; });
+  global.CLASSES = { NodicsError: class extends Error {
+    /** Retains the owner's stable denial code in the isolated controller fixture. @param {string} code Owner status. */
+    constructor(code) { super(code); this.code = code; }
+  } };
+  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : {} };
   const entitlements = [
     {
       code: "entitlement-1",
@@ -293,6 +338,8 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
     },
   ];
   global.SERVICE = {
+    DefaultLoggerService: { hasPrivateCaptureProtection: () => true, inheritRequestPrivacy: () => {} },
+    DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.digital.own.reveal'], isPermissionGranted: () => true },
     DefaultDigitalCommerceEntitlementService: entitlementService,
     DefaultDigitalEntitlementService: {
       get: async (request) => ({
@@ -323,7 +370,7 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
   const request = {
     tenant: "default",
     enterpriseCode: "enterpriseX",
-    authData: { tenant: "default", principalId: "customer-1" },
+    authData: { tenant: "default", enterpriseCode: 'enterpriseX', principalId: "customer-1", principalType: 'customer', tokenType: 'access' },
     httpRequest: { query: {}, params: {}, body: {} },
   };
   const listed = await customerController.listEntitlements(request);
@@ -347,7 +394,7 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
           },
         }),
       ),
-    /Digital entitlement was not found/,
+    { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' },
   );
 
   assert.equal(listed.data.entitlements.length, 1);

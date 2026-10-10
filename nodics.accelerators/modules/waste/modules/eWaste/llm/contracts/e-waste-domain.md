@@ -1,5 +1,16 @@
 # eWaste domain contract
 
+## Persisted Digital Asset Sale
+
+The optional Checkout bridge follows the
+[persisted digital asset sale owner contract](digital-ownership-sale.md).
+It verifies the original captured one-asset Loyalty payment and credits only
+the original seller; it does not reuse legacy marketplace purchase charging.
+Waste remains the persisted transfer authority and DigitalCore owns digital
+entitlement/delivery. Read its sequence, policy tables, cancellation/recovery,
+installed/publication gates and source-test limits before activation or extension.
+Automatic asset refund and physical custody are not supported by that bridge.
+
 ## Fresh Arrival Journey
 
 `DefaultEWasteJourneyService` owns centre selection, fresh arrival evidence,
@@ -45,7 +56,7 @@ Customer adapters must additionally run their public journey compatibility tests
 ## Reusable Customer Composition
 
 The historical customer-named `CIRCA_EWASTE_ESTIMATE` profile and its framework
-references remain in the retained core-v001 snapshot. The explicit core-v002
+references remain in the retained core-v001 snapshot. The explicit core-v001
 successor uses `EWASTE_ENVIRONMENTAL_ESTIMATE`; it does not delete installed
 historical profiles or rename saved assessments. Customers keep deliberate
 historical selections through nImport source-key deltas. See

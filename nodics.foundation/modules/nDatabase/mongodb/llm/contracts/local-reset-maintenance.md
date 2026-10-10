@@ -2,6 +2,22 @@
 
 ## Registered Tenant Destinations
 
+`discoverRegisteredTenantCodes` is a separate read-only operation on this same
+owner. It queries only `TenantModel.code` in the exact configured local Profile
+registry, excludes the explicitly resolved default tenant, and includes inactive
+codes rather than silently losing their destinations. A primary cursor is bounded
+to 33 rows and five seconds; more than 32 candidates, malformed/duplicate codes,
+unsupported topology or incomplete cleanup refuse. It initializes no schemas or
+indexes and closes its cursor and owned client on every path. Only sorted codes
+leave the owner; credentials and protected properties do not. The effective
+provider may override this member while preserving these limits.
+
+Discovery is not a protected binding observation, scope approval, completeness
+proof for orphan databases, or reset credential. Exact selected active Tenant and
+Enterprise provenance and all fresh durable-pin checks below remain mandatory.
+Inactive candidates must be reconciled explicitly; they cannot be dropped using
+discovery results as substitute authority.
+
 The same provider exposes `readRegisteredTenantBindings`,
 `isRegisteredTenantObservation` and `withRegisteredTenantTargets`. The first
 reads only exact selected active Tenant and Enterprise provenance with bounded,

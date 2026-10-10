@@ -11,11 +11,12 @@
 
 'use strict';
 
-/** @module nodics.loyalty/test/loyaltyDataBaselineContract @description Verifies Loyalty data packs are owner-scoped, hash-pinned, and free from tenant or enterprise wallet ownership fields. @layer test @owner nodics.loyalty */
+/** @module nodics.loyalty/test/loyaltyDataBaselineContract @description Verifies isolated Loyalty business packs and separately governed documentation contributions, including ownership and release hashes. @layer test @owner nodics.loyalty */
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const documentation = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService');
 
 const root = path.resolve(__dirname, '..');
 const dataModules = [
@@ -37,6 +38,35 @@ function recordsOf(filePath) {
     return Object.keys(loaded).sort().map(key => loaded[key]);
 }
 
+function assertDocumentationSection(moduleRoot, moduleName, section) {
+    assert.equal(section.kind, 'CONTENT_PACK');
+    assert.equal(section.owningDomain, 'documentation');
+    assert.equal(section.destinationRole, 'WCMS_STAGED');
+    assert.equal(section.contentPath, 'docs-v001');
+    assert.equal(section.pack, moduleName);
+    assert.equal(section.sourceMode, 'cms-records');
+    assert.equal(section.sourceAuthority, 'data/docs-v001/records/documentation');
+    assert.equal(section.lifecycle, 'PUBLISHABLE');
+    assert.equal(section.versioningPolicy, 'IMMUTABLE');
+    assert.equal(section.publicationPolicy, 'REQUIRED');
+    assert.equal(section.initialPublicationPolicy, 'ADMIN_INITIATED');
+    assert.equal(section.installationPolicy, 'OPTIONAL_AXIS_INITIATED');
+    assert.equal(section.files, undefined, 'Documentation must not share the business file inventory');
+    const files = Object.keys(section.generatedHashes).sort();
+    const actualFiles = fs.readdirSync(path.join(moduleRoot, 'data/docs-v001'), { recursive: true, withFileTypes: true })
+        .filter(entry => entry.isFile())
+        .map(entry => path.relative(path.join(moduleRoot, 'data'), path.join(entry.parentPath, entry.name)))
+        .sort();
+    assert.deepEqual(files, actualFiles, `${moduleName} documentation inventory must cover every release file`);
+    assert(files.some(file => file.startsWith('docs-v001/headers/')));
+    assert(files.some(file => file.startsWith('docs-v001/records/documentation/')));
+    files.forEach(file => {
+        assert(/^docs-v001\/(headers|records\/documentation|assets)\//.test(file), `${moduleName} documentation file must stay in its own release`);
+        assert.equal(sha256(path.join(moduleRoot, 'data', file)), section.generatedHashes[file], `${moduleName} documentation hash drift for ${file}`);
+    });
+    assert.equal(documentation.releaseChecksum(section.generatedHashes), section.releaseChecksum);
+}
+
 dataModules.forEach(moduleName => {
     const moduleRoot = path.join(root, 'modules', moduleName);
     const packageJson = JSON.parse(fs.readFileSync(path.join(moduleRoot, 'package.json'), 'utf8'));
@@ -45,7 +75,15 @@ dataModules.forEach(moduleName => {
     assert(packageJson.nodics.owns.includes('data'), `${moduleName} must declare data ownership`);
     assert.equal(manifest.contractVersion, 2);
     assert.equal(manifest.module, moduleName);
-    Object.values(manifest.sections).forEach(section => {
+    if (fs.existsSync(path.join(moduleRoot, 'data/docs-v001'))) {
+        assert(manifest.sections.documentation, `${moduleName} must declare its separate documentation contribution`);
+    }
+    Object.entries(manifest.sections).forEach(([sectionName, section]) => {
+        if (sectionName === 'documentation') {
+            assertDocumentationSection(moduleRoot, moduleName, section);
+            return;
+        }
+        assert.equal(section.kind, 'DATA_RELEASE');
         assert.equal(section.owningDomain, 'loyalty');
         const targetsProfileEnterprise = Object.keys(section.files || {}).some(relativeFile => relativeFile.includes('/profile/'));
         assert.equal(section.destinationRole, targetsProfileEnterprise ? 'PLATFORM' : 'LOYALTY');

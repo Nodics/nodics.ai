@@ -1,0 +1,767 @@
+{
+  "date": "2026-10-07",
+  "reviewType": "SOURCE_EDITORIAL_REVIEW",
+  "repository": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+  "scope": "Seven canonical owner CMS guides only; source editorial corrections and authoring staging.",
+  "status": "STAGED_NOT_APPROVED",
+  "approved": false,
+  "changedFiles": [
+    "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationComponentData.js",
+    "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationNodeData.js",
+    "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationPageMetadataData.js",
+    "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationPublicationStateData.js",
+    "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationRouteData.js",
+    "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationSearchMetadataData.js",
+    "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationComponentData.js",
+    "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationNodeData.js",
+    "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationPageMetadataData.js",
+    "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationPublicationStateData.js",
+    "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationRouteData.js",
+    "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationSearchMetadataData.js",
+    "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationComponentData.js",
+    "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationNodeData.js",
+    "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationPageMetadataData.js",
+    "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationPublicationStateData.js",
+    "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationRouteData.js",
+    "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationSearchMetadataData.js",
+    "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationComponentData.js",
+    "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationNodeData.js",
+    "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationPageMetadataData.js",
+    "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationPublicationStateData.js",
+    "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationRouteData.js",
+    "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationSearchMetadataData.js",
+    "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationComponentData.js",
+    "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationNodeData.js",
+    "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationPageMetadataData.js",
+    "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationPublicationStateData.js",
+    "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationRouteData.js",
+    "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationSearchMetadataData.js",
+    "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationComponentData.js",
+    "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationNodeData.js",
+    "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationPageMetadataData.js",
+    "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationPublicationStateData.js",
+    "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationRouteData.js",
+    "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationSearchMetadataData.js",
+    "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationComponentData.js",
+    "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationNodeData.js",
+    "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationPageMetadataData.js",
+    "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationPublicationStateData.js",
+    "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationRouteData.js",
+    "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationSearchMetadataData.js",
+    "nodics.docs/test/evidence/draft-editorial-review-b-2026-10-07.json"
+  ],
+  "reviews": [
+    {
+      "date": "2026-10-07",
+      "documentId": "location.approval-schema-boundary",
+      "owner": "locationApproval",
+      "ownerPath": "nodics.location/modules/locationApproval",
+      "reviewType": "SOURCE_EDITORIAL_REVIEW",
+      "status": "STAGED_NOT_APPROVED",
+      "approved": false,
+      "routeActive": true,
+      "implementationState": "schema-defined",
+      "findings": [
+        "Clarified draftCode/targetLocationCode are plain strings without refSchema mappings, and reviewerRef/decisionEvidence are unstructured objects.",
+        "Corrected the implication that revision binds the draft: it belongs to the request; no dedicated draftRevision/expectedDraftRevision exists.",
+        "Added a complete minimal OPEN record and labeled identity, consistency, separation-of-duties, stale-draft and uncertain-apply checks as missing business orchestration.",
+        "Added or retained the dedicated Customize and extend safely section with project-owned paths and topic-specific examples.",
+        "Reconciled headings, word counts, actual table/diagram metadata and PAGE search text; corrected the operational search facet to partial.",
+        "Moved only authoring lifecycle fields DRAFT to STAGED and activated only the owning route; preserved all checksum, release, actor, reviewer, approver, publisher, audit, receipt and existing route delivery-state fields."
+      ],
+      "changedFiles": [
+        "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationComponentData.js",
+        "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationNodeData.js",
+        "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationPageMetadataData.js",
+        "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationPublicationStateData.js",
+        "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationRouteData.js",
+        "nodics.location/modules/locationApproval/data/docs-v001/records/documentation/locationApprovalDocumentationSearchMetadataData.js"
+      ],
+      "sourceFiles": [
+        {
+          "path": "nodics.location/modules/locationApproval/src/schemas/schemas.js",
+          "reviewedAnchors": [
+            "module.exports schema registry",
+            "definition required/type/enum/default fields",
+            "refSchema mappings where present",
+            "service/router/search/event descriptors"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationApproval/src/service/defaultSampleService.js",
+          "reviewedAnchors": [
+            "init",
+            "postInit"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationApproval/src/router/routers.js",
+          "reviewedAnchors": [
+            "module.exports dedicated route registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationApproval/config/properties.js",
+          "reviewedAnchors": [
+            "schemaPolicies.locationApproval.operational.accessGroups"
+          ]
+        }
+      ],
+      "reviewedAnchors": [
+        "location-approval-schema-boundary",
+        "locationApprovalSchemaBoundary-1-business-purpose-and-current-implementation",
+        "locationApprovalSchemaBoundary-2-record-contract-and-owner-responsibilities",
+        "locationApprovalSchemaBoundary-3-worked-adoption-and-extension-path",
+        "locationApprovalSchemaBoundary-4-failure-handling-and-verification",
+        "locationApprovalSchemaBoundary-5-documentation-selection-assets-and-acceptance",
+        "location-approval-schema-boundary-common-mistakes"
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "location.draft-schema-boundary",
+      "owner": "locationDraft",
+      "ownerPath": "nodics.location/modules/locationDraft",
+      "reviewType": "SOURCE_EDITORIAL_REVIEW",
+      "status": "STAGED_NOT_APPROVED",
+      "approved": false,
+      "routeActive": true,
+      "implementationState": "schema-defined",
+      "findings": [
+        "Clarified only enterpriseRef has a Profile mapping; submitter/source objects do not authenticate or resolve their targets.",
+        "Explained optional correction/deactivation target, absent targetRevision and undefined patch-versus-complete-model semantics.",
+        "Added a complete required-field correction fixture, explicit merge-before-validation behavior for a future apply operation, and rejected/recovery cases.",
+        "Added or retained the dedicated Customize and extend safely section with project-owned paths and topic-specific examples.",
+        "Reconciled headings, word counts, actual table/diagram metadata and PAGE search text; corrected the operational search facet to partial.",
+        "Moved only authoring lifecycle fields DRAFT to STAGED and activated only the owning route; preserved all checksum, release, actor, reviewer, approver, publisher, audit, receipt and existing route delivery-state fields."
+      ],
+      "changedFiles": [
+        "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationComponentData.js",
+        "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationNodeData.js",
+        "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationPageMetadataData.js",
+        "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationPublicationStateData.js",
+        "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationRouteData.js",
+        "nodics.location/modules/locationDraft/data/docs-v001/records/documentation/locationDraftDocumentationSearchMetadataData.js"
+      ],
+      "sourceFiles": [
+        {
+          "path": "nodics.location/modules/locationDraft/src/schemas/schemas.js",
+          "reviewedAnchors": [
+            "module.exports schema registry",
+            "definition required/type/enum/default fields",
+            "refSchema mappings where present",
+            "service/router/search/event descriptors"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationDraft/src/service/defaultSampleService.js",
+          "reviewedAnchors": [
+            "init",
+            "postInit"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationDraft/src/router/routers.js",
+          "reviewedAnchors": [
+            "module.exports dedicated route registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationDraft/config/properties.js",
+          "reviewedAnchors": [
+            "schemaPolicies.locationDraft.operational.accessGroups"
+          ]
+        }
+      ],
+      "reviewedAnchors": [
+        "location-draft-schema-boundary",
+        "locationDraftSchemaBoundary-1-business-purpose-and-current-implementation",
+        "locationDraftSchemaBoundary-2-record-contract-and-owner-responsibilities",
+        "locationDraftSchemaBoundary-3-worked-adoption-and-extension-path",
+        "locationDraftSchemaBoundary-4-failure-handling-and-verification",
+        "locationDraftSchemaBoundary-5-documentation-selection-assets-and-acceptance",
+        "location-draft-schema-boundary-common-mistakes"
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "location.marker-projection-boundary",
+      "owner": "locationProjection",
+      "ownerPath": "nodics.location/modules/locationProjection",
+      "reviewType": "SOURCE_EDITORIAL_REVIEW",
+      "status": "STAGED_NOT_APPROVED",
+      "approved": false,
+      "routeActive": true,
+      "implementationState": "schema-defined",
+      "findings": [
+        "Clarified untyped place/layer strings and nested objects, unconstrained geographic ranges and caller-supplied provenance; no explicit projection revision field.",
+        "Preserved missing projector, delivery, synchronization and withdrawal orchestration despite search-enabled schema metadata.",
+        "Added a complete marker-shape fixture with deliberately non-digest example provenance, rejected visibility/range/reference cases and owner-based recovery.",
+        "Added or retained the dedicated Customize and extend safely section with project-owned paths and topic-specific examples.",
+        "Reconciled headings, word counts, actual table/diagram metadata and PAGE search text; corrected the operational search facet to partial.",
+        "Moved only authoring lifecycle fields DRAFT to STAGED and activated only the owning route; preserved all checksum, release, actor, reviewer, approver, publisher, audit, receipt and existing route delivery-state fields."
+      ],
+      "changedFiles": [
+        "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationComponentData.js",
+        "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationNodeData.js",
+        "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationPageMetadataData.js",
+        "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationPublicationStateData.js",
+        "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationRouteData.js",
+        "nodics.location/modules/locationProjection/data/docs-v001/records/documentation/locationProjectionDocumentationSearchMetadataData.js"
+      ],
+      "sourceFiles": [
+        {
+          "path": "nodics.location/modules/locationProjection/src/schemas/schemas.js",
+          "reviewedAnchors": [
+            "module.exports schema registry",
+            "definition required/type/enum/default fields",
+            "refSchema mappings where present",
+            "service/router/search/event descriptors"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationProjection/src/service/defaultSampleService.js",
+          "reviewedAnchors": [
+            "init",
+            "postInit"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationProjection/src/router/routers.js",
+          "reviewedAnchors": [
+            "module.exports dedicated route registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationProjection/config/properties.js",
+          "reviewedAnchors": [
+            "schemaPolicies.locationProjection.operational.accessGroups"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationProjection/src/search/indexes.js",
+          "reviewedAnchors": [
+            "empty module.exports index registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationProjection/src/event/listeners.js",
+          "reviewedAnchors": [
+            "empty module.exports event registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationProjection/src/pipelines/pipelines.js",
+          "reviewedAnchors": [
+            "empty module.exports pipeline registry"
+          ]
+        }
+      ],
+      "reviewedAnchors": [
+        "location-marker-projection-boundary",
+        "locationMarkerProjectionBoundary-1-business-purpose-and-current-implementation",
+        "locationMarkerProjectionBoundary-2-record-contract-and-owner-responsibilities",
+        "locationMarkerProjectionBoundary-3-worked-adoption-and-extension-path",
+        "locationMarkerProjectionBoundary-4-failure-handling-and-verification",
+        "locationMarkerProjectionBoundary-5-documentation-selection-assets-and-acceptance",
+        "location-marker-projection-boundary-common-mistakes"
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "location.search-projection-boundary",
+      "owner": "locationSearch",
+      "ownerPath": "nodics.location/modules/locationSearch",
+      "reviewType": "SOURCE_EDITORIAL_REVIEW",
+      "status": "STAGED_NOT_APPROVED",
+      "approved": false,
+      "routeActive": true,
+      "implementationState": "schema-defined",
+      "findings": [
+        "Distinguished Profile refSchema mappings from plain place/taxonomy strings; clarified unconstrained coordinates, nested visibility and caller-supplied provenance.",
+        "Preserved absence of nearby-query endpoint, radius/distance behavior, geospatial mapping and synchronization/withdrawal orchestration.",
+        "Added a complete search-projection fixture, reference-only address, proposed query rejection limits and source/index reconciliation.",
+        "Added or retained the dedicated Customize and extend safely section with project-owned paths and topic-specific examples.",
+        "Reconciled headings, word counts, actual table/diagram metadata and PAGE search text; corrected the operational search facet to partial.",
+        "Moved only authoring lifecycle fields DRAFT to STAGED and activated only the owning route; preserved all checksum, release, actor, reviewer, approver, publisher, audit, receipt and existing route delivery-state fields."
+      ],
+      "changedFiles": [
+        "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationComponentData.js",
+        "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationNodeData.js",
+        "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationPageMetadataData.js",
+        "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationPublicationStateData.js",
+        "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationRouteData.js",
+        "nodics.location/modules/locationSearch/data/docs-v001/records/documentation/locationSearchDocumentationSearchMetadataData.js"
+      ],
+      "sourceFiles": [
+        {
+          "path": "nodics.location/modules/locationSearch/src/schemas/schemas.js",
+          "reviewedAnchors": [
+            "module.exports schema registry",
+            "definition required/type/enum/default fields",
+            "refSchema mappings where present",
+            "service/router/search/event descriptors"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationSearch/src/service/defaultSampleService.js",
+          "reviewedAnchors": [
+            "init",
+            "postInit"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationSearch/src/router/routers.js",
+          "reviewedAnchors": [
+            "module.exports dedicated route registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationSearch/config/properties.js",
+          "reviewedAnchors": [
+            "schemaPolicies.locationSearch.operational.accessGroups"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationSearch/src/search/indexes.js",
+          "reviewedAnchors": [
+            "empty module.exports index registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationSearch/src/event/listeners.js",
+          "reviewedAnchors": [
+            "empty module.exports event registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationSearch/src/pipelines/pipelines.js",
+          "reviewedAnchors": [
+            "empty module.exports pipeline registry"
+          ]
+        }
+      ],
+      "reviewedAnchors": [
+        "location-search-projection-boundary",
+        "locationSearchProjectionBoundary-1-business-purpose-and-current-implementation",
+        "locationSearchProjectionBoundary-2-record-contract-and-owner-responsibilities",
+        "locationSearchProjectionBoundary-3-worked-adoption-and-extension-path",
+        "locationSearchProjectionBoundary-4-failure-handling-and-verification",
+        "locationSearchProjectionBoundary-5-documentation-selection-assets-and-acceptance",
+        "location-search-projection-boundary-common-mistakes"
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "location.taxonomy-schema-boundary",
+      "owner": "locationType",
+      "ownerPath": "nodics.location/modules/locationType",
+      "reviewType": "SOURCE_EDITORIAL_REVIEW",
+      "status": "STAGED_NOT_APPROVED",
+      "approved": false,
+      "routeActive": true,
+      "implementationState": "schema-defined",
+      "findings": [
+        "Replaced an implied localized-name contract with the actual required generic object; locale validation is absent.",
+        "Clarified category defaults as well as type defaults, untyped relationships, absent propagation and lifecycle/migration orchestration.",
+        "Added complete category/capability/type fixture records and explicit unknown/deprecated/stale relationship rejection and historical-code recovery guidance.",
+        "Added or retained the dedicated Customize and extend safely section with project-owned paths and topic-specific examples.",
+        "Reconciled headings, word counts, actual table/diagram metadata and PAGE search text; corrected the operational search facet to partial.",
+        "Moved only authoring lifecycle fields DRAFT to STAGED and activated only the owning route; preserved all checksum, release, actor, reviewer, approver, publisher, audit, receipt and existing route delivery-state fields."
+      ],
+      "changedFiles": [
+        "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationComponentData.js",
+        "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationNodeData.js",
+        "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationPageMetadataData.js",
+        "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationPublicationStateData.js",
+        "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationRouteData.js",
+        "nodics.location/modules/locationType/data/docs-v001/records/documentation/locationTypeDocumentationSearchMetadataData.js"
+      ],
+      "sourceFiles": [
+        {
+          "path": "nodics.location/modules/locationType/src/schemas/schemas.js",
+          "reviewedAnchors": [
+            "module.exports schema registry",
+            "definition required/type/enum/default fields",
+            "refSchema mappings where present",
+            "service/router/search/event descriptors"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationType/src/service/defaultSampleService.js",
+          "reviewedAnchors": [
+            "init",
+            "postInit"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationType/src/router/routers.js",
+          "reviewedAnchors": [
+            "module.exports dedicated route registry"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationType/config/properties.js",
+          "reviewedAnchors": [
+            "schemaPolicies.locationType.operational.accessGroups"
+          ]
+        }
+      ],
+      "reviewedAnchors": [
+        "location-taxonomy-schema-boundary",
+        "locationTaxonomySchemaBoundary-1-business-purpose-and-current-implementation",
+        "locationTaxonomySchemaBoundary-2-record-contract-and-owner-responsibilities",
+        "locationTaxonomySchemaBoundary-3-worked-adoption-and-extension-path",
+        "locationTaxonomySchemaBoundary-4-failure-handling-and-verification",
+        "locationTaxonomySchemaBoundary-5-documentation-selection-assets-and-acceptance",
+        "location-taxonomy-schema-boundary-common-mistakes"
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "location.shared-map-configuration",
+      "owner": "locationMap",
+      "ownerPath": "nodics.location/modules/locationMap",
+      "reviewType": "SOURCE_EDITORIAL_REVIEW",
+      "status": "STAGED_NOT_APPROVED",
+      "approved": false,
+      "routeActive": true,
+      "implementationState": "source-verified",
+      "findings": [
+        "Corrected map router permission to system.schema.manage for PUT and system.schema.view for GET; recorded narrative-contract drift without editing that contract.",
+        "Qualified shared versus legacy ambiguity behavior, optional expectedRevision and absence of update-count verification.",
+        "Replaced blanket fallback-safety claims with primary configured/fallbackAllowed checks and weaker alternative selection; clarified public token exposure and full editable PUT semantics.",
+        "Added concrete route queries, bounds, asymmetric coordinates, project refresh override, operator label/color edit, rejection and restore path; retained absent marker orchestration.",
+        "Added or retained the dedicated Customize and extend safely section with project-owned paths and topic-specific examples.",
+        "Reconciled headings, word counts, actual table/diagram metadata and PAGE search text; corrected the operational search facet to partial.",
+        "Moved only authoring lifecycle fields DRAFT to STAGED and activated only the owning route; preserved all checksum, release, actor, reviewer, approver, publisher, audit, receipt and existing route delivery-state fields."
+      ],
+      "changedFiles": [
+        "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationComponentData.js",
+        "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationNodeData.js",
+        "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationPageMetadataData.js",
+        "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationPublicationStateData.js",
+        "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationRouteData.js",
+        "nodics.location/modules/locationMap/data/docs-v001/records/documentation/locationMapDocumentationSearchMetadataData.js"
+      ],
+      "sourceFiles": [
+        {
+          "path": "nodics.location/modules/locationMap/src/service/defaultLocationMapConfigurationOperationService.js",
+          "reviewedAnchors": [
+            "context",
+            "preferredConfiguration",
+            "publicAccessToken",
+            "publicProjection",
+            "fallbackSelection",
+            "model",
+            "saveConfiguration",
+            "getConfiguration",
+            "getPublicConfiguration",
+            "getEffectiveConfiguration"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/src/service/defaultLocationMapCoordinateAdapterService.js",
+          "reviewedAnchors": [
+            "coordinate",
+            "domainPoint",
+            "toProviderPosition",
+            "fromProviderPosition",
+            "toGeoJsonPoint",
+            "fromGeoJsonPoint"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/src/service/defaultLocationMapPresentationService.js",
+          "reviewedAnchors": [
+            "settings",
+            "presentation",
+            "interaction"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/test/locationMapSharedConfigurationContract.test.js",
+          "reviewedAnchors": [
+            "one shared usage drives every consumer and rejects unsafe or stale edits"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/test/locationMapProviderConfigurationContract.test.js",
+          "reviewedAnchors": [
+            "schema/setupStatus assertions",
+            "getEffectiveMapConfiguration/getMapConfiguration/saveMapConfiguration permission assertions",
+            "configuration repository doubles and token rejection assertions"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/src/router/routers.js",
+          "reviewedAnchors": [
+            "locationMap.public.getPublicMapConfiguration",
+            "locationMap.internal.getEffectiveMapConfiguration",
+            "locationMap.internal.getMapConfiguration",
+            "locationMap.internal.saveMapConfiguration"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/src/controller/defaultLocationMapController.js",
+          "reviewedAnchors": [
+            "request",
+            "invoke"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/config/properties.js",
+          "reviewedAnchors": [
+            "locationMapConfiguration.refreshIntervalMs",
+            "locationMapConfiguration.publicUsageCodes",
+            "locationMapConfiguration.presentation",
+            "locationMapConfiguration.interaction",
+            "apiExposure.categories"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/src/schemas/schemas.js",
+          "reviewedAnchors": [
+            "module.exports schema registry",
+            "definition required/type/enum/default fields",
+            "refSchema mappings where present",
+            "service/router/search/event descriptors"
+          ]
+        },
+        {
+          "path": "nodics.location/modules/locationMap/llm/contracts/shared-map-configuration.md",
+          "reviewedAnchors": [
+            "Operator behavior",
+            "Consumer contract",
+            "Customization and verification"
+          ]
+        }
+      ],
+      "reviewedAnchors": [
+        "location-shared-map-configuration",
+        "locationSharedMapConfiguration-1-shared-authority-and-reader-model",
+        "locationSharedMapConfiguration-2-providers-coordinates-and-safe-presentation",
+        "locationSharedMapConfiguration-3-delivery-and-user-interaction",
+        "locationSharedMapConfiguration-4-verification-and-operational-recovery",
+        "location-shared-map-configuration-customize-and-extend-safely",
+        "locationSharedMapConfiguration-5-documentation-selection-assets-and-acceptance",
+        "location-shared-map-configuration-common-mistakes"
+      ]
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "wcms.experience-placement-delivery",
+      "owner": "wcmsExperience",
+      "ownerPath": "nodics.wcms/modules/wcmsExperience",
+      "reviewType": "SOURCE_EDITORIAL_REVIEW",
+      "status": "STAGED_NOT_APPROVED",
+      "approved": false,
+      "routeActive": true,
+      "implementationState": "source-verified",
+      "findings": [
+        "Distinguished normalized required fields/defaults from request example; documented controller-forced preview mode and actual route permissions.",
+        "Clarified absent-status acceptance, invalid-date handling, region/customer-segment gaps, fallbackUsed diagnostics, unused fallbackComponent and shallow component properties/media projection.",
+        "Documented missing-Discovery/FIXTURE branch despite fixtureFallbackEnabled=false, unenforced maxSlots/maxDepth, limited query pagination and separate public-route caching.",
+        "Documented placement-loading provenance gaps, missing component hydration, sequential save failure handling, skipped alias provider and WITHDRAW staged-alias behavior without claiming runtime safety.",
+        "Added later-layer query-cap/fallback configuration, delivery-body example and exact/default/rejected/recovery guidance.",
+        "Added or retained the dedicated Customize and extend safely section with project-owned paths and topic-specific examples.",
+        "Reconciled headings, word counts, actual table/diagram metadata and PAGE search text; corrected the operational search facet to partial.",
+        "Moved only authoring lifecycle fields DRAFT to STAGED and activated only the owning route; preserved all checksum, release, actor, reviewer, approver, publisher, audit, receipt and existing route delivery-state fields."
+      ],
+      "changedFiles": [
+        "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationComponentData.js",
+        "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationNodeData.js",
+        "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationPageMetadataData.js",
+        "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationPublicationStateData.js",
+        "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationRouteData.js",
+        "nodics.wcms/modules/wcmsExperience/data/docs-v001/records/documentation/wcmsExperienceDocumentationSearchMetadataData.js"
+      ],
+      "sourceFiles": [
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperienceResolverService.js",
+          "reviewedAnchors": [
+            "resolve",
+            "normalizeContext",
+            "validateContext",
+            "isActivePlacement",
+            "selectPlacements",
+            "comparePlacements",
+            "toSlotComponent",
+            "resolveFromPlacements diagnostics"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperienceProjectionService.js",
+          "reviewedAnchors": [
+            "findPlacements",
+            "shouldUseDiscovery",
+            "fixtureFallbackEnabled",
+            "discoveryQuery",
+            "discoverySearchOptions",
+            "normalizeDiscoveryRecords",
+            "fixturePlacements"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperiencePublicationIndexingService.js",
+          "reviewedAnchors": [
+            "handlePublicationEvent",
+            "loadPublicationContext",
+            "loadPlacements",
+            "toProjectionPayload",
+            "documentCode",
+            "sourceHash",
+            "indexProjectionDocuments",
+            "switchAlias",
+            "aliasName"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/test/wcmsExperienceResolverContract.test.js",
+          "reviewedAnchors": [
+            "exact collection hero and retained default featuredCarousel assertions",
+            "unknown target fallback and missing site assertions"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/test/wcmsExperiencePublicationIndexingContract.test.js",
+          "reviewedAnchors": [
+            "manifest/placement/Discovery doubles",
+            "DEPLOY document assertions",
+            "WITHDRAW payload assertions",
+            "save errors reject and unsupported event assertions"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/llm/contracts/experience-governance-contract.md",
+          "reviewedAnchors": [
+            "1. Lifecycle boundary",
+            "3. Publication hook",
+            "4. Idempotency and rollback",
+            "6. Storefront-safe resolver response",
+            "7. Performance guardrails",
+            "9. Staged preview and Online delivery split"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/src/router/routers.js",
+          "reviewedAnchors": [
+            "experienceDelivery.resolve",
+            "experienceAuthoring.preview",
+            "experienceAuthoring.indexStatus"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/src/controller/defaultWcmsExperienceDeliveryController.js",
+          "reviewedAnchors": [
+            "resolve forced previewMode=false",
+            "readBody"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/src/controller/defaultWcmsExperienceAuthoringController.js",
+          "reviewedAnchors": [
+            "preview forced previewMode=true",
+            "indexStatus",
+            "readBody"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/src/schemas/schemas.js",
+          "reviewedAnchors": [
+            "module.exports schema registry",
+            "definition required/type/enum/default fields",
+            "refSchema mappings where present",
+            "service/router/search/event descriptors"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/config/properties.js",
+          "reviewedAnchors": [
+            "wcmsExperience.resolver",
+            "wcmsExperience.indexing",
+            "wcmsExperience.projection",
+            "wcmsExperience.cache",
+            "apiExposure.categories"
+          ]
+        },
+        {
+          "path": "nodics.wcms/modules/wcmsExperience/llm/contracts/developer-implementation-contract.md",
+          "reviewedAnchors": [
+            "4. Lifecycle contract",
+            "5. cmsExperiencePlacement model contract",
+            "6. Resolver contract",
+            "7. Slot fallback behavior",
+            "8. Indexing contract",
+            "9. Preview and Online split",
+            "10. Performance guardrails",
+            "11. Extension checklist"
+          ]
+        }
+      ],
+      "reviewedAnchors": [
+        "wcms-experience-placement-delivery",
+        "wcmsExperiencePlacementDelivery-1-placement-versus-renderable-content",
+        "wcmsExperiencePlacementDelivery-2-selection-and-fallback-semantics",
+        "wcmsExperiencePlacementDelivery-3-projection-indexing-and-deployment-qualification",
+        "wcmsExperiencePlacementDelivery-4-verification-and-failure-investigation",
+        "wcms-experience-placement-delivery-customize-and-extend-safely",
+        "wcmsExperiencePlacementDelivery-5-documentation-selection-assets-and-acceptance",
+        "wcms-experience-placement-delivery-common-mistakes"
+      ]
+    }
+  ],
+  "additionalReviewedSources": [
+    {
+      "path": "nodics.location/modules/locationCore/src/service/defaultLocationOperationService.js",
+      "reviewedAnchors": [
+        "coordinate",
+        "requireRef",
+        "validateSourceRef",
+        "assertNoProfileAddressFields",
+        "model"
+      ],
+      "purpose": "Checked canonical coordinate, Profile-reference and duplicated-address/tenant rejection claims."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/src/service/documentation/defaultCmsDocumentationGovernanceService.js",
+      "reviewedAnchors": [
+        "AXIS_AUTHOR_STATES",
+        "ONLINE_READER_STATES",
+        "canView"
+      ],
+      "purpose": "Checked source staging is distinct from public delivery."
+    },
+    {
+      "path": "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js",
+      "reviewedAnchors": [
+        "documentationText",
+        "countWords"
+      ],
+      "purpose": "Reused canonical in-memory body extraction and count for static consistency checks; no generated output written."
+    }
+  ],
+  "validation": {
+    "result": "PASS_SCOPED_STATIC_CHECKS",
+    "checks": [
+      "49 owner CMS JavaScript files parsed; 8 JSON/JavaScript examples parsed and schema-only example required fields/enums checked.",
+      "Canonical body extraction matched Component and PAGE SearchMetadata searchText; headings, sourceEvidence, sourceCoverage, word counts and actual visual metadata agree.",
+      "All reviewed section anchors exist and are unique; coverage retains at least 800 prose words, a diagram, a table and existing source paths.",
+      "63 authoring lifecycle fields are STAGED; 7 owning routes are active; five schema-defined guide boundaries remain SCHEMA_DEFINED.",
+      "Semantic comparison to pre-edit records confirmed all protected checksum/hash/release/approval/receipt/audit fields are unchanged."
+    ],
+    "runtimeStarted": false,
+    "businessTestsExecuted": false,
+    "packIntegrityValidated": false,
+    "renderedReview": false,
+    "installedImport": false,
+    "publicationApprovalObtained": false,
+    "published": false
+  },
+  "blockers": [],
+  "remainingGates": [
+    "Normal owner review/approval and governed publication remain the parent task's responsibility; STAGED is not approval.",
+    "Checksums/manifests/releases were explicitly excluded and are unchanged despite edited source. Release-integrity preparation and full composed pack validation remain required before import/publication.",
+    "Installed provider, persistence, outbox/index/alias, browser and live acceptance were not performed. Documented missing orchestration and safety gaps remain implementation/readiness limits."
+  ]
+}

@@ -28,6 +28,12 @@ try {
   assert.equal(step.manifestModule, 'reference.web');
   assert.equal(service.mediaManifestAssetCount(step), 1);
   assert.equal(service.safeManifestAssetPath(step, 'pixel.svg'), fs.realpathSync(path.join(owner, 'data/files/pixel.svg')));
+  const source = service.describeMediaAssetSource(step, { mediaCode: 'referenceAsset', fileName: 'pixel.svg' });
+  assert.equal(source.descriptor.mediaCode, 'referenceAsset');
+  assert.equal(source.descriptor.sizeBytes, 6); assert.equal(source.descriptor.mimeType, 'image/svg+xml');
+  assert.equal(source.headers, undefined);
+  assert.throws(() => service.describeMediaAsset(step, { mediaCode: 'referenceAsset', fileName: 'pixel.svg' }, {}),
+    error => error.code === 'ERR_BOF_00082', 'pure source review must not remove the human upload guard');
   assert.throws(() => service.normalizePreparationStep({ ...step, manifestModule: 'differentOwner' }, 0), /configuration is invalid/);
   assert.throws(() => service.safeManifestPath({ ...step, manifestModule: 'unknown' }), /declared module-relative/);
   assert.throws(() => service.safeManifestPath({ ...step, manifestPath: '../outside.js' }), /declared module-relative/);

@@ -31,7 +31,7 @@ test("configuration probe import is inert and requires explicit valid selection"
 });
 
 test("configuration probe passes deployment variables only through the child environment", () => {
-  const filename = require.resolve("../src/service/project/defaultProjectConfigurationProbeService");
+  const filename = require.resolve("../../nConfig/src/service/defaultDeploymentConfigurationProjectionService");
   let call;
   const module = { exports: {} };
   const parent = { PATH: "/bin", HOME: "/fixture", PRIVATE_DEPLOYMENT_VALUE: "inherited-fixture" };
@@ -40,7 +40,7 @@ test("configuration probe passes deployment variables only through the child env
     process: { execPath: "/node", env: parent },
     require: name => name === "node:child_process" ? {
       execFileSync(command, args, options) { call = { command, args, options }; return "{}"; },
-    } : require(name),
+    } : createRequire(filename)(name),
   });
   for (const inheritEnvironment of [false, true]) {
     module.exports.read({ projectRoot: "/fixture", environment: "local", server: "api",

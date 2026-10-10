@@ -470,7 +470,7 @@ module.exports = {
                 controller: 'DefaultBackofficeApplicationInitializationController', operation: 'installContentPack'
             },
             initiateApplicationInitialization: {
-                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.initiate',
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup', 'commerceSetupPublisherUserGroup', 'commerceCouponIssuerUserGroup'], permission: 'backoffice.application.initialization.initiate',
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
                 key: '/applications/:profileCode/initialization/initiate', method: 'POST',
                 controller: 'DefaultBackofficeApplicationInitializationController', operation: 'initiate',
@@ -478,7 +478,8 @@ module.exports = {
                     type: 'object', additionalProperties: false, properties: {
                         reason: { type: 'string', maxLength: 1000 },
                         correlationId: { type: 'string', maxLength: 256 },
-                        forceRefresh: { type: 'boolean' }
+                        forceRefresh: { type: 'boolean' },
+                        afterPublicationStepCode: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$', maxLength: 257 }
                     }
                 } } } }
             },

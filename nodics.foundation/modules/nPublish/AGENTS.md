@@ -1,5 +1,19 @@
 # nPublish Agent Contract
 
+Bounded application intents follow [coordinated setup](llm/contracts/publication-setup.md).
+Keep domain capture, immutable receipts and ordinary Process approval; never add
+bundle approval or automatic activation authority.
+Setup status is human/access-token and enterprise-bound. Its
+[read authority boundary](llm/contracts/publication-setup.md#read-authority-boundary)
+does not authorize foreign aggregate observation through a runtime credential.
+The separate [exact-plan observer](llm/contracts/setup-observation.md) is disabled
+by default: require reviewed deployment/plan authority and the dedicated explicit
+permission before any private canonical owner reads. Never modify signed claims,
+borrow human identity or expose that internal persistence context to actions.
+Commerce publisher group admission is limited to the six human setup/lifecycle
+routes in that contract. Keep granular permissions and domain/enterprise checks;
+service decisions and activation retain their existing groups and token types.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -11,6 +25,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 ## Module Work Rules
 
 Approval is permission-based, including for the original requesting user.
+Shared deployment callbacks retain signed deployment identity; separately bind
+the exact claimed business enterprise to the stored publication. Cross-enterprise
+use requires the explicit bounded `approvalWorkflow.runtimeEnterpriseScope`
+selection. Never derive this authority from an enterprise header or widen human
+submission scope; cover absent, malformed and foreign selections.
 Native requester binding proves provenance, not separation of users. Reuse
 Process authority and preserve scoped identity and immutable decision evidence;
 do not add a username-based admin bypass or reinstate self-approval exclusion.

@@ -401,7 +401,7 @@ async function importStartupGuest(f, execute, tenant = "default") {
 
 /** Builds an actual import dispatch from the immutable forward Customer source; no generated password is printed or delivered. */
 function guestImport(f, record) {
-  const header = require("../data/init-v007/headers/user/defaultUsersHeader")
+  const header = require("../data/init-v001/headers/user/defaultUsersHeader")
     .profile.defaultCustomer;
   return importWriter.insertLocalSchemaModel(
     {
@@ -480,7 +480,7 @@ function useGuestMongoAdapter(
 /** Sends an Employee record through the actual forward header and generated import pipeline. */
 function employeeImport(f, record, tenant = "default") {
   const headers =
-    require("../data/init-v008/headers/user/defaultUsersHeader").profile;
+    require("../data/init-v001/headers/user/defaultUsersHeader").profile;
   const header =
     record.principalType === "service"
       ? headers.defaultServiceEmployee
@@ -650,7 +650,7 @@ test("actual forward Init import preserves retained guest credential and authVer
   useGuestMongoAdapter(f);
   const before = structuredClone(f.state.credentials);
   const record = structuredClone(
-    require("../data/init-v007/records/user/defaultCutomerData").record0,
+    require("../data/init-v001/records/user/defaultCutomerData").record0,
   );
   record.authVersion = 1;
   await importStartupGuest(f, () => guestImport(f, record));
@@ -674,7 +674,7 @@ test("actual forward Init import still initializes a new guest through nested cr
   const f = fixture();
   useGuestMongoAdapter(f);
   const record = structuredClone(
-    require("../data/init-v007/records/user/defaultCutomerData").record0,
+    require("../data/init-v001/records/user/defaultCutomerData").record0,
   );
   await importStartupGuest(f, () => guestImport(f, record));
   assert.equal(f.state.customers.length, 1);
@@ -711,7 +711,7 @@ test("actual forward Init writer refuses concurrent Customer credential/version 
       concurrentState = structuredClone(f.state.customers);
     });
     const record = structuredClone(
-      require("../data/init-v007/records/user/defaultCutomerData").record0,
+      require("../data/init-v001/records/user/defaultCutomerData").record0,
     );
     await assert.rejects(importStartupGuest(f, () => guestImport(f, record)));
     assert.deepEqual(f.state.customers, concurrentState, variant);
@@ -740,7 +740,7 @@ test("public markers and another tenant startup cannot authorize guest credentia
     authVersion: 7,
   });
   const record = structuredClone(
-    require("../data/init-v007/records/user/defaultCutomerData").record0,
+    require("../data/init-v001/records/user/defaultCutomerData").record0,
   );
   record.startup = true;
   await assert.rejects(guestImport(f, record));
@@ -777,7 +777,7 @@ test("startup retains lifecycle refusal for linked or shared guest credentials",
         password: "password-guest",
       });
     const record = structuredClone(
-      require("../data/init-v007/records/user/defaultCutomerData").record0,
+      require("../data/init-v001/records/user/defaultCutomerData").record0,
     );
     await assert.rejects(importStartupGuest(f, () => guestImport(f, record)));
     assert.deepEqual(f.state.mutations, []);
@@ -809,7 +809,7 @@ test("selected later-layer Profile preservation helper can refuse the actual imp
     },
   };
   const record = structuredClone(
-    require("../data/init-v007/records/user/defaultCutomerData").record0,
+    require("../data/init-v001/records/user/defaultCutomerData").record0,
   );
   await assert.rejects(importStartupGuest(f, () => guestImport(f, record)));
   assert.equal(calls, 1);
@@ -1650,6 +1650,10 @@ test("fresh framework Init Employee and Customer records save distinct credentia
   delete require.cache[sourceEmployees];
   const employees = lodash.cloneDeep(Object.values(require(sourceEmployees)));
   delete require.cache[sourceEmployees];
+  const sourceServices = require.resolve("../data/init-v001/records/user/defaultServiceEmployeeData");
+  delete require.cache[sourceServices];
+  employees.push(...lodash.cloneDeep(Object.values(require(sourceServices))));
+  delete require.cache[sourceServices];
   const customers = lodash.cloneDeep(
     Object.values(require("../data/init-v001/records/user/defaultCutomerData")),
   );

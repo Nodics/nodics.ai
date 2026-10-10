@@ -1,30 +1,79 @@
 {
-    "contractVersion": 2,
-    "module": "inventory",
-    "sections": {
-        "inventoryPublicationWorkflow": {
-            "kind": "DATA_RELEASE",
-            "selectionPolicy": "EXPLICIT",
-            "dataType": "init",
-            "version": "1.0.1",
-            "displayName": "Inventory Policy Publication Approval",
-            "description": "Forward Process approval contribution for exact retained policy.",
-            "owningDomain": "inventory",
-            "lifecycle": "OPERATIONAL_VERSIONED",
-            "destinationRole": "PROCESS",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "installer": "PROCESS_DEFINITION",
-            "sourceRoot": "init-v002",
-            "files": {
-                "init-v002/records/process/inventoryPublicationWorkflowDefinitionData.js": "eb8ba0c8e59a3610ac392c1d3f948df6fab6d51e1480787b7361a5b0da83a3d3"
-            }
+  "contractVersion": 2,
+  "module": "inventory",
+  "sections": {
+    "inventoryPublicationWorkflow": {
+      "kind": "DATA_RELEASE",
+      "selectionPolicy": "EXPLICIT",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Inventory Policy Publication Approval",
+      "description": "Forward Process approval contribution for exact retained policy.",
+      "owningDomain": "inventory",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "installer": "PROCESS_DEFINITION",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/process/inventoryPublicationWorkflowDefinitionData.js": "eb8ba0c8e59a3610ac392c1d3f948df6fab6d51e1480787b7361a5b0da83a3d3"
+      }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "inventory",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "af01e92febcd5c55a3435b054b031f663b80a910d629985503276e055530ed82",
+      "generatedHashes": {
+        "docs-v001/records/documentation/inventoryDocumentationNodeData.js": "7481590dcdfd772040062ed5c52dc89a2a7d70bb9638b30f770f12169449640d",
+        "docs-v001/records/documentation/inventoryDocumentationPageMetadataData.js": "d243054fe13d6ec59f5c065a9ec4c38b2246d02727bdb4c77d982f192c6e4366",
+        "docs-v001/records/documentation/inventoryDocumentationPublicationStateData.js": "4bd7ad2b059c285e9a63a80997b12710711cb514f017987db60280177a70d413",
+        "docs-v001/records/documentation/inventoryDocumentationSearchMetadataData.js": "4070813c165fb5106c35eb33ef9be52c41fb6e55a2e37c99a9d066afa3825cb2",
+        "docs-v001/records/documentation/inventoryDocumentationComponentData.js": "090b830916a80f1dd9595d04a0eddc4756c4b809a1f2e899d71d1d757481e3be",
+        "docs-v001/records/documentation/inventoryDocumentationPageData.js": "49df1d09255ca5cee970c0639e37a5a7475c1aafc07158cc44c77f27f22276e7",
+        "docs-v001/records/documentation/inventoryDocumentationRouteData.js": "f56cb77b11f50a4001f135fb6ace6d8e07c759243a3b61f6eaa145b487c74a0a",
+        "docs-v001/headers/100_inventoryDocumentationContentPackHeader.js": "feef775ded8492dc0b550f0aa78bedcf7b38445b1dbe95d1bbbc5dbbd2d56195"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

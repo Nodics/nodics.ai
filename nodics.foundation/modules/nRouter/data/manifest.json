@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "router",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "router",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "8efe38ca592a0b28af5ba49111237ba540634ebc52cd261673ac9bcacd2fa964",
+      "generatedHashes": {
+        "docs-v001/records/documentation/routerDocumentationNodeData.js": "38cef6420c76f94dbdb75a072276b6df241c77df12bcc6b66333fc2e5cfd7295",
+        "docs-v001/records/documentation/routerDocumentationPageMetadataData.js": "ff9ee95742e06884c0324adee13ade1a8fdcd348d4bec976170bd360773892a2",
+        "docs-v001/records/documentation/routerDocumentationPublicationStateData.js": "e5d3fb7a860554871554f9ecb21630cf77816948ca158548ce68690a70d228e3",
+        "docs-v001/records/documentation/routerDocumentationSearchMetadataData.js": "401814956fb36109e0893ae6f14378cddfcd91c8f82adfc541cd4b97133e08f2",
+        "docs-v001/records/documentation/routerDocumentationComponentData.js": "d8b938a828b4b1edfa5d73e90a54ad262c57c01c16b8b6a5c199ee51db9aa366",
+        "docs-v001/records/documentation/routerDocumentationPageData.js": "60aabb61bccb614e8db837b398313f595afb1a4ae6b57a9c0463c0220270db78",
+        "docs-v001/records/documentation/routerDocumentationRouteData.js": "51204235f5f697cfca47190d92438aaa621656a44f2911d0e837c2e511f02a25",
+        "docs-v001/headers/100_routerDocumentationContentPackHeader.js": "3640338ac3e424080e6dda3c1678832c02f1c7d9390ad96086e66cc6d8693a7d"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

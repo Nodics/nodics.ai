@@ -23,7 +23,8 @@ module.exports = {
         this.assertEnabled();
         this.manifests().assertScope(request, 'STAGED');
         if (!input || typeof input.publicationCode !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(input.publicationCode) ||
-            typeof input.mediaCode !== 'string' || !input.mediaCode || !Number.isSafeInteger(input.versionId) || input.versionId < 0) {
+            typeof input.mediaCode !== 'string' || !input.mediaCode || !Number.isSafeInteger(input.versionId) || input.versionId < 0 ||
+            (input.expectedChecksum !== undefined && !/^[a-f0-9]{64}$/.test(input.expectedChecksum))) {
             throw this.manifests().invalid('Exact Media identity and publication code are required');
         }
         const lifecycle = SERVICE.DefaultPublicationLifecycleService;
@@ -36,12 +37,16 @@ module.exports = {
             let publication = await lifecycle.getRepository().get(input.publicationCode, request);
             if (publication) {
                 const manifest = await this.getVersion(publication, request);
-                if (publication.rootCode !== input.mediaCode || manifest.artifacts.asset.versionId !== input.versionId) {
+                if (publication.rootCode !== input.mediaCode || manifest.artifacts.asset.versionId !== input.versionId ||
+                    (input.expectedChecksum !== undefined && manifest.artifacts.asset.checksum !== input.expectedChecksum)) {
                     throw this.manifests().invalid('Media publication retry identity conflict');
                 }
             } else {
                 stage = 'RETAIN';
                 const manifest = await this.manifests().capture({ code: input.mediaCode, versionId: input.versionId }, request);
+                if (input.expectedChecksum !== undefined && manifest.artifacts.asset.checksum !== input.expectedChecksum) {
+                    throw this.manifests().invalid('Media publication source checksum changed');
+                }
                 stage = 'CREATE';
                 publication = await lifecycle.create({ ...request, publication: { code: input.publicationCode, domain: 'media',
                     rootType: 'media', rootCode: input.mediaCode, sourceVersion: manifest.code } });
@@ -104,6 +109,18 @@ module.exports = {
     /** Reads target activation evidence through the configured authenticated transport. */
     getOnlineVersion: function (publication, request) {
         return this.transport().getStatus({ mediaCode: publication.rootCode }, request);
+    },
+    /** Reads exact target pointers in one bounded owner call without caching or approving assets. */
+    getOnlineVersions: function (mediaCodes, request) {
+        return this.transport().getStatuses({ mediaCodes }, request);
+    },
+    /** Verifies retained bytes through a bounded target batch, preserving legacy transport overlays. */
+    reconcileVersions: async function (assets, request) {
+        const transport = this.transport();
+        if (typeof transport.reconcileVersions === 'function') return transport.reconcileVersions({ assets }, request);
+        const results = [];
+        for (const asset of assets) results.push(await transport.reconcile(asset, request));
+        return { results };
     },
     /** Reports retained target integrity through the existing nPublish reconciliation hook without repair. */
     reconcile: function (publication, request) {

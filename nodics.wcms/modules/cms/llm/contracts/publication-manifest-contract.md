@@ -53,6 +53,30 @@
   and media references only; they must not contain procedural publishing,
   storage, approval, or routing logic.
 
+## Documentation Navigation Projection
+
+At snapshot construction, `documentation.component.navigation` retains its
+authored item order and identity but takes title, summary, keywords and search
+text from the canonical `documentation.component.article` reachable through
+active frozen page/component associations. The article must declare its owner
+and match the item's canonical code and route. Site, locale, channel and access
+mode must match exactly. Only preloaded dependency versions and their frozen
+localization variants participate; this is not a latest-content query or a
+second discovery/import mechanism. Missing, redirected, inactive, foreign-scope
+or ambiguous articles are omitted. Missing full-text metadata falls back only
+to current article title/summary/keywords, never stale navigation text.
+
+The projection does not alter authored releases, canonical articles, shared
+navigation records or existing immutable manifests. Other renderers keep their
+existing delivery projection, including removal of article-only search fields.
+An already Online publication adopts corrected projection behavior only through
+normal revision-pinned CMS validation, request-approval and its independent
+Process `publicationReview` decision. This creates a new immutable manifest and
+preserves the previous pointer/manifest for recovery. Do not force a data or
+asset reimport merely to renew the snapshot. Fresh Media readiness must still
+qualify every exact manifest pin. `test/cmsDocumentationNavigationProjection.test.js`
+covers reachability, scope exclusion, ambiguity, localization and non-mutation.
+
 ## Retained Media Dependency Readiness
 
 `DefaultCmsMediaDependencyReadinessService` reads the exact persisted CMS target
@@ -64,11 +88,26 @@ target status read confirming the same version/revision. No activation, receipt
 repair, import, publication request, or approval mutation occurs during status.
 Use the existing `maxBundleRoutes` and Media `maximumAssets` ceilings.
 
+When the selected Media provider supports bounded pointer batches, CMS takes
+one initial batch and one final batch around all exact metadata and physical
+integrity checks. Every qualified asset must retain its original version and
+revision. The default Media owner also accepts a bounded exact integrity batch
+on its existing reconcile route. This reduces N active assets from 3N to three
+remote calls without caching readiness or skipping any byte checks. The whole
+integrity selection is validated before owner reads, and results must match
+every exact identity in order with protected, non-repaired, non-deleted evidence.
+False intact/active evidence remains BYTES_UNAVAILABLE. Overlays supporting only
+pointer batching use N+2 calls; overlays without batch support retain the
+single-asset checks. Batch evidence must cover the complete ordered selection;
+missing, foreign or malformed entries fail closed. On unavailable inspection,
+diagnostics expose only a fixed `inspectionStage` and a format-validated
+`ownerErrorCode`, never an original exception message, cause or provider locator.
+
 The baseline status and initiate responses expose `mediaDependencies` with
 `contractVersion: 1`, owner, status, qualified, bounded dependencies and safe
 message. Each dependency carries mediaCode, pinned versionId/checksum, status,
 qualification and optional active version, verified-byte evidence, inert Media
-handoff and exact-version publication-request description. No paths, locators,
+handoff, deterministic `publicationCode`, and exact-version publication-request description. No paths, locators,
 provider details, secrets or file payloads are returned. Missing/denied reads,
 malformed target evidence or inconsistent child manifests are `UNAVAILABLE`.
 Unactivated assets are `NOT_ACTIVATED`; changed metadata is `VERSION_MISMATCH`;
@@ -87,8 +126,17 @@ non-retained deployments preserve their existing behavior through
 `NOT_REQUIRED`; the consumer never enables retained publication or invents a
 target runtime. The Media owner supplies navigation and actual command
 authorization. An inert request describes the existing `/publication/requests`
-contract and still requires an operator-selected publicationCode, an explicit
-request and separate normal Process approval. CMS approval is not Media approval.
+contract and still requires an explicit request and separate normal Process
+approval. The deterministic reference hashes CMS publication code, target
+manifest version, asset code, pinned asset version and checksum. A changed pin
+therefore cannot reuse the old approval identity. Axis may coordinate these
+normal approvals in one explicit action, using the employee's native Media
+request with `expectedChecksum` and actual returned Process workflow reference.
+It must validate the whole missing dependency set before requests, stop on
+denial, never substitute delegated CMS credentials or returned URLs, and report
+partial owner effects. Explicit resume skips assets already qualified Online.
+This action is not atomic across CMS, Media and Process. CMS approval is not
+Media approval; only fresh backend readiness proves the whole pack available.
 
 Later layers may decorate the CMS consumer and owner presentation, but must
 preserve exact-release selection, bounded inspection, signed scope, fail-closed

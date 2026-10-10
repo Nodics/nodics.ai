@@ -38,7 +38,7 @@ const manifest = JSON.parse(
 );
 assert.equal(manifest.module, pack.name);
 const documentationBoundary = await readFile(
-  resolve(moduleRoot, "docs/README.md"),
+  resolve(moduleRoot, "README.md"),
   "utf8",
 );
 const components = require(
@@ -212,7 +212,7 @@ async function sha256(relativePath) {
 assert.equal(site.code, "nexusCorporateSite");
 assert.match(
   documentationBoundary,
-  /ownership boundary for Nexus-specific authored\s+documentation/,
+  /Application-specific documentation is module-owned CMS data/,
   "Nexus application documentation must remain module-owned",
 );
 assert.equal(site.catalog, "nexusContentCatalog");
@@ -919,7 +919,7 @@ assert.equal(accelerator.name, 'nexus');
 assert(accelerator.requiredModules.includes('nexus.web'));
 
 for (const release of Object.values(manifest.sections)) {
-  for (const [relativePath, expectedHash] of Object.entries(release.files)) {
+  for (const [relativePath, expectedHash] of Object.entries(release.files || release.generatedHashes)) {
     assert.equal(
       await sha256(relativePath),
       expectedHash,

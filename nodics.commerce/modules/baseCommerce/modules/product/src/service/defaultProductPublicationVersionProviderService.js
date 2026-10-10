@@ -18,7 +18,35 @@
  * @override Replace transport through layered configuration without changing approval or immutable operation identity.
  */
 module.exports = {
+    /** Seals exact Product setup membership through the existing governed capture operation. */
+    prepareSetup: function (request, item) {
+        if (item.domain !== 'product' || item.rootType !== 'product' || item.rootCode !== item.input.productCode ||
+            !Number.isSafeInteger(item.input.versionId) || String(item.input.versionId + 1) !== item.sourceVersion)
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
+        return SERVICE.DefaultProductGovernedPublicationService.create(request, item.input);
+    },
+    /** Qualifies exact sealed source and Store membership without mutable fallback or publication writes. */
+    validateSetup: async function (publication, request, item) {
+        const manifest = await this.getVersion(publication, request);
+        if (manifest.scope.tenant !== request.tenant || manifest.root.enterpriseCode !== request.enterpriseCode ||
+            manifest.scope.storeCode !== item.input.storeCode || manifest.root.code !== item.rootCode ||
+            manifest.root.publicationReferences?.capturedFromVersion !== item.input.versionId ||
+            String(manifest.root.versionId) !== item.sourceVersion)
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
+        return manifest.version;
+    },
     targetReceiptContract: 'v1',
+    /** Pure target-local observation under nPublish's reviewed deployment plan; does not prepare or activate. */
+    observeSetupTarget: async function (publication, request) {
+        const scope = { tenant: request.tenant, productCode: publication.rootCode, storeCode: publication.input.storeCode };
+        const target = await SERVICE.DefaultProductPublicationTargetService.getStatus({ scope, operationKey: publication.activationOperation.key }, request);
+        if (target.receipt && target.receipt.committed !== true) throw new CLASSES.NodicsError('ERR_PUB_SETUP_OBSERVATION');
+        return target;
+    },
+    /** Preserves Product's own committed target receipt semantics for coordinated readiness. */
+    isSetupReceiptCommitted: function (publication, request, receipt) {
+        return receipt?.committed === true && receipt.previousOnlineVersion === publication.activationOperation?.previousOnlineVersion;
+    },
     /** Requires the existing runtime-role authority; source operations never activate versioning themselves. */
     assertStaged: function () {
         if ((CONFIG.get('runtimeRole') || {}).publication !== 'STAGED') throw new Error('Product publication requires Staged runtime');
@@ -33,6 +61,16 @@ module.exports = {
     getVersion: function (publication, request) {
         this.assertStaged();
         return SERVICE.DefaultProductPublicationGraphService.resolve(publication, request);
+    },
+    /** Qualifies older publication journals through their sealed root, without rewriting their metadata. */
+    getPublicationEnterprise: async function (publication, request) {
+        const manifest = await this.getVersion(publication, request);
+        if (manifest.scope.tenant !== request.tenant || manifest.root.tenant !== request.tenant ||
+            manifest.root.code !== publication.rootCode || String(manifest.root.versionId) !== publication.sourceVersion ||
+            typeof manifest.root.enterpriseCode !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(manifest.root.enterpriseCode)) {
+            throw new Error('Sealed Product publication owner is invalid');
+        }
+        return manifest.root.enterpriseCode;
     },
     /** Returns authoritative Online scope status before a transition. */
     getOnlineVersion: async function (publication, request) {

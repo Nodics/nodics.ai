@@ -1,7 +1,7 @@
 # Nodics Communication
 
-Read the detailed [email/SMS authoring and customization guide](../nodics.docs/docs/pages/nodics.communication/email-sms-templates.md)
-and [provider runbooks](../nodics.docs/docs/pages/nodics.communication/provider-runbooks.md).
+Read the detailed [email/SMS authoring and customization guide](modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js)
+and [provider runbooks](modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js).
 Domain modules own default presentation files; Communication owns their shared
 contract, layered resolution and rendering. These are separate from transport.
 

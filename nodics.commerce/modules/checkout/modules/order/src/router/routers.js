@@ -100,7 +100,7 @@ module.exports = {
 
 /** Manual order review keeps money and ownership unchanged. */
 module.exports.order.disputes = {};
-module.exports.order.disputes.listOwn = {
+module.exports.order.disputes.listOwnDisputes = {
   secured: true,
   authTokenTypes: ["access"],
   accessGroups: ["customerUserGroup"],
@@ -111,7 +111,7 @@ module.exports.order.disputes.listOwn = {
   controller: "DefaultOrderDisputeController",
   operation: "listOwn",
 };
-module.exports.order.disputes.create = {
+module.exports.order.disputes.createDispute = {
   secured: true,
   authTokenTypes: ["access"],
   accessGroups: ["customerUserGroup"],
@@ -155,4 +155,11 @@ module.exports.order.disputes.refundExecute = {
   permission: "commerce.refund.execute",
   key: "/disputes/:code/refund",
   operation: "refundExecute",
+};
+module.exports.order.disputes.refundException = {
+  ...module.exports.order.disputes.resolve,
+  permission: "commerce.refund.exception.adjudicate",
+  requestPrivacy: { sensitive: true }, cache: { enabled: false },
+  key: "/disputes/:code/refund-exception",
+  operation: "refundException",
 };

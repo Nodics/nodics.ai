@@ -154,9 +154,9 @@ try {
         rootDir: projectHome,
         includeInfo: false
     });
-    assert(!documentationOwnerReport.findings.some(finding => finding.module === 'documentationOwner'
+    assert(documentationOwnerReport.findings.some(finding => finding.module === 'documentationOwner'
         && finding.code === 'parallel-module-docs'),
-    'Audit must permit a governed docs source catalogue for an explicit documentation owner');
+    'Documentation ownership must not permit a second docs authoring source');
     const dataOwner = createModule(projectHome, 'dataOwner', 'dataOwner', 'capability', ['configuration', 'data', 'llm']);
     write(path.join(dataOwner, 'data/manifest.json'), JSON.stringify({
         contractVersion: 2,

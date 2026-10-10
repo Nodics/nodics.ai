@@ -1,6 +1,6 @@
 # wasteImpact Examples
 
-Use the [canonical provider guide](../../../../../nodics.docs/docs/pages/nodics.waste/impact-providers.md)
+Use the [canonical provider guide](../../data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
 for a minimal assessment request, configuration delta, and replacement adapter.
 The values in the examples are illustrative and do not represent real emissions.
 

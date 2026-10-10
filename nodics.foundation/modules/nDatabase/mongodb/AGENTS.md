@@ -7,6 +7,8 @@ acknowledgement, empty readback and owned cleanup; never invoke it on startup.
 Registered derived destinations require genuine protected read observations and
 complete fresh durable-pin comparisons within the same private one-use invocation.
 Do not broaden public prefix guards or accept copied/serialized admission proof.
+Code-only registry discovery stays bounded and read-only in that same owner;
+including inactive candidates never grants permission to drop their destinations.
 
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 

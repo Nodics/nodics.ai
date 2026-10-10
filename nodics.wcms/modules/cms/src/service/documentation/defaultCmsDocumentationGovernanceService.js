@@ -280,6 +280,8 @@ module.exports = {
             dashboards: records.dashboards.filter(record => this.canView(record, this.policyFor(record, records), principal, channel)),
             pages: records.pages.filter(record => this.canView(record, this.policyFor(record, records), principal, channel))
         };
+        const availablePages = new Set(visible.pages.map(page => page.code));
+        visible.nodes = visible.nodes.filter(node => node.nodeLevel !== 'PAGE_LINK' || availablePages.has(node.targetDocumentationPage));
         return {
             contract: 'cms.documentation.render-projection/v1',
             channel,

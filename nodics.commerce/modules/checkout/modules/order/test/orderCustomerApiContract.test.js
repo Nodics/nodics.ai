@@ -60,6 +60,43 @@ function installGlobals() {
 
 test.beforeEach(installGlobals);
 
+test('registered Order lifecycle and dispute routes retain distinct dispatch identities', t => {
+    const names = ['_', 'NODICS', 'CONFIG', 'SERVICE'];
+    const previous = Object.fromEntries(names.map(key => [key, global[key]]));
+    t.after(() => { for (const key of names) {
+        if (previous[key] === undefined) delete global[key]; else global[key] = previous[key];
+    } });
+    global._ = require('lodash');
+    const registry = new Map(), bindings = [];
+    global.CONFIG = { get: () => ({ options: { contextRoot: 'nodics' } }) };
+    global.NODICS = { addRouter: (name, definition) => registry.set(name, definition), getRouter: name => registry.get(name) };
+    const operation = require('../../../../../../nodics.foundation/modules/nRouter/src/service/router/defaultRouterOperationService');
+    const builder = require('../../../../../../nodics.foundation/modules/nRouter/src/service/router/defaultRouterService');
+    let dispatched;
+    global.SERVICE = {
+        DefaultRouterOperationService: Object.fromEntries(['get', 'post'].map(method => [method, (_router, definition) => bindings.push(definition)])),
+        DefaultLoggerService: { isSensitiveRequest: () => false },
+        DefaultRequestHandlerService: { startRequestHandler: (_request, _response, definition) => { dispatched = definition; } },
+    };
+    for (const group of Object.values(routers.order)) for (const [routerName, routerDef] of Object.entries(group)) {
+        builder.prepareRouter({ routerName, routerDef, urlPrefix: 'order', moduleName: 'order', moduleRouter: {} });
+    }
+    assert.equal(registry.size, bindings.length, 'Every Order route needs a unique flattened registration identity');
+    for (const [key, controllerName, method] of [
+        ['/orders/:orderCode/lifecycle', 'DefaultOrderLifecycleController', 'post'],
+        ['/orders/:orderCode/lifecycle', 'DefaultOrderLifecycleController', 'get'],
+        ['/orders/:code/disputes', 'DefaultOrderDisputeController', 'post'],
+        ['/orders/:code/disputes', 'DefaultOrderDisputeController', 'get'],
+    ]) {
+        const bound = bindings.find(row => row.key === key && row.method === method);
+        operation.bindOperation({}, {}, bound);
+        assert.equal(dispatched.controller, controllerName);
+        assert.equal(dispatched.key, key);
+        assert.equal(dispatched.secured, true);
+        assert.equal(dispatched.authTokenTypes[0], 'access');
+    }
+});
+
 test('Order customer routes expose customer-owned order read without catalog lifecycle leakage', () => {
     assert.equal(routers.order.customer.read.key, '/orders/:orderCode');
     assert.equal(routers.order.customer.read.controller, 'DefaultOrderCustomerController');

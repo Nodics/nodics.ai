@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "scope": "THREE_PREVIOUSLY_STALE_REVIEW_ITEMS_ONLY",
+  "boundary": "Source-editorial revalidation by the current maintainer AI and independent review agents; no runtime, browser, import, publication, provider or financial acceptance. Historical review files are preserved. Unreferenced stale catalogue pins are not blanket refreshed.",
+  "items": [
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Re-read the complete 622-line Order recovery service and all nine named authoring anchors. Current staff authority, persisted approval, original capture, scoped Order lock and explicit PREPARE/SETTLE/PAYMENT/COMPLETE checkpoints preserve the guide's distinction between authoring, publication, search freshness, physical fulfillment and browser proof. Uncertain checkpoints retain reconciliation; offline outcomes remain explicitly labeled. No article edit was needed.",
+      "documentId": "commerce.data-authoring-fulfillment",
+      "canonicalContentChanged": false,
+      "sourceFile": "nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderRefundRecoveryService.js",
+      "previousSourceSha256": "a931adbeda966d7a433f8be7ff1d2fba145a9b30be00bda488cd55ee561d50e6",
+      "reviewedSourceSha256": "2f6be914f20b57c1336bd8aa2aedf3ce17231dd4eac7889eb0fc39ebfb802e53",
+      "citedAnchorsVerified": 9
+    },
+    {
+      "item": "Module Registry journey",
+      "requestedAction": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Re-read the complete 2,215-line registry service and referenced owner contracts. Registration leases remain distinct from administrator activation; registration/runtime presence/dependencies/required-module protection and revision CAS gate activation. Required imports must be CURRENT without implied rollback. Runtime observations, enablement and data receipts remain separate; complete paging and permission/eligibility-filtered Axis visibility are retained. The new bootstrap admission projection reports readiness only.",
+      "documentId": "platform.module-registry-journey",
+      "canonicalContentChanged": false,
+      "sourceFile": "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+      "previousSourceSha256": "d10fe0556198bf13ae502103d282028d18b19fb33a72401d14232e4f7a90ae06",
+      "reviewedSourceSha256": "71abc36501b5ecffe4aa743288103880fddb1735389ef4cfe4061f9a69a7d757",
+      "citedAnchorsVerified": 8,
+      "isolatedChecksPassed": 13
+    },
+    {
+      "item": "Payment Core and provider split",
+      "requestedAction": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Re-read current Payment execution and the named Payment guide anchors. Corrected the unsupported request-hash and bounded-provider-status claim: transactionModel retains adapter status but generates no request hash or length bound. Verified the corrected canonical block and derived search text. Current refund owners require original full capture, persisted Order approval, remaining authority and exact reconciliation readback; only fresh LOCAL_SANDBOX_DEMO CARD or supported original Loyalty captures are admitted. Real CARD, historical unbound captures, partial/split refunds and external settlement remain unavailable. Superseded aggregate findings were corrected; historical reviews remain intact.",
+      "documentId": "commerce.payment-provider-boundaries",
+      "canonicalContentChanged": true,
+      "correctedAnchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+      "previousArticleBlocksSha256": "ec1cc0008412c218cba3ead3d86fe942fda519f0a5e8cc7e58617371cd2f4551",
+      "reviewedArticleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4",
+      "sourceFile": "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
+      "previousSourceSha256": "f1bae05a35e3d4f7d1207e6b2a7334605dd76c8b99aa5ffcad5d221b1269ff14",
+      "reviewedSourceSha256": "582bd237034b34aa34c59e038f166153ef3b25796af56817e2242732d370205d",
+      "additionalInspectedSource": {
+        "path": "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js",
+        "sha256": "6c6300618962f854777695767b30da5129c2d89f8d1cc0a2a2ba562f4dd50602"
+      },
+      "citedAnchorsVerified": 9
+    }
+  ],
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "wasteImpact",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "wasteImpact",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "48bb53717afa19bac6848fc33215a7eb76e22c7e9958e2df53d4b066efb07b43",
+      "generatedHashes": {
+        "docs-v001/records/documentation/wasteImpactDocumentationNodeData.js": "8d4b5fe3e256bc4fe8752628ba4205e033ec16de4e7b4420b7a7eb309f63bb6d",
+        "docs-v001/records/documentation/wasteImpactDocumentationPageMetadataData.js": "a955f927ce3f553dab413230317ae5ea26eb96760fb4f30bd743eb2515771868",
+        "docs-v001/records/documentation/wasteImpactDocumentationPublicationStateData.js": "daf757d5314d56ca7b6ab428b16ea998a732556bbd2352063b5caf3eb1ed7dec",
+        "docs-v001/records/documentation/wasteImpactDocumentationSearchMetadataData.js": "fa6df3536b01c88d88a0608fccbb9971967323821025f7a95ef36d767232c395",
+        "docs-v001/records/documentation/wasteImpactDocumentationComponentData.js": "751f7360fd00634fb6dceadd281d81ad240df4c9556ee56cdcb95a6803c92249",
+        "docs-v001/records/documentation/wasteImpactDocumentationPageData.js": "6ed4021bbf9efea397605e0c50c4a51b58e4f417e4ec6f69493a3b54c4a0f132",
+        "docs-v001/records/documentation/wasteImpactDocumentationRouteData.js": "df7f648bdcaf7287dc52fff3797cdd70af0055ceea94370bc1444900cd5cb22c",
+        "docs-v001/headers/100_wasteImpactDocumentationContentPackHeader.js": "028bdd359dbb484f7ca6f5a4ce25b2c2f6dd06d95ba0c6243eb020f90de46ad8"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

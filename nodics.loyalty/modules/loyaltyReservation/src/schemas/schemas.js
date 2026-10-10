@@ -32,3 +32,4 @@ module.exports = { loyaltyReservation: {
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } })
 } };
+module.exports.loyaltyReservation.rewardReservation.transaction = { enabled: true, sideEffects: 'none' };

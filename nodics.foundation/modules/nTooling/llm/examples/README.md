@@ -1,12 +1,25 @@
 # nTooling AI Examples
 
+## Optional Native Local Search Reset
+
+For a disposable `acmeLocal` deployment whose complete authored search scope is
+`acmelocal_products`, add `--search-indexes=acmelocal_products` to the existing
+`project:local-reset-maintenance` dry-run alongside exact project, database and
+auth selections. It opens no search connection and reports zero effects, not
+provider emptiness. Use execution flags only after operator approval and the real
+owner's host/outage checks. An alias, shared name, changed UUID, external search
+cache or connected client refuses. Never substitute raw Elasticsearch calls.
+After a partial deletion, preserve the receipt and reconcile the attempted index
+before a new reviewed plan; do not retry, restart writers or rewrite import
+history automatically. Normal startup and governed publication follow separately.
+
 This folder contains examples that help AI agents and developers work correctly inside the `nodics.foundation/modules/nTooling` module boundary.
 
 Prefer small examples that show proper layered customization, configuration overrides, service extension, schema/router changes, tests, and documentation updates without modifying unrelated Nodics code.
 
-An application data module keeps authored pages under `docs/pages`, validates
-`docs/catalogue.json` through the shared application-documentation contract,
-generates records below its `data/sample-v001/content` release, and exposes optional
+An application data module maintains CMS page/component records directly under
+`data/docs-v001/records/documentation`, declares them in `data/manifest.json`,
+validates them through the shared application-documentation contract, and exposes optional
 installation only through Axis. Import targets Staged; nPublish controls Online
 visibility. A repeated immutable release produces the same checksum, while a
 changed payload under the same version is rejected.
@@ -33,9 +46,10 @@ customer acceptance journeys or media seeds are discovered from conventional
 `nodics.project.json` or move these aliases into layered properties just to repeat
 the project structure. The existing executor supplies project and framework
 roots. Do not copy topology, release or configuration resolvers into the project.
-Project documentation generators read stable publication identifiers,
-routes, labels and channels from `docs/catalogue.json.publication`, validated
-before writing. The generic data-manifest command refreshes only explicitly
+Project documentation checks read stable publication identifiers, routes,
+labels and channels directly from canonical CMS records. The compatibility
+`docs:generate` command validates records without rewriting prose.
+The generic data-manifest command refreshes only explicitly
 declared development-baseline checksums; changed immutable releases fail before
 any manifest write. Environment composition selects an explicit code or the sole
 declared composition and reads only its declared environment variable.

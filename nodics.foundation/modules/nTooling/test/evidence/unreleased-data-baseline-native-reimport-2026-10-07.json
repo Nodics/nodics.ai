@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-07",
+  "project": "nodics.kickoff",
+  "environment": "native kickoffLocal",
+  "releaseVersion": "0.0.1",
+  "state": "DOCUMENTATION_AND_APPLICATION_PUBLICATION_QUALIFIED_REMAINING_GATES_PENDING",
+  "discovery": {
+    "owner": "DefaultMongodbLocalResetMaintenanceService.discoverRegisteredTenantCodes",
+    "mode": "READ_ONLY_DISCOVERY",
+    "registeredTenants": [],
+    "tenantCount": 0,
+    "effects": { "databasesDropped": 0, "authKeysRemoved": 0 },
+    "limits": "Registry codes only; not an inventory of orphan databases or reset authority"
+  },
+  "reset": {
+    "ownerCommand": "project:local-reset-maintenance",
+    "status": "COMPLETED",
+    "databases": [
+      "kickoffLocalCommerce",
+      "kickoffLocalCommerceStaged",
+      "kickoffLocalCron",
+      "kickoffLocalEngagement",
+      "kickoffLocalLocation",
+      "kickoffLocalLoyalty",
+      "kickoffLocalPlatform",
+      "kickoffLocalProcess",
+      "kickoffLocalWaste",
+      "kickoffLocalWcmsOnline",
+      "kickoffLocalWcmsStaged"
+    ],
+    "authNamespace": "auth_kickoffLocalRuntimeAuth_",
+    "runtimeCount": 10,
+    "databaseCount": 11,
+    "providerCounts": { "collections": 669, "authKeys": 46 },
+    "effects": { "databasesDropped": 11, "authKeysRemoved": 46 },
+    "independentExclusivityProof": true,
+    "writerExclusionEvidence": {
+      "providerProcessCount": 2,
+      "connectedSocketCount": 8,
+      "kind": "NATIVE_LOCAL_OBSERVED_WRITER_EXCLUSION",
+      "observedAt": "2026-10-07T15:03:22.799Z",
+      "continuousFence": false
+    },
+    "remainingCounts": { "collections": 0, "authKeys": 0 },
+    "cleanupFailedCount": 0,
+    "sharedProvidersExcluded": ["search", "media", "otherCacheNamespaces"],
+    "qualified": false
+  },
+  "startup": {
+    "firstAttempt": "REFUSED_ERR_TNT_PROVISIONING_HELD_AT_ENTER_PRIVATE_CONTEXT",
+    "cause": "Previously operator-qualified private capture launch binding was absent",
+    "recovery": "Existing NODICS_LOCAL_PRIVATE_CAPTURE_QUALIFIED=true binding supplied to topology owner; no policy defaults or eligibility flags changed",
+    "state": "ALL_10_NATIVE_RUNTIMES_READY"
+  },
+  "sourceValidation": {
+    "focusedMaintenanceTests": { "passed": 63, "failed": 0 },
+    "toolingMjsTests": { "passed": 78, "failed": 0 },
+    "finalToolingAndRuntimeGrantTests": { "passed": 194, "failed": 0 },
+    "generatedLlmModuleContexts": 202,
+    "diffCheck": "PASSED",
+    "javascriptSyntax": { "checkedFiles": 6068, "failures": 0 },
+    "releaseRecheck": { "sections": 141, "manifests": 86, "version": "0.0.1", "laterReleaseFolderPaths": 0, "failures": 0 },
+    "runtimeGrantVerifier": "Corrected read-only acceptance to compare each runtime against its own resolved permission policy; no installed permissions changed"
+  },
+  "documentationQualification": {
+    "state": "PASSED",
+    "releaseVersion": "0.0.1",
+    "axis": {
+      "authenticated": true,
+      "credentialHandling": "Existing canonical local credential owner used privately; no credentials printed or saved in evidence",
+      "onlineReadySources": 4,
+      "frameworkApproval": "One coordinated Axis action completed existing CMS and all 54 pinned Media approvals",
+      "kickoffAssetResume": "An owner-API request initially returned ERR_MED_00023; the existing Axis Complete asset approvals action resumed successfully without policy changes",
+      "screenshot": "/tmp/nodics-axis-v001-docs-online-2026-10-07.png"
+    },
+    "profiles": [
+      { "code": "frameworkdocs", "releaseStatus": "CURRENT", "readiness": "READY", "publicationCode": "cmsBaseline_frameworkdocs_0_0_1", "publicationState": "ONLINE", "revision": 6, "qualifiedAssets": 54, "publicChecksumVerifiedAssets": 54, "publicDelivery": "AVAILABLE" },
+      { "code": "axisdocs", "releaseStatus": "CURRENT", "readiness": "READY", "publicationCode": "cmsBaseline_axisdocs_0_0_1", "publicationState": "ONLINE", "revision": 6, "qualifiedAssets": 0, "publicChecksumVerifiedAssets": 0, "publicDelivery": "AVAILABLE" },
+      { "code": "kickoffdocs", "releaseStatus": "CURRENT", "readiness": "READY", "publicationCode": "cmsBaseline_kickoffdocs_0_0_1", "publicationState": "ONLINE", "revision": 6, "qualifiedAssets": 13, "publicChecksumVerifiedAssets": 13, "publicDelivery": "AVAILABLE" },
+      { "code": "circadocs", "releaseStatus": "CURRENT", "readiness": "READY", "publicationCode": "cmsBaseline_circadocs_0_0_1", "publicationState": "ONLINE", "revision": 6, "qualifiedAssets": 0, "publicChecksumVerifiedAssets": 0, "publicDelivery": "AVAILABLE" }
+    ],
+    "publicCanonicalContent": {
+      "frameworkArticles": 173,
+      "frameworkOwnerAnchorReferences": 586,
+      "circaArticles": 4,
+      "circaExternalCanonicalOwnerAnchorReferences": 12,
+      "articleBlocks": "EXACT_SOURCE_MATCH",
+      "assets": "EXACT_SHA256_MATCH"
+    }
+  },
+  "applicationPublication": {
+    "axis": { "publicationCode": "cmsBaseline_axis_0_0_1", "state": "ONLINE" },
+    "nexus": { "releaseVersion": "0.0.1", "readiness": "READY", "state": "ONLINE", "qualifiedAssets": 37, "publicChecksumVerifiedAssets": 37, "publicDelivery": "AVAILABLE" },
+    "circa": { "releaseVersion": "0.0.1", "readiness": "READY", "state": "ONLINE", "qualifiedAssets": 18, "publicChecksumVerifiedAssets": 18, "publicDelivery": "AVAILABLE", "preparationRecovery": "Initial setup returned blocked partial preparation; subsequent explicit owner initiation completed all preparation and entered normal Process approval" }
+  },
+  "bootstrapAcceptance": {
+    "state": "STOPPED_AT_MISSING_COMMERCE_PUBLICATION_PREREQUISITE",
+    "latestRun": "6ec43c426233",
+    "passedGates": ["All 10 runtimes reachable", "Live origin/CORS/redirect/header route-security matrix", "Real administrator authentication", "Platform and Location foundation CURRENT", "Mandatory CMS Process workflow CURRENT", "Optional documentation absent before explicit import", "Public and Nexus documentation installation denied", "Governed Staged export and Online/Process/cross-enterprise rejection boundaries", "Axis baseline ONLINE", "Nexus and Circa READY through normal approval and public delivery", "Agora commerce sample data installation verified through the owner API and canonical npm command"],
+    "earlierRefusals": ["Incorrect Platform-only runtime permission comparison corrected with regression coverage", "30-second bootstrap request timeout during Framework import; owner receipt confirmed completion without replay", "Nexus CMS Online was not READY until existing Media approvals completed", "Circa first initiation returned partial blocked preparation; explicit owner resume completed normally", "Agora data child command initially failed; explicit owner acceptance and canonical npm recheck both subsequently passed"],
+    "remainingFailure": {
+      "owner": "product/defaultCommercePublicationAcceptanceService",
+      "message": "Governed Online prerequisite missing for product: provide exact publication code, rootCode, sourceVersion and targetVersion; use the owner approved lifecycle, not internal restore APIs",
+      "boundary": "Commerce import CURRENT does not establish governed Online publication, search-backed delivery or business acceptance; no substitute receipt or internal restore used"
+    }
+  },
+  "agoraData": {
+    "state": "INSTALL_VERIFIED",
+    "destination": "COMMERCE_STAGED",
+    "expectedReleases": {
+      "agora.apparel:agoraApparelCommerceCatalog": "0.0.1",
+      "agora.electronics:agoraElectronicsCommerceCatalog": "0.0.1",
+      "agora.telco:agoraTelcoCommerceCatalog": "0.0.1"
+    }
+  },
+  "search": {
+    "state": "NOT_RESET",
+    "indexesDropped": 0,
+    "reason": "No exact deployment-owned reset index allowlist is configured; shared search was excluded from DB/auth reset",
+    "effectiveSearchEnabled": true,
+    "qualificationBoundary": "Some runtime module overrides enable search despite default search=false; this is not a clean-search acceptance"
+  },
+  "cleanup": {
+    "ownerCommand": "npm run topology:stop",
+    "state": "COMPLETED",
+    "supervisor": "NOT_RUNNING",
+    "runtimeListenersRemaining": 0,
+    "verification": "Canonical topology:status reports all 10 declared runtimes not listening and ownership NONE",
+    "preserved": ["Imported database records and normal publication receipts", "Existing Axis frontend", "Unrelated providers, indexes and media files"]
+  },
+  "pending": [
+    "Provide actual normally approved Online commerce publication prerequisite bindings before rerunning remaining bootstrap journey and update-lifecycle gates",
+    "Search requires an exact deployment-owned reset allowlist before clean-search acceptance",
+    "Full Circa business E2E has not been rerun in this qualification; eligibility and session qualification remain separate from CMS/Media readiness"
+  ]
+}

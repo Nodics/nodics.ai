@@ -514,7 +514,7 @@ module.exports.eWaste.orderReview.requestOrderReview = {
 };
 
 module.exports.eWaste.internalOrderReversal = {
-  invoke: {
+  internalOrderReversalInvoke: {
     secured: true,
     authTokenTypes: ["service"],
     accessGroups: ["serviceAccountUserGroup"],
@@ -524,6 +524,24 @@ module.exports.eWaste.internalOrderReversal = {
     method: "POST",
     controller: "DefaultEWasteOrderReversalController",
     operation: "invoke",
+  },
+};
+
+module.exports.eWaste.internalDigitalSale = {
+  internalDigitalSaleInvoke: {
+    secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+    permission: "waste.asset.sale.transfer", apiExposure: "wasteInternal", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+    key: "/internal/digital-sales/:phase", method: "POST",
+    controller: "DefaultEWasteDigitalSaleController", operation: "invoke",
+  },
+};
+
+module.exports.eWaste.internalDigitalListing = {
+  internalDigitalListingInvoke: {
+    secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+    permission: "waste.asset.marketplace.project", apiExposure: "wasteInternal", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+    key: "/internal/digital-listings/:phase", method: "POST",
+    controller: "DefaultEWasteDigitalListingController", operation: "invoke",
   },
 };
 

@@ -20,6 +20,51 @@ const _ = require('lodash');
  */
 module.exports = {
 
+    /**
+     * Resolves authored native Local index bindings without provider startup or persisted-index loading.
+     * This selection is not exclusivity proof; offline tooling independently admits each physical effect.
+     * @param {Object} input Explicit environment and default tenant.
+     * @returns {Object[]} Private effective bindings, including provider configuration.
+     */
+    readLocalResetBindings: function ({ environment, tenant }) {
+        const fail = () => { throw new Error('RESET_SEARCH_BINDING_UNQUALIFIED'); };
+        if (!/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(environment || '') ||
+            tenant !== (CONFIG.get('defaultTenant') || 'default')) fail();
+        const files = SERVICE.DefaultFilesLoaderService;
+        if (!files?.loadFiles || !files.loadSchemaFiles) fail();
+        const definitions = files.loadFiles('/src/search/indexes.js', {});
+        const schemas = files.loadSchemaFiles('/src/schemas/schemas.js', {});
+        const bindings = [];
+        for (const moduleName of Object.keys(NODICS.getModules())) {
+            const configuration = this.getSearchConfiguration(moduleName, tenant);
+            if (configuration.options?.enabled !== true) continue;
+            const declared = {};
+            for (const [schemaName, schema] of Object.entries(schemas[moduleName] || {})) {
+                if (schema.search?.enabled === true && (!schema.tenants || schema.tenants.includes(tenant))) {
+                    const key = schema.search.typeName || schema.search.indexName || schemaName;
+                    declared[key] = _.merge({}, schema.search, { indexName: schema.search.indexName || schemaName,
+                        typeName: schema.search.typeName || schema.search.indexName || schemaName });
+                }
+            }
+            for (const [fileKey, source] of Object.entries(definitions[moduleName] || {})) {
+                const logicalName = source.typeName || fileKey;
+                if (typeof logicalName !== 'string' || !logicalName) fail();
+                declared[logicalName] = _.merge({}, declared[logicalName] || {}, source,
+                    { indexName: source.indexName || fileKey, typeName: source.typeName || fileKey });
+            }
+            for (const [logicalName, definition] of Object.entries(declared)) {
+                // Retirement belongs to a separate immutable lifecycle, never disposable Local reset.
+                if (definition.retirement !== undefined) fail();
+                const index = (definition.indexName || logicalName).toLowerCase();
+                if (!/^[a-z0-9][a-z0-9._-]{0,199}$/.test(index) ||
+                    !index.startsWith(environment.toLowerCase() + '_') || bindings.length >= 128) fail();
+                bindings.push({ index, moduleName, tenant, logicalName, cacheIndexName: definition.indexName || logicalName,
+                    handler: configuration.options.connectionHandler, configuration: _.cloneDeep(configuration) });
+            }
+        }
+        return bindings;
+    },
+
     searchEngines: {},
     searchSchema: {},
     rawSearchModel: {},

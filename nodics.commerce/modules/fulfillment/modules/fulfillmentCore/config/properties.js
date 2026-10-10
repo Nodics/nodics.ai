@@ -31,6 +31,16 @@ module.exports = {
 
   fulfillmentCore: {
     enabled: true,
+    itemSimulation: {
+      enabled: false,
+      environmentAllowlist: [],
+    },
+    physicalOperations: {
+      enabled: false,
+      evidenceMode: "MANUAL_ATTESTATION",
+      maximumLines: 100,
+      maximumReceipts: 100,
+    },
     customerShipping: {
       enabled: true,
       methods: [],
@@ -87,6 +97,9 @@ module.exports = {
   apiExposure: {
     categories: {
       commerceCustomer: {
+        enabled: true,
+      },
+      commerceManagement: {
         enabled: true,
       },
     },

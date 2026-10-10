@@ -4,7 +4,7 @@ Collection-point create receipts use private `wasteCollectionCommandReceipt`
 storage under default-disabled `commandReceipts` admission. The existing native
 generated create retains location/reference and current schema authority.
 Inspection never infers original success from an existing centre. See
-[original business results](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+[original business results](../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js).
 
 `wasteCollectionPoint.commandReceipt.insertOnly: true` narrows the existing
 generated HTTP create to insertion. nDatabase sets the generated save option;

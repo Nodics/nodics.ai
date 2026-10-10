@@ -22,12 +22,14 @@ const path = require('path');
 
 const frameworkRootDir = path.resolve(__dirname, '../../../..');
 const config = require(path.join(frameworkRootDir, 'nConfig'));
-const env = require(path.join(frameworkRootDir, '..', 'env'));
+const tooling = require(path.join(frameworkRootDir, 'nTooling/src/service/defaultToolingCommandService'));
+const runtime = require(path.join(frameworkRootDir, 'nTooling/src/service/project/defaultProjectRuntimeStartService'));
+const composition = require(path.join(frameworkRootDir, 'nTooling/src/service/command/defaultRepositoryBuildCompositionService'));
 const projectRootDir = path.resolve(process.env.NODICS_HOME || process.cwd());
 
 /**
- * Resolves module roots for governance-report generation from the framework
- * repository root, core package root, and optional customer project home.
+ * Resolves governance-report targets through canonical nTooling project metadata
+ * or its tooling-only repository build composition.
  *
  * @returns {Object} Effective runtime options for `config.prepareBuild`.
  */
@@ -39,25 +41,42 @@ const projectRootDir = path.resolve(process.env.NODICS_HOME || process.cwd());
 let exportedService;
 module.exports = exportedService = {
     /** Implements resolveRuntimeOptions as an overrideable service operation. */
-    resolveRuntimeOptions: function () {
-    const customHome = process.env.CUSTOM_HOME ? path.resolve(process.env.CUSTOM_HOME) : projectRootDir;
-    const packagePath = path.join(projectRootDir, 'package.json');
-    if (fs.existsSync(packagePath)) {
-        const packageJson = require(packagePath);
-        if (packageJson.name === 'nodics.ai' && Array.isArray(packageJson.workspaces)) {
-            const workspaceRoots = packageJson.workspaces.map(workspaceName => path.resolve(projectRootDir, workspaceName));
-            return Object.assign({}, env.defaultOptions || {}, {
-                NODICS_HOME: path.resolve(projectRootDir, 'nodics.foundation'),
-                CUSTOM_HOME: customHome,
-                MODULE_ROOTS: workspaceRoots.includes(customHome) ? workspaceRoots : workspaceRoots.concat([customHome])
-            });
+    resolveRuntimeOptions: function (args = process.argv.slice(2), environment = process.env) {
+    args = tooling.normalizeArguments(args);
+    const commandHome = path.resolve(tooling.readOption(args, '--home', environment.NODICS_HOME || process.cwd()));
+    const packageJson = runtime.readProjectPackage(commandHome);
+    const selected = Object.assign({}, environment);
+    const environmentName = tooling.readOption(args, '--environment', environment.ENV || environment.E);
+    if (environmentName) { selected.ENV = environmentName; selected.E = environmentName; }
+    let projectHome = commandHome;
+    let serverCode = tooling.readOption(args, '--server', environment.S || environment.SERVER);
+    let frameworkRoot;
+    if (packageJson.name === 'nodics.ai' && packageJson.nodics && packageJson.nodics.runtimeModule === false) {
+        frameworkRoot = commandHome;
+        if (environment.CUSTOM_HOME && path.resolve(environment.CUSTOM_HOME) !== commandHome) {
+            projectHome = path.resolve(environment.CUSTOM_HOME);
+        } else {
+            const target = composition.create(frameworkRoot, { persistent: true });
+            projectHome = target.root;
+            selected.ENV = environmentName || target.environmentName;
+            selected.E = selected.ENV;
+            serverCode = serverCode || target.serverName;
         }
+    } else if (!packageJson.nodics || packageJson.nodics.kind !== 'application') {
+        throw new Error('Governance reporting requires a project application or framework repository home');
     }
-    return Object.assign({}, env.defaultOptions || {}, {
-        NODICS_HOME: projectRootDir,
-        CUSTOM_HOME: customHome,
-        MODULE_ROOTS: projectRootDir === customHome ? [projectRootDir] : [projectRootDir, customHome]
-    });
+    if (!serverCode) throw new Error('Select --server for project governance reporting');
+    runtime.readManifest(projectHome);
+    const server = runtime.resolveServer(projectHome, serverCode, selected);
+    frameworkRoot = frameworkRoot || runtime.resolveFrameworkRoot(projectHome, selected);
+    return {
+        NODICS_HOME: runtime.packageRoot(frameworkRoot, 'nodics.foundation'),
+        CUSTOM_HOME: projectHome,
+        // The repository composition already extends Foundation; discovery visits each root once.
+        MODULE_ROOTS: [...new Set(runtime.resolveModuleRoots(projectHome, frameworkRoot, server))],
+        defaultEnvironment: server.environment,
+        defaultServer: server.server
+    };
 },
 
     /** Implements toRelative as an overrideable service operation. */
@@ -292,16 +311,28 @@ module.exports = exportedService = {
 },
 
     /** Implements initialize as an overrideable service operation. */
-    initialize: async function () {
-    let options = (this.resolveRuntimeOptions || exportedService.resolveRuntimeOptions).call(this, );
-    await config.prepareBuild(options);
-    await config.initUtilities(options);
-    await config.loadModules();
+    initialize: async function (args = process.argv.slice(2), environment = process.env) {
+    args = tooling.normalizeArguments(args);
+    const options = (this.resolveRuntimeOptions || exportedService.resolveRuntimeOptions).call(this, args, environment);
+    const previous = { S: process.env.S, E: process.env.E, NODICS_NODE: process.env.NODICS_NODE };
+    process.env.S = options.defaultServer;
+    process.env.E = options.defaultEnvironment;
+    const node = tooling.readOption(args, '--node', environment.NODICS_NODE || environment.N);
+    if (node) process.env.NODICS_NODE = node;
+    try {
+        await config.prepareBuild(options);
+        await config.initUtilities(options);
+        await config.loadModules();
+    } finally {
+        for (const [key, value] of Object.entries(previous)) {
+            if (value === undefined) delete process.env[key]; else process.env[key] = value;
+        }
+    }
 },
 
     /** Implements run as an overrideable service operation. */
-    run: async function () {
-    await (this.initialize || exportedService.initialize).call(this, );
+    run: async function (args = process.argv.slice(2)) {
+    await (this.initialize || exportedService.initialize).call(this, args);
     let rawSchema = SERVICE.DefaultFilesLoaderService.loadSchemaFiles('/src/schemas/schemas.js', null);
     let rawRouters = SERVICE.DefaultFilesLoaderService.loadRouterFiles('/src/router/routers.js');
     let schemas = (this.collectSchemaSummary || exportedService.collectSchemaSummary).call(this, rawSchema);
@@ -364,8 +395,8 @@ module.exports = exportedService = {
 },
 
     /** Implements runCli as an overrideable service operation. */
-    runCli: function () {
-    (this.run || exportedService.run).call(this, ).catch(error => {
+    runCli: function (args = process.argv.slice(2)) {
+    return (this.run || exportedService.run).call(this, args).catch(error => {
         console.error(error);
         process.exit(1);
     });

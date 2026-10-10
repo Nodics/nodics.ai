@@ -30,7 +30,9 @@ module.exports = {
 
   order: {
     enabled: true,
-    refunds: { enabled: false, orderCodePrefixes: [], ownerPorts: {} },
+    disputes: { enabled: false, orderCodePrefixes: [], storeCodes: {} },
+    refunds: { enabled: false, orderCodePrefixes: [], storeCodes: {}, ownerByStore: {}, ownerPorts: {},
+      policyExceptions: { enabled: false, environmentNames: [], approvals: [] } },
     compatibility: {
       legacyAliasesEnabled: true,
       aliasWindow: "2_MINOR_RELEASES_OR_180_DAYS",

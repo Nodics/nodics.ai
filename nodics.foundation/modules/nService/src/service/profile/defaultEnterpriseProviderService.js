@@ -84,6 +84,7 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When enterprise cannot be found.
      */
     loadEnterprise: function (request) {
+        if (CONFIG.get('enterpriseResolution')?.runtimeLookup?.enabled === true) return this.loadRuntimeEnterprise(request);
         return new Promise((resolve, reject) => {
             let profileModuleName = CONFIG.get('profileModuleName') || 'profile';
             let lookupRequest = {
@@ -123,5 +124,37 @@ module.exports = {
             });
         });
 
+    },
+
+    /** Resolves public business placement through Profile without borrowing customer claims or changing the signed runtime enterprise. */
+    loadRuntimeEnterprise: async function (request) {
+        const fail = () => { throw new CLASSES.NodicsError('ERR_ENT_00000'); };
+        const code = request.entCode, tenant = CONFIG.get('defaultTenant') || 'default';
+        if (typeof code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(code)) fail();
+        const token = NODICS.getInternalAuthToken(tenant);
+        if (typeof token !== 'string' || !token) fail();
+        const verified = await SERVICE.DefaultAuthorizationProviderService.authorizeToken({ authToken: token });
+        if (!/^SUC_/.test(verified?.code || '') || verified.success === false || verified.error ||
+            verified.errors && (!Array.isArray(verified.errors) || verified.errors.length) || !verified.result) fail();
+        const auth = structuredClone(verified.result), moduleName = CONFIG.get('profileModuleName') || 'profile';
+        SERVICE.DefaultServiceTokenService.requireRuntimePrincipal({ tenant, authData: auth }, moduleName);
+        if (auth.principalType !== 'service' || auth.isSystem || !auth.permissions?.includes('profile.enterprise.search') ||
+            auth.enterpriseCode !== undefined && auth.enterpriseCode !== auth.entCode) fail();
+        const own = code === auth.entCode;
+        const payload = own ? {} : { contractVersion: 1, enterpriseCode: code };
+        const response = await SERVICE.DefaultModuleService.invokeModule({
+            local: false, moduleName, connectionName: 'profile', targetAuthority: { runtimeRole: 'PLATFORM' },
+            serviceName: 'DefaultEnterpriseService', operationName: own ? 'getRuntimeEnterprise' : 'resolveRuntimeEnterprise',
+            apiName: own ? '/enterprise/get' : '/internal/enterprise/resolve', methodName: own ? 'GET' : 'POST',
+            tenant, authToken: token, header: { 'x-enterprise-code': auth.entCode },
+            request: { tenant, entCode: auth.entCode, authData: auth, payload }, requestBody: payload,
+            responseType: true, maxAttempts: 1,
+        });
+        const rows = response?.result, enterprise = Array.isArray(rows) && rows.length === 1 ? rows[0] : undefined;
+        if (!/^SUC_/.test(response?.code || '') || response.success === false || response.error ||
+            response.errors && (!Array.isArray(response.errors) || response.errors.length) ||
+            !enterprise || enterprise.code !== code || enterprise.active !== true ||
+            enterprise.tenant?.code !== auth.tenant || enterprise.tenant.active !== true) fail();
+        return structuredClone(enterprise);
     }
 };

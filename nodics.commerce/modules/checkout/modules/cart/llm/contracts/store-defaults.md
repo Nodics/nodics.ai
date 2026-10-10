@@ -66,3 +66,12 @@ not an internal-server error.
 An unavailable Inventory decision rejects calculation with Cart-owned
 `ERR_CART_INVENTORY_UNAVAILABLE` (HTTP 409), before Pricing or later calculation
 steps. This rejection does not create reservations or change balances.
+
+Entry add/update/remove responses apply the same Inventory rejection when every
+blocking validation reason is `STOCK_UNAVAILABLE`. Other blocked validation
+(including mixed invalid quantity/product reasons) uses `ERR_CART_VALIDATION_FAILED`
+(HTTP 422). Neither path starts calculation or owner commitment. Owner read faults
+still propagate unchanged; an unavailable owner is not proof of insufficient stock.
+An entry mutation can already be persisted before response validation fails;
+inspect the owned cart before retrying rather than assuming the error rolled it back.
+Later-layer validation overrides retain these error and no-calculation boundaries.

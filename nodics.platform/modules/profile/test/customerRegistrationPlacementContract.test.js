@@ -43,7 +43,9 @@ function fixture() {
               },
             },
           }
-        : { eligibilityService: "DefaultFixtureDecisionService" },
+        : key === "profileCustomerEligibility"
+          ? { enabled: true }
+          : { eligibilityService: "DefaultFixtureDecisionService" },
   };
   const admissions = new WeakMap();
   let active = true;
@@ -158,7 +160,7 @@ test("placed registration evaluates the target Customer, not the administrative 
     },
     models: [{ code: "target", loginId: "target@example.invalid" }],
   });
-  assert.deepEqual(f.calls, { placement: 1, decision: 1, save: 1 });
+  assert.deepEqual(f.calls, { placement: 7, decision: 1, save: 1 });
 });
 
 test("placed registration still rejects cross-tenant placement before decision or writes", async () => {
@@ -185,7 +187,7 @@ test("placed registration cannot bypass an explicit eligibility denial", async (
     }),
     { code: "ERR_PROFILE_MEMBERSHIP_FORBIDDEN" },
   );
-  assert.deepEqual(f.calls, { placement: 1, decision: 1, save: 0 });
+  assert.deepEqual(f.calls, { placement: 6, decision: 1, save: 0 });
 });
 
 /** Returns a frozen nImport-owned metadata fixture, never a runtime approval. */
@@ -475,4 +477,38 @@ test("preflight readiness errors contain only reviewed status codes, never provi
   await assert.rejects(registration.validateImportTarget(metadata()), {
     code: "ERR_PROFILE_ELIGIBILITY_OWNER",
   });
+});
+
+test("ordinary import preflight validates placement without optional eligibility collaborators", async () => {
+  const f = fixture();
+  const original = CONFIG.get;
+  CONFIG.get = (key) =>
+    key === "profileCustomerEligibility" ? { enabled: false } : original(key);
+  delete SERVICE.DefaultFixtureDecisionService;
+  assert.equal(await registration.validateImportTarget(metadata()), true);
+  assert.equal(f.calls.placement, 1);
+  assert.equal(f.calls.decision, 0);
+  f.deactivate();
+  await assert.rejects(registration.validateImportTarget(metadata()), {
+    code: "ERR_PROFILE_MEMBERSHIP_FORBIDDEN",
+  });
+});
+
+test("ordinary admitted import registers its target without eligibility or administrative identity copying", async () => {
+  const f = fixture();
+  const original = CONFIG.get;
+  CONFIG.get = (key) =>
+    key === "profileCustomerEligibility" ? { enabled: false } : original(key);
+  delete SERVICE.DefaultFixtureDecisionService;
+  delete SERVICE.DefaultCustomerEligibilityDecisionGovernanceService;
+  const request = {
+    tenant: "t",
+    authData: { entCode: "source", principalType: "human" },
+    models: [{ code: "target", loginId: "target@example.invalid" }],
+  };
+  f.admissions.set(request, metadata());
+  await f.owner.signUpAll(request);
+  assert.equal(f.calls.save, 1);
+  assert.equal(f.calls.decision, 0);
+  assert.equal(request.authData.entCode, "source");
 });

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "disposition": "PASS_SCOPED_SOURCE_REVIEW",
+  "scope": "Frozen Copilot coupon queue/original-receipt simulation labels only; ITEM preparation/execution unsupported",
+  "affectedExistingClosureItems": [],
+  "existingPinAssessment": "No source/test/contract/AGENTS/README pin or canonical secure-coupon article pin exists in the authoritative 22-item closure for this change. Therefore no unrelated provider pin, item disposition or historical evidence was refreshed. This dated review is separate evidence, not a new backlog closure.",
+  "sourceFindings": [
+    "Frozen DefaultCopilotCouponActionService.simulationTags checks the three native own enumerable data descriptors and exact values simulated:true, deliveryVerified:false, evidenceMode:LOCAL_SIMULATION. Partial, contradictory, coerced, inherited, hidden and accessor tags refuse without evaluating flag getters; total absence remains absence and is never verification.",
+    "queue retains only the complete triad per minimized row, plus its prior bounded safe fields. It preserves independent copilot.data.query and native merchant grant, original employee credentials, at most 100 rows, fixed route and post-read target/grant recheck. Tags are not inferred from request, identity, configuration or environment.",
+    "reconcile projects complete native tags at response top level for both UNCONFIRMED and COMPLETED original receipts. Completion still checks original challenge/plan/actor/target/key/entitlement/outlet/receipt and positively acknowledged action CAS. Malformed tags refuse before a transition; original native receipt inspection never calls confirm or retries a mutation.",
+    "proposal explicitly rejects top-level simulated owner evidence and its existing strict benefit parser admits only PRICED_CART, not ITEM or SIMULATED_ITEMS. execute rejects unexpected simulated completion evidence and unsupported ITEM plan fields; an already-dispatched ordinary action remains uncertain rather than acquiring a retry. No new ITEM preparation, execution, provider, plan schema or native effect is supplied.",
+    "copilotCouponAction.test.js passes 30/30 source cases, including all partial tag combinations, bad values/types, accessors/inheritance/hidden fields, both receipt states, concurrent receipt CAS, no second confirm, absent-tag ordinary rows and unchanged approved ordinary PRICED_CART execution. Isolated native ports are not live/runtime/browser acceptance.",
+    "The canonical copilot.secure-coupon-fulfillment CMS article now contains a separate read-only simulation table/flow, descriptor validation and uncertainty limits, explicit unsupported ITEM preparation/execution, and typed references to Digital and Promotion owners. Historical native acceptance text, existing article anchors, Media assets and non-coupon articles remain unchanged."
+  ],
+  "sourceFileSha256": {
+    "nodics.copilot/modules/copilotWorkbench/src/service/defaultCopilotCouponActionService.js": "9dc0b9e34d214b282374fb40a63bddb9cfd84537d1ec3150a290a3884b7ef830",
+    "nodics.copilot/modules/copilotWorkbench/test/copilotCouponAction.test.js": "d2473ad591f0ceb067257189378937d106b9d0bd34c264c53833fe0fda073091",
+    "nodics.copilot/modules/copilotWorkbench/AGENTS.md": "dde02456f996164ed21b676e73cd0a139298efd3114b3a4ff14a6df4f73810c0",
+    "nodics.copilot/modules/copilotWorkbench/README.md": "253a9bf88c05338122c3c267b01743712d445b2114683a19e954abf874acd36d",
+    "nodics.copilot/modules/copilotWorkbench/llm/contracts/README.md": "d173e3cbf31482921c5fb9280fd644570963f942b7fae33b45ad454adf4b7972",
+    "nodics.copilot/modules/copilotWorkbench/llm/examples/secure-coupon-fulfillment.md": "ac9dac0e88302a3c15546110ef6e91e51a9dc2bda5eb40fbdcd4f30403c306f2"
+  },
+  "canonicalDocuments": {
+    "copilot.secure-coupon-fulfillment": {
+      "owner": "nodics.copilot/modules/copilotWorkbench",
+      "componentFile": "nodics.copilot/modules/copilotWorkbench/data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js",
+      "articleBlocksSha256": "67ed606a05289541d9d40d9a107e86dc26c700c67dece9fcabdc8fee1374fbdf",
+      "anchors": [
+        "copilot-coupon-simulation-read-boundary",
+        "copilotSecureCouponFulfillment-4-review-redemption-activity",
+        "copilotSecureCouponFulfillment-6-recover-an-uncertain-result"
+      ]
+    }
+  },
+  "generatedFiles": [
+    "nodics.copilot/modules/copilotWorkbench/data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js",
+    "nodics.copilot/modules/copilotWorkbench/data/docs-v001/records/documentation/copilotWorkbenchDocumentationPageMetadataData.js",
+    "nodics.copilot/modules/copilotWorkbench/data/docs-v001/records/documentation/copilotWorkbenchDocumentationSearchMetadataData.js",
+    "nodics.copilot/modules/copilotWorkbench/data/manifest.json"
+  ],
+  "validation": {
+    "couponSourceContracts": {
+      "passed": 30,
+      "failed": 0
+    },
+    "canonicalOptionalPack": "PASS",
+    "sourceFreeze": "Parent-confirmed frozen source SHA matches inspected bytes: 9dc0b9e34d214b282374fb40a63bddb9cfd84537d1ec3150a290a3884b7ef830"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED",
+    "boundary": "No runtime/source/config/test edits or native operations in this review. Prior native qualification text and evidence unchanged; source projection tests do not qualify ITEM mutation, physical delivery, monetary settlement or signed-in browser behavior."
+  },
+  "ownership": "Copilot owns minimized read projection and existing action reconciliation only. Digital owns original merchant evidence and authority, Promotion owns retained ITEM rights and disabled used inverse. referenceCatalogues validate canonical targets without selecting their records/assets for import; includes unchanged."
+}

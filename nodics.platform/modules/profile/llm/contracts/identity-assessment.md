@@ -47,7 +47,7 @@ The existing assessment workflow has a separately default-disabled
 `ownerService` defaults to `DefaultProfileBootstrapIdentityAssessmentService`.
 This is not a login exemption list or a qualification setting. Its bounded
 `sources` select exact approved Init release codes and versions; the framework
-selector is `profile:init-v001` version `0.0.2` from `init-v008`. Later layers may select their
+selector is `profile:init-v001` version `0.0.1` from `init-v001`. Later layers may select their
 approved releases or override the comparison owner, preserving the contracts
 below. A selection is usable only when the existing nImport installation owner
 reports exactly one active CURRENT installation with the same release version,
@@ -70,7 +70,7 @@ remain present after successful comparison.
 
 Human bootstrap employees and the credential-bearing guest belong to the
 configured authority tenant (`defaultTenant`), not each newly provisioned tenant.
-The forward `profile:init-v001` version `0.0.2` separates `defaultEmployeeData`
+The forward `profile:init-v001` version `0.0.1` separates `defaultEmployeeData`
 (humans) from `defaultServiceEmployeeData` (runtime service principal). Its human
 and guest headers declare `options.tenants: [defaultTenant]`. Service employees,
 groups and supporting reference data retain their tenant-local dispatch.
@@ -85,7 +85,7 @@ The source-review owner uses the same selector before reading expected records.
 That selection never broadens the review comparator's authority-tenant ceiling.
 
 Project contributions do not have to rename their own `init-v001` root merely
-because the framework's selected source moved to `init-v008`. The existing
+because the framework's selected source moved to `init-v001`. The existing
 immutable release plan resolves each owner's own physical root, then merges
 matching header/file identities in layer order. A project still needs its
 contribution selected and checksum-covered by its own governed manifest/plan;
@@ -108,12 +108,12 @@ Forward Init snapshots must preserve the final effective group definitions of
 all already-installed later Init releases. A retained upgrade executes the
 changed release only; later releases that remain CURRENT are not replayed.
 Compare exact final permission sets, including removed permissions, rather than
-unioning historical grants. Version `0.0.2` retains `init-v007` version `0.0.1`
-and corrects six stale group definitions in `init-v008`. This is a source release
+unioning historical grants. Version `0.0.2` retains `init-v001` version `0.0.1`
+and corrects six stale group definitions in `init-v001`. This is a source release
 change, not authorization to edit customer runtime permissions directly.
 
 The aggregate manifest retains the original `init-v001` bytes and checksums and
-selects `init-v008` as the newer source root of the same release identity. Startup
+selects `init-v001` as the newer source root of the same release identity. Startup
 accepts the explicit newer version; a changed checksum at the same installed
 version remains a refusal. No initializer removes prior records, relinks people,
 reclassifies humans as services, grants access or suppresses inventory findings.

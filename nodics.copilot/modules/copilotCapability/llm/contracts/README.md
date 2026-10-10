@@ -23,7 +23,7 @@ Validate every identity before display truncation, including omitted rows; exclu
 graphs, runtime context, assignees, task decisions, review contexts and private
 receipts. Matched commands and answers never enter provider history. Reads cannot
 claim tasks, approve decisions, start, retry or compensate instances. See the
-[Process guide](../../../../../nodics.docs/docs/pages/nodics.copilot/process-inspection.md)
+[Process guide](../../data/docs-v001/records/documentation/copilotCapabilityDocumentationComponentData.js)
 and `test/copilotProcessInspection.test.js` plus the opt-in native runtime test.
 
 `DefaultCopilotRulesInspectionService` owns five fixed Rules GET adapters.
@@ -35,7 +35,7 @@ Recheck current admission after await, reject routing/identity drift, minimize
 scalar evidence and never send matched commands/results to provider history.
 Simulation is a mutation and is not a read adapter. No configurable API executor
 or second capability registry is introduced. See the canonical
-[Rules inspection guide](../../../../../nodics.docs/docs/pages/nodics.copilot/rules-inspection.md)
+[Rules inspection guide](../../data/docs-v001/records/documentation/copilotCapabilityDocumentationComponentData.js)
 and `test/copilotRulesInspection.test.js` plus the opt-in native runtime suite.
 
 `DefaultCopilotOrderNotificationInspectionService` owns two fixed Digital Core
@@ -47,7 +47,7 @@ through the exact non-default Commerce connection. Results are projected to
 bounded delivery evidence and exclude recipients, template content and private
 financial fields. Admission and identity are rechecked after every native await.
 Matched commands and results never enter provider history. See the
-[order-notification guide](../../../../../nodics.docs/docs/pages/nodics.copilot/order-notification-operations.md)
+[order-notification guide](../../data/docs-v001/records/documentation/copilotCapabilityDocumentationComponentData.js)
 and `test/copilotOrderNotificationInspection.test.js`.
 
 The operation catalogue is a bounded inert projection of

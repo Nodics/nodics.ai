@@ -20,6 +20,28 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Authentication And Authorization Rules
 
+- `commerce.refund.exception.adjudicate` is catalogue recognition only, not a
+  default group or migration grant. Profile owns reviewed human assignment;
+  Order still requires exact Local deployment pins, original capture, unused
+  units and immutable audited adjudication. It never enables financial execution
+  or redeemed-benefit reversal. Run Order's exception contract regression.
+
+- `loyalty.sampleCredit.apply` is catalogue recognition only, never a default
+  group grant. Profile admits explicit reviewed human assignments; Loyalty still
+  enforces Local policy, pinned instructions, original balances and atomic posting.
+
+- `publish.setup.observe` is recognized only, not a default grant. nPublish's
+  disabled exact-plan observer additionally checks the original signed deployment,
+  tenant, caller allowlist and confined reviewed plan. Never add human groups,
+  system claims or financial action grants to make an observation pass.
+
+- `commerce.coupon.seller.manage` recognizes Promotion's existing seller-consent
+  routes. Catalogue membership is not a grant: do not add it to default group
+  targets or Init data. Profile owns explicit reviewed assignment; Promotion
+  retains issuer scope, consent and qualification checks. Preserve the existing
+  Profile user-group permission-resolution regression for assignability and
+  non-granting runtime-admin, merchant and customer inheritance.
+
 - The shared catalogue includes Location create/update as independently
   assignable route permissions. Do not add them to default migration groups
   merely to make a client or Copilot scenario pass. Location retains execution

@@ -353,6 +353,7 @@ test("actual nImport and Profile registration exports compose private child plac
     }
   };
   const get = CONFIG.get;
+  const eligibilityPolicy = {};
   CONFIG.get = (key) =>
     key === "identityGovernance"
       ? {
@@ -364,7 +365,9 @@ test("actual nImport and Profile registration exports compose private child plac
         }
       : key === "profileCustomerParticipation"
         ? { eligibilityService: "DefaultFixtureEligibilityService" }
-        : get(key);
+        : key === "profileCustomerEligibility"
+          ? eligibilityPolicy
+          : get(key);
   CONFIG.get("data").dataReleases.targetValidators.profile =
     "DefaultCustomerRegistrationService";
   SERVICE.DefaultModelImportProcessService = model;
@@ -455,6 +458,19 @@ test("actual nImport and Profile registration exports compose private child plac
       },
     ],
   });
+  await assert.rejects(
+    f.service.validateReleaseTargets(f.release, f.plan.tenant),
+    (error) => {
+      assert.equal(error.code, "ERR_IMP_00003");
+      assert.deepEqual(error.metadata, {
+        targetReadinessCode: "ERR_PROFILE_ELIGIBILITY_CONFIGURATION",
+      });
+      return true;
+    },
+  );
+  assert.equal(saved, 0, "Missing eligibility selection cannot admit a write");
+  assert.equal(decisions, 0);
+  eligibilityPolicy.enabled = true;
   await f.service.validateReleaseTargets(f.release, f.plan.tenant);
   const exact = operation();
   assert.deepEqual(

@@ -121,6 +121,20 @@ describe('CMS retained Media dependency readiness', () => {
         const result = await consumer.inspect(publication, request);
         assert.equal(result.qualified, false);
         assert.equal(result.dependencies[0].status, 'NOT_ACTIVATED');
+        assert.match(result.dependencies[0].publicationCode, /^cmsMedia_[a-f0-9]{64}$/);
+        assert.equal(result.dependencies[0].publicationCode, consumer.publicationCode(publication, asset));
+        const reference = consumer.publicationCode(publication, asset);
+        for (const [source, key, value] of [
+            [publication, 'code', 'another-publication'],
+            [publication, 'targetVersion', 'another-manifest'],
+            [asset, 'code', 'another-asset'],
+            [asset, 'versionId', 5],
+            [asset, 'checksum', 'c'.repeat(64)]
+        ]) {
+            const changed = { ...source, [key]: value };
+            assert.notEqual(consumer.publicationCode(source === publication ? changed : publication,
+                source === asset ? changed : asset), reference);
+        }
         assert.equal(calls.length, 2);
         assert.deepEqual(result.dependencies[0].publicationRequest.input, {
             mediaCode: 'hero',
@@ -134,6 +148,84 @@ describe('CMS retained Media dependency readiness', () => {
             result.dependencies[0].publicationRequest.approvalRequired,
             true
         );
+    });
+    it('batches owner pointer reads around exact metadata and byte checks', async () => {
+        let batches = 0;
+        SERVICE.DefaultMediaPublicationVersionProviderService.getOnlineVersions = async (codes, context) => {
+            assert.equal(context, request);
+            assert.deepEqual(codes, ['hero']);
+            batches++;
+            return { statuses: [{ mediaCode: 'hero', status: active }] };
+        };
+        const result = await consumer.inspect(publication, request);
+        assert.equal(result.qualified, true);
+        assert.equal(batches, 2);
+        assert.equal(calls.filter(call => call[0] === 'status').length, 0);
+        assert.equal(calls.filter(call => call[0] === 'physical').length, 1);
+        assert.equal(calls.filter(call => call[0] === 'version').length, 1);
+    });
+    it('rejects batched pointer changes after retained bytes were checked', async () => {
+        let batches = 0;
+        SERVICE.DefaultMediaPublicationVersionProviderService.getOnlineVersions = async () => ({
+            statuses: [{ mediaCode: 'hero', status: { ...active, revision: ++batches } }]
+        });
+        const result = await consumer.inspect(publication, request);
+        assert.equal(result.qualified, false);
+        assert.equal(result.dependencies[0].status, 'ACTIVATION_CHANGED');
+        assert.equal(result.dependencies[0].storedBytesVerified, undefined);
+    });
+    it('uses one exact integrity batch between unchanged pointer batches and fails closed on bad bytes or evidence', async () => {
+        root.mediaAssets.push({ ...asset, code: 'second' });
+        publication.mediaCodes.push('second');
+        const owner = SERVICE.DefaultMediaPublicationVersionProviderService;
+        owner.getOnlineVersions = async codes => ({ statuses: codes.map(mediaCode => ({ mediaCode, status: active })) });
+        owner.getVersion = async input => ({ code: active.version, artifacts: { asset: { ...actual, code: input.rootCode } } });
+        let response;
+        let count = 0;
+        owner.reconcileVersions = async (assets, context) => {
+            assert.equal(context, request); count++;
+            assert.deepEqual(assets.map(item => item.mediaCode), ['hero', 'second']);
+            return response || { results: assets.map(item => ({ ...item, intact: true, active: true, protected: true, repaired: false, deleted: false })) };
+        };
+        const result = await consumer.inspect(publication, request);
+        assert.equal(result.qualified, true); assert.equal(count, 1);
+        assert(result.dependencies.every(item => item.storedBytesVerified));
+        assert.equal(calls.filter(call => call[0] === 'physical').length, 0);
+        const valid = root.mediaAssets.map(item => ({ mediaCode: item.code, manifestCode: active.version,
+            intact: true, active: true, protected: true, repaired: false, deleted: false }));
+        response = { results: [{ ...valid[0], intact: false }, valid[1]] };
+        const damaged = await consumer.inspect(publication, request);
+        assert.equal(damaged.qualified, false);
+        assert.equal(damaged.dependencies[0].status, 'BYTES_UNAVAILABLE');
+        for (const results of [[], [...valid].reverse(), [valid[0], valid[0]], [{ ...valid[0], repaired: true }, valid[1]]]) {
+            response = { results };
+            assert.equal((await consumer.inspect(publication, request)).status, 'UNAVAILABLE');
+        }
+        response = undefined;
+        let reads = 0;
+        owner.getOnlineVersions = async codes => ({ statuses: codes.map(mediaCode => ({ mediaCode, status: { ...active, revision: ++reads } })) });
+        const drift = await consumer.inspect(publication, request);
+        assert.equal(drift.qualified, false);
+        assert(drift.dependencies.every(item => item.status === 'ACTIVATION_CHANGED' && !item.storedBytesVerified));
+    });
+    it('fails closed on omitted, foreign or malformed batched owner evidence', async () => {
+        for (const statuses of [[], [{ mediaCode: 'foreign', status: active }],
+            [{ mediaCode: 'hero', status: {} }], [{ mediaCode: 'hero', status: active }, { mediaCode: 'hero', status: active }]]) {
+            SERVICE.DefaultMediaPublicationVersionProviderService.getOnlineVersions = async () => ({ statuses });
+            const result = await consumer.inspect(publication, request);
+            assert.equal(result.status, 'UNAVAILABLE');
+            assert.equal(result.qualified, false);
+            assert.equal(calls.filter(call => call[0] === 'physical').length, 0);
+        }
+    });
+    it('exposes only a fixed inspection stage and safe owner error code on failure', async () => {
+        SERVICE.DefaultMediaPublicationVersionProviderService.getOnlineVersions = async () => {
+            throw Object.assign(new Error('/private/provider?secret=hidden'), { code: 'ERR_RTR_00004' });
+        };
+        const result = await consumer.inspect(publication, request);
+        assert.equal(result.inspectionStage, 'MEDIA_POINTERS');
+        assert.equal(result.ownerErrorCode, 'ERR_RTR_00004');
+        assert.equal(JSON.stringify(result).includes('secret'), false);
     });
     it('does not accept matching bytes at another metadata version', async () => {
         actual.versionId = 5;

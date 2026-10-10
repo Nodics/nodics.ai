@@ -1,5 +1,15 @@
 # media Examples
 
+## Explicit Approval Definition
+
+Read the Process init catalogue and select only `media:mediaPublicationWorkflow`.
+If it is CURRENT, inspect the published definition rather than reinstalling it.
+Otherwise validate and install its observed version with `expectedReleases`, then
+verify `mediaPublicationApproval` and its native reviewer/decision policy.
+The unreleased data baseline is `0.0.1`; graph version 1 is a different identity.
+Drift, denied reads and uncertain installations require inspection, not a forced
+replay or automatic installation from Media publication.
+
 ## Safe caller request
 
 ```json

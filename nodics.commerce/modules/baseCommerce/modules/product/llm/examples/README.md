@@ -23,6 +23,12 @@ receipt fields verbatim. Select `product.discovery.activationService` only with
 the qualified Online target reader. Do not enable global publication flags or
 write project-owned copies of versioned schema policies to make a test pass.
 
+For first-activation acceptance, an omitted top-level `previousOnlineVersion`
+matches the nPublish typed-storage contract only when operation, ONLINE audit
+details and target receipt explicitly contain null. For successors, retain the
+same predecessor string throughout. Missing authoritative lineage is a failure,
+not a value to fill from fixture defaults.
+
 ## Publish
 
 Supply one active Product, a Store code, and English/Arabic `READY` localization rows to

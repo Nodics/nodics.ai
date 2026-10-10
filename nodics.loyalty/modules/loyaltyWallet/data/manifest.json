@@ -1,30 +1,79 @@
 {
-    "contractVersion": 2,
-    "module": "loyaltyWallet",
-    "sections": {
-        "sample-lifecycle": {
-            "kind": "DATA_RELEASE",
-            "dataType": "sample",
-            "version": "0.0.0",
-            "displayName": "Loyalty Wallet Lifecycle Sample",
-            "description": "Local sample wallet and balance projection after earn, reserve, and capture operations.",
-            "owningDomain": "loyalty",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "LOYALTY",
-            "environmentScope": [
-                "LOCAL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "sample-v001/records/loyalty/loyaltyWalletLifecycleData.js": "26e30dde94fc6ea6d78c3f45ccb3e2d1e5a6a86625f9759c3f5b1525f68e6b24",
-                "sample-v001/records/loyalty/loyaltyWalletRewardBalanceLifecycleData.js": "c225c36e2554b51ae982ee2b406bf9b5974ef507750bd9651dd0b9ccf3779ed2",
-                "sample-v001/headers/loyalty/loyaltyWalletLifecycleHeader.js": "d435fd5b293161427af6a552a82d3e53a3a2b6ebc12a052eb563824dd2451d39"
-            },
-            "sourceRoot": "sample-v001"
+  "contractVersion": 2,
+  "module": "loyaltyWallet",
+  "sections": {
+    "sample-lifecycle": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "version": "0.0.1",
+      "displayName": "Loyalty Wallet Lifecycle Sample",
+      "description": "Local sample wallet and balance projection after earn, reserve, and capture operations.",
+      "owningDomain": "loyalty",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "LOYALTY",
+      "environmentScope": [
+        "LOCAL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "sample-v001/records/loyalty/loyaltyWalletLifecycleData.js": "26e30dde94fc6ea6d78c3f45ccb3e2d1e5a6a86625f9759c3f5b1525f68e6b24",
+        "sample-v001/records/loyalty/loyaltyWalletRewardBalanceLifecycleData.js": "c225c36e2554b51ae982ee2b406bf9b5974ef507750bd9651dd0b9ccf3779ed2",
+        "sample-v001/headers/loyalty/loyaltyWalletLifecycleHeader.js": "d435fd5b293161427af6a552a82d3e53a3a2b6ebc12a052eb563824dd2451d39"
+      },
+      "sourceRoot": "sample-v001"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "loyaltyWallet",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "3725746b69f5c867b0b5f46a845afdf626095275f8a2e967d2d46d133f862e2d",
+      "generatedHashes": {
+        "docs-v001/records/documentation/loyaltyWalletDocumentationNodeData.js": "f9e48f33fd6de68b29d37a2011e17d9ee2483ef7b5a58d7eed12bd1b1b320bc0",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationPageMetadataData.js": "9f0504028ed5e52d2cb15ef1d7b1aa9470ffe17907cca995578b7a4ebd3dc4ec",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationPublicationStateData.js": "4b7c58308681e7d1906bad5d0a8458128ce7aa039ab486562092f6b11b439462",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationSearchMetadataData.js": "e9556aa6c4d897c549d6b2d212c1887054a5ada0fe12c0ebc1bbd13af44e8425",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationComponentData.js": "534c78842e2d692737313221ecacb81addc7402fa3ed826247993be0ac6b92ae",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationPageData.js": "ab89161e83f468b6008444101c3f830ef12d613edf014bc8753abbc1d3110a4e",
+        "docs-v001/records/documentation/loyaltyWalletDocumentationRouteData.js": "66482d8eb27f72baab0dfabc2191460cf6c25cce41ee7a6e6bd2f877d2d6fe45",
+        "docs-v001/headers/100_loyaltyWalletDocumentationContentPackHeader.js": "6b15d6f4cb436506992b04a49ed540a59c999346e1a65033fe8c2db888fdf451"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

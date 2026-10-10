@@ -22,7 +22,6 @@
     "owns": [
       "composition",
       "configuration",
-      "data",
       "llm"
     ],
     "runtime": {

@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "telcoSubscription",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "telcoSubscription",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "61e17e16c10d867b43cbf9a5c6b29e2add2adf045139f5f7d19e9e24805cbecc",
+      "generatedHashes": {
+        "docs-v001/records/documentation/telcoSubscriptionDocumentationComponentData.js": "6b65d4c14308ed84e864ec0bfc980affd6f6ae5c6b5ba26db6fe6414898c6027",
+        "docs-v001/records/documentation/telcoSubscriptionDocumentationPageMetadataData.js": "96bafb6fc174856ab0e33852084eae2d8af8868f172530ed77262a51f782177a",
+        "docs-v001/records/documentation/telcoSubscriptionDocumentationNodeData.js": "054f6028442b53941adaf659911104de1f0af6dc0e4d1bf0c219e9556382640d",
+        "docs-v001/records/documentation/telcoSubscriptionDocumentationPageData.js": "5edbbd321a28817a98a10cf7fc05f54bb68779e46a22407874e05da178c0beb2",
+        "docs-v001/records/documentation/telcoSubscriptionDocumentationRouteData.js": "0feff1a379ab74007fe53f135a3b13c93bc41c56773eda9e36c65a6df80f7847",
+        "docs-v001/records/documentation/telcoSubscriptionDocumentationSearchMetadataData.js": "340857137efbdad216ff57d610d43b3788e465d3af74b7ead48e5be774c608bd",
+        "docs-v001/records/documentation/telcoSubscriptionDocumentationPublicationStateData.js": "1ac27053be00d45d9bf0a3a7c3d033c11e8d5aeb853e7d77b9d89eb4953885a5",
+        "docs-v001/headers/100_telcoSubscriptionDocumentationContentPackHeader.js": "b4b623831c6d268ea7e532e4be1644f2e63bc549c1f0678aa0ad07b9d6e45026"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,54 +1,103 @@
 {
-    "contractVersion": 2,
-    "module": "commsCore",
-    "sections": {
-        "runtime-defaults": {
-            "kind": "DATA_RELEASE",
-            "dataType": "core",
-            "version": "0.0.1",
-            "displayName": "Communication Runtime Defaults",
-            "description": "Governed Communication resource selections; presentation is module-owned.",
-            "owningDomain": "communication",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "ENGAGEMENT",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "core-v002/records/communication/commsRuntimeDefaultTemplateData.js": "16be370806cd8af47bc7226ca627c37c7e1d2a7f166ee2e726309859a1faa9f4",
-                "core-v002/records/communication/commsRuntimeDefaultTemplateVersionData.js": "7fe6436f75a6f48cad43ba1ce8c2c89df2104556e4c0699f91d43e3725f45735",
-                "core-v002/headers/communication/commsRuntimeDefaultHeader.js": "0a9c84a586f023014eb6ab8526efae71558130e7b1b3cc3af5550615378b707d"
-            },
-            "sourceRoot": "core-v002"
-        },
-        "sample-templates": {
-            "kind": "DATA_RELEASE",
-            "dataType": "sample",
-            "version": "0.0.1",
-            "displayName": "Communication Sample Templates",
-            "description": "Optional acknowledgement and consent resource selections; user-triggered adoption remains required.",
-            "owningDomain": "communication",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "ENGAGEMENT",
-            "environmentScope": [
-                "LOCAL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "sample-v002/records/communication/commsSampleTemplateData.js": "f7ee483ceb3a4697dad71833b0c42ad58a40366720c7128af0c5ab78698777e1",
-                "sample-v002/records/communication/commsSampleTemplateVersionData.js": "45a8af906665494a1a9d61a67c60e4e42de4f84455e8a34b1d7a13449c651228",
-                "sample-v002/headers/communication/commsSampleHeader.js": "464ccac525a4a3a2fd7c2d528e3dc6713fc682e360109c52d09932fb058dae35"
-            },
-            "sourceRoot": "sample-v002"
+  "contractVersion": 2,
+  "module": "commsCore",
+  "sections": {
+    "runtime-defaults": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "displayName": "Communication Runtime Defaults",
+      "description": "Governed Communication resource selections; presentation is module-owned.",
+      "owningDomain": "communication",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "ENGAGEMENT",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "core-v001/records/communication/commsRuntimeDefaultTemplateData.js": "6f2c59881612f5670dcec416368105e9add1e3d68408f2a0301dee222525fd76",
+        "core-v001/records/communication/commsRuntimeDefaultTemplateVersionData.js": "99a0e320e9253149ee6f1cf06a338a452911f63a3e29764fe92b3b2dc99101f3",
+        "core-v001/headers/communication/commsRuntimeDefaultHeader.js": "391b87a3760f02d574ac1220d9a5338a71e8665c13c2a7804c809178f6102a45"
+      },
+      "sourceRoot": "core-v001"
+    },
+    "sample-templates": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "version": "0.0.1",
+      "displayName": "Communication Sample Templates",
+      "description": "Optional acknowledgement and consent resource selections; user-triggered adoption remains required.",
+      "owningDomain": "communication",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "ENGAGEMENT",
+      "environmentScope": [
+        "LOCAL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "sample-v001/records/communication/commsSampleTemplateData.js": "93f8ca714ce7b21afcff5bc8377c48de0603110dfd4c4283e0e917e7be1f037b",
+        "sample-v001/records/communication/commsSampleTemplateVersionData.js": "53e2b3995a8bdb66c5be0471ae3314987710d7860698c6e6e42a0a5cf349f869",
+        "sample-v001/headers/communication/commsSampleHeader.js": "cd7912e13458b7227368e5ada8a66313906b139db0226eed060e94fa6bf691de"
+      },
+      "sourceRoot": "sample-v001"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "commsCore",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 3,
+      "components": 3,
+      "routes": 3,
+      "releaseChecksum": "eca67da21cfc5b4348378738f9eb202208c7421eef0b6b170c91360c9c35d580",
+      "generatedHashes": {
+        "docs-v001/records/documentation/commsCoreDocumentationNodeData.js": "fb922e196017cb49933dea75f8327c12b8cc2492892ff4a6f6dff24c3b11635d",
+        "docs-v001/records/documentation/commsCoreDocumentationPageMetadataData.js": "e98c3086b5b4ef3af403a9e09fca1de5e17219ee46eba3389886e3e0f1b31641",
+        "docs-v001/records/documentation/commsCoreDocumentationPublicationStateData.js": "e9481318c9697294a521b3b9cbd2f92b6672df8c192430376a4cc568a0f4459d",
+        "docs-v001/records/documentation/commsCoreDocumentationSearchMetadataData.js": "2aed4be3a0143ce7c0c9a9b09b4d6699a33efb86b2b156b50c9c3241171f48bd",
+        "docs-v001/records/documentation/commsCoreDocumentationComponentData.js": "f8e01c8260578f56bb83658b87f3ae6691bcd827ecee590c6f3c2457ce7b26a0",
+        "docs-v001/records/documentation/commsCoreDocumentationPageData.js": "1b2895411a0072032013a88b4b48474a88e820a0327a18d532ed88c06252184a",
+        "docs-v001/records/documentation/commsCoreDocumentationRouteData.js": "6bfe3df2a826eaf9d637578cd8541472aa7a82a6d6551a77f27c2438b484bf70",
+        "docs-v001/headers/100_commsCoreDocumentationContentPackHeader.js": "d3ecc04912da3a4638ed284b71bd03ecea18306acb8c3c960ec91a2ba1b5dab3"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

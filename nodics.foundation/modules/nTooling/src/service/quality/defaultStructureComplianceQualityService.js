@@ -225,13 +225,9 @@ module.exports = exportedService = {
                 'Missing recommended LLM guidance file `' + relativePath + '`.');
         }
     });
-    const declaredOwnership = Array.isArray(moduleObject.packageJson?.nodics?.owns)
-        ? moduleObject.packageJson.nodics.owns
-        : [];
-    if ((this.exists || exportedService.exists).call(this, moduleObject.path, 'docs')
-        && !declaredOwnership.includes('documentation')) {
+    if ((this.exists || exportedService.exists).call(this, moduleObject.path, 'docs')) {
         (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'parallel-module-docs',
-            'Only an explicit documentation owner may maintain a governed `docs/` source catalogue; other modules must use `README.md`.');
+            'Documentation owners maintain CMS records under data; developer guidance belongs in README/AGENTS/llm, not a parallel docs directory.');
     }
 },
 

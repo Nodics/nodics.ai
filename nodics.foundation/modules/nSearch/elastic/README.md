@@ -4,7 +4,7 @@ Dedicated immutable-index retirement uses the existing connection, exact UUIDs,
 full shard acknowledgement and transport retries disabled. Separate reviewed
 erasure supports qualified API-key-only writer decommissioning and one exact
 index deletion, never recreation or credential changes. See
-[Knowledge Progress and Recovery](../../../../nodics.docs/docs/pages/nodics.copilot/knowledge-generation-recovery.md).
+[Knowledge Progress and Recovery](../../../../nodics.foundation/data/docs-v001/records/documentation/nodics_foundationDocumentationComponentData.js).
 
 **Maturity: Guarded provider.** The adapter has deterministic connection and
 operation contracts, but production use requires a configured external cluster
@@ -33,6 +33,34 @@ The module contributes:
 - Elastic model operation implementations for create index, refresh, health, exists, get, search, save, bulk, update, remove, remove by query, get schema, update schema, and remove index.
 
 The adapter maps Nodics search model operations to the active Elasticsearch client. Provider-neutral services should not know which client is active.
+
+Index removal also uses the promise/callback compatibility bridge. Successful
+client completion alone is not evidence of a qualified offline deployment reset
+or historical erasure; lifecycle owners retain those admission and receipt checks.
+
+## Explicit Local Maintenance
+
+`DefaultElasticSearchEngineConnectionHandlerService.openLocalResetMaintenance`
+delegates to `DefaultElasticLocalResetMaintenanceService.open`. This explicit
+offline owner holds its own bounded native client for exact physical names on
+one configured HTTP loopback endpoint. It does not run during startup.
+
+The version-1 hold exposes sorted `names`, `inspect()`, `drop(index)`,
+`verifyEmpty()` and `close()`. Inspection pins initial UUIDs and a single native
+cluster/node/process identity, returning only counts and PID/HTTP/transport ports.
+Every deletion rechecks identity and UUID, requires native acknowledgement and
+exact typed absence, and runs without retries. Initially absent names return
+`{ acknowledged: false, absent: true, alreadyAbsent: true }` without deletion.
+Failures close the hold and expose fixed `RESET_ELASTIC_*` codes; a failure after
+native acknowledgement retains only that acknowledgement and exact index name
+for the caller's partial-outcome accounting, without claiming absence.
+
+Tooling must independently qualify the Local deployment, exclude writers, compare
+the returned PID/ports with actual Java process/socket ownership, close successful
+holds in `finally`, and invalidate search configuration caches only after every
+target verifies empty. This is separate from immutable retirement's API-key
+lifecycle. See [the exact contract](llm/contracts/README.md#local-offline-reset)
+and [the loader-owned example](llm/examples/README.md#local-offline-reset).
 
 ## Runtime Flow
 
@@ -80,6 +108,7 @@ Run focused Elastic coverage with:
 ```bash
 node nodics.foundation/modules/nSearch/elastic/test/elasticConnectionHandlerContract.test.js
 node nodics.foundation/modules/nSearch/elastic/test/elasticSearchModelOperationContract.test.js
+node --test nodics.foundation/modules/nSearch/elastic/test/elasticLocalResetMaintenanceContract.test.js
 npm run quality:docs
 ```
 

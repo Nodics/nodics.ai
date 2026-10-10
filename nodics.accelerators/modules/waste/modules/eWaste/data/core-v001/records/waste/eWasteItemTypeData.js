@@ -11,37 +11,380 @@
 
 'use strict';
 
-/** @module eWaste/data/core-v001/records/eWasteItemTypeData @description Provides reusable e-waste item type seed records for nodics.waste. @layer data @owner eWaste */
-const item = (code, categoryCode, name, options) => Object.assign({
-    code,
-    categoryCode,
-    name: { en: name },
-    requiresBrand: false,
-    requiresModel: false,
-    requiresSerial: false,
-    requiresWeight: false,
-    requiresQuantity: true,
-    allowedConditionGrades: ['WORKING', 'REUSABLE', 'REPAIRABLE', 'PARTS_ONLY', 'RECYCLABLE', 'DAMAGED', 'HAZARDOUS', 'UNKNOWN'],
-    evidencePolicyCode: 'EWASTE_STANDARD_PHOTO',
-    impactProfileCode: 'CIRCA_EWASTE_ESTIMATE',
-    status: 'ACTIVE',
-    revision: 1,
-    active: true
-}, options || {});
-
+/** @description Immutable forward reference records. @owner eWaste @layer data */
 module.exports = {
-    record0: item('MOBILE_PHONE', 'MOBILE_DEVICE', 'Mobile Phone', { requiresBrand: true, requiresModel: true }),
-    record1: item('SMARTPHONE', 'MOBILE_DEVICE', 'Smartphone', { requiresBrand: true, requiresModel: true }),
-    record2: item('FEATURE_PHONE', 'MOBILE_DEVICE', 'Feature Phone', { requiresBrand: true }),
-    record3: item('LAPTOP', 'LAPTOP_COMPUTER', 'Laptop', { requiresBrand: true, requiresModel: true, requiresWeight: true }),
-    record4: item('TABLET_DEVICE', 'TABLET', 'Tablet Device', { requiresBrand: true, requiresModel: true }),
-    record5: item('DESKTOP_TOWER', 'DESKTOP_COMPUTER', 'Desktop Tower', { requiresBrand: true, requiresWeight: true }),
-    record6: item('COMPUTER_MONITOR', 'MONITOR_DISPLAY', 'Computer Monitor', { requiresBrand: true, requiresWeight: true }),
-    record7: item('CHARGER', 'CABLE_CHARGER', 'Charger'),
-    record8: item('CABLE', 'CABLE_CHARGER', 'Cable'),
-    record9: item('EARPHONES', 'CABLE_CHARGER', 'Earphones'),
-    record10: item('POWER_BANK_DEVICE', 'POWER_BANK', 'Power Bank Device', { evidencePolicyCode: 'EWASTE_BATTERY_PHOTO', impactProfileCode: 'EWASTE_BATTERY_COUNT' }),
-    record11: item('LOOSE_LITHIUM_BATTERY', 'LITHIUM_BATTERY', 'Loose Lithium Battery', { evidencePolicyCode: 'EWASTE_BATTERY_PHOTO', impactProfileCode: 'EWASTE_BATTERY_COUNT', allowedConditionGrades: ['DAMAGED', 'HAZARDOUS', 'UNKNOWN', 'RECYCLABLE'] }),
-    record12: item('SMALL_HOME_APPLIANCE', 'SMALL_APPLIANCE', 'Small Home Appliance', { requiresWeight: true }),
-    record13: item('UNKNOWN_ELECTRONIC_ITEM', 'MIXED_ELECTRONICS', 'Unknown Electronic Item', { evidencePolicyCode: 'EWASTE_STANDARD_PHOTO' })
+    "record0": {
+        "code": "MOBILE_PHONE",
+        "categoryCode": "MOBILE_DEVICE",
+        "name": {
+            "en": "Mobile Phone"
+        },
+        "requiresBrand": true,
+        "requiresModel": true,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record1": {
+        "code": "SMARTPHONE",
+        "categoryCode": "MOBILE_DEVICE",
+        "name": {
+            "en": "Smartphone"
+        },
+        "requiresBrand": true,
+        "requiresModel": true,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record2": {
+        "code": "FEATURE_PHONE",
+        "categoryCode": "MOBILE_DEVICE",
+        "name": {
+            "en": "Feature Phone"
+        },
+        "requiresBrand": true,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record3": {
+        "code": "LAPTOP",
+        "categoryCode": "LAPTOP_COMPUTER",
+        "name": {
+            "en": "Laptop"
+        },
+        "requiresBrand": true,
+        "requiresModel": true,
+        "requiresSerial": false,
+        "requiresWeight": true,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record4": {
+        "code": "TABLET_DEVICE",
+        "categoryCode": "TABLET",
+        "name": {
+            "en": "Tablet Device"
+        },
+        "requiresBrand": true,
+        "requiresModel": true,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record5": {
+        "code": "DESKTOP_TOWER",
+        "categoryCode": "DESKTOP_COMPUTER",
+        "name": {
+            "en": "Desktop Tower"
+        },
+        "requiresBrand": true,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": true,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record6": {
+        "code": "COMPUTER_MONITOR",
+        "categoryCode": "MONITOR_DISPLAY",
+        "name": {
+            "en": "Computer Monitor"
+        },
+        "requiresBrand": true,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": true,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record7": {
+        "code": "CHARGER",
+        "categoryCode": "CABLE_CHARGER",
+        "name": {
+            "en": "Charger"
+        },
+        "requiresBrand": false,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record8": {
+        "code": "CABLE",
+        "categoryCode": "CABLE_CHARGER",
+        "name": {
+            "en": "Cable"
+        },
+        "requiresBrand": false,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record9": {
+        "code": "EARPHONES",
+        "categoryCode": "CABLE_CHARGER",
+        "name": {
+            "en": "Earphones"
+        },
+        "requiresBrand": false,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record10": {
+        "code": "POWER_BANK_DEVICE",
+        "categoryCode": "POWER_BANK",
+        "name": {
+            "en": "Power Bank Device"
+        },
+        "requiresBrand": false,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_BATTERY_PHOTO",
+        "impactProfileCode": "EWASTE_BATTERY_COUNT",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record11": {
+        "code": "LOOSE_LITHIUM_BATTERY",
+        "categoryCode": "LITHIUM_BATTERY",
+        "name": {
+            "en": "Loose Lithium Battery"
+        },
+        "requiresBrand": false,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN",
+            "RECYCLABLE"
+        ],
+        "evidencePolicyCode": "EWASTE_BATTERY_PHOTO",
+        "impactProfileCode": "EWASTE_BATTERY_COUNT",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record12": {
+        "code": "SMALL_HOME_APPLIANCE",
+        "categoryCode": "SMALL_APPLIANCE",
+        "name": {
+            "en": "Small Home Appliance"
+        },
+        "requiresBrand": false,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": true,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record13": {
+        "code": "UNKNOWN_ELECTRONIC_ITEM",
+        "categoryCode": "MIXED_ELECTRONICS",
+        "name": {
+            "en": "Unknown Electronic Item"
+        },
+        "requiresBrand": false,
+        "requiresModel": false,
+        "requiresSerial": false,
+        "requiresWeight": false,
+        "requiresQuantity": true,
+        "allowedConditionGrades": [
+            "WORKING",
+            "REUSABLE",
+            "REPAIRABLE",
+            "PARTS_ONLY",
+            "RECYCLABLE",
+            "DAMAGED",
+            "HAZARDOUS",
+            "UNKNOWN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    }
 };

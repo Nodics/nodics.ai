@@ -18,3 +18,9 @@ module.exports = { paymentCore: {
 } };
 module.exports.paymentCore.paymentTransaction.backoffice = { operations: ['search', 'read'], description: 'Payment transaction evidence; provider operations remain Payment-owned.' };
 module.exports.paymentCore.paymentReconciliation.backoffice = { operations: ['search', 'read'], description: 'Provider reconciliation evidence.' };
+for (const schemaName of ['paymentTransaction', 'paymentTransactionEntry']) {
+    module.exports.paymentCore[schemaName].definition.enterpriseCode = {
+        type: 'string', required: false,
+        description: 'Retains the original merchant enterprise supplied by the Payment operation; missing historical scope is not inferred on replay.'
+    };
+}

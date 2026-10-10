@@ -36,6 +36,38 @@ No new endpoint, acceptance installer or runtime service dispatcher is introduce
 facade, release discovery and Process planner with isolated generated read ports;
 it does not claim live HTTP authorization or installation acceptance.
 
+## Custom contribution payloads
+
+`await DefaultDataReleaseService.readContributionPayload(contribution,
+installerCode, payloadName)` returns fresh detached JSON for one explicitly
+declared payload in a custom DATA_RELEASE. The owning installer supplies fixed
+installer and `.json` basename arguments. HTTP request paths and file lists
+never establish authority. The contribution must exactly match the currently
+discovered release code, module, section, type, source root, version, checksum,
+installer, destination, environment scope, lifecycle, selection policy and owning
+domain. Existing discovery selectors,
+type policy, lifecycle validation and destination APIs remain authoritative.
+
+The reader checks canonical owner/data/source containment before discovery,
+rejects symlinks, nonregular files, traversal, missing declarations and ambiguous
+payload basenames, then rechecks selected file membership, manifest bytes and every
+declared file's aggregate SHA-256 checksum before JSON parsing. Parser and
+filesystem failures return bounded `ERR_IMP_00003` text without paths or payload
+fragments. The JSON payload is never required as executable code. No importer,
+receipt or registry is created. Owner services retain instruction limits and all
+business validation.
+
+`data.dataReleases.maximumContributionPayloadBytes` defaults to 1048576 bytes
+per selected file, including metadata; `maximumContributionBytes` defaults to
+8388608 bytes for the selected declared files plus their identity manifest.
+Unrelated source-root files and assets are not snapshotted or charged to either
+limit. Later layers may change these positive integer bounds. File count uses
+the existing `maximumFilesPerRelease`; selected paths have bounded depth.
+Independent partner coverage lives in `test/dataReleaseContributionPayload.test.js`,
+including a 200 KB payload, forged metadata, changed non-payload bytes, symlinks,
+drift, malformed JSON and tightened/extended limits. These are offline source
+tests, not live import or provider acceptance.
+
 ## Strict installed migration evidence
 
 The [installed migration journal contract](installed-migration-journal.md)
@@ -176,6 +208,24 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   duplicate fingerprints so update releases remain distinct and retry-safe.
 - Copy local releases into server-owned staging before local import because
   that lifecycle moves files.
+- Place declared headers directly under the selected `headers` directory with
+  a `Header` or `Headers` filename suffix before the extension. The existing
+  local initializer is nonrecursive for headers. Staging rejects nested or
+  misnamed header entries and compositions with no discoverable header before
+  dispatch, so ignored files cannot yield a misleading completion receipt.
+- Preserve the enclosing `data/<release>` convention in staging using the
+  run-local `input/data/content-pack` root. Header finalization must resolve
+  relative Media asset pointers there, not from finalized output records or
+  source-controlled module directories.
+- Stage only manifest-declared files inside the selected content root, including
+  binary Media assets. Recheck checksums before dispatch and clean up incomplete
+  staging on failure. Reject empty maps, sibling paths and symlink escapes; never
+  copy the whole source folder as execution authority.
+- Documentation uses a separately selectable `data/docs-v001` CONTENT_PACK.
+  Conventional Init/Core/Sample fallback discovery excludes roots represented
+  by content-pack sections even when no retained-root metadata is present.
+  Documentation is not a fourth generic import data type and references never
+  authorize implicit installation.
 - Treat committed content-pack data and its manifest as the distribution
   artifact. Consumer builds, `.work` copies, and caller-selected filesystem
   paths are outside the governed installation contract.
@@ -351,6 +401,22 @@ it does not suppress import errors, credential guards or installation receipts.
 See [governance defaults and selected owner templates](inherited-governance.md).
 
 ## Content-pack defaults and manifest paths
+
+`CONTENT_PACK.includes` explicitly composes other content-pack sections through
+`{manifestPack, source}` descriptors using the existing source resolver. Included
+sources are never inferred from business releases or module activation. Each
+source retains identity, contract, containment and byte-hash validation. Cycles,
+missing sections, conflicting staged files and compositions beyond 256 sources
+fail before dispatch. The effective checksum binds local bytes and included pack
+identities, versions and checksums. Staging visits a source once and copies only
+declared files; it rechecks bytes before the existing local importer runs.
+
+Module documentation can explicitly include a shared foundation without importing
+other capability articles. A full library explicitly includes the desired module
+packs. Neither selection imports adjacent Init/Core/Sample data. Publication,
+tenant authorization and import-history ownership remain unchanged. A framework
+repository source may name the package owning the Foundation directory's parent;
+it remains a bounded configured repository, not an arbitrary filesystem root.
 
 Inherit nImport defaults and derive content paths from the selected manifest. Preserve per-pack overrides, disabled import gates and validation. See [the detailed contract](inherited-governance.md#content-pack-defaults-and-manifest-paths).
 

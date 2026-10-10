@@ -20,6 +20,14 @@ This module owns generic import mechanics. Functional modules own their data mea
 
 ## Developer Notes
 
+- Custom owner installers read fixed JSON payloads through
+  `DefaultDataReleaseService.readContributionPayload(contribution, installerCode, payloadName)`.
+  It requalifies the exact current release and destination, rejects symlinks and
+  ambiguous basenames, and checks all declared bytes before returning detached JSON.
+  Layered limits default to 1 MiB per selected file and 8 MiB per contribution;
+  unrelated source-root assets are excluded. See the
+  [payload contract](llm/contracts/import-release-contracts.md#custom-contribution-payloads).
+
 - Single-record `update` headers preserve the generated owner's `model` contract;
   ambiguous batches reject before mutation. See the
   [dispatch contract](llm/contracts/README.md#generated-update-dispatch).
@@ -140,8 +148,7 @@ owning modules and configuration layers.
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.foundation/data-import-export-migration.md`
-- `nodics.docs/docs/pages/nodics.wcms/media-management.md`
+- `nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js`
 - `nodics.docs/docs/pages/applications/tee-deap-solution-use-cases.md`
 
 ## Verification
@@ -191,6 +198,20 @@ Own release safeguards and inert initialization profile templates. Deployment se
 
 Content-pack defaults belong to `data.contentPacks.defaults` in this capability. Selected packs inherit source conventions, update policy and complete presentation fields; partner contributions override only intentional differences. Resolve omitted content paths from the selected manifest section, preserving explicit path overrides and all import authorization/checksum/staging guards. See `llm/contracts/README.md#content-pack-defaults-and-manifest-paths`.
 
+Content-pack staging retains a server-owned `input/data/content-pack` release root.
+Declared headers must be direct `headers/*Header.js` or `*Headers.js` files.
+Nested headers and headerless selections fail before dispatch, not after a
+zero-work import is recorded as complete.
+Finalized Media headers resolve their relative asset pointers from that root,
+including composed packs; source-controlled assets are never moved by import.
+
+Standard release discovery collects exact declared paths before grouping file
+basenames, so independently selected sibling sections cannot hide one another.
+Zero-work runs do not qualify installation. Historical false-current standard
+releases have a Local-only, exact-zero-write recovery through the existing
+explicit `forceCurrent` operation and fenced receipt claim; ordinary immutable
+replays and custom installer replays remain prohibited. See the local contract.
+
 Sample releases are available to authorized manual operators by default, with optional deployment restriction. Only Init can auto-run at startup. Environment scope reads the effective `environment.class` projected by nConfig from the selected environment module metadata; never author it in environment properties or derive it from the selected environment name or another capability policy. Permissions, roles, tenant isolation, release checksums and durable receipts remain mandatory.
 
 Explicit enterprise placement belongs in a checksummed developer release header,
@@ -198,3 +219,8 @@ not imported rows or operator claims. nImport delegates fresh validation through
 `data.dataReleases.targetValidators` and exposes only transient exact-request
 metadata to the owning generated operation. Read the
 [placement contract](llm/contracts/README.md#explicit-enterprise-placement).
+
+Governed release discovery collects exact declared paths before grouping files by
+name. Separate manifest sections can reuse header or record basenames without
+discarding one another or loading unselected siblings. A `NO_DATA` run or an
+explicit zero-success summary cannot produce a `CURRENT` installation receipt.

@@ -1,5 +1,16 @@
 # Workflow AI Contracts
 
+## Publication Definition Bootstrap
+
+When the CMS approval definition is missing, select only
+`cms:cmsPublicationApproval` from the existing init release catalogue, require one
+versioned match, and pass its observed version as `expectedReleases` to nImport.
+Do not pin a historical version in Process, duplicate CMS definition data, or
+bypass immutable-release validation. A catalogue/execution drift rejects the start;
+the existing publication owner can request approval again after inspection.
+Already installed definitions and read-only diagnostics never invoke installation.
+See `test/processPublicationApprovalService.test.js`.
+
 ## Trigger Command Receipts
 
 `DefaultProcessTriggerCommandReceiptService` wraps only create, update, archive
@@ -21,7 +32,7 @@ fresh persisted state before success/audit. A failed envelope, zero match,
 foreign readback or duplicate creation cannot become a successful receipt.
 Scheduling remains in Cron. Executing an active trigger delegates to the
 existing Workflow start authority; start acknowledgement is not downstream
-business completion. See the [Copilot trigger guide](../../../../../nodics.docs/docs/pages/nodics.copilot/process-trigger-actions.md)
+business completion. See the [Copilot trigger guide](../../data/docs-v001/records/documentation/workflowDocumentationComponentData.js)
 and the composed/native-live trigger tests in copilotWorkbench.
 
 ## Human Task Command Receipts
@@ -50,7 +61,7 @@ Assignment now matches inspected status, instance, node and prior assignee;
 zero-match, failed/unacknowledged persistence and readback drift cannot produce
 success or assignment audit. Transition readback uses generated pageSize/pageNumber,
 not raw limit. Run task transition tests plus Copilot Process action/native runtime
-tests. See the [full usage and customization guide](../../../../../nodics.docs/docs/pages/nodics.copilot/process-task-actions.md).
+tests. See the [full usage and customization guide](../../data/docs-v001/records/documentation/workflowDocumentationComponentData.js).
 
 ## Inspection Pagination
 

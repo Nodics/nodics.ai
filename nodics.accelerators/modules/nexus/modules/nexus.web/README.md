@@ -28,12 +28,13 @@ accelerator. They are not a static-site authoring model and are not the
 standard way partners should maintain live content. See
 `LIFECYCLE.md` for the executable classification matrix.
 
-Application-specific documentation source belongs under `docs/`. When Nexus
-documentation is introduced, its generator must emit only governed WCMS Staged
-records under this module's `data/` tree and declare them in an immutable,
-destination-qualified manifest section. Customer-wide setup and runtime guidance
-remains in the customer repository's `docs/`; executable renderer code remains in
-the independent `nodics.nexus` frontend.
+Application-specific documentation is module-owned CMS data, maintained directly
+under this module's governed `data/` release and declared in an immutable,
+destination-qualified manifest section. Images are release assets and Media
+records referenced by `mediaCode`; no separate `docs/` authoring tree or prose
+generator is required. Customer-wide setup and runtime guidance remains in the
+customer repository's CMS data; executable renderer code remains in the
+independent `nodics.nexus` frontend.
 
 Verify the release contract with:
 

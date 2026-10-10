@@ -25,6 +25,25 @@ No additional identity map, copied capability service or import path is required
 - Model content through CMS records and content packs.
 - Keep page designer metadata backend-owned and renderable by Axis.
 - Use media references instead of embedding physical storage paths.
+
+Documentation pack import includes its declared records and assets in the same
+owner import operation. Publication remains governed separately: one explicit
+Axis action can complete the existing CMS approval, inspect exact manifest-pinned
+Media dependencies, initiate missing assets through native employee-authorized
+Media APIs, and complete their existing Process approvals. CMS readiness stays
+pending until every exact asset is Online. A denial stops coordination; completed
+owner effects remain audited and an explicit resume skips qualified assets. This
+is not a shared approval grant or a cross-runtime atomic transaction.
+Retained readiness uses bounded Media pointer batches around exact metadata and
+byte verification, using one read-only exact integrity batch on the default
+Media owner. It rereads every active pointer and fails closed on drift;
+there is no server-side READY cache or relaxed rate-limit policy.
+
+Documentation navigation search is projected from reachable canonical articles
+in the same frozen publication scope, not historical shared navigation text.
+Updating this projection requires normal CMS revalidation and Process approval;
+it never rewrites an existing manifest or reimports records or assets. See the
+[navigation projection contract](llm/contracts/publication-manifest-contract.md#documentation-navigation-projection).
 - Preserve publication, localization, route resolution, and renderer mapping contracts.
 
 Static employee UI composition may opt into project-shared Online delivery using
@@ -36,9 +55,9 @@ reads stay tenant-local. See [shared employee composition](llm/contracts/content
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.wcms/overview.md`
-- `nodics.docs/docs/pages/nodics.wcms/publishing-lifecycle.md`
-- `nodics.docs/docs/pages/nodics.wcms/media-management.md`
+- `nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js`
+- `nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js`
+- `nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js`
 
 ## Verification
 
@@ -76,3 +95,8 @@ Invoke it through `nodics project:run acceptance:guided-initialization --execute
 --approve-publications` only when normal installation/publication is intended.
 Customer projects provide their profile and delivery inputs; assertions and normal
 approval boundaries remain in CMS. See [the acceptance contract](llm/contracts/README.md#canonical-guided-acceptance).
+
+Publication collects distinct latest dependency identities through bounded reads,
+excluding already resolved codes so retained version history cannot hide routes
+or assets. It preserves source query and caller authority and rejects truncation
+or non-advancing provider evidence. See `test/cmsPublicationHistoryCapacity.test.js`.

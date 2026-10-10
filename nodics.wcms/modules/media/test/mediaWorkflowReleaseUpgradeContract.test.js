@@ -19,21 +19,21 @@ const fixture = require('../../../../nodics.foundation/modules/nData/nImport/imp
 const installer = require('../../../../nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionContributionService');
 const validator = require('../../../../nodics.process/modules/workflow/src/service/designer/defaultProcessGraphValidationService');
 const manifest = require('../data/manifest.json');
-const historicalFile = '../data/init-v002/records/process/mediaPublicationWorkflowDefinitionData.js';
+const historicalFile = './fixtures/compatibility/mediaPublicationBeforeApproval.js';
 const historical = require(historicalFile);
-const currentFile = '../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData.js';
+const currentFile = '../data/init-v001/records/process/mediaPublicationWorkflowDefinitionData.js';
 const graph = require(currentFile);
 const runtime = require('../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
 
 /** Provides only an error constructor; no runtime is initialized. */
 function errors() { global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } }; }
 
-test('new workflow uses a forward directory and explicit release selection without replaying installed historical releases', async () => {
+test('consolidated workflow uses explicit release selection without replaying installed historical releases', async () => {
     errors();
     const owner = { name: 'media', path: path.resolve(__dirname, '..') };
     const f = fixture({ modules: { media: owner }, runtimeRole: 'PROCESS' });
     const release = manifest.sections.mediaPublicationWorkflow;
-    assert.equal(release.sourceRoot, 'init-v003'); assert.equal(release.version, '1.0.1');
+    assert.equal(release.sourceRoot, 'init-v001'); assert.equal(release.version, '0.0.1');
     assert.deepEqual(Object.keys(release.files), [currentFile.slice('../data/'.length)]);
     assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname, historicalFile))).digest('hex'),
         '44355063df521b219094703cee293b65df954352e5ced7b77b8b6153acbb5fe9');
@@ -43,8 +43,8 @@ test('new workflow uses a forward directory and explicit release selection witho
     assert.equal(release.selectionPolicy, 'EXPLICIT');
     for (const name of ['mediaReplicationRetryJob', 'mediaCleanupRetentionJob']) {
         assert.equal(manifest.sections[name].sourceRoot, 'init-v001');
-        assert.equal(manifest.sections[name].version, '0.0.0');
-        f.installations.push({ code: 'installed-' + name, releaseCode: 'media:' + name, version: '0.0.0', status: 'INSTALLED' });
+        assert.equal(manifest.sections[name].version, '0.0.1');
+        f.installations.push({ code: 'installed-' + name, releaseCode: 'media:' + name, version: '0.0.1', status: 'INSTALLED' });
     }
     const before = structuredClone(f.installations);
     await assert.rejects(f.service.preparePlan({ releaseRequest: { dataType: 'init', modules: ['media'] } }), /explicit releaseCode/);
@@ -81,6 +81,7 @@ test('installed earlier Media workflow advances through Process lifecycle, repla
         }
     };
     const contribution = { ...manifest.sections.mediaPublicationWorkflow, moduleName: 'media',
+        version: '1.0.1',
         releaseCode: 'media:mediaPublicationWorkflow', checksum: 'b'.repeat(64),
         declaredFiles: Object.keys(manifest.sections.mediaPublicationWorkflow.files) };
     const before = structuredClone(history[0]);

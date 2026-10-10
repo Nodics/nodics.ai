@@ -68,7 +68,7 @@ function setup(role = "WCMS_ONLINE") {
   return { properties, effects: () => effects };
 }
 
-test("actual Online initializer excludes media:init-v002 fallback through effective empty role allowance", async () => {
+test("actual Online initializer excludes Media Process releases through effective empty role allowance", async () => {
   const fixture = setup();
   assert.deepEqual(
     fixture.properties.data.dataReleases.allowedDestinationRoles,
@@ -76,14 +76,14 @@ test("actual Online initializer excludes media:init-v002 fallback through effect
   );
   const discovered = service.discoverReleases("init");
   const candidate = discovered.find(
-    (release) => release.releaseCode === "media:init-v002",
+    (release) => release.releaseCode === "media:mediaPublicationWorkflow",
   );
   assert.ok(
     candidate,
-    "Retained conventional Media source must exercise real discovery",
+    "Current Media workflow must exercise real discovery",
   );
-  assert.equal(candidate.destinationRole, "WCMS_ONLINE");
-  assert.equal(candidate.sourceRoot, "init-v002");
+  assert.equal(candidate.destinationRole, "PROCESS");
+  assert.equal(candidate.sourceRoot, "init-v001");
   assert.equal(candidate.invalidManifest, undefined);
   assert.equal(service.isDestinationCompatible(candidate), false);
   const result = await service.installStartupReleases({

@@ -27,7 +27,8 @@ const providers = [
     '../modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentCoreBackofficeCapabilityService'
 ].map(file => require(file).getCapability());
 assert(providers.every(capability => backofficeContract.validateBackofficeMetadata(capability)), 'Every concrete Commerce provider must satisfy the live BackOffice contract');
-const navigation = providers.flatMap(capability => capability.navigation); assert.equal(navigation.length, 76);
+assert.deepEqual(providers.map(capability => capability.navigation.length), [1, 13, 1, 1, 10, 1, 17, 12, 21]);
+const navigation = providers.flatMap(capability => capability.navigation); assert.equal(navigation.length, 77);
 const ids = new Set(navigation.map(item => item.id)); assert.equal(ids.size, navigation.length);
 navigation.forEach(item => {
     assert(item.requiredPermissions.length > 0); assert(item.workbenchTarget.moduleName); assert(item.workbenchTarget.schemaName);
@@ -41,6 +42,12 @@ const reversal = navigation.filter(item => ['order-cancellations', 'order-return
 assert.equal(reversal.length, 3);
 assert(reversal.every(item => item.lifecycleActions.every(action => action.ownerModule === 'order')));
 assert.deepEqual(reversal.map(item => item.workbenchPresentation.fixedFilters[0].value), ['CANCELLATION', 'RETURN', 'REFUND']);
+const disputes = navigation.find(item => item.id === 'order-disputes');
+assert.equal(disputes.route, '/commerce/checkout/disputes');
+assert.deepEqual(disputes.requiredPermissions, ['commerce.dispute.review']);
+assert.deepEqual(disputes.workbenchTarget, { moduleName: 'order', schemaName: 'orderLifecycleRequest' });
+assert.equal(disputes.featureState, 'ACTIVE');
+assert.deepEqual(disputes.workbenchPresentation.fixedFilters.map(filter => [filter.field, filter.value]), [['requestType', 'DISPUTE']]);
 assert(navigation.find(item => item.id === 'payment-reconciliation').workbenchTarget.moduleName === 'paymentCore');
 assert(navigation.find(item => item.id === 'return-receipts').workbenchTarget.moduleName === 'fulfillmentCore');
 const localizedProductWorkspaces = navigation.filter(item => ['product-localizations', 'category-localizations',

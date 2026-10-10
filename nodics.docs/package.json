@@ -34,9 +34,11 @@
     "test": "node --test test/*.test.mjs && npm run docs:check && npm run validate && npm run audit:source-coverage:check && npm run audit:hardening"
   },
   "files": [
-    "docs",
-    "data/core",
-    "manifest",
+    "data",
+    "scripts",
+    "llm",
+    "README.md",
+    "AGENTS.md",
     "test"
   ]
 }

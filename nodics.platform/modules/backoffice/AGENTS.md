@@ -1,5 +1,17 @@
 # backoffice Agent Contract
 
+Application intents follow [governed setup](llm/contracts/governed-application-setup.md).
+Keep original human authorization and gate operational owners behind every required publication.
+Foreign aggregate proof remains unavailable under ordinary human setup authority. Follow
+the [aggregate read authority boundary](llm/contracts/governed-application-setup.md#aggregate-read-authority-boundary)
+for the separately reviewed disabled-by-default service observer; runtime
+authentication alone grants no foreign proof. Platform alone checks its complete
+effective profile. Targets validate confined approved bytes and runtime-owned
+stage identities, never a duplicated Platform profile or readiness store.
+Narrow Commerce setup groups may use initiate only for an explicit signed-operator
+AFTER stage. Preserve the service guard before owner reads and the existing
+granular route/domain permissions; do not grant normal CMS bootstrap by group admission.
+
 ## Inheritance
 
 - Follow the root Nodics contract: `../../../AGENTS.md`.
@@ -209,6 +221,13 @@ principal and bearer before execution; do not substitute the group-free runtime
 credential or add administrator groups to it. Status/preflight retains the scoped
 runtime credential. nImport still enforces the operator's import permission, tenant,
 release governance and schema access at the destination.
+
+Application data-release transport selects trusted
+`backofficeApplicationInitialization.dataReleaseTimeoutMs` at dispatch, default
+120000 ms, with integer bounds 1000..600000. Invalid settings reject before
+target resolution or transport. Request bodies, groups and application profiles
+cannot select this timeout; keep it outside sealed profile identities and retain
+single-attempt imports and all existing human/operator admission.
 
 BackOffice owns the complete `acceptance:capability-registry` suite, contributed
 as a canonical tooling command. Customer repositories invoke it with `--execute`

@@ -1,0 +1,1034 @@
+{
+  "date": "2026-10-07",
+  "repository": "nodics.ai",
+  "scope": "SOURCE_EDITORIAL_REVIEW",
+  "result": "PASS",
+  "authority": "Existing owner-qualified docs-v001 canonical CMS article records; no Markdown authoring copy",
+  "workingMode": "AUTHORIZED_MAINTAINER_EDITORIAL",
+  "instructionReview": {
+    "root": [
+      "AGENTS.md",
+      "README.md",
+      ".github/CONTRIBUTING.md"
+    ],
+    "ownerChains": [
+      "nodics.accelerators/modules/electronics/modules/electronicsProduct",
+      "nodics.accelerators/modules/telco/modules/telcoSubscription",
+      "nodics.copilot/modules/copilotProviders/modules/copilotProvider",
+      "nodics.copilot/modules/copilotEvaluation",
+      "nodics.rulesEngine/modules/rulesEvaluation",
+      "nodics.waste/modules/wasteMaterial",
+      "nodics.foundation/modules/nCache/redisCache"
+    ],
+    "description": "Applicable ancestor/owner AGENTS and README, customization/documentation contracts and cited owner contracts were read. Source tests were inspected as source, never executed."
+  },
+  "staging": {
+    "authoringLifecycleState": "STAGED",
+    "owningRouteActive": true,
+    "processApproved": false,
+    "liveApproved": false,
+    "publicationPerformed": false,
+    "onlineVersionWritten": false,
+    "reviewerOrApproverIdentityWritten": false,
+    "receiptWritten": false,
+    "existingRouteDeliveryStatePreserved": true
+  },
+  "validation": {
+    "changedDocumentationFiles": 42,
+    "stagedLifecycleRecords": 63,
+    "activeOwningRoutes": 7,
+    "canonicalHeadingsAndSearch": "PASS",
+    "existingAnchorsPreserved": true,
+    "protectedFieldsUnchanged": true,
+    "changedFileReadback": "All 42 documentation files match intended text and parse as static JSON module exports without evaluation.",
+    "sourceEvidence": "71 line-qualified references across 55 unique current source/contract/test files; paths are owner-relative.",
+    "manualEditMethod": "apply_patch",
+    "testsExecuted": false,
+    "runtimeCommandsExecuted": false,
+    "importExecuted": false,
+    "processApprovalPerformed": false,
+    "publicationPerformed": false,
+    "browserAcceptancePerformed": false,
+    "packValidationExecuted": false,
+    "scopeLimit": "Only the seven requested documentation owners and this evidence file were edited. Existing dirty/concurrent work was preserved.",
+    "integrityLimit": "Versions, checksums, word counts, release/manifests, central navigation, audit and runtime/test source were deliberately not changed. Counts/checksums can therefore be stale after editorial changes; this evidence is not integration acceptance."
+  },
+  "integrationHandoff": [
+    "Parent must refresh body word counts and integrity metadata, declared-file hashes and composed manifests/releases before normal import/publication.",
+    "Parent must run the normal documentation package, source-coverage, reference and integration checks; no runtime or package validation was executed in this editorial task.",
+    "Parent must perform normal Process review/approval and publication, then verify installed/live/browser behavior separately. STAGED plus an active route only marks editorial readiness and selection eligibility.",
+    "Existing Route deliveryState ONLINE was preserved, not newly assigned; no onlineVersion, approval identities or receipts were created."
+  ],
+  "changedFiles": [
+    "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationComponentData.js",
+    "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationNodeData.js",
+    "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationPageMetadataData.js",
+    "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationSearchMetadataData.js",
+    "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationPublicationStateData.js",
+    "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationRouteData.js",
+    "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationComponentData.js",
+    "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationNodeData.js",
+    "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationPageMetadataData.js",
+    "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationSearchMetadataData.js",
+    "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationPublicationStateData.js",
+    "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationRouteData.js",
+    "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationComponentData.js",
+    "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationNodeData.js",
+    "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationPageMetadataData.js",
+    "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationSearchMetadataData.js",
+    "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationPublicationStateData.js",
+    "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationRouteData.js",
+    "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationComponentData.js",
+    "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationNodeData.js",
+    "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationPageMetadataData.js",
+    "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationSearchMetadataData.js",
+    "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationPublicationStateData.js",
+    "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationRouteData.js",
+    "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationComponentData.js",
+    "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationNodeData.js",
+    "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationPageMetadataData.js",
+    "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationSearchMetadataData.js",
+    "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationPublicationStateData.js",
+    "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationRouteData.js",
+    "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationComponentData.js",
+    "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationNodeData.js",
+    "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationPageMetadataData.js",
+    "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationSearchMetadataData.js",
+    "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationPublicationStateData.js",
+    "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationRouteData.js",
+    "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationComponentData.js",
+    "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationNodeData.js",
+    "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationPageMetadataData.js",
+    "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationSearchMetadataData.js",
+    "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationPublicationStateData.js",
+    "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationRouteData.js",
+    "nodics.docs/test/evidence/draft-editorial-review-a-2026-10-07.json"
+  ],
+  "reviews": [
+    {
+      "date": "2026-10-07",
+      "documentId": "accelerators.agora-electronics-product-semantics",
+      "owner": "nodics.accelerators/modules/electronics/modules/electronicsProduct",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "result": "PASS",
+      "findings": [
+        {
+          "id": "electronicsProduct-1",
+          "status": "CORRECTED",
+          "detail": "Corrected helper-versus-schema validation claims, falsy compatibility values and identifier error shape; documented first-active enrichment, missing-storage behavior and pass-through specification privacy."
+        },
+        {
+          "id": "electronicsProduct-2",
+          "status": "CORRECTED",
+          "detail": "Expanded the existing customization section with a real comparison, project file locations, schema/config coupling and the unused projection flag."
+        },
+        {
+          "id": "electronicsProduct-3",
+          "status": "CORRECTED",
+          "detail": "Aligned PageMetadata diagram/table inventories with actual canonical article blocks; removed stale visual descriptors."
+        }
+      ],
+      "changedFiles": [
+        "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationComponentData.js",
+        "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationNodeData.js",
+        "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationPageMetadataData.js",
+        "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationSearchMetadataData.js",
+        "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationPublicationStateData.js",
+        "nodics.accelerators/modules/electronics/modules/electronicsProduct/data/docs-v001/records/documentation/electronicsProductDocumentationRouteData.js"
+      ],
+      "sourceEvidencePathBase": "nodics.accelerators/modules/electronics/modules/electronicsProduct",
+      "sourceEvidence": [
+        {
+          "path": "src/service/defaultElectronicsProductValidationService.js",
+          "lineStart": 26,
+          "lineEnd": 68,
+          "observations": "Truthy identity/Object.keys checks; candidate falsy fallback; warranty duration/coverage check and identifier valid/errors behavior."
+        },
+        {
+          "path": "src/service/defaultElectronicsProductProjectionService.js",
+          "lineStart": 28,
+          "lineEnd": 33,
+          "observations": "Hardcoded ACTIVE gate, explicit projection fields and unvalidated pass-through specifications."
+        },
+        {
+          "path": "src/service/defaultElectronicsProductSearchEnrichmentService.js",
+          "lineStart": 34,
+          "lineEnd": 67,
+          "observations": "Trusted tenant query, generated-service/model fallback, first active profile and referenced active warranty."
+        },
+        {
+          "path": "config/properties.js",
+          "lineStart": 33,
+          "lineEnd": 39,
+          "observations": "Identifier/unit defaults, declared but unread projection flag and Product search contributor."
+        },
+        {
+          "path": "src/schemas/schemas.js",
+          "lineStart": 19,
+          "lineEnd": 37,
+          "observations": "Object/array/int schema requirements, warranty enum and Product references."
+        },
+        {
+          "path": "test/electronicsProductContract.test.js",
+          "lineStart": 17,
+          "lineEnd": 25,
+          "observations": "Inspected existing specification/compatibility/warranty/identifier and safe-projection assertions; not executed."
+        },
+        {
+          "path": "llm/contracts/README.md",
+          "lineStart": 1,
+          "lineEnd": 3,
+          "observations": "Local contract entry inspected; detailed behavior comes from implementing source."
+        }
+      ],
+      "reviewedSectionAnchors": [
+        "accelerators-agora-electronics-product-semantics",
+        "acceleratorsAgoraElectronicsProductSemantics-1-business-result-and-beginner-model",
+        "acceleratorsAgoraElectronicsProductSemantics-2-ownership-and-source-map",
+        "acceleratorsAgoraElectronicsProductSemantics-3-specification-and-compatibility-decisions",
+        "acceleratorsAgoraElectronicsProductSemantics-4-warranty-and-device-identity-configuration",
+        "acceleratorsAgoraElectronicsProductSemantics-5-projection-and-publication-flow",
+        "acceleratorsAgoraElectronicsProductSemantics-6-partner-customization-and-operational-verification",
+        "acceleratorsAgoraElectronicsProductSemantics-7-common-mistakes",
+        "acceleratorsAgoraElectronicsProductSemantics-8-verification"
+      ],
+      "staging": {
+        "authoringLifecycleState": "STAGED",
+        "owningRouteActive": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publicationPerformed": false,
+        "onlineVersionWritten": false,
+        "reviewerOrApproverIdentityWritten": false,
+        "receiptWritten": false,
+        "existingRouteDeliveryStatePreserved": true
+      },
+      "verification": {
+        "sourceAndContractInspection": "PERFORMED",
+        "canonicalRecordStaticParse": "PASS",
+        "headingsSearchAndVisualInventory": "PASS",
+        "originalSectionAnchors": "PRESERVED",
+        "runtimeExecution": "NOT_PERFORMED",
+        "testExecution": "NOT_PERFORMED",
+        "installedImport": "NOT_PERFORMED",
+        "browserAcceptance": "NOT_PERFORMED"
+      },
+      "blockers": []
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "accelerators.agora-telco-service-journey",
+      "owner": "nodics.accelerators/modules/telco/modules/telcoSubscription",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "result": "PASS",
+      "findings": [
+        {
+          "id": "telcoSubscription-1",
+          "status": "CORRECTED",
+          "detail": "Qualified inherited-key transition failures, truthy but unverified portability evidence and unvalidated provisioning action."
+        },
+        {
+          "id": "telcoSubscription-2",
+          "status": "CORRECTED",
+          "detail": "Added project-owned override/data locations, real denied/helper examples, partial search enrichment diagnosis and a recovery matrix; distinguished schema/CRUD presence from transition enforcement."
+        },
+        {
+          "id": "telcoSubscription-3",
+          "status": "CORRECTED",
+          "detail": "Aligned PageMetadata diagram/table inventories with actual canonical article blocks; removed stale visual descriptors."
+        }
+      ],
+      "changedFiles": [
+        "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationComponentData.js",
+        "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationNodeData.js",
+        "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationPageMetadataData.js",
+        "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationSearchMetadataData.js",
+        "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationPublicationStateData.js",
+        "nodics.accelerators/modules/telco/modules/telcoSubscription/data/docs-v001/records/documentation/telcoSubscriptionDocumentationRouteData.js"
+      ],
+      "sourceEvidencePathBase": "nodics.accelerators/modules/telco/modules/telcoSubscription",
+      "sourceEvidence": [
+        {
+          "path": "src/service/defaultTelcoSubscriptionService.js",
+          "lineStart": 13,
+          "lineEnd": 14,
+          "observations": "Fixed plain-object transition map, pure transition helper and truthy PORT_IN evidence check."
+        },
+        {
+          "path": "src/schemas/schemas.js",
+          "lineStart": 19,
+          "lineEnd": 27,
+          "observations": "Subscription and number-intent schema states, references, revision and evidence object."
+        },
+        {
+          "path": "config/properties.js",
+          "lineStart": 19,
+          "lineEnd": 33,
+          "observations": "Access/reset configuration; no transitions configuration."
+        },
+        {
+          "path": "../telcoCatalog/src/service/defaultTelcoCatalogValidationService.js",
+          "lineStart": 13,
+          "lineEnd": 14,
+          "observations": "At-least-one supported SIM, allowance membership, postpaid billing-cycle presence and actual error codes."
+        },
+        {
+          "path": "../telcoProvisioning/src/service/defaultTelcoProvisioningService.js",
+          "lineStart": 13,
+          "lineEnd": 14,
+          "observations": "Context rejection, supplied-history tenant/idempotency replay and unvalidated action; no persistence/transport."
+        },
+        {
+          "path": "../telcoCatalog/src/service/defaultTelcoProductSearchEnrichmentService.js",
+          "lineStart": 34,
+          "lineEnd": 76,
+          "observations": "First active plan, active referenced allowances, empty-reader behavior and explicit safe fields."
+        },
+        {
+          "path": "../../config/properties.js",
+          "lineStart": 19,
+          "lineEnd": 21,
+          "observations": "Composition properties provide no carrier activation implementation."
+        }
+      ],
+      "reviewedSectionAnchors": [
+        "accelerators-agora-telco-service-journey",
+        "acceleratorsAgoraTelcoServiceJourney-1-business-result-and-beginner-model",
+        "acceleratorsAgoraTelcoServiceJourney-2-module-hierarchy-and-canonical-references",
+        "acceleratorsAgoraTelcoServiceJourney-3-plan-and-allowance-validation",
+        "acceleratorsAgoraTelcoServiceJourney-4-number-intent-and-subscription-state-flow",
+        "acceleratorsAgoraTelcoServiceJourney-5-service-order-construction-and-retry-boundaries",
+        "acceleratorsAgoraTelcoServiceJourney-6-configuration-adoption-and-operations",
+        "telco-subscription-customize-and-extend-safely",
+        "acceleratorsAgoraTelcoServiceJourney-7-common-mistakes",
+        "acceleratorsAgoraTelcoServiceJourney-8-verification"
+      ],
+      "staging": {
+        "authoringLifecycleState": "STAGED",
+        "owningRouteActive": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publicationPerformed": false,
+        "onlineVersionWritten": false,
+        "reviewerOrApproverIdentityWritten": false,
+        "receiptWritten": false,
+        "existingRouteDeliveryStatePreserved": true
+      },
+      "verification": {
+        "sourceAndContractInspection": "PERFORMED",
+        "canonicalRecordStaticParse": "PASS",
+        "headingsSearchAndVisualInventory": "PASS",
+        "originalSectionAnchors": "PRESERVED",
+        "runtimeExecution": "NOT_PERFORMED",
+        "testExecution": "NOT_PERFORMED",
+        "installedImport": "NOT_PERFORMED",
+        "browserAcceptance": "NOT_PERFORMED"
+      },
+      "blockers": []
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "copilot.provider-usage-budgets",
+      "owner": "nodics.copilot/modules/copilotProviders/modules/copilotProvider",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "result": "PASS",
+      "findings": [
+        {
+          "id": "copilotProvider-1",
+          "status": "CORRECTED",
+          "detail": "Corrected nonexistent unknown-profile-key rejection and fixed the distinction between complete provider measurements, total-only ledger settlement and receipt capture."
+        },
+        {
+          "id": "copilotProvider-2",
+          "status": "CORRECTED",
+          "detail": "Expanded current-period grants, exact command conflicts and recovery, bounded reservation estimates, project profile example and adapter-specific transport limitations."
+        },
+        {
+          "id": "copilotProvider-3",
+          "status": "CORRECTED",
+          "detail": "Replaced generic audience guidance with capability-specific use cases and clarified editorial staging versus Process approval/publication."
+        },
+        {
+          "id": "copilotProvider-4",
+          "status": "CORRECTED",
+          "detail": "Aligned PageMetadata diagram/table inventories with actual canonical article blocks; removed stale visual descriptors."
+        }
+      ],
+      "changedFiles": [
+        "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationComponentData.js",
+        "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationNodeData.js",
+        "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationPageMetadataData.js",
+        "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationSearchMetadataData.js",
+        "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationPublicationStateData.js",
+        "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationRouteData.js"
+      ],
+      "sourceEvidencePathBase": "nodics.copilot/modules/copilotProviders/modules/copilotProvider",
+      "sourceEvidence": [
+        {
+          "path": "src/service/defaultCopilotProviderService.js",
+          "lineStart": 106,
+          "lineEnd": 241,
+          "observations": "Own-property profile selection; selected tuning checks, no general unknown-key rejection, capability/message/byte admission."
+        },
+        {
+          "path": "src/service/defaultCopilotProviderService.js",
+          "lineStart": 253,
+          "lineEnd": 452,
+          "observations": "Unknown measurement normalization; total derivation; output clamping; opt-in reservation, complete-receipt capture and dispatch-once standard/stream paths."
+        },
+        {
+          "path": "src/service/defaultCopilotUsageService.js",
+          "lineStart": 188,
+          "lineEnd": 226,
+          "observations": "Current-period overrides/defaultLimit under hard ceilings and explicit eligibility."
+        },
+        {
+          "path": "src/service/defaultCopilotUsageService.js",
+          "lineStart": 242,
+          "lineEnd": 335,
+          "observations": "Trusted scope, DAY/MONTH policy validation and configurable journal maximum through 5000."
+        },
+        {
+          "path": "src/service/defaultCopilotUsageService.js",
+          "lineStart": 411,
+          "lineEnd": 550,
+          "observations": "Private generated get/save/update persistence and exact-revision CAS; uncertain acknowledgement fails closed."
+        },
+        {
+          "path": "src/service/defaultCopilotUsageService.js",
+          "lineStart": 573,
+          "lineEnd": 710,
+          "observations": "Atomic multi-cap reserve; repeated-call/capacity errors; original-period total-only settlement and PENDING when total is missing."
+        },
+        {
+          "path": "src/service/defaultCopilotUsageService.js",
+          "lineStart": 802,
+          "lineEnd": 922,
+          "observations": "Personal/enterprise grants, authorized filtering, bounded 100/25 pagination and full matching aggregates."
+        },
+        {
+          "path": "src/service/defaultCopilotBudgetService.js",
+          "lineStart": 27,
+          "lineEnd": 43,
+          "observations": "Independent target-specific management grants."
+        },
+        {
+          "path": "src/service/defaultCopilotBudgetService.js",
+          "lineStart": 178,
+          "lineEnd": 328,
+          "observations": "Strict commands, policy/period/allocation revision rechecks, confirmation and journal audit."
+        },
+        {
+          "path": "src/service/defaultCopilotReconciliationService.js",
+          "lineStart": 27,
+          "lineEnd": 154,
+          "observations": "Private insert-only complete measurements, receipt scope/digest validation."
+        },
+        {
+          "path": "src/service/defaultCopilotReconciliationService.js",
+          "lineStart": 236,
+          "lineEnd": 362,
+          "observations": "Independent read/reconcile grants, strict fields without client expectedRevision, confirmed original-period CAS and exact-command recovery."
+        },
+        {
+          "path": "config/properties.js",
+          "lineStart": 15,
+          "lineEnd": 75,
+          "observations": "Disabled provider/accounting defaults, conversation profile, output ceiling and accounting bounds."
+        },
+        {
+          "path": "../ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js",
+          "lineStart": 14,
+          "lineEnd": 65,
+          "observations": "Configured-host policy and chat request mapping; local transport selection does not grant arbitrary remote access."
+        },
+        {
+          "path": "../ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js",
+          "lineStart": 249,
+          "lineEnd": 305,
+          "observations": "Bounded NDJSON accumulation and required final done=true."
+        },
+        {
+          "path": "../openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js",
+          "lineStart": 14,
+          "lineEnd": 99,
+          "observations": "Responses/images/schema/profile search mapping, status/refusal rejection, bounded source references and one-completion stream."
+        },
+        {
+          "path": "../claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js",
+          "lineStart": 14,
+          "lineEnd": 26,
+          "observations": "System/role mapping, tool_use normalization, no request.tools mapping; buffered response-size check and supplied cancellation."
+        },
+        {
+          "path": "../geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js",
+          "lineStart": 14,
+          "lineEnd": 26,
+          "observations": "System/role/generation mapping, first candidate/functionCall normalization, no request.tools mapping and one-completion stream."
+        },
+        {
+          "path": "llm/contracts/README.md",
+          "lineStart": 1,
+          "lineEnd": 81,
+          "observations": "Provider-neutral profile, usage, budget and reconciliation invariants; adapter AGENTS and local operational examples also inspected."
+        },
+        {
+          "path": "test/providerValidation.test.js",
+          "lineStart": 125,
+          "lineEnd": 205,
+          "observations": "Inspected rejected-profile/capability and usage assertions; not executed."
+        },
+        {
+          "path": "test/copilotBudgets.test.js",
+          "lineStart": 117,
+          "lineEnd": 224,
+          "observations": "Inspected recurring-default, explicit-zero, allocation/settlement and denied-grant assertions; not executed."
+        },
+        {
+          "path": "test/copilotReconciliation.test.js",
+          "lineStart": 148,
+          "lineEnd": 221,
+          "observations": "Inspected read-only repair, bounded-history and connection-permission assertions; not executed."
+        }
+      ],
+      "reviewedSectionAnchors": [
+        "copilot-provider-usage-budgets",
+        "copilotProviderUsageBudgets-1-provider-boundary-and-business-outcome",
+        "copilotProviderUsageBudgets-2-calendar-accounting-and-allocation",
+        "copilotProviderUsageBudgets-3-inspection-and-reconciliation",
+        "copilotProviderUsageBudgets-4-verification-and-failure-recovery",
+        "copilot-provider-customize-and-extend-safely",
+        "copilotProviderUsageBudgets-5-documentation-selection-assets-and-acceptance",
+        "copilot-provider-usage-budgets-common-mistakes",
+        "copilot-provider-adapter-contracts"
+      ],
+      "staging": {
+        "authoringLifecycleState": "STAGED",
+        "owningRouteActive": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publicationPerformed": false,
+        "onlineVersionWritten": false,
+        "reviewerOrApproverIdentityWritten": false,
+        "receiptWritten": false,
+        "existingRouteDeliveryStatePreserved": true
+      },
+      "verification": {
+        "sourceAndContractInspection": "PERFORMED",
+        "canonicalRecordStaticParse": "PASS",
+        "headingsSearchAndVisualInventory": "PASS",
+        "originalSectionAnchors": "PRESERVED",
+        "runtimeExecution": "NOT_PERFORMED",
+        "testExecution": "NOT_PERFORMED",
+        "installedImport": "NOT_PERFORMED",
+        "browserAcceptance": "NOT_PERFORMED"
+      },
+      "blockers": []
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "copilot.evaluation-release-gates",
+      "owner": "nodics.copilot/modules/copilotEvaluation",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "result": "PASS",
+      "findings": [
+        {
+          "id": "copilotEvaluation-1",
+          "status": "CORRECTED",
+          "detail": "Corrected minPassRate to releaseGate.minimumPassRate and explained explicit configuration injection."
+        },
+        {
+          "id": "copilotEvaluation-2",
+          "status": "CORRECTED",
+          "detail": "Documented unused requiredDimensions, permissive nonfinite/string inputs and malformed raw safety bypass; added a concrete default example, caller validation and release recovery."
+        },
+        {
+          "id": "copilotEvaluation-3",
+          "status": "CORRECTED",
+          "detail": "Replaced generic audience guidance with capability-specific use cases and clarified editorial staging versus Process approval/publication."
+        },
+        {
+          "id": "copilotEvaluation-4",
+          "status": "CORRECTED",
+          "detail": "Aligned PageMetadata diagram/table inventories with actual canonical article blocks; removed stale visual descriptors."
+        }
+      ],
+      "changedFiles": [
+        "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationComponentData.js",
+        "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationNodeData.js",
+        "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationPageMetadataData.js",
+        "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationSearchMetadataData.js",
+        "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationPublicationStateData.js",
+        "nodics.copilot/modules/copilotEvaluation/data/docs-v001/records/documentation/copilotEvaluationDocumentationRouteData.js"
+      ],
+      "sourceEvidencePathBase": "nodics.copilot/modules/copilotEvaluation",
+      "sourceEvidence": [
+        {
+          "path": "src/service/defaultCopilotEvaluationService.js",
+          "lineStart": 16,
+          "lineEnd": 21,
+          "observations": "Default plus extra dimensions, numeric clamping, logical-or threshold, context labels and result shape."
+        },
+        {
+          "path": "src/service/defaultCopilotEvaluationService.js",
+          "lineStart": 24,
+          "lineEnd": 30,
+          "observations": "Empty-suite rejection, minimumPassRate, safety defaults/NaN behavior and exact gate reasons."
+        },
+        {
+          "path": "config/properties.js",
+          "lineStart": 19,
+          "lineEnd": 25,
+          "observations": "copilot.evaluation defaults and declared requiredDimensions not consumed by either helper."
+        },
+        {
+          "path": "src/schemas/schemas.js",
+          "lineStart": 19,
+          "lineEnd": 23,
+          "observations": "Declared evaluation record fields do not implement trusted scoring/provenance or release publication."
+        },
+        {
+          "path": "test/copilotEvaluationReleaseGateContract.test.js",
+          "lineStart": 19,
+          "lineEnd": 25,
+          "observations": "Existing unsafe/empty/perfect suite assertions inspected, not executed."
+        }
+      ],
+      "reviewedSectionAnchors": [
+        "copilot-evaluation-release-gates",
+        "copilotEvaluationReleaseGates-1-purpose-and-evidence-boundary",
+        "copilotEvaluationReleaseGates-2-scoring-and-threshold-semantics",
+        "copilotEvaluationReleaseGates-3-suite-safety-and-release-decision",
+        "copilotEvaluationReleaseGates-4-verification-and-honest-limits",
+        "copilot-evaluation-customize-and-extend-safely",
+        "copilotEvaluationReleaseGates-5-documentation-selection-assets-and-acceptance",
+        "copilot-evaluation-release-gates-common-mistakes"
+      ],
+      "staging": {
+        "authoringLifecycleState": "STAGED",
+        "owningRouteActive": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publicationPerformed": false,
+        "onlineVersionWritten": false,
+        "reviewerOrApproverIdentityWritten": false,
+        "receiptWritten": false,
+        "existingRouteDeliveryStatePreserved": true
+      },
+      "verification": {
+        "sourceAndContractInspection": "PERFORMED",
+        "canonicalRecordStaticParse": "PASS",
+        "headingsSearchAndVisualInventory": "PASS",
+        "originalSectionAnchors": "PRESERVED",
+        "runtimeExecution": "NOT_PERFORMED",
+        "testExecution": "NOT_PERFORMED",
+        "installedImport": "NOT_PERFORMED",
+        "browserAcceptance": "NOT_PERFORMED"
+      },
+      "blockers": []
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "rules.deterministic-evaluation",
+      "owner": "nodics.rulesEngine/modules/rulesEvaluation",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "result": "PASS",
+      "findings": [
+        {
+          "id": "rulesEvaluation-1",
+          "status": "CORRECTED",
+          "detail": "Corrected selected-band/result terminology and documented independent nested outcomes, inclusive band ambiguity and ordinary empty skippedRules behavior."
+        },
+        {
+          "id": "rulesEvaluation-2",
+          "status": "CORRECTED",
+          "detail": "Added concrete provider registration and simulation customization, request-level depth, quality/confidence rules and version-preserving recovery."
+        },
+        {
+          "id": "rulesEvaluation-3",
+          "status": "CORRECTED",
+          "detail": "Replaced generic audience guidance with capability-specific use cases and clarified editorial staging versus Process approval/publication."
+        },
+        {
+          "id": "rulesEvaluation-4",
+          "status": "CORRECTED",
+          "detail": "Aligned PageMetadata diagram/table inventories with actual canonical article blocks; removed stale visual descriptors."
+        }
+      ],
+      "changedFiles": [
+        "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationComponentData.js",
+        "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationNodeData.js",
+        "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationPageMetadataData.js",
+        "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationSearchMetadataData.js",
+        "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationPublicationStateData.js",
+        "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationRouteData.js"
+      ],
+      "sourceEvidencePathBase": "nodics.rulesEngine/modules/rulesEvaluation",
+      "sourceEvidence": [
+        {
+          "path": "src/service/defaultRuleEvaluationService.js",
+          "lineStart": 73,
+          "lineEnd": 148,
+          "observations": "Snapshot requirements, ordered enabled roots, independent flattened child outcomes, validated scoring, selected band code, skippedRules limitation and JSON evidence hash."
+        },
+        {
+          "path": "src/service/defaultRuleGroupEvaluationService.js",
+          "lineStart": 24,
+          "lineEnd": 52,
+          "observations": "Recursive ALL/ANY, applicable-only logic, configured depth and null outcome on unmatched groups."
+        },
+        {
+          "path": "src/service/defaultRuleConditionEvaluationService.js",
+          "lineStart": 36,
+          "lineEnd": 107,
+          "observations": "Availability operator branch, OPTIONAL versus UNAVAILABLE and ordinary quality-gated evaluation."
+        },
+        {
+          "path": "src/service/defaultRulePropertyResolutionService.js",
+          "lineStart": 35,
+          "lineEnd": 87,
+          "observations": "Explicit available flag, zero/false preservation, quality/confidence and consumer fallback."
+        },
+        {
+          "path": "src/service/defaultRuleQualityService.js",
+          "lineStart": 17,
+          "lineEnd": 60,
+          "observations": "Quality tiers, optional minimums and fraction/percentage confidence normalization."
+        },
+        {
+          "path": "src/service/defaultScoreBandResolutionService.js",
+          "lineStart": 22,
+          "lineEnd": 45,
+          "observations": "Inclusive endpoints, ambiguous band rejection and REJECT/NO_OUTCOME gap behavior."
+        },
+        {
+          "path": "src/service/defaultRuleSimulationService.js",
+          "lineStart": 16,
+          "lineEnd": 26,
+          "observations": "Simulation delegates to evaluator and adds simulation:true without business effects."
+        },
+        {
+          "path": "../rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js",
+          "lineStart": 18,
+          "lineEnd": 52,
+          "observations": "Registered consumer provider and optional fallback contract."
+        },
+        {
+          "path": "llm/contracts/README.md",
+          "lineStart": 1,
+          "lineEnd": 13,
+          "observations": "Deterministic, side-effect-free, version-bound evaluation and normalized quality ownership."
+        },
+        {
+          "path": "test/ruleEvaluationContract.test.js",
+          "lineStart": 17,
+          "lineEnd": 121,
+          "observations": "Existing provider/definition/fallback/group/hash assertions inspected, not executed."
+        }
+      ],
+      "reviewedSectionAnchors": [
+        "rules-deterministic-evaluation",
+        "rulesDeterministicEvaluation-1-engine-ownership-and-business-result",
+        "rulesDeterministicEvaluation-2-availability-quality-and-group-logic",
+        "rulesDeterministicEvaluation-3-scores-bands-and-reproducibility",
+        "rulesDeterministicEvaluation-4-verification-and-recovery",
+        "rules-evaluation-customize-and-extend-safely",
+        "rulesDeterministicEvaluation-5-documentation-selection-assets-and-acceptance",
+        "rules-deterministic-evaluation-common-mistakes"
+      ],
+      "staging": {
+        "authoringLifecycleState": "STAGED",
+        "owningRouteActive": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publicationPerformed": false,
+        "onlineVersionWritten": false,
+        "reviewerOrApproverIdentityWritten": false,
+        "receiptWritten": false,
+        "existingRouteDeliveryStatePreserved": true
+      },
+      "verification": {
+        "sourceAndContractInspection": "PERFORMED",
+        "canonicalRecordStaticParse": "PASS",
+        "headingsSearchAndVisualInventory": "PASS",
+        "originalSectionAnchors": "PRESERVED",
+        "runtimeExecution": "NOT_PERFORMED",
+        "testExecution": "NOT_PERFORMED",
+        "installedImport": "NOT_PERFORMED",
+        "browserAcceptance": "NOT_PERFORMED"
+      },
+      "blockers": []
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "waste.material-taxonomy-evidence",
+      "owner": "nodics.waste/modules/wasteMaterial",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "result": "PASS",
+      "findings": [
+        {
+          "id": "wasteMaterial-1",
+          "status": "CORRECTED",
+          "detail": "Removed the unsupported claim of dynamic form-property/evidence-policy resolution; described actual submission/asset descriptor and ACTIVE bounded catalogue reads."
+        },
+        {
+          "id": "wasteMaterial-2",
+          "status": "CORRECTED",
+          "detail": "Added concrete confidence override, reviewed-fact precedence, invalid-range recovery, sticky image holds and missing/mismatched-versus-flagged acknowledgement behavior."
+        },
+        {
+          "id": "wasteMaterial-3",
+          "status": "CORRECTED",
+          "detail": "Replaced generic audience guidance with capability-specific use cases and clarified editorial staging versus Process approval/publication."
+        },
+        {
+          "id": "wasteMaterial-4",
+          "status": "CORRECTED",
+          "detail": "Aligned PageMetadata diagram/table inventories with actual canonical article blocks; removed stale visual descriptors."
+        }
+      ],
+      "changedFiles": [
+        "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationComponentData.js",
+        "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationNodeData.js",
+        "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationPageMetadataData.js",
+        "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationSearchMetadataData.js",
+        "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationPublicationStateData.js",
+        "nodics.waste/modules/wasteMaterial/data/docs-v001/records/documentation/wasteMaterialDocumentationRouteData.js"
+      ],
+      "sourceEvidencePathBase": "nodics.waste/modules/wasteMaterial",
+      "sourceEvidence": [
+        {
+          "path": "src/service/defaultWasteItemDescriptorService.js",
+          "lineStart": 23,
+          "lineEnd": 97,
+          "observations": "Bounded supported facts, UNKNOWN versus invalid operator correction and canonical material references."
+        },
+        {
+          "path": "src/service/defaultWasteItemDescriptorService.js",
+          "lineStart": 99,
+          "lineEnd": 137,
+          "observations": "Advisory image-source normalization, sticky hold, exact photo-code match and acknowledgement distinction."
+        },
+        {
+          "path": "src/service/defaultWasteItemDescriptorService.js",
+          "lineStart": 139,
+          "lineEnd": 177,
+          "observations": "Effective unknown/confidence reporting and paged ACTIVE taxonomy reads with explicit catalogue failure."
+        },
+        {
+          "path": "src/service/defaultWasteItemDescriptorService.js",
+          "lineStart": 179,
+          "lineEnd": 244,
+          "observations": "Caller-authorized public-safe response projection, reviewed/confirmed/draft precedence, actual descriptor fields and separate impact/reward owner results."
+        },
+        {
+          "path": "src/schemas/schemas.js",
+          "lineStart": 13,
+          "lineEnd": 93,
+          "observations": "Taxonomy requirements, evidence-policy references and independent evidence-policy record fields; no dynamic form resolver."
+        },
+        {
+          "path": "config/properties.js",
+          "lineStart": 12,
+          "lineEnd": 29,
+          "observations": "Descriptor confidence 0.6, photo confidence 0.8 and bounds/presentation."
+        },
+        {
+          "path": "llm/contracts/README.md",
+          "lineStart": 7,
+          "lineEnd": 104,
+          "observations": "Canonical descriptor ownership, coverage, provenance, unknowns and sticky/manual review contract."
+        },
+        {
+          "path": "test/wasteImageEvidenceReview.test.js",
+          "lineStart": 20,
+          "lineEnd": 54,
+          "observations": "Existing uncertain/missing/replacement-photo and sticky hold assertions inspected, not executed."
+        },
+        {
+          "path": "test/wasteItemDescriptorContract.test.js",
+          "lineStart": 25,
+          "lineEnd": 68,
+          "observations": "Existing normalization, operator-rejection, safe-projection, override and catalogue-bound assertions inspected, not executed."
+        }
+      ],
+      "reviewedSectionAnchors": [
+        "waste-material-taxonomy-evidence",
+        "wasteMaterialTaxonomyEvidence-1-taxonomy-ownership-and-business-purpose",
+        "wasteMaterialTaxonomyEvidence-2-property-coverage-and-lifecycle",
+        "wasteMaterialTaxonomyEvidence-3-image-evidence-and-safe-consumer-behavior",
+        "wasteMaterialTaxonomyEvidence-4-verification-and-troubleshooting",
+        "waste-material-customize-and-extend-safely",
+        "wasteMaterialTaxonomyEvidence-5-documentation-selection-assets-and-acceptance",
+        "waste-material-taxonomy-evidence-common-mistakes"
+      ],
+      "staging": {
+        "authoringLifecycleState": "STAGED",
+        "owningRouteActive": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publicationPerformed": false,
+        "onlineVersionWritten": false,
+        "reviewerOrApproverIdentityWritten": false,
+        "receiptWritten": false,
+        "existingRouteDeliveryStatePreserved": true
+      },
+      "verification": {
+        "sourceAndContractInspection": "PERFORMED",
+        "canonicalRecordStaticParse": "PASS",
+        "headingsSearchAndVisualInventory": "PASS",
+        "originalSectionAnchors": "PRESERVED",
+        "runtimeExecution": "NOT_PERFORMED",
+        "testExecution": "NOT_PERFORMED",
+        "installedImport": "NOT_PERFORMED",
+        "browserAcceptance": "NOT_PERFORMED"
+      },
+      "blockers": []
+    },
+    {
+      "date": "2026-10-07",
+      "documentId": "foundation.redis-provider-operations",
+      "owner": "nodics.foundation/modules/nCache/redisCache",
+      "scope": "SOURCE_EDITORIAL_REVIEW",
+      "result": "PASS",
+      "findings": [
+        {
+          "id": "redisCache-1",
+          "status": "CORRECTED",
+          "detail": "Corrected actual prefix/default ownership, overstated numeric Sentinel bounds, equal-version acceptance and bounded-counter expiry behavior."
+        },
+        {
+          "id": "redisCache-2",
+          "status": "CORRECTED",
+          "detail": "Documented CONFIG SET notification effects, unbounded ordinary prefix collection versus strict offline inventory, real project prefix customization and rejection/recovery matrix."
+        },
+        {
+          "id": "redisCache-3",
+          "status": "CORRECTED",
+          "detail": "Replaced generic audience guidance with capability-specific use cases and clarified editorial staging versus Process approval/publication."
+        },
+        {
+          "id": "redisCache-4",
+          "status": "CORRECTED",
+          "detail": "Aligned PageMetadata diagram/table inventories with actual canonical article blocks; removed stale visual descriptors."
+        }
+      ],
+      "changedFiles": [
+        "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationComponentData.js",
+        "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationNodeData.js",
+        "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationPageMetadataData.js",
+        "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationSearchMetadataData.js",
+        "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationPublicationStateData.js",
+        "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationRouteData.js"
+      ],
+      "sourceEvidencePathBase": "nodics.foundation/modules/nCache/redisCache",
+      "sourceEvidence": [
+        {
+          "path": "src/service/cache/defaultRedisCacheService.js",
+          "lineStart": 28,
+          "lineEnd": 60,
+          "observations": "Versioned Lua comparison permits equal versions, rejects lower/unsafe versions and returns actual advanced version."
+        },
+        {
+          "path": "src/service/cache/defaultRedisCacheService.js",
+          "lineStart": 85,
+          "lineEnd": 159,
+          "observations": "JSON get/put, GETDEL capability rejection and allowed-increment expiry refresh."
+        },
+        {
+          "path": "src/service/cache/defaultRedisCacheService.js",
+          "lineStart": 162,
+          "lineEnd": 213,
+          "observations": "Canonical namespace and ordinary prefix SCAN collecting keys before one DEL."
+        },
+        {
+          "path": "src/service/engine/defaultRedisCacheEngineService.js",
+          "lineStart": 23,
+          "lineEnd": 57,
+          "observations": "Opt-in Sentinel mapping, separate credentials and timeout/retry defaults without comprehensive numeric validation."
+        },
+        {
+          "path": "src/service/engine/defaultRedisCacheEngineService.js",
+          "lineStart": 95,
+          "lineEnd": 149,
+          "observations": "Standalone/Sentinel client creation, awaited connect and original-failure cleanup."
+        },
+        {
+          "path": "src/service/engine/defaultRedisCacheEngineService.js",
+          "lineStart": 215,
+          "lineEnd": 242,
+          "observations": "Server CONFIG SET Ex, awaited subscriber startup and pre-registration cleanup."
+        },
+        {
+          "path": "src/service/engine/defaultSentinelRedisClientAdapterService.js",
+          "lineStart": 21,
+          "lineEnd": 131,
+          "observations": "ioredis facade maps GETDEL/eval/SCAN/subscription and connection lifecycle."
+        },
+        {
+          "path": "src/service/maintenance/defaultRedisLocalResetMaintenanceService.js",
+          "lineStart": 23,
+          "lineEnd": 140,
+          "observations": "Strict isolated loopback standalone scope, writer attestations, private bounded inventory, exact reviewed-key batch deletion and count-only uncertainty."
+        },
+        {
+          "path": "../cache/config/properties.js",
+          "lineStart": 98,
+          "lineEnd": 143,
+          "observations": "Actual shared Redis engine/prefix defaults; redisCache/config/properties.js is empty."
+        },
+        {
+          "path": "../cache/src/service/config/defaultCacheConfigurationService.js",
+          "lineStart": 84,
+          "lineEnd": 109,
+          "observations": "TTL precedence and invalid TTL error; channel/prefix/tenant storage key builder."
+        },
+        {
+          "path": "llm/contracts/local-reset-maintenance.md",
+          "lineStart": 1,
+          "lineEnd": 34,
+          "observations": "Offline isolated maintenance invariants, separate from runtime invalidation."
+        },
+        {
+          "path": "test/redisSentinelConfigurationContract.test.js",
+          "lineStart": 19,
+          "lineEnd": 81,
+          "observations": "Existing prefix/namespace, defaults and Sentinel mapping assertions inspected, not executed."
+        }
+      ],
+      "reviewedSectionAnchors": [
+        "foundation-redis-provider-operations",
+        "foundationRedisProviderOperations-1-provider-ownership-and-activation",
+        "foundationRedisProviderOperations-2-values-ttl-and-atomic-operations",
+        "foundationRedisProviderOperations-3-lifecycle-invalidation-and-reset-safety",
+        "foundationRedisProviderOperations-4-verification-and-troubleshooting",
+        "redis-cache-customize-and-extend-safely",
+        "foundationRedisProviderOperations-5-documentation-selection-assets-and-acceptance",
+        "foundation-redis-provider-operations-common-mistakes"
+      ],
+      "staging": {
+        "authoringLifecycleState": "STAGED",
+        "owningRouteActive": true,
+        "processApproved": false,
+        "liveApproved": false,
+        "publicationPerformed": false,
+        "onlineVersionWritten": false,
+        "reviewerOrApproverIdentityWritten": false,
+        "receiptWritten": false,
+        "existingRouteDeliveryStatePreserved": true
+      },
+      "verification": {
+        "sourceAndContractInspection": "PERFORMED",
+        "canonicalRecordStaticParse": "PASS",
+        "headingsSearchAndVisualInventory": "PASS",
+        "originalSectionAnchors": "PRESERVED",
+        "runtimeExecution": "NOT_PERFORMED",
+        "testExecution": "NOT_PERFORMED",
+        "installedImport": "NOT_PERFORMED",
+        "browserAcceptance": "NOT_PERFORMED"
+      },
+      "blockers": []
+    }
+  ],
+  "blockers": []
+}

@@ -1,40 +1,89 @@
 {
-    "contractVersion": 2,
-    "module": "localizationCore",
-    "sections": {
-        "localizationSource": {
-            "kind": "SOURCE_CONTRIBUTION",
-            "version": "0.0.0",
-            "description": "Canonical common localization source contribution.",
-            "files": {
-                "core-v001/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9"
-            }
-        },
-        "core-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "core",
-            "version": "0.0.0",
-            "description": "Localization Core core data",
-            "owningDomain": "localization",
-            "lifecycle": "OPERATIONAL_VERSIONED",
-            "destinationRole": "PLATFORM",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "core-v001/records/localization/defaultLocalizationKeyData.js": "d7b974f063b851f5e529b9eec830fdae89c8437fe64388ca8722c5a48d5afbad",
-                "core-v001/records/localization/defaultLocalizationOnlinePointerData.js": "19e7eb7b0d7a7e922c96db69c9f9b1500828ae0c320c13e59d8191043e35230f",
-                "core-v001/records/localization/defaultLocalizationReleaseData.js": "81a9f710230b0dae06ae46b69e7488674065d908f2db8dfc3c4bdab791e47894",
-                "core-v001/records/localization/defaultLocalizationValueData.js": "f4f530e3da11c6740488699b4332d7bf7f3b9c46e0f17cd444654da3162b10d2",
-                "core-v001/headers/localization/defaultLocalizationRuntimeHeader.js": "5b4f65ad5c2fcd98ae7b845d53931a8fa95701d1effdfda9973a11cec8aacc05",
-                "core-v001/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9"
-            },
-            "sourceRoot": "core-v001"
+  "contractVersion": 2,
+  "module": "localizationCore",
+  "sections": {
+    "localizationSource": {
+      "kind": "SOURCE_CONTRIBUTION",
+      "version": "0.0.0",
+      "description": "Canonical common localization source contribution.",
+      "files": {
+        "core-v001/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9"
+      }
+    },
+    "core-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "description": "Localization Core core data",
+      "owningDomain": "localization",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "core-v001/records/localization/defaultLocalizationKeyData.js": "d7b974f063b851f5e529b9eec830fdae89c8437fe64388ca8722c5a48d5afbad",
+        "core-v001/records/localization/defaultLocalizationOnlinePointerData.js": "19e7eb7b0d7a7e922c96db69c9f9b1500828ae0c320c13e59d8191043e35230f",
+        "core-v001/records/localization/defaultLocalizationReleaseData.js": "81a9f710230b0dae06ae46b69e7488674065d908f2db8dfc3c4bdab791e47894",
+        "core-v001/records/localization/defaultLocalizationValueData.js": "f4f530e3da11c6740488699b4332d7bf7f3b9c46e0f17cd444654da3162b10d2",
+        "core-v001/headers/localization/defaultLocalizationRuntimeHeader.js": "5b4f65ad5c2fcd98ae7b845d53931a8fa95701d1effdfda9973a11cec8aacc05",
+        "core-v001/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9"
+      },
+      "sourceRoot": "core-v001"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "localizationCore",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "776251b3b0d8ba7924926fca6822831272e2eaa3afa5e0c494d811efd02fec2f",
+      "generatedHashes": {
+        "docs-v001/records/documentation/localizationCoreDocumentationNodeData.js": "1fbca4f3fd4f8007ce540b1940953e8cc42bc67a01a777f02ef6daa5d64f21a4",
+        "docs-v001/records/documentation/localizationCoreDocumentationPageMetadataData.js": "e6c3b3f76be1a31c4eb8d10d899fa49134dd3c3ba7443247ddb0c08ff99467d4",
+        "docs-v001/records/documentation/localizationCoreDocumentationPublicationStateData.js": "4d2aab51f9b3e5eef09abd34c0373a7b6499dbbb260de02b1abeeb2650526e87",
+        "docs-v001/records/documentation/localizationCoreDocumentationSearchMetadataData.js": "b351abe05a63c9c1c1bd3b7212ad46c0b17bc0f86b776c9f5899d1c6d84a612a",
+        "docs-v001/records/documentation/localizationCoreDocumentationComponentData.js": "09d5c4e290979b634210e1981b7a2ce97ae556c4d6234cb30e523a3cf6de6824",
+        "docs-v001/records/documentation/localizationCoreDocumentationPageData.js": "9b863316665653efe078147c6d4c5949e3230bdf9af62da0d6bb608743b366c5",
+        "docs-v001/records/documentation/localizationCoreDocumentationRouteData.js": "3cc4cb06cbcfc97cff9664efa9041b18610849c4aed22ab44cf2015145fd41ed",
+        "docs-v001/headers/100_localizationCoreDocumentationContentPackHeader.js": "1d7b82ade4c55e5db0441a7fa1016e0b86fd36614e4cdfa0ee7847227793fc8d"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "discoveryRuntime",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "discoveryRuntime",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "7cbe74716675e5aee5f1c51352ed9ca7de4f548a7466bc8615c51c7c569c24d1",
+      "generatedHashes": {
+        "docs-v001/records/documentation/discoveryRuntimeDocumentationNodeData.js": "ef3d20186955f76a1d4126b85d38b4ed71be09f5cfe3f9d0ebb266c6bbc38486",
+        "docs-v001/records/documentation/discoveryRuntimeDocumentationPageMetadataData.js": "f43b24fea4a3370d3a1d4346210034d12338957a4aacbbf083850599aae87ff7",
+        "docs-v001/records/documentation/discoveryRuntimeDocumentationPublicationStateData.js": "2159f00a93eda7ec31df575db8a95aa6f7a9687f488f6a5f3efc82f2fee9db60",
+        "docs-v001/records/documentation/discoveryRuntimeDocumentationSearchMetadataData.js": "a3eb3689ddd050ef1eb9a4276dd017bd49611bcc338c8d4205b748c5513f6de7",
+        "docs-v001/records/documentation/discoveryRuntimeDocumentationComponentData.js": "ab746822a9eeaf3bdd5226a0d06116f926bb295eeb5dcac0e45bf7a33cad8b5c",
+        "docs-v001/records/documentation/discoveryRuntimeDocumentationPageData.js": "824cd27c276210280d2861bfe71592c223ff519c79d552cd2c79f9232c97870e",
+        "docs-v001/records/documentation/discoveryRuntimeDocumentationRouteData.js": "7c145b9766d36b63a8e10da8e067642a4ae1e25607cd0cc0369c5b5647585594",
+        "docs-v001/headers/100_discoveryRuntimeDocumentationContentPackHeader.js": "dad32a3932d86f15ac5672c2b0a25a243b3cceb3240ae6f0c796723a14441bd7"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -35,7 +35,7 @@ adapters receive caller idempotency and correlation identifiers. Missing,
 invalid, failed, or timed-out providers yield typed errors or explicitly FAILED
 results according to configured failureMode. They never fall back to mock.
 
-The [canonical guide](../../../../../nodics.docs/docs/pages/nodics.waste/impact-providers.md)
+The [canonical guide](../../data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
 contains exact configuration, protocol, failure, recovery and validation examples.
 
 ## Environmental assessment disclosure

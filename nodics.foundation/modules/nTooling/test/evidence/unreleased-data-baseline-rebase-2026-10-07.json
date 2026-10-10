@@ -1,0 +1,1607 @@
+{
+  "contractVersion": 1,
+  "generatedAt": "2026-10-07T14:09:15.962Z",
+  "state": "SOURCE_REBASED_LIVE_REIMPORT_REQUIRED",
+  "authority": "Explicit maintainer instruction to rebase all unreleased data to the v001 initial baseline",
+  "sourceRootSequence": "v001",
+  "semanticReleaseVersion": "0.0.1",
+  "sections": [
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/domainCommerceCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusCorporateSite",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.22",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusCorporateSiteUpdate",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusCorporateEcosystemComponentRepair",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusCorporateIncrementalProof",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusCorporateProfessionalCopyUpdate",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusEditorialSource",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusEngagementOperational",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "nexusCorporateMediaReferences",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.4",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+      "section": "core-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+      "section": "referenceDocumentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.0.5",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/inventory/data/manifest.json",
+      "section": "inventoryPublicationWorkflow",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/inventory/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/pricing/data/manifest.json",
+      "section": "pricingPublicationWorkflow",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/pricing/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/product/data/manifest.json",
+      "section": "productPublicationWorkflow",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "2.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/product/data/manifest.json",
+      "section": "sample-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/product/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+      "section": "promotionPublicationWorkflow",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/store/data/manifest.json",
+      "section": "core-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/tax/data/manifest.json",
+      "section": "taxPublicationWorkflow",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/checkout/modules/order/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.communication/modules/commsCore/data/manifest.json",
+      "section": "runtime-defaults",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.communication/modules/commsCore/data/manifest.json",
+      "section": "sample-templates",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.communication/modules/commsCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.copilot/modules/copilotApi/data/manifest.json",
+      "section": "knowledgeRefreshWorkflow",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.1.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.copilot/modules/copilotCapability/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.copilot/modules/copilotConversation/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.copilot/modules/copilotEvaluation/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.copilot/modules/copilotKnowledge/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.copilot/modules/copilotWorkbench/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.discovery/modules/discoveryRuntime/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.docs/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.docs/data/manifest.json",
+      "section": "foundation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.engagement/modules/contactSubmission/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.engagement/modules/customerFeedback/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.engagement/modules/customerReview/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.engagement/modules/engagementCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nAuth/data/manifest.json",
+      "section": "core-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nCache/cache/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nCache/redisCache/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nCatalog/data/manifest.json",
+      "section": "init-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nCatalog/data/manifest.json",
+      "section": "sample-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nCommon/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nConfig/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nData/nImport/import/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nDatabase/database/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nEms/emsClient/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nNms/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nOtp/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nPipeline/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nRouter/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nService/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nTooling/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nValidator/data/manifest.json",
+      "section": "sample-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.foundation/modules/nbpm/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.localization/modules/localizationCore/data/manifest.json",
+      "section": "core-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.localization/modules/localizationCore/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationApproval/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationDraft/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationMap/data/manifest.json",
+      "section": "core-map-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationMap/data/manifest.json",
+      "section": "init-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationMap/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationProjection/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationSearch/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.location/modules/locationType/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyCore/data/manifest.json",
+      "section": "core-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyCore/data/manifest.json",
+      "section": "core-enterprise-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyLedger/data/manifest.json",
+      "section": "sample-lifecycle",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyProgram/data/manifest.json",
+      "section": "core-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyRedemption/data/manifest.json",
+      "section": "sample-lifecycle",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyReservation/data/manifest.json",
+      "section": "sample-lifecycle",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyRewardType/data/manifest.json",
+      "section": "core-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyWallet/data/manifest.json",
+      "section": "sample-lifecycle",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.loyalty/modules/loyaltyWallet/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/axis/data/manifest.json",
+      "section": "axisBaseline",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/axis/data/manifest.json",
+      "section": "core-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/axis/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.0.6",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/backoffice/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/installer/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/profile/data/manifest.json",
+      "section": "init-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.3",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/profile/data/manifest.json",
+      "section": "sample-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/profile/data/manifest.json",
+      "section": "employeeApplicationReview",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.platform/modules/profile/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.process/modules/cronjob/data/manifest.json",
+      "section": "core-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.process/modules/cronjob/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.process/modules/workflow/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.rulesEngine/modules/rulesApi/data/manifest.json",
+      "section": "rulesPolicyApproval",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.rulesEngine/modules/rulesEvaluation/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.waste/modules/wasteCollection/data/manifest.json",
+      "section": "sample-profile-addresses",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.waste/modules/wasteCollection/data/manifest.json",
+      "section": "sample-locations",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.waste/modules/wasteCollection/data/manifest.json",
+      "section": "sample-collection-points",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.waste/modules/wasteCore/data/manifest.json",
+      "section": "core-reference",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.waste/modules/wasteImpact/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.waste/modules/wasteMaterial/data/manifest.json",
+      "section": "core-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.waste/modules/wasteMaterial/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/cms/data/manifest.json",
+      "section": "init-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/cms/data/manifest.json",
+      "section": "cmsPublicationApproval",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/cms/data/manifest.json",
+      "section": "sample-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/cms/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/editorial/data/manifest.json",
+      "section": "editorialWorkflows",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/editorial/data/manifest.json",
+      "section": "init-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/media/data/manifest.json",
+      "section": "mediaPublicationWorkflow",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "1.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/media/data/manifest.json",
+      "section": "mediaReplicationRetryJob",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/media/data/manifest.json",
+      "section": "mediaCleanupRetentionJob",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/media/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/wcms/data/manifest.json",
+      "section": "init-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/wcms/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.ai/nodics.wcms/modules/wcmsExperience/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.16.36",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/data/manifest.json",
+      "section": "documentation",
+      "kind": "CONTENT_PACK",
+      "previousVersion": "0.8.14",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/envs/kickoffLocal/processServer/data/manifest.json",
+      "section": "init-v001",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.0",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/agora.apparel/data/manifest.json",
+      "section": "agoraApparelCommerceCatalog",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.10",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/agora.apparel/data/manifest.json",
+      "section": "agoraApparelContentCatalog",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.8",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/agora.electronics/data/manifest.json",
+      "section": "agoraElectronicsCommerceCatalog",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.4",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/agora.electronics/data/manifest.json",
+      "section": "agoraElectronicsContentCatalog",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.2",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/agora.telco/data/manifest.json",
+      "section": "agoraTelcoCommerceCatalog",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.4",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/agora.telco/data/manifest.json",
+      "section": "agoraTelcoContentCatalog",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.2",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "profile",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "location",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "waste",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "waste-policy",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "loyalty",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "content",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "commerce",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "operations",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "customer-workspace",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "sunmarke-profile",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "sunmarke-location",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "sunmarke-waste",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    },
+    {
+      "manifest": "nodics.kickoff/modules/circa.ewaste/data/manifest.json",
+      "section": "commerce-operational",
+      "kind": "DATA_RELEASE",
+      "previousVersion": "0.0.1",
+      "version": "0.0.1"
+    }
+  ],
+  "changedFiles": [
+    {
+      "path": "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "df5e9550d1f4081cb03a0f698a77eade8bd6b0760884b7981d795b4dddbedb0c",
+      "afterSha256": "8fa043f74353b2b165a81c996d2d49e34ede0c1d0c2901f6236b9c91c516d29f"
+    },
+    {
+      "path": "nodics.ai/nodics.accelerators/modules/domainCommerceCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "eca87eee4ed5d12f84087f120fb6c56a15a1ff327611bf4bc2346c3be87b8fee",
+      "afterSha256": "c337a1ac6229d2096677e9de500dfc419fcdd181f4298d0c47b6b5b1a67c6e5c"
+    },
+    {
+      "path": "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "d87bde8060ac8e7838bf1047f5ffabe896e58ce5761d42eb28eaa3d40af07bf0",
+      "afterSha256": "9722768fdf9fcb300cb51fa779a0ca797a3a89cc75977827ca6552beb32a60c1"
+    },
+    {
+      "path": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "3e65104dbb82c32dd24a8d66de15c30651003a03e54b2ba4dbf3e8ef3583eb75",
+      "afterSha256": "3fe0ea371f5600f9953ed343e228a71094705077a0f2467fa0dc3f555220b739"
+    },
+    {
+      "path": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "c3ecf975191bc8cb7e950a221860bb7c6902e76c027e7944e7d645c4eafbde4a",
+      "afterSha256": "300426b7071de43edeac4cdf540e30a7f5e7b854dd0005733d1982019ff7cdb4"
+    },
+    {
+      "path": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "dafc110769243697c4c5d9eec26326c127d4082bd9cd19ad51305b31ce37fd04",
+      "afterSha256": "dad7aadffff14e6a898aad1887cdec9013e88bf3309806078c65b378742af3ac"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "4b5780d8be90c9158d3b0ed9bf219e394d4dcfe5444f7de9fb1364a70d00db61",
+      "afterSha256": "70ac678c19fc3838442da4e3ae4c852f408fea5c404767d0085f7bbae68b93bd"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/inventory/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "c99f4815e283ba7d354eaaff0dfe2c9a321048c4bc9f7a7139698572bc34485f",
+      "afterSha256": "a1835b89388089ab51230a97d9e2af01986d32a99b9cbbc48c5e2599bb59ba9e"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/pricing/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "bcc84e39523945d30ef08e50777c23cd20195611c81a4cee2ba3bc202a509f46",
+      "afterSha256": "2e4ae3de884c8b85687c75220467b9ebef320ad500a9bfd6ce6316477a7e5e03"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/product/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "694996a4e6c5593b99b8563bb94ef5dcab05f758109af3871c65ac2ae227c67e",
+      "afterSha256": "10fa28b749fddc18bcf15bd95d02a88ad25afa408a84f103708133fd1b45a2c9"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "e867d502acf932876b1dd7917bc9cd5c563c0c3c56c3827dd35936bd84e9775c",
+      "afterSha256": "7517badbb2a717d515329c6b104a75e18373fc7eebb58164b31788e3ad51ba21"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "799a81d1d3d02f9e4b20ed07a995bcfa10933f3247ead222d7c686cb09940342",
+      "afterSha256": "d39f2e4bbb2ada698b6fb9f25af3f2734c9978ecd0effd685c03da9c46bcbf6e"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/store/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "f615abbce3e294b87a6ba604509c937cf0924dc8d7f6a83842959334c1abdd91",
+      "afterSha256": "e6bd943c193faf9085f39d35b1f9cbf4f9a40cc6fbf51ad425e5d73f5e19316b"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/tax/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "8b8ce9369c2f2d753f0cad80275ebb4c737570f9642edaed5c6efaf738a17760",
+      "afterSha256": "1f141e7d93de19bc713b6727ea26e20ed144ba6b28c0239508c391fe9059aa71"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "e138089dc8882eaa9ad61c3c8017eaa4cd67b542ec5f0847bddfe1e21e717d6c",
+      "afterSha256": "1fec6cbe11585ee7064252c15bfe368e5a85f1cc45ac887730e8f3e4ce3c9a70"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/checkout/modules/order/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "eb773fe575b12cd3d8a508c0361ad44ddc109aa442879918029579988edb4580",
+      "afterSha256": "83b0a6cc2037b4ede2d96c5ca217db2db05f4eaf9803f178b494b3807a61aea4"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "4f653eb77e8cc0a1917586ea5e67404c07bf255c75ea6d845ba97130acc83fb0",
+      "afterSha256": "706948309bba586b64a1fee948489fa89afe3eeb47f753510940edfd7a6928c0"
+    },
+    {
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "63212bf0ee484b0f63b5641f5a7cc1ca155315affe1ade77ea53c50f94c689ce",
+      "afterSha256": "1b15fbc8cf5bcf4a8251e39dbc4e07e93c00e643b49ca59fc2371c494bb37ad1"
+    },
+    {
+      "path": "nodics.ai/nodics.communication/modules/commsCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "9ddfc1de50f33f494e59204baf16e11db8e147008431145702a31f615cf9ff98",
+      "afterSha256": "0b4079af051421c4264b4d6e0aefbb5525ae5bb9c35047d3cba4d7587686c07c"
+    },
+    {
+      "path": "nodics.ai/nodics.copilot/modules/copilotApi/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "90aa83860f9b4833297604d7bbc945b40d43897011555135b0b0d5d2eca4c4ce",
+      "afterSha256": "9abf0cc7ffb76ae3688ea76aeeec7a602895abf877809b0506834487593f7409"
+    },
+    {
+      "path": "nodics.ai/nodics.copilot/modules/copilotCapability/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "ca8ff2b4f6c2f84df1f2601136c577c9ba3eff86b1484888ef0df5cecb562b4b",
+      "afterSha256": "a25f4d3fc8b9bf1e6eadd27981ed57b6807df47fa651ebf802f71691b6554d20"
+    },
+    {
+      "path": "nodics.ai/nodics.copilot/modules/copilotConversation/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "daeb099cb281858f80c038680ff385c279e7ce47e4f299cd20986181fe249885",
+      "afterSha256": "defe32f882c04f56182a256fb3c611d452818bae6e32104267a821a75baa0327"
+    },
+    {
+      "path": "nodics.ai/nodics.copilot/modules/copilotEvaluation/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "b6ce3091c51d1de0de8b3f535370c8225f118498f540c6c2e05b43ade13b28fe",
+      "afterSha256": "a39f864ea2fef5c89725a98f90974d92dcdd66c3e5275ce3d72917718e932cd5"
+    },
+    {
+      "path": "nodics.ai/nodics.copilot/modules/copilotKnowledge/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "2762cf7cd5e69623a6d0214ca504f27f4a1ed03144e93e54993dea8c22b755cd",
+      "afterSha256": "568ccb9e5cd8d6abcd958a9a913e7968d9d232e3c5128b05f00b9866c8693810"
+    },
+    {
+      "path": "nodics.ai/nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "31f75115e5d7caa4b1ca5721981e709b82e98514b595a0f6de73a5219c5d6c6b",
+      "afterSha256": "9e29eff47e4a0e5bffdbfb9acb32b4cd19fa5f8b96e65d48dc56b3b94f1e19e0"
+    },
+    {
+      "path": "nodics.ai/nodics.copilot/modules/copilotWorkbench/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "9a8d64054dc167012cce2d71ace0beb6a8ff70e3ccb2db7d42985a6b7723ca36",
+      "afterSha256": "f3f2463ae7713a4051005f4a7136af12c54089e5d19f3e0e54e3267a0ba3bd10"
+    },
+    {
+      "path": "nodics.ai/nodics.discovery/modules/discoveryRuntime/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "ebc174956d554ebed23226651f23a72a808eb7e3ce61c68e2957c175dc577762",
+      "afterSha256": "7c52618b69aab3314eb07f0bb4ba11fc7e21a538b6957dcd767fcb9142968634"
+    },
+    {
+      "path": "nodics.ai/nodics.docs/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "a4b432acacf6bb994500220788f051eeb17ab72c7e1cc0b7426fb4824dd7c012",
+      "afterSha256": "94bced3336b1313e64e42a15fb8704e303a3c12b47a5f1aaa84d509787236f3f"
+    },
+    {
+      "path": "nodics.ai/nodics.engagement/modules/contactSubmission/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "0689113194ca4c2423debe75c76ee66e0ead0be33c38be334a3a37eb6c1ba480",
+      "afterSha256": "21b0f39c9178cc97dd414562dfc608a40c24f3cb84a54d23b45cd175f2faa0b4"
+    },
+    {
+      "path": "nodics.ai/nodics.engagement/modules/customerFeedback/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "0ed561daa8c36949c5a3626b64a6c653837b87dcc5a577b831d728b7f14b0ab2",
+      "afterSha256": "2a9c31fb846c4ead722d40c8282b16337e91214cb30f9f7918018aaf5436e4e5"
+    },
+    {
+      "path": "nodics.ai/nodics.engagement/modules/customerReview/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "8974389c9933ebd0e4a692bffae0e49ee1e81d8ea0e49238a08957ad94daede8",
+      "afterSha256": "32e4a6ab2ce12a4f33072c5c04adb10037aa259531c976b67a23e279e27c7d3b"
+    },
+    {
+      "path": "nodics.ai/nodics.engagement/modules/engagementCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "dedbeb145838e442dfb48b82ef50b9b23c720dd097d7b02aae3d450fb292196e",
+      "afterSha256": "a070c7147866fa158d63426fc61cc2cfef5e5a08eaf4a95263a0b90d78d6e267"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nAuth/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "d1bb361b72ae32cad98645d3e67aacc916b054ec86d6fcbbc7100a11c7059c9c",
+      "afterSha256": "208b79647053e612279e2401d427f16d54e03671442894a060c161af737aebf0"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nCache/cache/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "3071a41fab71b940608d12ededfcbe0517afbc74971e1cc3e94e370ba81db6ec",
+      "afterSha256": "ad23ac3557af686fb40b8890a034549bbc88f45ef65ca9be251f9c9389da4f3a"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nCache/redisCache/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "33ca0ee042befc99cca6146f8de5a026ae439ea1d1f8dd14dc4be79c5a0f50b7",
+      "afterSha256": "5d49ddafe62612e6b8bbce18dcf7b91b7678d9093496cd9b6924148a2720751d"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nCatalog/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "1ebb07a8fb3f8d4ef95036cfcc90d30606d93aef4c2d04aa01945f0e42a97437",
+      "afterSha256": "33ecdc24ea7b370ce000112b72384318890b20850f9f7fd87dac06111c8f0c44"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nCommon/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "2c470ff9097fc57920e8de7e7d23f89b9a2392c3ff232e10130578cd6cb8160f",
+      "afterSha256": "7aae8a958b1c6600cfbf306a36497a68c4124e46acedcbdef36a0365fcbb0471"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nConfig/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "9130b784af000523b80a9efc22da659b3664e008af52936567b4189c4a9e4448",
+      "afterSha256": "d7abdae45b609f7aff46ec566ccbaaffb260b36d18c275caa6484d18d81e395b"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nData/nImport/import/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "704a1535815e2d1f9b49bd5a3963c36d610dea82ee96f432bfa5fb79f2f9c0d9",
+      "afterSha256": "4cf504ede1bb4c7f88be86f2694eea245d18b6ec9ad5d739cbf188080fd6ba25"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nDatabase/database/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "1ec5c14e641e4873bbfc4a86083e6d12266649caaf0ef11a203cf2e53456fe88",
+      "afterSha256": "acb5a08b75cb472c191dad3f7062ef7d6ef850fcd043a44d7f1b01b180b6c868"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nEms/emsClient/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "52001d00fc6af4b0ad6e5cd964e369099847f90c0fb1bdbf29435984c1056401",
+      "afterSha256": "267c3eb03c5f52f0ab58d3c06fb05d253f408c65e91d3bdf636204473a7914d4"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nNms/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "5bf4c2b46ede008b86532582f9b24d973f5cb867c406d274322ceed2e4d0c55f",
+      "afterSha256": "e83a2167f5bc49e81cce6fb9943c5f7b2044c44f4623d8b83c52d1f37f825beb"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nOtp/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "a9d01225c4e770df577948d1e18de001336b38eaf84580971a73fd32cee8bfdb",
+      "afterSha256": "a645d5b5949f84a28b4d83187ae71c32bcbf33670adea4d39445a1a3e5832478"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nPipeline/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "082ba141c9f4a69beeb4a29d319b58a8655bb716dfad5f8c2bb0f773156a8a2e",
+      "afterSha256": "7b0a7921ca031280cb5991660ff1b6bc675d89923acf79b2205edf0ef3846855"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nRouter/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "52158a778917ac871969b9e4d80281aa0ed86216ce88918087080449fd5c09a2",
+      "afterSha256": "b59dfb9a77fe292cf8f3f41989ef238c47de7a197bf828d08c3c1ff00d01419b"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nService/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "5e48763f6a923037029c260f2e23482482eced26aa27d75448423bdea5274d8a",
+      "afterSha256": "b37a71d0fb9742aca16dd3edc86409d9ef5a0ece9cdaa177260ec007dad99116"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nTooling/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "74cfd0615ad60797850c6c674096e3f47fc62f7fa0138e854d8f3f33789f3239",
+      "afterSha256": "9dacbeed867e78cabe0c104cbe34a141eece902b37ac24e60e1b65c58c8c7089"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nValidator/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "2d19a4d2ff3b623385b75e323e8c22117d92b746d57a1cf6d2458bd28315a4fb",
+      "afterSha256": "c9e4592ceb739e942f284596e2a061999da4f400fb7f671f360cd7a4a7261544"
+    },
+    {
+      "path": "nodics.ai/nodics.foundation/modules/nbpm/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "d29458ea4dda5f197514478e5ace04c16e9d74c1cd1b6a32df22e53db91ed017",
+      "afterSha256": "cc2f07b19d3a3791d9e03244d02c89a4ce5bf77ecbaccf7455b0a68215195a51"
+    },
+    {
+      "path": "nodics.ai/nodics.localization/modules/localizationCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "75daa910d443a365b4e555317e078529aa9297d16f3ade0d127b1172faf19151",
+      "afterSha256": "000384bf034228ad7423b92fd0cd97bb0fd8af1a93a30c023c919fefdf301539"
+    },
+    {
+      "path": "nodics.ai/nodics.location/modules/locationApproval/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "20605dc1f8e11b8475abf7a54eaba9ee88d860be79870c719bea0daca09de472",
+      "afterSha256": "fa61517c509c73eb0b74c270619e76650005bf73d42513620f10eacc112b81d0"
+    },
+    {
+      "path": "nodics.ai/nodics.location/modules/locationDraft/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "cc19750052256c530e3aed5f26abae9380df1b109b5dd474eb96d2846ffa2131",
+      "afterSha256": "20cd894159875fc7840fff1b573db8617fbc901fec3cb8e484cc07411553da6c"
+    },
+    {
+      "path": "nodics.ai/nodics.location/modules/locationMap/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "4a91554b0334b6f2cbd563414694c136031403541feb599a175bf0c02ebb6b13",
+      "afterSha256": "9a58e1fdc6d6b8c7fa6bb4f975a9957da0be05a9a42edc69d338faf87f61eb5f"
+    },
+    {
+      "path": "nodics.ai/nodics.location/modules/locationProjection/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "86f11d217c5a4b63db7a32e941d2cc1fb76e8968ab9d0db1507813751362cc2c",
+      "afterSha256": "1ca5ae0a584e3fc2ad668d934d18a236c7124eb9313f801add69e57e41309c3d"
+    },
+    {
+      "path": "nodics.ai/nodics.location/modules/locationSearch/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "4c061656f8c502cc0f1afaca32121fa7164fa356c461aa74e86e88a4bf61e481",
+      "afterSha256": "0c62a646219816fd93284892a1531a62b6b89582a0ceb5c588544470f1ff8d78"
+    },
+    {
+      "path": "nodics.ai/nodics.location/modules/locationType/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "a3a81a2a990200a62e1826739ea8cd7a2c58f8dee87f8731a2bd0ae26f1c5799",
+      "afterSha256": "c0835b30a38e7b54a3f4e0b373cdab464a5d6440b2f1c698bc0aa278fdfe7d82"
+    },
+    {
+      "path": "nodics.ai/nodics.loyalty/modules/loyaltyCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "d9699c04c20f35cd0d6f00bc33d15d239b0245c7a65f903f6f123df96aaefec8",
+      "afterSha256": "45bfdc6747f8966f9e27120ce3c0b2cb7c6daf7d26fa9f95f9f64061e334ad5c"
+    },
+    {
+      "path": "nodics.ai/nodics.loyalty/modules/loyaltyLedger/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "0a26e831da35f0a4c9fcd9e876a665ae1401ed5c72a60f9845e506e39e1e7f50",
+      "afterSha256": "92eebb6f4dc754a490251baf9621d1e4e335afa917983a8f7122ebfd13bb94a1"
+    },
+    {
+      "path": "nodics.ai/nodics.loyalty/modules/loyaltyProgram/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "12da1f83a88675cd29e5ae528e4dd79ae2ce1b5078e977db951be476658eb37c",
+      "afterSha256": "d341116be1595ff36adc6743f00effc6a81ca0cd4ed32011af66bf542d3190ec"
+    },
+    {
+      "path": "nodics.ai/nodics.loyalty/modules/loyaltyRedemption/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "40de9f21e6d1d4f17457d794a19b34a216060a70e2085effbe9d92516809767c",
+      "afterSha256": "7094152fc9f0c79ee7c937f2fa7d8d325fae6bb4e47a1a10c2cded89a18c57f2"
+    },
+    {
+      "path": "nodics.ai/nodics.loyalty/modules/loyaltyReservation/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "4979ff2f17e156f6ab44636c06a0068d85d44e026b7205d48103fe5c6c14ee95",
+      "afterSha256": "0692f7998b6ef27a85402a2b47dc6046b65fecaec7f19fa1bc06ee19070e4149"
+    },
+    {
+      "path": "nodics.ai/nodics.loyalty/modules/loyaltyRewardType/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "fb3c45f07817af9ca4206f130a093d586e1d04f3bcd587dbf687ea906aa8e948",
+      "afterSha256": "db2f4a911ea6e0c5ba89a87e5d11dd0ade2be4cf5b097399e79749b9fd00da54"
+    },
+    {
+      "path": "nodics.ai/nodics.loyalty/modules/loyaltyWallet/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "aef846bd242a12a09c8f77d54203ef4cd9a3d88ff0683083593d376479ca7fb8",
+      "afterSha256": "85b3f49768f3e4d12ab93542abd0bde76ad0c736347ad2e4baff6f9539f10f9e"
+    },
+    {
+      "path": "nodics.ai/nodics.platform/modules/axis/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "38e61c9fe2d470f23fc61198693f44ada41037ca58a31d1df8534166dec5c76c",
+      "afterSha256": "a788b3128d89158c6db4739f148cd2cbd240b1d0ad34fe5cd58f673ede32cbad"
+    },
+    {
+      "path": "nodics.ai/nodics.platform/modules/backoffice/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "090477030175fce7d8a86a5391575b08ba12442e0cb2ea8d988d2261ac05245d",
+      "afterSha256": "82912d539b73c3e335894f3d942969413f7269ad4d0ae8cf0132dd836e61cbcb"
+    },
+    {
+      "path": "nodics.ai/nodics.platform/modules/installer/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "41d38e15f74b301d0eedc3ff48f5cfe7019d8547e2b2cce2079e18c8d356ce29",
+      "afterSha256": "2035536a8e00a959eb6b499c3f61cf74971a356ef1536476a0437d0a850d584b"
+    },
+    {
+      "path": "nodics.ai/nodics.platform/modules/profile/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "a38b17b404321e1c8cb14f1670160e034a50e65216e17826c03f53ae88a57533",
+      "afterSha256": "97dd17b34fe5d626b37e33e4fd9ae716772c9cb3208a0644f54c9ad6b9f3dc29"
+    },
+    {
+      "path": "nodics.ai/nodics.process/modules/cronjob/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "bbf1cb12d64895239cab8f308b5b0d97ed98c7aac504aac9a4ff7d33b7a6df0e",
+      "afterSha256": "e8530a38b2d0f149b31e76d94aa3035c81e2c9d05081ca8423f22a90451dcd79"
+    },
+    {
+      "path": "nodics.ai/nodics.process/modules/workflow/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "a14a7c8bf7f7b36902c78399c1bbb01a97bce5ca1ba32baaadede0d670beed01",
+      "afterSha256": "b990aeed57091f844e21c568d520a580bbf0157958cb504f4c94ec798c4cd08a"
+    },
+    {
+      "path": "nodics.ai/nodics.rulesEngine/modules/rulesApi/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "934e087a9d04f16b92d622f26c3a86a4169096ecf935638d9d7ea81ae07cd7c6",
+      "afterSha256": "e554b3574e32ea90c03a4a832d89b44bb4b99389f83ddba61352840afce2009e"
+    },
+    {
+      "path": "nodics.ai/nodics.rulesEngine/modules/rulesEvaluation/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "0aecdc896b0d72aad92d419ebf22908bb6b12ce52563975e47fc9b7cf1d40c6c",
+      "afterSha256": "2a68ca79a8d87d7d3dedec04650f66dcc4b41c7b9536ed5374c082704227b593"
+    },
+    {
+      "path": "nodics.ai/nodics.waste/modules/wasteCollection/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "0db9e266b55ebcacd2c444790de74c303157adcf7900d90448674dbb8eecae25",
+      "afterSha256": "f03aa151e6c1d41ddb9d6f187119bab5bbce1e20157590baced53287146353f5"
+    },
+    {
+      "path": "nodics.ai/nodics.waste/modules/wasteCore/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "20ea46ef4aff03616772a88d3c21fb13b4b1b3b6908d6b0fbeb2126833eb3268",
+      "afterSha256": "e73b46c29a52004e00740fdddc417d9c3bb2740c6d9cade5a2a7b2db51fa48a8"
+    },
+    {
+      "path": "nodics.ai/nodics.waste/modules/wasteImpact/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "d16fcc53be9914c393011b87690ef29e53d3dc8095f4e1c56d25155ddff5c70a",
+      "afterSha256": "9507dcd98bd17342dc273b8e63ee67cd37c1e76eeb9dfa9d85dcbdcdfd4d7f43"
+    },
+    {
+      "path": "nodics.ai/nodics.waste/modules/wasteMaterial/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "f36822b43a2a9bb82e5261b61a8ba237d7fadf901751c125384c8c226229f46e",
+      "afterSha256": "30a693edaaa7b2a0b53116702a5ee4164cad102d2770c67946987570136dff00"
+    },
+    {
+      "path": "nodics.ai/nodics.wcms/modules/cms/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "1f33ae3a5108bec01e31cad522e4fa8de4233230f07b26644c010ee5ad7c3aa2",
+      "afterSha256": "70470292d311a759e70f33da657c00d6f26429ac55476fe505757bcc2d3236ff"
+    },
+    {
+      "path": "nodics.ai/nodics.wcms/modules/editorial/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "357d2fa4fe83f4269f57d4fdae950d01515de250cd1e42144266faec3032c6dc",
+      "afterSha256": "585613d3dad35400b8dda16644a2bc0bc6ec4fa3c277a77d93c1ac90e1f57165"
+    },
+    {
+      "path": "nodics.ai/nodics.wcms/modules/media/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "489de2577d48e69736a4a84037e3f8679785e8858c2e8037d34da74d768d39e8",
+      "afterSha256": "f981319afff12a0362448511c4cf387d6ec0dcb054ff888adb206802b3cdfd22"
+    },
+    {
+      "path": "nodics.ai/nodics.wcms/modules/wcms/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "3d500fd5922c65e34ad775f19a1cdf67bb9076e19d846bcbca0cd9f16b48aa99",
+      "afterSha256": "a11ee8042c5e6dc6ce10858192b8e1c214a0435982f8ebcde658920ee9ba92df"
+    },
+    {
+      "path": "nodics.ai/nodics.wcms/modules/wcmsExperience/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "2a7ff1bad73a3c865845d6bf9977694d4506955e2ed734ed152a662ed2b304c0",
+      "afterSha256": "772eee8bea3512e3c802fb41f7f89e15c212849e656f4861683b7eb98532f8be"
+    },
+    {
+      "path": "nodics.kickoff/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "2c0dc7cdd40a9bfa0125fce872869104d896019454ad0c5d0422f8b4c944aee6",
+      "afterSha256": "66003178a667268d153d3786d21e6232ff70609a7d47900d8b4ba32253f7e687"
+    },
+    {
+      "path": "nodics.kickoff/envs/kickoffLocal/processServer/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "950609b5258ad131459f82b1b4babb5f1955ff10f8e82cdf18134bef21ac5272",
+      "afterSha256": "b87cc21781dcbdeb245a97eb2a809049f63471bc716aa6b53f4e5c490e2685c2"
+    },
+    {
+      "path": "nodics.kickoff/modules/agora.apparel/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "fe271e0c125773011f615b4232bb4d4ddca80cf53e357728314a28c96623a086",
+      "afterSha256": "3e511a8236f715f25dea374ef224c801b7254b5e78af553a39301a371d35088d"
+    },
+    {
+      "path": "nodics.kickoff/modules/agora.electronics/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "6dd0faeee366fcf8857cab5faae61910a766ce454259b1bb49f238f1699fc209",
+      "afterSha256": "807ec90c0fdf96fc6599332c9fcf94b4864d9b77ffcfa6f625c1ef2b48a4e40f"
+    },
+    {
+      "path": "nodics.kickoff/modules/agora.telco/data/manifest.json",
+      "kind": "MANIFEST",
+      "beforeSha256": "f3c2974c3b065d319aa196607f4850a064b0780bc051e45aa65be8fd623394a8",
+      "afterSha256": "4bd3de958e015078b01a621163e9c1a85d17188666c9ba3a1c893c1f0e3bb67b"
+    },
+    {
+      "path": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "e48bd115671ca5bd7c49ab0a7c596eadc9f2bee6dd5e2d96303ae029e525b9b6",
+      "afterSha256": "080795c59ddc586ad5e08bb9ef46a12d7c642120a1ba15bb235cedffda43452d"
+    },
+    {
+      "path": "nodics.ai/nodics.docs/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "1ca7f623cd01444c4289e9b98e7ad98672f34f8e67d2eefdd1ec03d50aca9c99",
+      "afterSha256": "b37db58fdda2dc30c62e5c6b635cce27f73dd4e75c2da2e88358224bf0a700bc"
+    },
+    {
+      "path": "nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "f2d895dc716475615175a91e0803690e8b8c9586b2ffa63f8aa7fb26fdc51520",
+      "afterSha256": "a9f917d96b1f521259bc06de6c5cad5340fd62abc55f184f31f6ca9887ae602d"
+    },
+    {
+      "path": "nodics.kickoff/envs/kickoffLocal/wcmsStagedServer/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "1e6adec737c06c053cbd2d46decfca855fbc5a782216b55cb2867cfe74e730ca",
+      "afterSha256": "d914f2a27abc382e6d05dba7460bcd4bfcaac68146a0b4c8ecfc9879f462a876"
+    },
+    {
+      "path": "nodics.kickoff/modules/agora.apparel/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "abfc90c5744006172e967bd6424bf098b61e91502f223f704b3e898f99d2efad",
+      "afterSha256": "2c7928fb9f56fc6d38899b32042b23eb221c6c233b5f96cf3bef7260671765ea"
+    },
+    {
+      "path": "nodics.kickoff/modules/agora.electronics/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "d9c1a8c65b6d9e94cb97b9b6f82073404e239563d04b525ae7b9cc187c0fb0c2",
+      "afterSha256": "13be43b1d473b0d37d24bebbb0ed407324b5bf66c8ba6d8dd0fafb97f526ee15"
+    },
+    {
+      "path": "nodics.kickoff/modules/agora.telco/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "2a437c671cf4c6f864829eb35149605ea9cc7c122a6c1a1e55a8cc1bf9566dcb",
+      "afterSha256": "1618e595d77941c0861db29683385cf6ed285151ceb0cda299d714463db5e935"
+    },
+    {
+      "path": "nodics.kickoff/modules/kickoffCore/config/properties.js",
+      "kind": "CONFIGURATION_PINS",
+      "beforeSha256": "f41e8bfeef2c55c85b372811d2a3447a2deb52cbb2756f325a8c6376c35bb641",
+      "afterSha256": "5ea460a4992f1308260a9034b3ba0ae7442a9551a5a63c02492f1f431c6d5812"
+    }
+  ],
+  "checks": {
+    "declaredPayloadFilesUnchanged": 1226,
+    "configurationPinsRebased": 78
+  },
+  "boundaries": [
+    "SOURCE_CONTRIBUTION versions, package versions, contract versions, schema versions and business workflow revisions are not executable release identities and remain unchanged.",
+    "No source records, headers or assets were rewritten. Existing installation receipts and publication histories were not changed.",
+    "Previous native qualification applies to its recorded pre-rebase release identities, not to the new 0.0.1 identities.",
+    "Use an approved owner-governed local fresh reset and re-import/publication to qualify this baseline. Never bypass downgrade or checksum protection or replay Init over an installed deployment.",
+    "This is a one-time pre-customer source rebase, not permission to rewrite any future frozen or installed release."
+  ],
+  "finalSourceVerification": {
+    "state": "PASS",
+    "executableSections": 141,
+    "uniquePayloadFilesVerified": 1226,
+    "configuredReleasePinsVerified": 81,
+    "exactProvenanceReleasePinsVerified": 5,
+    "repeatedRebasePlan": {
+      "filesToChange": 0,
+      "pinsToChange": 0
+    },
+    "followupCorrections": [
+      "Profile bootstrap assessment selects profile:init-v001 at 0.0.1; qualification remains disabled.",
+      "Local Editorial source and target provenance select 0.0.1, with target checksum verified against declared files; graph checksums remain unchanged.",
+      "Current baseline assertions and nearest contracts updated; hypothetical forward upgrade fixtures remain independent.",
+      "One changed Media test evidence binding was manually re-reviewed without changing canonical article blocks or historical reviews."
+    ]
+  },
+  "validation": {
+    "documentationSuite": "PASS; 173 articles; source coverage and hardening checks; 22 scoped semantic items closed",
+    "toolingSuite": "PASS; 188 tests",
+    "importSuite": "PASS; 151 passed; 1 explicit live replica-set opt-in skipped",
+    "profileAndMediaFocusedSuite": "PASS; 33 tests",
+    "kickoffFullSuite": "PASS before the final added baseline/provenance assertions; final changed gates rerun separately",
+    "kickoffFinalBaselineAndEditorialGates": "PASS; 17 tests",
+    "generatedContext": "PASS; 202 modules generated and validated",
+    "frameworkSyntax": "PASS; 6068 files; 0 failures",
+    "frameworkAndProjectDiffChecks": "PASS",
+    "liveRebasedBaseline": "NOT_EXECUTED; requires governed fresh reset, import and normal approvals"
+  },
+  "supplementalSourceFiles": [
+    {
+      "path": "nodics.ai/nodics.platform/modules/profile/config/properties.js",
+      "sha256": "f2d2fb610ee9c1efc018125dbd09754d468d00d19bccc02b3ba2353f25f80d1f"
+    },
+    {
+      "path": "nodics.kickoff/envs/kickoffLocal/config/properties.js",
+      "sha256": "9629c4c3a19dcc64b86836561e659d7a16058d10efa0d08e351a3c6bb244680c"
+    }
+  ]
+}

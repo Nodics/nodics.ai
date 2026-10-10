@@ -24,8 +24,6 @@ export async function runRuntimeDeploymentGrantAcceptance(options = {}) {
     ...probe.read({ projectRoot, environment: configuration.environment, server: runtime.server, inheritEnvironment: true }),
   }));
   const runtimes = projections.filter(item => item.properties?.runtimeIdentity?.instanceCode);
-  const platformServer = configuration.topology.groups.backends.find(item => item.role === 'PLATFORM' && item.enabled !== false)?.server;
-  const policy = projections.find(item => item.server === platformServer)?.properties.identityGovernance?.migration || {};
   if (!runtimes.length) throw new Error('No effective runtime identities are configured');
   const headers = { ...await authenticate(), tenant: environment.AXIS_TENANT || 'default' };
   const evidence = [];
@@ -44,7 +42,7 @@ export async function runRuntimeDeploymentGrantAcceptance(options = {}) {
         scope?.projectCode !== configuration.projectCode || scope?.environmentCode !== configuration.environment ||
         scope?.serverCode !== runtime.server || scope?.instanceCode !== runtime.properties.runtimeIdentity.instanceCode ||
         !Array.isArray(scope.modules) || !requiredModules.every(module => scope.modules.includes(module))) throw new Error('Governed runtime grant does not match its effective deployment: ' + code);
-    const permissions = bootstrap.runtimeGrantPermissions(policy);
+    const permissions = bootstrap.runtimeGrantPermissions(runtime.properties.identityGovernance?.migration || {});
     if (!permissions.length || !Array.isArray(scope.permissions) || !permissions.every(permission => scope.permissions.includes(permission)))
       throw new Error('Runtime grant is missing configured owner permissions: ' + code);
     evidence.push({ code, server: runtime.server, state: 'VERIFIED' });

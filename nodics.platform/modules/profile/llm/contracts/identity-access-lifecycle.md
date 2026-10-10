@@ -48,7 +48,10 @@ assignments; it never provisions credentials, rotates keys or repairs grants.
 Imports and help are inert. Every selected runtime must have one matching active
 ALLOW service assignment for its project, environment, server, instance, enterprise
 and tenant. Verify both active and remote module requirements and both owner
-permission sources. Modules and permissions must be arrays, never strings whose
+permission sources from each runtime's own effective policy, matching the bootstrap
+owner. Platform's policy is not a permission union for sibling runtimes; missing
+runtime policy refuses instead of inheriting it. The suite never expands installed
+grants to satisfy a mismatched verifier. Modules and permissions must be arrays, never strings whose
 substring matching could fabricate coverage. Missing, ambiguous, malformed and
 denied records fail the suite.
 

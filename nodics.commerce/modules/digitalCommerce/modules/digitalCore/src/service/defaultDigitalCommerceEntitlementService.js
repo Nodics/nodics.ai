@@ -12,6 +12,7 @@
 "use strict";
 
 const crypto = require("node:crypto");
+const { isDeepStrictEqual } = require('node:util');
 
 /** @module digitalCore/src/service/defaultDigitalCommerceEntitlementService @description Owns Digital Commerce entitlement, delivery, reveal, and revocation evidence. @layer service @owner digitalCore */
 module.exports = {
@@ -275,7 +276,7 @@ module.exports = {
         enterpriseCode: request.enterpriseCode || sale.enterpriseCode,
         ownerId: request.ownerId || sale.soldTo,
         orderCode: unit.orderCode,
-        orderEntryCode: sale.orderEntryCode || sale.entryCode,
+        orderEntryCode: this.couponPurchaseEntryCode(sale),
         cartCode:
           sale.cartCode || (request.payload && request.payload.cartCode),
         productCode: sale.productCode,
@@ -401,8 +402,71 @@ module.exports = {
     }
     return records;
   },
-  /** Reveals a delivered entitlement through a secure provider/vault service only after owner checks. @param {Object} request Request. @returns {Promise<Object>} Reveal result. */
+  /** Rejects without disclosing payment, purchase or secret evidence. @returns {never} Fixed refusal. */
+  refuseReveal: function () { throw new CLASSES.NodicsError('ERR_DIGITAL_REVEAL_FORBIDDEN'); },
+  /** Resolves Promotion's original checkout entry identity; an explicit alias must agree rather than override it. @param {Object} coupon Purchased provider unit. @returns {string} Exact original entry. */
+  couponPurchaseEntryCode: function (coupon) {
+    const entries = [coupon?.entryCode, coupon?.orderEntryCode].filter(
+      (value) => value !== undefined,
+    );
+    if (
+      !entries.length ||
+      entries.some(
+        (value) =>
+          typeof value !== "string" ||
+          !/^[A-Za-z0-9_.:@|\-]{1,192}$/.test(value) ||
+          value !== entries[0],
+      )
+    )
+      this.refuseReveal();
+    return entries[0];
+  },
+  /** Snapshots signed customer scope without trusting payload overrides or manufactured privacy flags. @param {Object} request Exact private entry. @returns {Object} Privately inherited trusted context. */
+  revealContext: function (request) {
+    const auth = request?.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+    const enterpriseCode = auth.enterpriseCode || auth.entCode, ownerId = auth.principalId || auth.code || auth.loginId;
+    const role = CONFIG.get('runtimeRole');
+    if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' ||
+        auth.tokenType !== 'access' || auth.principalType !== 'customer' ||
+        [auth.tenant, enterpriseCode, ownerId].some(value => typeof value !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(value)) ||
+        [request.tenant, auth.tenant].some(value => value !== undefined && value !== auth.tenant) ||
+        [request.enterpriseCode, request.entCode, auth.enterpriseCode, auth.entCode].some(value => value !== undefined && value !== enterpriseCode) ||
+        (request.ownerId !== undefined && request.ownerId !== ownerId) ||
+        !security?.isPermissionGranted('commerce.digital.own.reveal', security.getGrantedPermissions(request), {}) ||
+        SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection(request) !== true) this.refuseReveal();
+    const r = { ...request, tenant: auth.tenant, enterpriseCode, ownerId, authData: structuredClone(auth),
+      payload: structuredClone(request.payload || {}) };
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy(r, request);
+    return r;
+  },
+  /** Reuses committed Checkout/Payment/Order/entitlement/delivery evidence for one current purchased coupon. No notification selection or new authority is introduced. @param {Object} input Private customer context. @param {Object} coupon Current coupon snapshot. @returns {Promise<Object>} Current exact entitlement. */
+  authorizeCouponReveal: async function (input, coupon) {
+    const r = this.revealContext(input), entitlementCode = r.entitlementCode || r.payload.entitlementCode;
+    if (typeof entitlementCode !== 'string' || !/^[A-Za-z0-9_.:@-]{1,192}$/.test(entitlementCode) ||
+        !coupon || coupon.code !== r.couponCode || coupon.tenant !== r.tenant || coupon.enterpriseCode !== r.enterpriseCode ||
+        coupon.active !== true || coupon.soldTo !== r.ownerId || !['DELIVERED', 'CLAIMED'].includes(coupon.status) ||
+        !Number.isFinite(Date.parse(coupon.soldAt)) || !Number.isFinite(Date.parse(coupon.deliveredAt)) ||
+        !Number.isFinite(Date.parse(coupon.validTo)) || Date.parse(coupon.validTo) <= Date.now()) this.refuseReveal();
+    const rows = await this.readRecords(SERVICE.DefaultDigitalEntitlementService, r, {
+      tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, code: entitlementCode,
+    });
+    if (rows.length !== 1) this.refuseReveal();
+    const e = rows[0];
+    if (e.code !== entitlementCode || e.tenant !== r.tenant || e.enterpriseCode !== r.enterpriseCode || e.ownerId !== r.ownerId ||
+        e.active !== true || e.status !== 'ACTIVE' || e.providerOwner !== 'promotion' || e.digitalDeliveryType !== 'COUPON_CODE' ||
+        e.providerCode !== coupon.code || e.orderCode !== coupon.orderCode || e.orderEntryCode !== this.couponPurchaseEntryCode(coupon) ||
+        e.productCode !== coupon.productCode || Date.parse(e.purchasedAt) !== Date.parse(coupon.soldAt) ||
+        Date.parse(e.validTo) !== Date.parse(coupon.validTo) ||
+        !isDeepStrictEqual(e.purchasePolicy, coupon.purchasePolicy)) this.refuseReveal();
+    const evidence = await SERVICE.DefaultDigitalCommerceNotificationService.evidence({ ...r, orderCode: e.orderCode }, 'PURCHASED');
+    const committed = evidence.items.filter(item => item.code === e.code);
+    if (evidence.kind !== 'PURCHASED' || committed.length !== 1 ||
+        !isDeepStrictEqual(committed[0], e)) this.refuseReveal();
+    return e;
+  },
+  /** Reveals a delivered entitlement through Promotion's secure owner after private customer admission. @param {Object} request Request. @returns {Promise<Object>} Reveal result. */
   reveal: async function (request) {
+    request = this.revealContext(request);
     const payload = request.payload || {};
     const entitlements = await this.listEntitlements(request, {
       code: payload.entitlementCode,
@@ -410,11 +474,11 @@ module.exports = {
       status: "ACTIVE",
     });
     const entitlement = entitlements[0];
-    if (!entitlement) throw new Error("Digital entitlement was not found");
+    if (entitlements.length !== 1 || !entitlement || entitlement.code !== payload.entitlementCode) this.refuseReveal();
     if (entitlement.ownerId !== request.ownerId)
-      throw new Error("Digital entitlement belongs to another customer");
+      this.refuseReveal();
     if (entitlement.providerOwner !== "promotion")
-      throw new Error("Unsupported digital entitlement provider");
+      this.refuseReveal();
     if (
       !SERVICE.DefaultCouponSecureRevealService ||
       typeof SERVICE.DefaultCouponSecureRevealService.reveal !== "function"
@@ -427,14 +491,12 @@ module.exports = {
         reasonCode: "COUPON_REVEAL_PROVIDER_REQUIRED",
       };
     }
-    return SERVICE.DefaultCouponSecureRevealService.reveal({
-      tenant: request.tenant,
-      enterpriseCode: request.enterpriseCode,
-      ownerId: request.ownerId,
+    const providerRequest = { ...request,
+      entitlementCode: entitlement.code,
       couponCode: entitlement.providerCode,
-      correlationId: request.correlationId,
-      authData: request.authData,
-    });
+    };
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy(providerRequest, request);
+    return SERVICE.DefaultCouponSecureRevealService.reveal(providerRequest);
   },
   /** Claims a delivered coupon entitlement for a target discount application. @param {Object} request Claim request. @returns {Promise<Object>} Updated entitlement and provider coupon. */
   claim: async function (request) {
@@ -466,8 +528,7 @@ module.exports = {
         .claimPurchasedCouponCode !== "function"
     )
       throw new Error("Coupon claim provider is required");
-    const coupon =
-      await SERVICE.DefaultPromotionOperationService.claimPurchasedCouponCode({
+    const coupon = await this.promotionLifecycle(request, "claim", {
         tenant: request.tenant,
         enterpriseCode: request.enterpriseCode,
         ownerId: request.ownerId,
@@ -518,8 +579,7 @@ module.exports = {
         .redeemClaimedCouponCode !== "function"
     )
       throw new Error("Coupon redeem provider is required");
-    const coupon =
-      await SERVICE.DefaultPromotionOperationService.redeemClaimedCouponCode({
+    const coupon = await this.promotionLifecycle(request, "redeem", {
         tenant: request.tenant,
         enterpriseCode: request.enterpriseCode,
         ownerId: request.ownerId,
@@ -547,8 +607,21 @@ module.exports = {
     );
     return { entitlement: updated, coupon };
   },
+  /** Preserves exact private merchant child identity without transferring generic scope or credentials. @param {Object} request Original Digital command. @param {string} operation Fixed lifecycle operation. @param {Object} command Exact Promotion child. @returns {Promise<Object>} Coupon transition. */
+  promotionLifecycle: async function (request, operation, command) {
+    if (!["claim", "redeem"].includes(operation)) throw new Error("Invalid coupon lifecycle operation");
+    const release = SERVICE.DefaultPromotionMerchantScopeService?.forwardLifecycle(request, command, operation);
+    try {
+      return await SERVICE.DefaultPromotionOperationService[
+        operation === "claim" ? "claimPurchasedCouponCode" : "redeemClaimedCouponCode"
+      ](command);
+    } finally { release?.(); }
+  },
   /** Calculates digital revocation policy for cancellation, return, or refund. @param {Object} entitlement Entitlement. @param {string} requestType Reversal type. @returns {Object} Policy decision. */
   revocationPolicy: function (entitlement, requestType) {
+    if (entitlement?.digitalDeliveryType === "DIGITAL_OWNERSHIP" || entitlement?.providerOwner === "wasteCore")
+      return { policyDecision: requestType === "RETURN" ? "BLOCKED" : "MANUAL_REVIEW", refundable: false,
+        reasonCode: requestType === "RETURN" ? "DIGITAL_PRODUCTS_DO_NOT_USE_PHYSICAL_RETURN" : "DIGITAL_OWNERSHIP_REFUND_REQUIRES_DOMAIN_OWNER" };
     const claimStatus = (entitlement && entitlement.claimStatus) || "UNCLAIMED";
     if (claimStatus === "REDEEMED")
       return {

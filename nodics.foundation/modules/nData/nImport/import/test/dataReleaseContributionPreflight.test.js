@@ -39,7 +39,7 @@ function fixture() {
         code: service.installationCode('tenantA', target), version: target.version, checksum: target.checksum, status: 'COMPLETED'
     }] : [] };
     const target = service.discoverReleases('init').find(item => item.releaseCode === 'editorial:editorialWorkflows');
-    const definitions = require(path.join(owner.path, 'data/init-v002/records/process/editorialWorkflowDefinitionData'));
+    const definitions = require(path.join(owner.path, 'data/init-v001/records/process/editorialWorkflowDefinitionData'));
     const records = definitions.definitions.map(item => ({ ...structuredClone(item), status: 'PUBLISHED', currentVersion: 1,
         contributionOwner: 'deployment', contributionCode: 'deployment:editorial',
         contributionVersion: '1.0.0', contributionChecksum: 'a'.repeat(64) }));

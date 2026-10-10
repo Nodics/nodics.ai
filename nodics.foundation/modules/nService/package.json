@@ -1,42 +1,43 @@
 {
-    "name": "nService",
-    "index": "1.5",
-    "description": "Generate services for all defined items",
-    "homepage": "http://www.nodics.com/",
-    "keywords": [
-        "Nodics",
-        "Framework",
-        "Services"
+  "name": "nService",
+  "index": "1.5",
+  "description": "Generate services for all defined items",
+  "homepage": "http://www.nodics.com/",
+  "keywords": [
+    "Nodics",
+    "Framework",
+    "Services"
+  ],
+  "author": "Nodics Framework <nodics.framework@gmail.com>",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "GNU General Public License v3",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nodics/nodics.ai.git"
+  },
+  "dependencies": {},
+  "nodics": {
+    "kind": "group",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "service",
+      "pipeline",
+      "utility",
+      "test",
+      "llm",
+      "data"
     ],
-    "author": "Nodics Framework <nodics.framework@gmail.com>",
-    "main": "nodics.js",
-    "version": "0.0.0",
-    "private": true,
-    "license": "GNU General Public License v3",
-    "scripts": {},
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Nodics/nodics.ai.git"
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
     },
-    "dependencies": {},
-    "nodics": {
-        "kind": "group",
-        "runtimeModule": true,
-        "loadableByNodicsModuleLoader": true,
-        "owns": [
-            "composition",
-            "configuration",
-            "service",
-            "pipeline",
-            "utility",
-            "test",
-            "llm"
-        ],
-        "runtime": {
-            "router": false,
-            "publish": false,
-            "web": false
-        },
-        "displayName": "Services"
-    }
+    "displayName": "Services"
+  }
 }

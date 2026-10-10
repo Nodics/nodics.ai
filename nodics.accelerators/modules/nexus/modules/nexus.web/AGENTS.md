@@ -9,10 +9,9 @@
   `nexusContentCatalog`. Do not add demo-commerce data until the corporate
   local qualification gate is complete and the demo phase is authorized.
 - Do not introduce structured-source folders or generator-only authoring files
-  for general Nexus application content. The explicit exception is
-  application-owned documentation source under `docs/`; it is non-executable
-  authoring input and must generate governed WCMS Staged records declared by an
-  immutable manifest section before it can be installed or published.
+  for Nexus application content or documentation. Canonical documentation is CMS
+  page/component data in this module's `data/docs-v001`, declared by an optional
+  `CONTENT_PACK` manifest section and installed independently of business data.
 - Business-user content changes belong in Axis, Schema Workbench, Page
   Designer, and governed data import/export flows. DevOps may use data packs
   for bootstrap, migration, environment promotion, or controlled sample data.
@@ -20,15 +19,16 @@
   belongs in the independent `nodics.nexus` frontend.
 - Public content must not contain secrets, credentials, private endpoints,
   unverified claims, or unlicensed media.
-- Every executable file must be declared by exactly one immutable manifest
-  section whose `sourceRoot`, lifecycle, and destination role match its
-  physical folder. Never place expected Online projections under `data/`.
+- Every executable business data file must be declared by exactly one immutable
+  business release section whose `sourceRoot`, lifecycle, and destination role
+  match its physical folder. Documentation uses checksummed `CONTENT_PACK`
+  declarations instead. Never place expected Online projections under `data/`.
 - WCMS publishable releases must contain authoring source only. Engagement
   schemas remain on the Engagement runtime and must be classified
   `OPERATIONAL_VERSIONED`, not disguised as WCMS Staged content.
-- Keep reusable Nexus documentation source under this module's `docs/`.
-  Never place it in customer-wide `docs/`, an untracked workspace planning
-  directory, the Nexus frontend, or a framework documentation pack.
+- Keep reusable Nexus documentation records and Media assets under this module's
+  `data/docs-v001`. Reference shared framework guides by stable document identity;
+  never copy their detail into Nexus, a customer project or the Nexus frontend.
 
 
 This module explicitly participates in Application Builder through

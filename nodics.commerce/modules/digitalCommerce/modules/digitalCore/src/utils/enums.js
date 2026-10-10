@@ -11,9 +11,13 @@
 
 /**
  * @module digitalCore/utils/enums
- * @description Reserved enums contribution registry for digitalCore.
+ * @description Defines bounded DigitalCore integration availability reasons.
  * @layer utils
  * @owner digitalCore
  * @override Later modules may contribute definitions through the standard module hierarchy.
  */
-module.exports = {};
+module.exports = {
+    DigitalOwnershipAvailabilityReason: {
+        definition: ['DIGITAL_OWNERSHIP_NOT_SELECTED', 'DIGITAL_OWNERSHIP_NOT_QUALIFIED']
+    }
+};

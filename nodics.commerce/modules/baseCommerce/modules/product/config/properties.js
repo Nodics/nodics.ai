@@ -12,6 +12,7 @@
 /** @module product/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner product */
 module.exports = {
   publish: {
+    setup: { permissions: { product: 'commerce.product.publish' } },
     providers: { domainAdapters: { product: null }, versionProviders: { product: null }, workflowProviders: { product: null } },
     approvalWorkflow: { domains: { product: { definitionCode: 'productPublicationApproval', ownerModule: 'product',
       actionKey: 'product.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } },

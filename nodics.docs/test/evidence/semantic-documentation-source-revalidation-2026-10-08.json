@@ -1,0 +1,940 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-08",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "BOUNDED_SOURCE_REVALIDATION_WITH_OPEN_CONTENT_GAPS",
+  "predecessor": {
+    "artifact": "semantic-documentation-closure.json",
+    "sha256BeforeReview": "460b1d397f9ab2dbe975806b5285e0dcc26964c13aa2b76bba3fb14395c54aa0",
+    "priorSourceFileSha256": {
+      "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "a82b1c70e5de05cf0c5d3e7311e8535a4bab996745fb69303bef90a584bc829b",
+      "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1",
+      "nodics.platform/modules/backoffice/src/router/routers.js": "71f4c69fa105c59c94d40e1b29efd8ba80b81dc7553f7a8f2d80d4e1f8aedc96",
+      "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js": "9008fbb9e34620162576b6cf5ff6d308db86a9858ff5bd76c4aec490e984292a",
+      "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js": "9fccac9c928a42536e8e531239b1648e3ecd3e91b50961e2f8d695bf682e7c7b",
+      "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js": "6db5f614512ac70e9e7dd3a6d91d34ee4b97ee32d1d9afea9905eed4b2c9c660",
+      "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js": "e51088c4dfe34366a347e11e22d0f2c2979128ba1136e77b7a9072611267bdf9",
+      "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js": "4cc3e29444502ce4e670625c90c004cba33f4430cd9bc27ab84744e1c70198cd",
+      "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js": "fe5af5c5a583bc34f98d062dab3f61e3826f043969b775bd022b355eb047487a",
+      "nodics.foundation/modules/nData/nImport/import/config/properties.js": "a1bd7094fc4e36d3d50203e8ee2699896e3c5e59df964db4eb0843df6577eea5",
+      "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js": "2b7f151865e2ffdfdf6367e7f67cb04d33793521d4d23d8df49dc2271f99a18d",
+      "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js": "ccceb1a3435222922eb24b97b597fbc3274c7301e612429a4f94ae9b69a4872b",
+      "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js": "7a4c4403548396f5749baf9c9ed2c6d8bd7b2fbe6a467c9683b13fec8d6f3741",
+      "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
+      "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
+      "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js": "90f49f1136d1fdb59ad3215a5a14a78c87b8c88e8a0c8674d88a21d9c54cfbaa",
+      "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js": "738e99cb171af61029b2488937232b6059a2c56e1dc0a43f17e5c14249f41fb7",
+      "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+      "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+      "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "406446bfd139172108ebf8f41598b0460ba03f1e0c875706cb64f3d0d40a83c6",
+      "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+      "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js": "ebb2ad51a15069289ff18f6f697ebff6000ee3259a3a791199ad9cf8b5b6cac9",
+      "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+      "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js": "c84793cec04b6000e88e5f8bde862ac984f67ca4319565e44695e139508ca917",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
+      "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js": "b796caca48ab333de664e81ae84813359ce1a2097f6cad40fffca4f2480a9041",
+      "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js": "a975e46dabac84330246f06c452f2c7432d0bb01f6aec4f76445b66fd1d38668",
+      "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js": "9363bc706d16a4ddce2cf56a53b1bab165bdefd3cc5f8f849a1a289384f4bfd6",
+      "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "f3f67872ae2434dfa21366305cb8e599ed74c74274f5668b1de08e4591121d91",
+      "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+      "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+      "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "e167190eaa0265ef59f5956370e3f5ccc11006c2f54e012159c74c21742e1f71"
+    }
+  },
+  "boundary": "Audit metadata/reports only. Five re-reviews; three renewed, two content gaps. No frozen packs, manifest/hash regeneration, global LLM generation, runtime, installed receipt, approval/publication or release-choice mutation. Developer LLM contracts are source evidence, not CMS module-guide content. Parent owns browser acceptance and pending content-release decision.",
+  "items": [
+    {
+      "item": "Axis setup and user-safe error contracts",
+      "backlogPriority": "P0",
+      "requestedAction": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "statusStates": "ENUM_MAPPING_CORRECT_PHASE_AND_ACTION_EXPLANATION_INCOMPLETE",
+        "setupBlockers": "NEEDS_REVIEW_AFTER_PUBLICATION_AND_GOVERNED_PUBLICATIONS",
+        "retryActions": "NEEDS_REVIEW_EXISTING_ONLINE_BASELINE_INITIALIZE",
+        "technicalEvidence": "COVERED_AUTHORIZED_BOUNDED_DIAGNOSTICS",
+        "userSafeMessages": "COVERED_PRIMARY_MESSAGE_VS_TECHNICAL_DETAIL"
+      },
+      "rationale": "The existing capabilityBusinessStatus precedence remains implemented, but the pinned State model, Error contract and Setup flow omit required AFTER_PUBLICATION setup and GOVERNED_PUBLICATIONS. Initialization is no longer always limited to preparing Staged: invoke can reuse a current Online CMS baseline, submit required owner publication intents and then initialize operational releases only after all required publications are CURRENT. Fresh status must qualify every required phase receipt before READY. Setup-blocker and retry explanations are incomplete, not eligible for hash-only renewal.",
+      "evidence": [
+        {
+          "documentId": "applications.axis-setup-error-contracts",
+          "anchors": [
+            "applicationsAxisSetupErrorContracts-1-source-map",
+            "applicationsAxisSetupErrorContracts-2-state-model",
+            "applicationsAxisSetupErrorContracts-3-error-contract",
+            "applicationsAxisSetupErrorContracts-4-setup-flow",
+            "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+            "applicationsAxisSetupErrorContracts-6-common-mistakes",
+            "applicationsAxisSetupErrorContracts-7-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js"
+      ],
+      "sourceFindings": [
+        "capabilityBusinessStatus guards can return NEEDS_ATTENTION before otherwise ready/retired readiness; READY also requires confirmed publication.state ONLINE and no UPDATE_AVAILABLE.",
+        "capabilityRepairProjection distinguishes read-only REFRESH_READINESS, unavailable owner handoffs and explicitly confirmed Media repair. Axis cannot infer mutation authority from action metadata.",
+        "invoke lines 3104-3338 gates required AFTER_PUBLICATION work on CMS READY/ONLINE, exact Media qualification and non-invalid release. GOVERNED_PUBLICATIONS must be CURRENT before deferred DATA_RELEASE execution.",
+        "publicationPreparation lines 3054-3101 calls fixed secured publish /publications/setup/status|submit endpoints, checks exact intended identities and bounded evidence, and projects CURRENT/VALIDATION_BLOCKED/NOT_INSTALLED/RUNNING without exposing publicationPlan.",
+        "Actionable deferred setup with an existing Online baseline can yield readiness IMPORTED and allowedActions INITIALIZE; preparation guards still precede the IMPORTED-to-APPROVAL_REQUIRED mapper. Labels alone grant no approval."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Backend projection accuracy does not prove a deployed Axis screen renders or enforces the contract; browser and permission acceptance remain separate."
+      ],
+      "remediation": [
+        "applications.axis-setup-error-contracts#applicationsAxisSetupErrorContracts-2-state-model: add BEFORE_PUBLICATION -> CMS/Media Online -> required GOVERNED_PUBLICATIONS -> AFTER_PUBLICATION DATA_RELEASE -> fresh all-receipt status flow. Preserve actual capabilityBusinessStatus precedence; do not invent a replacement mapping.",
+        "applications.axis-setup-error-contracts#applicationsAxisSetupErrorContracts-3-error-contract: explain owner publication REVIEW_REQUIRED/VALIDATION_BLOCKED, NOT_INSTALLED and RUNNING blockers, bounded runtimeDiagnostic and contribution ownerBlocker. Distinguish owner review from actionable INITIALIZE; do not expose publicationPlan or provider exceptions.",
+        "applications.axis-setup-error-contracts#applicationsAxisSetupErrorContracts-4-setup-flow: qualify step 5, currently \"Initialization prepares the selected Staged release; approval and publication remain governed.\" Required deferred setup can reuse a current Online baseline, submit normal owner approval requests, then execute operational releases only after all required publications are CURRENT. Read allowedActions and fresh phase receipts; do not reset/reapprove a baseline merely to clear deferred setup.",
+        "applications.axis-setup-error-contracts#applicationsAxisSetupErrorContracts-7-verification: cover no deferred writes before CMS/Media and every required owner publication qualify; blocked/pending/failed contribution behavior, current-baseline reuse, INITIALIZE availability and fresh post-execution status. A separately authorized content-release decision is required; preserve frozen docs-v001."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0",
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-source-revalidation-2026-10-08.json",
+        "previousDisposition": "PASS_SOURCE_REVIEW",
+        "canonicalArticleBytes": "UNCHANGED",
+        "changedSourceFiles": [
+          "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js"
+        ],
+        "boundary": "Pinned article and previous findings compared with current source. No frozen edits or runtime/publication acceptance."
+      }
+    },
+    {
+      "item": "Import/export provider guides",
+      "backlogPriority": "P0",
+      "requestedAction": "Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "javascript": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "json": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "csv": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "excel": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "generatedExports": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "parserBehavior": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "safety": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "masking": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "customization": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Compared the unchanged pinned provider article and exact JavaScript/JSON/CSV/Excel/export anchors with changed import configuration. The only configuration additions are data.dataReleases.maximumContributionBytes=8388608 and maximumContributionPayloadBytes=1048576 for detached owner contribution reads, not parser buffers, workbook bounds, export dispatch or masking authority. Existing parser/exporter source bindings are unchanged. The article correctly separates provider behavior and safety, including unbounded workbook loading, optional masking and unsupported generated XLSX dispatch; its requested explanation still holds without editorial edits.",
+      "evidence": [
+        {
+          "documentId": "data.import-export-provider-guides",
+          "anchors": [
+            "dataImportExportProviderGuides-2-provider-model",
+            "dataImportExportProviderGuides-3-javascript-release-data",
+            "dataImportExportProviderGuides-4-json-csv-and-excel",
+            "dataImportExportProviderGuides-5-export-contract",
+            "dataImportExportProviderGuides-6-customization-and-extension-guidance"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+        "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js",
+        "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+      ],
+      "sourceFindings": [
+        "JavaScript mergeModels validates keyed plain maps, overlays by export key and mergeModel replaces array values; import header identity/deletion remains separate.",
+        "JSON processes streamed root arrays. CSV passes csvTypeParserOptions and encoding. ExcelJS loads a workbook, chooses the configured 1-based sheet or first sheet, trims headers and preserves formula/result objects rather than evaluating formulas.",
+        "DataExportService carries original actor/scope through owner reads and renders CSV/JSON; absence of DefaultSchemaReadAccessPolicyService returns cloned unmasked records, so mandatory masking is not guaranteed.",
+        "CSV values beginning =,+,-,@ are neutralized, but leading whitespace/tab/CR is not covered by that path. Standalone XLSX safeValue also handles tab/CR, but is not wired into generated export selection.",
+        "The new dataReleases contribution limits are not an 8 MiB parser admission limit or 1 MiB Excel/JSON/CSV record limit. No such limit is claimed by the provider article."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "EXPORT_POLICY_INTEGRATION_GAP: required masking cannot be claimed when the optional access-policy service is absent.",
+        "UNSUPPORTED_GENERATED_EXPORT_PROVIDER: standalone Excel rendering/package presence is not generated XLSX dispatch support.",
+        "CSV formula defenses are limited; qualify the real consuming spreadsheet and leading-whitespace/control-character cases. No live parser/export/Media acceptance was executed."
+      ],
+      "remediation": [
+        "Added two real JavaScript layers and exact array-replacing merged result.",
+        "Added concrete parser input/options/results and Excel header/blank/formula distinctions.",
+        "Separated original-actor authorization, policy absence, format dispatch, CSV/XLSX safety, limits/truncation and Media delivery ownership."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P0",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js",
+          "anchors": [
+            "mergeModel",
+            "mergeModels",
+            "selectSourceModels",
+            "handleFiles"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+          "anchors": [
+            "normalizeRequest",
+            "applyExportAccessPolicies",
+            "renderCsv",
+            "renderJson"
+          ]
+        }
+      ],
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-source-revalidation-2026-10-08.json",
+        "previousDisposition": "PASS_SOURCE_REVIEW",
+        "canonicalArticleBytes": "UNCHANGED",
+        "changedSourceFiles": [
+          "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+        ],
+        "boundary": "Pinned article and previous findings compared with current source. No frozen edits or runtime/publication acceptance."
+      }
+    },
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "backlogPriority": "P0",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "dataDependencies": "COVERED_OWNER_RELATIONS_AND_OPERATIONAL_EXCLUSIONS",
+        "creationLanes": "NEEDS_REVIEW_LEGACY_INVENTORY_RETURN_NOW_REFUSED",
+        "publication": "COVERED_STAGED_APPROVAL_VS_OPERATIONAL_STOCK",
+        "searchProjection": "COVERED_INDEPENDENT_OWNER_FRESHNESS",
+        "fulfillmentEvidence": "NEEDS_REVIEW_RETURN_AUTHORITY_AND_PENDING_ORDER_PAYMENT_CHANGES",
+        "browserProof": "COVERED_SCENARIOS_EXECUTION_REMAINS_SEPARATE"
+      },
+      "rationale": "Pricing changes retain createGoverned authority and add strict Store-scoped delivery roots without contradicting the guide. The new Inventory owner does contradict three pinned blocks: the data-bundle diagram, authoring step 6 and stock-operation paragraph advertise RETURN alongside RECEIVE/ADJUST. requireReturnAuthority now refuses legacy RETURN before getBalance or any write, even with caller-claimed receipt, disposition or quantity. Idempotency and operator-supplied evidence do not authorize this path. Legacy return restocking must be marked unsupported pending a qualified owner bridge, so this review remains open.",
+      "evidence": [
+        {
+          "documentId": "commerce.data-authoring-fulfillment",
+          "anchors": [
+            "commerceDataAuthoringFulfillment-1-source-map",
+            "commerceDataAuthoringFulfillment-2-data-bundle",
+            "commerceDataAuthoringFulfillment-3-authoring-sequence",
+            "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+            "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+            "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+            "commerceDataAuthoringFulfillment-7-common-mistakes",
+            "commerceDataAuthoringFulfillment-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js"
+      ],
+      "sourceFindings": [
+        "Inventory rejects stock mutation in COMMERCE_STAGED/STAGED and direct operational snapshots for balance/movement/reservation in OPERATIONAL_VERSIONED mode.",
+        "balanceAction replay identity does not make sequential balance/movement writes a proven cross-worker transaction.",
+        "Product listing creation is gated specialized DIGITAL/DIGITAL_COMMERCE behavior with source/owner/listing identity, not general Axis product CRUD.",
+        "Carrier sandbox execute requires enabled sandboxOnly policy, references and injected ports; liveQualified:true is refused, not certified.",
+        "Pricing createGoverned uses retained capture and shared publication authority, not operational inventory or frontend approval.",
+        "Inventory requireReturnAuthority lines 96-100 rejects RETURN/return or payload.actionCode RETURN. operationDelta and balanceAction both invoke it; balanceAction does so before balance/idempotency validation and generated owner reads/writes.",
+        "Pricing prepareSetup delegates to createGoverned, validateSetup checks retained membership/version and trusted scope, and isSetupReceiptCommitted checks applied tenant/enterprise/fingerprint/previous-version evidence. rootCodesByStore requires exact configured Store mappings; it does not fall back to Staged authoring.",
+        "inventoryReturnAuthorityContract.test.js asserts zero reads/writes for RETURN with caller-claimed receipt/disposition/quantity. Parent-reported ongoing Order/Payment reverse-safety work is not certified by this snapshot."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "No atomic transaction spans catalog publication, Inventory, carrier and Payment.",
+        "Browser sellability, live carrier support and settled refunds require separate operational evidence."
+      ],
+      "remediation": [
+        "commerce.data-authoring-fulfillment#commerceDataAuthoringFulfillment-2-data-bundle: correct diagram label \"Operational stock RECEIVE / ADJUST / RETURN\" to supported RECEIVE/ADJUST. Explain legacy RETURN is refused pending qualified Inventory-owned shipment/receipt/disposition authority, not a successful stock mutation.",
+        "commerce.data-authoring-fulfillment#commerceDataAuthoringFulfillment-3-authoring-sequence: correct ordered step 6 \"Operate stock through Inventory RECEIVE, ADJUST or RETURN\" and paragraph \"RECEIVE/ADJUST/RETURN require stable replay identity\". balanceAction/operationDelta reject RETURN before reads/writes even with idempotencyKey, rmaCode, receiptCode and disposition. Do not recommend ADJUST as a return-authority workaround.",
+        "commerce.data-authoring-fulfillment#commerceDataAuthoringFulfillment-5-fulfillment-flow and #commerceDataAuthoringFulfillment-8-verification: distinguish required delivered/receipt/disposition evidence from an implemented restock bridge; retain Payment-owned original-capture/refund reconciliation and no-settled-refund claims. Require denied RETURN/zero-effect tests and recheck parent-owned Order/Payment reverse-safety changes after they settle before closure.",
+        "Preserve frozen docs-v001 and historical Inventory/Pricing aggregate closure hashes. A future authorized content release must correct exact article blocks and renew relevant source bindings. Source review grants no import/publication or live carrier/payment acceptance."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0",
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-source-revalidation-2026-10-08.json",
+        "previousDisposition": "PASS_SOURCE_REVIEW",
+        "canonicalArticleBytes": "UNCHANGED",
+        "changedSourceFiles": [
+          "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js",
+          "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js"
+        ],
+        "boundary": "Pinned article and previous findings compared with current source. No frozen edits or runtime/publication acceptance."
+      }
+    },
+    {
+      "item": "Documentation publishing runbook",
+      "backlogPriority": "P0",
+      "requestedAction": "Document canonical CMS data, optional CONTENT_PACK selection, Staged import, review, Online publication, rollback, and rendering.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "canonicalCms": "COVERED_EXISTING_CANONICAL_OWNER_RECORDS",
+        "optionalContentPack": "COVERED_EXISTING_EXPLICIT_SELECTION_AND_SHARED_FOUNDATION_RULES",
+        "stagedImport": "COVERED_EXISTING_GOVERNED_IMPORT",
+        "review": "COVERED_EXISTING_REVIEW_AND_OWNER_APPROVAL",
+        "onlinePublication": "COVERED_EXISTING_MANIFEST_AND_POINTER_BOUNDARY",
+        "rollback": "COVERED_CONCRETE_SHARED_CMS_BASELINE_PROCEDURE",
+        "rendering": "COVERED_POST_ROLLBACK_ARTICLE_NAVIGATION_ACCESS_SEARCH_MEDIA_CHECKS"
+      },
+      "rationale": "Compared the unchanged runbook and delegated wcms.publishing-lifecycle rollback anchor with the changed BackOffice initialization owner. AFTER_PUBLICATION/GOVERNED_PUBLICATIONS logic is conditional on required deferred steps; it does not replace contentPack includes/referenceCatalogues, Staged documentation import, CMS/Media approval authority, immutable Online scope or CMS expectedRevision rollback. The runbook distinguishes documentation profiles from employee/product business setup and keeps selection, import, review, publication and browser/physical-Media verification separate. Its requested CMS publication explanation remains correct; renewing it does not close the Axis setup-phase gap.",
+      "evidence": [
+        {
+          "documentId": "docs.documentation-publishing-runbook",
+          "anchors": [
+            "docsDocumentationPublishingRunbook-1-source-map",
+            "docsDocumentationPublishingRunbook-2-publishing-model",
+            "docsDocumentationPublishingRunbook-3-authoring-steps",
+            "docsDocumentationPublishingRunbook-4-generated-data-contract",
+            "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+            "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+            "docsDocumentationPublishingRunbook-7-common-mistakes",
+            "docsDocumentationPublishingRunbook-8-verification",
+            "docs-publishing-module-ownership-composition",
+            "docs-publishing-references-pictures-checks",
+            "docsPublishingRunbook-functional-visibility-and-record-ownership"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-3-running-example"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js",
+        "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js",
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+        "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js",
+        "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js",
+        "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js",
+        "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js"
+      ],
+      "sourceFindings": [
+        "BackOffice forwards applicationInitialization reason/correlation and delegated human requestedBy to a fixed profile-owned baseline endpoint; internal CMS rollback is not a public human-token shortcut.",
+        "CMS baseline rollback requires state ONLINE and previousOnlineVersion, then passes current expectedRevision to nPublish.rollback.",
+        "nPublish transitions ROLLING_BACK, invokes the version provider and domain hook, and records ROLLED_BACK or FAILED/ROLLBACK_FAILED; pointer recovery does not revert source/imported records or physical assets.",
+        "BackOffice invoke enters deferred setup only for profiles declaring required AFTER_PUBLICATION steps. This optional operational branch does not grant documentation publication, alter pack composition or bypass CMS/Media approval/rollback."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Source editing and this evidence do not refresh manifest integrity, install a content pack, approve or publish it.",
+        "A ROLLED_BACK label alone is not browser/Media/cache acceptance; the prior immutable target must be inspected."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0",
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-source-revalidation-2026-10-08.json",
+        "previousDisposition": "PASS_SOURCE_REVIEW",
+        "canonicalArticleBytes": "UNCHANGED",
+        "changedSourceFiles": [
+          "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js"
+        ],
+        "boundary": "Pinned article and previous findings compared with current source. No frozen edits or runtime/publication acceptance."
+      }
+    },
+    {
+      "item": "Release and upgrade compatibility",
+      "backlogPriority": "P1",
+      "requestedAction": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "versionFreeze": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "upgradePath": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "rollback": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "checksumDrift": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "generatedManifestPolicy": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
+        "customerExtensionCompatibility": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
+      },
+      "rationale": "Rechecked the pinned article against current preparePlan, catalogue/install states, validateUpgradePolicy, isDevelopmentRelease, forward-manifest planning and rollback boundaries. Source still reserves mutability for version0.0.0, refuses nondevelopment same-version checksum drift and unauthorized downgrade, uses exact releaseCodes/expectedReleases versions, skips CURRENT and waits for RUNNING without timeout takeover. Detached contribution reads add identity/checksum/containment and 8 MiB/1 MiB bounds. Declared CONTENT_PACK roots are excluded from accidental business discovery, not implicitly selected. The freeze, forward-release, retained-root and separate-recovery explanations remain correct. Historical pinned release-service bytes were not recovered from inspected git history: this is current named-method review against unchanged prose, not a claimed recovered historical code diff.",
+      "evidence": [
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "anchors": [
+            "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+            "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+            "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+            "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+            "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+            "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+            "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+        "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+        "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md",
+        "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+      ],
+      "sourceFindings": [
+        "isDevelopmentRelease identifies version0.0.0 only; installed nondevelopment same-version checksum drift rejects, while downgrade requires explicit allowDowngrade and is not rollback.",
+        "planForwardRelease requires newer semantic version/source sequence and immutable prior payload, retains historical roots/section identity and rejects frozen drift.",
+        "Catalogue/preflight/execute selection uses exact releaseCode and expectedReleases version; expectedReleases is not a digest signature. CURRENT is skipped and RUNNING cannot be taken over merely by timeout.",
+        "Failed/partial outcomes require secured import-run/installation reconciliation and owner idempotency; a retry is not guaranteed row-level resume.",
+        "Publication rollback delegates to the domain provider; it does not restore deployed overrides/configuration, imported/migrated records or external side effects.",
+        "readContributionPayload/contributionSourceSnapshot validate fixed registered installer, exact current release metadata, destination, declared files, stable detached bytes and full checksum; filesystem/parser failures are sanitized. Contribution bounds do not authorize frozen-byte refresh.",
+        "discoverReleases representedRoots now recognizes declared CONTENT_PACK contentPath roots even without retainedRoots, excluding docs-v001 from accidental DATA_RELEASE discovery without changing explicit selection.",
+        "Current validateUpgradePolicy/isDevelopmentRelease and preparePlan retain version0.0.0 mutability, nondevelopment freeze, allowDowngrade opt-in and version-only expectedReleases checks."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "H1/H2/Hdev1/Hdev2 are explicitly symbolic explanatory values, not fabricated checksum evidence or executed receipt history.",
+        "No tooling generation, hash refresh, import, release execution, runtime rebuild, publication or rollback was performed.",
+        "Parent owns the pending preserve-v001/forward-content-release decision and browser/approval/publication acceptance. This metadata review neither makes that decision nor edits any manifest or frozen bytes."
+      ],
+      "remediation": [
+        "Corrected baseline, freeze, drift/downgrade and retained-root policy.",
+        "Added concrete installed1.0.0-to1.1.0 selection/checkpoints and partial recovery distinctions.",
+        "Separated recovery surfaces and retained customer override/API/security/provider compatibility detail."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+      },
+      "remediationPriority": "P1",
+      "reviewedSourceAnchors": [
+        {
+          "file": "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+          "anchors": [
+            "isDevelopmentRelease",
+            "getCatalogue",
+            "preflight",
+            "execute",
+            "preparePlan"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+          "anchors": [
+            "planForwardRelease",
+            "retainedRoots",
+            "immutable checksum drift"
+          ]
+        },
+        {
+          "file": "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+          "anchors": [
+            "rollback"
+          ]
+        }
+      ],
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-source-revalidation-2026-10-08.json",
+        "previousDisposition": "PASS_SOURCE_REVIEW",
+        "canonicalArticleBytes": "UNCHANGED",
+        "changedSourceFiles": [
+          "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+          "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+        ],
+        "boundary": "Pinned article and previous findings compared with current source. No frozen edits or runtime/publication acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "applications.axis-setup-error-contracts": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
+      "route": "/docs/framework/applications-axis-setup-error-contracts",
+      "blocksha256": "2506513b4fc667c4088e07e8e0fc41b691a0d529e1db6779dbdc43bce021e4dc",
+      "articleBlocksSha256": "e9399319f1067753afb8727971301885c69673cb7b6c81f17c8fae08faa033fe",
+      "sections": [
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-2-state-model",
+          "title": "State model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-3-error-contract",
+          "title": "Error contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow",
+          "title": "Setup flow",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-6-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 16
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-7-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 18
+        }
+      ]
+    },
+    "data.import-export-provider-guides": {
+      "owner": "nodics.foundation/modules/nData/nImport/import",
+      "componentFile": "nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js",
+      "articleBlocksSha256": "7b01c277944adf58a8811e0691e20394bd5a0c8d93c903a5dadd8d5d5fa065fd",
+      "sections": [
+        {
+          "anchor": "dataImportExportProviderGuides-2-provider-model",
+          "title": "Provider model"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-3-javascript-release-data",
+          "title": "JavaScript release data"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-4-json-csv-and-excel",
+          "title": "JSON, CSV, and Excel"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-5-export-contract",
+          "title": "Export contract"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        }
+      ]
+    },
+    "commerce.data-authoring-fulfillment": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentcommerceDataAuthoringFulfillment",
+      "route": "/docs/framework/commerce-data-authoring-fulfillment",
+      "blocksha256": "86d843b8320f8ebec7fd26580b77c1108a27159e01febe79cf911894f8e39ce6",
+      "articleBlocksSha256": "86d843b8320f8ebec7fd26580b77c1108a27159e01febe79cf911894f8e39ce6",
+      "sections": [
+        {
+          "anchor": "commerceDataAuthoringFulfillment-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-2-data-bundle",
+          "title": "Data bundle",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-3-authoring-sequence",
+          "title": "Authoring sequence",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+          "title": "Header and record contract",
+          "headingLevel": 2,
+          "blockIndex": 8
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+          "title": "Fulfillment flow",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 17
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 21
+        }
+      ]
+    },
+    "docs.documentation-publishing-runbook": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentdocsDocumentationPublishingRunbook",
+      "route": "/docs/framework/docs-documentation-publishing-runbook",
+      "blocksha256": "56ab6500193080aeff8a264fd3e500e721f37e579a8677117ce0471f65730a69",
+      "articleBlocksSha256": "563d69c3be80f2fa3afeda4a440c7145b412fb7282193962ff8cd16f44192ef8",
+      "sections": [
+        {
+          "anchor": "docsDocumentationPublishingRunbook-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-2-publishing-model",
+          "title": "Publishing model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-3-authoring-steps",
+          "title": "Authoring steps",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-4-generated-data-contract",
+          "title": "Canonical data contract",
+          "headingLevel": 2,
+          "blockIndex": 8
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+          "title": "Review and Online activation",
+          "headingLevel": 2,
+          "blockIndex": 11
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 18
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 20
+        },
+        {
+          "anchor": "docs-publishing-module-ownership-composition",
+          "title": "Module Ownership and Optional Composition",
+          "headingLevel": 2,
+          "blockIndex": 22
+        },
+        {
+          "anchor": "docs-publishing-references-pictures-checks",
+          "title": "References, Pictures and Publication Checks",
+          "headingLevel": 2,
+          "blockIndex": 29
+        },
+        {
+          "anchor": "docsPublishingRunbook-functional-visibility-and-record-ownership",
+          "title": "Functional visibility and physical record ownership",
+          "headingLevel": 2,
+          "blockIndex": 35
+        }
+      ]
+    },
+    "wcms.publishing-lifecycle": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentwcmsPublishingLifecycle",
+      "route": "/docs/framework/wcms-publishing-lifecycle",
+      "blocksha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "articleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "sections": [
+        {
+          "anchor": "wcmsPublishingLifecycle-1-why-separate-staged-and-online",
+          "title": "Why separate Staged and Online",
+          "headingLevel": 2,
+          "blockIndex": 2
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-2-data-lifecycle-categories",
+          "title": "Data lifecycle categories",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-3-running-example",
+          "title": "Running example",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-4-site-bundle-shape",
+          "title": "Site bundle shape",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-5-initialization-and-reusable-site-bundles",
+          "title": "Initialization and reusable site bundles",
+          "headingLevel": 2,
+          "blockIndex": 21
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-6-security-and-integrity-rules",
+          "title": "Security and integrity rules",
+          "headingLevel": 2,
+          "blockIndex": 24
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-7-customization-boundary",
+          "title": "Customization boundary",
+          "headingLevel": 2,
+          "blockIndex": 26
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-8-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 28
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-9-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 30
+        },
+        {
+          "anchor": "wcms-coordinated-pack-asset-approvals",
+          "title": "Coordinated pack and asset approvals",
+          "headingLevel": 2,
+          "blockIndex": 34
+        },
+        {
+          "anchor": "wcms-exact-media-readiness-capacity",
+          "title": "Exact Media readiness and capacity",
+          "headingLevel": 2,
+          "blockIndex": 39
+        }
+      ]
+    },
+    "framework.release-upgrade-compatibility": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608",
+      "sections": [
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
+          "title": "Explaining an effective runtime"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+          "title": "Folder contract"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+          "title": "Compatibility rules"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+          "title": "Configuration behavior"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+          "title": "Upgrade flow"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+          "title": "Code and contract compatibility"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+          "title": "Security boundaries under customization"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "ee0a68ce8d3deeea87cbda835985c1283c6eeebc13e0be95650dbdd48fe79bd8",
+    "nodics.platform/modules/backoffice/src/router/routers.js": "71f4c69fa105c59c94d40e1b29efd8ba80b81dc7553f7a8f2d80d4e1f8aedc96",
+    "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js": "9008fbb9e34620162576b6cf5ff6d308db86a9858ff5bd76c4aec490e984292a",
+    "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js": "9fccac9c928a42536e8e531239b1648e3ecd3e91b50961e2f8d695bf682e7c7b",
+    "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js": "6db5f614512ac70e9e7dd3a6d91d34ee4b97ee32d1d9afea9905eed4b2c9c660",
+    "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js": "e51088c4dfe34366a347e11e22d0f2c2979128ba1136e77b7a9072611267bdf9",
+    "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js": "4cc3e29444502ce4e670625c90c004cba33f4430cd9bc27ab84744e1c70198cd",
+    "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js": "fe5af5c5a583bc34f98d062dab3f61e3826f043969b775bd022b355eb047487a",
+    "nodics.foundation/modules/nData/nImport/import/config/properties.js": "ce6bbd1acad90a805070fbae2a95aa87ab5c7300bef55dfcca822fc2d3284f8b",
+    "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+    "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "406446bfd139172108ebf8f41598b0460ba03f1e0c875706cb64f3d0d40a83c6",
+    "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js": "ebb2ad51a15069289ff18f6f697ebff6000ee3259a3a791199ad9cf8b5b6cac9",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+    "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js": "c84793cec04b6000e88e5f8bde862ac984f67ca4319565e44695e139508ca917",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
+    "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js": "b796caca48ab333de664e81ae84813359ce1a2097f6cad40fffca4f2480a9041",
+    "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js": "a975e46dabac84330246f06c452f2c7432d0bb01f6aec4f76445b66fd1d38668",
+    "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js": "9363bc706d16a4ddce2cf56a53b1bab165bdefd3cc5f8f849a1a289384f4bfd6",
+    "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "24449557d20223bbae0aab8d64053b396845f2b49ac6ac1c7214d7b3199070e3",
+    "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+    "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+    "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "e167190eaa0265ef59f5956370e3f5ccc11006c2f54e012159c74c21742e1f71"
+  },
+  "observedSourceFileSha256": {
+    "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "ee0a68ce8d3deeea87cbda835985c1283c6eeebc13e0be95650dbdd48fe79bd8",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1",
+    "nodics.platform/modules/backoffice/src/router/routers.js": "71f4c69fa105c59c94d40e1b29efd8ba80b81dc7553f7a8f2d80d4e1f8aedc96",
+    "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js": "9008fbb9e34620162576b6cf5ff6d308db86a9858ff5bd76c4aec490e984292a",
+    "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js": "9fccac9c928a42536e8e531239b1648e3ecd3e91b50961e2f8d695bf682e7c7b",
+    "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js": "6db5f614512ac70e9e7dd3a6d91d34ee4b97ee32d1d9afea9905eed4b2c9c660",
+    "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js": "e51088c4dfe34366a347e11e22d0f2c2979128ba1136e77b7a9072611267bdf9",
+    "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js": "4cc3e29444502ce4e670625c90c004cba33f4430cd9bc27ab84744e1c70198cd",
+    "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js": "fe5af5c5a583bc34f98d062dab3f61e3826f043969b775bd022b355eb047487a",
+    "nodics.foundation/modules/nData/nImport/import/config/properties.js": "ce6bbd1acad90a805070fbae2a95aa87ab5c7300bef55dfcca822fc2d3284f8b",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js": "2b7f151865e2ffdfdf6367e7f67cb04d33793521d4d23d8df49dc2271f99a18d",
+    "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js": "cf85a1fd6d625dfbcbd37c0db34129ca08df6ef55e33ecab8fcdf97bb82b76de",
+    "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js": "816b7508588b2fdc1ad7b5757bcd02e94e82dbf6af1fb5ad8fc2836df97b8eba",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js": "90f49f1136d1fdb59ad3215a5a14a78c87b8c88e8a0c8674d88a21d9c54cfbaa",
+    "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js": "738e99cb171af61029b2488937232b6059a2c56e1dc0a43f17e5c14249f41fb7",
+    "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+    "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "406446bfd139172108ebf8f41598b0460ba03f1e0c875706cb64f3d0d40a83c6",
+    "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js": "ebb2ad51a15069289ff18f6f697ebff6000ee3259a3a791199ad9cf8b5b6cac9",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+    "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js": "c84793cec04b6000e88e5f8bde862ac984f67ca4319565e44695e139508ca917",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
+    "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js": "b796caca48ab333de664e81ae84813359ce1a2097f6cad40fffca4f2480a9041",
+    "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js": "a975e46dabac84330246f06c452f2c7432d0bb01f6aec4f76445b66fd1d38668",
+    "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js": "9363bc706d16a4ddce2cf56a53b1bab165bdefd3cc5f8f849a1a289384f4bfd6",
+    "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "24449557d20223bbae0aab8d64053b396845f2b49ac6ac1c7214d7b3199070e3",
+    "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+    "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+    "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "e167190eaa0265ef59f5956370e3f5ccc11006c2f54e012159c74c21742e1f71"
+  },
+  "bindingPolicy": "Renew only bindings needed by passing reviews. BackOffice is shared with the passing publishing runbook, but Axis remains OPEN_CONTENT_GAP. Inventory/Pricing aggregate hashes remain historical because Commerce is open; observed current hashes here do not close it.",
+  "frozenDocsInventoryBeforeReview": {
+    "files": 637,
+    "sha256": "e1c30aad530a0c78a28eed51ec2caf12caa8416f7188260add75e49eabaf57e3"
+  },
+  "pendingSourceWork": [
+    {
+      "owner": "Parent/Godel",
+      "scope": "Order/Payment reverse safety",
+      "status": "IN_PROGRESS_REPORTED_BY_PARENT",
+      "boundary": "Not qualified here; recheck Commerce after owner work settles."
+    }
+  ],
+  "summary": {
+    "reviewedItems": 5,
+    "PASS_SOURCE_REVIEW": 3,
+    "OPEN_CONTENT_GAP": 2,
+    "aggregateTotalItems": 22,
+    "aggregatePASS_SOURCE_REVIEW": 20,
+    "aggregateOPEN_CONTENT_GAP": 2
+  },
+  "verification": {
+    "status": "BOUNDED_AUDIT_PASSED_WITH_EXPLICIT_EDITORIAL_GAPS",
+    "commands": [
+      {
+        "command": "node nodics.docs/scripts/audit-source-coverage.mjs",
+        "exitCode": 0,
+        "result": "Regenerated only source-backed coverage JSON/Markdown reports; 19 closed, 3 open."
+      },
+      {
+        "command": "node nodics.docs/scripts/audit-source-coverage.mjs --check",
+        "exitCode": 0,
+        "result": "Generated reports are current; freshness is not all-items editorial closure."
+      },
+      {
+        "command": "node nodics.docs/scripts/audit-hardening.mjs",
+        "exitCode": 0,
+        "result": "173 documents; hardening checks passed."
+      },
+      {
+        "command": "node nodics.docs/scripts/generate-content-pack.mjs --check",
+        "exitCode": 0,
+        "result": "173 canonical CMS pages validated read-only; no pack generation or hash refresh."
+      },
+      {
+        "command": "node --test nodics.commerce/modules/baseCommerce/modules/inventory/test/inventoryReturnAuthorityContract.test.js",
+        "exitCode": 0,
+        "result": "1 passed; legacy RETURN rejects before all mocked owner reads/writes. No runtime acceptance."
+      },
+      {
+        "command": "node --test nodics.docs/test/semanticReviewContract.test.mjs",
+        "exitCode": 1,
+        "result": "1 passed, 1 failed. Scope/identity/anchor/hash binding unit contract passed. Integrated all-22-closed assertion fails at explicit Axis OPEN_CONTENT_GAP; gate was not weakened or edited."
+      }
+    ],
+    "effectiveAuditSummary": {
+      "totalModules": 203,
+      "documents": 173,
+      "needs-deeper-section": 1,
+      "covered": 195,
+      "shared-guide-mapped": 7,
+      "semanticReviewClosed": 19,
+      "semanticReviewOpen": 3
+    },
+    "additionalUnrenewedStaleReviews": [
+      {
+        "item": "Payment Core and provider split",
+        "sourceFiles": [
+          {
+            "file": "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js",
+            "previousSha256": "7d3ace5bafb4679b6f4609dd55ef19d2229ae8bbf5f80b513fa6125ba84ef238",
+            "observedSha256": "d59b50aa7390fc24fcf3501830f64e1f55143e68c5668a130925b9dac09b62d0"
+          }
+        ]
+      }
+    ],
+    "frozenDocsInventoryAfterReview": {
+      "files": 637,
+      "sha256": "e1c30aad530a0c78a28eed51ec2caf12caa8416f7188260add75e49eabaf57e3"
+    },
+    "frozenDocsUnchanged": true,
+    "inspectedSourceBytesUnchangedDuringReview": true,
+    "boundary": "Aggregate PASS_SOURCE_REVIEW count 20 is a saved-disposition count, not effective closure: concurrent Payment Core refund-source changes independently reopen one untouched prior review, making current effective closure 19/22. No review outside the five assigned items was renewed. Parent-owned Order/Payment work still requires semantic re-review after it settles."
+  }
+}

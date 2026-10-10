@@ -32,6 +32,8 @@ test('canonical command and owner suite registration remain discoverable', () =>
     'src/service/command/defaultNodeScriptCommandService.js');
   assert.ok(tooling.testSuites.governance.some(step => step.node ===
     'nodics.foundation/modules/nTooling/test/projectLocalResetMaintenanceContract.test.mjs'));
+  assert.ok(Object.values(tooling.testSuites).some(steps => Array.isArray(steps) && steps.some(step =>
+    step.node === 'nodics.foundation/modules/nSearch/elastic/test/elasticLocalResetMaintenanceContract.test.js')));
 });
 
 test('explicit exact scope is mandatory, bounded and dry-run by default', () => {
@@ -48,6 +50,19 @@ test('public CLI normalization preserves maintenance project identity independen
   assert.equal(tooling.resolveHome(normalized), '/tmp/customer');
   assert.deepEqual(parseOptions(normalized.slice(2)), options());
   assert.throws(() => parseOptions([...canonical, '--project=acme.project']), /RESET_SELECTION_INVALID/);
+});
+
+test('registered discovery is an explicit read-only mode, never an implicit tenant or reset selector', async () => {
+  const discovery = ['--environment=acmeLocal', '--project-code=acme.project', '--discover-registered-tenants'];
+  const parsed = parseOptions(discovery);
+  assert.deepEqual(parsed, { environment: 'acmeLocal', project: 'acme.project', discoverRegisteredTenants: true, execute: false });
+  for (const extra of ['--execute', '--exclusive-deployment', '--writers-excluded', '--registered-tenants=alpha',
+    '--databases=acmeLocalPlatform', '--auth-namespace=auth_acmeLocalRuntimeAuth_', '--discover-registered-tenants'])
+    assert.throws(() => parseOptions([...discovery, extra]));
+  assert.throws(() => parseOptions(discovery.map(value => value === '--discover-registered-tenants' ? value + '=true' : value)));
+  await assert.rejects(run({ ...parsed, execute: true }), /RESET_DISCOVERY_READ_ONLY_REQUIRED/);
+  await assert.rejects(run({ ...parsed, databases: ['acmeLocalPlatform'] }), /RESET_DISCOVERY_READ_ONLY_REQUIRED/);
+  await assert.rejects(run(parsed, { readSelection: async () => { throw new Error('must not discover'); } }), /RESET_RUNTIME_ADAPTER_OVERRIDE_DENIED/);
 });
 
 test('plan reports scope/counts without credentials or fabricated provider emptiness', () => {
@@ -453,5 +468,193 @@ test('provider cleanup failure after confirmed effects still blocks completion a
     assert.equal(error.code, 'RESET_CONNECTION_CLEANUP_FAILED');
     assert.deepEqual(error.receipt.effects, { databasesDropped: 2, authKeysRemoved: 2 });
     assert.equal(error.receipt.restartAllowed, false); return true;
+  });
+});
+
+const searchBinding = () => ({ index: 'acmelocal_products', moduleName: 'product', logicalName: 'products', tenant: 'default',
+  handler: 'SearchConnector', configuration: { options: { enabled: true }, connection: { hosts: ['http://127.0.0.1:9200'] } } });
+const searchSelection = () => {
+  const selected = selection();
+  selected.scopes.forEach(scope => { scope.search = [searchBinding()]; });
+  return selected;
+};
+
+test('optional physical search scope is exact, bounded, default-off and forbidden during tenant discovery', () => {
+  const parsed = parseOptions([...args, '--search-indexes=acmelocal_products']);
+  assert.deepEqual(parsed.searchIndices, ['acmelocal_products']);
+  const s = searchSelection();
+  const plan = buildPlan(parsed, s.deployment, s.scopes);
+  assert.equal(plan.searchIndexCount, 1);
+  assert.deepEqual(plan.searchEffects, { indexesDropped: 0, alreadyAbsent: 0 });
+  assert.deepEqual(plan.sharedProvidersExcluded, ['media', 'otherCacheNamespaces']);
+  assert.doesNotMatch(JSON.stringify(plan), /http:|SearchConnector/);
+  for (const value of ['acme*', '.system', 'acmelocal_products,acmelocal_products', 'A', ''])
+    assert.throws(() => parseOptions([...args, '--search-indexes=' + value]));
+  assert.throws(() => parseOptions([...args, '--search-indexes=acmelocal_products', '--registered-tenants=alpha']));
+  assert.throws(() => parseOptions(['--environment=acmeLocal', '--project-code=acme.project', '--discover-registered-tenants', '--search-indexes=acmelocal_products']));
+  for (const mutate of [
+    x => { x.scopes[0].search[0].index = 'foreign_products'; },
+    x => { delete x.scopes[0].search; },
+    x => { x.scopes[1].search[0].configuration.connection.hosts = ['http://127.0.0.1:9201']; },
+    x => { x.scopes.forEach(scope => { scope.search = []; }); },
+  ]) { const selected = searchSelection(); mutate(selected); assert.throws(() => buildPlan(parsed, selected.deployment, selected.scopes)); }
+  assert.throws(() => buildPlan(options(), s.deployment, s.scopes), /RESET_SEARCH_SELECTION_REQUIRED/);
+});
+
+test('search binding owner merges canonical schema/index layers and refuses shared or historical bindings', t => {
+  const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS, SERVICE: global.SERVICE };
+  t.after(() => { for (const [key, value] of Object.entries(previous)) { if (value === undefined) delete global[key]; else global[key] = value; } });
+  const owner = require('../../nSearch/search/src/service/config/defaultSearchConfigurationService');
+  const definitions = { product: { productProjection: { indexName: 'acmelocal_product_projection' } } };
+  global.CONFIG = { get: key => key === 'defaultTenant' ? 'default' : undefined };
+  global.NODICS = { getModules: () => ({ product: {}, disabled: {} }) };
+  global.SERVICE = { DefaultFilesLoaderService: {
+    loadFiles: (name, target) => { assert.equal(name, '/src/search/indexes.js'); return Object.assign(target, definitions); },
+    loadSchemaFiles: (name, target) => { assert.equal(name, '/src/schemas/schemas.js'); return Object.assign(target, { product: {
+      productProjection: { search: { enabled: true } }, untouched: { search: { enabled: false } },
+    } }); },
+  } };
+  const selected = { ...owner, getSearchConfiguration: moduleName => ({ options: { enabled: moduleName === 'product', connectionHandler: 'SearchConnector' }, connection: { hosts: ['http://127.0.0.1:9200'] } }) };
+  const bindings = selected.readLocalResetBindings({ environment: 'acmeLocal', tenant: 'default' });
+  assert.equal(bindings.length, 1);
+  assert.equal(bindings[0].index, 'acmelocal_product_projection');
+  assert.equal(bindings[0].logicalName, 'productProjection');
+  assert.throws(() => selected.readLocalResetBindings({ environment: 'acmeLocal', tenant: 'foreign' }));
+  definitions.product.productProjection.retirement = { dedicated: true };
+  assert.throws(() => selected.readLocalResetBindings({ environment: 'acmeLocal', tenant: 'default' }));
+  delete definitions.product.productProjection.retirement;
+  definitions.product = { alias: { typeName: 'productProjection', indexName: 'acmelocal_new_projection' } };
+  const remapped = selected.readLocalResetBindings({ environment: 'acmeLocal', tenant: 'default' });
+  assert.deepEqual(remapped.map(binding => [binding.logicalName, binding.index]), [['productProjection', 'acmelocal_new_projection']]);
+  definitions.product = { acmelocal_alias_default: { typeName: 'productProjection' } };
+  assert.deepEqual(selected.readLocalResetBindings({ environment: 'acmeLocal', tenant: 'default' }).map(binding => binding.index),
+    ['acmelocal_alias_default']);
+  definitions.product = { productProjection: { indexName: 'acmelocal_product_projection' } };
+  definitions.product.productProjection.indexName = 'shared_projection';
+  assert.throws(() => selected.readLocalResetBindings({ environment: 'acmeLocal', tenant: 'default' }));
+});
+
+test('search bindings require process-local caches rather than silently retaining external cache state', async () => {
+  const snapshot = { modules: ['product'], properties: {
+    database: { default: { options: { databaseType: 'mongodb' }, mongodb: { options: { connectionHandler: 'OwnerConnector' }, master: { URI: 'mongodb://127.0.0.1:27017', databaseName: 'acmeLocalCommerce' } } } },
+    cache: { default: { channels: { search: { engine: 'redis' } }, engines: { redis: { options: { host: '127.0.0.1', port: 6379 } } } } },
+  } };
+  await assert.rejects(consumeRuntime(snapshot, undefined, [searchBinding()]), /RESET_SEARCH_CACHE_UNQUALIFIED/);
+  snapshot.properties.cache.default.channels.search.engine = 'local';
+  snapshot.properties.cache.default.engines.local = { cacheHandler: 'DefaultLocalCacheService', distributed: false };
+  snapshot.properties.cache.default.channels.persistedSearch = { engine: 'redis' };
+  snapshot.properties.cache.schemaCacheChannelNameMapping = { acmelocal_products: 'persistedSearch' };
+  await assert.rejects(consumeRuntime(snapshot, undefined, [searchBinding()]), /RESET_SEARCH_CACHE_UNQUALIFIED/);
+  snapshot.properties.cache.schemaCacheChannelNameMapping = { acmelocal_products: 'missingChannel' };
+  await assert.rejects(consumeRuntime(snapshot, undefined, [searchBinding()]), /RESET_SEARCH_CACHE_UNQUALIFIED/);
+  snapshot.properties.cache.schemaCacheChannelNameMapping = {};
+  snapshot.properties.cache.default.engines.local = { connectionHandler: 'DefaultRedisCacheEngineService',
+    cacheHandler: 'DefaultRedisCacheService', distributed: false, capabilities: { distributed: false } };
+  await assert.rejects(consumeRuntime(snapshot, undefined, [searchBinding()]), /RESET_SEARCH_CACHE_UNQUALIFIED/);
+});
+
+function searchExecutionFixture() {
+  const f = executionFixture();
+  const selected = searchSelection();
+  const input = { ...f.execute, searchIndices: ['acmelocal_products'] };
+  const plan = buildPlan(input, selected.deployment, selected.scopes);
+  const search = { contractVersion: 1, names: input.searchIndices,
+    inspect: async () => { f.calls.push('search.inspect'); return { indexCount: 1, absentCount: 0 }; },
+    drop: async index => { assert.equal(index, 'acmelocal_products'); f.calls.push('search.drop'); return { acknowledged: true, absent: true }; },
+    verifyEmpty: async () => { f.calls.push('search.verify'); return { indexCount: 0 }; } };
+  const open = f.ports.openOwnerTargets;
+  const run = () => orchestrateAdmittedMaintenance({ selected, plan, topology: { runtimes: selected.deployment.topology.groups.backends },
+    readFreshSelection: async () => selected, verifyOutage: f.ports.verifyOutage,
+    openTargets: async () => ({ ...await open(), search: [search] }) });
+  return { ...f, search, plan, run };
+}
+
+test('search preflight is before any effect; physical drops follow Mongo and precede final auth cleanup', async () => {
+  const f = searchExecutionFixture();
+  const result = await f.run();
+  assert.equal(result.status, 'COMPLETED');
+  assert.deepEqual(result.searchEffects, { indexesDropped: 1, alreadyAbsent: 0 });
+  assert(f.calls.indexOf('search.inspect') < f.calls.indexOf('acmeLocalPlatform.drop'));
+  assert(f.calls.indexOf('search.drop') > f.calls.indexOf('acmeLocalWaste.drop'));
+  assert(f.calls.indexOf('auth.clear') > f.calls.indexOf('search.drop'));
+  assert.equal(f.calls.at(-1), 'providers.close');
+});
+
+test('search inspection or malformed owner scope refuses before all mutations and closes targets', async () => {
+  for (const variant of ['inspection', 'names', 'contract']) {
+    const f = searchExecutionFixture();
+    if (variant === 'inspection') f.search.inspect = async () => ({ indexCount: 0, absentCount: 0 });
+    if (variant === 'names') f.search.names = ['foreign_index'];
+    if (variant === 'contract') f.search.contractVersion = 2;
+    await assert.rejects(f.run(), error => {
+      assert.equal(error.receipt.status, 'REFUSED');
+      assert.deepEqual(error.receipt.effects, { databasesDropped: 0, authKeysRemoved: 0 });
+      assert.deepEqual(error.receipt.searchEffects, { indexesDropped: 0, alreadyAbsent: 0 });
+      return true;
+    });
+    assert(!f.calls.some(call => call.endsWith('.drop') || call === 'auth.clear'));
+    assert.equal(f.calls.at(-1), 'providers.close');
+  }
+});
+
+test('search missing acknowledgement and uncertain deletion retain earlier effects and never clear auth', async () => {
+  for (const variant of ['ack', 'timeout', 'readback']) {
+    const f = searchExecutionFixture();
+    f.search.drop = async () => {
+      if (variant === 'timeout') throw new Error('http://private-secret@host timeout');
+      return variant === 'ack' ? { acknowledged: false, absent: true } : { acknowledged: true, absent: false };
+    };
+    await assert.rejects(f.run(), error => {
+      assert.equal(error.receipt.status, 'PARTIAL_OR_UNCERTAIN');
+      assert.equal(error.receipt.attemptedSearchIndex, 'acmelocal_products');
+      assert.equal(error.receipt.failedStage, 'SEARCH_INDEX_DROP');
+      assert.equal(error.receipt.effects.databasesDropped, 2);
+      assert.equal(error.receipt.effects.authKeysRemoved, 0);
+      assert.equal(error.receipt.searchEffects.indexesDropped, variant === 'readback' ? 1 : 0);
+      assert.equal(error.receipt.restartAllowed, false);
+      assert.doesNotMatch(JSON.stringify(error.receipt), /private-secret/);
+      return true;
+    });
+    assert(!f.calls.includes('auth.clear'));
+    assert.equal(f.calls.at(-1), 'providers.close');
+  }
+});
+
+test('an originally absent index is recorded separately, not fabricated as a deletion', async () => {
+  const f = searchExecutionFixture();
+  f.search.inspect = async () => ({ indexCount: 0, absentCount: 1 });
+  f.search.drop = async () => ({ acknowledged: false, absent: true, alreadyAbsent: true });
+  const result = await f.run();
+  assert.deepEqual(result.searchEffects, { indexesDropped: 0, alreadyAbsent: 1 });
+});
+
+test('native search acknowledgement survives a failed absence readback without claiming completion', async () => {
+  const f = searchExecutionFixture();
+  f.search.drop = async () => {
+    const error = new Error('RESET_SEARCH_ABSENCE_UNCONFIRMED');
+    error.code = error.message;
+    error.acknowledged = true;
+    error.index = 'acmelocal_products';
+    throw error;
+  };
+  await assert.rejects(f.run(), error => {
+    assert.equal(error.receipt.searchEffects.indexesDropped, 1);
+    assert.equal(error.receipt.status, 'PARTIAL_OR_UNCERTAIN');
+    assert.equal(error.receipt.attemptedSearchIndex, 'acmelocal_products');
+    assert.equal(error.receipt.effects.authKeysRemoved, 0);
+    assert.equal(error.receipt.failedCheck, 'RESET_SEARCH_ABSENCE_UNCONFIRMED');
+    return true;
+  });
+});
+
+test('search final reappearance is incomplete even after successful database, search and auth effects', async () => {
+  const f = searchExecutionFixture();
+  f.search.verifyEmpty = async () => ({ indexCount: 1 });
+  await assert.rejects(f.run(), error => {
+    assert.equal(error.receipt.failedStage, 'FINAL_VERIFICATION');
+    assert.equal(error.receipt.searchEffects.indexesDropped, 1);
+    assert.equal(error.receipt.effects.authKeysRemoved, 2);
+    assert.equal(error.receipt.restartAllowed, false);
+    return true;
   });
 });

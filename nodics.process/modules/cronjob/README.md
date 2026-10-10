@@ -99,7 +99,7 @@ handling. A human bearer token can authorize a CronJob command; module calls
 performed by the job use the separate tenant-scoped internal service-token flow.
 
 Scheduler bookkeeping uses owner-bound `persistRuntimeState`, never business
-execution authority. The [detailed guide](../../../nodics.docs/docs/pages/nodics.process/scheduled-automation.md)
+execution authority. The [detailed guide](data/docs-v001/records/documentation/cronjobDocumentationComponentData.js)
 defines its permitted fields, exact acknowledgement and drain guarantees.
 
 Axis can present a Cron operation panel, but it remains a client. Saving a job
@@ -187,7 +187,7 @@ environment.
 ## Continue
 
 - Inactive Process schedule drafts: [contract](llm/contracts/inactive-schedule-drafts.md)
-  and [step-by-step guide](../../../nodics.docs/docs/pages/nodics.process/inactive-schedule-drafts.md).
+  and [step-by-step guide](data/docs-v001/records/documentation/cronjobDocumentationComponentData.js).
   Deployment-approved targets can be reviewed and inserted without scheduling.
   This optional command defaults off and never activates a job.
 - Process capability family: [nodics.process](../../README.md)

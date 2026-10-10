@@ -62,10 +62,24 @@ module.exports = {
     /** Loads active models and collapses version history to exact latest identities. */
     loadLatest: async function (serviceName, request, query) {
         let maximum = Number(this.settings().maxDependencies || 500);
-        let response = await this.service(serviceName).get({ tenant: request.tenant, authData: request.authData,
-            query: Object.assign({ active: true }, query), searchOptions: { limit: maximum, pageSize: maximum,
-                sort: { versionId: -1 } } });
-        return this.latestByCode(this.items(response));
+        let selected = new Map();
+        let baseQuery = Object.assign({ active: true }, query);
+        // Exclude resolved identities so their history cannot exhaust the next bounded read.
+        for (;;) {
+            let response = await this.service(serviceName).get({ tenant: request.tenant, authData: request.authData,
+                query: selected.size ? { $and: [baseQuery, { code: { $nin: [...selected.keys()] } }] } : baseQuery,
+                searchOptions: { limit: maximum, pageSize: maximum, sort: { versionId: -1 } } });
+            let items = this.items(response);
+            let latest = this.latestByCode(items);
+            if (latest.some(item => typeof item.code !== 'string' || !item.code || selected.has(item.code))) {
+                throw this.error('CMS_PUBLICATION_DEPENDENCY_IDENTITY_INVALID', 'CMS dependency read did not advance');
+            }
+            latest.forEach(item => selected.set(item.code, item));
+            if (selected.size > maximum) {
+                throw this.error('CMS_PUBLICATION_DEPENDENCY_EXCEEDED', 'CMS publication graph exceeds configured size');
+            }
+            if (items.length < maximum) return [...selected.values()];
+        }
     },
     /** Converts one model into a frozen dependency identity. */
     identity: function (schema, model) {

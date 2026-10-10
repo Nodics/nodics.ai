@@ -5,7 +5,7 @@
     "axisBaseline": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.0",
+      "version": "0.0.1",
       "description": "Platform-owned Axis baseline experience with the current dashboard composition for Staged installation and controlled publication",
       "owningDomain": "axis",
       "lifecycle": "PUBLISHABLE",
@@ -147,7 +147,7 @@
       },
       "sourceRoot": "init-v001"
     },
-    "core-v002": {
+    "core-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "core",
       "version": "0.0.1",
@@ -204,17 +204,17 @@
         ]
       },
       "files": {
-        "core-v002/headers/axis/axisAssistantKnowledgeHeader.js": "fcce187bd082f2861beed93dba89c5aaa89957b188987885e2e6a2090def36f1",
-        "core-v002/records/axis/axisAssistantKnowledgeTypeCodeData.js": "120b2c4a1c41c6ebed3cac76ab1bb2aacc37fdc314db432bc5f436464db7f2e2",
-        "core-v002/records/axis/axisAssistantKnowledgeComponentData.js": "e9518c71549cf0f6769fbdf76267db04c44060290df9bc6ad765f7b6ae1a9730"
+        "core-v001/headers/axis/axisAssistantKnowledgeHeader.js": "8de1a86e87a9a091b76b9cd248abea440693bcd204b2812304960d8582ba4209",
+        "core-v001/records/axis/axisAssistantKnowledgeTypeCodeData.js": "a852225fc2cf022cb35bd208c3002318f3437153be342e891f25ffaf4d9badd8",
+        "core-v001/records/axis/axisAssistantKnowledgeComponentData.js": "aba152d5280c4d9a51f5ab02d26a2145d8262afe37a27a75f815f888f1430d4d"
       },
-      "sourceRoot": "core-v002"
+      "sourceRoot": "core-v001"
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "core-v001",
+      "contentPath": "docs-v001",
       "pack": "nodics.platform.axis",
-      "version": "0.0.3",
+      "version": "0.0.1",
       "owningDomain": "axis",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -227,8 +227,8 @@
       "initialPublicationPolicy": "ADMIN_INITIATED",
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
-      "sourceMode": "catalogue-markdown-source",
-      "sourceAuthority": "docs/catalogue.json",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
       "sites": [
         "axisDocumentationSite"
       ],
@@ -236,28 +236,29 @@
       "pages": 18,
       "components": 19,
       "routes": 18,
-      "releaseChecksum": "8d6f9e8a30a52f7c46a71596a2c074c7c38d5f676722d3707c538cbeba1b713d",
+      "releaseChecksum": "209c2b1a4a5c367645cbc292307285b928de4d3f4ce8e94d4d714f113e6594d9",
       "generatedHashes": {
-        "core-v001/records/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
-        "core-v001/records/documentation/axisDocumentationDashboardData.js": "0a2084e73332c2b8f514d399dd1eefa89b6366c33091ac1b858c87fa00b7abf7",
-        "core-v001/records/documentation/axisDocumentationLegacyNavigationCleanupData.js": "9834348653678933d43ea165ae67c9f275a64dfc35aa7e705c51314007f7ec0b",
-        "core-v001/records/documentation/axisDocumentationNavigationData.js": "ffea967d9fae65d5153fb3b092f3826c5682456365cff6f5d8efa1ea8c438827",
-        "core-v001/records/documentation/axisDocumentationNodeData.js": "2a589bbea5937eb79aaae4ae1e3460d3a1e4b5aa8ea5cbe4d51f232afe760a08",
-        "core-v001/records/documentation/axisDocumentationPageMetadataData.js": "4fe54c522f5813849c457d8e11662c7266d6bade8531d471d3f224876c61b875",
-        "core-v001/records/documentation/axisDocumentationProductData.js": "e1e980db49906f19c49f9a33fdb347b2fc9752716290c38751955f2c488f6b84",
-        "core-v001/records/documentation/axisDocumentationPublicationStateData.js": "82e9685cf018eb89e8ea37f701a6ca54134b64cffd8e688ae6b524289f540801",
-        "core-v001/records/documentation/axisDocumentationSearchMetadataData.js": "db3daf7c2b63c7adf77260211116bc70cb7d6e01d77110c6bbb82e47ffb01907",
-        "core-v001/records/documentation/axisDocumentationComponentData.js": "4eeb60488c00f8503a143b9b582da8005e93d5439da9f1210fb87c93dee4544a",
-        "core-v001/records/documentation/axisDocumentationPageData.js": "de4033d92d5faca60b9709acbc7662fae370cd1e2b09d336d09206ce0d3a8de7",
-        "core-v001/records/documentation/axisDocumentationRendererData.js": "780fce11057c4d41e54d3d5c5577de24b2920be3730d037f9b994ed9bf375008",
-        "core-v001/records/documentation/axisDocumentationRouteData.js": "fc8ee198df8b4bf3ea96eb2d6938e6ad9781d72f145875cea91bcae7b9935f33",
-        "core-v001/records/documentation/axisDocumentationSiteData.js": "91b8c928ef77bf1708ee7732fb40034607c2a49970ea8b012647e3f2ba880120",
-        "core-v001/records/documentation/axisDocumentationSlotData.js": "ca55bf76cc07edfa3b1d3ac64b2473123a74914a25df03d6e646a5e2b3ea74f2",
-        "core-v001/records/documentation/axisDocumentationTemplateData.js": "88c5d2f77c302c48fef6aa5ec21d4a528f698b94eb72e2b5147127258e16f43b",
-        "core-v001/records/documentation/axisDocumentationTypeCodeData.js": "743acb639042864dc9e907cf0c9b012a252ae2bab395a58bfc9c03047f6fc4db",
-        "core-v001/headers/axisDocumentationContentPackHeader.js": "a87a87df4c7c00325cf34f206254d1b78532ae77ac69f9e2c76401b92a9c3482"
-      },
-      "migrationRegister": "docs/migration-register.json"
+        "docs-v001/records/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
+        "docs-v001/records/documentation/axisDocumentationDashboardData.js": "0a2084e73332c2b8f514d399dd1eefa89b6366c33091ac1b858c87fa00b7abf7",
+        "docs-v001/records/documentation/axisDocumentationLegacyNavigationCleanupData.js": "9834348653678933d43ea165ae67c9f275a64dfc35aa7e705c51314007f7ec0b",
+        "docs-v001/records/documentation/axisDocumentationNavigationData.js": "ffea967d9fae65d5153fb3b092f3826c5682456365cff6f5d8efa1ea8c438827",
+        "docs-v001/records/documentation/axisDocumentationNodeData.js": "2a589bbea5937eb79aaae4ae1e3460d3a1e4b5aa8ea5cbe4d51f232afe760a08",
+        "docs-v001/records/documentation/axisDocumentationPageMetadataData.js": "5aab24695d09212b7bde0658163ddb197d2e6a95f57c6a04ed6e90477e8d7cce",
+        "docs-v001/records/documentation/axisDocumentationProductData.js": "e1e980db49906f19c49f9a33fdb347b2fc9752716290c38751955f2c488f6b84",
+        "docs-v001/records/documentation/axisDocumentationPublicationStateData.js": "e5d01cd96c01440183a95495840f95352a9af89c416d73c5ead6f4d7b21a31af",
+        "docs-v001/records/documentation/axisDocumentationSearchMetadataData.js": "60c1772bd60b8a8807ad2ac92ad8c845d9f9dc11142d9efeac292e77c94d3787",
+        "docs-v001/records/documentation/axisDocumentationComponentData.js": "42ce81ac1a89afe433321f1b9db7dc8de4f84d647a5b43fea869f90066b3305d",
+        "docs-v001/records/documentation/axisDocumentationPageData.js": "de4033d92d5faca60b9709acbc7662fae370cd1e2b09d336d09206ce0d3a8de7",
+        "docs-v001/records/documentation/axisDocumentationRendererData.js": "e65bdc1a34aa1ac60ef98f9ab6bd2a7f684095ce2db01f7483d675d7efd34a71",
+        "docs-v001/records/documentation/axisDocumentationRouteData.js": "fc8ee198df8b4bf3ea96eb2d6938e6ad9781d72f145875cea91bcae7b9935f33",
+        "docs-v001/records/documentation/axisDocumentationSiteData.js": "5c230ba36d9fb06a62e547b3ddd77846794d044dcd3f8c66af4307b3fd507b96",
+        "docs-v001/records/documentation/axisDocumentationSlotData.js": "69f8b32f526a18e5a43ef990e9c416dfdec9f163550eee1d2ef269da2de41458",
+        "docs-v001/records/documentation/axisDocumentationTemplateData.js": "ecbb59623f1d164262b956834d0b3481d6fbfe124c0e9c522b84aa652e457121",
+        "docs-v001/records/documentation/axisDocumentationTypeCodeData.js": "18c2a6071c533beb6c308682328eceb12e92fb0f5e3c32ceb4bddd523f29cc27",
+        "docs-v001/headers/axisDocumentationContentPackHeader.js": "6eea8107d7c1ec1e841d96d88f01b29a0889cef1f6456c90b0dc1103ad7b6519",
+        "docs-v001/records/documentation/axisDocumentationMediaData.js": "e0287cde4bd2e63b200f62ee13d04f886f4e0fef1f17f530b68191cbd657082c",
+        "docs-v001/assets/documentation/assetManifest.js": "4da371a282a99ce7e2e211d0025d2af05606d08972cccc468df0fb5f7487610d"
+      }
     }
   }
 }

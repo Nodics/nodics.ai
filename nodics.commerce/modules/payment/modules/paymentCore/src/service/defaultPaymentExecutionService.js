@@ -14,11 +14,21 @@
 /** @module paymentCore/src/service/defaultPaymentExecutionService @description Enforces provider-neutral idempotent payment operations and evidence. @layer service @owner paymentCore */
 const ALLOWED = new Set(['AUTHORIZE', 'CAPTURE', 'VOID', 'REFUND']);
 const inFlight = new Map();
+const captureIntents = new Map();
+const { isDeepStrictEqual } = require('node:util');
 module.exports = {
     /** Returns true when a payment operation is supported by the provider-neutral execution contract. @param {string} operation Operation code. @returns {boolean} Supported flag. */
     isSupportedOperation: function (operation) { return ALLOWED.has(operation); },
     /** Returns a tenant/idempotency in-flight key. @param {Object} request Payment request. @returns {string} Key. */
     inFlightKey: function (request) { return request.tenant + ':' + request.idempotencyKey; },
+    /** Resolves supplied operation enterprise aliases without accepting conflicting or malformed scope. Missing legacy scope stays missing. */
+    operationEnterprise: function (request) {
+        const aliases = [request.enterpriseCode, request.entCode, request.authData?.enterpriseCode, request.authData?.entCode]
+            .filter(value => value !== undefined);
+        if (aliases.some(value => typeof value !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(value) || value !== aliases[0]))
+            throw new Error('Payment enterprise scope is invalid or conflicting');
+        return aliases[0];
+    },
     /** Normalizes provider outcome into stable Commerce payment statuses. @param {Object} request Payment request. @param {Object} response Provider response. @returns {Object} Normalized outcome. */
     normalizeOutcome: function (request, response) {
         const status = response && response.status || 'SUBMITTED';
@@ -31,8 +41,10 @@ module.exports = {
     /** Builds provider-neutral persisted transaction evidence. @param {Object} request Payment request. @param {Object} adapter Adapter. @param {Object} response Provider response. @returns {Object} Transaction model. */
     transactionModel: function (request, adapter, response) {
         const outcome = this.normalizeOutcome(request, response || {});
+        const enterpriseCode = this.operationEnterprise(request);
         return Object.freeze({
             tenant: request.tenant,
+            ...(enterpriseCode ? { enterpriseCode } : {}),
             ownerId: request.ownerId,
             orderCode: request.orderCode,
             cartCode: request.cartCode,
@@ -54,6 +66,9 @@ module.exports = {
                 providerReference: response && response.reference,
                 providerStatus: response && response.status,
                 sandbox: response && response.sandbox === true,
+                ...(response && response.originalCaptureReceipt ? { originalCaptureReceipt: structuredClone(response.originalCaptureReceipt), maturity: response.maturity, sandboxMode: response.sandboxMode } : {}),
+                ...(response && response.originalRefundReceipt ? { originalRefundReceipt: structuredClone(response.originalRefundReceipt), maturity: response.maturity, sandboxMode: response.sandboxMode } : {}),
+                ...(response && response.originalRefundUnconfirmed === true ? { originalRefundUnconfirmed: true, maturity: response.maturity, sandboxMode: response.sandboxMode } : {}),
                 walletCode: request.walletCode,
                 programCode: request.programCode,
                 rewardTypeCode: request.rewardTypeCode
@@ -63,12 +78,31 @@ module.exports = {
     /** Executes one idempotent provider-neutral payment operation. @param {Object} request Payment request. @param {Object} adapter Provider adapter. @param {Object} repository Persistence adapter. @returns {Promise<Object>} Stored transaction evidence. */
     execute: async function (request, adapter, repository) {
         if (!request || !request.tenant || !request.idempotencyKey || !this.isSupportedOperation(request.operation)) throw new Error('Valid tenant payment operation and idempotency key are required');
+        request = { ...request, enterpriseCode: this.operationEnterprise(request) };
+        const qualifiedCapture = request.operation === 'CAPTURE' && request.sandboxMode !== undefined;
+        let captureIntent;
+        if (qualifiedCapture) {
+            if (adapter.code !== 'stripe-sandbox' || typeof adapter.captureBinding !== 'function' || typeof adapter.validateCaptureRecord !== 'function')
+                throw new Error('Original offline capture owner is unavailable');
+            captureIntent = adapter.captureBinding(request);
+        }
         const key = this.inFlightKey(request);
-        if (inFlight.has(key)) return inFlight.get(key);
+        if (inFlight.has(key)) {
+            if ((captureIntent || captureIntents.has(key)) && !isDeepStrictEqual(captureIntents.get(key), captureIntent))
+                throw new Error('Concurrent original capture intent changed');
+            return inFlight.get(key);
+        }
         const execution = (async () => {
-            const existing = await repository.find(request.tenant, request.idempotencyKey); if (existing) return existing;
+            const existing = await repository.find(request.tenant, request.idempotencyKey);
+            if (existing) {
+                if (existing.evidence?.originalCaptureReceipt && !qualifiedCapture)
+                    throw new Error('Original capture replay cannot drop its bound offline intent');
+                if (qualifiedCapture) adapter.validateCaptureRecord(request, existing);
+                return existing;
+            }
             const response = await adapter.execute(Object.freeze({
                 tenant: request.tenant,
+                enterpriseCode: request.enterpriseCode,
                 authData: request.authData,
                 authorization: request.methodCode === 'LOYALTY_REWARD' ? request.authorization : undefined,
                 ownerId: request.ownerId,
@@ -76,6 +110,10 @@ module.exports = {
                 cartCode: request.cartCode,
                 paymentTransactionCode: request.paymentTransactionCode,
                 operation: request.operation,
+                sandboxMode: request.sandboxMode,
+                sandboxRefundOutcome: request.sandboxRefundOutcome,
+                captureCode: request.captureCode,
+                refundIntent: request.refundIntent,
                 methodCode: request.methodCode,
                 amount: request.amount,
                 currency: request.currency,
@@ -92,9 +130,16 @@ module.exports = {
                 idempotencyKey: request.idempotencyKey,
                 correlationId: request.correlationId
             }));
-            return repository.record(this.transactionModel(request, adapter, response));
+            const stored = await repository.record(this.transactionModel(request, adapter, response));
+            if (qualifiedCapture) {
+                const retained = await repository.find(request.tenant, request.idempotencyKey);
+                adapter.validateCaptureRecord(request, retained);
+                return retained;
+            }
+            return stored;
         })();
         inFlight.set(key, execution);
-        try { return await execution; } finally { inFlight.delete(key); }
+        if (captureIntent) captureIntents.set(key, captureIntent);
+        try { return await execution; } finally { inFlight.delete(key); captureIntents.delete(key); }
     }
 };

@@ -1,5 +1,9 @@
 # Waste Core
 
+The existing reversal owner also handles [original digital-sale refund locks](llm/contracts/README.md#original-digital-sale-refund),
+using inspected generated CAS and linked events. Financial approvals and ledger
+effects remain with Order, eWaste, Payment and Loyalty.
+
 For maintainers qualifying a reference-only upgrade, use the
 [installed evidence inspection contract](llm/contracts/README.md#installed-evidence-inspection)
 and its [read-only request examples](llm/examples/README.md). Inspection preserves

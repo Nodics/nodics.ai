@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "scope": "Final encrypted-issuance lifecycle mutation correction only",
+  "boundary": "No runtime/native/monetary acceptance; historical review bundles and liveAcceptance fields unchanged. Only inspected Operation/test and changed canonical Promotion/Digital block pins renewed.",
+  "items": [
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "sourceFindings": [
+        "Final 2026-10-09 lifecycle-guard re-review: commitLifecycleCoupon rejects supplied changes/clearing of original protectedToken, secureIssuance and secureIssuanceCode; unchanged originals are omitted from generated mutation. Existing private seller and secure guards, exact scoped revision/status CAS and successor readback remain. Actual guarded claim/redemption regression passes, and generic encrypted-record writes remain fenced. This source correction does not qualify monetary/native execution or provide canonical RELEASE."
+      ],
+      "inspectedSourceMembers": [
+        "DefaultPromotionOperationService.commitLifecycleCoupon",
+        "DefaultPromotionOperationService.assertLifecycleEnvelope",
+        "actual secure write guards preserve encrypted issuance during confirmed claim and redemption",
+        "lifecycle CAS cannot change or clear original encrypted issuance even through its owner helper"
+      ],
+      "rationale": "The documented exact unit lifecycle now matches the actual secure generated guards: immutable encryption bytes are validated and retained, not written through a relaxed generic path. Scoped CAS/readback and merchant private authority remain intact. Missing canonical RELEASE, ITEM delivery and installed/native acceptance limits are unchanged."
+    }
+  ],
+  "canonicalDocuments": {
+    "promotion.campaigns-coupon-issuance": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationComponentData.js",
+      "articleBlocksSha256": "eda266b0c87aa3dfad5150b84254714f2320421b8c387831846ac5515c4f05e7"
+    },
+    "digital.purchase-delivery-reveal": {
+      "owner": "nodics.commerce/modules/digitalCommerce/modules/digitalCore",
+      "componentFile": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v001/records/documentation/digitalCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "fcece5dd56588b781ddabc57e85409410183467fb444ef6a87cc87317ac662c0"
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js": "bb5fc0753ac0396972f0c9a4795e12a6a6c6f3ca0a61924c4cd1aee1ea69ce0d",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "ea8c9081d74f070506f91fc04027d7348f4c0440087a469ae695924c2b9f35dd"
+  },
+  "checks": {
+    "promotionMerchantScopeContract": "41/41 PASS"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "finalSourceRevalidation": {
+    "reviewDate": "2026-10-09",
+    "sourceFreeze": "Parent-confirmed Operation and Socrates merchant test frozen before this review",
+    "item": "Commerce product, price, inventory, and fulfillment authoring",
+    "disposition": "PASS_SOURCE_REVIEW",
+    "canonicalContentChanged": false,
+    "previousSourceFileSha256": {
+      "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js": "bb5fc0753ac0396972f0c9a4795e12a6a6c6f3ca0a61924c4cd1aee1ea69ce0d",
+      "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "ea8c9081d74f070506f91fc04027d7348f4c0440087a469ae695924c2b9f35dd"
+    },
+    "reviewedSourceFileSha256": {
+      "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js": "72a71039dd1f3fd6715d7c4f4f715964ecf1044414011cf64b8bb4e4fafa92e2",
+      "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "f7990b236cbcc360a3383e35bb4b5724f672dffe4b479ed665ee080966e85318"
+    },
+    "sourceFindings": [
+      "Final frozen private-readback review: commitLifecycleCoupon first rejects supplied protected-field changes, then requires typeof secure.read and secure.privateOperation to be function when supplied original protected values need verification, before any CAS write. Only lifecycle patch fields enter mutation and normal redacted successor readback.",
+      "Protected original values are independently read inside secure.privateOperation using secure.read with exact tenant, enterprise and coupon selectors, maximum one row, matching successor revision and deep equality of original protected fields. Secure read checks successful envelope, bounded unique rows and every equality selector; it returns detached private evidence while generic providerResult remains redacted.",
+      "The frozen 54-case merchant contract passes, including five absent/non-callable-owner prewrite refusals and seven private readback failures (error, missing, revision, tenant and each protected field). Postwrite failures leave one already-written original transition but never confirm it; encrypted issuance remains unchanged. No generic guard relaxation, monetary/native qualification, new RELEASE caller or CMS edit follows."
+    ],
+    "checks": {
+      "merchantScopeContract": "54/54 PASS"
+    },
+    "boundary": "Source-editorial/test evidence only. Prior evidence and liveAcceptance preserved; no CMS/runtime/native/monetary claims."
+  }
+}

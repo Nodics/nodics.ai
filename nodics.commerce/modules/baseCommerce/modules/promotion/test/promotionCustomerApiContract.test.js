@@ -100,10 +100,15 @@ function installGlobals() {
                 const index = promotions.findIndex(
                     (item) =>
                         item.code === request.query.code &&
-                        item.tenant === request.query.tenant,
+                        item.tenant === request.query.tenant &&
+                        (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode) &&
+                        (!request.query.budgetAdmission || !Object.hasOwn(item, 'budgetAdmission')),
                 );
                 if (index >= 0) promotions[index] = request.model;
-                return { result: request.model };
+                if (!request.query.budgetAdmission) return { result: request.model };
+                return { code: 'SUC_UPDATE', result: {
+                    acknowledged: true, matchedCount: index >= 0 ? 1 : 0, modifiedCount: index >= 0 ? 1 : 0,
+                } };
             },
         },
         DefaultCouponService: {
@@ -187,14 +192,19 @@ function installGlobals() {
                 budgetLedger.push(request.model);
                 return { result: request.model };
             },
-            get: async (request) => ({
-                result: budgetLedger.filter(
+            get: async (request) => {
+                const rows = budgetLedger.filter(
                     (item) =>
                         item.tenant === request.query.tenant &&
+                        (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode) &&
                         (!request.query.promotionCode ||
                             item.promotionCode === request.query.promotionCode),
-                ),
-            }),
+                );
+                const limit = request.searchOptions?.pageSize || rows.length || 100;
+                const skip = ((request.searchOptions?.pageNumber || 1) - 1) * limit;
+                return { code: 'SUC_FIND_00000', count: rows.length, options: { limit, skip },
+                    result: rows.slice(skip, skip + limit) };
+            },
         },
         DefaultDiscountDecisionService: {
             save: async (request) => {
@@ -1135,6 +1145,8 @@ test('Promotion owns coupon-code marketplace sale claim redeem and release lifec
 });
 
 test('Promotion coupon reservation rejects an unconfirmed optimistic update', async () => {
+    promotions.push({ tenant: 'default', code: 'coupon10', status: 'ACTIVE',
+        actions: { discountType: 'FIXED', discountAmount: '10.00' } });
     coupons = [
         {
             code: 'coupon-row-1',
@@ -1170,6 +1182,8 @@ test('Promotion coupon reservation rejects an unconfirmed optimistic update', as
 });
 
 test('Promotion coupon reservation returns concrete fallback model when generated update returns metadata', async () => {
+    promotions.push({ tenant: 'default', code: 'coupon10', status: 'ACTIVE',
+        actions: { discountType: 'FIXED', discountAmount: '10.00' } });
     coupons = [
         {
             code: 'coupon-row-1',
@@ -1211,6 +1225,8 @@ test('Promotion coupon reservation returns concrete fallback model when generate
 });
 
 test('Promotion coupon pool reservation is scoped by enterpriseCode inside a shared tenant', async () => {
+    promotions.push({ tenant: 'default', enterpriseCode: 'enterpriseX', code: 'coupon10', status: 'ACTIVE',
+        actions: { discountType: 'FIXED', discountAmount: '10.00' } });
     coupons = [
         {
             code: 'coupon-enterprise-x',
@@ -1326,12 +1342,14 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
     });
     budgetLedger = [
         {
+            code: 'builder10-commit',
             tenant: 'default',
             promotionCode: 'builder10',
             mutationType: 'COMMIT',
             amount: '10.00',
         },
         {
+            code: 'builder10-release',
             tenant: 'default',
             promotionCode: 'builder10',
             mutationType: 'RELEASE',
@@ -1365,6 +1383,8 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
     assert.equal(batch.data.coupons.length, 2);
     assert.equal(reserved.data.batch.status, 'RESERVED');
     assert.equal(ledger.data.entries.length, 2);
+    assert.deepEqual(ledger.data.completeness, { contractVersion: 1, tenant: 'default', enterpriseCode: null,
+        promotionCode: 'builder10', totalCount: 2, returnedCount: 2, pageNumber: 1, pageSize: 100, complete: true });
     assert.equal(analytics.data.redemptionCount, 2);
     assert.equal(analytics.data.appliedCount, 1);
     assert.equal(analytics.data.reversedCount, 1);

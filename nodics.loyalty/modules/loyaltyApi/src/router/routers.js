@@ -15,6 +15,16 @@
 module.exports = {
     loyaltyApi: {
         internal: {
+            walletEvidence: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal', cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/wallet-evidence', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'walletEvidence'
+            },
+            ledgerEvidence: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal', cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/reward-ledger-evidence', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'ledgerEvidence'
+            },
             openWallet: {
                 secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
                 permission: 'loyalty.wallet.open', apiExposure: 'loyaltyInternal',

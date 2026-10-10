@@ -15,6 +15,30 @@
 module.exports = {
   checkoutCore: {
     customer: {
+      commandStatus: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["customerUserGroup"],
+        permission: "commerce.checkout.place",
+        apiExposure: "commerceCustomer",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/checkouts/commands/:commandCode",
+        method: "GET",
+        controller: "DefaultCheckoutCustomerController",
+        operation: "commandStatus",
+      },
+      recoverCompensation: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["customerUserGroup"],
+        permission: "commerce.checkout.place",
+        apiExposure: "commerceCustomer",
+        key: "/checkouts/:commandCode/compensation/recover",
+        method: "POST",
+        controller: "DefaultCheckoutCustomerController",
+        operation: "recoverCompensation",
+      },
       status: {
         secured: true,
         authTokenTypes: ["access"],

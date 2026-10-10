@@ -10,6 +10,8 @@
  */
 
 const _ = require('lodash');
+// Provenance of opened default handles, not a second connection registry.
+const defaultConnectionConfigurations = new WeakMap();
 
 /**
  * @module database/service/connection/DefaultDatabaseConnectionHandlerService
@@ -169,6 +171,24 @@ module.exports = {
                 let dbConfig = SERVICE.DefaultDatabaseConfigurationService.getDatabaseConfiguration(moduleName, tntCode);
                 if (dbConfig && !UTILS.isBlank(dbConfig.options) && dbConfig.options.connectionHandler) {
                     let testConfig = CONFIG.get('test');
+                    const testEnabled = !!(testConfig && testConfig.enabled && testConfig.uTest && testConfig.uTest.enabled);
+                    const configuration = _.cloneDeep(dbConfig);
+                    const registry = SERVICE.DefaultDatabaseConfigurationService;
+                    if (moduleName !== 'default') {
+                        const existing = registry.getTenantDatabase('default', tntCode);
+                        const opened = existing?.master && defaultConnectionConfigurations.get(existing.master);
+                        if (opened && opened.tenant === tntCode && opened.testEnabled === testEnabled &&
+                            _.isEqual(opened.configuration, configuration) && (!testEnabled || existing.test)) {
+                            registry.addTenantDatabase(moduleName, tntCode, { master: existing.master, test: existing.test });
+                            return resolve();
+                        }
+                    }
+                    const register = handles => {
+                        registry.addTenantDatabase(moduleName, tntCode, handles);
+                        if (moduleName === 'default') defaultConnectionConfigurations.set(handles.master, {
+                            tenant: tntCode, testEnabled, configuration
+                        });
+                    };
                     let masterDatabase = new CLASSES.Database();
                     let testDatabase = null;
                     masterDatabase.setName(moduleName);
@@ -195,7 +215,7 @@ module.exports = {
                                         testDatabase.setCollections(success.collections);
                                         testDatabase.setClient(success.client);
                                         testDatabase.setCapabilities(success.capabilities);
-                                        SERVICE.DefaultDatabaseConfigurationService.addTenantDatabase(moduleName, tntCode, {
+                                        register({
                                             master: masterDatabase,
                                             test: testDatabase
                                         });
@@ -209,14 +229,14 @@ module.exports = {
                                         _self.LOG.error('Default test database configuration not found. Please velidate database configuration');
                                         process.exit(CONFIG.get('errorExitCode'));
                                     }
-                                    SERVICE.DefaultDatabaseConfigurationService.addTenantDatabase(moduleName, tntCode, {
+                                    register({
                                         master: masterDatabase,
                                         test: testDB
                                     });
                                     resolve();
                                 }
                             } else {
-                                SERVICE.DefaultDatabaseConfigurationService.addTenantDatabase(moduleName, tntCode, {
+                                register({
                                     master: masterDatabase,
                                     test: testDatabase
                                 });

@@ -51,6 +51,12 @@ Database owns Nodics model registration, provider-neutral data access, tenant/mo
 
 This module converts module schemas and configuration into runtime models, data access behavior, transaction semantics, cache coherence, and schema maintenance APIs.
 
+Fully identical resolved module configurations share their tenant's opened
+default master/test wrapper and client. Distinct configurations and tenants stay
+isolated; transaction admission still requires actual wrapper identity, never
+matching URI strings. See the [transaction contract](llm/contracts/README.md#transaction-contract)
+and source-only shared-registration regression before customizing connection lifecycle.
+
 ## Canonical schema APIs
 
 `DefaultSchemaUtilityService` owns discovery and safe effective metadata;
@@ -106,9 +112,7 @@ original revision; no client or project may disable these checks for editing.
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.foundation/provider-data-access-layer.md`
-- `nodics.docs/docs/pages/nodics.foundation/schema-data-modeling.md`
-- `nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md`
+- `nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js`
 
 ## Verification
 

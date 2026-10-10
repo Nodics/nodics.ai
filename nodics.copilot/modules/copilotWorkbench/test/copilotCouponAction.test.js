@@ -487,3 +487,197 @@ test("permission revocation during receipt lookup leaves the action uncertain", 
   await assert.rejects(core.reconcileCouponReceipt(request));
   assert.equal(action.state, "OUTCOME_UNKNOWN");
 });
+
+const simulationTriad = { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" };
+/** Malformed owner tags, never caller-selected simulation policy. */
+function invalidSimulationTags() {
+  const partial = [];
+  const keys = Object.keys(simulationTriad);
+  for (let mask = 1; mask < 7; mask++) partial.push(Object.fromEntries(
+    keys.filter((_key, index) => mask & (1 << index)).map(key => [key, simulationTriad[key]])));
+  return [...partial, ...[
+    { simulated: false }, { simulated: "true" }, { simulated: null }, { simulated: undefined },
+    { deliveryVerified: true }, { deliveryVerified: "false" }, { deliveryVerified: null }, { deliveryVerified: undefined },
+    { evidenceMode: "VERIFIED" }, { evidenceMode: "local_simulation" }, { evidenceMode: null }, { evidenceMode: undefined }
+  ].map(patch => ({ ...simulationTriad, ...patch }))];
+}
+
+test("actual merchant queue retains only the source-authored simulation triad alongside minimized fields", async () => {
+  const original = SERVICE.DefaultModuleService.invokeModule;
+  SERVICE.DefaultModuleService.invokeModule = async r => {
+    const response = await original(r);
+    Object.assign(response.data.redemptions[0], simulationTriad, { deliveryProof: "private-proof", ownerId: "private-owner" });
+    return response;
+  };
+  const result = await core.getCouponRedemptions(request);
+  for (const [key, value] of Object.entries(simulationTriad)) assert.equal(result.redemptions[0][key], value);
+  assert.doesNotMatch(JSON.stringify(result), /private-proof|private-owner|private-command-key|private-customer|confirmationKey/);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].apiName, "/merchant/redemptions");
+  assert.equal(calls[0].methodName, "GET");
+  assert.equal(action, undefined);
+});
+
+test("ordinary queue evidence gains no verification or simulation tags from request, identity or environment", async () => {
+  Object.assign(request, simulationTriad);
+  Object.assign(request.authData, simulationTriad);
+  configuration.environment = { class: "LOCAL" };
+  const row = (await core.getCouponRedemptions(request)).redemptions[0];
+  for (const key of Object.keys(simulationTriad)) assert.equal(Object.hasOwn(row, key), false);
+});
+
+test("actual queue fails partial, contradictory and coerced native simulation tags without returning rows", async () => {
+  const original = SERVICE.DefaultModuleService.invokeModule;
+  for (const tags of invalidSimulationTags()) {
+    SERVICE.DefaultModuleService.invokeModule = async r => {
+      const response = await original(r);
+      Object.assign(response.data.redemptions[0], tags);
+      return response;
+    };
+    await assert.rejects(core.getCouponRedemptions(request), { code: "ERR_CPW_00004" });
+    assert.equal(action, undefined);
+  }
+});
+
+test("queue rejects inherited, accessor and hidden simulation flags without evaluating flag getters", async () => {
+  const original = SERVICE.DefaultModuleService.invokeModule;
+  let reads = 0;
+  for (const malformed of ["inherited", "accessor", "hidden"]) {
+    SERVICE.DefaultModuleService.invokeModule = async r => {
+      const response = await original(r), row = response.data.redemptions[0];
+      Object.assign(row, simulationTriad);
+      if (malformed === "inherited") { delete row.simulated; Object.setPrototypeOf(row, { simulated: true }); }
+      if (malformed === "accessor") Object.defineProperty(row, "simulated", { enumerable: true, get() { reads++; return true; } });
+      if (malformed === "hidden") Object.defineProperty(row, "simulated", { value: true, enumerable: false });
+      return response;
+    };
+    await assert.rejects(core.getCouponRedemptions(request), { code: "ERR_CPW_00004" });
+  }
+  assert.equal(reads, 0);
+});
+
+for (const state of ["UNCONFIRMED", "COMPLETED"]) {
+  test("actual receipt reconciliation preserves source-only simulation tags: " + state, async () => {
+    const receipt = await uncertain();
+    Object.assign(receipt, simulationTriad, { state, ownerId: "private-owner", deliveryProof: "private-proof" });
+    const before = action.audit.revision;
+    const result = await core.reconcileCouponReceipt(request);
+    for (const [key, value] of Object.entries(simulationTriad)) assert.equal(result[key], value);
+    assert.equal(result.receiptState, state);
+    assert.equal(action.state, state === "COMPLETED" ? "EXECUTED" : "OUTCOME_UNKNOWN");
+    assert.equal(action.audit.revision, before + (state === "COMPLETED" ? 1 : 0));
+    assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 1);
+    assert.equal(calls.at(-1).apiName, "/merchant/redemptions/ENTITLEMENT_1/receipt/query");
+    assert.equal(calls.at(-1).header.Authorization, "Bearer employee");
+    assert.equal(calls.at(-1).maxAttempts, 1);
+    assert.doesNotMatch(JSON.stringify(result), /private-owner|private-proof|confirmationKey|PRIVATE-COUPON/);
+  });
+
+  test("malformed tags cannot complete or relabel an actual uncertain receipt: " + state, async () => {
+    const receipt = await uncertain(), before = action.audit.revision;
+    receipt.state = state;
+    for (const tags of invalidSimulationTags()) {
+      for (const key of Object.keys(simulationTriad)) delete receipt[key];
+      Object.assign(receipt, tags);
+      await assert.rejects(core.reconcileCouponReceipt(request), { code: "ERR_CPW_00004" });
+      assert.equal(action.state, "OUTCOME_UNKNOWN");
+      assert.equal(action.audit.revision, before);
+      assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 1);
+    }
+  });
+}
+
+test("receipt reconciliation cannot obtain simulation tags from current request or identity", async () => {
+  const receipt = await uncertain();
+  receipt.state = "UNCONFIRMED";
+  Object.assign(request, simulationTriad);
+  Object.assign(request.authData, simulationTriad);
+  const result = await core.reconcileCouponReceipt(request);
+  for (const key of Object.keys(simulationTriad)) assert.equal(Object.hasOwn(result, key), false);
+  assert.equal(action.state, "OUTCOME_UNKNOWN");
+});
+
+test("receipt reconciliation rejects accessor/inherited tags and still rechecks original receipt authority", async () => {
+  const receipt = await uncertain(), before = action.audit.revision;
+  let reads = 0;
+  SERVICE.DefaultModuleService.invokeModule = async r => { calls.push(r); return { data: receipt }; };
+  Object.assign(receipt, simulationTriad);
+  Object.defineProperty(receipt, "simulated", { configurable: true, enumerable: true, get() { reads++; return true; } });
+  await assert.rejects(core.reconcileCouponReceipt(request), { code: "ERR_CPW_00004" });
+  assert.equal(reads, 0);
+  delete receipt.simulated;
+  Object.setPrototypeOf(receipt, { simulated: true });
+  await assert.rejects(core.reconcileCouponReceipt(request), { code: "ERR_CPW_00004" });
+  Object.setPrototypeOf(receipt, Object.prototype);
+  receipt.simulated = true;
+  receipt.merchantReceiptReference = "FOREIGN";
+  await assert.rejects(core.reconcileCouponReceipt(request), { code: "ERR_CPW_00004" });
+  assert.equal(action.state, "OUTCOME_UNKNOWN");
+  assert.equal(action.audit.revision, before);
+});
+
+test("ITEM and simulated owner validation remain unsupported and never create Copilot plans", async () => {
+  const original = structuredClone(evidence);
+  for (const sourceStage of ["FULFILLED_ITEMS", "SIMULATED_ITEMS"]) {
+    evidence = { ...original, conditions: { benefit: { benefitType: "ITEM", sourceStage,
+      items: [{ sku: "sku-1", quantity: 1, unit: "EACH" }] } } };
+    await assert.rejects(core.prepareCouponPlan(request), { code: "ERR_CPW_00004" });
+    assert.equal(action, undefined);
+  }
+  evidence = { ...original, ...simulationTriad };
+  await assert.rejects(core.prepareCouponPlan(request), { code: "ERR_CPW_00004" });
+  assert.equal(action, undefined, "Simulation flags without a benefit cannot enter an ordinary plan");
+  assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 0);
+});
+
+test("unexpected simulated execution evidence stays uncertain and never enables ITEM execution or replay", async () => {
+  await approve();
+  const original = SERVICE.DefaultModuleService.invokeModule;
+  SERVICE.DefaultModuleService.invokeModule = async r => {
+    const response = await original(r);
+    Object.assign(response.data, simulationTriad);
+    return response;
+  };
+  const result = await core.executeConfirmation(request);
+  assert.equal(result.state, "OUTCOME_UNKNOWN");
+  await assert.rejects(core.executeConfirmation(request));
+  assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 1);
+});
+
+test("an ITEM plan row is refused by the coupon executor before any owner confirmation", async () => {
+  await approve();
+  Object.assign(action.audit.plan.records[0], { benefitType: "ITEM", items: [{ sku: "sku-1", quantity: 1, unit: "EACH" }] });
+  await assert.rejects(coupon.execute(action, request, configuration), { code: "ERR_CPW_00004" });
+  assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 0);
+});
+
+test("tagged concurrent receipt inspections preserve exactly one acknowledged completion and no new fulfillment", async () => {
+  const receipt = await uncertain(), before = action.audit.revision;
+  Object.assign(receipt, simulationTriad);
+  const results = await Promise.allSettled([core.reconcileCouponReceipt(request), core.reconcileCouponReceipt(request)]);
+  const completed = results.filter(result => result.status === "fulfilled");
+  assert.equal(completed.length, 1);
+  assert.equal(results.filter(result => result.status === "rejected").length, 1);
+  for (const [key, value] of Object.entries(simulationTriad)) assert.equal(completed[0].value[key], value);
+  assert.equal(action.audit.revision, before + 1);
+  assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 1);
+});
+
+test("existing ordinary PRICED_CART validation and approved execution remain supported", async () => {
+  request.body.storeCode = "OUTLET";
+  request.body.merchantReceiptReference = "CART:priced-1";
+  Object.assign(evidence, { storeCode: "OUTLET", storeRevision: 7 });
+  evidence.conditions.benefit = { sourceStage: "PRICED_CART", sourceReference: "CART:priced-1", currency: "USD",
+    subtotalAmount: "100.00", discountAmount: "10.00", sourceHash: "a".repeat(64), sourceRevision: 2,
+    storeCode: "OUTLET", storeRevision: 7 };
+  const original = SERVICE.DefaultModuleService.invokeModule;
+  SERVICE.DefaultModuleService.invokeModule = async r => {
+    const response = await original(r);
+    if (r.apiName.endsWith("/confirm")) Object.assign(response.data, {
+      merchantReceiptReference: "CART:priced-1", storeCode: "OUTLET", storeRevision: 7 });
+    return response;
+  };
+  await approve();
+  assert.equal((await core.executeConfirmation(request)).state, "CONSUMED");
+  assert.equal(calls.filter(call => call.apiName.endsWith("/confirm")).length, 1);
+});

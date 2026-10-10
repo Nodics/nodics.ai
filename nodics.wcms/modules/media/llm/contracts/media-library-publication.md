@@ -19,7 +19,7 @@ existing runtime routing, normally `/nodics/media/v0`. Do not hardcode a host.
 | --- | --- | --- | --- |
 | GET | `/library` | Optional `code`, `folderCode`, `status`, `pageNumber`, `pageSize` query | `{items,pageNumber,pageSize,hasMore}` |
 | GET | `/library/:mediaCode` | Empty body/query | One current metadata DTO with `commands` |
-| POST | `/library/publications` | `{mediaCode,versionId,publicationCode}` | `{publicationCode,mediaCode,versionId,state,revision,approvalRequired:true}` |
+| POST | `/library/publications` | `{mediaCode,versionId,publicationCode,expectedChecksum?}` | `{publicationCode,mediaCode,versionId,state,revision,workflowRef?,approvalRequired:true}` |
 
 Use the listing's exact-code filter or inspect route to obtain the current
 version before submitting a request. Page defaults are 1 and 50; page size is
@@ -140,12 +140,50 @@ storage facade -> Media version provider -> nPublish create/validate/request
 approval. It never invokes approve, activate or supplies Process decisions.
 The older human POST `/publication/requests` is mapped through the same library
 checks, retaining its `result` envelope with the safe initiation DTO. It accepts
-only the same three fields; it is not a legacy escape around the scope/version
+only the same fields; it is not a legacy escape around the scope/version
 checks. Internal trusted version-provider operations retain their existing owner
 contracts and are not exposed as arbitrary browser dispatch.
+
+Coordinated CMS publication supplies `expectedChecksum`, a lowercase SHA-256
+digest pinned by the CMS manifest. Media validates it against the scoped current
+row, retained capture and any existing publication replay before further effects.
+Omitting it preserves the existing native exact-version request contract; it
+does not permit the coordinated client to omit the CMS checksum. `workflowRef`
+is returned only from the actual stored publication, never invented by a client.
+Axis may explicitly initiate each missing asset and complete its existing Process
+task with the same authenticated employee. Every Media and Process permission
+and decision policy still applies. CMS and Media remain separately audited,
+non-atomic publications; partial failures require inspection and explicit resume.
 Readiness consumers must not interpret an available request command, READY
 metadata, or APPROVAL_PENDING as approved Online publication. Online evidence
 continues to come from existing nPublish state and exact target receipts.
+
+## Read-Only Pointer Batches
+
+The existing service-authenticated target status route also accepts
+`{mediaCodes:[...]}` instead of one `mediaCode`. It rejects empty, duplicate,
+invalid and oversized selections before reading; the bound is the effective
+`media.publication.maximumAssets`. The response is ordered
+`{statuses:[{mediaCode,status}]}`, where status is the existing version/revision
+DTO or null for no activation. No byte, provider locator, approval or mutation is
+added. Transport rejects missing, reordered, foreign or malformed evidence.
+
+CMS may read the pointer batch before inspecting exact retained metadata and
+target bytes, then reread it after all byte checks. Every qualified dependency
+must retain the same exact pointer and revision; changes fail closed. For N
+active assets, the default owner uses three remote reads: two pointer batches
+around one exact integrity batch on the existing service-only reconcile route.
+Its input is `{assets:[{mediaCode,manifestCode}]}`. The complete unique selection
+must satisfy `maximumAssets`, safe Media codes and SHA-256 manifest identities
+before any read. Mixed mutation/operation fields and extra asset selectors are
+rejected. Each item still invokes existing retained cleanup reconciliation with
+the original trusted context; no parallel mutation, repair or deletion is added.
+The ordered `{results:[...]}` acknowledgment must contain every exact identity
+and boolean intact/active evidence plus protected=true, repaired=false and
+deleted=false. Corrupt/inactive bytes do not qualify. Pointer-only overlays keep
+N+2 remote reads. Legacy owner overlays
+without batch support retain the single-asset inspection contract. Neither
+batching nor UI display caching substitutes for target integrity or approval.
 
 ## Workspaces And Customization
 
@@ -192,14 +230,16 @@ Do not copy them into Kickoff or add a project-level publication implementation.
 
 ## Verification And Deployment
 
-The explicit `media:mediaPublicationWorkflow` release advances from `1.0.0`
-to `1.0.1` using the SAME `mediaPublicationApproval` definition code. The existing
-Process installer prepares a successor draft and publishes a new immutable
-numeric version (v2 when v1 is already installed). The original `init-v002`
-payload and running v1 instances remain unchanged; a fresh installation may
-publish the new policy as its first numeric version. Never infer release
-qualification from numeric version 2 alone, borrow CMS approval, or install a
-parallel Media workflow code.
+The unreleased `media:mediaPublicationWorkflow` contribution is consolidated at
+`0.0.1` under `init-v001`, using the same `mediaPublicationApproval` definition
+code and current reviewer/decision policy. Select the exact observed version
+from the existing init catalogue, not a historical version in client or repair
+code. A fresh installation publishes its first immutable numeric graph version;
+that numeric version is not the data release version. After installation, future
+changes require a higher immutable release and successor graph through the
+existing installer. Running tasks retain their pinned versions. Never infer
+qualification from a numeric graph version alone, overwrite an installed release,
+borrow CMS approval, or install a parallel Media workflow code.
 
 The successor declares native `actorPolicy` requiring
 `publish.lifecycle.approve`, enterprise context `enterpriseCode`, and requester

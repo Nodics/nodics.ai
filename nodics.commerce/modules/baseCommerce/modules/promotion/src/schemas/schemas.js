@@ -730,7 +730,52 @@ module.exports.promotion.promotion.backoffice = {
   description: "Promotion rule master data.",
 };
 
+/** First-use admission evidence is committed with the live counter, never imported as policy. */
+module.exports.promotion.promotion.definition.budgetAdmission = {
+  type: "object",
+  required: false,
+  description: "Private first-use command evidence retained atomically with the opening live budget.",
+};
+
+/** Activated accounting uses the existing ledger as an append-only transaction receipt. */
+for (const name of ['promotion', 'promotionBudgetLedger']) {
+  const schema = module.exports.promotion[name];
+  schema.transaction = { enabled: true, sideEffects: 'none' };
+  schema.indexes = schema.indexes || {};
+  schema.indexes.individual = { ...(schema.indexes.individual || {}),
+    budgetIdentity: { name: 'code', enabled: true, options: { unique: true } } };
+}
+Object.assign(module.exports.promotion.promotionBudgetLedger.definition, enterpriseAssociationDefinitions, {
+  budgetMutation: { type: 'object', required: false,
+    description: 'Private immutable activated budget command, fingerprint and before/after revision proof; owner transaction inserts only.' },
+});
+module.exports.promotion.promotionBudgetLedger.refSchema = enterpriseAssociationRefSchema;
+module.exports.promotion.promotionBudgetLedger.readProtection = { owner: 'DefaultPromotionBudgetMutationService' };
+
 /** Locks purchased coupon benefits to their reviewed fulfillment target. */
+for (const name of ['coupon', 'couponBatch']) {
+  const schema = module.exports.promotion[name];
+  schema.transaction = { enabled: true, sideEffects: 'none' };
+  schema.readProtection = { owner: 'DefaultCouponSecureIssuanceService' };
+  schema.indexes = { individual: { issuanceIdentity: { name: 'code', enabled: true, options: { unique: true } } } };
+}
+module.exports.promotion.coupon.indexes.composite = {
+  tenant: { name: 'tenant', enabled: true, options: { unique: true } },
+  tokenHash: { name: 'tokenHash', enabled: true, options: { unique: true } },
+};
+module.exports.promotion.coupon.definition.protectedToken = {
+  type: 'object', required: false,
+  description: 'Private authenticated token ciphertext retained only by secure issuance; excluded from generic reads and exports.',
+};
+module.exports.promotion.coupon.definition.secureIssuanceCode = {
+  type: 'string', required: false,
+  description: 'Private original batch receipt identity; never a caller-provided issuance grant.',
+};
+module.exports.promotion.couponBatch.definition.secureIssuance = {
+  type: 'object', required: false,
+  description: 'Private immutable intent and encrypted-unit fingerprints committed atomically with the original issued coupons.',
+};
+
 module.exports.promotion.coupon.definition.claimTargetCode = {
   type: "string",
   required: false,

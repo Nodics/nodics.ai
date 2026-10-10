@@ -149,4 +149,22 @@ try {
     assert.throws(() => rotating.rotateJwtSecret(rotationRoot,'fixtureLocal'),/JWT_ROTATION_REFUSED/);
 } finally { fs.rmSync(rotationRoot,{recursive:true,force:true}); }
 
+const keyBefore = service.readExistingEnvironment(fs.realpathSync(root), 'kickoffLocal', {});
+const purposeName = 'NODICS_TEST_PURPOSE_KEY';
+const added = service.ensureSecretKey(fs.realpathSync(root), 'kickoffLocal', purposeName);
+assert.deepStrictEqual(added.changedKeys, [purposeName]);
+const keyAfter = service.readExistingEnvironment(fs.realpathSync(root), 'kickoffLocal', {});
+assert.match(keyAfter[purposeName], /^[a-f0-9]{64}$/);
+for (const key of Object.keys(keyBefore)) assert.strictEqual(keyAfter[key], keyBefore[key]);
+const retainedKeyBytes = fs.readFileSync(file);
+assert.deepStrictEqual(service.ensureSecretKey(fs.realpathSync(root), 'kickoffLocal', purposeName).changedKeys, []);
+assert.deepStrictEqual(fs.readFileSync(file), retainedKeyBytes);
+for (const name of ['NODICS_JWT_SECRET', '../outside', '', null])
+    assert.throws(() => service.ensureSecretKey(fs.realpathSync(root), 'kickoffLocal', name), /LOCAL_SECRET_KEY_REFUSED/);
+assert.throws(() => service.ensureSecretKey(fs.realpathSync(root), 'production', purposeName), /LOCAL_SECRET_KEY_REFUSED/);
+fs.chmodSync(file, 0o644);
+assert.throws(() => service.ensureSecretKey(fs.realpathSync(root), 'kickoffLocal', purposeName), /LOCAL_SECRET_KEY_REFUSED/);
+fs.chmodSync(file, 0o600);
+assert.deepStrictEqual(fs.readFileSync(file), retainedKeyBytes);
+
 console.log('Project local runtime credential service validated');

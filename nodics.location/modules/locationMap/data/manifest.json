@@ -1,56 +1,105 @@
 {
-    "contractVersion": 2,
-    "module": "locationMap",
-    "sections": {
-        "core-map-reference": {
-            "kind": "DATA_RELEASE",
-            "dataType": "core",
-            "version": "0.0.0",
-            "displayName": "Location Map Reference Data",
-            "description": "Reusable map provider, usage, style, and control reference records owned by Location Map.",
-            "owningDomain": "location",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "LOCATION",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "core-v001/headers/location/locationMapConfigurationHeader.js": "9fa5aa610c79c41a41a746582d64dbbb25b58a51e458b57831379e87d1699ad6",
-                "core-v001/records/backoffice/locationMapBackofficeCapabilityData.js": "ced3d4c7431d7720760569c70be703bc655072a10a241251f349edcd7dabf1df",
-                "core-v001/records/location/locationMapProviderData.js": "e12babf84a1a28bb89a33b26651c8b4f2e2c1e84adab1c555db8d931f215673b",
-                "core-v001/records/location/locationMapUsageData.js": "ef9344832b65d1af7debc51f2ce9b0c56a0a53aeb087220a4ffcb6e78e22b75c",
-                "core-v001/records/location/locationMapStylePresetData.js": "717444afd6124447d8f33c4d4de051768db1d3e0dc900788214a9eec960617f2",
-                "core-v001/records/location/locationMapControlPresetData.js": "9aefb9385a04972127388d2c4a45dc2cb457be58e24d41d28b78100634bacd9c"
-            },
-            "sourceRoot": "core-v001"
-        },
-        "init-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "init",
-            "sourceRoot": "init-v001",
-            "version": "0.0.0",
-            "displayName": "Location Map Initial Configuration",
-            "description": "Startup Location Map provider configurations for Axis map consumers.",
-            "owningDomain": "location",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "LOCATION",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "init-v001/headers/location/defaultLocationMapProviderConfigurationHeader.js": "a033bb127f621ff3e65f7668b6c71a9f0ac598a8b46bb1ec07d19c5a12f860eb",
-                "init-v001/records/location/defaultLocationMapProviderConfigurationData.js": "c2ff002d7f6efcc2bf3f36bba59459021cf23cfc52fc3d46925202612818a751"
-            }
+  "contractVersion": 2,
+  "module": "locationMap",
+  "sections": {
+    "core-map-reference": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "displayName": "Location Map Reference Data",
+      "description": "Reusable map provider, usage, style, and control reference records owned by Location Map.",
+      "owningDomain": "location",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "LOCATION",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "core-v001/headers/location/locationMapConfigurationHeader.js": "9fa5aa610c79c41a41a746582d64dbbb25b58a51e458b57831379e87d1699ad6",
+        "core-v001/records/backoffice/locationMapBackofficeCapabilityData.js": "ced3d4c7431d7720760569c70be703bc655072a10a241251f349edcd7dabf1df",
+        "core-v001/records/location/locationMapProviderData.js": "e12babf84a1a28bb89a33b26651c8b4f2e2c1e84adab1c555db8d931f215673b",
+        "core-v001/records/location/locationMapUsageData.js": "ef9344832b65d1af7debc51f2ce9b0c56a0a53aeb087220a4ffcb6e78e22b75c",
+        "core-v001/records/location/locationMapStylePresetData.js": "717444afd6124447d8f33c4d4de051768db1d3e0dc900788214a9eec960617f2",
+        "core-v001/records/location/locationMapControlPresetData.js": "9aefb9385a04972127388d2c4a45dc2cb457be58e24d41d28b78100634bacd9c"
+      },
+      "sourceRoot": "core-v001"
+    },
+    "init-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v001",
+      "version": "0.0.1",
+      "displayName": "Location Map Initial Configuration",
+      "description": "Startup Location Map provider configurations for Axis map consumers.",
+      "owningDomain": "location",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "LOCATION",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "init-v001/headers/location/defaultLocationMapProviderConfigurationHeader.js": "a033bb127f621ff3e65f7668b6c71a9f0ac598a8b46bb1ec07d19c5a12f860eb",
+        "init-v001/records/location/defaultLocationMapProviderConfigurationData.js": "c2ff002d7f6efcc2bf3f36bba59459021cf23cfc52fc3d46925202612818a751"
+      }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "locationMap",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "1b5efe7fc4fad84f519fcdaaa4272e1fa5058627c96fa076aea5d687443fbdf6",
+      "generatedHashes": {
+        "docs-v001/records/documentation/locationMapDocumentationComponentData.js": "aab6e663b05403ac1d8c3c1c50b67a29679344d39cdd5fd27d59f395fc194cbf",
+        "docs-v001/records/documentation/locationMapDocumentationPageMetadataData.js": "3746af81b94ce32c6064657c9027a7950b8166325ed5edffb10c5cb55170239c",
+        "docs-v001/records/documentation/locationMapDocumentationNodeData.js": "f867e7dae9cebc4fe992944e0742f183631adbcac14e5903d4a5eaafb43c98fa",
+        "docs-v001/records/documentation/locationMapDocumentationPageData.js": "19a2e6bfaf609803bb1b203554ff0e7d000c261cf8868ff628529b05fb1d8159",
+        "docs-v001/records/documentation/locationMapDocumentationRouteData.js": "7453d1f109f1c4fb026ac90b78453448ab1d9a781920017baf93347406a7a98a",
+        "docs-v001/records/documentation/locationMapDocumentationSearchMetadataData.js": "54f13a190b1080516b2266d5a43e237161e802bf7f5e1badd905dfe60267a255",
+        "docs-v001/records/documentation/locationMapDocumentationPublicationStateData.js": "a02a4a4469a079f084fcd5f711563123c34d67f7a27020344ed71c5b616a047d",
+        "docs-v001/headers/100_locationMapDocumentationContentPackHeader.js": "f0417711f98fab45fa5561fa9ec38652c33150bc68583a6390eea57f8c3cdcc6"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

@@ -93,18 +93,24 @@ module.exports = {
         const payload = request.payload || {};
         return request.idempotencyKey || payload.idempotencyKey || [request.tenant, request.balanceCode, request.actionCode, payload.referenceCode || payload.reasonCode || payload.quantity].join(':');
     },
+    /** Rejects generic RETURN; only the qualified physical owner may apply original shipment/receipt disposition authority. */
+    requireReturnAuthority: function (request) {
+        if (String(request.actionCode || request.payload?.actionCode || '').toUpperCase() === 'RETURN')
+            throw new CLASSES.NodicsError('ERR_INVENTORY_RETURN_UNQUALIFIED');
+    },
     /** Computes stock deltas for one supported Inventory operation. @param {Object} request Request. @returns {Object} Operation delta. */
     operationDelta: function (request) {
+        this.requireReturnAuthority(request);
         const payload = request.payload || {}, action = String(request.actionCode || payload.actionCode || '').toUpperCase();
         const amount = this.quantity(payload.quantity);
         if (amount <= 0 && action !== 'ADJUST') throw new Error('Positive quantity is required for this Inventory operation');
         if (action === 'RECEIVE') return { movementType: 'RECEIPT', onHandDelta: amount, availableDelta: amount };
         if (action === 'ADJUST') return { movementType: 'ADJUST', onHandDelta: amount, availableDelta: amount };
-        if (action === 'RETURN') return { movementType: 'RETURN', onHandDelta: amount, availableDelta: amount };
         throw new Error('Unsupported Inventory operation action');
     },
     /** Executes a bounded BackOffice stock operation. @param {Object} request Request. @returns {Promise<Object>} Operation evidence. */
     balanceAction: async function (request) {
+        this.requireReturnAuthority(request);
         if (!request.balanceCode) throw new Error('Inventory balance code is required');
         if (!request.idempotencyKey && !(request.payload && request.payload.idempotencyKey)) throw new Error('Idempotency-Key is required');
         const balance = await this.getBalance(request), delta = this.operationDelta(request), payload = request.payload || {};

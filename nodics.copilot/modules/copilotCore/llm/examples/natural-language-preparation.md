@@ -11,7 +11,7 @@ instance identity, endpoint or scheduler action may be inferred. Preparation
 needs native manage/execute authority and a valid enabled trigger target before
 the provider sees these forms. Typed commands bypass the provider. All trigger
 exchanges are excluded from later model history. See the canonical
-[trigger guide](../../../../../nodics.docs/docs/pages/nodics.copilot/process-trigger-actions.md).
+[trigger guide](../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js).
 
 ## What This Mode Does
 
@@ -25,7 +25,7 @@ native command permission. The interpreter cannot infer approval from complete:
 `approved true` or `approved false` must appear explicitly for a boolean proposal.
 Task and assignee identifiers must match whole supplied tokens. Typed and exact
 short forms bypass the provider. Task exchanges are excluded from later provider
-history. See [the task guide](../../../../../nodics.docs/docs/pages/nodics.copilot/process-task-actions.md)
+history. See [the task guide](../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js)
 for native receipts, supported decision shapes and failure investigation.
 
 ```text
@@ -158,6 +158,6 @@ exercise real Profile, Ollama, private receipts and CURRENT versioned Staged
 MongoDB authoring. They cover no-write review/approval, denied readers, stale
 revisions, exact persisted fields, response loss, original inspection, fresh
 continuation and restart. See the reproducible commands in
-[Standalone Business Actions](../../../../../nodics.docs/docs/pages/nodics.copilot/standalone-business-actions.md#native-authoring-acceptance).
+[Standalone Business Actions](../../../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js#native-authoring-acceptance).
 These tests author synthetic identifiers; they do not establish catalogue/book
 existence, production publication, customer pricing or browser acceptance.

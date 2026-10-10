@@ -4,7 +4,7 @@ Use bounded tenant-scoped inputs, correlation and idempotency references, safe o
 
 ## Notification examples
 
-Use the [worked authoring guide](../../../../../nodics.docs/docs/pages/nodics.communication/email-sms-templates.md)
+Use the [worked authoring guide](../../data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js)
 for full examples. The smallest branding override is just
 `<customer-module>/src/templates/email/employee-email-verification/en/subject.txt`:
 

@@ -1,5 +1,68 @@
 # Operational Import Admission
 
+## Scoped Publisher Persistence
+
+Online activated reads use a separate read-only admission, never the Staged
+source-versioning guard. Signed human/customer tenant and enterprise aliases
+must agree. A human with `commerce.product.publish` and the effective
+`publish.setup.permissions.inventory` may read only this owner's generated
+release, pointer and receipt services through canonical local persistence
+authority. This does not require a separate lifecycle-create permission unless
+it is the selected domain permission. It does not authorize mutable operational
+rows, generic CRUD, capture, retention writes or target activation. Ordinary
+consumers keep their original schema authorization; service claims are never
+rewritten or elevated. The original caller stays unchanged.
+
+Activated reads pin scope and root before asynchronous persistence calls and
+preserve exact current-pointer, receipt, root and immutable-release checks.
+Missing or corrupt evidence fails without mutable fallback or read-side repair.
+The shared `nodics.commerce/test/helpers/policyActivatedReadAdmission.js`
+contract covers actual owner reads, real permission/identity/schema access
+owners, scope and permission denials, ordinary consumers and zero writes.
+Promotion additionally exercises its actual human budget context/policy path.
+Persistence ports remain isolated; native installed acceptance is separate.
+
+An authenticated human with `publish.lifecycle.create`, `commerce.product.publish`
+and the effective `publish.setup.permissions.inventory` may use the owner's
+existing Staged capture/retention path without generic schema CRUD grants.
+Before requesting canonical local persistence authority, require an access
+identity, original actor, matching signed tenant/enterprise aliases and qualified
+Staged source selection. Generated reads remain exact-version and scoped;
+capturePolicy independently rejects foreign responses before any retained write.
+Only policy retention receives this authority, never operational balances,
+coupon stock or consumption. nPublish receives the original authenticated claims
+and retains approval/lifecycle authority. Detached source input and authentication
+prevent await-boundary replacement. Missing permission keeps ordinary schema
+authorization; it never triggers an owner-authority fallback.
+The publisher tests in `test/inventoryPolicyProvider.test.js` use real permission,
+access and identity owners with isolated persistence doubles. They do not qualify
+installed identity, persistence or native publication by themselves.
+
+## Cross-Enterprise Runtime Handoff
+
+Deployment identity and publication business scope are distinct. Keep the original
+signed runtime claims and all supplied request enterprise aliases consistent;
+derive business scope from `publication.enterpriseCode`, or `enterpriseCode` on
+the source authorization command. Require the actual service-token owner for this
+module. Cross-business scope additionally requires nPublish's shared
+`requireRuntimeEnterprise` and explicit `publish.approvalWorkflow.runtimeEnterpriseScope`
+selection; default-off, malformed or unselected scope refuses before target writes.
+
+The source independently checks its qualified Staged role and exact stored
+nPublish intent: domain, tenant, business enterprise, root, source version,
+operation key, state and pointer preconditions. The target requires that exact
+authorization fingerprint before private persistence. Canonical local system
+authority is bounded to those owner reads/writes; it never rewrites signed
+deployment identity or grants ordinary schema CRUD.
+
+Transport uses the selected named runtime connection, internal runtime token and
+tenant header only. Business identity remains in the bounded payload, never a
+forwarded human enterprise header or access token. The owner suite's shared
+`nodics.commerce/test/helpers/policyRuntimeEnterprise.js` covers the actual
+service-token, workflow, source/target and transport owners with group-free
+deployment claims and isolated persistence/HTTP ports. It proves source
+regressions, not JWT verification, native topology or installed qualification.
+
 `DefaultInventoryOperationService.validateImportTarget` rejects operational
 targets on Staged. Generated balance/movement/reservation preSave, preUpdate
 and preRemove hooks enforce the same boundary; owner balance and movement
@@ -64,6 +127,14 @@ concurrency against an independent atomic provider double. This is source proof,
 not permission to repair live records or a claim of database qualification.
 
 ## Isolated Delivery Qualification
+
+For independently prepared Stores, set `rootCodesByStore` to an exact map of
+every selected `storeCodes` entry to its nonempty, unique retained root list.
+This map takes precedence over legacy `rootCodes`; missing/extra Stores or invalid
+roots reject before reads, with no fallback. A Store reads only its mapped roots,
+so another Store's missing pointer cannot block it. This selection does not grant
+authority, create releases, approve publication or establish runtime acceptance.
+Later deployment layers may replace the entire map through nConfig.
 
 Use `inventory.publication.delivery = {enabled:true,
 storeCodes:[reviewedStore], rootCodes:[reviewedRoot]}` for a bounded Store rollout.
@@ -269,7 +340,7 @@ per-domain workflow provider. The action callback delegates directly to
 `DefaultPublicationApprovalCallbackService.applyDecision` with a fixed domain
 and action key; it never accepts a body-selected domain or approval decision.
 The domain's new explicit Process data release is version 1.0.1 under
-`data/init-v002`; no historical checksums were changed.
+`data/init-v001`; no historical checksums were changed.
 
 Private pointer and receipt storage omits unset optional string fields. Never
 persist null for initial pointer version/receiptCode or first-release

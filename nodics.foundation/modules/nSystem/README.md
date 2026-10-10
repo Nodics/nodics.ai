@@ -1,5 +1,8 @@
 # nSystem
 
+Capability-owned secrets may use [purpose-bound authenticated encryption](llm/contracts/secret-protection.md).
+This primitive provides no API, persistence or access authority and never reuses runtime-configuration keys.
+
 `nSystem` is the operational control plane exposed by a running Nodics
 application. It provides governed health, contract, configuration, import,
 diagnostic, and test operations for infrastructure, administrators, support

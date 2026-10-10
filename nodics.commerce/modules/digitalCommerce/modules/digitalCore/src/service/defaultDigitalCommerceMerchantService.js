@@ -11,6 +11,11 @@
 
 "use strict";
 const crypto = require("node:crypto");
+const { isDeepStrictEqual } = require("node:util");
+const confirmations = new WeakMap(), delegatedActions = new WeakMap();
+const validationFailures = new WeakMap();
+const confirmationFailures = new WeakMap();
+const merchantFailures = new WeakMap();
 /** @module digitalCore/service/defaultDigitalCommerceMerchantService @description Supports enterprise employees validating customer-presented purchased coupons and confirming fulfillment in Axis. Profile enterprises and employee scopes are the merchant authority; Promotion owns coupon eligibility and redemption. @layer service @owner digitalCore @override Configure an installed fulfillment provider, never a parallel merchant registry. Future POS adapters consume the same owner operations. */
 module.exports = {
   /** Resolves deployment fulfillment policy without a merchant identity catalogue. */
@@ -20,6 +25,78 @@ module.exports = {
   /** Rejects inaccessible merchant actions without leaking coupon secrets. */
   fail: function (message) {
     throw new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID", message);
+  },
+  /** Returns only a fixed stage recorded by this owner's actual validation; caller error fields grant nothing. */
+  validationDiagnostic: function (error) {
+    return error && typeof error === "object" ? validationFailures.get(error) : undefined;
+  },
+  /** Returns only the original confirmation failure's fixed stage, never caller fields or private causes. */
+  confirmationDiagnostic: function (error) {
+    return error && typeof error === "object" ? confirmationFailures.get(error) : undefined;
+  },
+  /** Returns only this owner's fixed merchant-resolution stage for the original failure object. */
+  merchantFailureStage: function (error) {
+    return error && typeof error === "object" ? merchantFailures.get(error) : undefined;
+  },
+  /** Selects Promotion's exact private issuer-to-stock owner, never changes generic enterprise scope. @param {Object} r Original context. @returns {Object|undefined} Selected owner. */
+  delegation: function (r) {
+    const owner = SERVICE.DefaultPromotionMerchantScopeService;
+    return r.authData?.principalType === "human" && owner?.enabled() ? owner : undefined;
+  },
+  /** Admits only the exact token or entitlement for original issuer staff. @param {Object} r Signed staff. @param {Object} selection Exact lookup. @returns {Promise<boolean>} Private admission. */
+  admitDelegation: async function (r, selection) {
+    const owner = this.delegation(r);
+    return owner ? owner.admitted(r) || await owner.admit(r, selection) : false;
+  },
+  /** Dispatches a fixed vendor mutation only within this owner's actual confirmed flow and original phase. Read admission alone is insufficient. @param {Object} r Original in-flight confirmation. @param {string} operation Fixed mutation. @param {Object} args Exact owner arguments. @returns {Promise<Object>} Mutation result. */
+  delegatedAction: async function (r, operation, args) {
+    const session = confirmations.get(r), phases = { update: "VALIDATED", claim: "CLAIMABLE",
+      persistReceipt: "PROVIDER_ACKNOWLEDGED", redeem: "RECEIPT_CONFIRMED" };
+    if (!session || session.phase !== phases[operation]) this.fail("Confirmed fulfillment phase is required");
+    const command = { operation };
+    delegatedActions.set(command, { request: r, session, phase: session.phase, operation, args: structuredClone(args) });
+    try { return await this.delegation(r).execute(r, operation, args, command); }
+    finally { delegatedActions.delete(command); }
+  },
+  /** Recognizes only the unchanged in-flight phase command minted by canonical confirmation. @param {Object} command Private action. @param {Object} r Original staff identity. @param {string} operation Fixed action. @param {Object} args Exact values. @returns {boolean} Admission, never a credential/context. */
+  resolveDelegatedAction: function (command, r, operation, args) {
+    const value = delegatedActions.get(command);
+    if (!value || value.request !== r || value.operation !== operation ||
+      !isDeepStrictEqual(command, { operation }) || !isDeepStrictEqual(args, value.args) ||
+      confirmations.get(r) !== value.session || value.session.phase !== value.phase)
+      this.fail("Confirmed fulfillment phase is required");
+    return true;
+  },
+  /** Validates original unit rights through the exact private handoff when delegated. @param {Object} r Original signed staff. @param {Object} item Purchased entitlement. @param {Object} merchant Current outlet. @returns {Promise<Object>} Promotion validation. */
+  validateCoupon: async function (r, item, merchant) {
+    const owner = this.delegation(r);
+    if (owner?.admitted(r)) return owner.execute(r, "validate", { item });
+    return SERVICE.DefaultPromotionOperationService.validateMerchantCoupon({ ...r,
+      ownerId: item.ownerId, couponCode: item.providerCode, productCode: item.productCode,
+      storeCode: merchant.store?.code,
+      storeRevision: merchant.store?.revision,
+      targetCode: item.evidence?.merchantRedemption?.code || this.targetCode(r, item) });
+  },
+  /** Claims or redeems only the purchased unit and original persisted target. @param {Object} r Signed context. @param {Object} item Purchased unit. @param {string} operation Fixed lifecycle action. @returns {Promise<Object>} Owner result. */
+  fulfillCoupon: async function (r, item, operation) {
+    const owner = this.delegation(r);
+    if (!["claim", "redeem"].includes(operation)) this.fail("Invalid fulfillment action");
+    if (owner?.admitted(r)) return this.delegatedAction(r, operation, { item });
+    return SERVICE.DefaultDigitalCommerceEntitlementService[operation]({ ...r, ownerId: item.ownerId,
+      payload: { entitlementCode: item.code, targetCode: item.evidence.merchantRedemption.code,
+        targetType: "POS", ...(operation === "redeem" ? { fulfillmentStatus: "COMPLETED" } : {}) } });
+  },
+  /** Reads the exact original receipt with its admitted stock owner. @param {Object} r Original signed context. @param {Object} model Original receipt. @returns {Promise<Object|undefined>} Receipt. */
+  readBoundMerchantReceipt: function (r, model) {
+    const owner = this.delegation(r);
+    return owner?.admitted(r) ? owner.execute(r, "readReceipt", { model }) :
+      this.readMerchantReceipt({ ...r, ownerId: model.ownerId }, model);
+  },
+  /** Persists only the exact admitted unit receipt, never a generic vendor write. @param {Object} r Original context. @param {Object} model Original receipt. @returns {Promise<Object>} Receipt. */
+  persistBoundMerchantReceipt: function (r, model) {
+    const owner = this.delegation(r);
+    return owner?.admitted(r) ? this.delegatedAction(r, "persistReceipt", { model }) :
+      this.persistMerchantReceipt({ ...r, ownerId: model.ownerId }, model);
   },
   /** Resolves Store-owned outlet facts only under explicit qualification; caller strings are never evidence. @param {Object} request Fresh staff context. @param {Object} merchant Canonical issuer. @returns {Promise<Object>} Merchant with optional current outlet. */
   withStore: async function (request, merchant) {
@@ -67,74 +144,27 @@ module.exports = {
     )
       this.fail("Priced source presentation is unavailable");
     if (!result.storeRequired) return result;
-    if (p.qualified !== true || !SERVICE.DefaultStoreService)
+    if (p.qualified !== true || !SERVICE.DefaultStoreMerchantReadService?.list)
       this.fail("Outlet fulfillment is unavailable");
-    const response = await SERVICE.DefaultStoreService.get({
-      tenant: r.tenant,
-      authData: r.authData,
-      query: { status: "ACTIVE" },
-      options: { recursive: false, skipItemCache: true },
-      searchOptions: { pageSize: 101, pageNumber: 1, sort: { _id: 1 } },
-    });
-    if (
-      !response ||
-      !/^SUC_/.test(response.code || "") ||
-      response.success === false ||
-      response.error ||
-      (response.errors &&
-        (!Array.isArray(response.errors) || response.errors.length)) ||
-      !Array.isArray(response.result) ||
-      !Number.isSafeInteger(response.count) ||
-      response.count < 0 ||
-      response.count > 100 ||
-      response.count !== response.result.length
-    )
-      this.fail("Outlet inventory is unavailable");
-    const seen = new Set();
-    for (const store of response.result) {
-      if (
-        !store ||
-        !store._id ||
-        typeof store.code !== "string" ||
-        !/^[A-Za-z0-9_.:-]{1,128}$/.test(store.code) ||
-        typeof store.name !== "string" ||
-        !store.name ||
-        store.name.length > 256 ||
-        seen.has(store.code) ||
-        store.tenant !== r.tenant ||
-        !Number.isSafeInteger(store.revision) ||
-        store.revision < 1
-      )
-        this.fail("Outlet inventory is unavailable");
-      seen.add(store.code);
-      const ref = store.enterpriseRef,
-        enterpriseCode = typeof ref === "string" ? ref : ref?.code;
-      if (
-        !enterpriseCode ||
-        store.active === false ||
-        store.status !== "ACTIVE"
-      )
-        continue;
-      if (
-        typeof ref === "object" &&
-        ((ref.moduleName || ref.module || "profile") !== "profile" ||
-          (ref.schemaName || ref.schema || "enterprise") !== "enterprise")
-      )
-        this.fail("Outlet reference is invalid");
-      if (this.scoped(r, { enterpriseCode, store }))
-        result.stores.push({
-          code: store.code,
-          name: store.name,
-          revision: store.revision,
-        });
-    }
+    result.stores = await SERVICE.DefaultStoreMerchantReadService.list(r);
     return result;
   },
   /** Resolves trusted enterprise and customer context. */
   context: function (input, customer = false) {
     const auth = input.authData || {},
       enterpriseCode = auth.enterpriseCode || auth.entCode;
-    if (!input.tenant || !enterpriseCode || !this.policy().enabled)
+    const bounded = (value) =>
+      typeof value === "string" && /^[A-Za-z0-9_.:-]{1,128}$/.test(value);
+    if (
+      !bounded(input.tenant) || !bounded(enterpriseCode) || this.policy().enabled !== true ||
+      [input.tenantCode, auth.tenant, auth.tenantCode].some(
+        (value) => value !== undefined && (!bounded(value) || value !== input.tenant),
+      ) ||
+      [input.enterpriseCode, input.entCode, auth.enterpriseCode, auth.entCode].some(
+        (value) => value !== undefined && (!bounded(value) || value !== enterpriseCode),
+      ) ||
+      (auth.tokenType !== undefined && auth.tokenType !== "access")
+    )
       this.fail("Merchant redemption is unavailable");
     if (customer && auth.principalType !== "customer")
       this.fail("Please sign in as a customer");
@@ -144,6 +174,9 @@ module.exports = {
       this.fail("Merchant fulfillment requires operational Commerce");
     return {
       ...input,
+      authData: structuredClone(auth),
+      ...(input.payload ? { payload: structuredClone(input.payload) } : {}),
+      ...(input.query ? { query: structuredClone(input.query) } : {}),
       enterpriseCode,
       ownerId: auth.principalId || auth.code || auth.loginId,
     };
@@ -159,24 +192,28 @@ module.exports = {
   },
   /** Unwraps a generated owner response. */
   unwrap: function (v) {
-    for (let n = 0; n < 7 && v && !Array.isArray(v); n++) {
+    for (let n = 0; n <= 7; n++) {
+      if (Array.isArray(v)) return v;
       if (
-        typeof v !== "object" ||
+        !v || typeof v !== "object" ||
         v.error ||
         v.success === false ||
+        v.acknowledged === false ||
         (v.code !== undefined && !/^SUC_/.test(v.code)) ||
         (v.errors !== undefined &&
           (!Array.isArray(v.errors) || v.errors.length))
       )
         this.fail("The issuing enterprise is unavailable");
-      if (v.data !== undefined) v = v.data;
-      else if (v.result !== undefined) v = v.result;
-      else break;
+      if (v.data === undefined && v.result === undefined) return v;
+      if (n === 7) this.fail("The issuing enterprise is unavailable");
+      v = v.data !== undefined ? v.data : v.result;
     }
-    return v;
+    this.fail("The issuing enterprise is unavailable");
   },
   /** Reads an entitlement with an optional authenticated customer restriction. */
   entitlement: async function (r, owned) {
+    if (!owned && await this.admitDelegation(r, { entitlementCode: r.code }))
+      return this.delegation(r).execute(r, "entitlement");
     const items =
       await SERVICE.DefaultDigitalCommerceEntitlementService.listEntitlements(
         r,
@@ -184,58 +221,96 @@ module.exports = {
       );
     if (items.length !== 1 || items[0].code !== r.code)
       this.fail("The coupon entitlement is missing or ambiguous");
+    this.assertEntitlement(r, items[0], owned);
     return items[0];
+  },
+  /** Verifies exact operational identity after owner reads; a selector or successful envelope alone is not persisted scope evidence. @param {Object} r Trusted unchanged context. @param {Object} item Persisted entitlement. @param {boolean} owned Require authenticated buyer. @returns {void} Matching identity or refusal. */
+  assertEntitlement: function (r, item, owned = false) {
+    const identity = (value) => typeof value === "string" &&
+      /^[A-Za-z0-9_.:-]{1,256}$/.test(value);
+    if (
+      !item || item.tenant !== r.tenant || item.enterpriseCode !==
+        (this.delegation(r)?.stockEnterprise(r) || r.enterpriseCode) ||
+      item.providerOwner !== "promotion" ||
+      ![item.code, item.providerCode, item.productCode, item.orderCode].every(identity) ||
+      typeof item.ownerId !== "string" || !item.ownerId.trim() || item.ownerId !== item.ownerId.trim() ||
+      item.ownerId.length > 192 || /[\u0000-\u001f\u007f]/.test(item.ownerId) ||
+      !Number.isSafeInteger(item.revision) || item.revision < 0 ||
+      (owned && item.ownerId !== r.ownerId)
+    )
+      this.fail("The coupon entitlement is missing or ambiguous");
   },
   /** Resolves the coupon issuer through canonical Profile enterprise identity. */
   merchant: async function (r, item) {
-    const coupon =
-      await SERVICE.DefaultPromotionOperationService.merchantCoupon({
-        ...r,
-        couponCode: item.providerCode,
-      });
-    const ref = coupon.issuerEnterpriseRef || coupon.enterpriseRef;
-    const code = typeof ref === "string" ? ref : ref?.code;
-    if (
-      !code ||
-      (typeof ref === "object" &&
-        ((ref.moduleName || ref.module || "profile") !== "profile" ||
-          (ref.schemaName || ref.schema || "enterprise") !== "enterprise"))
-    )
-      this.fail("The coupon needs a canonical issuing enterprise");
-    const response = this.unwrap(
-      await SERVICE.DefaultModuleService.invokeModule({
-        local: false,
-        moduleName: "profile",
-        connectionName: "profile",
-        targetAuthority: { runtimeRole: "PLATFORM" },
-        tenant: r.tenant,
-        request: { tenant: r.tenant },
-        apiName: "/references/read",
-        methodName: "POST",
-        requestBody: {
-          type: "enterprise",
-          codes: [code],
-        },
-        timeoutMs: 10000,
-        maxAttempts: 1,
-      }),
-    );
-    const enterprise =
-      Array.isArray(response) && response.length === 1
-        ? response[0]
-        : undefined;
-    if (!enterprise || enterprise.code !== code || enterprise.active === false)
-      this.fail("The issuing enterprise is unavailable");
-    return {
-      code,
-      enterpriseCode: code,
-      label: typeof enterprise.name === "string" ? enterprise.name : code,
-      mode: "MERCHANT_SCREEN",
-      providerService:
-        this.policy().providerService ||
-        "DefaultDigitalCommerceMerchantScreenProviderService",
-      coupon,
-    };
+    let stage = "RETAINED_UNIT";
+    try {
+      if (item.enterpriseCode !== r.enterpriseCode && r.authData?.principalType === "human")
+        await this.admitDelegation(r, { entitlementCode: item.code });
+      this.assertEntitlement(r, item);
+      stage = "COUPON_READ";
+      const coupon =
+        this.delegation(r)?.admitted(r) ? await this.delegation(r).execute(r, "coupon", { item }) :
+        await SERVICE.DefaultPromotionOperationService.merchantCoupon({
+          ...r,
+          couponCode: item.providerCode,
+        });
+      stage = "COUPON_BINDING";
+      if (
+        !coupon || coupon.code !== item.providerCode || coupon.tenant !== item.tenant ||
+        coupon.enterpriseCode !== item.enterpriseCode || coupon.soldTo !== item.ownerId ||
+        coupon.productCode !== item.productCode || coupon.orderCode !== item.orderCode
+      )
+        this.fail("The purchased coupon does not match its entitlement");
+      stage = "ISSUER_REFERENCE";
+      const ref = coupon.issuerEnterpriseRef || coupon.enterpriseRef;
+      const code = typeof ref === "string" ? ref : ref?.code;
+      if (
+        typeof code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(code) ||
+        (typeof ref === "object" &&
+          ((ref.moduleName || ref.module || "profile") !== "profile" ||
+            (ref.schemaName || ref.schema || "enterprise") !== "enterprise"))
+      )
+        this.fail("The coupon needs a canonical issuing enterprise");
+      stage = "PROFILE_READ";
+      const referenceResponse = await SERVICE.DefaultModuleService.invokeModule({
+          local: false,
+          moduleName: "profile",
+          connectionName: "profile",
+          targetAuthority: { runtimeRole: "PLATFORM" },
+          tenant: r.tenant,
+          request: { tenant: r.tenant },
+          apiName: "/references/read",
+          methodName: "POST",
+          requestBody: {
+            type: "enterprise",
+            codes: [code],
+          },
+          timeoutMs: 10000,
+          maxAttempts: 1,
+        });
+      stage = "PROFILE_RESULT";
+      const response = this.unwrap(referenceResponse);
+      const enterprise =
+        Array.isArray(response) && response.length === 1
+          ? response[0]
+          : undefined;
+      // Profile filters active references; Enterprise.tenant is its business Tenant relationship.
+      if (!enterprise || enterprise.code !== code || enterprise.active === false)
+        this.fail("The issuing enterprise is unavailable");
+      return {
+        code,
+        enterpriseCode: code,
+        label: typeof enterprise.name === "string" ? enterprise.name : code,
+        mode: "MERCHANT_SCREEN",
+        providerService:
+          this.policy().providerService ||
+          "DefaultDigitalCommerceMerchantScreenProviderService",
+        coupon,
+      };
+    } catch (error) {
+      if (error && typeof error === "object") merchantFailures.set(error, stage);
+      throw error;
+    }
   },
   /** Projects employee or customer receipt state without raw tokens or another customer's identity. */
   summary: function (item, merchant) {
@@ -258,16 +333,27 @@ module.exports = {
       recoveryRequired: !!m.confirmationKey && item.claimStatus !== "REDEEMED",
       storeCode: m.storeRef?.code,
       storeRevision: m.storeRevision,
+      ...(m.pricedBenefit?.sourceStage === "SIMULATED_ITEMS" && m.pricedBenefit.simulated === true ?
+        { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" } : {}),
     };
   },
   /** Applies a revisioned entitlement mutation and rereads authoritative state. */
   update: async function (r, item, patch) {
+    if (this.delegation(r)?.admitted(r))
+      return this.delegatedAction(r, "update", { item, patch });
+    this.assertEntitlement(r, item);
+    if (item.revision === Number.MAX_SAFE_INTEGER || item.status !== "ACTIVE" ||
+        !["UNCLAIMED", "CLAIMED"].includes(item.claimStatus))
+      this.fail("The entitlement is unavailable for a fulfillment instruction");
     const response = await SERVICE.DefaultDigitalEntitlementService.update({
       ...this.storage(r),
       query: {
+        tenant: r.tenant,
         code: item.code,
         enterpriseCode: r.enterpriseCode,
         revision: item.revision,
+        status: item.status,
+        claimStatus: item.claimStatus,
       },
       model: { ...patch, code: item.code, revision: item.revision + 1 },
     });
@@ -285,6 +371,10 @@ module.exports = {
     const saved = await this.entitlement({ ...r, code: item.code }, false);
     if (
       saved.revision !== item.revision + 1 ||
+      ["tenant", "enterpriseCode", "ownerId", "providerOwner", "providerCode", "productCode",
+        "orderCode", "orderEntryCode", "sku", "digitalDeliveryType", "purchasedAt", "validTo", "purchasePolicy"].some(
+        (key) => JSON.stringify(saved[key]) !== JSON.stringify(item[key]),
+      ) ||
       Object.keys(patch).some(
         (key) => JSON.stringify(saved[key]) !== JSON.stringify(patch[key]),
       )
@@ -308,7 +398,7 @@ module.exports = {
       "POS_" +
       crypto
         .createHash("sha256")
-        .update(r.enterpriseCode + ":" + item.code)
+        .update((item.enterpriseCode || r.enterpriseCode) + ":" + item.code)
         .digest("hex")
         .slice(0, 28)
         .toUpperCase()
@@ -373,7 +463,11 @@ module.exports = {
       router = SERVICE.DefaultSecuredRequestPipelineService;
     if (
       auth.principalType !== "human" ||
-      !auth.loginId ||
+      typeof auth.loginId !== "string" || !auth.loginId.trim() ||
+      auth.loginId !== auth.loginId.trim() || auth.loginId.length > 192 ||
+      /[\u0000-\u001f\u007f]/.test(auth.loginId) ||
+      typeof router?.isPermissionGranted !== "function" ||
+      typeof router?.getGrantedPermissions !== "function" ||
       !router.isPermissionGranted(
         "commerce.coupon.pos.redeem",
         router.getGrantedPermissions(request),
@@ -381,7 +475,10 @@ module.exports = {
       )
     )
       this.fail("Merchant confirmation is not permitted for this identity");
-    if (!request.authorization)
+    if (
+      typeof request.authorization !== "string" ||
+      !/^Bearer [^\s\u0000-\u001f\u007f]{1,16384}$/i.test(request.authorization)
+    )
       this.fail("The employee access token is required");
     const response = await SERVICE.DefaultModuleService.invokeModule({
       local: false,
@@ -399,27 +496,43 @@ module.exports = {
       timeoutMs: 10000,
       maxAttempts: 1,
     });
-    let value = response;
-    for (let n = 0; n < 6 && value; n++) {
-      if (value.data !== undefined) value = value.data;
-      else if (value.result !== undefined) value = value.result;
-      else break;
-    }
+    const value = this.unwrap(response);
     if (
       value?.principalCode !== auth.loginId ||
+      (value.principalType !== undefined && value.principalType !== "human") ||
       !Array.isArray(value.scopes) ||
-      !Array.isArray(value.deniedScopes)
+      !Array.isArray(value.deniedScopes) ||
+      value.scopes.length + value.deniedScopes.length > 1000 ||
+      (value.scopeCount !== undefined && value.scopeCount !== value.scopes.length)
     )
       this.fail("Merchant scope resolution is unavailable");
-    return { ...request, scopes: value };
+    const text = (v) => typeof v === "string" && v.length > 0 && v.length <= 128 &&
+      v === v.trim() && !/[\u0000-\u001f\u007f]/.test(v);
+    for (const [rows, effect] of [[value.scopes, "ALLOW"], [value.deniedScopes, "DENY"]]) {
+      for (const scope of rows) {
+        if (
+          !scope || typeof scope !== "object" || Array.isArray(scope) ||
+          !text(scope.scopeType) || !text(scope.scopeCode) ||
+          ["tenantCode", "enterpriseCode", "capabilityCode", "permissionCode"].some(
+            (key) => scope[key] !== undefined && scope[key] !== null &&
+              scope[key] !== "" && !text(scope[key]),
+          ) ||
+          (scope.effect !== undefined && scope.effect !== effect) ||
+          (scope.status !== undefined && scope.status !== "ACTIVE") || scope.active === false
+        )
+          this.fail("Merchant scope resolution is unavailable");
+      }
+    }
+    return { ...request, scopes: structuredClone(value) };
   },
   /** Applies explicit deny-over-allow Profile scopes to the merchant's enterprise or business unit. */
   scoped: function (request, merchant) {
     const match = (scope) => {
       if (scope.tenantCode && scope.tenantCode !== request.tenant) return false;
+      if (scope.enterpriseCode && scope.enterpriseCode !== merchant.enterpriseCode) return false;
       if (
         scope.capabilityCode &&
-        !["commerce", "digitalCore"].includes(scope.capabilityCode)
+        !["*", "commerce", "digitalCore"].includes(scope.capabilityCode)
       )
         return false;
       if (
@@ -504,6 +617,14 @@ module.exports = {
       p.evidenceService === "DefaultPromotionPricedTransactionAdapterService"
     );
   },
+  /** Allows ITEM receipt handles for qualified delivery or explicitly gated LOCAL simulation; monetary handles retain their own adapter and binding. @returns {boolean} */
+  itemEvidenceSelected: function () {
+    const p = CONFIG.get("promotion")?.merchantBenefits;
+    return p?.enabled === true && (p.qualified === true ||
+      p.itemEvidenceMode === "LOCAL_SIMULATION" && SERVICE.DefaultPromotionItemBenefitService?.simulationSelected() === true) &&
+      /^[A-Za-z][A-Za-z0-9_]{0,127}$/.test(p.itemEvidenceService || "") &&
+      typeof SERVICE[p.itemEvidenceService]?.evaluate === "function";
+  },
   /** Reuses canonical live Profile membership and Store scope for a native priced provider, never supplied entitlement/merchant objects. @param {Object} input Signed staff context. @param {Object} original Original owner marker. @returns {Promise<Object>} Fresh bound owner authority. */
   pricedAuthority: async function (input, original) {
     const r = await this.staff(input),
@@ -530,79 +651,95 @@ module.exports = {
       this.fail(
         "Priced fulfillment authority changed; inspect the original command",
       );
-    return { ...r, entitlement: item, merchant, redemption: marker };
+    // The original object is the private handoff identity; do not clone it for the provider.
+    r.entitlement = item;
+    r.merchant = merchant;
+    r.redemption = marker;
+    return r;
   },
   /** Validates the code already displayed in the customer's existing coupon purchase view. */
   validate: async function (input) {
-    const r = await this.staff(input),
-      token = r.payload?.couponToken;
-    if (this.nativePricingSelected())
-      this.nativeBasketReference(r.payload?.merchantReceiptReference);
-    if (
-      typeof token !== "string" ||
-      token.trim().length < 4 ||
-      token.length > 256
-    )
-      this.fail("Enter the coupon code presented by the customer");
-    const coupon =
-      await SERVICE.DefaultPromotionOperationService.merchantCoupon({
-        ...r,
-        couponToken: token,
-      });
-    const items =
-      await SERVICE.DefaultDigitalCommerceEntitlementService.listEntitlements(
-        r,
-        { providerOwner: "promotion", providerCode: coupon.code },
-      );
-    const item = items.length === 1 ? items[0] : undefined;
-    if (!item || item.providerCode !== coupon.code)
-      this.fail("The purchased coupon is missing or ambiguous");
-    const m = await this.withStore(r, await this.merchant(r, item));
-    if (!this.scoped(r, m))
-      this.fail("The issuing enterprise is outside your assigned scope");
-    if (item.claimStatus === "REDEEMED")
+    let stage = "STAFF";
+    try {
+      const r = await this.staff(input),
+        token = r.payload?.couponToken;
+      stage = "INPUT";
+      if (this.nativePricingSelected() && !this.itemEvidenceSelected())
+        this.nativeBasketReference(r.payload?.merchantReceiptReference);
+      if (
+        typeof token !== "string" ||
+        token.trim().length < 4 ||
+        token.length > 256
+      )
+        this.fail("Enter the coupon code presented by the customer");
+      stage = "ISSUER_ADMISSION";
+      const delegated = await this.admitDelegation(r, { token });
+      stage = "COUPON";
+      const coupon = delegated ? await this.delegation(r).execute(r, "coupon") :
+        await SERVICE.DefaultPromotionOperationService.merchantCoupon({
+          ...r,
+          couponToken: token,
+        });
+      stage = "ENTITLEMENT";
+      const items = delegated ? [await this.delegation(r).execute(r, "entitlement")] :
+        await SERVICE.DefaultDigitalCommerceEntitlementService.listEntitlements(
+          r,
+          { providerOwner: "promotion", providerCode: coupon.code },
+        );
+      const item = items.length === 1 ? items[0] : undefined;
+      if (!item || item.providerCode !== coupon.code)
+        this.fail("The purchased coupon is missing or ambiguous");
+      this.assertEntitlement(r, item);
+      stage = "MERCHANT";
+      const merchant = await this.merchant(r, item);
+      stage = "STORE";
+      const m = await this.withStore(r, merchant);
+      stage = "SCOPE";
+      if (!this.scoped(r, m))
+        this.fail("The issuing enterprise is outside your assigned scope");
+      if (item.claimStatus === "REDEEMED")
+        return {
+          ...this.summary(item, m),
+          eligible: false,
+          reason: "ALREADY_REDEEMED",
+        };
+      stage = "PURCHASE_STATE";
+      if (
+        item.status !== "ACTIVE" ||
+        !["UNCLAIMED", "CLAIMED"].includes(item.claimStatus)
+      )
+        this.fail("The coupon is unavailable for fulfillment");
+      stage = "RIGHTS";
+      const conditions = await this.validateCoupon(r, item, m);
+      stage = "VALIDATION_BINDING";
+      const validationExpiresAt = new Date(Date.now() + 300000).toISOString();
       return {
         ...this.summary(item, m),
-        eligible: false,
-        reason: "ALREADY_REDEEMED",
-      };
-    if (
-      item.status !== "ACTIVE" ||
-      !["UNCLAIMED", "CLAIMED"].includes(item.claimStatus)
-    )
-      this.fail("The coupon is unavailable for fulfillment");
-    const conditions =
-      await SERVICE.DefaultPromotionOperationService.validateMerchantCoupon({
-        ...r,
-        ownerId: item.ownerId,
-        couponCode: item.providerCode,
-        productCode: item.productCode,
-        storeCode: m.store?.code,
-        targetCode:
-          item.evidence?.merchantRedemption?.code || this.targetCode(r, item),
-      });
-    const validationExpiresAt = new Date(Date.now() + 300000).toISOString();
-    return {
-      ...this.summary(item, m),
-      eligible: true,
-      validationExpiresAt,
-      validationCode: this.validationCode(
-        item,
-        m,
+        eligible: true,
         validationExpiresAt,
-        r.authData.loginId,
-        this.pricedBinding(
-          conditions.conditions?.benefit,
-          r.payload?.merchantReceiptReference,
+        validationCode: this.validationCode(
+          item,
+          m,
+          validationExpiresAt,
+          r.authData.loginId,
+          this.pricedBinding(
+            conditions.conditions?.benefit,
+            r.payload?.merchantReceiptReference,
+          ),
         ),
-      ),
-      storeCode: m.store?.code,
-      storeRevision: m.store?.revision,
-      conditions: conditions.conditions,
-    };
+        storeCode: m.store?.code,
+        storeRevision: m.store?.revision,
+        conditions: conditions.conditions,
+      };
+    } catch (error) {
+      if (error && typeof error === "object") validationFailures.set(error, stage);
+      throw error;
+    }
   },
   /** Lists only prior fulfillment requests whose issuing enterprise is within the employee's current Profile scope. */
   queue: async function (input) {
+    if (SERVICE.DefaultPromotionMerchantScopeService?.enabled())
+      return SERVICE.DefaultPromotionMerchantScopeService.queue(input);
     const r = await this.staff(input),
       items =
         await SERVICE.DefaultDigitalCommerceEntitlementService.listEntitlements(
@@ -629,7 +766,7 @@ module.exports = {
       typeof key !== "string" ||
       !/^[A-Za-z0-9._:-]{8,180}$/.test(key) ||
       typeof r.payload?.merchantReceiptReference !== "string" ||
-      !/^[A-Za-z0-9][A-Za-z0-9 ._:/-]{2,119}$/.test(
+      !/^[A-Za-z0-9][A-Za-z0-9 ._:/@-]{2,119}$/.test(
         r.payload.merchantReceiptReference,
       )
     )
@@ -653,10 +790,12 @@ module.exports = {
       contractVersion: 1,
       entitlementCode: item.code,
       state: "UNCONFIRMED",
+      ...(marker.pricedBenefit?.sourceStage === "SIMULATED_ITEMS" && marker.pricedBenefit.simulated === true ?
+        { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" } : {}),
     };
     if (item.claimStatus !== "REDEEMED") return pending;
-    const receipt = await this.readMerchantReceipt(
-      { ...r, ownerId: item.ownerId },
+    const receipt = await this.readBoundMerchantReceipt(
+      r,
       this.merchantReceiptModel(r, item, marker, merchant, key),
     );
     if (!receipt) return pending;
@@ -687,6 +826,8 @@ module.exports = {
       merchantReceiptReference: marker.merchantReceiptReference,
       merchantCode: merchant.code,
       mode: merchant.mode,
+      ...(marker.pricedBenefit?.sourceStage === "SIMULATED_ITEMS" && marker.pricedBenefit.simulated === true ?
+        { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" } : {}),
       ...(merchant.store
         ? {
             storeCode: merchant.store.code,
@@ -697,9 +838,11 @@ module.exports = {
   },
   /** Confirms employee fulfillment and receipt, then claims and redeems through Promotion under the original customer's ownership. */
   confirm: async function (input) {
-    const r = await this.staff(input),
-      key = this.command(r);
-    if (this.nativePricingSelected())
+    let r, stage = "AUTHORITY";
+    try {
+    r = await this.staff(input);
+    const key = this.command(r);
+    if (this.nativePricingSelected() && !this.itemEvidenceSelected())
       this.nativeBasketReference(r.payload?.merchantReceiptReference);
     this.assertMerchantReceiptOwner();
     let item = await this.entitlement(r, false);
@@ -713,7 +856,7 @@ module.exports = {
     const receipt = r.payload.merchantReceiptReference?.trim();
     if (
       typeof receipt !== "string" ||
-      !/^[A-Za-z0-9][A-Za-z0-9 ._:/-]{2,119}$/.test(receipt)
+      !/^[A-Za-z0-9][A-Za-z0-9 ._:/@-]{2,119}$/.test(receipt)
     )
       this.fail("Enter the merchant transaction or receipt reference");
     if (marker?.confirmationKey) {
@@ -728,8 +871,8 @@ module.exports = {
       )
         this.fail("Use the original confirmation and receipt reference");
       if (item.claimStatus === "REDEEMED") {
-        const savedReceipt = await this.readMerchantReceipt(
-          { ...r, ownerId: item.ownerId },
+        const savedReceipt = await this.readBoundMerchantReceipt(
+          r,
           this.merchantReceiptModel(r, item, marker, m, key),
         );
         if (!savedReceipt)
@@ -739,17 +882,8 @@ module.exports = {
         return this.summary(item, m);
       }
     } else {
-      const validated =
-          await SERVICE.DefaultPromotionOperationService.validateMerchantCoupon(
-            {
-              ...r,
-              ownerId: item.ownerId,
-              couponCode: item.providerCode,
-              productCode: item.productCode,
-              storeCode: m.store?.code,
-              targetCode: marker?.code || this.targetCode(r, item),
-            },
-          ),
+      stage = "VALIDATION";
+      const validated = await this.validateCoupon(r, item, m),
         pricedBenefit = validated.conditions?.benefit,
         pricedBinding = this.pricedBinding(pricedBenefit, receipt);
       const expiry = Date.parse(r.payload.validationExpiresAt);
@@ -802,6 +936,8 @@ module.exports = {
             }
           : {}),
       };
+      stage = "MARKER";
+      confirmations.set(r, { phase: "VALIDATED" });
       item = await this.update(r, item, {
         evidence: { ...item.evidence, merchantRedemption: marker },
       });
@@ -816,18 +952,13 @@ module.exports = {
       )
         this.fail("Another fulfillment confirmation is already in progress");
     }
-    const owner = { ...r, ownerId: item.ownerId };
+    stage = "CLAIM";
+    confirmations.set(r, { phase: "CLAIMABLE" });
     if (item.claimStatus === "UNCLAIMED") {
-      await SERVICE.DefaultDigitalCommerceEntitlementService.claim({
-        ...owner,
-        payload: {
-          entitlementCode: item.code,
-          targetCode: marker.code,
-          targetType: "POS",
-        },
-      });
+      await this.fulfillCoupon(r, item, "claim");
       item = await this.entitlement(r, false);
     }
+    stage = "LIVE_AUTHORITY";
     const live = await this.staff(input),
       liveMerchant = await this.withStore(
         live,
@@ -842,9 +973,11 @@ module.exports = {
       liveMerchant.store?.revision !== m.store?.revision
     )
       this.fail("Fulfillment authority changed; inspect before retrying");
+    stage = "RECEIPT_READ";
     const receiptModel = this.merchantReceiptModel(r, item, marker, m, key);
-    const priorReceipt = await this.readMerchantReceipt(owner, receiptModel);
+    const priorReceipt = await this.readBoundMerchantReceipt(r, receiptModel);
     if (!priorReceipt) {
+      stage = "PROVIDER";
       const receiptResult = await provider.confirm(
         { ...live, merchant: liveMerchant, entitlement: item },
         marker,
@@ -864,23 +997,24 @@ module.exports = {
             receiptResult.storeRevision !== m.store.revision))
       )
         this.fail("Merchant fulfillment was not confirmed");
-      await this.persistMerchantReceipt(owner, receiptModel);
+      stage = "RECEIPT_WRITE";
+      confirmations.get(r).phase = "PROVIDER_ACKNOWLEDGED";
+      await this.persistBoundMerchantReceipt(r, receiptModel);
     }
+    stage = "REDEEM";
+    confirmations.get(r).phase = "RECEIPT_CONFIRMED";
     try {
-      await SERVICE.DefaultDigitalCommerceEntitlementService.redeem({
-        ...owner,
-        payload: {
-          entitlementCode: item.code,
-          targetCode: marker.code,
-          targetType: "POS",
-          fulfillmentStatus: "COMPLETED",
-        },
-      });
+      await this.fulfillCoupon(r, item, "redeem");
     } catch (error) {
       const saved = await this.entitlement(r, false);
       if (saved.claimStatus !== "REDEEMED") throw error;
     }
+    stage = "READBACK";
     return this.summary(await this.entitlement(r, false), m);
+    } catch (error) {
+      if (error && typeof error === "object") confirmationFailures.set(error, stage);
+      throw error;
+    } finally { confirmations.delete(r); }
   },
   /**
    * Builds receipt evidence exclusively from the original persisted instruction.
@@ -902,7 +1036,7 @@ module.exports = {
     return {
       code: marker.receiptCode,
       tenant: request.tenant,
-      enterpriseCode: request.enterpriseCode,
+      enterpriseCode: item.enterpriseCode || request.enterpriseCode,
       ownerId: item.ownerId,
       entitlementCode: item.code,
       orderCode: item.orderCode,

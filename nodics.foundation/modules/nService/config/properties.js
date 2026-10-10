@@ -17,6 +17,7 @@
  * @override Project modules may provide later property contributions for service behavior and diagnostics.
  */
 module.exports = {
+    enterpriseResolution: { runtimeLookup: { enabled: false } },
     serviceCommunication: {
         timeoutMs: 5000,
         retry: {

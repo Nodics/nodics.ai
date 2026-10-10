@@ -48,6 +48,9 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 Governance reports use the loader's effective artifact trace and member origins.
 Preserve generated-before-authored order and inherited methods; do not infer a
 method winner from the last contributing filename.
+Report invocation follows [offline target selection](llm/contracts/README.md#offline-report-target-selection):
+reuse nTooling's project resolver or repository-build composition, never recursive
+framework-root discovery or runtime/provider startup for generation.
 
 This capability contributes an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
 Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.

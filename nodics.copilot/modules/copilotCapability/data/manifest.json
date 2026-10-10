@@ -1,0 +1,66 @@
+{
+  "contractVersion": 2,
+  "module": "copilotCapability",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "copilotCapability",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 3,
+      "components": 3,
+      "routes": 3,
+      "releaseChecksum": "92a214c6c44484128dd3b789aed6ad50a3ce8270f4acde18886e125e22bb8bb7",
+      "generatedHashes": {
+        "docs-v001/records/documentation/copilotCapabilityDocumentationNodeData.js": "6f0bdf2c88a73b03038530f3b32140e8c8a815b9f16177cf641e8d229336997c",
+        "docs-v001/records/documentation/copilotCapabilityDocumentationPageMetadataData.js": "074c5e0785ac6c651e9090166734249a0f3e51756e71389b609442ace3aa6c45",
+        "docs-v001/records/documentation/copilotCapabilityDocumentationPublicationStateData.js": "e84f9fd169545d1799eaa5d347ef127c8ee796ff971e7b8de916af2d212e72cb",
+        "docs-v001/records/documentation/copilotCapabilityDocumentationSearchMetadataData.js": "27051df0c5ae08fecdfb5edb51c6ef2f4ef663c3cffac2685cf9d0eca6bc2f40",
+        "docs-v001/records/documentation/copilotCapabilityDocumentationComponentData.js": "4f02fe531423edb3166409e02a15e74253fd95252150afb774ee7249f411fe93",
+        "docs-v001/records/documentation/copilotCapabilityDocumentationPageData.js": "3c389cdd9bd7aa9e051c912398e2eafc783b8df792968db210e97cd919861de3",
+        "docs-v001/records/documentation/copilotCapabilityDocumentationRouteData.js": "b880305e4976d8097780aead5fc6e763fc35380a02eaeb445282fc7832c84894",
+        "docs-v001/records/documentation/copilotCapabilityDocumentationMediaData.js": "54421b4050de6ec20f6f2996ab781cdd95b7e29677b60bd29fd25e8eb24495f2",
+        "docs-v001/headers/100_copilotCapabilityDocumentationContentPackHeader.js": "d4951bdd08bf9f2f3160bc4861805ce9ee0bd59de07a54ebc98620b1f09f8b9b",
+        "docs-v001/assets/documentation/files/images/full-axis-inspection-mobile-restart.png": "13e7608ae078c2a9626c48f9f13a15479048dbf3fe17536e4f2c504acb27ba1f",
+        "docs-v001/assets/documentation/files/images/full-axis-inspection-reader-denied.png": "5a684b97630b13347333e7287cfd7b61b964a36bd89f64735ed5313461c8a4f3",
+        "docs-v001/assets/documentation/files/images/full-axis-process-inspection-desktop.png": "14f712cef83c1ef616fb9972412c9f20fa4cea97ff2823d0b4cd4d03fa852049",
+        "docs-v001/assets/documentation/files/images/full-axis-process-inspection-mobile.png": "8c3f0c8c18648d2b0766aa965b9c03145e69fbc4a8268216c93836461233d312",
+        "docs-v001/assets/documentation/files/images/full-axis-rules-inspection-desktop.png": "fbcc50b88a0785c0d739e15a1b5773bc2d7b786b5810822a60864f0d7a4da17f",
+        "docs-v001/assets/documentation/files/images/process-inspection-desktop.png": "8ca6274851ef29f4c573b8562c142f571764eb89650e3307e04f2ccbae96d7fd",
+        "docs-v001/assets/documentation/files/images/process-inspection-mobile.png": "fe40e522f93fcbbfd3919f60f71cd655157ae66bf23c9925a564e9d79f3b4b02",
+        "docs-v001/assets/documentation/files/images/rules-inspection-desktop.png": "2488b2e141953db92d3a295ba4cc7db5247094654c969f6c407cebab136677b6",
+        "docs-v001/assets/documentation/files/images/rules-inspection-mobile.png": "2d65b3c0efc982f8d5281043f3812208310988f870bc77c49c7233bf4458f078",
+        "docs-v001/assets/documentation/copilotCapabilityDocumentationAssetManifest.js": "1432a2453fbde41efd3dfa3c90448f3c3f7d8f0eceabb661eea0c465e95f3bae"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

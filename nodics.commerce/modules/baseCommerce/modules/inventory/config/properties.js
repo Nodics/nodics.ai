@@ -11,8 +11,10 @@
 
 /** @module inventory/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner inventory */
 module.exports = {
-  data: { dataReleases: { targetValidators: { inventory: "DefaultInventoryOperationService" } } },
+  data: { dataReleases: { targetValidators: { inventory: "DefaultInventoryOperationService" },
+    installers: { INVENTORY_OPENING_RECEIPTS: 'DefaultInventoryOpeningContributionService' } } },
   publish: {
+    setup: { permissions: { inventory: 'publish.lifecycle.create' } },
     providers: { domainAdapters: { inventory: null }, versionProviders: { inventory: null }, workflowProviders: { inventory: null } },
     approvalWorkflow: { domains: { inventory: { definitionCode: 'inventoryPublicationApproval', ownerModule: 'inventory',
       actionKey: 'inventory.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } }
@@ -29,6 +31,7 @@ module.exports = {
           DefaultInventoryBalanceService: true,
           DefaultInventoryMovementService: true,
           DefaultInventoryReservationService: true,
+          DefaultInventoryOpeningReceiptRecordService: true,
           DefaultWarehouseService: true,
         },
       },
@@ -37,6 +40,7 @@ module.exports = {
 
   inventory: {
     enabled: true,
+    openingReceipts: { maximumInstructions: 1000 },
     customerSummary: {
       enabled: true,
       maximumProductsPerRequest: 100,
@@ -48,6 +52,9 @@ module.exports = {
   schemaPolicies: {
     inventory: {
       publicationVersioned: { isVersionedEnabled: false },
+      openingReceiptHuman: {
+        accessGroups: { commerceInventoryOpeningUserGroup: 2 },
+      },
       operational: {
         accessGroups: {
           adminGroup: 10,

@@ -118,7 +118,9 @@ function loadProfileBootstrapEmployees(activeConfig) {
     delete require.cache[profileEmployeeDataPath];
     global.CONFIG = activeConfig;
     try {
-        return require(profileEmployeeDataPath);
+        const services = path.join(path.dirname(profileEmployeeDataPath), 'defaultServiceEmployeeData.js');
+        delete require.cache[require.resolve(services)];
+        return { ...require(profileEmployeeDataPath), ...require(services) };
     } finally {
         delete require.cache[profileEmployeeDataPath];
         delete global.CONFIG;

@@ -1,5 +1,8 @@
 # nSystem Agent Contract
 
+Purpose encryption follows [secret protection](llm/contracts/secret-protection.md):
+no storage, access authority, credential generation or runtime-configuration key reuse.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance

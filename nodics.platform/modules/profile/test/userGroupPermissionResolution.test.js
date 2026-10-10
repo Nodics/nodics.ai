@@ -44,8 +44,12 @@ global.UTILS = Object.assign({}, commonUtils, {
   },
 });
 
-const userGroupsData = require("../data/init-v001/records/groups/defaultBootstrapUserGroupsData");
-const employeeData = require("../data/init-v001/records/user/defaultEmployeeData");
+// Historical group grants exercise permission resolution, not current bootstrap admission.
+const userGroupsData = require("./fixtures/compatibility/bootstrapGroupsLegacy.js");
+const employeeData = {
+  ...require("../data/init-v001/records/user/defaultEmployeeData"),
+  ...require("../data/init-v001/records/user/defaultServiceEmployeeData"),
+};
 let groupTree = [
   {
     code: "runtimeConfigAdminUserGroup",
@@ -579,5 +583,46 @@ for (const code of operationalRoleCodes) {
   if (code === 'wasteVerifierUserGroup') assert(!grants.includes('waste.review.approve'));
   if (code === 'wasteApproverUserGroup') assert(!grants.includes('waste.verification.record'));
   if (code === 'wasteAuditorUserGroup') assert(!grants.includes('waste.review.evidence.read') && !grants.includes('waste.review.approve'));
+}
+// Recognizing a native seller-consent permission must not expand default role grants.
+const sellerPermission = "commerce.coupon.seller.manage";
+const sellerRoutes = require(path.join(repositoryRoot,
+  "nodics.commerce/modules/baseCommerce/modules/promotion/src/router/routers")).promotion.backoffice;
+const groupGovernance = require("../src/service/group/defaultUserGroupGovernanceService");
+const routeSecurity = require(path.join(repositoryRoot,
+  "nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService"));
+const originalConfig = global.CONFIG;
+const originalClasses = global.CLASSES;
+try {
+  global.CONFIG = { get: key => authProperties[key] };
+  global.CLASSES = {
+    NodicsError: class extends Error {
+      constructor(code, message) { super(message || code); this.code = code; }
+    },
+  };
+  for (const route of [sellerRoutes.inspectSellers, sellerRoutes.manageSeller]) {
+    assert.strictEqual(route.permission, sellerPermission);
+    assert.doesNotThrow(() => groupGovernance.validatePermissions([
+      { permissions: [route.permission] },
+    ]), "Existing seller-authorization route permission must be assignable through Profile");
+  }
+  const sampleCreditPermission = "loyalty.sampleCredit.apply";
+  assert.doesNotThrow(() => groupGovernance.validatePermissions([{ permissions: [sampleCreditPermission] }]),
+    "Reviewed sample-credit permission must be independently assignable through Profile");
+  for (const [code, group] of Object.entries(authProperties.identityGovernance.migration.groupTargets)) {
+    assert(!(group.permissions || []).includes(sampleCreditPermission), code + " must not receive a default sample-credit grant");
+  }
+  assert.throws(() => groupGovernance.validatePermissions([
+    { permissions: ["commerce.coupon.seller.unknown"] },
+  ]), /Unknown permission/);
+  for (const code of ["runtimeConfigAdminUserGroup", "commerceMerchantUserGroup", "customerUserGroup"]) {
+    assert(authProperties.identityGovernance.migration.groupTargets[code], "Missing canonical role: " + code);
+    const grants = routeSecurity.getGrantedPermissions({ authData: { userGroups: [code] } });
+    assert(!grants.includes(sellerPermission), code + " must not gain seller-consent administration, including through inheritance");
+    assert(!grants.includes(sampleCreditPermission), code + " must not gain sample-credit permission through inheritance");
+  }
+} finally {
+  global.CONFIG = originalConfig;
+  global.CLASSES = originalClasses;
 }
 console.log("Profile user group permission resolution validated");

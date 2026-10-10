@@ -1,42 +1,91 @@
 {
-    "contractVersion": 2,
-    "module": "wcms",
-    "sections": {
-        "init-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "init",
-            "version": "0.0.0",
-            "description": "Web Content Management init data",
-            "owningDomain": "wcms",
-            "lifecycle": "OPERATIONAL_VERSIONED",
-            "destinationRole": "WCMS_STAGED",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "init-v001/records/components/defaultCmsComponentWorkflowActionData.js": "0f5a303b4bd549d0b340e04fae1f4dabea13ce846f58006197e2f67056d47026",
-                "init-v001/records/components/defaultCmsComponentWorkflowChannelData.js": "2ced2c094e282c884526b1e58d9fd537b0846e74a2cbb26a809116bedbe188ae",
-                "init-v001/records/components/defaultCmsComponentWorkflowHeadData.js": "0f515b26abc9f40189be59963b3a927b35c26a1dc2c82c05c14feda46228d111",
-                "init-v001/records/pages/defaultCmsPageWorkflowActionData.js": "549598e7f76f2a34dc23a1453a596e0cbe350799325f6faac5d15f890c142e27",
-                "init-v001/records/pages/defaultCmsPageWorkflowChannelData.js": "e466bb79d9a51bb88465ade004a8eb442f483774730d506bba5ec4f9797be3bf",
-                "init-v001/records/pages/defaultCmsPageWorkflowHeadData.js": "6d2cb8715fd5d5aa2b3e02c5cec03b3f8ca2d5c344dc276b98dc841794cbe6bd",
-                "init-v001/records/schema2Workflow/defaultCmsComponent2WorkflowData.js": "19e7fd40e2b27f5a1521f2791180e32f04b8b2336fe474b0fb47a1623f1cbf61",
-                "init-v001/records/schema2Workflow/defaultCmsPage2WorkflowData.js": "14bee5b22812e6113f7bd6d044929f8903a051181b363f4af388c6609940f0b8",
-                "init-v001/headers/components/defaultCmsComponentWorkflowActionHeader.js": "6d4505335f8784116884ed7ba3c62c120ae6f61c7ec64b0f28307f668b88c44a",
-                "init-v001/headers/components/defaultCmsComponentWorkflowChannelHeader.js": "56869453beb7438d4eed6f4c6eaacacebda44b2f96f847b6ac8879370fcd9b0f",
-                "init-v001/headers/components/defaultCmsComponentWorkflowHeadHeader.js": "b21785cd1971665f192210ff5a9b33fc4b3994e4849d1db7d5997588feb30174",
-                "init-v001/headers/pages/defaultCmsPageWorkflowActionHeader.js": "d2672a7eba02d01a2dcab85c2b97a30ccda53715e4b04774a7f67bc5b41d18a0",
-                "init-v001/headers/pages/defaultCmsPageWorkflowChannelHeader.js": "4fd6996f0888eaf767853c2835dd5fde5d33defae367a5fb0a8393f3c20334fd",
-                "init-v001/headers/pages/defaultCmsPageWorkflowHeadHeader.js": "651b9bcffd332e8de1b6296bfe632a9bd9ba462ed695bc371d68bf1e7285192f",
-                "init-v001/headers/schema2Workflow/defaultCmsComponent2Workflow.js": "78e061cefb292a7e4e9210abc54011d2e27771d72c84c26fa293898097a076e5",
-                "init-v001/headers/schema2Workflow/defaultCmsPage2Workflow.js": "e4dbfb0c9d1977715eef8c75d9cac85ee5fe43615c11a4576b329e28de678871"
-            },
-            "sourceRoot": "init-v001"
+  "contractVersion": 2,
+  "module": "wcms",
+  "sections": {
+    "init-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "description": "Web Content Management init data",
+      "owningDomain": "wcms",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "init-v001/records/components/defaultCmsComponentWorkflowActionData.js": "0f5a303b4bd549d0b340e04fae1f4dabea13ce846f58006197e2f67056d47026",
+        "init-v001/records/components/defaultCmsComponentWorkflowChannelData.js": "2ced2c094e282c884526b1e58d9fd537b0846e74a2cbb26a809116bedbe188ae",
+        "init-v001/records/components/defaultCmsComponentWorkflowHeadData.js": "0f515b26abc9f40189be59963b3a927b35c26a1dc2c82c05c14feda46228d111",
+        "init-v001/records/pages/defaultCmsPageWorkflowActionData.js": "549598e7f76f2a34dc23a1453a596e0cbe350799325f6faac5d15f890c142e27",
+        "init-v001/records/pages/defaultCmsPageWorkflowChannelData.js": "e466bb79d9a51bb88465ade004a8eb442f483774730d506bba5ec4f9797be3bf",
+        "init-v001/records/pages/defaultCmsPageWorkflowHeadData.js": "6d2cb8715fd5d5aa2b3e02c5cec03b3f8ca2d5c344dc276b98dc841794cbe6bd",
+        "init-v001/records/schema2Workflow/defaultCmsComponent2WorkflowData.js": "19e7fd40e2b27f5a1521f2791180e32f04b8b2336fe474b0fb47a1623f1cbf61",
+        "init-v001/records/schema2Workflow/defaultCmsPage2WorkflowData.js": "14bee5b22812e6113f7bd6d044929f8903a051181b363f4af388c6609940f0b8",
+        "init-v001/headers/components/defaultCmsComponentWorkflowActionHeader.js": "6d4505335f8784116884ed7ba3c62c120ae6f61c7ec64b0f28307f668b88c44a",
+        "init-v001/headers/components/defaultCmsComponentWorkflowChannelHeader.js": "56869453beb7438d4eed6f4c6eaacacebda44b2f96f847b6ac8879370fcd9b0f",
+        "init-v001/headers/components/defaultCmsComponentWorkflowHeadHeader.js": "b21785cd1971665f192210ff5a9b33fc4b3994e4849d1db7d5997588feb30174",
+        "init-v001/headers/pages/defaultCmsPageWorkflowActionHeader.js": "d2672a7eba02d01a2dcab85c2b97a30ccda53715e4b04774a7f67bc5b41d18a0",
+        "init-v001/headers/pages/defaultCmsPageWorkflowChannelHeader.js": "4fd6996f0888eaf767853c2835dd5fde5d33defae367a5fb0a8393f3c20334fd",
+        "init-v001/headers/pages/defaultCmsPageWorkflowHeadHeader.js": "651b9bcffd332e8de1b6296bfe632a9bd9ba462ed695bc371d68bf1e7285192f",
+        "init-v001/headers/schema2Workflow/defaultCmsComponent2Workflow.js": "78e061cefb292a7e4e9210abc54011d2e27771d72c84c26fa293898097a076e5",
+        "init-v001/headers/schema2Workflow/defaultCmsPage2Workflow.js": "e4dbfb0c9d1977715eef8c75d9cac85ee5fe43615c11a4576b329e28de678871"
+      },
+      "sourceRoot": "init-v001"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "wcms",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 4,
+      "components": 4,
+      "routes": 4,
+      "releaseChecksum": "41ca42b71fe854ed8951719cc22e1c4365aef72337ed5f4ae2f58425c3f2d711",
+      "generatedHashes": {
+        "docs-v001/records/documentation/wcmsDocumentationNodeData.js": "1f45323135993faae3f19fcea1943e53360ecad9f002cc1fecadea265fbc2442",
+        "docs-v001/records/documentation/wcmsDocumentationPageMetadataData.js": "4691c53a60218e814373b801e2bab3c425439dce5c1187e5d6e9b2803e4b86af",
+        "docs-v001/records/documentation/wcmsDocumentationPublicationStateData.js": "ab00560468f27ce976a321ec28e059b41d433eb54e7b2b110af2783ff05435b7",
+        "docs-v001/records/documentation/wcmsDocumentationSearchMetadataData.js": "0f955ee6c457b9247cb33abb55c5b09c0e646cba2c301935ad1a3b1eafa19d3a",
+        "docs-v001/records/documentation/wcmsDocumentationComponentData.js": "3ea43107fcf827cdac803d188d91b3b91e74e5e428130fd2477b22488250765e",
+        "docs-v001/records/documentation/wcmsDocumentationPageData.js": "f310b85cb9eae3bab8d4155c10947db6fc2e48c4bef761186e585c319fab0577",
+        "docs-v001/records/documentation/wcmsDocumentationRouteData.js": "7bb07020d23a83ad7ebcc3ecec77883f080f39703e0faf3a00612df2e9392cf3",
+        "docs-v001/headers/100_wcmsDocumentationContentPackHeader.js": "b2fbf4a2fb6935d89486091d5eacbb93abac2006490ee20316c969259f4a9aa8"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

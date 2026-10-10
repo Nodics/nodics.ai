@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "workflow",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "workflow",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 15,
+      "components": 15,
+      "routes": 15,
+      "releaseChecksum": "959a1cee76797e29eb3215ef38013f313883cf40ad36468d3d89dd5437a1e3f1",
+      "generatedHashes": {
+        "docs-v001/records/documentation/workflowDocumentationNodeData.js": "5cf6541d45e243b0238643d901eb233c194cb8862cb5d19c4735ec6d64b09eb7",
+        "docs-v001/records/documentation/workflowDocumentationPageMetadataData.js": "b5de1b4a8a666ac618b85a531c5ea6e10fdd3594c36afcf1cd2c2ee506cdf914",
+        "docs-v001/records/documentation/workflowDocumentationPublicationStateData.js": "2fa0cfed6ce789396fcaa014764d9fb082826b32211f6e29d399a8ce74733f06",
+        "docs-v001/records/documentation/workflowDocumentationSearchMetadataData.js": "8dd0c9a92517e5af4969fb5418263a4dfc73ea79b26bf242bad238ad6f2a4c93",
+        "docs-v001/records/documentation/workflowDocumentationComponentData.js": "37fe878562271dade372d82163fff1c5cd1af1d488ee4452a08fa195265e7a16",
+        "docs-v001/records/documentation/workflowDocumentationPageData.js": "c8c71b20b1f850ad9956789dacd16f978a04c4e1b1309908e8ca66a2b392bbd7",
+        "docs-v001/records/documentation/workflowDocumentationRouteData.js": "2e08a3f4604fcd34c35e4b1e5649152144068b7ac6ab104a1186bab4a5e87f06",
+        "docs-v001/headers/100_workflowDocumentationContentPackHeader.js": "595c04eef54a47a9c0137cd26053a5aa497625c883d2e5bde238588041c5c2f5"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

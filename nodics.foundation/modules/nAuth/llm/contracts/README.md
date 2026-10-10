@@ -6,6 +6,11 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 
 ## Permission Catalogue Versus Grants
 
+`publish.setup.observe` is recognition only. There are no default group, human,
+runtime or financial-action grants. The disabled nPublish exact-plan observer
+requires separately reviewed signed deployment and local plan configuration;
+permission recognition does not enable its route or confer readiness.
+
 The shared `identityGovernance.permissionCatalog` lets Profile validate permission
 names even when their native runtime is separate. Location create/update/read/search
 are catalogue members; create/update are not default migration-group grants.
@@ -13,6 +18,16 @@ An administrator must separately assign the approved permission, and nRouter
 still checks identity, exposure, route admission and the native operation.
 Unknown permission codes must continue to fail Profile group validation. Location's
 `locationPermissionCatalog.test.js` guards assignability and non-granting behavior.
+
+Promotion's existing seller-authorization GET/POST routes require
+`commerce.coupon.seller.manage`. The shared catalogue recognizes this permission
+for explicit reviewed Profile assignment only; it does not add group targets,
+change Init records or qualify seller consent. Runtime administrators, merchants
+and customers do not receive it automatically, including through parent groups.
+Promotion retains route admission, signed issuer scope, consent and qualification
+authority. Profile's `userGroupPermissionResolution.test.js` exercises the actual
+route permissions, group validator and inherited default-role resolution; unknown
+permission names still reject.
 
 ## Strict auth cache activation
 

@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "customerReview",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "customerReview",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 3,
+      "components": 3,
+      "routes": 3,
+      "releaseChecksum": "2f628b025baba948b56c41b6fa2bfb2c230b0552bfe651f8af7cd86bb5e79d68",
+      "generatedHashes": {
+        "docs-v001/records/documentation/customerReviewDocumentationNodeData.js": "20da930ad09d857d698d179dd8ea04f0e129007280a606f93601786d38dc0fa1",
+        "docs-v001/records/documentation/customerReviewDocumentationPageMetadataData.js": "7230ca867d96a2e67cbe55ce6301b00ffe500552fb9673af3c8956563bdeecba",
+        "docs-v001/records/documentation/customerReviewDocumentationPublicationStateData.js": "174e9d8178509955631904c57076cf7b2efc4f77834979a582eb187666a1c4c6",
+        "docs-v001/records/documentation/customerReviewDocumentationSearchMetadataData.js": "74deffe2d97e22eb61751a1bc96854c83884065a97bf496f16bb07a0f1322d39",
+        "docs-v001/records/documentation/customerReviewDocumentationComponentData.js": "a11f50fd20c639743dc8b006aa2a921835fe8fa275a15d95805922b59945960a",
+        "docs-v001/records/documentation/customerReviewDocumentationPageData.js": "0ec2065fa6be8281a5c61fdce75dd7c4ae3ef52e8fb6f430d766107ccc0868d3",
+        "docs-v001/records/documentation/customerReviewDocumentationRouteData.js": "ef2339fd96f284ed9978ad82c5bdc457d038a5fb446e06902d5b8f5eb2dae0f1",
+        "docs-v001/headers/100_customerReviewDocumentationContentPackHeader.js": "38b195807da3e9786e3a15989042cb877bb04b69c8211f44d4121025e5f4c6aa"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -17,7 +17,8 @@
       "controller",
       "service",
       "test",
-      "llm"
+      "llm",
+      "data"
     ],
     "runtime": {
       "router": true,

@@ -14,7 +14,7 @@ legal claims, and public messaging remain with their owning accelerator,
 provider, or project policies; no specific customer module is mandatory.
 
 Read [the provider contract](llm/contracts/README.md) and the
-[canonical guide](../../../nodics.docs/docs/pages/nodics.waste/impact-providers.md)
+[canonical guide](data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
 before modifying dispatch or calculations.
 
 - Resolve selected adapters through `SERVICE`, and effective settings through

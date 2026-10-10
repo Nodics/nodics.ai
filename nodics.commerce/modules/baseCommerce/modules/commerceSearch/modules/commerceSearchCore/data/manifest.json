@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "commerceSearchCore",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "commerceSearchCore",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "b1b7111c28d4e833a919a4e84870668a430aa5ef1adf5133a1861406d3bdcab7",
+      "generatedHashes": {
+        "docs-v001/records/documentation/commerceSearchCoreDocumentationNodeData.js": "98e8209b369444be9746e55be283cb2bd71b55e2cecac80b8421f8b6867f425f",
+        "docs-v001/records/documentation/commerceSearchCoreDocumentationPageMetadataData.js": "6ec30ff56f00410d089fa927c171d95ccd8b6b4f6f7259e904d610e6123e3e7f",
+        "docs-v001/records/documentation/commerceSearchCoreDocumentationPublicationStateData.js": "dbdbde3c05abe1ca27db87ebc1b0219e939f99a83986ca5d5998dc67955bef0f",
+        "docs-v001/records/documentation/commerceSearchCoreDocumentationSearchMetadataData.js": "f270091877cf4a334aa9293976e794c6fdfc081b6e989dc60615793e6a77c091",
+        "docs-v001/records/documentation/commerceSearchCoreDocumentationComponentData.js": "a55f830318f7d2821227985ea5458ad56b991a25803659daf49da6a100009e70",
+        "docs-v001/records/documentation/commerceSearchCoreDocumentationPageData.js": "86eae24243aa90df1a52af72b4bb22f573ef6bdd59b45fe6bf3c1b75df75fbc2",
+        "docs-v001/records/documentation/commerceSearchCoreDocumentationRouteData.js": "0cfb1bda05cabfef46c607c3bc074f8effa6afceef8e4b3addc6f710182bfe43",
+        "docs-v001/headers/100_commerceSearchCoreDocumentationContentPackHeader.js": "e3ad12e5e9d463bf808199b5fcc285f0cc41193644a444caab1821abe140ca67"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -28,6 +28,7 @@ const lodash = require('lodash');
 const probe = require('./defaultProjectConfigurationProbeService');
 const database = require('../../../../nDatabase/database/src/service/config/defaultDatabaseConfigurationService');
 const cache = require('../../../../nCache/cache/src/service/config/defaultCacheConfigurationService');
+const searchCache = require('../../../../nSearch/search/src/service/cache/defaultCacheService');
 const nativeMaintenance = require('../../../../nDatabase/mongodb/src/service/maintenance/defaultMongodbLocalResetMaintenanceService');
 const maximumTargets = 128;
 const registeredTargets = new WeakMap();
@@ -54,12 +55,12 @@ export function refusal(code) {
 /** Parses exact CLI selections. Mutation defaults off; ambiguous, duplicate and wildcard options refuse. */
 export function parseOptions(args) {
   const values = {};
-  const allowed = new Set(['environment', 'project', 'project-code', 'databases', 'registered-tenants', 'auth-namespace', 'execute', 'exclusive-deployment', 'writers-excluded']);
+  const allowed = new Set(['environment', 'project', 'project-code', 'databases', 'registered-tenants', 'auth-namespace', 'search-indexes', 'execute', 'exclusive-deployment', 'writers-excluded', 'discover-registered-tenants']);
   for (const argument of args) {
     const match = argument.match(/^--([a-z-]+)(?:=(.*))?$/);
     if (!match || !allowed.has(match[1]) || Object.hasOwn(values, match[1]))
       throw refusal('RESET_SELECTION_INVALID');
-    if (['execute', 'exclusive-deployment', 'writers-excluded'].includes(match[1])) {
+    if (['execute', 'exclusive-deployment', 'writers-excluded', 'discover-registered-tenants'].includes(match[1])) {
       if (match[2] !== undefined) throw refusal('RESET_EXECUTE_FLAG_INVALID');
       values[match[1]] = true;
     } else {
@@ -75,6 +76,11 @@ export function parseOptions(args) {
     if (!/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(values[key] || ''))
       throw refusal('RESET_SELECTION_REQUIRED');
   }
+  if (values['discover-registered-tenants'] === true) {
+    if (['databases', 'registered-tenants', 'auth-namespace', 'search-indexes', 'execute', 'exclusive-deployment', 'writers-excluded']
+      .some(key => Object.hasOwn(values, key))) throw refusal('RESET_DISCOVERY_READ_ONLY_REQUIRED');
+    return { environment: values.environment, project: values.project, discoverRegisteredTenants: true, execute: false };
+  }
   const names = typeof values.databases === 'string' ? values.databases.split(',') : [];
   const tenants = values['registered-tenants']?.split(',') || [];
   if (tenants.length > 32 || new Set(tenants).size !== tenants.length || tenants.some(code =>
@@ -85,11 +91,15 @@ export function parseOptions(args) {
     throw refusal('RESET_DATABASE_SELECTION_INVALID');
   if (!/^auth_[A-Za-z][A-Za-z0-9_]{1,127}_$/.test(values['auth-namespace'] || ''))
     throw refusal('RESET_AUTH_SELECTION_INVALID');
+  const indices = values['search-indexes']?.split(',');
+  if (indices && (!indices.length || indices.length > maximumTargets || new Set(indices).size !== indices.length ||
+      indices.some(index => !/^[a-z0-9][a-z0-9._-]{0,199}$/.test(index)) || tenants.length))
+    throw refusal('RESET_SEARCH_SELECTION_INVALID');
   if (values.execute === true && (values['exclusive-deployment'] !== true || values['writers-excluded'] !== true))
     throw refusal('RESET_OPERATOR_ATTESTATION_REQUIRED');
   return { environment: values.environment, project: values.project,
     ...(tenants.length ? { registeredTenants: tenants.sort() } : {}),
-    databases: names.sort(), authNamespace: values['auth-namespace'], execute: values.execute === true,
+    databases: names.sort(), authNamespace: values['auth-namespace'], ...(indices ? { searchIndices: indices.sort() } : {}), execute: values.execute === true,
     exclusiveDeployment: values['exclusive-deployment'] === true, writersExcluded: values['writers-excluded'] === true };
 }
 
@@ -111,7 +121,7 @@ export function assertNativeEndpoint(uri, protocol) {
 }
 
 /** Uses actual database/cache configuration consumers in serial, restoring globals even after partial discovery failure. No provider initialization is called. */
-export async function consumeRuntime(snapshot, registration) {
+export async function consumeRuntime(snapshot, registration, searchBindings) {
   const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS, CLASSES: global.CLASSES };
   const modules = Object.fromEntries(snapshot.modules.map(name => [name, { name }]));
   try {
@@ -167,6 +177,15 @@ export async function consumeRuntime(snapshot, registration) {
     }
     const selected = { ...cache, engines: {}, channels: {} };
     await selected.loadCacheConfiguration();
+    for (const binding of searchBindings || []) {
+      const cacheOwner = global.SERVICE?.DefaultCacheService?.getSearchCacheChannel ? global.SERVICE.DefaultCacheService : searchCache;
+      const channelName = cacheOwner.getSearchCacheChannel(binding.cacheIndexName || binding.index);
+      const channel = selected.channels[binding.moduleName]?.[channelName];
+      const engine = selected.engines[binding.moduleName]?.[channel?.engine];
+      if (channel?.engine !== 'local' || !engine || engine.distributed !== false || engine.capabilities?.distributed !== false ||
+          engine.connectionHandler !== 'DefaultLocalCacheEngineService' || engine.cacheHandler !== 'DefaultLocalCacheService')
+        throw refusal('RESET_SEARCH_CACHE_UNQUALIFIED');
+    }
     const auth = [];
     for (const name of Object.keys(modules)) {
       const channel = selected.channels[name]?.auth;
@@ -182,7 +201,7 @@ export async function consumeRuntime(snapshot, registration) {
         endpoint: uri, database: options.database ?? options.db ?? 0,
         engine, handler: engine.cacheHandler, moduleName: name });
     }
-    return { databases: dbs, auth };
+    return { databases: dbs, auth, ...(searchBindings ? { search: searchBindings } : {}) };
   } finally {
     for (const [key, value] of Object.entries(previous)) {
       if (value === undefined) delete global[key]; else global[key] = value;
@@ -204,7 +223,20 @@ export function buildPlan(options, deployment, scopes) {
     throw refusal('RESET_NATIVE_TOPOLOGY_REQUIRED');
   const databases = new Map();
   const auth = new Set();
+  const search = new Map();
   for (const scope of scopes) {
+    if (options.searchIndices) {
+      if (!Array.isArray(scope.search)) throw refusal('RESET_SEARCH_SCOPE_INCOMPLETE');
+      for (const target of scope.search) {
+        if (!/^[a-z0-9][a-z0-9._-]{0,199}$/.test(target.index || '') ||
+            !target.index.startsWith(options.environment.toLowerCase() + '_') ||
+            !target.handler || !target.configuration) throw refusal('RESET_SEARCH_BINDING_UNQUALIFIED');
+        const identity = JSON.stringify([target.handler, target.configuration, target.moduleName, target.logicalName, target.tenant]);
+        if (search.has(target.index) && search.get(target.index) !== identity)
+          throw refusal('RESET_SEARCH_ENDPOINT_AMBIGUOUS');
+        search.set(target.index, identity);
+      }
+    } else if (scope.search?.length) throw refusal('RESET_SEARCH_SELECTION_REQUIRED');
     if (!scope.databases?.length || !scope.auth?.length) throw refusal('RESET_PROVIDER_SCOPE_INCOMPLETE');
     for (const target of scope.databases) {
       const proof = registeredTargets.get(target);
@@ -234,13 +266,75 @@ export function buildPlan(options, deployment, scopes) {
   if (databases.size > maximumTargets || auth.size !== 1 ||
       JSON.stringify(names) !== JSON.stringify(options.databases))
     throw refusal('RESET_EXACT_SCOPE_MISMATCH');
+  if (options.searchIndices && (search.size > maximumTargets ||
+      !isDeepStrictEqual([...search.keys()].sort(), options.searchIndices))) throw refusal('RESET_SEARCH_EXACT_SCOPE_MISMATCH');
   return { project: options.project, environment: options.environment, databases: names,
     authNamespace: options.authNamespace, runtimeCount: runtimes.length, databaseCount: names.length,
     providerCounts: { collections: null, authKeys: null }, effects: { databasesDropped: 0, authKeysRemoved: 0 },
     mode: options.execute ? 'EXECUTE' : 'DRY_RUN', status: 'PLANNED', qualified: false,
     exclusivity: options.exclusiveDeployment ? 'OPERATOR_ATTESTED' : 'NOT_ATTESTED',
     writerExclusion: options.writersExcluded ? 'OPERATOR_ATTESTED' : 'NOT_ATTESTED',
-    independentExclusivityProof: false, sharedProvidersExcluded: ['search', 'media', 'otherCacheNamespaces'] };
+    independentExclusivityProof: false, sharedProvidersExcluded: [...(options.searchIndices ? [] : ['search']), 'media', 'otherCacheNamespaces'],
+    ...(options.searchIndices ? { searchIndices: options.searchIndices, searchIndexCount: search.size,
+      searchEffects: { indexesDropped: 0, alreadyAbsent: 0 }, searchCacheDisposition: 'OFFLINE_PROCESS_LOCAL_ONLY' } : {}) };
+}
+
+/** Resolves search bindings through the effective owner only; no engine, index or lifecycle is initialized. */
+function readSearchBindings(options) {
+  const owner = SERVICE.DefaultSearchConfigurationService;
+  if (typeof owner?.readLocalResetBindings !== 'function') {
+    const configuration = CONFIG.get('search') || {};
+    if (Object.keys(NODICS.getModules()).some(moduleName =>
+      lodash.merge({}, configuration.default || {}, configuration[moduleName] || {}).options?.enabled === true))
+      throw refusal('RESET_SEARCH_OWNER_UNAVAILABLE');
+    return [];
+  }
+  return owner.readLocalResetBindings({ environment: options.environment, tenant: CONFIG.get('defaultTenant') || 'default' });
+}
+
+/** Groups exact private bindings for one configured provider without accepting public connection arguments. */
+function groupSearchBindings(bindings) {
+  const groups = new Map();
+  for (const target of bindings) {
+    const key = JSON.stringify([target.handler, target.configuration]);
+    if (!groups.has(key)) groups.set(key, { handler: target.handler, configuration: target.configuration, indices: [] });
+    const names = groups.get(key).indices;
+    if (!names.includes(target.index)) names.push(target.index);
+  }
+  return [...groups.values()].map(group => ({ ...group, indices: group.indices.sort() }));
+}
+
+/** Inspects configured search owners under the maintenance loader and closes every probe before host socket admission. */
+async function inspectSearchProviders(options, selected) {
+  const variables = { ...require('./defaultProjectLocalRuntimeCredentialService').readExistingEnvironment(process.cwd(), options.environment), ...process.env };
+  const providers = [];
+  const seen = new Set();
+  for (const scope of selected.scopes) {
+    const runtime = selected.deployment.topology.groups.backends.find(item => item.server === scope.server);
+    await withRuntime(options, process.cwd(), runtime, variables, async () => {
+      if (!isDeepStrictEqual(readSearchBindings(options), scope.search)) throw refusal('RESET_CONFIGURATION_CHANGED');
+      for (const group of groupSearchBindings(scope.search || [])) {
+        const key = JSON.stringify([group.handler, group.configuration]);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const owner = SERVICE[group.handler];
+        if (typeof owner?.openLocalResetMaintenance !== 'function') throw refusal('RESET_SEARCH_OWNER_UNAVAILABLE');
+        let held;
+        try {
+          held = await owner.openLocalResetMaintenance({ ...options, ...group });
+          const inspection = await held.inspect();
+          const provider = inspection.provider;
+          if (!provider || !Number.isSafeInteger(provider.pid) || provider.pid < 1 ||
+              [provider.httpPort, provider.transportPort].some(port => !Number.isSafeInteger(port) || port < 1 || port > 65535) ||
+              provider.httpPort === provider.transportPort) throw refusal('RESET_SEARCH_PROVIDER_UNCONFIRMED');
+          providers.push(provider);
+        } finally {
+          if (held) await held.close();
+        }
+      }
+    });
+  }
+  return providers;
 }
 
 /** Parses bounded machine-format socket inventory without returning process arguments or interpreting it as authority. */
@@ -317,7 +411,7 @@ export function getLocalProviderProcessNameField(platform = process.platform) {
 }
 
 /** Independently observes native same-user loopback providers and excludes other connected clients under the explicit disposable Local outage. Not a distributed lock or future-client fence. */
-export async function verifyLocalWriterExclusion(selected) {
+export async function verifyLocalWriterExclusion(selected, options) {
   if (!resolvedSelections.has(selected) || typeof process.getuid !== 'function')
     throw refusal('RESET_OWNED_LOCAL_SELECTION_REQUIRED');
   const topology = await import('./defaultProjectTopologyService.mjs');
@@ -325,6 +419,13 @@ export async function verifyLocalWriterExclusion(selected) {
   catch { throw refusal('RESET_RUNTIME_OUTAGE_REQUIRED'); }
   const ports = new Map();
   const inspected = new Set();
+  const searchProviders = options?.searchIndices ? await inspectSearchProviders(options, selected) : [];
+  for (const provider of searchProviders) {
+    for (const port of [provider.httpPort, provider.transportPort]) {
+      if (ports.has(port) && ports.get(port) !== 'java') throw refusal('RESET_PROVIDER_ENDPOINT_AMBIGUOUS');
+      ports.set(port, 'java');
+    }
+  }
   for (const scope of selected.scopes) {
     for (const target of [...scope.databases, ...scope.auth]) {
       const uri = new URL(target.endpoint);
@@ -356,7 +457,9 @@ export async function verifyLocalWriterExclusion(selected) {
       executable = execFileSync('ps', ['-p', String(pids[0]), '-o', processNameField], { encoding: 'utf8', timeout: 3000 }).trim();
       uid = Number(execFileSync('ps', ['-p', String(pids[0]), '-o', 'uid='], { encoding: 'utf8', timeout: 3000 }).trim());
     } catch { throw refusal('RESET_PROVIDER_OWNER_UNCONFIRMED'); }
-    if (path.basename(executable) !== kind || uid !== process.getuid()) throw refusal('RESET_PROVIDER_OWNER_UNCONFIRMED');
+    if (path.basename(executable) !== kind || uid !== process.getuid() ||
+        (kind === 'java' && !searchProviders.some(provider => provider.pid === pids[0] &&
+          [provider.httpPort, provider.transportPort].includes(port)))) throw refusal('RESET_PROVIDER_OWNER_UNCONFIRMED');
     owners.push({ port, kind, pid: pids[0] });
   }
   const counts = assertLocalSocketExclusion(sockets, owners, process.pid);
@@ -435,6 +538,10 @@ export async function readSelection(options, projectRoot) {
           throw refusal('RESET_DEPLOYMENT_MISMATCH');
         return { ...await consumeRuntime(snapshot, { ...registration, server: runtime.server }), server: runtime.server };
       }));
+    } else if (options.searchIndices) {
+      scopes.push(await withRuntime(options, projectRoot, runtime, variables, async snapshot => {
+        return { ...await consumeRuntime(snapshot, undefined, readSearchBindings(options)), server: runtime.server };
+      }));
     } else {
       const snapshot = probe.read({ projectRoot, environment: options.environment,
         server: runtime.server, inheritEnvironment: true, variables: { ...variables, ...(runtime.env || {}) } });
@@ -457,8 +564,8 @@ export async function readSelection(options, projectRoot) {
       }
     }
     registeredSelections.set(selected, registration);
-    freezeSelection(selected);
   }
+  freezeSelection(selected);
   resolvedSelections.add(selected);
   return selected;
 }
@@ -467,7 +574,7 @@ export async function readSelection(options, projectRoot) {
 export async function openOwnerTargets(options, selected, wrapRegistered) {
   const projectRoot = process.cwd();
   const variables = { ...require('./defaultProjectLocalRuntimeCredentialService').readExistingEnvironment(projectRoot, options.environment), ...process.env };
-  const opened = [], databaseNames = new Set();
+  const opened = [], databaseNames = new Set(), searchNames = new Set(), searchTargets = [];
   let auth;
   try {
     for (const scope of selected.scopes) {
@@ -478,7 +585,8 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
         if (registration && (NODICS.getEnvironmentName() !== registration.options.project ||
             NODICS.getSelectedEnvironmentName() !== options.environment || NODICS.getServerName() !== scope.server))
           throw refusal('RESET_DEPLOYMENT_MISMATCH');
-        const fresh = { ...await consumeRuntime(snapshot, registration && { ...registration, server: scope.server }), server: scope.server };
+        const fresh = { ...await consumeRuntime(snapshot, registration && { ...registration, server: scope.server },
+          options.searchIndices ? readSearchBindings(options) : undefined), server: scope.server };
         if (!isDeepStrictEqual(fresh, scope)) throw refusal('RESET_CONFIGURATION_CHANGED');
         const input = { project: options.project, environment: options.environment,
           exclusiveDeployment: options.exclusiveDeployment, writersExcluded: options.writersExcluded };
@@ -499,9 +607,20 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
           databaseNames.add(target.name);
           held.name = target.name;
         }
+        for (const group of groupSearchBindings(scope.search || [])) {
+          const indices = group.indices.filter(index => !searchNames.has(index));
+          if (!indices.length) continue;
+          const owner = SERVICE[group.handler];
+          if (typeof owner?.openLocalResetMaintenance !== 'function') throw refusal('RESET_SEARCH_OWNER_UNAVAILABLE');
+          const held = await owner.openLocalResetMaintenance({ ...input, configuration: group.configuration, indices });
+          opened.push(held);
+          searchTargets.push(held);
+          indices.forEach(index => searchNames.add(index));
+        }
       });
     }
-    return { auth, databases: opened.filter(item => item !== auth), close: async () => {
+    return { auth, databases: opened.filter(item => item !== auth && !searchTargets.includes(item)),
+      ...(options.searchIndices ? { search: searchTargets } : {}), close: async () => {
       let failures = 0;
       for (const item of opened.reverse()) { try { await item.close(); } catch { failures++; } }
       return failures;
@@ -515,16 +634,21 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
   }
 }
 
-/** Runs complete preflight before effects; verifies each drop and clears reviewed auth keys last. Errors retain count-only partial/uncertain receipts and never restart writers. */
+/** Runs explicit read-only discovery or complete reset preflight; reset verifies each drop and clears reviewed auth keys last. Errors retain count-only partial/uncertain receipts and never restart writers. */
 export async function run(options, dependencies = {}) {
   // Revalidate exported calls as strictly as CLI input; injected ports are isolated test consumers only.
   options = parseOptions([`--environment=${options.environment}`, `--project-code=${options.project}`,
-    `--databases=${Array.isArray(options.databases) ? options.databases.join(',') : ''}`,
-    `--auth-namespace=${options.authNamespace}`, ...(options.execute === true ? ['--execute'] : []),
+    ...(options.discoverRegisteredTenants === true ? ['--discover-registered-tenants'] : []),
+    ...(options.discoverRegisteredTenants !== true || options.databases !== undefined ?
+      [`--databases=${Array.isArray(options.databases) ? options.databases.join(',') : ''}`] : []),
+    ...(options.discoverRegisteredTenants !== true || options.authNamespace !== undefined ? [`--auth-namespace=${options.authNamespace}`] : []),
+    ...(options.execute === true ? ['--execute'] : []),
     ...(Array.isArray(options.registeredTenants) ? [`--registered-tenants=${options.registeredTenants.join(',')}`] : []),
+    ...(options.searchIndices !== undefined ? [`--search-indexes=${Array.isArray(options.searchIndices) ? options.searchIndices.join(',') : ''}`] : []),
     ...(options.exclusiveDeployment === true ? ['--exclusive-deployment'] : []),
     ...(options.writersExcluded === true ? ['--writers-excluded'] : [])]);
-  if (options.execute && Object.keys(dependencies).length) throw refusal('RESET_RUNTIME_ADAPTER_OVERRIDE_DENIED');
+  if ((options.execute || options.discoverRegisteredTenants) && Object.keys(dependencies).length)
+    throw refusal('RESET_RUNTIME_ADAPTER_OVERRIDE_DENIED');
   const read = dependencies.readSelection || readSelection;
   const check = dependencies.verifyOutage || (async input => {
     const previous = process.env.ENV;
@@ -537,16 +661,39 @@ export async function run(options, dependencies = {}) {
     }
   });
   const selected = await read(options, process.cwd());
-  const plan = buildPlan(options, selected.deployment, selected.scopes);
   const topology = { runtimes: selected.deployment.topology.groups.backends };
+  if (options.discoverRegisteredTenants) {
+    if (selected.deployment.projectCode !== options.project || selected.deployment.environment !== options.environment)
+      throw refusal('RESET_DEPLOYMENT_MISMATCH');
+    await check(topology);
+    const runtime = projectRuntime(selected.deployment, { role: 'PLATFORM' });
+    const variables = { ...require('./defaultProjectLocalRuntimeCredentialService').readExistingEnvironment(process.cwd(), options.environment), ...process.env };
+    const codes = await withRuntime(options, process.cwd(), runtime, variables, async snapshot => {
+      const owner = SERVICE.DefaultMongodbLocalResetMaintenanceService;
+      if (typeof owner?.discoverRegisteredTenantCodes !== 'function') throw refusal('RESET_REGISTERED_OWNER_UNAVAILABLE');
+      const scope = await consumeRuntime(snapshot);
+      const target = scope.databases.find(item => item.moduleName === 'profile');
+      if (!target || target.handler !== 'DefaultMongodbDatabaseConnectionHandlerService' ||
+          NODICS.getSelectedEnvironmentName() !== options.environment || NODICS.getServerName() !== runtime.server)
+        throw refusal('RESET_REGISTERED_OWNER_UNAVAILABLE');
+      try {
+        return await owner.discoverRegisteredTenantCodes({ environment: options.environment,
+          configuration: target.configuration, defaultTenant: CONFIG.get('defaultTenant') });
+      } catch { throw refusal('RESET_TENANT_DISCOVERY_FAILED'); }
+    });
+    return { project: options.project, environment: options.environment, mode: 'READ_ONLY_DISCOVERY',
+      registeredTenants: codes, tenantCount: codes.length, qualified: false,
+      effects: { databasesDropped: 0, authKeysRemoved: 0 } };
+  }
+  const plan = buildPlan(options, selected.deployment, selected.scopes);
   await check(topology);
   if (!options.execute) return plan;
-  const exclusion = await verifyLocalWriterExclusion(selected);
+  const exclusion = await verifyLocalWriterExclusion(selected, options);
   if (writerExclusions.get(exclusion)?.selected !== selected) throw refusal('RESET_INDEPENDENT_EXCLUSIVITY_REQUIRED');
   plan.independentExclusivityProof = true;
   plan.writerExclusionEvidence = exclusion;
   const verify = async () => {
-    const fresh = await verifyLocalWriterExclusion(selected);
+    const fresh = await verifyLocalWriterExclusion(selected, options);
     if (!isDeepStrictEqual(writerExclusions.get(fresh)?.owners, writerExclusions.get(exclusion).owners))
       throw refusal('RESET_PROVIDER_OWNER_CHANGED');
     await check(topology);
@@ -586,6 +733,21 @@ export async function orchestrateAdmittedMaintenance({ selected, plan, topology,
     const authInspection = await targets.auth.inspect();
     if (!Number.isSafeInteger(authInspection.keyCount) || authInspection.keyCount < 0) throw refusal('RESET_INSPECTION_UNCONFIRMED');
     plan.providerCounts = { collections: collectionCount, authKeys: authInspection.keyCount };
+    if (plan.searchIndices) {
+      const names = targets.search?.flatMap(target => target.names);
+      if (!names || targets.search.some(target => target.contractVersion !== 1 || typeof target.drop !== 'function' ||
+          typeof target.verifyEmpty !== 'function') || !isDeepStrictEqual([...names].sort(), plan.searchIndices))
+        throw refusal('RESET_SEARCH_OWNER_CONTRACT_INVALID');
+      let present = 0, absent = 0;
+      for (const target of targets.search) {
+        const inspection = await target.inspect();
+        if (![inspection.indexCount, inspection.absentCount].every(value => Number.isSafeInteger(value) && value >= 0) ||
+            inspection.indexCount + inspection.absentCount !== target.names.length) throw refusal('RESET_SEARCH_INSPECTION_UNCONFIRMED');
+        present += inspection.indexCount;
+        absent += inspection.absentCount;
+      }
+      plan.searchProviderCounts = { present, absent };
+    }
     const fresh = await readFreshSelection();
     if (!isDeepStrictEqual(fresh, selected)) throw refusal('RESET_CONFIGURATION_CHANGED');
     await verifyOutage(topology);
@@ -599,6 +761,21 @@ export async function orchestrateAdmittedMaintenance({ selected, plan, topology,
       if ((await target.verifyEmpty()).collectionCount !== 0) throw refusal('RESET_DATABASE_NOT_EMPTY');
     }
     delete plan.attemptedDatabase;
+    if (plan.searchIndices) {
+      stage = 'SEARCH_INDEX_DROP';
+      for (const target of targets.search) {
+        for (const index of target.names) {
+          await verifyOutage(topology);
+          plan.attemptedSearchIndex = index;
+          const outcome = await target.drop(index);
+          if (outcome.acknowledged === true) plan.searchEffects.indexesDropped++;
+          if (outcome.absent !== true) throw refusal('RESET_SEARCH_DROP_UNCONFIRMED');
+          if (outcome.acknowledged === false && outcome.alreadyAbsent === true) plan.searchEffects.alreadyAbsent++;
+          else if (outcome.acknowledged !== true) throw refusal('RESET_SEARCH_DROP_UNCONFIRMED');
+        }
+      }
+      delete plan.attemptedSearchIndex;
+    }
     stage = 'AUTH_CLEANUP';
     await verifyOutage(topology);
     const cleared = await targets.auth.clear();
@@ -610,6 +787,9 @@ export async function orchestrateAdmittedMaintenance({ selected, plan, topology,
       if ((await target.verifyEmpty()).collectionCount !== 0) throw refusal('RESET_DATABASE_NOT_EMPTY');
     }
     if ((await targets.auth.verifyEmpty()).keyCount !== 0) throw refusal('RESET_AUTH_NOT_EMPTY');
+    for (const target of targets.search || []) {
+      if ((await target.verifyEmpty()).indexCount !== 0) throw refusal('RESET_SEARCH_NOT_EMPTY');
+    }
     await verifyOutage(topology);
     plan.status = 'COMPLETED';
     plan.remainingCounts = { collections: 0, authKeys: 0 };
@@ -620,6 +800,9 @@ export async function orchestrateAdmittedMaintenance({ selected, plan, topology,
       plan.cleanupFailedCount = error.cleanupFailedCount;
     if (stage === 'AUTH_CLEANUP' && Number.isSafeInteger(error.removedCount) && error.removedCount >= 0 &&
         error.removedCount <= plan.providerCounts.authKeys) plan.effects.authKeysRemoved = error.removedCount;
+    if (stage === 'SEARCH_INDEX_DROP' && error.acknowledged === true &&
+        error.index === plan.attemptedSearchIndex && plan.searchIndices.includes(error.index))
+      plan.searchEffects.indexesDropped++;
     plan.status = stage === 'PROVIDER_PREFLIGHT' ? 'REFUSED' : 'PARTIAL_OR_UNCERTAIN';
     plan.failedStage = stage;
     plan.restartAllowed = false;

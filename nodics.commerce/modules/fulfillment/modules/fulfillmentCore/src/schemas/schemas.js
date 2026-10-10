@@ -23,3 +23,14 @@ module.exports = { fulfillmentCore: {
 module.exports.fulfillmentCore.consignment.backoffice = { operations: ['search', 'read'], description: 'Fulfillment consignment evidence.' };
 module.exports.fulfillmentCore.shipment.backoffice = { operations: ['search', 'read'], description: 'Shipment and tracking evidence.' };
 module.exports.fulfillmentCore.returnInspection.backoffice = { operations: ['search', 'read'], description: 'Returned-goods receipt and inspection evidence.' };
+
+// Physical authority is owner-issued, never generic CRUD or versioned snapshots.
+for (const name of ['consignment', 'shipment', 'fulfillmentReturn', 'returnReceipt', 'returnInspection']) {
+    const schema = module.exports.fulfillmentCore[name];
+    schema.isVersionedEnabled = false;
+    schema.transaction = { enabled: true, sideEffects: 'none' };
+    schema.router = { enabled: false };
+    schema.backoffice = { operations: ['search', 'read'], description: 'Owner-issued physical operation evidence; mutations require reviewed Fulfillment commands.' };
+    schema.indexes = { individual: { physicalIdentity: { name: 'code', enabled: true, options: { unique: true } } } };
+    schema.definition.enterpriseCode = { type: 'string', required: true, description: 'Enterprise bound to the original Order and signed operator scope.' };
+}

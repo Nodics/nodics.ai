@@ -137,9 +137,17 @@ module.exports = {
             query: { code: 'cmsPublicationApproval' }, searchOptions: { limit: 1 }, authData: request.authData })
             .then(response => response && response.result && response.result[0]);
         if (definition) return definition;
+        let releaseCode = 'cms:cmsPublicationApproval';
+        let catalogue = await SERVICE.DefaultDataReleaseService.getCatalogue({ tenant: request.tenant,
+            authData: request.authData, dataType: 'init' });
+        let releases = catalogue && Array.isArray(catalogue.data) ?
+            catalogue.data.filter(release => release.releaseCode === releaseCode) : [];
+        if (releases.length !== 1 || typeof releases[0].version !== 'string' || !releases[0].version) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00002', 'CMS publication approval release is unavailable');
+        }
         await SERVICE.DefaultDataReleaseService.execute({ tenant: request.tenant, authData: request.authData,
-            releaseRequest: { dataType: 'init', releaseCodes: ['cms:cmsPublicationApproval'],
-                expectedReleases: { 'cms:cmsPublicationApproval': '1.0.0' } } });
+            releaseRequest: { dataType: 'init', releaseCodes: [releaseCode],
+                expectedReleases: { [releaseCode]: releases[0].version } } });
         definition = await SERVICE.DefaultProcessDefinitionService.get({ tenant: request.tenant,
             query: { code: 'cmsPublicationApproval' }, searchOptions: { limit: 1 }, authData: request.authData })
             .then(response => response && response.result && response.result[0]);

@@ -1,6 +1,6 @@
 # copilotKnowledge
 
-The [Knowledge Progress and Recovery guide](../../../nodics.docs/docs/pages/nodics.copilot/knowledge-generation-recovery.md)
+The [Knowledge Progress and Recovery guide](data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js)
 also covers reviewed dedicated legacy-index retirement, verified replacements,
 native provider barriers, original inspection and retained-data limitations.
 
@@ -44,7 +44,7 @@ safe-search APIs. See [Live Database Sources](llm/examples/live-database-sources
 for registration, exclusions, Axis steps, contracts, recovery and customization.
 Selected collection fields/capabilities and technical deletion-impact previews
 also run through these native owners in conversation. See the canonical
-[collection inspection guide](../../../nodics.docs/docs/pages/nodics.copilot/collection-inspection.md).
+[collection inspection guide](data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js).
 An impact preview is not deletion, business cancellation or permission to execute.
 
 [Runtime-bound partitions](llm/examples/runtime-source-partitions.md) reuse the
@@ -129,7 +129,7 @@ for setup, permission boundaries, uncertain outcomes and customization. This doe
 not provision schedules or replace Process incident recovery.
 
 Source managers can optionally prepare a fingerprint-bound inactive schedule
-through the existing Cron owner. See [source-aware schedule setup](../../../nodics.docs/docs/pages/nodics.process/inactive-schedule-drafts.md#prepare-a-draft-from-knowledge-studio).
+through the existing Cron owner. See [source-aware schedule setup](data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js#prepare-a-draft-from-knowledge-studio).
 `studio.sourceScheduleDraftsEnabled` defaults false; the Axis surface additionally
 requires authorized Cron navigation and an exact approved target binding. Saving
 a draft never proves activation or bypasses source callback admission.

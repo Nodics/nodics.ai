@@ -17,6 +17,62 @@ module.exports = { inventory: {
     inventoryMovement: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { backoffice: { operations: ['search', 'read'], description: 'Append-only stock movement evidence.' }, definition: { code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'}, tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'}, warehouseCode: { type: 'string', required: true , description: 'Stores the warehouse code used to classify, link, or resolve this record.'}, sku: { type: 'string', required: true , description: 'Stores the SKU used to identify the purchasable product or variant.'}, quantity: { type: 'string', required: true , description: 'Stores the quantity value used by this record.'}, movementType: { type: 'string', required: true, enum: ['RECEIPT', 'RESERVE', 'RELEASE', 'ALLOCATE', 'SHIP', 'RETURN', 'ADJUST'] , description: 'Classifies this record by movement type for validation and business handling.'}, referenceCode: { type: 'string', required: true , description: 'Stores the reference code used to classify, link, or resolve this record.'}, balanceRevision: { type: 'int', required: true , description: 'Stores the numeric balance revision used by this record.'}, occurredAt: { type: 'date', required: true , description: 'Records when the occurred event or value applies.'}, correlationId: { type: 'string', required: true , description: 'Stores the correlation identifier used to correlate this record.'} } })
 } };
 
+// Opening receipts and checkout holds change stock and movement evidence atomically.
+for (const name of ['inventoryBalance', 'inventoryMovement', 'inventoryReservation']) {
+    module.exports.inventory[name].isVersionedEnabled = false;
+    module.exports.inventory[name].transaction = { enabled: true, sideEffects: 'none' };
+    module.exports.inventory[name].indexes = {
+        individual: { stockIdentity: { name: 'code', enabled: true, options: { unique: true } } }
+    };
+}
+Object.assign(module.exports.inventory.inventoryReservation.definition, {
+    ownerId: { type: 'string', required: false, description: 'Signed customer who acquired the Inventory-owned hold.' },
+    balanceCode: { type: 'string', required: false, description: 'Exact stock balance atomically changed by this hold.' },
+    expectedBalanceRevision: { type: 'int', required: false, description: 'Observed stock revision at original acquisition.' },
+    revision: { type: 'int', required: false, description: 'Managed reservation lifecycle revision.' }
+});
+Object.assign(module.exports.inventory.inventoryReservation.definition, {
+    returnedQuantity: { type: 'string', required: false, description: 'Exact cumulative owner-inspected quantity returned against the original shipment.' },
+    evidence: { type: 'object', required: false, description: 'Retained dispatch or reviewed reversal identities and their immutable stock movements.' }
+});
+module.exports.inventory.inventoryMovement.definition.evidence = {
+    type: 'object', required: false, description: 'Original reviewed shipment, return receipt, inspection and disposition bindings.'
+};
+module.exports.inventory.inventoryBalance.indexes.composite = {
+    tenant: { name: 'tenant', enabled: true, options: { unique: true } },
+    enterpriseCode: { name: 'enterpriseCode', enabled: true, options: { unique: true } },
+    warehouseCode: { name: 'warehouseCode', enabled: true, options: { unique: true } },
+    sku: { name: 'sku', enabled: true, options: { unique: true } }
+};
+module.exports.inventory.inventoryMovement.definition.enterpriseCode = {
+    type: 'string', required: false, description: 'Business enterprise responsible for this stock movement.'
+};
+module.exports.inventory.inventoryOpeningReceiptRecord = {
+    super: 'base', model: true, isVersionedEnabled: false, schemaPolicies: ['operational'],
+    service: { enabled: true }, router: { enabled: false }, cache: { enabled: false },
+    event: { enabled: false }, search: { enabled: false }, backoffice: { enabled: false },
+    transaction: { enabled: true, sideEffects: 'none' },
+    indexes: { individual: { openingIdentity: { name: 'code', enabled: true, options: { unique: true } } } },
+    definition: {
+        code: { type: 'string', required: true, description: 'Inventory-owned scope and intake identity.' },
+        tenant: { type: 'string', required: true, description: 'Runtime partition containing the receipt and stock.' },
+        enterpriseCode: { type: 'string', required: true, description: 'Authenticated stock-owning enterprise.' },
+        warehouseCode: { type: 'string', required: true, description: 'Activated receiving warehouse.' },
+        sku: { type: 'string', required: true, description: 'Activated Product variant SKU.' },
+        quantity: { type: 'string', required: true, description: 'Original positive whole-unit receipt quantity.' },
+        referenceCode: { type: 'string', required: true, description: 'Pack-owned intake reference, not a fabricated movement snapshot.' },
+        intentDigest: { type: 'string', required: true, description: 'Exact immutable pack identity and original intake fingerprint.' },
+        balanceCode: { type: 'string', required: true, description: 'Atomically created initial Inventory balance.' },
+        movementCode: { type: 'string', required: true, description: 'Atomically retained first-receipt movement.' },
+        actorId: { type: 'string', required: true, description: 'Authenticated original receiving operator.' }
+    }
+};
+
+// Only first-receipt storage admits the bounded human group; generic HTTP mutations remain disabled.
+for (const name of ['inventoryBalance', 'inventoryMovement', 'inventoryOpeningReceiptRecord']) {
+    module.exports.inventory[name].schemaPolicies.push('openingReceiptHuman');
+}
+
 /** Inventory owns retained policy content; nPublish remains lifecycle authority. */
 module.exports.inventory.inventoryPolicyRelease = {
     "super": "base",

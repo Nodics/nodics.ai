@@ -11,6 +11,15 @@
 
 /** @module loyaltyWallet/config/properties @description Defines loyaltyWallet schema access policy. @layer config @owner loyaltyWallet */
 module.exports = {
+  loyalty: {
+    transactions: { enabled: false },
+    sampleCredits: { enabled: false, maximumInstructions: 100, allowedEnvironments: [], approvedSources: [] },
+  },
+  data: {
+    dataReleases: {
+      installers: { LOYALTY_SAMPLE_CREDITS: "DefaultLoyaltySampleCreditContributionService" },
+    },
+  },
   schemaPolicies: {
     loyaltyWallet: {
       operational: {

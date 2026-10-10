@@ -213,7 +213,7 @@ test('reverse lifecycle facade keeps operator action actor separate from custome
     assert.equal(captured.actorId, 'operator@example.com');
 });
 
-test('reverse lifecycle operator approve executes Payment-owned refund and records downstream evidence', async () => {
+test('generic refund approval refuses unqualified financial execution', async () => {
     let refundRequest;
     storedLifecycle = [{
         code: 'order-1:refund:1',
@@ -242,13 +242,12 @@ test('reverse lifecycle operator approve executes Payment-owned refund and recor
         correlationId: 'corr-approve-refund'
     });
 
-    assert.equal(result.status, 'APPROVED');
-    assert.equal(refundRequest.orderCode, 'order-1');
-    assert.equal(refundRequest.payload.amount, '12.00');
-    assert.equal(lifecycleUpdates[0].evidence.downstream.payment.status, 'REFUND_SUCCEEDED');
+    assert.equal(result.status, 'SUBMITTED');
+    assert.equal(refundRequest, undefined);
+    assert.equal(lifecycleUpdates[0].evidence.execution.status, 'BLOCKED');
 });
 
-test('reverse lifecycle operator cancellation approval executes refund when amount is confirmed', async () => {
+test('generic cancellation approval refuses before digital or financial side effects', async () => {
     let refundRequest;
     let digitalRequest;
     storedLifecycle = [{
@@ -286,15 +285,13 @@ test('reverse lifecycle operator cancellation approval executes refund when amou
         correlationId: 'corr-cancellation-approve'
     });
 
-    assert.equal(result.status, 'APPROVED');
-    assert.equal(digitalRequest.payload.requestType, 'CANCELLATION');
-    assert.equal(refundRequest.orderCode, 'order-1');
-    assert.equal(refundRequest.payload.amount, '5.00');
-    assert.equal(result.evidence.downstream.digitalCommerce[0].policyDecision, 'REVOKE_AND_REFUND');
-    assert.equal(result.evidence.downstream.payment.status, 'REFUND_SUCCEEDED');
+    assert.equal(result.status, 'SUBMITTED');
+    assert.equal(digitalRequest, undefined);
+    assert.equal(refundRequest, undefined);
+    assert.equal(result.evidence.execution.missingGate, 'qualified-operator-physical-stock-reversal-owner');
 });
 
-test('reverse lifecycle refund approval calls Digital Commerce entitlement revocation policy', async () => {
+test('generic refund approval cannot bypass guarded digital reversal', async () => {
     let digitalRequest;
     storedLifecycle = [{
         code: 'order-1:refund-digital:1',
@@ -328,12 +325,11 @@ test('reverse lifecycle refund approval calls Digital Commerce entitlement revoc
         correlationId: 'corr-approve-digital-refund'
     });
 
-    assert.equal(digitalRequest.enterpriseCode, 'enterpriseX');
-    assert.equal(digitalRequest.payload.requestType, 'REFUND');
-    assert.equal(result.evidence.downstream.digitalCommerce[0].policyDecision, 'REVOKE_AND_REFUND');
+    assert.equal(digitalRequest, undefined);
+    assert.equal(result.evidence.execution.status, 'BLOCKED');
 });
 
-test('reverse lifecycle operator return actions call Fulfillment-owned receipt and inspection services', async () => {
+test('generic return actions refuse before unqualified receipt inspection or disposition', async () => {
     const calls = [];
     storedLifecycle = [{
         code: 'order-1:return:1',
@@ -359,10 +355,9 @@ test('reverse lifecycle operator return actions call Fulfillment-owned receipt a
     await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'MARK_RECEIVED', payload: {}, authData: {}, correlationId: 'corr-receipt' });
     const inspected = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'DISPOSITION', payload: { disposition: 'RESTOCK' }, authData: {}, correlationId: 'corr-inspection' });
 
-    assert.deepEqual(calls.map(call => call.operation), ['receipt', 'inspection']);
-    assert.equal(calls[0].request.payload.rmaCode, 'RMA-1');
-    assert.equal(inspected.status, 'DISPOSITION_RECORDED');
-    assert.equal(lifecycleUpdates[1].evidence.downstream.fulfillment.evidence.disposition, 'RESTOCK');
+    assert.deepEqual(calls, []);
+    assert.equal(inspected.status, 'SUBMITTED');
+    assert.equal(lifecycleUpdates[1].evidence.execution.status, 'BLOCKED');
 });
 
 test('reverse lifecycle operator exchange approval calls Inventory and Fulfillment owner hooks', async () => {
@@ -451,19 +446,19 @@ test("cancellation return and refund orchestration remains routed to existing Co
   const calls = [];
   const ports = {
     find: async () => undefined,
-    evaluatePolicy: async () => ({ eligible: true }),
+    evaluatePolicy: async () => ({ eligible: true, requiresApproval: false }),
     requestApproval: async () => ({ status: "APPROVED" }),
     fulfillmentIntent: async () => {
       calls.push("FULFILLMENT");
-      return { returnMethod: "DROP_OFF" };
+      return { status: "PREPARED", returnMethod: "DROP_OFF" };
     },
     inventoryDisposition: async () => {
       calls.push("INVENTORY");
-      return { disposition: "RESTOCK" };
+      return { status: "SETTLED", disposition: "RESTOCK" };
     },
     paymentIntent: async () => {
       calls.push("PAYMENT");
-      return { refundMethod: "ORIGINAL_PAYMENT" };
+      return { status: "REFUND_SUCCEEDED", transactionCode: "refund-1", refundMethod: "ORIGINAL_PAYMENT" };
     },
     complete: async (request, evidence) => ({
       status: "COMPLETED",
@@ -500,16 +495,17 @@ test("provider partial failure records compensation evidence with completed owne
   let compensation;
   const ports = {
     find: async () => undefined,
-    evaluatePolicy: async () => ({ eligible: true }),
+    evaluatePolicy: async () => ({ eligible: true, requiresApproval: false }),
     requestApproval: async () => ({ status: "APPROVED" }),
-    fulfillmentIntent: async () => ({ code: "return-1" }),
-    inventoryDisposition: async () => ({ disposition: "RESTOCK" }),
+    fulfillmentIntent: async () => ({ code: "return-1", status: "PREPARED" }),
+    inventoryDisposition: async () => ({ status: "SETTLED", disposition: "RESTOCK" }),
     paymentIntent: async () => {
       throw new Error("provider unavailable");
     },
     compensate: async (request, checkpoint, error) => {
       compensation = { request, checkpoint, error: error.message };
     },
+    complete: async () => assert.fail("Failed Payment must not complete a reversal"),
   };
   await assert.rejects(
     () =>

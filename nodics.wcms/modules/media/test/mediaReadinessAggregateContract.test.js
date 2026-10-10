@@ -26,6 +26,17 @@ const getPipeline = require('../../../../nodics.foundation/modules/nDatabase/dat
 
 describe('Media persisted readiness aggregate', function () {
     let request, assets, rows, reads, granted, model;
+    const globalNames = ['CLASSES', 'NODICS', 'UTILS', 'SERVICE', 'FACADE', 'CONFIG'];
+    let priorGlobals;
+    beforeEach(function () {
+        priorGlobals = new Map(globalNames.map(name => [name, Object.getOwnPropertyDescriptor(global, name)]));
+    });
+    afterEach(function () {
+        for (const [name, descriptor] of priorGlobals) {
+            if (descriptor) Object.defineProperty(global, name, descriptor);
+            else delete global[name];
+        }
+    });
     beforeEach(function () {
         global.CLASSES = {
             NodicsError: class extends Error {

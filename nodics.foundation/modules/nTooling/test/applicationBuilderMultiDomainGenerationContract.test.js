@@ -270,7 +270,7 @@ try {
       "Deployment packaging draft must preserve project identity configuration",
     );
     const frontendGuide = fs.readFileSync(
-      path.join(output, "docs/frontend-guide.md"),
+      path.join(output, "llm/examples/frontend-guide.md"),
       "utf8",
     );
     testCase.renderers.forEach((renderer) =>
@@ -280,7 +280,7 @@ try {
       ),
     );
     const firstThirty = fs.readFileSync(
-      path.join(output, "docs/first-30-minutes.md"),
+      path.join(output, "llm/examples/first-30-minutes.md"),
       "utf8",
     );
     testCase.packs.forEach((dataPack) =>
@@ -290,7 +290,7 @@ try {
       ),
     );
     const customizationMap = fs.readFileSync(
-      path.join(output, "docs/customization-map.md"),
+      path.join(output, "llm/examples/customization-map.md"),
       "utf8",
     );
     testCase.packs.forEach((dataPack) =>

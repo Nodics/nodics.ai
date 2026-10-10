@@ -22,6 +22,14 @@ For existing carts, `GET /carts/:cartCode` uses the stored context after ownersh
 checks. Retain the returned Cart ID rather than reconstructing it. Entry operations
 on that ID need not repeat the store, but cannot override it.
 
+When an entry's Inventory owner reports no available stock, the mutation response
+is HTTP 409 with `ERR_CART_INVENTORY_UNAVAILABLE`; invalid quantity validation is
+HTTP 422 with `ERR_CART_VALIDATION_FAILED`. Read the owned Cart before retrying:
+the entry write can have succeeded before response validation rejected calculation.
+Restore real stock through Inventory's governed operations, not by importing a
+balance or assuming a missing owner decision means zero. No payment, reservation
+or promotion commitment is authorized by either rejection.
+
 `cart.customerApi.defaultStoreCode` no longer selects a store. Update legacy callers
 to send explicit context before upgrading. This example validates identifier
 agreement; Store existence, active selling context and authorization remain separate

@@ -204,6 +204,17 @@ test("Checkout placement requests internal Cart calculation evidence for reserva
 
 test("Checkout order creation persists promotion summary evidence for backoffice views", async () => {
   const saved = [];
+  const persistedCart = { code: "cart-1", tenant: "default", enterpriseCode: "enterprise-x",
+    ownerId: "customer-1", storeCode: "published-store", currency: "USD", revision: 1 };
+  global.SERVICE.DefaultCartOperationService = {
+    cartSnapshot: async request => {
+      assert.equal(request.cartCode, persistedCart.code);
+      assert.equal(request.tenant, persistedCart.tenant);
+      assert.equal(request.enterpriseCode, persistedCart.enterpriseCode);
+      assert.equal(request.ownerId, persistedCart.ownerId);
+      return { ...persistedCart };
+    },
+  };
   global.SERVICE.DefaultCommerceOrderService = {
     save: async (request) => {
       saved.push({ service: "order", model: request.model });
@@ -261,6 +272,7 @@ test("Checkout order creation persists promotion summary evidence for backoffice
   assert.equal(order.taxAmount, "6.13");
   assert.equal(order.promotionCode, "coupon5");
   assert.equal(order.couponCode, "coupon-row-1");
+  assert.equal(order.evidence.storeCode, persistedCart.storeCode);
   assert.equal(
     saved.find((item) => item.service === "order").model.enterpriseCode,
     "enterprise-x",

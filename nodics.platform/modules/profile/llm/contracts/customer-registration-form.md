@@ -9,7 +9,23 @@ accounts. Browser validation helps interaction but does not replace owner checks
 `profile.customer.register`. It maps only the form fields through
 `DefaultCustomerRegistrationService.formModel` and the existing signup facade and
 registration pipeline. That pipeline retains group/principal policy, uniqueness,
-KYC enforcement, password hashing and generated persistence. The response is only
+active enterprise/tenant placement, password hashing and generated persistence.
+Customer eligibility is optional for ordinary signup: the existing layered
+`profileCustomerEligibility.enabled: false` default requires no eligibility owner,
+published Rules policy or decision receipt. It does not fabricate an approval.
+An explicit `enabled: true` requires the selected authoritative eligibility owner
+and existing private decision/audit guards; missing policy, unqualified owner,
+denial and malformed decisions reject. Missing or non-Boolean enablement rejects
+instead of silently disabling enforcement. Import preflight uses the same switch
+after validating its exact active target, and registration rechecks placement
+before persistence. Request/body flags cannot select this policy.
+
+Employee-backed customer participation retains its independent consent,
+qualification and eligibility requirements. Neither employee membership nor paid
+membership is a prerequisite for ordinary customer signup or coupon ownership.
+Regulated KYC is a separately selected business requirement, not a framework-wide
+requirement inferred from the default eligibility service's name.
+The response is only
 `registered: true`; shared browser sign-in remains a separate Profile operation.
 The existing structured `/customer/signup` contract remains compatible.
 

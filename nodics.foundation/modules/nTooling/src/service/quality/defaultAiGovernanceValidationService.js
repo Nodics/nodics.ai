@@ -347,20 +347,8 @@ module.exports = exportedService = {
             });
         }
         if (directory !== rootPath && fs.existsSync(path.join(directory, 'docs'))) {
-            try {
-                if (!(this.ownsDocumentation || exportedService.ownsDocumentation).call(this, directory)) {
-                    (this.fail || exportedService.fail).call(this,
-                        failures,
-                        'Only an explicit documentation owner may maintain a governed docs source catalogue: ' +
-                        relativePath + '/docs'
-                    );
-                }
-            } catch (error) {
-                (this.fail || exportedService.fail).call(this,
-                    failures,
-                    'Documentation ownership metadata must be readable for: ' + relativePath + ': ' + error.message
-                );
-            }
+            (this.fail || exportedService.fail).call(this, failures,
+                'CMS documentation belongs under data, not a parallel docs source directory: ' + relativePath + '/docs');
         }
     });
 },

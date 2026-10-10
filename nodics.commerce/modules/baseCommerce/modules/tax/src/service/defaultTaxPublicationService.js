@@ -23,8 +23,31 @@
  * and nPublish authority. Never implement a second journal or activate through restore.
  */
 module.exports = {
+    /** Captures an exact application setup intent through this domain's existing publication owner. */
+    prepareSetup: function (request, item) {
+        if (item.domain !== 'tax' || item.input.rootType !== item.rootType || item.input.rootCode !== item.rootCode)
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
+        return this.createGoverned(request, item.input);
+    },
+    /** Qualifies this domain's applied policy receipt without borrowing Product commit flags. */
+    isSetupReceiptCommitted: function (publication, request, receipt) {
+        return receipt?.applied === true && receipt.tenant === request.tenant && receipt.enterpriseCode === request.enterpriseCode &&
+            receipt.fingerprint === publication.sourceVersion && receipt.previousOnlineVersion === publication.activationOperation?.previousOnlineVersion;
+    },
+    /** Verifies intended immutable policy membership and trusted scope without changing source or target. */
+    validateSetup: async function (publication, request, item) {
+        const release = await this.getVersion(publication, request), refs = item.input.references;
+        if (!Array.isArray(refs) || !refs.length || release.payload.tenant !== request.tenant ||
+            release.payload.enterpriseCode !== request.enterpriseCode || release.code !== item.sourceVersion ||
+            refs.length !== release.payload.records.length || new Set(refs.map(ref => ref.schema + ':' + ref.code)).size !== refs.length ||
+            refs.some(ref => !release.payload.records.some(row => row.schema === ref.schema && row.policy.code === ref.code && row.policy.versionId === ref.versionId)))
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
+        return release.code;
+    },
     /** Creates the nPublish request from retained capture with fixed domain and trusted scope. */
     createGoverned: async function (request, input) {
+        request = { ...request, authData: structuredClone(request.authData || {}) };
+        input = structuredClone(input);
         const scope = this.scope(request);
         const release = await this.capture(request, input);
         return SERVICE.DefaultPublicationLifecycleService.create({ ...request, publication: {
@@ -38,7 +61,14 @@ module.exports = {
         this.requireSource();
         const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'tax');
         const scope = this.scope(request);
-        if (auth.entCode !== scope.enterpriseCode || auth.tenant !== scope.tenant) throw new Error('Publication runtime enterprise mismatch');
+        if (auth.tenant !== scope.tenant) throw new Error('Publication runtime tenant mismatch');
+        if (auth.entCode !== scope.enterpriseCode) {
+            const workflow = SERVICE.DefaultPublicationApprovalWorkflowService;
+            if (!workflow?.requireRuntimeEnterprise) throw new Error('Cross-enterprise publication is not selected');
+            workflow.requireRuntimeEnterprise(auth, scope.enterpriseCode);
+        }
+        if (command.enterpriseCode !== undefined && command.enterpriseCode !== scope.enterpriseCode)
+            throw new Error('Publication business enterprise mismatch');
         if (!command || !['prepare', 'activate', 'reconcile'].includes(command.operation) ||
             typeof command.publicationCode !== 'string' || !command.publicationCode ||
             typeof command.operationKey !== 'string' || !command.operationKey) throw new Error('Unsupported source authorization operation');
@@ -148,6 +178,20 @@ module.exports = {
     /** Resolves an explicit configured delivery set; empty/duplicate roots never fall back to authoring data. */
     deliveryRoots: function (request) {
         const delivery = this.publicationSettings().delivery || {};
+        if (delivery.rootCodesByStore !== undefined) {
+            const mapping = delivery.rootCodesByStore;
+            const maximum = this.publicationSettings().maxDependencies || 1000;
+            if (!this.deliveryEnabled(request) || !Array.isArray(delivery.storeCodes) ||
+                !mapping || typeof mapping !== 'object' || Array.isArray(mapping) ||
+                Object.keys(mapping).length !== delivery.storeCodes.length ||
+                delivery.storeCodes.some(store => !Object.hasOwn(mapping, store) ||
+                    !Array.isArray(mapping[store]) || !mapping[store].length ||
+                    mapping[store].length > maximum ||
+                    mapping[store].some(code => typeof code !== 'string' || !code.trim()) ||
+                    new Set(mapping[store]).size !== mapping[store].length))
+                throw new Error('Activated delivery roots require an exact Store mapping');
+            return [...mapping[request.storeCode]];
+        }
         if (!this.deliveryEnabled(request) || !Array.isArray(delivery.rootCodes) || !delivery.rootCodes.length ||
             delivery.rootCodes.length > (this.publicationSettings().maxDependencies || 1000) ||
             delivery.rootCodes.some(code => typeof code !== 'string' || !code) ||
@@ -212,10 +256,52 @@ targetReceiptContract: 'v1',
         if (!request || typeof request.tenant !== 'string' || !request.tenant || typeof enterpriseCode !== 'string' || !enterpriseCode) throw new Error('Publication scope is required');
         return { tenant: request.tenant, enterpriseCode };
     },
+    /** Admits the real Staged publisher for this owner's fixed scoped persistence, never generic schema CRUD. */
+    sourcePersistenceAuth: function (request) {
+        const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (auth.principalType !== 'human' || !security?.getGrantedPermissions || !security.isPermissionGranted ||
+            !['publish.lifecycle.create', 'commerce.product.publish', CONFIG.get('publish')?.setup?.permissions?.tax]
+                .every(permission => typeof permission === 'string' && permission &&
+                    security.isPermissionGranted(permission, security.getGrantedPermissions(request), {}))) return request.authData;
+        const enterpriseCode = auth.enterpriseCode || auth.entCode;
+        if (auth.tokenType !== 'access' || auth.isSystem || !(auth.principalId || auth.loginId || auth.code) ||
+            typeof auth.tenant !== 'string' || !auth.tenant || request.tenant !== auth.tenant ||
+            typeof enterpriseCode !== 'string' || !enterpriseCode ||
+            [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode].some(value => value !== undefined && value !== enterpriseCode))
+            throw new Error('Authenticated Tax publisher scope is required');
+        this.requireSource();
+        const owner = SERVICE.DefaultIdentityGovernanceService;
+        if (!owner?.getSystemAuthData) throw new Error('Tax publication persistence owner is unavailable');
+        return owner.getSystemAuthData();
+    },
+    /** Admits Online human publication reads only for this owner's fixed retained services; never grants source capture or writes. */
+    activatedReadAuth: function (request, service) {
+        this.requireTarget();
+        const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (!['human', 'customer'].includes(auth.principalType)) return request.authData;
+        const enterpriseCode = auth.enterpriseCode || auth.entCode;
+        if (auth.tokenType !== 'access' || auth.isSystem || !(auth.principalId || auth.loginId || auth.code) ||
+            typeof auth.tenant !== 'string' || !auth.tenant || request.tenant !== auth.tenant ||
+            typeof enterpriseCode !== 'string' || !enterpriseCode ||
+            [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== auth.tenant) ||
+            [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode].some(value => value !== undefined && value !== enterpriseCode))
+            throw new Error('Authenticated Tax activated reader scope is required');
+        if (auth.principalType !== 'human' || !security?.getGrantedPermissions || !security.isPermissionGranted ||
+            !['commerce.product.publish', CONFIG.get('publish')?.setup?.permissions?.tax]
+                .every(permission => typeof permission === 'string' && permission &&
+                    security.isPermissionGranted(permission, security.getGrantedPermissions(request), {})) ||
+            !Object.values(this.targetServices()).includes(service)) return request.authData;
+        const owner = SERVICE.DefaultIdentityGovernanceService;
+        if (!owner?.getSystemAuthData) throw new Error('Tax publication persistence owner is unavailable');
+        return owner.getSystemAuthData();
+    },
     /** Reads at most one scoped record through generated services, rejecting malformed or ambiguous results. */
     readRecord: async function (service, code, request) {
-        const response = await service.get({ tenant: request.tenant, authData: request.authData,
-            query: { ...this.scope(request), code }, searchOptions: { limit: 2 } });
+        const authData = this.publicationSettings().runtimeRole === 'ONLINE'
+            ? this.activatedReadAuth(request, service) : this.sourcePersistenceAuth(request);
+        const response = await service.get({ tenant: request.tenant, authData,
+            query: { ...this.scope(request), code }, searchOptions: { limit: 2, pageSize: 2 },
+            options: { recursive: false, skipItemCache: true } });
         if (!response || !Array.isArray(response.result) || response.result.length > 1) throw new Error('Invalid publication persistence response');
         const item = response.result[0];
         if (item && (item.code !== code || item.tenant !== request.tenant || item.enterpriseCode !== this.scope(request).enterpriseCode)) throw new Error('Publication persistence scope mismatch');
@@ -229,11 +315,13 @@ targetReceiptContract: 'v1',
     },
     /** Insert-only managed save; only an identical durable record can resolve a duplicate/lost response. */
     retain: async function (service, model, request) {
+        const scope = this.scope(request);
+        if (model.tenant !== scope.tenant || model.enterpriseCode !== scope.enterpriseCode) throw new Error('Retained publication scope mismatch');
         const matches = item => item && Object.keys(model).filter(key => key !== 'revision').every(key => this.fingerprint(item[key]) === this.fingerprint(model[key]));
         let existing = await this.readRecord(service, model.code, request);
         if (existing) { if (!matches(existing)) throw new Error('Retained publication identity conflict'); return existing; }
         try {
-            await service.save({ tenant: request.tenant, authData: request.authData, model: { ...model, revision: 0 } });
+            await service.save({ tenant: request.tenant, authData: this.sourcePersistenceAuth(request), model: { ...model, revision: 0 } });
         } catch (error) {
             existing = await this.readRecord(service, model.code, request);
             if (!matches(existing)) throw error;
@@ -249,6 +337,8 @@ targetReceiptContract: 'v1',
      * @returns {Promise<Object>} Retained release; use its code as nPublish sourceVersion.
      */
     capture: async function (request, input) {
+        request = { ...request, authData: structuredClone(request.authData || {}) };
+        input = structuredClone(input);
         this.requireSource();
         const services = {"taxPolicy":"DefaultTaxPolicyService"};
         const maximum = this.publicationSettings().maxDependencies || 1000;
@@ -263,7 +353,7 @@ targetReceiptContract: 'v1',
             if (!model || model.versioned !== true || !model.rawSchema || model.rawSchema.versionedReadMode !== 'CURRENT') {
                 throw new Error('Tax publication requires qualified CURRENT versioned storage: ' + ref.schema);
             }
-            const response = await SERVICE[services[ref.schema]].get({ tenant: request.tenant, authData: request.authData,
+            const response = await SERVICE[services[ref.schema]].get({ tenant: request.tenant, authData: this.sourcePersistenceAuth(request),
                 query: { ...this.scope(request), code: ref.code, versionId: ref.versionId }, searchOptions: { limit: 2 } });
             if (!response || !Array.isArray(response.result) || response.result.length !== 1 ||
                 response.result[0].code !== ref.code || response.result[0].versionId !== ref.versionId) throw new Error('Exact policy version unavailable');
@@ -333,6 +423,20 @@ targetReceiptContract: 'v1',
         this.requireTarget();
         const pointer = await this.readRecord(this.targetServices().pointer, this.pointerCode(publication, request), request);
         return pointer ? { version: pointer.version ?? null, revision: pointer.revision } : { version: null, revision: 0 };
+    },
+    /** Pure exact target observation; never settles or repairs an incomplete activation receipt. */
+    observeSetupTarget: async function (publication, request) {
+        this.requireTarget();
+        const services = this.targetServices();
+        const pointer = await this.readRecord(services.pointer, this.pointerCode(publication, request), request);
+        if (!pointer || pointer.active === false || !pointer.version) return { version: null, revision: pointer?.revision, receipt: null };
+        const receipt = await this.readRecord(services.receipt, pointer.receiptCode, request);
+        const release = await this.retainedVersion(pointer.version, request);
+        if (!receipt || receipt.applied !== true || receipt.pointerCode !== pointer.code || receipt.targetVersion !== pointer.version ||
+            receipt.expectedRevision + 1 !== pointer.revision || receipt.fingerprint !== release.fingerprint ||
+            release.rootType !== publication.rootType || release.rootCode !== publication.rootCode)
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_OBSERVATION');
+        return { version: pointer.version, revision: pointer.revision, receipt };
     },
     /** Finalizes only a receipt proven by the durable pointer CAS, including a lost-update response. */
     settleReceipt: async function (receipt, pointer, request) {
@@ -440,6 +544,8 @@ targetReceiptContract: 'v1',
     /** Resolves one activated policy release, rejecting absence rather than querying source data. */
     readActivated: async function (publication, request) {
         this.requireTarget();
+        request = { ...request, authData: structuredClone(request.authData || {}) };
+        publication = { ...publication };
         const services = this.targetServices();
         const pointer = await this.readRecord(services.pointer, this.pointerCode(publication, request), request);
         if (!pointer || !pointer.version) throw new Error('No activated policy');

@@ -7,6 +7,11 @@ modules. It is deliberately not a home for any code that merely feels reusable.
 `nCommon` owns shared utilities, enumerations, reusable runtime helpers, and
 common process/data holders used across Nodics modules.
 
+`src/utils/exactAmount.js` provides pure decimal-string arithmetic to capabilities
+deployed independently. It has no runtime, currency, rounding, tenant or financial
+authority. Pricing retains its existing mergeable service over this same utility;
+domain owners retain their own validation and precision policies.
+
 `nCommon` is the place for utility middleware, enumerations, and common
 class/process holders. Keep it focused: shared helpers belong here only when
 they are framework-wide, stable, and not owned more clearly by a specific

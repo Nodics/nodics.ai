@@ -18,16 +18,16 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const successor = {
-    profiles: Object.values(require('../data/core-v002/records/waste/eWasteImpactProfileData')),
-    categories: Object.values(require('../data/core-v002/records/waste/eWasteCategoryData')),
-    itemTypes: Object.values(require('../data/core-v002/records/waste/eWasteItemTypeData'))
+    profiles: Object.values(require('../data/core-v001/records/waste/eWasteImpactProfileData')),
+    categories: Object.values(require('../data/core-v001/records/waste/eWasteCategoryData')),
+    itemTypes: Object.values(require('../data/core-v001/records/waste/eWasteItemTypeData'))
 };
 const policy = require('../../../../../../nodics.waste/modules/wasteCore/src/service/defaultWasteDataContributionPolicyService');
 const dataRoot = path.resolve(__dirname, '../data');
-const records = name => Object.values(require(path.join(dataRoot, 'core-v001/records/waste', name)));
+const records = name => Object.values(require(path.join(__dirname, 'fixtures/compatibility', name)));
 
-test('retained eWaste reference bytes still match the published manifest', () => {
-    const section = require('../data/manifest.json').retainedRoots['core-v001'].sections['core-reference'];
+test('consolidated eWaste reference bytes match the declared manifest; historical inputs remain inert fixtures', () => {
+    const section = require('../data/manifest.json').sections['core-reference'];
     for (const [file, hash] of Object.entries(section.files)) {
         assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(dataRoot, file))).digest('hex'), hash, file);
     }

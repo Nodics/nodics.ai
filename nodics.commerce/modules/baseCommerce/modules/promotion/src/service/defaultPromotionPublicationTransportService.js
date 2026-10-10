@@ -26,8 +26,7 @@ module.exports = {
             methodName: 'POST', apiName: '/publication/policy/' + operation,
             requestBody: payload, timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,
             idempotencyKey: payload.operationKey || payload.release && payload.release.code,
-            header: { Authorization: 'Bearer ' + token, tenant: request.tenant,
-                'x-enterprise-code': request.enterpriseCode || request.entCode || request.authData && (request.authData.enterpriseCode || request.authData.entCode) },
+            header: { Authorization: 'Bearer ' + token, tenant: request.tenant },
             responseSelector: response => response && response.result });
     },
     /** Transfers immutable policy but does not activate it. */

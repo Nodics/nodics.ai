@@ -13,6 +13,28 @@
 'use strict';
 /** @module checkoutCore/src/facade/defaultCheckoutCustomerFacade @description Enforces customer tenant and ownership context for placement. @layer facade @owner checkoutCore */
 module.exports = {
+    /** Uses only original signed customer identity and consistent routed scope; never changes bearer claims or infers legacy enterprise. */
+    commandStatus: function (request) {
+        return Promise.resolve().then(() => {
+            const auth = request.authData || {}, ownerId = auth.principalId || auth.code || auth.loginId;
+            const tenant = auth.tenant || request.tenant, enterpriseCode = auth.enterpriseCode || auth.entCode;
+            if (auth.principalType !== 'customer' || !ownerId || !tenant || !enterpriseCode ||
+                [auth.tenant, request.tenant].some(value => value !== undefined && value !== tenant) ||
+                [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode,
+                    request.httpRequest?.headers?.['x-enterprise-code']].some(value => value !== undefined && value !== enterpriseCode))
+                throw new Error('Authenticated original Checkout scope is required');
+            return SERVICE.DefaultCheckoutOperationService.commandStatus({ ...request, tenant, enterpriseCode, ownerId });
+        });
+    },
+    /** Requires signed original customer scope before the bounded compensation operation. */
+    recoverCompensation: function (request) {
+        return Promise.resolve().then(() => {
+            const auth = request.authData || {};
+            if (!(auth.principalId || auth.code || auth.loginId) || !(auth.tenant || request.tenant) ||
+                !(auth.enterpriseCode || auth.entCode)) throw new Error('Authenticated original Checkout scope is required');
+            return SERVICE.DefaultCheckoutOperationService.recoverCompensation(this.applyContext(request));
+        });
+    },
     /**
      * Resolves enterprise-owned business context and derived runtime tenant.
      * @param {*} request Value defined by the owning module contract.

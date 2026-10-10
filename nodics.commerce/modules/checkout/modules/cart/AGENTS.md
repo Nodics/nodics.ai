@@ -5,6 +5,16 @@
 
 Preserve Cart ownership, tenant security, exact evidence, idempotency, audit and generation discipline. Cart depends on the existing Store context service for explicit identifier validation.
 
+Digital availability delegates to `DefaultDigitalCommerceCheckoutService.availability`
+before physical Inventory reads. Never reconstruct coupon pools from warehouse
+balances: Product owns pinned identity/classification and Promotion owns live
+units. Unavailable/failed digital evidence cannot fall back to physical stock.
+
+Entry-response validation uses the existing Inventory conflict (409) for stock-only
+rejections and Cart validation status (422) for other blocked reasons. Never map
+owner read faults to stock unavailability or calculate a blocked cart. A response
+rejection does not undo the preceding entry write; inspect before retrying.
+
 Apply [explicit store context](llm/contracts/store-defaults.md). Never infer a store from policy defaults; preserve identical context for identity and operations, existing IDs and record ownership. Do not introduce a resolver layer or duplicate API.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).

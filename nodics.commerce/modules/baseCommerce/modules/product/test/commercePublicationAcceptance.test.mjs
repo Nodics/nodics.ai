@@ -16,12 +16,12 @@ import test from 'node:test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { resolveCommercePublicationFixtures, runCommercePublicationAcceptance } from '../src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs';
+import { commerceProductPublicationFixtures, readCommercePublicationCatalogue, resolveCommercePublicationFixtures, runCommercePublicationAcceptance } from '../src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs';
 
 const domains = ['product', 'pricing', 'promotion', 'inventory', 'tax', 'media'];
 const bytes = Buffer.from('partner asset');
 const fixture = { catalogs: [{ catalogVersion: 'partnerStaged', storeCode: 'partnerRetail', locale: 'de', productCodes: ['partnerLamp'],
-  publications: Object.fromEntries(domains.map(domain => [domain, { code: domain + '-release', rootCode: domain + '-root', sourceVersion: '1.2.3', targetVersion: domain === 'product' ? 'a'.repeat(64) : '1.2.3' }])),
+  publications: Object.fromEntries(domains.map(domain => [domain, { code: domain + '-release', rootCode: domain === 'product' ? 'partnerLamp' : domain + '-root', sourceVersion: '1.2.3', targetVersion: domain === 'product' ? 'a'.repeat(64) : '1.2.3' }])),
   media: [{ mediaCode: 'partnerLampPhoto', checksum: createHash('sha256').update(bytes).digest('hex') }],
 }] };
 const configuration = { topology: { groups: { backends: ['PLATFORM', 'COMMERCE_STAGED', 'COMMERCE', 'WCMS_STAGED', 'WCMS_ONLINE'].map((role, i) => ({ role, server: 'partner' + i, host: 'localhost', port: 18000 + i })) } } };
@@ -36,30 +36,54 @@ const contract = { paths: {
   '/nodics/product/v0/products/{productCode}': { get: {} },
 } };
 
-test('module references reuse confined Media manifests without copying bytes into customer properties', t => {
+test('module references qualify shared CMS-owned media without changing ownership or copying bytes into customer properties', async t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'commerce-fixture-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   fs.mkdirSync(path.join(root, 'files'));
   fs.writeFileSync(path.join(root, 'files/photo.png'), bytes);
-  fs.writeFileSync(path.join(root, 'manifest.js'), 'module.exports = ' + JSON.stringify([
+  const assets = [
     { mediaCode: 'partner-photo', fileName: 'photo.png', ownerType: 'PRODUCT' },
     { mediaCode: 'partner-banner', fileName: 'photo.png', ownerType: 'CMS_COMPONENT' },
+  ];
+  fs.writeFileSync(path.join(root, 'manifest.js'), 'module.exports = ' + JSON.stringify(assets));
+  fs.writeFileSync(path.join(root, 'unselected.js'), 'module.exports = ' + JSON.stringify([
+    { mediaCode: 'unselected-banner', fileName: 'photo.png', ownerType: 'CMS_COMPONENT' },
   ]));
   const options = {
-    profiles: { partner: { dataPackages: [{ type: 'MEDIA_ASSET_MANIFEST', manifestModule: 'partner.shop', manifestPath: 'manifest.js', targetRuntimeRole: 'WCMS_STAGED', businessPurpose: 'PARTNER_PRODUCT_IMAGE' }] } },
-    modules: [{ name: 'partner.shop', path: root }],
+    profiles: { partner: { dataPackages: [
+      { type: 'MEDIA_ASSET_MANIFEST', manifestModule: 'partner.shop', manifestPath: 'manifest.js', targetRuntimeRole: 'WCMS_STAGED', businessPurpose: 'PARTNER_PRODUCT_IMAGE' },
+      { type: 'MEDIA_ASSET_MANIFEST', manifestModule: 'partner.other', manifestPath: 'unselected.js', targetRuntimeRole: 'WCMS_STAGED', businessPurpose: 'PARTNER_OTHER_IMAGE' },
+    ] } },
+    modules: [{ name: 'partner.shop', path: root }, { name: 'partner.other', path: root }],
   };
   const config = { catalogs: [{ ...fixture.catalogs[0], media: undefined, mediaModules: ['partner.shop'] }] };
   const resolved = resolveCommercePublicationFixtures(config, {}, options);
-  assert.deepEqual(resolved.catalogs[0].media, [{ mediaCode: 'partner-photo', checksum: createHash('sha256').update(bytes).digest('hex') }]);
+  assert.deepEqual(resolved.catalogs[0].media, assets.map(asset => ({ mediaCode: asset.mediaCode, checksum: createHash('sha256').update(bytes).digest('hex') })));
   assert.equal(config.catalogs[0].media, undefined);
+  assert.deepEqual(JSON.parse(fs.readFileSync(path.join(root, 'manifest.js'), 'utf8').slice('module.exports = '.length)), assets);
+  const listingPage = (query, card) => ({ products: [{ ...card,
+    media: { primary: { mediaCode: 'partner-banner', deliveryUrl: '/nodics/media/v0/content/partner-banner' } },
+  }], discovery: { source: 'SEARCH_INDEX' } });
+  const h = harness({ acceptance: config, listingPage });
+  assert.equal((await runCommercePublicationAcceptance({ ...h.options, ...options })).state, 'PASSED');
+  assert.deepEqual(h.calls.filter(call => call.path.includes('/media/v0/content/')).map(call => call.path), [
+    '/nodics/media/v0/content/partner-photo', '/nodics/media/v0/content/partner-banner',
+  ]);
+  assert(!h.calls.some(call => (call.options.method || 'GET') !== 'GET'));
+  const corrupt = harness({ acceptance: config, listingPage, corruptMediaCode: 'partner-banner' });
+  await assert.rejects(runCommercePublicationAcceptance({ ...corrupt.options, ...options }), /checksum mismatch: partner-banner/);
+  const foreign = harness({ acceptance: config, listingPage: (query, card) => ({ products: [{ ...card,
+    media: { primary: { mediaCode: 'unselected-banner', deliveryUrl: '/nodics/media/v0/content/unselected-banner' } },
+  }], discovery: { source: 'SEARCH_INDEX' } }) });
+  await assert.rejects(runCommercePublicationAcceptance({ ...foreign.options, ...options }), /outside the governed fixture manifest/);
+  assert(!foreign.calls.some(call => call.path.includes('/media/v0/content/')));
   options.profiles.partner.dataPackages[0].manifestPath = '../manifest.js';
   assert.throws(() => resolveCommercePublicationFixtures(config, {}, options), /module-relative/);
 });
 test('inline media and module references cannot create two fixture authorities', () => {
   assert.throws(() => resolveCommercePublicationFixtures({ catalogs: [{ ...fixture.catalogs[0], mediaModules: ['partner.shop'] }] }, {}), /not both/);
 });
-function harness({ denied, pending, wrongVersion, wrongTarget, wrongReceipt, leak, mediaCorrupt, missingProduct, mediaUrl } = {}) {
+function harness({ denied, pending, wrongVersion, wrongTarget, wrongReceipt, mutateProductReceipt, leak, mediaCorrupt, corruptMediaCode, missingProduct, mediaUrl, acceptance = fixture, listingPage } = {}) {
   const calls = [];
   const reply = (body, status = 200) => new Response(JSON.stringify(body), { status });
   const fetch = async (url, options) => {
@@ -67,25 +91,28 @@ function harness({ denied, pending, wrongVersion, wrongTarget, wrongReceipt, lea
     calls.push({ path, options, url: String(url) });
     if (denied) return reply({ message: 'Denied' }, 403);
     if (path.includes('/publications/')) {
-      const domain = path.split('/').at(-1).replace('-release', '');
-      const expected = fixture.catalogs[0].publications[domain];
+      const [domain, expected] = Object.entries(acceptance.catalogs[0].publications)
+        .flatMap(([domain, value]) => (Array.isArray(value) ? value : [value]).map(receipt => [domain, receipt]))
+        .find(([, receipt]) => receipt.code === decodeURIComponent(path.split('/').at(-1)));
       const proof = { committed: true, operationKey: wrongReceipt ? 'other-operation' : 'activation-1', publicationCode: expected.code,
         sourceVersion: expected.sourceVersion, targetVersion: expected.targetVersion, previousOnlineVersion: null };
-      return reply({ ...expected, domain, targetVersion: wrongTarget ? 'wrong' : expected.targetVersion,
-        activationOperation: { key: 'activation-1' }, previousOnlineVersion: null,
-        sourceVersion: wrongVersion ? 'old' : '1.2.3', state: pending ? 'PENDING_APPROVAL' : 'ONLINE',
-        auditTrail: [{ toState: 'APPROVED' }, { toState: 'ONLINE', details: { version: expected.targetVersion, receipt: proof } }] });
+      const publication = { ...expected, domain, targetVersion: wrongTarget ? 'wrong' : expected.targetVersion,
+        activationOperation: { key: 'activation-1', previousOnlineVersion: null }, previousOnlineVersion: null,
+        sourceVersion: wrongVersion ? 'old' : expected.sourceVersion, state: pending ? 'PENDING_APPROVAL' : 'ONLINE',
+        auditTrail: [{ toState: 'APPROVED' }, { toState: 'ONLINE', details: { version: expected.targetVersion, previousOnlineVersion: null, receipt: proof } }] };
+      if (domain === 'product' && mutateProductReceipt) mutateProductReceipt(publication);
+      return reply(publication);
     }
     if (path.endsWith('/contract/openapi')) return reply(contract);
     if (path.endsWith('/publication/search')) return reply({ published: 1, projectionCount: 1, projectionSnapshots: [{ productCode: 'partnerLamp' }] });
-    if (path.includes('/media/v0/content/')) return new Response(mediaCorrupt ? 'bad' : bytes);
-    const product = { productCode: missingProduct ? 'unrelated' : 'partnerLamp', name: 'Lampe', ...(leak ? { sku: 'internal' } : {}),
+    if (path.includes('/media/v0/content/')) return new Response(mediaCorrupt || path === '/nodics/media/v0/content/' + corruptMediaCode ? 'bad' : bytes);
+    const product = { productCode: missingProduct ? 'unrelated' : path.endsWith('/products/discovery') ? 'partnerLamp' : decodeURIComponent(path.split('/').at(-1)), name: 'Lampe', ...(leak ? { sku: 'internal' } : {}),
       media: { primary: { mediaCode: 'partnerLampPhoto', deliveryUrl: mediaUrl || '/nodics/media/v0/content/partnerLampPhoto' } } };
-    if (path.endsWith('/products/discovery')) return reply({ products: [product], discovery: { source: 'SEARCH_INDEX' } });
+    if (path.endsWith('/products/discovery')) return reply(listingPage ? listingPage(new URL(url).searchParams, product) : { products: [product], discovery: { source: 'SEARCH_INDEX' } });
     if (path.includes('/products/')) return reply({ product });
     throw new Error('Unexpected request ' + path);
   };
-  return { calls, options: { execute: true, approvePublications: true, acceptance: fixture, configuration,
+  return { calls, options: { execute: true, approvePublications: true, acceptance, configuration,
     environment: { AXIS_AUTH_TOKEN: 'human', NODICS_ACCEPTANCE_ORIGIN: 'http://partner.test' }, fetch } };
 }
 test('independent governed partner fixtures cover projections, Online cards/PDP and all media bytes without Online writes', async () => {
@@ -124,6 +151,38 @@ test('qualified Product receipt operation mismatch fails without writes', async 
   await assert.rejects(runCommercePublicationAcceptance(h.options), /qualified activation receipt/);
   assert(!h.calls.some(call => call.options.method === 'POST'));
 });
+test('first Product activation permits omitted optional storage predecessor with explicit null owner evidence', async () => {
+  const h = harness({ mutateProductReceipt: publication => { delete publication.previousOnlineVersion; } });
+  assert.equal((await runCommercePublicationAcceptance(h.options)).state, 'PASSED');
+  assert(!h.calls.some(call => call.options.method === 'POST'));
+});
+test('successor Product activation requires the same explicit predecessor throughout owner evidence', async () => {
+  const h = harness({ mutateProductReceipt: publication => {
+    publication.previousOnlineVersion = 'prior-digest';
+    publication.activationOperation.previousOnlineVersion = 'prior-digest';
+    publication.auditTrail[1].details.previousOnlineVersion = 'prior-digest';
+    publication.auditTrail[1].details.receipt.previousOnlineVersion = 'prior-digest';
+  } });
+  assert.equal((await runCommercePublicationAcceptance(h.options)).state, 'PASSED');
+});
+for (const [label, mutateProductReceipt] of [
+  ['missing target predecessor', publication => { delete publication.auditTrail[1].details.receipt.previousOnlineVersion; }],
+  ['missing operation predecessor', publication => { delete publication.activationOperation.previousOnlineVersion; }],
+  ['missing audit predecessor', publication => { delete publication.auditTrail[1].details.previousOnlineVersion; }],
+  ['conflicting operation predecessor', publication => { publication.activationOperation.previousOnlineVersion = 'other'; }],
+  ['conflicting audit predecessor', publication => { publication.auditTrail[1].details.previousOnlineVersion = 'other'; }],
+  ['conflicting storage predecessor', publication => { publication.previousOnlineVersion = 'other'; }],
+  ['omitted successor storage predecessor', publication => {
+    delete publication.previousOnlineVersion;
+    publication.activationOperation.previousOnlineVersion = 'prior-digest';
+    publication.auditTrail[1].details.previousOnlineVersion = 'prior-digest';
+    publication.auditTrail[1].details.receipt.previousOnlineVersion = 'prior-digest';
+  }],
+]) test(label + ' fails before delivery and without writes', async () => {
+  const h = harness({ mutateProductReceipt });
+  await assert.rejects(runCommercePublicationAcceptance(h.options), /qualified activation receipt/);
+  assert(!h.calls.some(call => call.options.method === 'POST' || call.path.includes('/products/discovery')));
+});
 test('legacy projection qualification is explicitly separate and Staged-only', async () => {
   const h = harness();
   const result = await runCommercePublicationAcceptance({ ...h.options, legacyProjectionQualification: true });
@@ -137,6 +196,113 @@ test('unsafe Product projection fails acceptance', async () => {
 });
 test('missing expected product fails acceptance', async () => {
   await assert.rejects(runCommercePublicationAcceptance(harness({ missingProduct: true }).options), /Expected Online product is missing/);
+});
+function completeCatalogueFixture(count = 61) {
+  const acceptance = structuredClone(fixture), catalog = acceptance.catalogs[0];
+  catalog.productCodes = Array.from({ length: count }, (_, index) => 'partnerItem' + index);
+  catalog.publications.product = catalog.productCodes.map((rootCode, index) => ({
+    code: 'partner-publication-' + index, rootCode, sourceVersion: String(index), targetVersion: createHash('sha256').update(rootCode).digest('hex'),
+  }));
+  return acceptance;
+}
+function cataloguePage(codes, query, card) {
+  const page = Number(query.get('page')), pageSize = Number(query.get('pageSize'));
+  return { page, pageSize, total: codes.length, discovery: { source: 'SEARCH_INDEX' },
+    pagination: { page, pageSize, total: codes.length, hasNextPage: page * pageSize < codes.length },
+    products: codes.slice((page - 1) * pageSize, page * pageSize).map(productCode => ({ ...card, productCode })),
+  };
+}
+test('complete independent catalogue checks all 61 receipts and PDPs across three bounded search pages without writes', async () => {
+  const acceptance = completeCatalogueFixture();
+  const h = harness({ acceptance, listingPage: (query, card) => cataloguePage(acceptance.catalogs[0].productCodes, query, card) });
+  const result = await runCommercePublicationAcceptance(h.options);
+  assert.equal(result.state, 'PASSED');
+  assert.equal(result.summaries[0].expectedProductCount, 61);
+  assert.equal(result.summaries[0].discoveredProductCount, 61);
+  assert.equal(result.summaries[0].qualifiedProductReceiptCount, 61);
+  assert.equal(h.calls.filter(call => call.path.includes('/publications/')).length, 66);
+  assert.equal(h.calls.filter(call => call.path.endsWith('/products/discovery')).length, 3);
+  assert.equal(h.calls.filter(call => /\/products\/partnerItem\d+$/.test(call.path)).length, 61);
+  assert(!h.calls.some(call => (call.options.method || 'GET') !== 'GET'));
+});
+test('representative Product receipt cannot qualify a multi-root catalogue before any network call', async () => {
+  const acceptance = completeCatalogueFixture(2);
+  acceptance.catalogs[0].publications.product = acceptance.catalogs[0].publications.product[0];
+  const h = harness({ acceptance });
+  await assert.rejects(runCommercePublicationAcceptance(h.options), /receipt coverage is missing: partnerItem1/);
+  assert.equal(h.calls.length, 0);
+});
+for (const [label, mutate] of [
+  ['duplicate root', catalog => { catalog.publications.product[1].rootCode = catalog.publications.product[0].rootCode; }],
+  ['duplicate publication code', catalog => { catalog.publications.product[1].code = catalog.publications.product[0].code; }],
+  ['foreign root', catalog => { catalog.publications.product[1].rootCode = 'foreignItem'; }],
+  ['incomplete receipt', catalog => { delete catalog.publications.product[1].targetVersion; }],
+]) test(label + ' Product evidence rejects before requests', async () => {
+  const acceptance = completeCatalogueFixture(2);
+  mutate(acceptance.catalogs[0]);
+  const h = harness({ acceptance });
+  await assert.rejects(runCommercePublicationAcceptance(h.options), /duplicate|outside|prerequisite missing/);
+  assert.equal(h.calls.length, 0);
+});
+test('last Product root with pending approval blocks discovery despite all earlier Online receipts', async () => {
+  const acceptance = completeCatalogueFixture(3);
+  const h = harness({ acceptance, mutateProductReceipt: receipt => {
+    if (receipt.rootCode === 'partnerItem2') receipt.state = 'PENDING_APPROVAL';
+  } });
+  await assert.rejects(runCommercePublicationAcceptance(h.options), /prerequisite not satisfied for product/);
+  assert.equal(h.calls.filter(call => call.path.includes('/publications/')).length, 3);
+  assert(!h.calls.some(call => call.path.includes('/products/discovery')));
+});
+test('every missing expected root is detected independently of a valid receipt and a successful sibling PDP', async () => {
+  const acceptance = completeCatalogueFixture(61);
+  const present = acceptance.catalogs[0].productCodes.filter(code => !['partnerItem25', 'partnerItem60'].includes(code));
+  const h = harness({ acceptance, listingPage: (query, card) => cataloguePage(present, query, card) });
+  await assert.rejects(runCommercePublicationAcceptance(h.options), /Expected Online product is missing: partnerItem25, partnerItem60/);
+  assert.equal(h.calls.filter(call => call.path.endsWith('/products/discovery')).length, 3);
+  assert(!h.calls.some(call => /\/products\/partnerItem\d+$/.test(call.path)));
+});
+test('provider-paged discovery without totals reads a terminal page instead of truncating at the first full page', async () => {
+  const acceptance = completeCatalogueFixture(48);
+  const h = harness({ acceptance, listingPage: (query, card) => {
+    const page = cataloguePage(acceptance.catalogs[0].productCodes, query, card);
+    delete page.total;
+    delete page.pagination;
+    return page;
+  } });
+  assert.equal((await runCommercePublicationAcceptance(h.options)).state, 'PASSED');
+  assert.equal(h.calls.filter(call => call.path.endsWith('/products/discovery')).length, 3);
+});
+for (const [label, mutate, match] of [
+  ['repeated page', (body, page) => { if (page === 2) body.products[0].productCode = 'partnerItem0'; }, /repeated/],
+  ['changed total', (body, page) => { if (page === 2) { body.total--; body.pagination.total--; } }, /total is invalid, changed/],
+  ['contradictory total', body => { body.pagination.total--; }, /totals disagree/],
+  ['early terminal page', body => { body.pagination.hasNextPage = false; }, /ended before/],
+  ['short nonterminal page', body => { body.products.pop(); }, /ended before/],
+  ['wrong page', body => { body.page = 9; }, /unexpected page/],
+  ['oversized page', body => { body.products.push({ ...body.products[0], productCode: 'extra' }); }, /exceeded its page size/],
+  ['lost search evidence', (body, page) => { if (page === 2) body.discovery.source = 'DATABASE'; }, /search-index backed/],
+]) test(label + ' discovery fails closed', async () => {
+  const acceptance = completeCatalogueFixture(61);
+  const h = harness({ acceptance, listingPage: (query, card) => {
+    const body = cataloguePage(acceptance.catalogs[0].productCodes, query, card);
+    mutate(body, Number(query.get('page')));
+    return body;
+  } });
+  await assert.rejects(runCommercePublicationAcceptance(h.options), match);
+  assert(!h.calls.some(call => (call.options.method || 'GET') !== 'GET'));
+});
+test('bounded pagination rejects a nonterminating provider, invalid limits and oversized totals', async () => {
+  const catalog = { productCodes: ['item'], storeCode: 'partner', locale: 'de', discoveryPagination: { pageSize: 1, maximumProducts: 2 } };
+  let calls = 0;
+  await assert.rejects(readCommercePublicationCatalogue(catalog, async () => ({
+    products: [{ productCode: 'item-' + calls++, name: 'Item' }], discovery: { source: 'SEARCH_INDEX' },
+  }), {}), /exceeded its configured Product bound/);
+  assert.equal(calls, 3);
+  await assert.rejects(readCommercePublicationCatalogue({ ...catalog, discoveryPagination: { pageSize: 0 } }, async () => { throw new Error('No request'); }, {}), /pagination limits are invalid/);
+  await assert.rejects(readCommercePublicationCatalogue(catalog, async () => ({ products: [], total: 3, discovery: { source: 'SEARCH_INDEX' } }), {}), /exceeds its bound/);
+});
+test('single expected root retains exact object fixture compatibility', () => {
+  assert.deepEqual(commerceProductPublicationFixtures(fixture.catalogs[0]), [fixture.catalogs[0].publications.product]);
 });
 test('bad Online bytes fail media checksum evidence', async () => {
   await assert.rejects(runCommercePublicationAcceptance(harness({ mediaCorrupt: true }).options), /checksum mismatch/);

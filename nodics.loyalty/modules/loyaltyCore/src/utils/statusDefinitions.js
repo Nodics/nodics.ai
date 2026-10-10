@@ -47,5 +47,12 @@ module.exports = {
     ERR_LOYALTY_REVERSAL_TYPE: { code: '400', message: 'Reversal type' },
     ERR_LOYALTY_SERVICE_MISSING: { code: '503', message: 'Service missing' },
     ERR_LOYALTY_SERVICE_REQUIRED: { code: '400', message: 'Service required' },
-    ERR_LOYALTY_WALLET_UNAVAILABLE: { code: '503', message: 'Wallet unavailable' }
+    ERR_LOYALTY_WALLET_UNAVAILABLE: { code: '503', message: 'Wallet unavailable' },
+    ERR_LOYALTY_TRANSACTION_UNAVAILABLE: { code: '503', message: 'Qualified Loyalty transactions are unavailable' },
+    ERR_LOYALTY_TRANSACTION_SCOPE: { code: '400', message: 'Exact Loyalty transaction scope is required' },
+    ERR_LOYALTY_TRANSACTION_CONTEXT: { code: '409', message: 'Loyalty transaction context cannot be joined or replaced' },
+    ERR_LOYALTY_TRANSACTION_OPERATION: { code: '400', message: 'Loyalty transaction operation is required' },
+    ERR_LOYALTY_SAMPLE_CREDIT_INVALID: { code: '400', message: 'Invalid reviewed sample credit instruction' },
+    ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE: { code: '503', message: 'Reviewed Local sample credit prerequisites are unavailable' },
+    ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT: { code: '409', message: 'Sample credit original intent or balance revision conflicts' }
 };

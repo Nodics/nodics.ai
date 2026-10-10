@@ -41,6 +41,7 @@ module.exports = {
     /** Resolves one generated record without empty-response fallbacks. */
     read: async function (name, code, request) {
         const response = await SERVICE[name].get({ tenant: request.tenant, authData: request.authData,
+            options: { recursive: false, skipItemCache: true },
             query: { code: code, tenant: request.tenant }, searchOptions: { limit: 2, pageSize: 2 } });
         if (!response || !Array.isArray(response.result) || response.result.length > 1) throw new Error('Invalid Product target response');
         const record = response.result[0];

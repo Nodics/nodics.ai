@@ -106,6 +106,37 @@ test('Cart unavailable inventory maps to a typed business rejection before prici
     } finally { Object.assign(global, previous); }
 });
 const validationService = require('../src/service/defaultCartValidationService');
+test('Cart entry response maps validation rejections without calculation or masking owner faults', async () => {
+    const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+    const NodicsError = require('../../../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError');
+    try {
+        global.CONFIG = { get: () => ({ NodicsError: 'ERR_SYS_00000' }) };
+        global.SERVICE = { DefaultStatusService: { get: code => require('../src/utils/statusDefinitions')[code] } };
+        global.CLASSES = { NodicsError };
+        const cart = { code: 'partner-cart', revision: 4 };
+        let validation;
+        const effective = { ...service, cartSnapshot: async () => cart,
+            validateDirect: async request => {
+                assert.equal(request.cartCode, cart.code);
+                assert.equal(request.payload.expectedRevision, 4);
+                return validation;
+            }, calculateDirect: () => assert.fail('Blocked validation must not calculate') };
+        for (const reasons of [[{ code: 'STOCK_UNAVAILABLE' }], [{ code: 'INVALID_QUANTITY' }],
+            [{ code: 'STOCK_UNAVAILABLE' }, { code: 'MISSING_PRODUCT_OR_SKU' }], []]) {
+            validation = { status: 'BLOCKED', blockingReasons: reasons };
+            const stockOnly = reasons.length && reasons.every(reason => reason.code === 'STOCK_UNAVAILABLE');
+            await assert.rejects(effective.responseWithValidationAndCalculation({ payload: {} }), error =>
+                error.code === (stockOnly ? 'ERR_CART_INVENTORY_UNAVAILABLE' : 'ERR_CART_VALIDATION_FAILED') &&
+                error.responseCode === (stockOnly ? '409' : '422') && error.validation === validation);
+        }
+        const ownerError = new Error('Owner evidence unavailable');
+        effective.validateDirect = async () => { throw ownerError; };
+        await assert.rejects(effective.responseWithValidationAndCalculation({ payload: {} }), error => error === ownerError);
+        effective.validateDirect = async () => ({ status: 'VALID', blockingReasons: [] });
+        effective.calculateDirect = async () => ({ code: 'partner-calculation' });
+        assert.equal((await effective.responseWithValidationAndCalculation({ payload: {} })).calculation.code, 'partner-calculation');
+    } finally { Object.assign(global, previous); }
+});
 const calculationEngine = require('../src/service/defaultCartCalculationEngineService');
 const calculationPipelineService = require('../src/service/pipelines/defaultCartCalculationPipelineService');
 const calculationPorts = require('../src/service/defaultCommerceCalculationPortsService');
@@ -214,6 +245,25 @@ function installGlobals() {
 }
 
 test.beforeEach(installGlobals);
+
+test('Customer entry mutations preserve typed stock/quantity errors and require inspecting persisted entries', async () => {
+    const get = global.CONFIG.get;
+    global.CONFIG.get = key => key === 'defaultErrorCodes' ? { NodicsError: 'ERR_SYS_00000' } : get(key);
+    global.CLASSES = { NodicsError: require('../../../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError') };
+    global.SERVICE.DefaultStatusService = { get: code => require('../src/utils/statusDefinitions')[code] };
+    global.SERVICE.DefaultInventoryBalanceService.get = async () => ({ result: [] });
+    global.SERVICE.DefaultCartCalculationEngineService = { calculate: () => assert.fail('Blocked entry must not calculate') };
+    const authData = { tenant: 'partner-tenant', principalId: 'customer-1' };
+    await controller.create({ authData, httpRequest: { body: { cartCode: 'rejected-cart', storeCode: 'partner-store' } } });
+    await assert.rejects(controller.addEntry({ authData, httpRequest: {
+        params: { cartCode: 'rejected-cart' }, body: { productCode: 'partner-product', sku: 'partner-sku', quantity: '1' }
+    } }), error => error.code === 'ERR_CART_INVENTORY_UNAVAILABLE' && error.responseCode === '409');
+    const read = await controller.read({ authData, httpRequest: { params: { cartCode: 'rejected-cart' } } });
+    assert.equal(read.data.entries.length, 1, 'A rejected response must not be advertised as transaction rollback');
+    await assert.rejects(controller.updateEntry({ authData, httpRequest: {
+        params: { cartCode: 'rejected-cart', entryCode: read.data.entries[0].code }, body: { quantity: '-1' }
+    } }), error => error.code === 'ERR_CART_VALIDATION_FAILED' && error.responseCode === '422');
+});
 
 test('Cart customer routes expose create read entry mutation and calculation through secured customer permission', () => {
     assert.equal(routers.cart.customer.create.key, '/carts');

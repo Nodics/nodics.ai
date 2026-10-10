@@ -102,9 +102,9 @@ body strings. See the [resource contract](../../../nodics.communication/modules/
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.platform/security-identity-access.md`
-- `nodics.docs/docs/pages/applications/axis-business-customization.md`
-- `nodics.docs/docs/pages/nodics.foundation/routing-api-governance.md`
+- `nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js`
+- `nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js`
+- `nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js`
 
 ## Verification
 

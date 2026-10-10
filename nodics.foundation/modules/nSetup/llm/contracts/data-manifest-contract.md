@@ -70,7 +70,7 @@ Nodics tooling:
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.0",
+      "version": "0.0.1",
       "description": "Bootstrap records",
       "files": {
         "init-v001/headers/exampleHeader.js": "sha256",
@@ -93,6 +93,15 @@ Each independently releasable section owns its semantic version, description,
 file map, checksum evidence, and kind-specific metadata. Section file paths
 must be relative to the containing `data/` directory, remain inside it, and
 must not be absolute, traverse with `..`, or resolve through symbolic links.
+
+The explicitly rebased, pre-customer source baseline uses `*-v001` folders and
+semantic version `0.0.1` for all executable `DATA_RELEASE` and `CONTENT_PACK`
+sections. `SOURCE_CONTRIBUTION` versions, package versions and business record
+revisions are separate contracts. This one-time maintainer-approved consolidation
+does not permit rewriting installed receipts or future frozen releases. Existing
+local installations need an approved owner-governed fresh reset and re-import;
+never enable downgrade, bypass checksums or replay Init to disguise the rebase.
+Earlier runtime qualification remains evidence only for its recorded identities.
 
 Every runtime-executable section must additionally declare its data lifecycle
 and permitted placement through governed contract fields:

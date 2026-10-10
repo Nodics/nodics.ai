@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "nTooling",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "nTooling",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 10,
+      "components": 10,
+      "routes": 10,
+      "releaseChecksum": "4a08f3c5b9c77ab1c9278ad170499e78e576050cabbb29b9baa7f081fa40ce4f",
+      "generatedHashes": {
+        "docs-v001/records/documentation/nToolingDocumentationNodeData.js": "53759a29b6405ee28afd5430bc3183e53f92de41dc0057f43cb2ecada57f8468",
+        "docs-v001/records/documentation/nToolingDocumentationPageMetadataData.js": "7b100466ca27fa28759f7223a69b72363440e10b6feed39ae266c027b351989a",
+        "docs-v001/records/documentation/nToolingDocumentationPublicationStateData.js": "d42f010383db90923fbce002a6f3b21dcc4115fb83a39e71fbead87d220ab38f",
+        "docs-v001/records/documentation/nToolingDocumentationSearchMetadataData.js": "5ba0ad2c4cd98c666509f031fad702da84de5e78061544b49e01ef803239b59e",
+        "docs-v001/records/documentation/nToolingDocumentationComponentData.js": "8d062258d22f6b92de4db5ae1f3a4cbd508d45af2537cd1003f1a0bb8283d1f7",
+        "docs-v001/records/documentation/nToolingDocumentationPageData.js": "7081a23e8cf0d2f8f2f7dd98b77f5d5cc8928ebda030cf7798d0c1d3700c8a56",
+        "docs-v001/records/documentation/nToolingDocumentationRouteData.js": "0fc0d3ec27bfa41de02e0130176210e4200ae47a1e6cf8ded413c9132a2a5406",
+        "docs-v001/headers/100_nToolingDocumentationContentPackHeader.js": "13efda5c2a7ba01a47b1c042046d15ad6d174bef26c2c09c9b5e5b3ee55da391"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

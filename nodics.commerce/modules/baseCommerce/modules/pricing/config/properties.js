@@ -12,6 +12,7 @@
 /** @module pricing/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner pricing */
 module.exports = {
   publish: {
+    setup: { permissions: { pricing: 'publish.lifecycle.create' } },
     providers: {
       domainAdapters: { pricing: null },
       versionProviders: { pricing: null },
@@ -61,7 +62,10 @@ module.exports = {
 
   pricing: {
     enabled: true,
-    merchantEvidence: { qualified: false },
+    merchantEvidence: {
+      qualified: false,
+      businessCallers: { enabled: false, runtimeRole: "COMMERCE", callers: [] },
+    },
     customerSummary: {
       enabled: true,
       defaultCurrency: "USD",

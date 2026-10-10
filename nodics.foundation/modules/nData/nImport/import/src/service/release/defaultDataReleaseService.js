@@ -16,6 +16,7 @@ const { AsyncLocalStorage } = require("node:async_hooks");
 const startupReleaseExecution = new AsyncLocalStorage();
 const placementRequests = new WeakMap();
 const placementRuns = new WeakMap();
+const zeroWorkRecoveryPlans = new WeakMap();
 
 /**
  * @module import/service/release/DefaultDataReleaseService
@@ -474,6 +475,144 @@ module.exports = {
     return results;
   },
 
+  /**
+   * Reads detached JSON for a fixed owner installer from an exact current DATA_RELEASE.
+   * @param {Object} contribution Qualified release metadata, never a filesystem path.
+   * @param {string} installerCode Caller-owned installer identity.
+   * @param {string} payloadName Caller-owned JSON basename.
+   * @returns {Promise<*>} Fresh JSON after destination, containment and full checksum checks.
+   */
+  readContributionPayload: async function (contribution, installerCode, payloadName) {
+    const fail = () => this.error(
+      "ERR_IMP_00003", "Contribution payload is invalid, unavailable or changed",
+    );
+    try {
+      if (!contribution || typeof contribution !== "object" ||
+          !/^[A-Z][A-Z0-9_]{1,63}$/.test(installerCode || "") ||
+          typeof payloadName !== "string" ||
+          !/^[A-Za-z0-9][A-Za-z0-9._-]{0,122}\.json$/.test(payloadName) ||
+          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(contribution.moduleName || "") ||
+          !/^(init|core|sample)(-v\d{3})?$/.test(contribution.sourceRoot || "") ||
+          contribution.installer !== installerCode ||
+          !(this.configuration().installers || {})[installerCode]) throw fail();
+      this.validateDataType(contribution.dataType);
+      this.validateTypePolicy(contribution.dataType);
+      const selector = this.discoveryOwners().find((item) => item.moduleName === contribution.moduleName);
+      if (!selector || (!selector.active && !selector.sections.includes(contribution.sectionCode))) throw fail();
+      const owner = NODICS.getRawModule(contribution.moduleName);
+      if (!owner || owner.name !== contribution.moduleName || !owner.path) throw fail();
+      const identity = this.contributionSourceSnapshot(owner, contribution.sourceRoot, []);
+      const matches = this.discoverReleases(contribution.dataType).filter(
+        (release) => release.releaseCode === contribution.releaseCode,
+      );
+      if (matches.length !== 1) throw fail();
+      const current = matches[0];
+      if (current.invalidManifest || !current.installer ||
+          ["releaseCode", "moduleName", "sectionCode", "dataType", "version", "checksum",
+            "installer", "sourceRoot", "destinationRole", "lifecycle", "selectionPolicy", "owningDomain"].some(
+            (key) => typeof contribution[key] !== "string" || contribution[key] !== current[key],
+          ) || !Array.isArray(contribution.environmentScope) ||
+          JSON.stringify(contribution.environmentScope) !== JSON.stringify(current.environmentScope)) throw fail();
+      this.validateDestination(current);
+      const manifest = this.readAggregateManifest(owner, path.join(owner.path, "data", "manifest.json"));
+      const section = manifest && manifest.sections[current.sectionCode];
+      if (!section || section.kind !== "DATA_RELEASE" || section.installer !== installerCode) throw fail();
+      this.validateLifecycleMetadata(section, current.moduleName, current.dataType, true);
+      const names = current.declaredFiles;
+      if (!Array.isArray(names) || names.length === 0 || new Set(names).size !== names.length) throw fail();
+      const payloads = names.filter((name) => path.posix.basename(name) === payloadName);
+      if (payloads.length !== 1) throw fail();
+      const payload = payloads[0];
+      const declared = Object.keys(section.files || {}).map((name) =>
+        name.startsWith(current.sourceRoot + "/") ? name : current.sourceRoot + "/" + name,
+      );
+      if (!declared.includes(payload) || new Set(declared).size !== declared.length ||
+          declared.some((name) => name.includes("\\") ||
+            name.split("/").some((part) => !part || part === "." || part === "..") ||
+            !names.includes(name))) throw fail();
+      const before = this.contributionSourceSnapshot(owner, current.sourceRoot, names);
+      const after = this.contributionSourceSnapshot(owner, current.sourceRoot, names);
+      if (!identity.manifest.equals(before.manifest) || !before.manifest.equals(after.manifest) ||
+          before.files.size !== after.files.size ||
+          [...before.files].some(([name, bytes]) => !after.files.get(name)?.equals(bytes))) throw fail();
+      const hashes = names.slice().sort().map((name) => {
+        if (typeof name !== "string" || name.includes("\\") ||
+            name.split("/").some((part) => !part || part === "." || part === "..") ||
+            !name.startsWith(current.sourceRoot + "/") || !after.files.has(name)) throw fail();
+        return name + ":" + crypto.createHash("sha256").update(after.files.get(name)).digest("hex");
+      });
+      if (crypto.createHash("sha256").update(hashes.join("|")).digest("hex") !== current.checksum) throw fail();
+      const bytes = after.files.get(payload);
+      const limit = this.configuration().maximumContributionPayloadBytes ?? 1024 * 1024;
+      if (bytes.length > limit) throw fail();
+      return JSON.parse(bytes.toString("utf8"));
+    } catch (error) {
+      // Filesystem and parser exceptions may contain paths or payload fragments.
+      throw fail();
+    }
+  },
+
+  /** Captures only selected declared bytes and their identity manifest without following symlinks. */
+  contributionSourceSnapshot: function (owner, sourceRoot, declaredFiles) {
+    const fail = () => this.error("ERR_IMP_00003", "Contribution source is invalid or exceeds its bounds");
+    const policy = this.configuration();
+    const maximumBytes = policy.maximumContributionBytes ?? 8 * 1024 * 1024;
+    const maximumPayload = policy.maximumContributionPayloadBytes ?? 1024 * 1024;
+    const maximumFiles = policy.maximumFilesPerRelease || 1024;
+    if (![maximumBytes, maximumPayload, maximumFiles].every(
+      (value) => Number.isSafeInteger(value) && value > 0,
+    ) || !Array.isArray(declaredFiles) || declaredFiles.length > maximumFiles ||
+        new Set(declaredFiles).size !== declaredFiles.length) throw fail();
+    const ownerRoot = fs.realpathSync(owner.path);
+    const dataRoot = path.join(ownerRoot, "data");
+    const folder = path.join(dataRoot, sourceRoot);
+    let totalBytes = 0;
+    const checked = (file, directory) => {
+      const stat = fs.lstatSync(file);
+      if (stat.isSymbolicLink() || fs.realpathSync(file) !== file ||
+          (directory ? !stat.isDirectory() : !stat.isFile())) throw fail();
+      return stat;
+    };
+    checked(dataRoot, true);
+    checked(folder, true);
+    const read = (file) => {
+      const stat = checked(file, false);
+      if (stat.size > maximumPayload || stat.size > maximumBytes - totalBytes) throw fail();
+      const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+      try {
+        const opened = fs.fstatSync(fd);
+        if (!opened.isFile() || opened.dev !== stat.dev || opened.ino !== stat.ino || opened.size !== stat.size) throw fail();
+        const buffer = Buffer.alloc(stat.size + 1);
+        let length = 0, count;
+        while ((count = fs.readSync(fd, buffer, length, buffer.length - length, null)) > 0) {
+          length += count;
+          if (length > stat.size) throw fail();
+        }
+        const final = checked(file, false);
+        if (length !== stat.size || final.dev !== stat.dev || final.ino !== stat.ino ||
+            final.size !== stat.size || final.mtimeMs !== stat.mtimeMs || final.ctimeMs !== stat.ctimeMs) throw fail();
+        totalBytes += length;
+        return buffer.subarray(0, length);
+      } finally {
+        fs.closeSync(fd);
+      }
+    };
+    const manifest = read(path.join(dataRoot, "manifest.json"));
+    const files = new Map();
+    for (const name of declaredFiles) {
+      if (typeof name !== "string" || name.includes("\\") || !name.startsWith(sourceRoot + "/")) throw fail();
+      const segments = name.split("/");
+      if (segments.length > 32 || segments.some((part) => !part || part === "." || part === "..")) throw fail();
+      let directory = dataRoot;
+      for (const segment of segments.slice(0, -1)) {
+        directory = path.join(directory, segment);
+        checked(directory, true);
+      }
+      files.set(name, read(path.join(dataRoot, name)));
+    }
+    return { manifest, files };
+  },
+
   /** Builds a release-level dry-run summary without claiming row-level import effects. */
   buildDryRunSummary: function (plan, operationReleases, executablePlan) {
     const executableCodes = new Set(
@@ -694,10 +833,13 @@ module.exports = {
         "A selected data release is still running; establish completion before retry",
       );
     }
+    const recoveries = request.releaseRequest?.forceCurrent === true
+      ? await this.qualifyZeroWorkRecoveries(plan, operationReleases) : new Map();
     plan = this.executablePlan(
       plan,
       operationReleases,
       request.releaseRequest && request.releaseRequest.forceCurrent === true,
+      new Set(recoveries.keys()),
     );
     if (plan.releases.length === 0)
       throw this.error(
@@ -720,6 +862,7 @@ module.exports = {
       forceCurrent:
         request.releaseRequest && request.releaseRequest.forceCurrent === true,
     });
+    zeroWorkRecoveryPlans.set(plan, recoveries);
     try {
       for (let release of plan.releases) {
         await this.recordInstallation(plan, release, undefined, "RUNNING");
@@ -733,6 +876,9 @@ module.exports = {
           false,
         );
         let result = await this.invokeImport(importRequest, plan.dataType);
+        if (importRequest.importRun?.status === "NO_DATA" ||
+            importRequest.importRun?.summary?.recordsSucceeded === 0)
+          throw this.error("ERR_IMP_00003", "A zero-work import cannot qualify a data release installation");
         await this.recordInstallation(
           plan,
           release,
@@ -1191,7 +1337,7 @@ module.exports = {
   },
 
   /** Keeps execution scoped to releases that can change state. */
-  executablePlan: function (plan, operationReleases, forceCurrent) {
+  executablePlan: function (plan, operationReleases, forceCurrent, zeroWorkCodes = new Set()) {
     let executableReleases = new Set(
       (operationReleases || [])
         .filter(
@@ -1201,7 +1347,7 @@ module.exports = {
             ) ||
             (forceCurrent === true &&
               release.status === "CURRENT" &&
-              this.isDevelopmentRelease(release.version)),
+              (this.isDevelopmentRelease(release.version) || zeroWorkCodes.has(release.releaseCode))),
         )
         .map((release) => release.releaseCode),
     );
@@ -1210,6 +1356,46 @@ module.exports = {
         executableReleases.has(release.releaseCode),
       ),
     });
+  },
+
+  /** Qualifies only explicitly requested Local recovery of an unchanged standard release's durable zero-write run. */
+  qualifyZeroWorkRecoveries: async function (plan, releases) {
+    const qualified = new Map();
+    if (CONFIG.get("environment")?.class !== "LOCAL") return qualified;
+    const candidates = releases.filter(release => release.status === "CURRENT" &&
+      plan.releases.some(source => source.releaseCode === release.releaseCode && !source.installer) &&
+      !this.isDevelopmentRelease(release.version));
+    if (!candidates.length) return qualified;
+    const installations = await this.getInstallations(plan.tenant), history = SERVICE.DefaultImportRunService;
+    if (typeof history?.get !== "function") return qualified;
+    for (const release of candidates) {
+      const receipts = installations.filter(row => row.code === this.installationCode(plan.tenant, release));
+      if (receipts.length !== 1) continue;
+      const receipt = receipts[0];
+      if (receipt?.status !== "CURRENT" || receipt.version !== release.version || receipt.checksum !== release.checksum ||
+          !Number.isSafeInteger(receipt.revision) || receipt.revision < 0 || typeof receipt.runId !== "string" || !receipt.runId) continue;
+      const response = await history.get({ tenant: plan.tenant, query: { runId: receipt.runId },
+        options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 2, pageNumber: 1 } });
+      if (!/^SUC_/.test(response?.code || "") || response.error || response.success === false ||
+          response.acknowledged === false || response.errors?.length || !Array.isArray(response.result) || response.result.length !== 1) continue;
+      const run = response.result[0];
+      const sources = Array.isArray(run?.dataReleases) ? run.dataReleases.filter(row => row?.releaseCode === release.releaseCode) : [];
+      if (!run || run.runId !== receipt.runId || run.tenant !== plan.tenant || run.dataType !== plan.dataType ||
+          run.status !== "NO_DATA" || run.validationOnly !== false || !Array.isArray(run.modules) || !run.modules.includes(release.moduleName) ||
+          ["recordsRead", "recordsFinalized", "recordsDispatched", "recordsSucceeded", "recordsFailed", "recordsSkipped"]
+            .some(key => run.summary?.[key] !== 0) ||
+          sources.length !== 1 || sources[0].moduleName !== release.moduleName ||
+          sources[0].version !== release.version || sources[0].checksum !== release.checksum) continue;
+      qualified.set(release.releaseCode, { runId: receipt.runId, revision: receipt.revision, checksum: receipt.checksum });
+    }
+    return qualified;
+  },
+
+  /** Private qualification is bound to the exact preimage; serialized request fields cannot mint it. */
+  isZeroWorkRecovery: function (plan, release, receipt) {
+    const proof = zeroWorkRecoveryPlans.get(plan)?.get(release.releaseCode);
+    return Boolean(proof && receipt.runId === proof.runId && receipt.revision === proof.revision &&
+      receipt.checksum === proof.checksum && release.checksum === proof.checksum && receipt.version === release.version);
   },
 
   /** Resolves active owners plus explicitly allowlisted inactive contribution owners without activating their runtime behavior. */
@@ -1334,16 +1520,14 @@ module.exports = {
             sections
               .map((entry) => entry[1].sourceRoot || entry[0])
               .concat(
-                aggregate.retainedRoots
-                  ? Object.values(aggregate.sections)
-                      .filter(
-                        (section) =>
-                          section &&
-                          section.kind === "CONTENT_PACK" &&
-                          section.contentPath,
-                      )
-                      .map((section) => section.contentPath.split("/")[0])
-                  : [],
+                Object.values(aggregate.sections)
+                  .filter(
+                    (section) =>
+                      section &&
+                      section.kind === "CONTENT_PACK" &&
+                      section.contentPath,
+                  )
+                  .map((section) => section.contentPath.split("/")[0]),
               )
               .concat(Object.keys(aggregate.retainedRoots || {})),
           );
@@ -2638,6 +2822,15 @@ module.exports = {
     return { contributions: results };
   },
 
+  /** Rejects failed or missing generated receipt acknowledgements, including nested write failures. */
+  assertInstallationAcknowledgement: function (response) {
+    if (!/^SUC_/.test(response?.code || "") ||
+        [response, response.result].some(value => value && (value.error || value.success === false ||
+          value.acknowledged === false || value.errors?.length))) {
+      throw this.error("ERR_IMP_00004", "Data installation acknowledgement is unavailable or failed");
+    }
+  },
+
   /** Returns durable current installation projections for one tenant. */
   getInstallations: async function (tenant) {
     let installationService = SERVICE.DefaultDataInstallationService;
@@ -2656,6 +2849,7 @@ module.exports = {
         query: {},
         searchOptions: { pageSize: pageSize, pageNumber: pageNumber },
       });
+      this.assertInstallationAcknowledgement(result);
       let page = result && result.result;
       if (!Array.isArray(page))
         throw this.error(
@@ -2693,6 +2887,7 @@ module.exports = {
       query: { code: code },
       searchOptions: { limit: 2 },
     });
+    this.assertInstallationAcknowledgement(response);
     if (
       !response ||
       !Array.isArray(response.result) ||
@@ -2712,7 +2907,7 @@ module.exports = {
         !(
           state === "CURRENT" &&
           plan.forceCurrent &&
-          this.isDevelopmentRelease(release.version)
+          (this.isDevelopmentRelease(release.version) || this.isZeroWorkRecovery(plan, release, existing))
         )
       ) {
         throw this.error(
@@ -2764,7 +2959,7 @@ module.exports = {
       lastAttemptAt: new Date().toISOString(),
     };
     if (existing && typeof service.update === "function") {
-      return service.update({
+      const updated = await service.update({
         tenant: plan.tenant,
         query: {
           code: code,
@@ -2772,8 +2967,17 @@ module.exports = {
         },
         model: model,
       });
+      this.assertInstallationAcknowledgement(updated);
+      if (updated.result?.matchedCount !== 1)
+        throw this.error("ERR_IMP_00004", "Data installation update did not confirm its fenced receipt");
+      return updated;
     }
-    return service.save({ tenant: plan.tenant, model: model });
+    const saved = await service.save({ tenant: plan.tenant, model: model });
+    this.assertInstallationAcknowledgement(saved);
+    if (saved.result?.code !== code || saved.result.status !== status ||
+        saved.result.executionId !== plan.executionId || saved.result.revision !== 1)
+      throw this.error("ERR_IMP_00004", "Data installation creation did not confirm its claimed receipt");
+    return saved;
   },
 
   /** Combines available and installed state into a client-safe catalogue item. */

@@ -33,7 +33,7 @@ test("real Media contribution published through the definition owner projects ex
   const f = fixture();
   const publisher = require("../src/service/definition/defaultProcessDefinitionLifecycleService");
   const source =
-    require("../../../../nodics.wcms/modules/media/data/init-v003/records/process/mediaPublicationWorkflowDefinitionData")
+    require("../../../../nodics.wcms/modules/media/data/init-v001/records/process/mediaPublicationWorkflowDefinitionData")
       .definitions[0];
   const definition = {
     ...source,

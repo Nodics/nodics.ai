@@ -13,6 +13,18 @@
 "use strict";
 /** @module checkoutCore/src/service/defaultCheckoutPlacementPortsService @description Binds placement orchestration to generated domain repositories and owner services. @layer service @owner checkoutCore */
 module.exports = {
+  /** Routes only exact calculated domain strategies to Digital Core; incomplete ownership metadata never becomes physical stock. @param {Object} entry Canonical calculated entry. @returns {boolean} Digital domain reservation required. */
+  digitalReservationEntry: function (entry) {
+    const a = entry?.availability || {};
+    if (a.inventoryStrategy === "COUPON_CODE_POOL") return true;
+    if (a.inventoryStrategy === "DIGITAL_COMMERCE" || a.digitalDeliveryType === "DIGITAL_OWNERSHIP") {
+      if (a.inventoryStrategy !== "DIGITAL_COMMERCE" || a.digitalDeliveryType !== "DIGITAL_OWNERSHIP" ||
+          a.productType !== "DIGITAL") throw new Error("Unsupported digital reservation classification");
+      return true;
+    }
+    if (a.productType === "DIGITAL") throw new Error("Unsupported digital reservation classification");
+    return false;
+  },
   /** Unwraps a standard result envelope while preserving raw provider values. */
   unwrap: function (response) {
     return response && Object.prototype.hasOwnProperty.call(response, "result")
@@ -236,8 +248,9 @@ module.exports = {
   create: function () {
     const self = this;
     return {
-      findPlacement: async (request) =>
-        (
+      findPlacement: async (request) => {
+        await SERVICE.DefaultCheckoutCompensationRecoveryService.assertPlacementAllowed(request);
+        return (
           await self.get(
             SERVICE.DefaultCheckoutCheckpointService,
             request.tenant,
@@ -254,7 +267,8 @@ module.exports = {
             request.authData,
             1,
           )
-        )[0],
+        )[0];
+      },
       validateCart: async (request) => {
         if (SERVICE.DefaultNegotiatedPriceService) {
           const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({
@@ -298,11 +312,7 @@ module.exports = {
       reserveInventory: async (request, calculation) => {
         const reservations = [];
         for (const entry of calculation.entries) {
-          if (
-            entry.availability &&
-            entry.availability.inventoryStrategy === "COUPON_CODE_POOL"
-          )
-            continue;
+          if (self.digitalReservationEntry(entry)) continue;
           const candidate = (entry.availability.candidates || [])[0];
           if (!candidate) throw new Error("No warehouse candidate");
           const model =
@@ -326,31 +336,33 @@ module.exports = {
               },
               SERVICE.DefaultExactAmountService,
             );
-          reservations.push(
-            await self.save(
-              SERVICE.DefaultInventoryReservationService,
-              request.tenant,
-              Object.assign(
-                {
-                  code: request.payload.orderCode + ":" + entry.code,
-                  revision: 0,
-                },
-                model,
-              ),
-              self.serviceAuthData(request),
-            ),
-          );
+          reservations.push({ ...model, code: request.payload.orderCode + ':' + entry.code });
         }
-        return reservations;
+        if (!reservations.length) return [];
+        const inventory = SERVICE.DefaultInventoryReservationOperationService;
+        if (!inventory?.reserveAll) throw new Error('Inventory reservation owner unavailable');
+        return inventory.reserveAll(request, reservations);
       },
-      reserveDigitalUnits: (request, calculation) =>
-        SERVICE.DefaultDigitalCommerceCheckoutService &&
-        SERVICE.DefaultDigitalCommerceCheckoutService.reserveForCheckout
-          ? SERVICE.DefaultDigitalCommerceCheckoutService.reserveForCheckout(
-              request,
-              calculation,
-            )
-          : [],
+      reserveDigitalUnits: async (request, calculation) => {
+        const digital = SERVICE.DefaultDigitalCommerceCheckoutService;
+        if (!digital?.reserveForCheckout) {
+          if ((calculation.entries || []).some(entry => self.digitalReservationEntry(entry)))
+            throw new Error("Digital reservation owner unavailable");
+          return [];
+        }
+        const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({
+          ...request, cartCode: request.payload.cartCode,
+        });
+        if (cart?.code !== request.payload.cartCode ||
+            typeof cart.storeCode !== "string" || !cart.storeCode.trim())
+          throw new Error("Persisted Cart Store is required for digital reservation");
+        const ownership = (calculation.entries || []).some(entry =>
+          entry.availability?.digitalDeliveryType === "DIGITAL_OWNERSHIP");
+        if (ownership && (typeof cart.locale !== "string" || !cart.locale.trim()))
+          throw new Error("Persisted Cart locale is required for digital ownership reservation");
+        return digital.reserveForCheckout({ ...request, storeCode: cart.storeCode,
+          ...(ownership ? { locale: cart.locale } : {}) }, calculation);
+      },
       authorizePayment: async (request, calculation) => {
         const method = self.preparePaymentMethod(request, calculation);
         if (method.methodCode === "CASH_ON_DELIVERY")
@@ -394,6 +406,10 @@ module.exports = {
         authorization,
         digitalReservations,
       ) => {
+        const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({ ...request, cartCode: request.payload.cartCode });
+        if (!cart?.storeCode || cart.code !== request.payload.cartCode || cart.ownerId !== request.ownerId ||
+          cart.enterpriseCode !== request.enterpriseCode || cart.tenant !== request.tenant)
+          throw new Error("Order requires its authoritative persisted Cart Store");
         const discount =
           (calculation.decisions && calculation.decisions.discount) || {};
         const model = {
@@ -415,6 +431,7 @@ module.exports = {
           promotionCode: discount.promotionCode,
           couponCode: discount.couponCode,
           evidence: {
+            storeCode: cart.storeCode,
             calculationCode: calculation.code,
             reservationCodes: reservations.map((value) => value.code),
             digitalReservationCodes: (digitalReservations || []).map(
@@ -471,14 +488,22 @@ module.exports = {
       capturePayment: async (request, order, authorization) => {
         if (!self.requiresProviderAuthorization(authorization))
           return authorization;
+        const role = CONFIG.get("runtimeRole"), policy = CONFIG.get("stripeProvider") || {};
+        const adapter = self.paymentAdapter(authorization);
+        const offlineCapture = (typeof role === "string" ? role : role?.code) === "COMMERCE" &&
+          authorization.methodCode === "CARD" && authorization.providerCode === "stripe-sandbox" &&
+          adapter === SERVICE.DefaultStripeSandboxAdapterService && policy.enabled === true &&
+          policy.sandboxOnly === true && policy.liveQualified === false && policy.maturity === "OFFLINE_CONFORMANCE";
         return SERVICE.DefaultPaymentExecutionService.execute(
           {
             tenant: request.tenant,
             authData: self.serviceAuthData(request),
+            enterpriseCode: request.enterpriseCode || request.authData?.entCode || request.authData?.enterpriseCode,
             ownerId: request.ownerId,
             orderCode: order.code,
             cartCode: order.cartCode || request.payload.cartCode,
             operation: "CAPTURE",
+            ...(offlineCapture ? { sandboxMode: "LOCAL_SANDBOX_DEMO" } : {}),
             methodCode: authorization.methodCode,
             providerCode: authorization.providerCode,
             providerToken: request.payload.providerToken,
@@ -498,7 +523,7 @@ module.exports = {
             idempotencyKey: request.idempotencyKey + ":payment:capture",
             correlationId: request.correlationId,
           },
-          self.paymentAdapter(authorization),
+          adapter,
           self.paymentRepository(
             request,
             request.payload.orderCode + ":capture",
@@ -514,15 +539,24 @@ module.exports = {
           Number(discount.discountAmount || 0) <= 0
         )
           return undefined;
+        const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({
+          ...request,
+          cartCode: request.payload.cartCode,
+        });
+        if (cart?.code !== request.payload.cartCode ||
+            typeof cart.storeCode !== "string" || !cart.storeCode.trim())
+          throw new Error("Persisted Cart Store is required for promotion commitment");
         const result = await SERVICE.DefaultPromotionOperationService.apply({
           tenant: request.tenant,
           enterpriseCode: request.enterpriseCode || calculation.enterpriseCode,
+          storeCode: cart.storeCode,
           ownerId: request.ownerId,
           authData: self.serviceAuthData(request),
           correlationId: request.correlationId,
           idempotencyKey: request.idempotencyKey + ":promotion",
           payload: {
             cartCode: request.payload.cartCode,
+            storeCode: cart.storeCode,
             orderCode: (order && order.code) || request.payload.orderCode,
             couponCode: request.payload.couponCode,
             customerGroup: request.payload.customerGroup,
@@ -636,6 +670,54 @@ module.exports = {
         ),
       compensate: async (checkpoint, error, request) => {
         const outcomes = [];
+        const paymentReversalTarget = checkpoint.results.capture || checkpoint.results.authorization;
+        const reversalOperation = checkpoint.results.capture ? "REFUND" : "VOID";
+        const paymentRequired = paymentReversalTarget && self.requiresProviderAuthorization(paymentReversalTarget);
+        const paymentCompensationIntent = paymentRequired ? JSON.parse(JSON.stringify({
+          tenant: checkpoint.tenant, enterpriseCode: checkpoint.enterpriseCode, ownerId: checkpoint.ownerId,
+          orderCode: paymentReversalTarget.orderCode || checkpoint.results.order?.code || request?.payload?.orderCode,
+          cartCode: paymentReversalTarget.cartCode || request?.payload?.cartCode,
+          operation: reversalOperation, idempotencyKey: checkpoint.idempotencyKey + ":payment:" + reversalOperation.toLowerCase(),
+          originalPaymentTransactionCode: paymentReversalTarget.code,
+          originalIdempotencyKey: paymentReversalTarget.idempotencyKey,
+          originalProviderReference: paymentReversalTarget.providerReference || paymentReversalTarget.evidence?.providerReference,
+          providerCode: paymentReversalTarget.providerCode || paymentReversalTarget.evidence?.providerCode,
+          methodCode: paymentReversalTarget.methodCode || paymentReversalTarget.evidence?.methodCode,
+          amount: paymentReversalTarget.amount || paymentReversalTarget.totalAmount || paymentReversalTarget.evidence?.originalCaptureReceipt?.amount,
+          currency: paymentReversalTarget.currency || paymentReversalTarget.evidence?.originalCaptureReceipt?.currency,
+          sandboxMode: paymentReversalTarget.evidence?.sandboxMode, maturity: paymentReversalTarget.evidence?.maturity,
+        })) : undefined;
+        if (paymentRequired) {
+          const owner = SERVICE.DefaultCheckoutCheckpointService;
+          if (typeof owner?.get !== "function") throw new Error("Checkout payment recovery read owner is unavailable");
+          let retained = await owner.get({ tenant: checkpoint.tenant, authData: self.serviceAuthData(request || checkpoint),
+            query: { tenant: checkpoint.tenant, code: checkpoint.idempotencyKey, ownerId: checkpoint.ownerId, idempotencyKey: checkpoint.idempotencyKey },
+            options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 3 } });
+          for (let n = 0; n < 8 && !Array.isArray(retained); n++) {
+            if (!retained || retained.error || retained.success === false || retained.acknowledged === false ||
+              (retained.errors && (!Array.isArray(retained.errors) || retained.errors.length)) ||
+              (retained.code !== undefined && (typeof retained.code !== "string" || !/^SUC_/.test(retained.code))))
+              throw new Error("Checkout payment recovery read failed");
+            retained = retained.result !== undefined ? retained.result : retained.data;
+          }
+          if (!Array.isArray(retained) || retained.length > 1) throw new Error("Checkout payment recovery read is unconfirmed");
+          if (retained[0]) {
+            const row = retained[0];
+            if (row.tenant !== checkpoint.tenant || row.ownerId !== checkpoint.ownerId || row.code !== checkpoint.idempotencyKey ||
+              row.idempotencyKey !== checkpoint.idempotencyKey || !["COMPENSATED", "COMPENSATION_REQUIRED"].includes(row.status) ||
+              !require("node:util").isDeepStrictEqual(row.evidence?.paymentCompensationIntent, paymentCompensationIntent))
+              throw new Error("Retained Checkout payment recovery intent requires manual reconciliation");
+            if (row.status === "COMPENSATED") {
+              const payment = row.evidence.compensation?.filter(value => value.type === "PAYMENT_" + reversalOperation);
+              if (payment?.length !== 1 || payment[0].status !== "COMPLETED" ||
+                typeof payment[0].providerReference !== "string" || !payment[0].providerReference.trim() ||
+                payment[0].idempotencyKey !== paymentCompensationIntent.idempotencyKey ||
+                !(reversalOperation === "VOID" ? ["VOIDED"] : ["REFUNDED", "REFUND_SUCCEEDED"]).includes(payment[0].paymentStatus))
+                throw new Error("Retained Checkout compensation lacks terminal Payment confirmation; reconcile manually");
+            }
+            return row;
+          }
+        }
         const promotionCommit = checkpoint.results.promotionCommit;
         const redemptionCode =
           promotionCommit &&
@@ -683,13 +765,9 @@ module.exports = {
         }
         for (const reservation of checkpoint.results.reservation || []) {
           try {
-            await self.update(
-              SERVICE.DefaultInventoryReservationService,
-              checkpoint.tenant,
-              reservation,
-              { status: "RELEASED" },
-              checkpoint.authData,
-            );
+            const inventory = SERVICE.DefaultInventoryReservationOperationService;
+            if (!inventory?.release) throw new Error('Inventory release owner unavailable');
+            await inventory.release(request || checkpoint, reservation.code);
             outcomes.push({
               type: "INVENTORY_RELEASE",
               code: reservation.code,
@@ -704,21 +782,15 @@ module.exports = {
             });
           }
         }
-        const paymentReversalTarget =
-          checkpoint.results.capture || checkpoint.results.authorization;
-        if (
-          paymentReversalTarget &&
-          request &&
-          request.payload &&
-          self.requiresProviderAuthorization(paymentReversalTarget)
-        ) {
+        if (paymentRequired) {
+          let reversal;
           try {
+            if (!request?.payload || request.payload.orderCode !== paymentCompensationIntent.orderCode ||
+              request.payload.cartCode !== paymentCompensationIntent.cartCode)
+              throw new Error("Original Checkout payment reversal context is unavailable");
             const authorization =
               checkpoint.results.authorization || paymentReversalTarget;
-            const reversalOperation = checkpoint.results.capture
-              ? "REFUND"
-              : "VOID";
-            await SERVICE.DefaultPaymentExecutionService.execute(
+            reversal = await SERVICE.DefaultPaymentExecutionService.execute(
               {
                 tenant: checkpoint.tenant,
                 authData: self.serviceAuthData(request),
@@ -764,15 +836,43 @@ module.exports = {
                   reversalOperation.toLowerCase(),
               ),
             );
+            for (let n = 0; n < 8; n++) {
+              if (!reversal || reversal.error || reversal.success === false || reversal.acknowledged === false ||
+                (reversal.errors && (!Array.isArray(reversal.errors) || reversal.errors.length)) ||
+                (typeof reversal.code === "string" && reversal.code.startsWith("ERR_")) ||
+                ((reversal.result !== undefined || reversal.data !== undefined || !reversal.status) && reversal.code !== undefined &&
+                  (typeof reversal.code !== "string" || !/^SUC_/.test(reversal.code))))
+                throw new Error("Payment reversal response is unconfirmed");
+              if (reversal.result !== undefined) reversal = reversal.result;
+              else if (reversal.data !== undefined) reversal = reversal.data;
+              else break;
+            }
+            const reference = reversal?.providerReference || reversal?.evidence?.providerReference;
+            if (!(reversalOperation === "VOID" ? ["VOIDED"] : ["REFUNDED", "REFUND_SUCCEEDED"]).includes(reversal?.status) ||
+              reversal.reconciliationRequired === true || typeof reference !== "string" || !reference.trim() ||
+              reversal.tenant !== checkpoint.tenant || reversal.ownerId !== checkpoint.ownerId ||
+              reversal.orderCode !== paymentCompensationIntent.orderCode || reversal.idempotencyKey !== paymentCompensationIntent.idempotencyKey ||
+              (reversal.evidence?.providerStatus !== undefined &&
+                !(reversalOperation === "VOID" ? ["VOIDED"] : ["REFUNDED", "REFUND_SUCCEEDED"]).includes(reversal.evidence.providerStatus)) ||
+              (reversal.totalAmount !== undefined && reversal.totalAmount !== paymentCompensationIntent.amount) ||
+              (reversal.currency !== undefined && reversal.currency !== paymentCompensationIntent.currency))
+              throw new Error("Payment reversal lacks terminal original-intent confirmation");
             outcomes.push({
               type: "PAYMENT_" + reversalOperation,
               status: "COMPLETED",
+              paymentStatus: reversal.status, providerReference: reference,
+              paymentTransactionCode: reversal.code, idempotencyKey: paymentCompensationIntent.idempotencyKey,
+              ...(reversal.evidence?.sandbox === true ? { sandbox: true, maturity: reversal.evidence.maturity, sandboxMode: reversal.evidence.sandboxMode } : {}),
             });
           } catch (voidError) {
             outcomes.push({
-              type: "PAYMENT_VOID",
+              type: "PAYMENT_" + reversalOperation,
               status: "FAILED",
-              errorCode: voidError.code || "VOID_FAILED",
+              errorCode: voidError.code || reversalOperation + "_UNCONFIRMED",
+              idempotencyKey: paymentCompensationIntent.idempotencyKey,
+              paymentStatus: ["VOIDED", "REFUNDED", "REFUND_SUCCEEDED", "REFUND_PENDING", "REFUND_DELAYED", "REFUND_FAILED",
+                "REFUND_RECONCILIATION_REQUIRED", "SUBMITTED"].includes(reversal?.status) ? reversal.status : "UNCONFIRMED",
+              reconciliationRequired: true,
             });
           }
         }
@@ -783,7 +883,10 @@ module.exports = {
             errorCode: "DIGITAL_RESERVATION_UNCERTAIN",
           });
         }
-        return self.save(
+        if (checkpoint.results.inventoryReservationRecoveryRequired === true) {
+          outcomes.push({ type: 'INVENTORY_RELEASE', status: 'FAILED', errorCode: 'INVENTORY_RESERVATION_UNCERTAIN' });
+        }
+        const saved = await self.save(
           SERVICE.DefaultCheckoutCheckpointService,
           checkpoint.tenant,
           {
@@ -798,7 +901,9 @@ module.exports = {
             correlationId: checkpoint.correlationId,
             evidence: {
               completed: checkpoint.completed,
-              compensation: outcomes,
+              compensation: JSON.parse(JSON.stringify(outcomes)),
+              ...(paymentCompensationIntent ? { paymentCompensationIntent } : {}),
+              inventoryReservationRecoveryRequired: checkpoint.results.inventoryReservationRecoveryRequired === true,
               digitalReservationRecoveryRequired:
                 checkpoint.results.digitalReservationRecoveryRequired === true,
               digitalReservationUncertainKey:
@@ -808,6 +913,27 @@ module.exports = {
           },
           checkpoint.authData,
         );
+        if (!paymentRequired) return saved;
+        let readback = await SERVICE.DefaultCheckoutCheckpointService.get({
+          tenant: checkpoint.tenant, authData: self.serviceAuthData(request || checkpoint),
+          query: { tenant: checkpoint.tenant, code: checkpoint.idempotencyKey, ownerId: checkpoint.ownerId, idempotencyKey: checkpoint.idempotencyKey },
+          options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 3 },
+        });
+        for (let n = 0; n < 8 && !Array.isArray(readback); n++) {
+          if (!readback || readback.error || readback.success === false || readback.acknowledged === false ||
+            (readback.errors && (!Array.isArray(readback.errors) || readback.errors.length)) ||
+            (readback.code !== undefined && (typeof readback.code !== "string" || !/^SUC_/.test(readback.code))))
+            throw new Error("Checkout payment recovery persistence readback failed");
+          readback = readback.result !== undefined ? readback.result : readback.data;
+        }
+        const expectedStatus = outcomes.every(value => value.status === "COMPLETED") ? "COMPENSATED" : "COMPENSATION_REQUIRED";
+        if (!Array.isArray(readback) || readback.length !== 1 || readback[0].tenant !== checkpoint.tenant ||
+          readback[0].ownerId !== checkpoint.ownerId || readback[0].code !== checkpoint.idempotencyKey ||
+          readback[0].idempotencyKey !== checkpoint.idempotencyKey || readback[0].status !== expectedStatus ||
+          !require("node:util").isDeepStrictEqual(readback[0].evidence?.paymentCompensationIntent, paymentCompensationIntent) ||
+          !require("node:util").isDeepStrictEqual(readback[0].evidence?.compensation, JSON.parse(JSON.stringify(outcomes))))
+          throw new Error("Checkout payment recovery persistence is unconfirmed");
+        return readback[0];
       },
     };
   },

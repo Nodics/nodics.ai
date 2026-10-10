@@ -254,6 +254,64 @@ module.exports = {
     };
   },
 
+  /** Resolves only explicitly reviewed runtime/business placement; bootstrap lookup remains independently exact. */
+  resolveRuntimeEnterprise: async function (request) {
+    const fail = () => { throw new CLASSES.NodicsError("ERR_AUTH_00003"); };
+    const same = require("node:util").isDeepStrictEqual;
+    const identifier = value => typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value);
+    const policy = CONFIG.get("profileRuntimeEnterpriseResolution"), payload = request.payload;
+    if (policy?.enabled !== true || CONFIG.get("runtimeRole")?.code !== policy.runtimeRole ||
+        !payload || Object.keys(payload).sort().join(",") !== "contractVersion,enterpriseCode" ||
+        payload.contractVersion !== 1 || !identifier(payload.enterpriseCode) || Object.keys(request.query || {}).length) fail();
+    const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, CONFIG.get("profileModuleName") || "profile");
+    if (auth.principalType !== "service" || auth.isSystem || !auth.permissions?.includes("profile.enterprise.search") ||
+        auth.enterpriseCode !== undefined && auth.enterpriseCode !== auth.entCode ||
+        [request.tenantCode, auth.tenantCode].some(value => value !== undefined && value !== auth.tenant) ||
+        [request.entCode, request.enterpriseCode, request.httpRequest?.headers?.["x-enterprise-code"]]
+          .some(value => value !== undefined && value !== auth.entCode)) fail();
+    const coordinates = ["projectCode", "environmentCode", "serverCode", "instanceCode", "assignmentCode"];
+    const callers = policy.callers;
+    if (!Array.isArray(callers) || !callers.length || callers.length > 100 || callers.some(grant =>
+        !grant || Object.keys(grant).sort().join(",") !== "enterpriseCodes,environmentCode,instanceCode,principalEnterpriseCode,projectCode,serverCode,serviceId,tenant,assignmentCode".split(",").sort().join(",") ||
+        !["tenant", "principalEnterpriseCode", "serviceId", ...coordinates].every(key => identifier(grant[key])) ||
+        !Array.isArray(grant.enterpriseCodes) || !grant.enterpriseCodes.length || grant.enterpriseCodes.length > 100 ||
+        grant.enterpriseCodes.some(code => !identifier(code)) || new Set(grant.enterpriseCodes).size !== grant.enterpriseCodes.length)) fail();
+    const grants = callers.filter(grant => grant.tenant === auth.tenant && grant.principalEnterpriseCode === auth.entCode &&
+      grant.serviceId === auth.serviceId && grant.enterpriseCodes.includes(payload.enterpriseCode) &&
+      coordinates.every(key => grant[key] === auth.runtimeScope[key]) && grant.instanceCode === auth.runtimeInstanceId &&
+      grant.environmentCode === NODICS.getSelectedEnvironmentName());
+    if (grants.length !== 1) fail();
+    const pin = structuredClone({ policy, auth, payload });
+    const check = () => {
+      if (!same(CONFIG.get("profileRuntimeEnterpriseResolution"), pin.policy) || !same(request.authData, pin.auth) ||
+          !same(request.payload, pin.payload) || request.tenant !== pin.auth.tenant ||
+          CONFIG.get("runtimeRole")?.code !== pin.policy.runtimeRole ||
+          NODICS.getSelectedEnvironmentName() !== pin.auth.runtimeScope.environmentCode ||
+          [request.tenantCode, request.authData.tenantCode].some(value => value !== undefined && value !== pin.auth.tenant) ||
+          [request.entCode, request.enterpriseCode, request.httpRequest?.headers?.["x-enterprise-code"]]
+            .some(value => value !== undefined && value !== pin.auth.entCode)) fail();
+    };
+    const placement = async () => {
+      check();
+      const rows = SERVICE.DefaultEnterpriseTenantProvisioningService;
+      const enterprises = await rows.rows("DefaultEnterpriseService", { code: pin.payload.enterpriseCode, active: true });
+      check();
+      const enterprise = enterprises.length === 1 ? enterprises[0] : undefined;
+      const tenantCode = typeof enterprise?.tenant === "string" ? enterprise.tenant : enterprise?.tenant?.code;
+      if (!enterprise || enterprise.code !== pin.payload.enterpriseCode || enterprise.active !== true || tenantCode !== pin.auth.tenant) fail();
+      const tenants = await rows.rows("DefaultTenantService", { code: tenantCode, active: true });
+      check();
+      if (tenants.length !== 1 || tenants[0].code !== pin.auth.tenant || tenants[0].active !== true) fail();
+      return { code: enterprise.code, active: true, revision: enterprise.revision,
+        tenant: { code: tenantCode, active: true, revision: tenants[0].revision } };
+    };
+    const before = await placement();
+    if (!same(before, await placement())) fail();
+    check();
+    return { code: "SUC_FIND_00000", result: [{ code: before.code, active: true,
+      tenant: { code: before.tenant.code, active: true } }] };
+  },
+
   /**
    * Retrieves enterprise information.
    *

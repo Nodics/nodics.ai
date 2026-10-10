@@ -18,7 +18,7 @@ module.exports = {
 };
 
 // Operational stores must never be persisted by a Staged policy runtime.
-for (const item of ['inventoryBalance', 'inventoryMovement', 'inventoryReservation']) {
+for (const item of ['inventoryBalance', 'inventoryMovement', 'inventoryReservation', 'inventoryOpeningReceiptRecord']) {
     for (const trigger of ['preSave', 'preUpdate', 'preRemove']) {
         module.exports[item + trigger] = { type: 'schema', item, trigger,
             active: 'true', index: -20,

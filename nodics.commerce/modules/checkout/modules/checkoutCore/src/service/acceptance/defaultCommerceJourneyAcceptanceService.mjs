@@ -25,6 +25,9 @@ export async function runCommerceJourneyAcceptance(options = {}) {
     if (typeof config[field] !== 'string' || !config[field].trim()) throw new Error('Commerce journey requires fixture ' + field);
   }
   if (!config.shippingAddress || !config.shippingAddress.country || !config.shippingAddress.line1) throw new Error('Commerce journey requires shippingAddress');
+  if (config.couponCode !== undefined && (typeof config.couponCode !== 'string' || !config.couponCode.trim())) {
+    throw new Error('Commerce journey couponCode must be a purchased customer coupon token');
+  }
   const log = options.log || (() => {});
   const platformUrl = 'PLATFORM';
   const commerceUrl = 'COMMERCE';
@@ -114,7 +117,6 @@ export async function runCommerceJourneyAcceptance(options = {}) {
       "/nodics/shoppingList/v0/lists/{listType}/entries/{entryCode}": ['delete'],
       "/nodics/promotion/v0/promotions/preview": ['post'],
       "/nodics/promotion/v0/promotions/apply": ['post'],
-      "/nodics/promotion/v0/promotions/drafts": ['put'],
     };
     const effectiveCommercePaths = Object.keys(paths)
       .filter((route) => /\/(product|cart|checkoutCore|fulfillmentCore|order|shoppingList|promotion)\//.test(route))
@@ -169,13 +171,13 @@ export async function runCommerceJourneyAcceptance(options = {}) {
       headers: commonHeaders,
       body: JSON.stringify(body),
     }));
-    if (created?.cart?.code !== body.cartCode) {
+    if (created?.cart?.code !== body.cartCode || created.cart.storeCode !== config.storeCode) {
       throw new Error(`Customer cart creation returned unexpected response: ${JSON.stringify(created)}`);
     }
     const read = dataOf(await request(commerceUrl, `/nodics/cart/v0/carts/${encodeURIComponent(body.cartCode)}`, {
       headers: commonHeaders,
     }));
-    if (read?.cart?.code !== body.cartCode) {
+    if (read?.cart?.code !== body.cartCode || read.cart.storeCode !== config.storeCode || read.cart.currency !== config.currency) {
       throw new Error(`Customer cart read returned unexpected response: ${JSON.stringify(read)}`);
     }
     const added = dataOf(await request(commerceUrl, `/nodics/cart/v0/carts/${encodeURIComponent(body.cartCode)}/entries`, {
@@ -206,18 +208,29 @@ export async function runCommerceJourneyAcceptance(options = {}) {
     const calculated = dataOf(await request(commerceUrl, `/nodics/cart/v0/carts/${encodeURIComponent(body.cartCode)}/calculations`, {
       method: "POST",
       headers: commonHeaders,
-      body: JSON.stringify({ expectedRevision: revision, calculationCode: `calc-${body.cartCode}` }),
+      body: JSON.stringify({ expectedRevision: revision, calculationCode: `calc-${body.cartCode}`, couponCode: config.couponCode }),
     }));
     const serializedCart = JSON.stringify(calculated);
     for (const forbidden of ["priceRowCode", "warehouseCode", "supplierCost", "internalOnly"]) {
       if (serializedCart.includes(forbidden)) throw new Error(`Customer cart leaked backend-only field ${forbidden}`);
     }
+    if (calculated?.cartCode !== body.cartCode || calculated.currency !== read.cart.currency ||
+        typeof calculated.subtotal !== 'string' || !/^\d+(?:\.\d+)?$/.test(calculated.subtotal) ||
+        !Array.isArray(calculated.entries) || !calculated.entries.length ||
+        calculated.entries.some(entry => typeof entry.productCode !== 'string' || !entry.productCode)) {
+      throw new Error('Customer cart calculation returned no owned cart pricing context');
+    }
     log(`customer cart add/update/remove/calculate smoke passed for ${body.cartCode}`);
     return {
       headers: commonHeaders,
       cartCode: body.cartCode,
-      revision: String(calculated?.cart?.revision || revision),
+      revision: String(calculated.cartRevision ?? calculated.revision ?? revision),
       calculationCode: `calc-${body.cartCode}`,
+      storeCode: read.cart.storeCode,
+      currency: calculated.currency,
+      subtotal: calculated.subtotal,
+      productCodes: calculated.entries.map(entry => entry.productCode),
+      discount: calculated.decisions?.discount,
       productCode: primaryProductCode,
       variantCode: primaryVariantCode,
     };
@@ -244,58 +257,45 @@ export async function runCommerceJourneyAcceptance(options = {}) {
     log(`shopping-list smoke passed for ${touched.length} entries`);
   }
 
-  async function ensureAcceptancePromotion(employeeHeaders) {
-    const code = config.promotionCode;
-    const promotion = dataOf(await request(commerceUrl, "/nodics/promotion/v0/promotions/drafts", {
-      method: "PUT",
-      headers: employeeHeaders,
-      body: JSON.stringify({
-        code,
-        name: "Acceptance Welcome 10",
-        status: "ACTIVE",
-        priority: 50,
-        conditions: { minimumSubtotal: "100.00" },
-        actions: { discountAmount: "10.00", reasonCode: "ACCEPTANCE10" },
-        revision: 0,
-      }),
-    }));
-    const saved = promotion?.promotion || {};
-    const updatedExisting = saved.acknowledged === true && Number(saved.matchedCount || 0) > 0;
-    if (!updatedExisting && (saved.code !== code || saved.status !== "ACTIVE")) {
-      throw new Error(`Promotion draft save returned unexpected response: ${JSON.stringify(promotion)}`);
+  function requirePromotionSelection(result, label) {
+    const selected = result?.selected?.find(item => item.code === config.promotionCode);
+    if (!selected) throw new Error(`${label} did not select configured campaign ${config.promotionCode}`);
+    if (selected.versionId !== undefined && (!Number.isSafeInteger(selected.versionId) || selected.versionId < 0)) {
+      throw new Error(`${label} returned invalid campaign versionId`);
     }
-    return { code };
+    return selected;
   }
 
-  async function exerciseCustomerPromotions(headers, promotion) {
-    const cartCode = `promotion_cart_${randomUUID()}`;
+  function requirePromotionDecision(decision, cartSmoke, selected, label) {
+    if (decision?.promotionCode !== config.promotionCode || decision.targetType !== 'CART' ||
+        decision.targetCode !== cartSmoke.cartCode ||
+        (selected.revision !== undefined && decision.ruleVersion !== String(selected.revision)) ||
+        (decision.versionId !== undefined && selected.versionId !== undefined && decision.versionId !== selected.versionId)) {
+      throw new Error(`${label} did not prove configured campaign and cart/version binding`);
+    }
+  }
+
+  async function exerciseCustomerPromotions(cartSmoke) {
     const payload = {
-      cartCode,
-      currency: config.currency,
-      subtotal: "150.00",
-      entries: [{
-        productCode: config.productCode,
-        quantity: 1,
-        totalPrice: "150.00",
-      }],
+      cartCode: cartSmoke.cartCode,
+      storeCode: cartSmoke.storeCode,
+      currency: cartSmoke.currency,
+      subtotal: cartSmoke.subtotal,
+      productCodes: cartSmoke.productCodes,
+      couponCode: config.couponCode,
     };
     const preview = dataOf(await request(commerceUrl, "/nodics/promotion/v0/promotions/preview", {
       method: "POST",
-      headers,
+      headers: cartSmoke.headers,
       body: JSON.stringify(payload),
     }));
-    if (!preview?.selected?.some((item) => item.code === promotion.code) || preview.redemptionStateMutation !== "NONE") {
-      throw new Error(`Promotion preview returned unexpected response: ${JSON.stringify(preview)}`);
+    const selected = requirePromotionSelection(preview, 'Promotion preview');
+    if (preview.cartCode !== cartSmoke.cartCode || preview.redemptionStateMutation !== "NONE") {
+      throw new Error('Promotion preview did not prove non-mutating owned cart context');
     }
-    const applied = dataOf(await request(commerceUrl, "/nodics/promotion/v0/promotions/apply", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(payload),
-    }));
-    if (!applied?.applied || applied.redemptionStateMutation !== "COMMITTED" || !applied?.redemption?.code) {
-      throw new Error(`Promotion apply returned unexpected response: ${JSON.stringify(applied)}`);
-    }
-    log(`customer promotion preview/apply smoke passed for ${promotion.code}`);
+    requirePromotionDecision(cartSmoke.discount, cartSmoke, selected, 'Cart promotion quote');
+    // Checkout alone commits after payment, avoiding duplicate campaign budget/coupon consumption.
+    return selected;
   }
 
   async function expectReadRejected(headers, path, label) {
@@ -321,6 +321,7 @@ export async function runCommerceJourneyAcceptance(options = {}) {
         orderCode,
         expectedCartRevision: cartSmoke.revision,
         calculationCode: cartSmoke.calculationCode,
+        couponCode: config.couponCode,
         providerToken: config.providerToken,
         customer: { email: customer.credentials.loginId, firstName: "Storefront", lastName: "Customer" },
         shippingAddress: config.shippingAddress,
@@ -328,6 +329,12 @@ export async function runCommerceJourneyAcceptance(options = {}) {
         paymentMethod: config.paymentMethod,
       }),
     }));
+    if (placed?.status !== 'COMPLETED' ||
+        !placed.evidence?.completed?.includes('PROMOTION_COMMITTED') ||
+        placed.evidence.promotionCode !== config.promotionCode ||
+        !placed.evidence.promotionRedemptionCode || (config.couponCode && !placed.evidence.couponCode)) {
+      throw new Error('Checkout promotion apply did not commit configured campaign/redemption or required coupon');
+    }
     const placedOrderCode = placed?.orderCode || placed?.code || placed?.evidence?.orderCode || orderCode;
     const order = dataOf(await request(commerceUrl, `/nodics/order/v0/orders/${encodeURIComponent(placedOrderCode)}`, {
       headers: cartSmoke.headers,
@@ -335,6 +342,11 @@ export async function runCommerceJourneyAcceptance(options = {}) {
     if (order?.order?.code !== placedOrderCode) {
       throw new Error(`Customer order read returned unexpected response: ${JSON.stringify(order)}`);
     }
+    if (order.order.cartCode !== cartSmoke.cartCode || order.order.promotionCode !== config.promotionCode ||
+        (config.couponCode && order.order.couponCode !== placed.evidence.couponCode)) {
+      throw new Error('Customer order did not retain configured campaign/cart or required coupon evidence');
+    }
+    log(`customer promotion preview/checkout apply smoke passed for ${config.promotionCode}`);
     const cancellationPayload = {
       code: `${placedOrderCode}:cancellation`,
       requestType: "CANCELLATION",
@@ -442,16 +454,18 @@ export async function runCommerceJourneyAcceptance(options = {}) {
   }
 
 
+    const primaryCredentials = storefrontCustomerCredentials("PRIMARY");
+    if (config.couponCode && primaryCredentials.generated) {
+      throw new Error('Purchased coupon acceptance requires existing primary customer login/password fixtures');
+    }
     const employeeHeaders = await context.authenticate();
     await validateCommerceContract(employeeHeaders);
-    const acceptancePromotion = await ensureAcceptancePromotion(employeeHeaders);
-    const primaryCredentials = storefrontCustomerCredentials("PRIMARY");
     await ensureStorefrontCustomer(employeeHeaders, primaryCredentials, "primary");
     const primaryCustomer = await authenticateCustomer(primaryCredentials, "primary");
     await exerciseProductDiscovery(primaryCustomer.headers);
     await exerciseShoppingLists(primaryCustomer.headers);
-    await exerciseCustomerPromotions(primaryCustomer.headers, acceptancePromotion);
     const cartSmoke = await exerciseCustomerCart(primaryCustomer.headers);
+    await exerciseCustomerPromotions(cartSmoke);
     const checkoutSmoke = await exerciseCustomerCheckout(cartSmoke, primaryCustomer);
     const secondaryCredentials = storefrontCustomerCredentials("SECONDARY");
     await ensureStorefrontCustomer(employeeHeaders, secondaryCredentials, "secondary");

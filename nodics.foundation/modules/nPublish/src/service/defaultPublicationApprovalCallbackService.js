@@ -52,10 +52,10 @@ module.exports = {
             execution.executionCode !== input.executionCode || !execution.nodeCode || !execution.taskCode || !execution.actor ||
             !context || context.domain !== scope.domain || context.definitionCode !== policy.definitionCode ||
             context.actionKey !== policy.actionKey || context.ownerModule !== policy.ownerModule ||
-            context.workflowRef !== instance.code || context.tenantCode !== request.tenant ||
-            context.enterpriseCode !== auth.entCode) {
+            context.workflowRef !== instance.code || context.tenantCode !== request.tenant) {
             throw new CLASSES.NodicsError('ERR_PUB_00004', 'Claimed publication Process context does not match');
         }
+        workflow.requireRuntimeEnterprise(auth, context.enterpriseCode);
         workflow.requireText(context.publicationCode, 'code');
         workflow.requireText(context.correlationId, 'correlation');
         if (!Number.isSafeInteger(context.publicationRevision) || context.publicationRevision < 1) {
@@ -114,11 +114,19 @@ module.exports = {
         // Elevation is target-local and occurs only after Process grants the exact action.
         const local = { tenant: request.tenant, authData: Object.assign({}, request.authData,
             SERVICE.DefaultIdentityGovernanceService.getSystemAuthData()),
+            enterpriseCode: context.enterpriseCode,
             publicationCode: context.publicationCode, correlationId: context.correlationId };
         const lifecycle = SERVICE.DefaultPublicationLifecycleService;
         let publication = await lifecycle.get(local);
+        if (context.enterpriseCode !== request.authData.entCode && !publication.enterpriseCode && !publication.entCode) {
+            const provider = lifecycle.getVersionProvider(publication.domain);
+            if (typeof provider.getPublicationEnterprise !== 'function' ||
+                await provider.getPublicationEnterprise(publication, local) !== context.enterpriseCode) {
+                throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication sealed source owner does not match');
+            }
+        }
         const expected = this.workflow().context(Object.assign({}, publication,
-            { revision: context.publicationRevision }), local);
+            { revision: context.publicationRevision }), local, context.enterpriseCode);
         if ((expected.workflowVersion !== undefined && execution.instance.version !== expected.workflowVersion) ||
             Object.keys(expected).some(key => context[key] !== expected[key])) {
             throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication no longer matches the claimed source');

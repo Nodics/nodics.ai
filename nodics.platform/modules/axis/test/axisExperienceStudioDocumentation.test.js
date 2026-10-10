@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 const moduleRoot = path.resolve(__dirname, '..');
-const catalogue = require('../docs/catalogue.json');
+const catalogue = require('../../../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService').validateDataRelease(moduleRoot);
 
 const page = catalogue.pages.find(item => item.code === 'experience-studio');
 assert(page, 'Experience Studio documentation must be registered in the Axis catalogue');
@@ -24,7 +24,7 @@ assert.strictEqual(page.navigationSection, 'Axis Capabilities');
 assert.strictEqual(page.navigationGroup, 'Axis Workspaces and Operations');
 assert(page.relatedPages.includes('axis.page-designer'), 'Experience Studio docs must link back to Page Designer');
 
-const source = fs.readFileSync(path.resolve(moduleRoot, page.content), 'utf8');
+const source = page.body;
 for (const required of [
     '## Collection journey example',
     '## Brand journey example',
@@ -42,15 +42,15 @@ for (const required of [
 }
 
 const generatedPageData = fs.readFileSync(
-    path.resolve(moduleRoot, 'data/core-v001/records/documentation/axisDocumentationPageData.js'),
+    path.resolve(moduleRoot, 'data/docs-v001/records/documentation/axisDocumentationPageData.js'),
     'utf8',
 );
 const generatedRouteData = fs.readFileSync(
-    path.resolve(moduleRoot, 'data/core-v001/records/documentation/axisDocumentationRouteData.js'),
+    path.resolve(moduleRoot, 'data/docs-v001/records/documentation/axisDocumentationRouteData.js'),
     'utf8',
 );
 const generatedComponentData = fs.readFileSync(
-    path.resolve(moduleRoot, 'data/core-v001/records/documentation/axisDocumentationComponentData.js'),
+    path.resolve(moduleRoot, 'data/docs-v001/records/documentation/axisDocumentationComponentData.js'),
     'utf8',
 );
 

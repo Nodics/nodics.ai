@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "QUALIFIED_SOURCE_ONLY",
+  "scope": "CMS exact source map: frozen reachable-article documentation navigation projection, with related current Axis limitation correction.",
+  "boundary": "Manual source/editorial/security review and focused local source tests only. No runtime, data, config, released payload, shared scaffold, generated report, native, import, approval, publication or financial writes. Historical artifacts remain unchanged. Parent owns full docs audit regeneration, native publication and integration. Browser, business end-to-end and provider acceptance are not executed or qualified.",
+  "sourceOutcome": {
+    "status": "PASS_SOURCE_REVIEW",
+    "actionableFindings": [],
+    "canonicalArticle": "All eight actual current source-map blocks/anchors manually inspected; canonical article bytes unchanged.",
+    "sourceReviewed": "Exact frozen dependency loading, active scoped reachability, route/code identity, duplicate/missing fail-closed behavior, governed localization, deterministic immutable manifests, delivery projection and pointer authority reviewed.",
+    "security": "Projection consumes only already admitted exact dependency models; no latest/source lookup, loader, import, persistence, executable route, identity widening or permission grant. Existing publication/Process/Media/access gates remain required."
+  },
+  "items": [
+    {
+      "item": "CMS exact source map",
+      "backlogPriority": "P0",
+      "requestedAction": "Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "authoring": "COVERED_EXACT_DESIGNER_METHODS_AND_SEQUENTIAL_SAVES",
+        "delivery": "COVERED_PUBLISHED_VS_LEGACY_RESOLVER_AND_SCOPE_BOUND_NAVIGATION",
+        "publicationManifest": "COVERED_EXACT_FROZEN_REACHABLE_NAVIGATION_PROJECTION_AND_IMMUTABLE_MANIFEST",
+        "migration": "COVERED_PREVIEW_APPLY_AUDIT_ROLLBACK_LIMITS",
+        "cache": "COVERED_INVALIDATION_AND_OPTIONAL_CACHE_ABSENCE",
+        "documentationGovernance": "COVERED_VALIDATION_PROJECTION_HANDOFF_BOUNDARY"
+      },
+      "rationale": "Manually re-read all eight actual canonical CMS source-map sections and the current frozen manifest, delivery, dependency and localization owners. The article's authoring/delivery/manifest/migration/cache/governance separation remains accurate; no canonical article blocks changed. The new documentationNavigationProperties branch derives navigation metadata only from active reachable documentation articles in the exact preloaded Site/locale/channel/access scope, rejects absent/redirected/ambiguous identities, matches canonical code and route and uses only frozen localization variants. It performs no reads, imports, persistence, permission changes or approval. Existing manifest integrity, exact-version dependency loading and delivery pointer authority remain intact. Source-level projection rules are now explicit in the owning publication-manifest contract; this source-editorial pass does not assert the canonical overview contains a detailed new navigation tutorial or qualify native/browser behavior.",
+      "evidence": [
+        {
+          "documentId": "wcms.cms-source-map-authoring-contract",
+          "anchors": [
+            "wcmsCmsSourceMapAuthoringContract-1-source-map",
+            "wcmsCmsSourceMapAuthoringContract-2-content-model",
+            "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+            "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+            "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+            "wcmsCmsSourceMapAuthoringContract-6-operational-checks",
+            "wcmsCmsSourceMapAuthoringContract-7-common-mistakes",
+            "wcmsCmsSourceMapAuthoringContract-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js",
+        "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryCacheInvalidationService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js",
+        "nodics.wcms/modules/cms/src/service/migration/defaultCmsMigrationService.js",
+        "nodics.wcms/modules/cms/src/service/documentation/defaultCmsDocumentationGovernanceService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+        "nodics.wcms/modules/cms/src/service/designer/defaultCmsDesignerCompositionService.js",
+        "nodics.wcms/modules/cms/src/router/routers.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+        "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+        "nodics.wcms/modules/cms/llm/contracts/publication-manifest-contract.md"
+      ],
+      "sourceFindings": [
+        "saveDraftComposition saves generated owner records sequentially and invalidates only after the full successful path; partial failure can precede invalidation.",
+        "applyMigration recomputes preview and records before-images; rollbackMigration requires auditCode/snapshot and is not a globally atomic undo of concurrent edits or every introduced field.",
+        "resolvePage uses resolvePublishedManifest only when publication is enabled; employee shared composition rejects the legacy path.",
+        "validateAuthoringRecords validates hierarchy/access/visual/publication/search/checksum coverage; renderProjection/search/publicationHandoff do not create publication authority.",
+        "buildRouteSnapshot requires exact frozen route/page/template and every referenced component; absent components throw CMS_PUBLICATION_COMPONENT_MISSING. deliveryProperties still removes top-level article search-only fields. The documentation navigation renderer alone receives a detached nested item projection with current canonical title/summary/searchKeywords/searchText before that existing delivery projection.",
+        "persist/importManifest retain deterministic contentHash and immutable identity; activateScope checks pointer revision and propagates transactionContext. No global atomicity claim is added.",
+        "resolvePage uses immutable Online manifests only with cms.publication.enabled; employee shared composition rejects the legacy path. The article explicitly separates those paths and optional invalidation from actual cache freshness.",
+        "documentationNavigationProperties indexes only the supplied models, follows active frozen component associations through active pages/components with a seen set, and admits only non-redirect active routes matching Site, locale, channel and accessMode exactly. It requires a documentation article renderer, canonical code, declared source owner and matching article/navigation route; duplicate canonical identities become non-navigable rather than selecting an owner.",
+        "Navigation item order/identity and existing authored fields are retained, while title/summary/keywords/full-text come from the eligible current article and its existing governed localization resolver. Missing full text falls back only to current title/summary/keywords; missing or ambiguous article evidence drops the item, never revives historical navigation text.",
+        "buildSnapshot supplies only tenant/auth/transaction-scoped exact dependency versions loaded with active:true. The dependency adapter retains configured graph/depth/site limits and localization READY validation. The helper creates no new loader, latest lookup, data import, persistence access, authorization grant or executable route.",
+        "Existing immutable manifests and authored/shared release bytes are not rewritten. A newly reviewed publication snapshot gains the projection through the normal revision-pinned validation/Process approval path; the current Online pointer remains authoritative until ordinary publication succeeds."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Optional nCache absence can return success without invalidating a cache; external CDN/browser freshness requires target evidence.",
+        "Migration rollback and publication pointer rollback are distinct recovery operations.",
+        "Projection qualification is source/local-fixture only. Native delivery must independently demonstrate newly approved exact manifest scope and navigation searchText equals the canonical article. A browser still applies its own bounded item-text filter, so source full-text projection is not proof every late-position keyword is discoverable.",
+        "The helper consumes already admitted frozen dependencies and canonical route access classifications; source.owner is provenance, not an independent access grant. Existing publication, identity, localization and delivery authorities remain required.",
+        "Large-site maximum-bound performance and browser search behavior were not benchmarked or accepted by this review."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "remediationPriority": "P0",
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-09",
+        "artifact": "semantic-documentation-cms-navigation-source-review-2026-10-09.json",
+        "previousDisposition": "PASS_SOURCE_REVIEW",
+        "canonicalArticleBytes": "UNCHANGED_ALL_EIGHT_CITED_SECTIONS_MANUALLY_REVIEWED",
+        "changedSourceFiles": [
+          "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js"
+        ],
+        "manuallyReviewedSourceFiles": [
+          "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js",
+          "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js",
+          "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+          "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+          "nodics.wcms/modules/cms/test/cmsDocumentationNavigationProjection.test.js",
+          "nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js",
+          "nodics.wcms/modules/cms/llm/contracts/publication-manifest-contract.md"
+        ],
+        "boundary": "Manual CMS source/security and canonical source-map review only. Existing immutable data/config/releases remain unchanged. No native publication, Process decision, import, financial mutation, browser or provider acceptance. Other editorial findings are preserved; the Axis aggregate navigation limitation alone is corrected to reference this newly source-qualified projection without changing its historical review. Seven independently verified comment-only files are not mapped to any semantic scope and require no fingerprint refresh."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "wcms.cms-source-map-authoring-contract": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentwcmsCmsSourceMapAuthoringContract",
+      "route": "/docs/framework/wcms-cms-source-map-authoring-contract",
+      "blocksha256": "3773f3531bce19c6e93cc936fafa1d52c8b65eff90de1eb781a415d24f0cd9e6",
+      "articleBlocksSha256": "3773f3531bce19c6e93cc936fafa1d52c8b65eff90de1eb781a415d24f0cd9e6",
+      "sections": [
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-2-content-model",
+          "title": "Content model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+          "title": "Authoring contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+          "title": "Publication and delivery",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 14
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-6-operational-checks",
+          "title": "Operational checks",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 21
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 23
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js": "fd9e8cddb1f3495bb3f3d91dca8afeef9679f5e383a2ea1d62ffe82b45df6738",
+    "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js": "94b9b20470c1144e65ab0f6bdda35bbc8ecc8664d00ffc3b27732b712cefbbd8",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+    "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js": "f4103e4ba53736843d81072b916436d20308f4579eb751ad7c0761e93d13ed5e",
+    "nodics.wcms/modules/cms/test/cmsDocumentationNavigationProjection.test.js": "0b190fe9ae226a74c87ffcbd1e0c6bed5afe960a03399d39eda3e7868856e980",
+    "nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js": "61f961fd67d2ecad1c279ed7a6120146ad0c0a171a5e8214d5aadc360554c051",
+    "nodics.wcms/modules/cms/llm/contracts/publication-manifest-contract.md": "d7af2206a347915d910cbaeb49c49be8ce606b739aeb6cc06340c260e4287b1d"
+  },
+  "previousReview": {
+    "disposition": "PASS_SOURCE_REVIEW",
+    "orchestrationSha256": "32d503ba60b8f4b40cb5ce199e9010cc1a209552a40ed26c2be6b05a70b86aae",
+    "canonicalArticleBlocksSha256": "3773f3531bce19c6e93cc936fafa1d52c8b65eff90de1eb781a415d24f0cd9e6",
+    "historicalReviewFilesPreserved": true
+  },
+  "axisRelatedLimitationCorrection": {
+    "item": "Axis setup and user-safe error contracts",
+    "kind": "RELATED_LIMITATION_CORRECTION_NOT_DUPLICATE_EDITORIAL_REVIEW",
+    "historicalArtifact": "semantic-documentation-axis-setup-successor-review-2026-10-09.json",
+    "historicalArtifactSha256": "d75a1d8922913cf14cbf700b1f920f022973b56323b4a81121a3b5dfc8f79ca3",
+    "historicalArtifactUnchanged": true,
+    "previousLimitation": "Frozen shared navigation searchText/searchKeywords remain unchanged. Axis's DocumentationNavigationRenderer searches those component properties locally; CMS governance search instead filters canonical SearchMetadata. New-term navigation/browser search is not qualified by the successor.",
+    "currentLimitation": "Authored shared navigation scaffold bytes remain unchanged. The frozen CMS reachable-article publication projection is SOURCE_QUALIFIED to derive current title/summary/searchKeywords/searchText from exact active canonical articles and localization dependencies within Site/locale/channel/access scope; this is a publication-time projection, not a scaffold rewrite or qualification supplied by the BackOffice successor alone. A fresh revision-pinned validation/Process approval/publication cycle and independent native equality check against canonical article.searchText remain required. Axis navigation searches delivered component properties locally and retains browser text bounds; CMS governance search separately uses canonical SearchMetadata. Browser search remains NOT_EXECUTED.",
+    "preserved": "Axis disposition, requested action, rationale, source findings, source evidence, successor release, canonical block/anchor pins and all other limitations unchanged."
+  },
+  "commentOnlyInspection": {
+    "status": "VERIFIED_NO_MAPPED_FINGERPRINTS_TO_REFRESH",
+    "baselineDirectory": "/tmp/circa-jsdoc-baseline-20261009",
+    "method": "Manually read seven complete unified diffs and all 27 added JSDoc blocks with adjacent implementation. Independently parsed before/current with installed Acorn ecmaVersion latest, sourceType script; excluded only positional start/end/loc/range metadata. Executable AST SHA-256 equality holds for all seven. All changed lines in the diffs are JSDoc insertions; no existing code changed.",
+    "addedJSDocBlocks": 27,
+    "files": [
+      {
+        "file": "nodics.accelerators/modules/waste/modules/eWaste/src/controller/defaultEWasteDigitalListingController.js",
+        "beforeSha256": "8565596ecf221e999025793f53c3b7cca163fc5cb7646fbcdb28a1dbcef5b6a5",
+        "afterSha256": "0c429dad9e6a799d2259ecee277b267b428980c4aa6233111cb0ac7d7b6c9678",
+        "executableAstUnchanged": true,
+        "beforeAstSha256": "e095a3e852902a4e67b2335234fd03ad03d90d937e7926bcd788b701f256c94f",
+        "afterAstSha256": "e095a3e852902a4e67b2335234fd03ad03d90d937e7926bcd788b701f256c94f",
+        "mappedScopes": [],
+        "addedJSDocBlocks": 1
+      },
+      {
+        "file": "nodics.commerce/modules/baseCommerce/modules/promotion/test/helpers/nativePersistenceFixture.js",
+        "beforeSha256": "d253584bebb32f1166c4b59e70a3092f0e7b478a6632e60c0b55fd4702a6080d",
+        "afterSha256": "aa51a96d5fc5236a4c6482cf3ab1fe1f24e6812db9ed24f270c8594020f3f86e",
+        "executableAstUnchanged": true,
+        "beforeAstSha256": "b806f5db593ebcd428c53fbed6b3c1852c5b0f898833449f855cbf73e25f1418",
+        "afterAstSha256": "b806f5db593ebcd428c53fbed6b3c1852c5b0f898833449f855cbf73e25f1418",
+        "mappedScopes": [],
+        "addedJSDocBlocks": 1
+      },
+      {
+        "file": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/controller/defaultDigitalCommerceOwnershipEvidenceController.js",
+        "beforeSha256": "3b0dea7cb241950af50d939e5a4c03f86a1564986d754e156ea8d1d5a0667a34",
+        "afterSha256": "46fbba423db10cbde50f2e929adc02bad33c5cc4634ce2ea9b48d3f0eea0bc1a",
+        "executableAstUnchanged": true,
+        "beforeAstSha256": "e39d508015359191f3b1fdb167e0ce2b1da11a26e99c4cb7ea5477670e25418b",
+        "afterAstSha256": "e39d508015359191f3b1fdb167e0ce2b1da11a26e99c4cb7ea5477670e25418b",
+        "mappedScopes": [],
+        "addedJSDocBlocks": 3
+      },
+      {
+        "file": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/facade/defaultDigitalCommerceOwnershipEvidenceFacade.js",
+        "beforeSha256": "b023225c51b9a11e80b8604bc2284a0fd334311fd25a4d9e00ffea63892b0c83",
+        "afterSha256": "6a2390b3ddfbbf7a829b3b0d5356341494d0dea8f8813271496f20a436a1dec1",
+        "executableAstUnchanged": true,
+        "beforeAstSha256": "bb50086d6eb7c844d2a18d0f9c6398672a8f43bfa8a0745a7998e4401a817c9e",
+        "afterAstSha256": "bb50086d6eb7c844d2a18d0f9c6398672a8f43bfa8a0745a7998e4401a817c9e",
+        "mappedScopes": [],
+        "addedJSDocBlocks": 2
+      },
+      {
+        "file": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipEvidenceService.js",
+        "beforeSha256": "7935b8035f23617226d22d4a01e9779bb57c42d1ceeeebdc36f052cb0b77a2b2",
+        "afterSha256": "428a1e67a07990acd23d3e78c5485ef2d2753a82c6865c4bb59722b637ff38ac",
+        "executableAstUnchanged": true,
+        "beforeAstSha256": "19683bab46f1ab8fa2a4c786dba904c53c4cf662fb685909c2190746cb9383c9",
+        "afterAstSha256": "19683bab46f1ab8fa2a4c786dba904c53c4cf662fb685909c2190746cb9383c9",
+        "mappedScopes": [],
+        "addedJSDocBlocks": 6
+      },
+      {
+        "file": "nodics.foundation/modules/nPublish/src/service/defaultPublicationSetupObservationService.js",
+        "beforeSha256": "9870fd04c2a7a48c058117e1a0420f41a2d90d5ad2276a70a0e30fad2053b10e",
+        "afterSha256": "d6beb660e5d1928319473579f7bc5d40f8e150a43bb78b59b7fa895804e72323",
+        "executableAstUnchanged": true,
+        "beforeAstSha256": "37598d1f6acf71837171d5073972d10ed4cd7ca39460d94aceb7704f98df9ce9",
+        "afterAstSha256": "37598d1f6acf71837171d5073972d10ed4cd7ca39460d94aceb7704f98df9ce9",
+        "mappedScopes": [],
+        "addedJSDocBlocks": 13
+      },
+      {
+        "file": "nodics.waste/modules/wasteCore/test/helpers/nativePersistenceFixture.js",
+        "beforeSha256": "c33d108b4afb8455aaae59e225eb197471f69b5be6cf1eddb874e05f74006a7b",
+        "afterSha256": "fe492af2b8decfe0979e2b19dd5ef968461af03ff37e11d6cb221961c6353379",
+        "executableAstUnchanged": true,
+        "beforeAstSha256": "f3452e2c53d9d613409965f8da66f5839361b07ac28df1d33d291b1aab9db6c4",
+        "afterAstSha256": "f3452e2c53d9d613409965f8da66f5839361b07ac28df1d33d291b1aab9db6c4",
+        "mappedScopes": [],
+        "addedJSDocBlocks": 1
+      }
+    ],
+    "aggregateImpact": "None of these seven paths is present in any current item.sourceFiles or sourceFileSha256 map. No new source pin or scope blessing is added for them; existing editorial outcomes are preserved.",
+    "qualityDocs": {
+      "status": "PASS_RECORDED_IN_EXISTING_PARENT_LOG",
+      "log": "/tmp/circa-navigation-quality-docs-jsdoc-20261009.log",
+      "rerunBySidecar": false
+    }
+  },
+  "checks": [
+    {
+      "command": "node --test nodics.wcms/modules/cms/test/cmsDocumentationNavigationProjection.test.js",
+      "status": "PASS",
+      "passed": 5,
+      "failed": 0,
+      "executedBySidecar": true
+    },
+    {
+      "command": "node --test nodics.wcms/modules/cms/test/cmsDocumentationNavigationProjection.test.js nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js",
+      "status": "PASS",
+      "passed": 6,
+      "failed": 0,
+      "executedBySidecar": true
+    },
+    {
+      "command": "node --test nodics.docs/test/semanticReviewContract.test.mjs",
+      "status": "PASS",
+      "passed": 2,
+      "failed": 0,
+      "executedBySidecar": true,
+      "meaning": "Strict current 22-scope aggregate contract; canonical sections and non-data source bytes remain mandatory."
+    },
+    {
+      "scope": "CMS full top-level source suite",
+      "status": "PASS_RECORDED_IN_EXISTING_PARENT_LOG",
+      "passed": 98,
+      "failed": 0,
+      "log": "/tmp/circa-cms-navigation-full-source-20261009.log",
+      "rerunBySidecar": false
+    },
+    {
+      "scope": "Full nodics.docs npm test and generated source coverage reports",
+      "status": "PARENT_OWNED_NOT_RUN_BY_SIDECAR",
+      "boundary": "Parent reports source-coverage generated report mismatch or absence, cause not established by this review; parent will regenerate through the canonical script. No deletion claim or gate relaxation."
+    }
+  ],
+  "preservation": {
+    "scopeCount": 22,
+    "unchangedScopeObjects": 20,
+    "otherChangedScope": "Axis setup and user-safe error contracts: only the requested related navigation limitation correction",
+    "canonicalDocumentPins": "ALL_UNCHANGED",
+    "historicalReviewArtifacts": "ALL_UNCHANGED",
+    "runtimeDataConfigWritesByThisReview": [],
+    "reportWritersExecuted": [],
+    "backofficeReleaseChecksum": "1731c69aef697ba0cfe4fe8e52916cbadefb41e02dbdee20fa777787a6b7aa4f"
+  },
+  "freeze": {
+    "cmsOrchestrationSourceSha256": "fd9e8cddb1f3495bb3f3d91dca8afeef9679f5e383a2ea1d62ffe82b45df6738",
+    "status": "SOURCE_REVIEW_COMPLETE_NO_RUNTIME_OR_DATA_CHANGE_REQUESTED",
+    "qualifies": "Reviewed exact source and local fixture behavior only; native must independently show newly approved exact manifest and delivered navigation searchText equality."
+  },
+  "liveAcceptance": {
+    "nativePublication": "NOT_EXECUTED_BY_SIDECAR",
+    "nativeSearchTextEquality": "NOT_EXECUTED_BY_SIDECAR",
+    "browserSearch": "NOT_EXECUTED",
+    "financialAcceptance": "NOT_EXECUTED",
+    "businessEndToEnd": "NOT_EXECUTED",
+    "providerAcceptance": "NOT_EXECUTED"
+  }
+}

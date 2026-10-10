@@ -111,6 +111,17 @@ does not modify Process services, routes, domain graphs or shared configuration.
 
 ## Authority And Recovery
 
+A shared deployment principal retains its signed deployment enterprise. By
+default the claimed business enterprise must match it. The explicit
+`publish.approvalWorkflow.runtimeEnterpriseScope` selection can admit a bounded
+literal `enterpriseCodes` list for that deployment, only when `enabled: true`.
+This does not grant a human foreign-enterprise submission or manufacture a
+Process decision. The callback first claims the exact completed action and then
+binds its business enterprise to the stored publication before any transition.
+The private persistence request carries that separate business scope; signed
+principal fields remain unchanged. Wildcards, duplicates and unselected owners
+reject. Configure only the actual deployment owners and qualify native callbacks.
+
 Read-only operations diagnostics include `pending` using the existing bounded
 repository selection and safe reference projection, independently of `stuck`.
 This allows recovery of the original publication identity after an interrupted
@@ -164,6 +175,12 @@ Only after a valid claim and bounded source context does it acquire nAuth's
 existing local system auth data to read the publication and invoke its owner.
 Original principal metadata is retained; the incoming request is not modified.
 Persisted source/scope mismatch rejects before any publication mutation.
+For a selected multi-enterprise deployment, the signed runtime's home enterprise
+remains unchanged. The claimed business enterprise must be explicitly allowed
+and match stored publication scope. Older journals without that scope require
+an independent immutable-source ownership check from their version provider;
+Product qualifies its exact sealed root. Missing or foreign owner evidence denies
+the transition. This does not backfill journals or authorize arbitrary enterprises.
 
 Approval calls nPublish `approve`, then `activate`; rejection calls `reject` and
 never deploys. Each transition retains nPublish's CAS and atomic audit journal.

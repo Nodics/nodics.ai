@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "otp",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "otp",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "aee9f5fd46115806c035175aa3af6a75c9652b350ef9f8152af7a349ec1aa8a6",
+      "generatedHashes": {
+        "docs-v001/records/documentation/otpDocumentationNodeData.js": "75846f32f4214d3474e205b10aefeb9b9bf1f38ee11bff78a239375a80d2602c",
+        "docs-v001/records/documentation/otpDocumentationPageMetadataData.js": "8ff55a225f1ba988a4bdfe497215fbf26cc36b62fcd37ec2db19a72b8e8690ae",
+        "docs-v001/records/documentation/otpDocumentationPublicationStateData.js": "b21eb7a27996229360add6d7e88756b92e9dfa14547680151d495170e261dab6",
+        "docs-v001/records/documentation/otpDocumentationSearchMetadataData.js": "511263717592b8637232c364b5e04310764d86b652e0ba2461ae50ef2754e684",
+        "docs-v001/records/documentation/otpDocumentationComponentData.js": "f4b89d5e88ea975b201b71a408024772b429ff88d5022a9c814a470af35acd71",
+        "docs-v001/records/documentation/otpDocumentationPageData.js": "14058c3ba61f14d969a1d3d01c15dd14e056ee98cd482e3b00f6135c045e711f",
+        "docs-v001/records/documentation/otpDocumentationRouteData.js": "87f0c68156beddc379cdd519a71d6c7250918a6dc8e366470225d38bd4dc11e9",
+        "docs-v001/headers/100_otpDocumentationContentPackHeader.js": "2cd214add003a16117b3f2aefc6af5c49ac56377ee97be4baa92bbf03d81a998"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

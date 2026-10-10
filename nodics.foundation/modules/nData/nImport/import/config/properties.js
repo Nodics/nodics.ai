@@ -76,6 +76,8 @@ module.exports = {
       installers: {},
       targetValidators: {},
       maximumFilesPerRelease: 1024,
+      maximumContributionBytes: 8388608,
+      maximumContributionPayloadBytes: 1048576,
       maximumModulesPerRun: 256,
       allowDowngrade: false,
       initializationProfiles: {},

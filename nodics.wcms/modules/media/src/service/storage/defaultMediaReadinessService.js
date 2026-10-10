@@ -24,6 +24,11 @@ module.exports = {
     read: async function (input, request) {
         const library = SERVICE.DefaultMediaLibraryService;
         library.assertOperator(request, 'media.upload.create');
+        return this.inspect(input, request);
+    },
+    /** Pure metadata inspection for already-authorized owner orchestration; no upload permission or identity substitution. */
+    inspect: async function (input, request) {
+        const library = SERVICE.DefaultMediaLibraryService;
         library.assertInput(input, ['assets']);
         if (
             !Array.isArray(input.assets) ||

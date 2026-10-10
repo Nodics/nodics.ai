@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "copilotEvaluation",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "copilotEvaluation",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "3ae09491d03acef5c266a0485f7f6032322200ab2dca1444bbf05ee64fcb25a6",
+      "generatedHashes": {
+        "docs-v001/records/documentation/copilotEvaluationDocumentationComponentData.js": "65a49aa0b8c80ee799e77077362bb31034e54c8f13802efb3ac2f4ec365d80b1",
+        "docs-v001/records/documentation/copilotEvaluationDocumentationPageMetadataData.js": "ed46bcff904214dc33d32d0ef83dbbdfa975cdef687832fe1c02b0e3e7f3c9c6",
+        "docs-v001/records/documentation/copilotEvaluationDocumentationNodeData.js": "864e391e668f26f0980b1ae33803c3d08566fa0d176d78a143f675c81c4f2acb",
+        "docs-v001/records/documentation/copilotEvaluationDocumentationPageData.js": "548540a57a2e4e3df73a4afeab58a6116a710c612798fceecd42c2fc4ef20571",
+        "docs-v001/records/documentation/copilotEvaluationDocumentationRouteData.js": "1d0c018879567256bc341f7420e1ebe35b7420d6dc9310230fd99b9306626a79",
+        "docs-v001/records/documentation/copilotEvaluationDocumentationSearchMetadataData.js": "14ee159e765d5f5a2c95a696c6573a38528c0e7bec4445edc34856cde7e3a93b",
+        "docs-v001/records/documentation/copilotEvaluationDocumentationPublicationStateData.js": "b500e3690bf189e863dc404aaacae5cc42bcf7cac42f4bc8f3840d143ba73d5f",
+        "docs-v001/headers/100_copilotEvaluationDocumentationContentPackHeader.js": "4ae1cf80eeb13fab361f394de9259c1cedb9249d01efb1a955a763db3b3559cd"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -3,6 +3,9 @@
 Commerce tests stay with the owning module whenever behavior belongs to one
 domain module. Use the group-level test folder only for cross-module guidance
 or future orchestration contracts that cannot live in one owner.
+`helpers/policyRuntimeEnterprise.js` registers the common four-policy runtime
+handoff contract from each owning module's existing PolicyProvider test suite;
+it is test-only and does not introduce another runtime or acceptance runner.
 
 - `baseCommerce/product/test`: customer-safe discovery, PDP, search publication,
   and Product projection contracts.

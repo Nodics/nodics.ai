@@ -76,6 +76,66 @@ test("provider open failure attempts owned connection close without leaking orig
   assert.equal(f.state.closes, 1); assert.equal(f.state.drops, 0);
 });
 
+/** Supplies only bounded registry reads through an overridden provider client; no live connections or writes. */
+function discoveryFixture(rows = [{ code: "retired" }, { code: "alpha" }]) {
+  const state = { clientCloses: 0, cursorCloses: 0, opens: 0 };
+  const cursor = { toArray: async () => rows, close: async () => { state.cursorCloses++; },
+    limit: function (maximum) { assert.equal(maximum, 33); return this; } };
+  const db = { command: async () => ({ isWritablePrimary: true }), collection: name => {
+    assert.equal(name, "TenantModel");
+    return { find: (query, configuration) => {
+      assert.deepEqual(query, { code: { $ne: "default" } });
+      assert.deepEqual(configuration, { projection: { _id: 0, code: 1 }, readPreference: "primary", maxTimeMS: 5000 });
+      return cursor;
+    } };
+  } };
+  const client = { connect: async () => {}, db: name => { assert.equal(name, "acmeLocalPlatform"); return db; },
+    close: async () => { state.clientCloses++; } };
+  const effective = { ...owner, createClient: () => { state.opens++; return client; } };
+  return { state, cursor, db, client, effective, input: { ...options(), defaultTenant: "default" } };
+}
+
+test("registry discovery is bounded, code-only, includes inactive candidates and grants no protected observation", async () => {
+  const f = discoveryFixture();
+  assert.deepEqual(await f.effective.discoverRegisteredTenantCodes(f.input), ["alpha", "retired"]);
+  assert.deepEqual(f.state, { opens: 1, clientCloses: 1, cursorCloses: 1 });
+  assert.equal(owner.isRegisteredTenantObservation({ tenants: [{ code: "alpha" }] }, f.input), false);
+  assert.deepEqual(await discoveryFixture([]).effective.discoverRegisteredTenantCodes(f.input), []);
+});
+
+test("registry discovery refuses malformed, duplicate, default and overflowing results with cleanup", async () => {
+  for (const rows of [null, [{}], [{ code: "default" }], [{ code: "constructor" }], [{ code: "*" }],
+    [{ code: "alpha" }, { code: "alpha" }], Array.from({ length: 33 }, (_, index) => ({ code: "tenant" + index }))]) {
+    const f = discoveryFixture(rows);
+    await assert.rejects(f.effective.discoverRegisteredTenantCodes(f.input), /RESET_TENANT_DISCOVERY_FAILED/);
+    assert.equal(f.state.clientCloses, 1);
+    assert.equal(f.state.cursorCloses, 1);
+  }
+});
+
+test("registry discovery validates local scope before opening and sanitizes read/cleanup failures", async () => {
+  for (const alter of [input => { input.defaultTenant = "__proto__"; },
+    input => { input.configuration.databaseName = "sharedData"; },
+    input => { input.configuration.URI = "mongodb://remote.example"; }]) {
+    const f = discoveryFixture(); alter(f.input);
+    await assert.rejects(f.effective.discoverRegisteredTenantCodes(f.input));
+    assert.equal(f.state.opens, 0);
+  }
+  for (const stage of ["connect", "topology", "read", "cursorClose", "clientClose"]) {
+    const f = discoveryFixture();
+    const fail = async () => { throw new Error("mongodb://private-secret@host"); };
+    if (stage === "connect") f.client.connect = fail;
+    if (stage === "topology") f.db.command = async () => ({ isWritablePrimary: true, msg: "isdbgrid" });
+    if (stage === "read") f.cursor.toArray = fail;
+    if (stage === "cursorClose") f.cursor.close = fail;
+    if (stage === "clientClose") f.client.close = async () => { f.state.clientCloses++; await fail(); };
+    await assert.rejects(f.effective.discoverRegisteredTenantCodes(f.input), error => {
+      assert.equal(error.message, "RESET_TENANT_DISCOVERY_FAILED"); return true;
+    });
+    assert.equal(f.state.clientCloses, 1);
+  }
+});
+
 /** Builds protected read observations with actual namespace/fingerprint owners and injected read-only native collections. */
 async function registeredFixture(t, mutate = () => {}, explicitName) {
   const prior = Object.fromEntries(["_", "CONFIG", "NODICS", "CLASSES", "SERVICE"].map(key => [key, global[key]]));

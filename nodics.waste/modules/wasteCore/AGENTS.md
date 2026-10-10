@@ -3,6 +3,22 @@
 Follow the parent contract: `../../AGENTS.md`.
 Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
+Digital original-sale refund locks/events remain in the existing reversal owner.
+Reuse the transfer owner's inspected CAS/unique-code/readback primitives, bind
+the original approved command and custody snapshot, and retain locks on uncertain
+settlement. Restore digital ownership only after eWaste verifies original seller
+reversal and original Payment refund; never mutate wallets or infer custody.
+See [the reversal contract](llm/contracts/README.md#original-digital-sale-refund).
+
+The transfer owner also owns strictly unfenced RESERVED captured/refunded
+cleanup through `digitalCompensationState`, `fenceDigitalCompensation` and
+`completeDigitalCompensation`. CAS cancellation precedes qualified owner absence
+reads and blocks fresh/stale capture preparation. Never release capture/settlement
+fences, infer financial absence or execute wallets. Retain original financial
+proof, command, custody and asset/event revision fences; uncertain reads keep
+locks. See the refunded-reservation contract and eWaste real-owner bridge tests.
+No new routes, permissions or activation defaults are needed.
+
 `wasteCore` owns shared Waste enum, status, source-reference, and policy defaults.
 Common Waste reference data belongs here when it serves the whole Waste
 functional module. Do not place material records, submissions, receipts, impact

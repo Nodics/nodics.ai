@@ -20,6 +20,8 @@ import {
 } from 'node:fs';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+import { qualifySemanticReview } from './semantic-review-contract.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const docsRoot = resolve(scriptDir, '..');
@@ -44,20 +46,24 @@ if (customScope && (!options.catalogue || !options['output-dir']))
     throw new Error('Selected source coverage requires --catalogue and --output-dir owned by that project');
 if (!customScope && (options.catalogue || options['output-dir']))
     throw new Error('Custom catalogue/output requires an explicit --source-root');
-const cataloguePath = resolve(options.catalogue || resolve(docsRoot, 'docs/catalogue.json'));
+const cataloguePath = resolve(options.catalogue || resolve(docsRoot, 'data/manifest.json'));
 const contentRoot = customScope ? dirname(dirname(cataloguePath)) : docsRoot;
 const workspaceRoot = customScope
     ? resolve(options['path-base'] || contentRoot)
     : resolve(frameworkRoot, '..');
 const checkOnly = process.argv.includes('--check');
-const catalogue = JSON.parse(readFileSync(cataloguePath, 'utf8'));
+const require = createRequire(import.meta.url);
+const documentationContract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
+const catalogue = cataloguePath.endsWith('/data/manifest.json')
+    ? documentationContract.readDataCatalogue(contentRoot)
+    : JSON.parse(readFileSync(cataloguePath, 'utf8'));
 function canonicalPath(value) {
     const absolute = resolve(value);
     let existing = absolute;
     while (!existsSync(existing)) existing = dirname(existing);
     return resolve(realpathSync(existing), relative(existing, absolute));
 }
-const outputRoot = canonicalPath(options['output-dir'] || resolve(docsRoot, 'docs/reports'));
+const outputRoot = canonicalPath(options['output-dir'] || resolve(docsRoot, 'test/reports'));
 if (
     customScope &&
     (outputRoot === canonicalPath(frameworkRoot) || outputRoot.startsWith(canonicalPath(frameworkRoot) + sep))
@@ -131,8 +137,8 @@ const frameworkDocumentationBacklog = [
         priority: 'P0',
         item: 'Documentation publishing runbook',
         classification: 'needs-deeper-section',
-        sourceAreas: ['nodics.docs', 'nodics.wcms/modules/cms', 'nodics.process/modules/nPublish'],
-        action: 'Document source Markdown to generated data, Staged import, review, Online publication, rollback, and rendering.',
+        sourceAreas: ['nodics.docs', 'nodics.wcms/modules/cms', 'nodics.foundation/modules/nPublish'],
+        action: 'Document canonical CMS data, optional CONTENT_PACK selection, Staged import, review, Online publication, rollback, and rendering.',
     },
     {
         priority: 'P1',
@@ -265,12 +271,9 @@ const documentationBacklog = customScope
     ? catalogue.documentationBacklog || []
     : frameworkDocumentationBacklog;
 
-function backlogStatus(item) {
-    if (item.priority === 'P0') return 'closed-by-p0-docs-batch';
-    if (item.priority === 'P1') return 'closed-by-p1-docs-batch';
-    if (item.priority === 'P2') return 'closed-by-p2-docs-batch';
-    return 'open';
-}
+const semanticReviewPath = resolve(docsRoot, 'test/evidence/semantic-documentation-closure.json');
+const semanticReview = !customScope && existsSync(semanticReviewPath)
+    ? JSON.parse(readFileSync(semanticReviewPath, 'utf8')) : undefined;
 
 function isIgnored(pathValue) {
     return pathValue.split(sep).some((segment) => ignoredSegments.has(segment));
@@ -390,15 +393,15 @@ function collectSignals(entry) {
     });
 }
 
-function resolveEvidencePath(evidence) {
+function resolveEvidencePath(evidence, ownerRoot = contentRoot) {
     if (!evidence || /^https?:\/\//.test(evidence)) return undefined;
-    return resolve(contentRoot, evidence);
+    return resolve(ownerRoot, evidence);
 }
 
 const documents = catalogue.documents.map((document) => {
-    const contentPath = resolve(contentRoot, document.content);
-    const body = existsSync(contentPath) ? readFileSync(contentPath, 'utf8') : '';
-    const evidencePaths = (document.sourceEvidence || []).map(resolveEvidencePath).filter(Boolean);
+    const contentPath = resolve(document.ownerRoot || contentRoot, document.content);
+    const body = document.body ?? (existsSync(contentPath) ? readFileSync(contentPath, 'utf8') : '');
+    const evidencePaths = (document.sourceEvidence || []).map(evidence => resolveEvidencePath(evidence, document.ownerRoot || contentRoot)).filter(Boolean);
     return {
         id: document.id,
         title: document.title,
@@ -416,6 +419,7 @@ const documents = catalogue.documents.map((document) => {
             ].join(' '),
         ),
         evidencePaths,
+        source: document,
     };
 });
 
@@ -461,10 +465,80 @@ function classify(entry, matches, priorityScore) {
 
 const modules = collectPackageBoundaries();
 modules.forEach(collectSignals);
+// Explicit depth claims bind real source files to substantial, anchored sections.
+// Mention-based matches remain triage only; they are not implementation proof.
+const declaredCoverage = new Map();
+const declaredOwnership = new Map();
+for (const document of documents) {
+    const source = document.source;
+    // A reviewed shared-guide mapping settles ownership, not documentation depth.
+    const ownership = source.sourceOwnership || [];
+    if (!Array.isArray(ownership)) throw new Error(`Invalid sourceOwnership: ${document.id}`);
+    for (const claim of ownership) {
+        const fail = reason => { throw new Error(`Invalid sourceOwnership for ${document.id}: ${reason}`); };
+        if (!claim || typeof claim.modulePath !== 'string' ||
+            !['IMPLEMENTED', 'SCHEMA_DEFINED', 'COMPOSITION_ONLY'].includes(claim.implementationState) ||
+            typeof claim.rationale !== 'string' || claim.rationale.trim().length < 80) fail('explicit owner decision required');
+        const target = canonicalPath(resolve(source.ownerRoot || contentRoot, claim.modulePath));
+        if (!modules.some(module => canonicalPath(module.path) === target)) fail('module outside selected source boundaries');
+        if (!source.blocks?.some(block => block.kind === 'heading' && block.anchor === claim.anchor)) fail('canonical section required');
+        if (!Array.isArray(claim.evidence) || new Set(claim.evidence).size < 2) fail('two distinct source files required');
+        for (const evidence of claim.evidence) {
+            if (typeof evidence !== 'string' || /^https?:/.test(evidence)) fail('local source evidence required');
+            const file = canonicalPath(resolve(source.ownerRoot || contentRoot, evidence));
+            if (!existsSync(file) || !statSync(file).isFile() || !file.startsWith(target + sep) ||
+                !document.evidencePaths.some(path => canonicalPath(path) === file) || /[\\/]data[\\/]/.test(file)) fail('declared owner source required');
+        }
+        if (!declaredOwnership.has(target)) declaredOwnership.set(target, []);
+        declaredOwnership.get(target).push({ documentId: document.id, ...claim });
+    }
+    const claims = source.sourceCoverage || [];
+    if (!Array.isArray(claims)) throw new Error(`Invalid sourceCoverage: ${document.id}`);
+    for (const claim of claims) {
+        const fail = reason => { throw new Error(`Invalid sourceCoverage for ${document.id}: ${reason}`); };
+        if (!claim || typeof claim.modulePath !== 'string') fail('modulePath required');
+        const target = canonicalPath(resolve(source.ownerRoot || contentRoot, claim.modulePath));
+        const entry = modules.find(module => canonicalPath(module.path) === target);
+        if (!entry) fail('module outside selected source boundaries');
+        if (!['IMPLEMENTED', 'SCHEMA_DEFINED', 'COMPOSITION_ONLY'].includes(claim.implementationState))
+            fail('implementationState required');
+        if (!Array.isArray(claim.anchors) || claim.anchors.some(anchor => typeof anchor !== 'string' || !anchor) ||
+            new Set(claim.anchors).size < 3 || new Set(claim.anchors).size !== claim.anchors.length)
+            fail('three distinct anchors required');
+        if (!Array.isArray(claim.evidence) || claim.evidence.length < 2) fail('two source files required');
+        for (const evidence of claim.evidence) {
+            if (typeof evidence !== 'string' || /^https?:/.test(evidence)) fail('local source evidence required');
+            const file = canonicalPath(resolve(source.ownerRoot || contentRoot, evidence));
+            if (!existsSync(file) || !statSync(file).isFile() ||
+                !file.startsWith(target + sep) ||
+                !document.evidencePaths.some(path => canonicalPath(path) === file) ||
+                /[\\/]data[\\/]/.test(file)) fail('evidence must be declared non-data source inside module');
+        }
+        const blocks = source.blocks;
+        if (!Array.isArray(blocks)) fail('canonical content blocks required');
+        const sections = [];
+        for (const anchor of claim.anchors) {
+            const start = blocks.findIndex(block => block.kind === 'heading' && block.anchor === anchor);
+            if (start < 0) fail('missing section anchor');
+            let end = start + 1;
+            while (end < blocks.length && !(blocks[end].kind === 'heading' && blocks[end].level <= blocks[start].level)) end++;
+            sections.push(...blocks.slice(start + 1, end));
+        }
+        const prose = sections.filter(block => ['paragraph', 'table', 'list'].includes(block.kind));
+        const words = JSON.stringify(prose).split(/\s+/).filter(Boolean).length;
+        if (words < 800 || !sections.some(block => block.kind === 'diagram') || !sections.some(block => block.kind === 'table'))
+            fail('sections require 800 words, a diagram and a table');
+        if (!declaredCoverage.has(target)) declaredCoverage.set(target, []);
+        declaredCoverage.get(target).push({ documentId: document.id, implementationState: claim.implementationState,
+            anchors: claim.anchors, evidence: claim.evidence, words });
+    }
+}
 const rows = modules
     .map((entry) => {
         const matches = documents.filter((document) => documentMatches(entry, document));
         const priorityScore = score(entry);
+        const claims = declaredCoverage.get(canonicalPath(entry.path)) || [];
+        const ownership = declaredOwnership.get(canonicalPath(entry.path)) || [];
         return {
             name: entry.name,
             kind: entry.kind,
@@ -472,7 +546,10 @@ const rows = modules
             path: entry.relativePath,
             packageJsonPath: entry.packageJsonPath,
             priorityScore,
-            classification: classify(entry, matches, priorityScore),
+            classification: claims.length ? 'covered' : ownership.length ? 'shared-guide-mapped' : classify(entry, matches, priorityScore),
+            coverageBasis: claims.length ? 'validated-source-sections' : ownership.length ? 'owner-reviewed-reference' : 'mention-based-triage',
+            sourceCoverage: claims,
+            ...(ownership.length ? { sourceOwnership: ownership } : {}),
             matchedDocuments: matches.slice(0, 6).map((document) => document.id),
             counts: entry.counts,
             examples: entry.examples,
@@ -483,6 +560,7 @@ const rows = modules
             'needs-page-or-owner-mapping': 0,
             'needs-deeper-section': 1,
             'internal-only-candidate': 2,
+            'shared-guide-mapped': 3,
             covered: 3,
         };
         return (
@@ -513,21 +591,24 @@ const report = {
             'needs-deeper-section',
             'covered',
             'internal-only-candidate',
+            'shared-guide-mapped',
         ],
     },
     documentationBacklog: documentationBacklog.map((item) => ({
         ...item,
-        status: backlogStatus(item),
+        ...qualifySemanticReview(item, semanticReview, catalogue.documents, frameworkRoot),
     })),
     rows,
 };
+summary.semanticReviewClosed = report.documentationBacklog.filter(item => item.status === 'closed-with-evidence').length;
+summary.semanticReviewOpen = report.documentationBacklog.length - summary.semanticReviewClosed;
 
 function markdown(reportValue) {
-    const topGaps = reportValue.rows.filter((row) => row.classification !== 'covered').slice(0, 40);
+    const topGaps = reportValue.rows.filter((row) => !['covered', 'shared-guide-mapped'].includes(row.classification)).slice(0, 40);
     const lines = [
         '# Source-Backed Documentation Coverage Report',
         '',
-        'This generated report maps current source boundaries to published documentation catalogue coverage. Open gaps are triage signals, not proof that a page is absent; a technical module can be intentionally covered by a broader business capability page.',
+        'This generated report maps source boundaries to the authoring catalogue, including drafts. Validated source sections bind anchored content to real module files; other matches are mention-based triage only. Coverage is documentation evidence, not proof of implementation, publication, runtime qualification or browser acceptance.',
         '',
         '## Summary',
         '',
@@ -539,7 +620,10 @@ function markdown(reportValue) {
         `| Needs deeper section | ${reportValue.summary['needs-deeper-section'] || 0} |`,
         `| Covered | ${reportValue.summary.covered || 0} |`,
         `| Internal-only candidate | ${reportValue.summary['internal-only-candidate'] || 0} |`,
+        `| Reviewed shared-guide mapping (not depth certification) | ${reportValue.summary['shared-guide-mapped'] || 0} |`,
         `| Classified backlog items | ${reportValue.documentationBacklog.length} |`,
+        `| Source-editorial backlog closed with current evidence | ${reportValue.summary.semanticReviewClosed} |`,
+        `| Source-editorial backlog still open | ${reportValue.summary.semanticReviewOpen} |`,
         '',
         '## Classified Backlog',
         '',
@@ -578,7 +662,7 @@ function markdown(reportValue) {
         'npm --prefix nodics.docs run audit:source-coverage:check',
         '```',
         '',
-        'Use this report with `docs/pages/reference/source-backed-documentation-coverage-audit.md` to decide whether each item needs a new page, a deeper section, or an explicit internal-only classification.',
+        'Use this report with the source-backed documentation coverage CMS article to decide whether each item needs a new page, a deeper section, or an explicit internal-only classification.',
         '',
     );
     return lines.join('\n');
@@ -602,5 +686,9 @@ if (checkOnly) {
 console.log('Source-backed documentation coverage audit passed');
 console.log(`Source boundaries: ${summary.totalModules}`);
 console.log(`Catalogue documents: ${summary.documents}`);
+for (const basis of ['validated-source-sections', 'owner-reviewed-reference', 'mention-based-triage']) {
+    console.log(`${basis}: ${rows.filter(row => row.coverageBasis === basis).length}`);
+}
 console.log(`Needs page or owner mapping: ${summary['needs-page-or-owner-mapping'] || 0}`);
 console.log(`Needs deeper section: ${summary['needs-deeper-section'] || 0}`);
+console.log(`Semantic backlog: ${summary.semanticReviewClosed} closed, ${summary.semanticReviewOpen} open`);

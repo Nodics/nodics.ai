@@ -154,12 +154,34 @@ module.exports = {
             .digest('hex');
     },
 
-    /** Builds bounded context from the stored publication and authenticated scope, never a callback decision. */
-    context: function (publication, request) {
+    /** Admits explicitly selected business owners without rewriting a deployment principal. */
+    requireRuntimeEnterprise: function (auth, enterpriseCode) {
+        if (typeof enterpriseCode !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(enterpriseCode)) {
+            throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication business enterprise is invalid');
+        }
+        if (enterpriseCode === auth.entCode) return enterpriseCode;
+        const policy = CONFIG.get('publish')?.approvalWorkflow?.runtimeEnterpriseScope;
+        if (auth.tokenType !== 'service' || auth.principalType !== 'service' || !auth.runtimeScope ||
+            policy?.enabled !== true || !Array.isArray(policy.enterpriseCodes) || !policy.enterpriseCodes.length ||
+            policy.enterpriseCodes.length > 100 || new Set(policy.enterpriseCodes).size !== policy.enterpriseCodes.length ||
+            policy.enterpriseCodes.some(code => typeof code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(code)) ||
+            !policy.enterpriseCodes.includes(enterpriseCode)) {
+            throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication business enterprise is not selected for this deployment');
+        }
+        return enterpriseCode;
+    },
+
+    /** Builds bounded context from stored source and human scope, or a previously claimed private callback scope. */
+    context: function (publication, request, claimedEnterprise) {
         const policy = this.policy(publication.domain);
         const auth = request.authData || {};
         const tenant = this.requireText(request.tenant, 'tenant');
-        const enterprise = this.requireText(auth.entCode || auth.enterpriseCode, 'enterprise');
+        if (claimedEnterprise !== undefined && auth.isSystem !== true) {
+            throw new CLASSES.NodicsError('ERR_PUB_00004', 'Claimed enterprise requires private owner persistence');
+        }
+        const enterprise = claimedEnterprise === undefined
+            ? this.requireText(auth.entCode || auth.enterpriseCode, 'enterprise')
+            : this.requireRuntimeEnterprise(auth, claimedEnterprise);
         if ((auth.tenant && auth.tenant !== tenant) ||
             (auth.entCode && auth.enterpriseCode && auth.entCode !== auth.enterpriseCode) ||
             (publication.tenantCode && publication.tenantCode !== tenant) ||

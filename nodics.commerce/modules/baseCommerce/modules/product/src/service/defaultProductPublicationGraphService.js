@@ -12,6 +12,21 @@
 'use strict';
 const crypto = require('node:crypto');
 
+// Only verified roots can create a dependency-read capability; request fields cannot supply one.
+const memberships = new WeakMap();
+// Capability minting is private security authority, never a mergeable customization surface.
+const membershipAuthority = {
+    /** Mints a private read capability for a verified root and its sealed dependency references. */
+    rootMembership: function (request, root, references, owner) {
+        const token = {};
+        memberships.set(token, { request, productCode: root.code,
+            references: references && new Set(references.map(reference => owner.referenceKey(reference))),
+            variants: new Set((references || []).filter(row => row.schema === 'productVariant').map(row => row.code)),
+            categories: new Set((references || []).filter(row => row.schema === 'category').map(row => row.code)) });
+        return token;
+    }
+};
+
 /**
  * @module product/service/defaultProductPublicationGraphService
  * @description Resolves an immutable Product-owned catalogue graph through generated versioned services.
@@ -20,6 +35,8 @@ const crypto = require('node:crypto');
  * @override Extend graph validation without weakening exact references, tenant isolation or bounded closure.
  */
 module.exports = {
+    /** Returns the exact schema/code/version/hash key; overrides must preserve every coordinate. @param {Object} reference Sealed source reference. @returns {string} Stable membership key. */
+    referenceKey: function (reference) { return JSON.stringify([reference.schema, reference.code, reference.versionId, reference.hash]); },
     /** Returns Product-owned persistence service identities, not a second provider registry. */
     services: function () {
         return { product: 'DefaultProductService', productLocalization: 'DefaultProductLocalizationService',
@@ -28,6 +45,74 @@ module.exports = {
     },
     /** Returns effective owner limits. */
     policy: function () { return (CONFIG.get('product') || {}).publication || {}; },
+    /** Admits only the authenticated publisher's Staged enterprise; never adds schema CRUD groups to that principal. */
+    publisherScope: function (request) {
+        const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (auth.principalType !== 'human' || !security?.getGrantedPermissions || !security.isPermissionGranted ||
+            !security.isPermissionGranted('commerce.product.publish', security.getGrantedPermissions(request), {})) return undefined;
+        const enterpriseCode = auth.enterpriseCode || auth.entCode;
+        if (auth.tokenType !== 'access' || auth.principalType !== 'human' || auth.isSystem ||
+            !(auth.principalId || auth.loginId || auth.code) || typeof auth.tenant !== 'string' || !auth.tenant ||
+            request.tenant !== auth.tenant || typeof enterpriseCode !== 'string' || !enterpriseCode ||
+            [auth.entCode, auth.enterpriseCode, request.enterpriseCode, request.entCode].some(value => value !== undefined && value !== enterpriseCode) ||
+            CONFIG.get('runtimeRole')?.publication !== 'STAGED') throw new Error('Authenticated Product publisher scope is required');
+        return { tenant: auth.tenant, enterpriseCode };
+    },
+    /** Uses canonical owner authority only for fixed generated graph reads and the membership-only seal write. */
+    persistenceContext: function (request) {
+        const scope = this.publisherScope(request);
+        if (!scope) return { tenant: request.tenant, authData: request.authData };
+        const owner = SERVICE.DefaultIdentityGovernanceService;
+        if (!owner?.getSystemAuthData) throw new Error('Product publication persistence owner is unavailable');
+        return { tenant: scope.tenant, authData: owner.getSystemAuthData() };
+    },
+    /** Binds neutral reads to a privately verified root and exact parent/reference membership. */
+    publisherQuery: function (request, schema, query, token, reference) {
+        const scope = this.publisherScope(request);
+        if (!scope) return { ...query, tenant: request.tenant };
+        if (schema === 'product') {
+            if (typeof query.code !== 'string' || !query.code) throw new Error('Exact publisher Product is required');
+            return { ...query, ...scope };
+        }
+        const membership = token && memberships.get(token);
+        if (!membership || membership.request !== request ||
+            (reference ? !membership.references?.has(this.referenceKey(reference)) : membership.references))
+            throw new Error('Verified Product dependency membership is required');
+        if (!reference) {
+            const valid = ['productLocalization', 'productVariant'].includes(schema) ? query.productCode === membership.productCode :
+                schema === 'productVariantLocalization' ? query.productCode === membership.productCode &&
+                    Array.isArray(query.variantCode?.$in) && query.variantCode.$in.length > 0 &&
+                    query.variantCode.$in.every(code => membership.variants.has(code)) :
+                schema === 'category' ? membership.categories.has(query.code) :
+                schema === 'categoryLocalization' && Array.isArray(query.categoryCode?.$in) && query.categoryCode.$in.length > 0 &&
+                    query.categoryCode.$in.every(code => membership.categories.has(code));
+            if (!valid) throw new Error('Product dependency query escaped verified membership');
+        }
+        return { ...query, tenant: scope.tenant,
+            $or: [{ enterpriseCode: scope.enterpriseCode }, { enterpriseCode: { $exists: false } }] };
+    },
+    /** Independently rejects foreign scope and provider responses outside the verified root's closure. */
+    assertPublisherRecord: function (request, row, schema, token) {
+        const scope = this.publisherScope(request);
+        if (!scope) return;
+        if (row.tenant !== scope.tenant ||
+            (row.enterpriseCode !== scope.enterpriseCode && (schema === 'product' || row.enterpriseCode !== undefined)))
+            throw new Error('Product source escaped publisher enterprise');
+        if (schema === 'product') return;
+        const membership = token && memberships.get(token);
+        const valid = membership?.request === request && (
+            ['productLocalization', 'productVariant'].includes(schema) ? row.productCode === membership.productCode :
+                schema === 'productVariantLocalization' ? row.productCode === membership.productCode && membership.variants.has(row.variantCode) :
+                schema === 'category' ? membership.categories.has(row.code) :
+                schema === 'categoryLocalization' && membership.categories.has(row.categoryCode));
+        if (!valid) throw new Error('Product dependency response escaped verified membership');
+    },
+    /** Seals only captured membership through the existing versioned generated update, never arbitrary publisher fields. */
+    sealRoot: function (request, productCode, versionId, references) {
+        return SERVICE.DefaultProductService.update({ ...this.persistenceContext(request),
+            query: { tenant: request.tenant, ...this.publisherScope(request), code: productCode, versionId },
+            model: { publicationReferences: structuredClone(references) } });
+    },
     /** Produces deterministic JSON without storage identities; retained source records remain authoritative. */
     canonical: function (value, storageRecord) {
         if (value instanceof Date) return value.toISOString();
@@ -52,28 +137,31 @@ module.exports = {
         }
     },
     /** Reads one exact immutable record and rejects missing, duplicate or foreign responses. */
-    read: async function (request, reference) {
+    read: async function (request, reference, membership) {
         const name = this.services()[reference.schema];
         if (!request.tenant || !name || !reference.code || !Number.isSafeInteger(reference.versionId) || reference.versionId < 0) {
             throw new Error('Exact Product source reference is required');
         }
         this.assertVersioned(request, reference.schema);
-        const response = await SERVICE[name].get({ tenant: request.tenant, authData: request.authData,
-            query: { tenant: request.tenant, code: reference.code, versionId: reference.versionId },
+        const response = await SERVICE[name].get({ ...this.persistenceContext(request),
+            query: this.publisherQuery(request, reference.schema, { code: reference.code, versionId: reference.versionId }, membership, reference),
+            options: { recursive: false, skipItemCache: true },
             searchOptions: { limit: 2, pageSize: 2 } });
         const rows = response && response.result;
         if (!Array.isArray(rows) || rows.length !== 1 || (Number.isFinite(response.count) && response.count !== 1) || rows[0].tenant !== request.tenant ||
             rows[0].code !== reference.code || rows[0].versionId !== reference.versionId ||
             (reference.hash && reference.hash !== this.hash(rows[0]))) throw new Error('Product source version is missing or changed');
+        this.assertPublisherRecord(request, rows[0], reference.schema, membership);
         return this.canonical(rows[0]);
     },
     /** Reads bounded current membership through the generated service, never raw history or caller-supplied rows. */
-    current: async function (request, schema, query) {
+    current: async function (request, schema, query, membership) {
         this.assertVersioned(request, schema);
         const limit = this.policy().maximumDependencies;
         if (!Number.isSafeInteger(limit) || limit < 1) throw new Error('Product dependency bound is invalid');
-        const response = await SERVICE[this.services()[schema]].get({ tenant: request.tenant, authData: request.authData,
-            query: Object.assign({}, query, { tenant: request.tenant }), searchOptions: { limit: limit + 1, pageSize: limit + 1 } });
+        const response = await SERVICE[this.services()[schema]].get({ ...this.persistenceContext(request),
+            query: this.publisherQuery(request, schema, query, membership),
+            options: { recursive: false, skipItemCache: true }, searchOptions: { limit: limit + 1, pageSize: limit + 1 } });
         if (!response || !Array.isArray(response.result) || response.result.length > limit ||
             (Number.isFinite(response.count) && response.count > limit)) throw new Error('Product dependency capture is incomplete');
         const seen = new Set();
@@ -81,6 +169,7 @@ module.exports = {
             if (row.tenant !== request.tenant || !row.code || seen.has(row.code) || !Number.isSafeInteger(row.versionId) || row.versionId < 0) {
                 throw new Error('Product current dependency identity is invalid');
             }
+            this.assertPublisherRecord(request, row, schema, membership);
             seen.add(row.code);
             return this.canonical(row);
         });
@@ -90,22 +179,26 @@ module.exports = {
         if (!productCode || !storeCode) throw new Error('Product and Store are required');
         const roots = await this.current(request, 'product', { code: productCode });
         if (roots.length !== 1 || roots[0].code !== productCode) throw new Error('Current Product is unavailable');
+        const membership = membershipAuthority.rootMembership(request, roots[0]);
+        const members = memberships.get(membership);
         const records = {};
-        records.productLocalization = await this.current(request, 'productLocalization', { productCode: productCode, status: 'READY' });
-        records.productVariant = await this.current(request, 'productVariant', { productCode: productCode, status: 'ACTIVE' });
+        records.productLocalization = await this.current(request, 'productLocalization', { productCode: productCode, status: 'READY' }, membership);
+        records.productVariant = await this.current(request, 'productVariant', { productCode: productCode, status: 'ACTIVE' }, membership);
+        records.productVariant.forEach(row => members.variants.add(row.code));
         records.productVariantLocalization = records.productVariant.length ? await this.current(request, 'productVariantLocalization',
-            { productCode: productCode, variantCode: { $in: records.productVariant.map(row => row.code) }, status: 'READY' }) : [];
+            { productCode: productCode, variantCode: { $in: records.productVariant.map(row => row.code) }, status: 'READY' }, membership) : [];
         records.category = [];
         const pending = new Set(records.productLocalization.flatMap(row => (row.classificationValues || {}).categoryCodes || []));
+        pending.forEach(code => members.categories.add(code));
         for (const code of pending) {
             if (pending.size > this.policy().maximumDependencies) throw new Error('Product category dependency bound exceeded');
-            const rows = await this.current(request, 'category', { code: code });
+            const rows = await this.current(request, 'category', { code: code }, membership);
             if (rows.length !== 1 || rows[0].code !== code) throw new Error('Product category dependency is missing');
             records.category.push(rows[0]);
-            if (rows[0].parentCode) pending.add(rows[0].parentCode);
+            if (rows[0].parentCode) { pending.add(rows[0].parentCode); members.categories.add(rows[0].parentCode); }
         }
         records.categoryLocalization = records.category.length ? await this.current(request, 'categoryLocalization',
-            { categoryCode: { $in: records.category.map(row => row.code) }, status: 'READY' }) : [];
+            { categoryCode: { $in: records.category.map(row => row.code) }, status: 'READY' }, membership) : [];
         this.validateGraph(request, roots[0], records);
         const references = Object.entries(records).flatMap(([schema, rows]) => rows.map(row =>
             ({ schema: schema, code: row.code, versionId: row.versionId, hash: this.hash(row) })));
@@ -157,6 +250,7 @@ module.exports = {
         const limit = this.policy().maximumDependencies;
         if (!Number.isSafeInteger(limit) || limit < 1 || !selection || typeof selection.storeCode !== 'string' || !selection.storeCode ||
             !Array.isArray(selection.records) || selection.records.length > limit) throw new Error('Sealed Product dependency selection is required');
+        const membership = membershipAuthority.rootMembership(request, root, selection.records, this);
         const records = {}, references = [], seen = new Set();
         for (const reference of selection.records) {
             const key = JSON.stringify([reference.schema, reference.code]);
@@ -164,7 +258,7 @@ module.exports = {
                 throw new Error('Duplicate or invalid Product dependency reference');
             }
             seen.add(key);
-            const record = await this.read(request, reference);
+            const record = await this.read(request, reference, membership);
             (records[reference.schema] ||= []).push(record);
             references.push({ schema: reference.schema, code: record.code, versionId: record.versionId, hash: this.hash(record) });
         }

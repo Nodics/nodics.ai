@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "apparelProduct",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "apparelProduct",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "2f4e1b4c743734f26819dd54a075249cc41501c95044ad50698d300a370e1b04",
+      "generatedHashes": {
+        "docs-v001/records/documentation/apparelProductDocumentationNodeData.js": "c9a896c76b4a4a96f0a76b4fa08546157c69ae46db103d2d6f312040a97b6214",
+        "docs-v001/records/documentation/apparelProductDocumentationPageMetadataData.js": "ea80a448ab6ffd8842e74c8b6cf4c3f3279c38f8a9d84152ca5f091e6c2515da",
+        "docs-v001/records/documentation/apparelProductDocumentationPublicationStateData.js": "76dadc4ddacb2d65652b60229aa428b428c8bb982c3ee80b7929005fb664254e",
+        "docs-v001/records/documentation/apparelProductDocumentationSearchMetadataData.js": "7e558f5b4223d9be2e5365d599971d1fcd1c93ec3fff93d6ce531621acf05aa0",
+        "docs-v001/records/documentation/apparelProductDocumentationComponentData.js": "8478058d2a1ffce8e595dad8358f403936ba2e4383a8f71077beae22927325d1",
+        "docs-v001/records/documentation/apparelProductDocumentationPageData.js": "686d2a7e2ac22f6ed4121ae9e3b86474af1c11f73fb1e37047364961db4ada6a",
+        "docs-v001/records/documentation/apparelProductDocumentationRouteData.js": "9d27cdaa8b94d0def7647bd137435cf3b72d33f49cc2acec58bcd63213abb7cf",
+        "docs-v001/headers/100_apparelProductDocumentationContentPackHeader.js": "2c7c3883ad39e732488b1ed12268e365f7a9578464621c022f989bf356fec921"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

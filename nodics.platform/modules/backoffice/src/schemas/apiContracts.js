@@ -2059,6 +2059,9 @@ module.exports = {
       "tenantCode",
     ],
     properties: {
+      axisInitializationAdmission: {
+        enum: ["READY", "NOT_READY", "UNAVAILABLE"],
+      },
       compatibility: { type: "object" },
       modules: { type: "object" },
       catalogue: { type: "object" },

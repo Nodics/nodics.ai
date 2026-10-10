@@ -1,5 +1,14 @@
 # media Contracts
 
+## Setup Metadata Observation
+
+`DefaultMediaReadinessService.read` retains its existing human upload-operator
+guard. Its pure `inspect` helper is also used by the disabled nPublish exact-plan
+observer after deployment/plan authorization, with a private canonical owner
+persistence context. Exact descriptors, CURRENT versioned metadata and enterprise
+scope remain mandatory. This is not provider-byte, upload or Online proof and
+must not invoke mutation, publication, repair or financial action methods.
+
 ## Canonical Preparation Suite
 
 `acceptance:media-seed` is a protected capability-owned command, not a customer
@@ -44,9 +53,9 @@ Media owns asset metadata, source context, provider configuration, storage root 
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.wcms/media-management.md`
-- `nodics.docs/docs/pages/nodics.foundation/data-import-export-migration.md`
-- `nodics.docs/docs/pages/reference/source-map-glossary.md`
+- `nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js`
+- `nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js`
+- `nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js`
 
 ## Verification
 
@@ -256,14 +265,13 @@ normal configuration composition, not copied source or a second registry.
 
 ### Installed Release And Qualification Checks
 
-The new workflow is an additive `media:mediaPublicationWorkflow` release at
-`1.0.0`, with its payload under `init-v002`. It does not replace or bump the
-existing Cron job releases under `init-v001`; those manifest entries and all
-their file checksums remain unchanged. Moving this not-yet-installed workflow
-out of `init-v001` separates new contribution content from historical roots.
+The workflow is an explicit `media:mediaPublicationWorkflow` contribution in the
+unreleased `0.0.1` baseline, with its payload under `init-v001`. It does not replace
+Cron job releases: each manifest section retains its own identity and checksum.
+Select its current version from the existing init catalogue. Numeric published
+Process graph versions are separate from executable data release versions.
 Future changes after installation require a higher version of the same release
 identity and a new source root; never edit installed graph bytes/checksums.
-No installed workflow was queried or assumed to exist during this source change.
 
 `test/mediaWorkflowReleaseUpgradeContract.test.js` uses the real nImport planner
 and Process contribution installer with in-memory lifecycle ports. It checks
@@ -374,9 +382,10 @@ For the controlled qualification configuration only:
 API sequence (use actual configured authorities, never guessed ports):
 
 1. On Process, explicitly plan/validate/install nImport init release
-   `media:mediaPublicationWorkflow` version `1.0.0` using
-   `releaseCodes:['media:mediaPublicationWorkflow']`. The owner manifest selects
-   `init-v002`; do not edit/reinstall historical init-v001 releases. Confirm
+   `media:mediaPublicationWorkflow` using
+   `releaseCodes:['media:mediaPublicationWorkflow']` and its observed catalogue
+   version as `expectedReleases`. The unreleased owner manifest selects `0.0.1`
+   under `init-v001`; never edit or force-reinstall installed releases. Confirm
    published definition `mediaPublicationApproval` and reviewer assignment.
 2. On Staged, obtain the exact installed Media `code`/`versionId`, then POST
    `/nodics/media/v0/publication/requests` with

@@ -75,5 +75,5 @@ See [Remote owner transport](verification-lifecycle-contract.md#remote-owner-tra
 
 Canonical framework documentation:
 
-- [Communication overview](../../../../../nodics.docs/docs/pages/nodics.communication/overview.md)
-- [Email and SMS templates](../../../../../nodics.docs/docs/pages/nodics.communication/email-sms-templates.md)
+- [Communication overview](../../../commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js)
+- [Email and SMS templates](../../../commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js)

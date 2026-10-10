@@ -513,28 +513,28 @@ module.exports = {
     add(
       "CREATE_FILE",
       "EVIDENCE",
-      "docs/api-catalogue.md",
+      "llm/contracts/api-catalogue.md",
       "GENERATED",
       "ABSENT",
     );
     add(
       "CREATE_FILE",
       "EVIDENCE",
-      "docs/customization-map.md",
+      "llm/examples/customization-map.md",
       "GENERATED",
       "ABSENT",
     );
     add(
       "CREATE_FILE",
       "EVIDENCE",
-      "docs/first-30-minutes.md",
+      "llm/examples/first-30-minutes.md",
       "GENERATED",
       "ABSENT",
     );
     add(
       "CREATE_FILE",
       "EVIDENCE",
-      "docs/frontend-guide.md",
+      "llm/examples/frontend-guide.md",
       "GENERATED",
       "ABSENT",
     );

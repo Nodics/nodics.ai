@@ -1,34 +1,35 @@
 {
-    "name": "nTooling",
-    "index": "1.98",
-    "description": "Non-runtime Nodics development, quality, generation, and command tooling.",
-    "main": "nodics.js",
-    "version": "0.0.0",
-    "private": true,
-    "license": "SEE LICENSE IN LICENSE",
-    "nodics": {
-        "kind": "tooling",
-        "runtimeModule": false,
-        "loadableByNodicsModuleLoader": false,
-        "entrypoints": {
-            "cli": "bin/nodics-tool.js",
-            "properties": "config/properties.js"
-        },
-        "owns": [
-            "tooling",
-            "quality",
-            "configuration",
-            "service",
-            "test",
-            "llm"
-        ],
-        "runtime": {
-            "router": false,
-            "publish": false,
-            "web": false
-        },
-        "displayName": "Developer Tooling"
+  "name": "nTooling",
+  "index": "1.98",
+  "description": "Non-runtime Nodics development, quality, generation, and command tooling.",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "tooling",
+    "runtimeModule": false,
+    "loadableByNodicsModuleLoader": false,
+    "entrypoints": {
+      "cli": "bin/nodics-tool.js",
+      "properties": "config/properties.js"
     },
-    "scripts": {},
-    "dependencies": {}
+    "owns": [
+      "tooling",
+      "quality",
+      "configuration",
+      "service",
+      "test",
+      "llm",
+      "data"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "displayName": "Developer Tooling"
+  },
+  "scripts": {},
+  "dependencies": {}
 }

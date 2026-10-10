@@ -9,7 +9,7 @@ adapters own their field selection, terminology, corrections and confirmation.
 Independent audit retention uses its own permissions and enterprise legal-hold
 policy, bounded reviews, atomic deletion receipts and original-operation recovery.
 It never inherits transcript expiry or removes provider accounting. See the
-[audit retention guide](../../../nodics.docs/docs/pages/nodics.copilot/retention-lifecycle.md#independent-audit-retention).
+[audit retention guide](data/docs-v001/records/documentation/copilotConversationDocumentationComponentData.js#independent-audit-retention).
 
 ## Exact History and Recovery
 
@@ -51,7 +51,7 @@ deployment gates. Local tests do not qualify distributed writers or failover.
 The generated parent schema permits an explicit null title at PURGED, matching
 the existing tombstone transition; required ownership and state are unchanged.
 
-The canonical [retention and recovery operator guide](../../../nodics.docs/docs/pages/nodics.copilot/retention-lifecycle.md)
+The canonical [retention and recovery operator guide](data/docs-v001/records/documentation/copilotConversationDocumentationComponentData.js)
 includes configuration, API steps, failure recovery, customization, a sequence
 diagram and sanitized Axis screenshots. Its generated documentation release must
 follow the existing Platform import/publication process before appearing in Axis;

@@ -99,6 +99,7 @@ module.exports = {
                 route.accessMode === accessMode);
             if (matches.length !== 1) throw this.error('ERR_CMS_00091', 'published bundle route is missing or ambiguous');
             snapshot = this.expandSharedComponents(matches[0], manifest.snapshot && manifest.snapshot.sharedComponents);
+            snapshot = this.filterDocumentationNavigation(snapshot, manifest.snapshot.routes, manifest.snapshot.sharedComponents);
         }
         if (composition && (!snapshot || ![0, 1, 2].includes(snapshot.contractVersion) ||
             !snapshot.page || manifest.code !== pointer.manifestCode ||
@@ -107,6 +108,51 @@ module.exports = {
             throw this.error('ERR_CMS_00091', 'shared composition publication scope is invalid');
         }
         return { result: snapshot };
+    },
+    /** Limits documentation links to routes in this exact immutable publication scope. */
+    filterDocumentationNavigation: function (snapshot, routes, sharedComponents) {
+        const scopedRoutes = (routes || []).filter(route => ['site', 'locale', 'channel', 'accessMode']
+            .every(field => route[field] === snapshot[field]));
+        const available = new Set(scopedRoutes.map(route => route.path));
+        const documents = new Map();
+        const collect = (component, route) => {
+            if (component.renderer === 'documentation.component.article' && component.properties?.code) {
+                const properties = component.properties;
+                // Ambiguous identities never become navigable references.
+                documents.set(properties.code, documents.has(properties.code) ? null : { properties, route });
+            }
+            (component.components || []).forEach(child => collect(child, route));
+        };
+        for (const route of scopedRoutes) {
+            const expanded = this.expandSharedComponents(route, sharedComponents);
+            (expanded.page?.components || []).forEach(component => collect(component, route.path));
+        }
+        const project = component => {
+            let properties = component.properties;
+            if (component.renderer === 'documentation.component.navigation') {
+                properties = Object.assign({}, properties, { items: (properties?.items || [])
+                    .filter(item => available.has(item.route)) });
+            } else if (component.renderer === 'documentation.component.article') {
+                const seen = new Set();
+                const relatedLinks = (properties?.references || []).flatMap(reference => {
+                    const target = documents.get(reference.documentId);
+                    if (!target || target.properties.source?.owner !== reference.owner ||
+                        reference.anchor && !(target.properties.headings || []).some(heading => heading.anchor === reference.anchor)) return [];
+                    const route = target.route + (reference.anchor ? '#' + reference.anchor : '');
+                    if (seen.has(route)) return [];
+                    seen.add(route);
+                    return [{ title: target.properties.title, route }];
+                });
+                properties = Object.assign({}, properties, { relatedLinks,
+                    previous: available.has(properties?.previous?.route) ? properties.previous : undefined,
+                    next: available.has(properties?.next?.route) ? properties.next : undefined });
+            }
+            return Object.assign({}, component, { properties: properties,
+                components: (component.components || []).map(project) });
+        };
+        return Object.assign({}, snapshot, { page: Object.assign({}, snapshot.page, {
+            components: (snapshot.page && snapshot.page.components || []).map(project)
+        }) });
     },
     /** Authorizes explicitly shared static employee composition without changing the caller or accepting a storage selector. */
     employeeCompositionScope: function (request, context, accessMode) {

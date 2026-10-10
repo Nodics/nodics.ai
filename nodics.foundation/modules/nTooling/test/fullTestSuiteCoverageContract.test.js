@@ -99,7 +99,7 @@ requireSuiteIncludes('full', [
 // Late lifecycle fixtures must remain explicit, unique and reachable through full.
 const lifecycleSteps = testSuites['enterprise-lifecycle'];
 assert(Array.isArray(lifecycleSteps), 'Missing enterprise-lifecycle suite');
-assert.strictEqual(lifecycleSteps.length, 198, 'Update the reviewed lifecycle inventory when adding fixtures');
+assert.strictEqual(lifecycleSteps.length, 206, 'Update the reviewed lifecycle inventory when adding fixtures');
 const lifecycleFiles = lifecycleSteps.map(step => {
     if (step.node === 'node_modules/mocha/bin/mocha.js') {
         assert.deepStrictEqual(Object.keys(step), ['node', 'args']);
@@ -117,8 +117,16 @@ const lifecycleFiles = lifecycleSteps.map(step => {
     requireFile(step.node);
     return step.node;
 });
-assert.strictEqual(new Set(lifecycleFiles).size, 198, 'Lifecycle fixture paths must not repeat');
+assert.strictEqual(new Set(lifecycleFiles).size, 206, 'Lifecycle fixture paths must not repeat');
 const lateLifecycleContracts = [
+    'nodics.commerce/modules/baseCommerce/modules/product/test/productDigitalAvailabilityContract.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/inventory/test/inventoryReturnAuthorityContract.test.js',
+    'nodics.commerce/modules/checkout/modules/order/test/orderReverseSafetyContract.test.js',
+    'nodics.commerce/modules/payment/modules/paymentCore/test/paymentRefundSafetyContract.test.js',
+    'nodics.commerce/modules/payment/modules/paymentCore/test/paymentCardOriginalCaptureContract.test.js',
+    'nodics.commerce/modules/payment/modules/paymentCore/test/paymentOriginalCaptureSandboxContract.test.js',
+    'nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCompensationSafetyContract.test.js',
+    'nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/physicalOrderReversalContract.test.js',
     'nodics.foundation/modules/nService/test/tenantNamespaceHandshakeContract.test.js',
     'nodics.foundation/modules/nService/test/tenantStartupCompletionContract.test.js',
     'nodics.foundation/modules/nService/test/moduleDomainRefusalCircuitContract.test.js',

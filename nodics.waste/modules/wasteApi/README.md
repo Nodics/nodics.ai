@@ -29,7 +29,7 @@ Impact calculation awaits the effective `DefaultWasteImpactCalculationService`
 from `SERVICE`, including configured asynchronous providers. Trusted tenant
 context comes from the authenticated controller envelope; payload fields cannot
 select tenant configuration or adapters. See the
-[impact provider guide](../../../nodics.docs/docs/pages/nodics.waste/impact-providers.md).
+[impact provider guide](../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js).
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

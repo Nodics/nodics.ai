@@ -18,7 +18,7 @@ const auth = { tenant: 'tenant-a', tokenType: 'service', principalType: 'service
 const calls = [], actor = { userGroups: ['serviceAccountUserGroup'] };
 global.CONFIG = { get: () => settings };
 global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
-let response = { code: 'SUC_FIND_00000', result: [{ code: 'REF_1', name: { en: 'Display name' }, addressLine1: 'Street', city: 'City', countryCode: 'AE', tenant: { properties: { secret: true } }, apiKey: 'private', contacts: ['private'] }] };
+let response = { code: 'SUC_FIND_00000', result: [{ code: 'REF_1', active: true, name: { en: 'Display name' }, addressLine1: 'Street', city: 'City', countryCode: 'AE', tenant: { properties: { secret: true } }, apiKey: 'private', contacts: ['private'] }] };
 const owner = { get: async request => { calls.push(request); return response; } };
 global.SERVICE = { DefaultAddressService: owner, DefaultEnterpriseService: owner, DefaultProfileReferenceService: service,
     DefaultIdentityGovernanceService: { getSystemAuthData: () => actor } };
@@ -31,7 +31,7 @@ const request = extra => ({ tenant: 'tenant-a', authData: auth, payload: { type:
     assert.equal(calls[0].authData, actor);
     assert.equal(calls[0].options.recursive, false);
     const enterprise = await service.read(request({ payload: { type: 'enterprise', codes: ['REF_1'] } }));
-    assert.deepEqual(enterprise.result, [{ code: 'REF_1', name: { en: 'Display name' } }]);
+    assert.deepEqual(enterprise.result, [{ code: 'REF_1', name: { en: 'Display name' }, active: true }]);
     for (const change of [{ tenant: 'tenant-b' }, { modules: [] }, { permissions: [] }, { permissions: ['profile.enterprise.reference.read'] }, { tokenType: 'access' }, { principalType: 'customer' }, { runtimeScope: {} }]) {
         await assert.rejects(service.read(request({ authData: { ...auth, ...change } })), { code: 'ERR_AUTH_00003' });
     }

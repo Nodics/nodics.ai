@@ -11,6 +11,20 @@
 "use strict";
 /** @module order/controller/defaultOrderDisputeController @description Maps trusted customer and moderator identities into reviewed manual Order lifecycle requests. @layer controller @owner order */
 module.exports = {
+  /** Records the explicitly reviewed original-case exception, privately and without executing a refund. */
+  refundException: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    const http = request.httpRequest || {}, p = http.body, h = http.headers || {};
+    const promise = Promise.resolve().then(() => {
+      SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+      if (Object.keys(http.query || {}).length || (h["idempotency-key"] && p?.idempotencyKey && h["idempotency-key"] !== p.idempotencyKey))
+        throw new CLASSES.NodicsError("ERR_ORDER_REFUND_EXCEPTION");
+      return SERVICE.DefaultOrderRefundExceptionService.adjudicate({ tenant: request.tenant, authData: request.authData,
+        code: http.params?.code, payload: p, authorization: h.authorization,
+        idempotencyKey: h["idempotency-key"] || p?.idempotencyKey, correlationId: h["x-correlation-id"] || request.requestId });
+    }).then(data => ({ data })).catch(() => { throw new CLASSES.NodicsError("ERR_ORDER_REFUND_EXCEPTION"); });
+    return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+  },
   /** Accepts only declared route/body/trace values; business ownership comes from authentication. */
   invoke: function (operation, request, callback) {
     const http = request.httpRequest || {},

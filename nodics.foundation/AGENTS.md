@@ -39,7 +39,10 @@
 - Non-runtime packages may live under `modules` when Foundation is their authoritative
   distribution point, but they must be excluded from runtime discovery and
   activation through package metadata.
-- Keep frontend code, documentation content, and customer code outside Foundation.
+- Keep frontend and customer code outside Foundation. Individual Foundation
+  capabilities own their optional documentation CMS packs and assets; the
+  composition-only Foundation group root owns no business or documentation data.
+  Cross-module overview articles and shared discovery belong to `nodics.docs`.
 - Apply `modules/nSetup/llm/contracts/module-group-participation-contract.md`,
   `modules/nSetup/llm/contracts/module-structure-contract.md`, and
   `modules/nSetup/llm/standards/nodics-structure-matrix.md` before changing

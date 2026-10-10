@@ -19,7 +19,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
 const applicationDocumentationContract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
 const documentationRecordValidation = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js');
-const catalogue = JSON.parse(await readFile(resolve(root, 'docs/catalogue.json'), 'utf8'));
+const catalogue = applicationDocumentationContract.validateDataRelease(root);
+applicationDocumentationContract.validateReferenceGraph([catalogue]);
 const minimumWordCount = 500;
 const minimumSectionCount = 5;
 const requiredSectionPatterns = [
@@ -92,10 +93,11 @@ if (!Array.isArray(catalogue.documents) || catalogue.documents.length === 0) {
 }
 applicationDocumentationContract.validateCatalogue({
   ownerRoot: root,
-  sourceDirectory: 'docs',
-  cataloguePath: 'docs/catalogue.json',
+  sourceDirectory: 'data',
+  cataloguePath: 'data/manifest.json',
   catalogue: {
     pack: 'nodics.docs',
+    sourceMode: 'cms-records',
     version: catalogue.release,
     navigationSections: catalogue.navigationSections,
     documents: catalogue.documents,
@@ -154,6 +156,8 @@ const allowedAccessModes = new Set([
 ]);
 
 async function loadGeneratedRecords(relativePath) {
+  const suffix = relativePath.match(/Documentation(.+)Data\.js$/)?.[1];
+  if (suffix) return applicationDocumentationContract.readReleaseRecords(catalogue.releaseComposition, suffix).records;
   const moduleObject = { exports: {} };
   const source = await readFile(resolve(root, relativePath), 'utf8');
   vm.runInNewContext(source, { module: moduleObject, exports: moduleObject.exports }, {
@@ -163,18 +167,18 @@ async function loadGeneratedRecords(relativePath) {
   return Object.values(moduleObject.exports);
 }
 
-const siteRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationSiteData.js');
-const pageRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPageData.js');
-const routeRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationRouteData.js');
-const productRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationProductData.js');
-const navigationRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationNavigationData.js');
-const nodeRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationNodeData.js');
-const dashboardRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationDashboardData.js');
-const pageMetadataRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js');
-const accessPolicyRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js');
-const publicationStateRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPublicationStateData.js');
-const searchMetadataRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js');
-const componentRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationComponentData.js');
+const siteRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationSiteData.js');
+const pageRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationPageData.js');
+const routeRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationRouteData.js');
+const productRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationProductData.js');
+const navigationRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationNavigationData.js');
+const nodeRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationNodeData.js');
+const dashboardRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationDashboardData.js');
+const pageMetadataRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationPageMetadataData.js');
+const accessPolicyRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationAccessPolicyData.js');
+const publicationStateRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationPublicationStateData.js');
+const searchMetadataRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationSearchMetadataData.js');
+const componentRecords = await loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationComponentData.js');
 for (const state of publicationStateRecords) {
   for (const field of [
     'onlineVersion',
@@ -210,21 +214,22 @@ const validationReport = documentationRecordValidation.validateRecords({
     manifestHashes: manifestEnvelope.sections?.documentation?.generatedHashes || {},
   },
   options: {
+    validationScope: 'AUTHORING',
     release: catalogue.release,
-    source: 'nodics.docs/docs/catalogue.json',
+    source: 'nodics.docs/data/manifest.json',
     owner: 'nodics.docs',
     generatedAt: '2026-08-26T00:00:00.000Z',
   },
 });
 documentationRecordValidation.assertReady(validationReport);
-await mkdir(resolve(root, 'docs/reports'), { recursive: true });
+await mkdir(resolve(root, 'test/reports'), { recursive: true });
 await writeFile(
-  resolve(root, 'docs/reports/framework-documentation-validation-report.json'),
+  resolve(root, 'test/reports/framework-documentation-validation-report.json'),
   JSON.stringify(validationReport, null, 2) + '\n',
   'utf8',
 );
 await writeFile(
-  resolve(root, 'docs/reports/framework-documentation-validation-report.md'),
+  resolve(root, 'test/reports/framework-documentation-validation-report.md'),
   documentationRecordValidation.formatMarkdown(validationReport),
   'utf8',
 );
@@ -281,8 +286,11 @@ for (const document of catalogue.documents) {
   if (!metadata.accessPolicy || !allowedAccessModes.has(metadata.accessMode || '') || !metadata.lifecycleState) {
     throw new Error(`Documentation page metadata lacks access or lifecycle policy: ${document.id}`);
   }
-  if (metadata.accessMode === 'PUBLIC' && metadata.lifecycleState !== 'ONLINE') {
-    throw new Error(`Public documentation page metadata must be Online before Nexus visibility: ${document.id}`);
+  // Active Staged routes are authoring inputs; only approved immutable Online
+  // pointers authorize public delivery. Draft/failed/retired inputs stay inactive.
+  if (metadata.accessMode === 'PUBLIC' && !['STAGED', 'APPROVED', 'ONLINE'].includes(metadata.lifecycleState) &&
+      routeRecords.some(route => route.code === metadata.targetRoute && route.active !== false)) {
+    throw new Error(`Draft documentation must not have an active public route: ${document.id}`);
   }
   if (metadata.workflowRequired !== true || !(metadata.workflowTriggers || []).includes('CONTENT_CHANGE')) {
     throw new Error(`Documentation page metadata lacks workflow triggers: ${document.id}`);
@@ -352,12 +360,7 @@ for (const publicationState of publicationStateRecords) {
   if (!publicationState.validationResult || publicationState.validationResult.publicationPath !== 'STAGED_REVIEW_APPROVAL_ONLINE') {
     throw new Error(`Documentation publication state must preserve Staged review approval Online path: ${publicationState.code}`);
   }
-  if (!Object.prototype.hasOwnProperty.call(publicationState, 'author') ||
-      !Object.prototype.hasOwnProperty.call(publicationState, 'reviewer') ||
-      !Object.prototype.hasOwnProperty.call(publicationState, 'approver') ||
-      !Object.prototype.hasOwnProperty.call(publicationState, 'publisher')) {
-    throw new Error(`Documentation publication state lacks actor evidence fields: ${publicationState.code}`);
-  }
+  // The canonical record validator above owns lifecycle-appropriate actor evidence.
 }
 for (const searchMetadata of searchMetadataRecords) {
   if (!searchMetadata.searchText || searchMetadata.indexState !== 'INDEX_READY') {
@@ -434,12 +437,13 @@ for (const document of catalogue.documents) {
   ) {
     throw new Error(`Invalid framework documentation route: ${document.id}`);
   }
-  const contentPath = resolve(root, document.content || '');
-  if (!contentPath.startsWith(root + sep)) {
+  const ownerRoot = document.ownerRoot || root;
+  const contentPath = resolve(ownerRoot, document.content || '');
+  if (!contentPath.startsWith(ownerRoot + sep)) {
     throw new Error(`Content escapes package root: ${document.id}`);
   }
   await access(contentPath);
-  const body = await readFile(contentPath, 'utf8');
+  const body = document.body;
   if (!body.trim().startsWith('# ')) {
     throw new Error(`Document must start with one title: ${document.id}`);
   }

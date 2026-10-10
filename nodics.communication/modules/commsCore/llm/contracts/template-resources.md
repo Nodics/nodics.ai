@@ -3,7 +3,7 @@
 Mandatory framework placement follows
 [Module-Owned Email And SMS Presentation](../../../../../nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#module-owned-email-and-sms-presentation).
 For end-to-end explanation, complete configuration and new notification examples,
-read [Email and SMS Templates](../../../../../nodics.docs/docs/pages/nodics.communication/email-sms-templates.md).
+read [Email and SMS Templates](../../data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js).
 This contract is the implementation authority; the public guide explains adoption.
 
 ## Ownership
@@ -169,7 +169,7 @@ version. Missing source ownership fails closed; no wildcard legacy authorization
 Reference versions cannot also contain inline subject/body. Runtime validation owns
 this exclusive representation contract because schema fields alone cannot express it.
 
-The current core-v002 and optional sample-v002 releases select resources only for
+The current core-v001 and optional sample-v001 releases select resources only for
 EMAIL/SMS. Historical v001 files are retained unchanged, not active manifest inputs.
 The IN_APP notice remains a text definition. Release checksums identify framework
 bundles; later-layer presentation overrides are permitted, and every new intent pins

@@ -1,5 +1,8 @@
 # BackOffice AI Contracts
 
+See [governed application setup](governed-application-setup.md) for full-catalogue
+publication prerequisites before operational data initialization.
+
 This index routes developers to BackOffice's discovery, registration, readiness and governed repair contracts.
 
 ## Application Readiness Evidence

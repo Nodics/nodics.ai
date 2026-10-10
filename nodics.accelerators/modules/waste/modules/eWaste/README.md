@@ -1,5 +1,16 @@
 # eWaste
 
+The [original digital-sale refund contract](llm/contracts/digital-ownership-sale.md#original-sale-refund)
+coordinates approved Order phases with original seller proceeds, original buyer
+Payment and Waste ownership. It remains source-only and disabled without exact
+retained reviewed policy; physical custody and approval rewards never reverse.
+
+Canonical accelerator guidance belongs to this implementing module. The optional
+`referenceDocumentation` pack retains stable Circa guide identities and references
+shared Framework owners without importing their records. Reviewed product and
+navigation metadata is STAGED; discovery never substitutes for actual CMS/Media
+approval, READY status or authorized Online delivery.
+
 `eWaste` is the electronic-waste domain accelerator over `nodics.waste`. It owns
 reusable taxonomy and policy presets plus customer journey orchestration for
 submissions, advisory conversation, evidence, review/approval, wallet projections,
@@ -24,7 +35,7 @@ composition, registration/contact forms, branding and sample policy belong in a
 customer backend module. A separate application-named accelerator is unnecessary.
 
 The 83 core reference records keep their `eWaste:core-reference` release identity
-and Waste schema destinations. Explicit version `0.0.1` in `core-v002` uses a
+and Waste schema destinations. Explicit version `0.0.1` in `core-v001` uses a
 neutral environmental profile; `core-v001` remains retained. Read
 [reference compatibility](llm/contracts/reference-compatibility.md) before adoption.
 Run `npm test` for data integrity, authorization,

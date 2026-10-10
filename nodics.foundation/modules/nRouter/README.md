@@ -39,9 +39,9 @@ other routes remain unchanged.
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.foundation/routing-api-governance.md`
-- `nodics.docs/docs/pages/nodics.foundation/governed-runtime-change.md`
-- `nodics.docs/docs/pages/nodics.foundation/schema-data-modeling.md`
+- `nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js`
+- `nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js`
+- `nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js`
 
 ## Verification
 

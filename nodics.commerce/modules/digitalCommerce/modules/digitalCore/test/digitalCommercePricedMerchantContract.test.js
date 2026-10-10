@@ -92,6 +92,39 @@ test("native receipt reuses owner authority and original benefit without claimin
   assert.equal(result.mode, "MERCHANT_SCREEN");
   assert.equal(result.paymentStatus, undefined);
 });
+
+for (const stage of ["AUTHORITY", "INSTRUCTION", "RIGHTS", "BINDING"]) {
+  test(`priced confirmation retains only original ${stage} failure`, async t => {
+    const f = fixture(t), privateError = new Error("private-token private-record");
+    if (stage === "AUTHORITY") SERVICE.DefaultDigitalCommerceMerchantService.pricedAuthority = async () => { throw privateError; };
+    if (stage === "INSTRUCTION") f.request.entitlement.status = "REVOKED";
+    if (stage === "RIGHTS") SERVICE.DefaultDigitalCommerceMerchantService.validateCoupon = async () => { throw privateError; };
+    if (stage === "BINDING") SERVICE.DefaultDigitalCommerceMerchantService.validateCoupon = async () =>
+      ({ conditions: { benefit: { ...f.benefit, sourceHash: "b".repeat(64) } } });
+    await assert.rejects(provider.confirm(f.request, f.marker), error => {
+      assert.equal(provider.failureStage(error), stage);
+      assert.equal(provider.failureStage({ ...error, stage }), undefined);
+      assert.doesNotMatch(error.message, /private/);
+      return true;
+    });
+  });
+}
+
+test('priced provider preserves the admitted merchant request identity through the validation owner', async t => {
+  const f = fixture(t);
+  let calls = 0;
+  SERVICE.DefaultDigitalCommerceMerchantService.validateCoupon = async (request, item, outlet) => {
+    calls++;
+    assert.equal(request, f.request, 'Do not spread/clone the private merchant handoff');
+    assert.equal(item, f.request.entitlement);
+    assert.equal(outlet, f.request.merchant);
+    return { conditions: { benefit: f.benefit } };
+  };
+  SERVICE.DefaultPromotionOperationService.validateMerchantCoupon = () => assert.fail('No direct Promotion validation bypass');
+  const result = await provider.confirm(f.request, f.marker);
+  assert.equal(result.fulfillmentStatus, 'COMPLETED');
+  assert.equal(calls, 1);
+});
 test("source change, lost scope or unqualified provider refuses before acknowledgment", async (t) => {
   const f = fixture(t);
   global.SERVICE.DefaultPromotionOperationService.validateMerchantCoupon =

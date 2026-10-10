@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "copilotProvider",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "copilotProvider",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "a1e62d520f26d56adaca4afc78bbe6fcb8f319f01b775793347786db741cb683",
+      "generatedHashes": {
+        "docs-v001/records/documentation/copilotProviderDocumentationComponentData.js": "1c26283b572a21f03c34709373663195d4141e40dd40e3c6f8f0866eb3bc9dbe",
+        "docs-v001/records/documentation/copilotProviderDocumentationPageMetadataData.js": "39645596b3f6e403455c166873bb655d31d3b5594c368ddba01470f8dfdc81dc",
+        "docs-v001/records/documentation/copilotProviderDocumentationNodeData.js": "bc476b1420b4c771c36d305616e1c17b05f2286b1e4da7d94d92f1c6f31dc9de",
+        "docs-v001/records/documentation/copilotProviderDocumentationPageData.js": "6e57f6108d67eafe029ac1203e3240798abb4ce295d19d98baa312faf658c923",
+        "docs-v001/records/documentation/copilotProviderDocumentationRouteData.js": "7fe66dae5eb4de59be6a9e9ef44b5e64699c0852b06867ed72c1462c1e3a0638",
+        "docs-v001/records/documentation/copilotProviderDocumentationSearchMetadataData.js": "596110ec713ceaf5c328273c96c2af9436c7a21dcd1e41fd11c83cacde4435f5",
+        "docs-v001/records/documentation/copilotProviderDocumentationPublicationStateData.js": "8989da577baec5219f9fe7618301c75c3157ced567e3321fef9b6b450f3ab7d0",
+        "docs-v001/headers/100_copilotProviderDocumentationContentPackHeader.js": "31b7f1a4dc78943e7fe59223dcc4f9d3a3712ffd1b96e084f621d17d31b88892"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

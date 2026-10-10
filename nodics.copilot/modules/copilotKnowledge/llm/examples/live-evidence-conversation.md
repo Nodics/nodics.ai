@@ -152,7 +152,7 @@ and native delete advertisement. It calls only the native POST delete-impact
 preview, returning `targetCount` and `blocked`, without relationship names/counts.
 Zero matching targets can mean a stale identity/revision; it never means deletion
 is safe or complete. It is a typed command, not a new deletion form or mutation
-adapter. See the detailed [collection inspection guide](../../../../../nodics.docs/docs/pages/nodics.copilot/collection-inspection.md)
+adapter. See the detailed [collection inspection guide](../../data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js)
 for exact steps, failure/recovery, supported customization and evidence limits.
 
 Run `copilotLiveConversation.test.js`, database/incident/group and recording tests,

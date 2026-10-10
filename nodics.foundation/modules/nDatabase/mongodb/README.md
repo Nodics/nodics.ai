@@ -1,5 +1,9 @@
 # mongodb Module
 
+Offline local reset and bounded code-only tenant discovery share the existing
+maintenance provider. Discovery performs no writes and grants no reset authority;
+see the [maintenance contract](llm/contracts/local-reset-maintenance.md).
+
 Multi-match save replacement requires an explicit canonical identity before any
 driver operation. Empty/index-only/operator selectors fail closed. See the
 [replacement contract](llm/contracts/README.md#canonical-replacement-selector).

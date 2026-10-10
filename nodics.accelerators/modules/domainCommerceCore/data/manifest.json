@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "domainCommerceCore",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "domainCommerceCore",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "8285e004864189b0279b94cfab378cc7b410849640dab887098814874dae51b9",
+      "generatedHashes": {
+        "docs-v001/records/documentation/domainCommerceCoreDocumentationNodeData.js": "569765123201279cfaff0acd914094baadbbb4c40f183cb718dbc41f3ded6139",
+        "docs-v001/records/documentation/domainCommerceCoreDocumentationPageMetadataData.js": "efed03ed9e73cf94a13708a4be7102ee430dc1c0c39b2ab4af12d02c3b9e591b",
+        "docs-v001/records/documentation/domainCommerceCoreDocumentationPublicationStateData.js": "d5fe67c808344c4bb41b18dc9ecd7dbe719d8b0bb9914104f101b9e13be9dfba",
+        "docs-v001/records/documentation/domainCommerceCoreDocumentationSearchMetadataData.js": "d62aaa37d6a0df415622fa321ae8d3e8d82be6f0a3deb58c9c9c56446ae2bb26",
+        "docs-v001/records/documentation/domainCommerceCoreDocumentationComponentData.js": "e1f11d906d56cf332f7075a9b2b299e009cb387ea2e0d49468cc6562c7ae0344",
+        "docs-v001/records/documentation/domainCommerceCoreDocumentationPageData.js": "8313f5c3fdee1fb9433978baee76b32dd5c3af197d59b6fc0fe42d2f472234bf",
+        "docs-v001/records/documentation/domainCommerceCoreDocumentationRouteData.js": "593bf51684644d0538c057f6eec60df3a593cf5be9cf2eac36713df146bdca2c",
+        "docs-v001/headers/100_domainCommerceCoreDocumentationContentPackHeader.js": "13687f15a6ae7223ba99078dbfc19be398a5549bf316c26e1bdb9f219f754a90"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

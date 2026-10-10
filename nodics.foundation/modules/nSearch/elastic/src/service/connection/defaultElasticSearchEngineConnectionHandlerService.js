@@ -21,6 +21,15 @@ let elasticsearch = require('@elastic/elasticsearch');
  */
 module.exports = {
     /**
+     * Delegates explicit offline Local reset to the effective loader-visible owner.
+     * @param {Object} request Environment, configuration, exact indices and exclusion attestations.
+     * @returns {Promise<Object>} Held version-1 maintenance contract; caller closes in finally.
+     */
+    openLocalResetMaintenance: function (request) {
+        return SERVICE.DefaultElasticLocalResetMaintenanceService.open(request);
+    },
+
+    /**
      * Converts the Nodics search connection contract into the option names
      * accepted by the current Elasticsearch client. The framework continues to
      * accept the historic `hosts` property so layered project configuration is

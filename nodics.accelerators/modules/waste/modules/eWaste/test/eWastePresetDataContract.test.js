@@ -17,8 +17,8 @@ const fs = require('fs');
 const path = require('path');
 
 const moduleRoot = path.resolve(__dirname, '..');
-const recordRoot = path.join(moduleRoot, 'data/core-v002/records/waste');
-const header = require(path.join(moduleRoot, 'data/core-v002/headers/waste/eWastePresetHeader'));
+const recordRoot = path.join(moduleRoot, 'data/core-v001/records/waste');
+const header = require(path.join(moduleRoot, 'data/core-v001/headers/waste/eWastePresetHeader'));
 const properties = require(path.join(moduleRoot, 'config/properties'));
 const contributionPolicy = require('../../../../../../nodics.waste/modules/wasteCore/src/service/defaultWasteDataContributionPolicyService');
 const forbiddenPattern = /(BANTGO|I2E|i2eCredits|MAPBOX|RECYCLER_ADAPTER|LOGISTICS_ADAPTER|VENDOR_CODE|VENDOR_REF)/;

@@ -1,100 +1,149 @@
 {
-    "contractVersion": 2,
-    "module": "cms",
-    "sections": {
-        "init-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "init",
-            "version": "0.0.0",
-            "displayName": "CMS Foundation",
-            "description": "Content Management init data",
-            "owningDomain": "cms",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "WCMS_STAGED",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "init-v001/records/content/defaultCmsSiteData.js": "0e34852ce89ba85bda6ed3f3f49a590a314f9d29004b20e5f1f7df3830fbbfd7",
-                "init-v001/records/content/defaultCmsTypeCodeData.js": "6217613834024e68f12622b15d55915c3f322231c06d5ceab6f43b12b0db63d3",
-                "init-v001/records/user/defaultCmsEmployeeData.js": "3563e19ba2e01a222b9a259b8d75d38fa87c647974208944accd1eb8b5e80330",
-                "init-v001/records/user/defaultCmsUserGroupsData.js": "966496a646545d0d44941b4c8c89e1e083f705f64611db0a7a9f1ec62357e602",
-                "init-v001/headers/content/defaultCmsSiteDataHeader.js": "8b200a816cb4370e6aae385b1aafb2e8fe4b734339100dbe7b5091bdd23dddbd",
-                "init-v001/headers/content/defaultCmsTypeCodeDataHeader.js": "118d8888cf51c1d34b5e58abd72fb20142500736b744cf229b0a5768dba65814",
-                "init-v001/headers/user/defaultCmsEmployeeDataHeader.js": "49774b4827e46141b8227d2b1cd8c62792be5d4bd704da2fae91720d4a084550",
-                "init-v001/headers/user/defaultCmsUserGroupsDataHeader.js": "62d0ac582f8e1907fa5e89a94c7c2a799feeaf503f88cf901257fc98ff673e7d"
-            },
-            "sourceRoot": "init-v001"
-        },
-        "cmsPublicationApproval": {
-            "kind": "DATA_RELEASE",
-            "dataType": "init",
-            "version": "1.0.0",
-            "displayName": "CMS Publication Approval Workflow",
-            "description": "WCMS-owned mandatory CMS publication approval workflow contribution",
-            "owningDomain": "cms",
-            "lifecycle": "OPERATIONAL_VERSIONED",
-            "destinationRole": "PROCESS",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "installer": "PROCESS_DEFINITION",
-            "files": {
-                "init-v001/records/process/cmsPublicationApprovalDefinitionData.js": "79fcc7631aaec57de3dd7a5351f2ff1fdb71e0ba0def1bd74485685e646a970e"
-            },
-            "sourceRoot": "init-v001"
-        },
-        "sample-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "sample",
-            "version": "0.0.0",
-            "description": "Content Management sample data",
-            "owningDomain": "cms",
-            "lifecycle": "PUBLISHABLE",
-            "destinationRole": "WCMS_STAGED",
-            "environmentScope": [
-                "LOCAL",
-                "DEVELOPMENT",
-                "TEST"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "REQUIRED",
-            "initialPublicationPolicy": "ADMIN_INITIATED",
-            "removalPolicy": "UNPUBLISH_OR_RETIRE",
-            "files": {
-                "sample-v001/records/components/sampleCmsComponentData.js": "c9bf2fba03019a454726b73aa010b92a5212a9f63eeb12cb7344d6587ad190db",
-                "sample-v001/records/components/sampleCmsComponentLocalizationData.js": "a25efb1ae3109be5886dc4a21cfb81c96df8cab59db84da2026be1d409295373",
-                "sample-v001/records/components/sampleFooterCmsComponentData.js": "abbd20804a043be14148c635a185da13da2b19246f0a6c08321f67c3f1c260a0",
-                "sample-v001/records/components/sampleHeaderCmsComponentData.js": "bca19ceedccbb4bd6e64ee09da7f2829946e3ecb91f4268b1faa876fec93d724",
-                "sample-v001/records/components/sampleMainCmsComponentData.js": "4d4aaa807dbac0b314392a0f813e75f7e67c55094c92e569e9b90e0cc5889636",
-                "sample-v001/records/pages/sampleCmsPageData.js": "172a7bf49c77069d38957ef64360fc8b47f04de93292f358621786d7bf46d7ce",
-                "sample-v001/records/pages/sampleCmsPageRouteData.js": "9b148d256944b5fce4f90f09cad2712d7236239d17ac93300167f55f372d61a4",
-                "sample-v001/records/sites/sampleCmsSiteData.js": "657de8059504d7c671c616d91ead1d63cbce0d84cbdaa13b1b6086d1082548c6",
-                "sample-v001/records/typeCodes/sampleTypeCode2RendererData.js": "459363a3b69d2c949fcbfddf39d19f17f25ee7f12504195b7a52681716af347f",
-                "sample-v001/records/typeCodes/sampleTypeCodeData.js": "4bb39fddeb15dab2f3c808981035d9b605d57a24382ca3bed5dac1fc8a315b5e",
-                "sample-v001/headers/components/sampleCmsComponentDataHeader.js": "8fc3644187649efed27acb21a1cdb0cae22ff23d0cc3d0e00ec63e9690d38b39",
-                "sample-v001/headers/components/sampleCmsComponentLocalizationDataHeader.js": "c9153b3579d2d59c986f9045ff028d83c954f052f3481aaccf5747be0d82c2b3",
-                "sample-v001/headers/components/sampleFooterCmsComponentDataHeader.js": "23b41df3589345406ad358be73f1cb7997ab9ff3b6afdfbafc5712a11feb2216",
-                "sample-v001/headers/components/sampleHeaderCmsComponentDataHeader.js": "6a50069c35c2ae541b2558355424723f388de42b3d7ccb5cb10298e699e67012",
-                "sample-v001/headers/components/sampleMainCmsComponentDataHeader.js": "02962cf181818275bae525cd5ccb99c322785699f2210535000dc8c78362080a",
-                "sample-v001/headers/pages/sampleCmsPageDataHeader.js": "98a633613a871b051f6fbf79ceb4da417f9049030af4fe690baddbce9d0dc7f4",
-                "sample-v001/headers/pages/sampleCmsPageRouteDataHeader.js": "4122887503d3d800b93beebc1187449ed5535c67f91f800d34d5f1fed99a4b34",
-                "sample-v001/headers/sites/sampleCmsSiteDataHeader.js": "155d0f9dd8c89b094bccca3bb69319dfffaa13fe8c18963e6b2be5dce80676c0",
-                "sample-v001/headers/typeCodes/sampleTypeCode2RendererDataHeader.js": "b43eb61d85fa1dfcb42ecedfcb950519ec2ecdbbcbe0407ac9ac905017ccc9ea",
-                "sample-v001/headers/typeCodes/sampleTypeCodeDataHeader.js": "34c7a8a62a84cede7ee80710fb129c84dff17b7ce750532d538377744b9251dc"
-            },
-            "sourceRoot": "sample-v001"
+  "contractVersion": 2,
+  "module": "cms",
+  "sections": {
+    "init-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "CMS Foundation",
+      "description": "Content Management init data",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "init-v001/records/content/defaultCmsSiteData.js": "0e34852ce89ba85bda6ed3f3f49a590a314f9d29004b20e5f1f7df3830fbbfd7",
+        "init-v001/records/content/defaultCmsTypeCodeData.js": "6217613834024e68f12622b15d55915c3f322231c06d5ceab6f43b12b0db63d3",
+        "init-v001/records/user/defaultCmsEmployeeData.js": "3563e19ba2e01a222b9a259b8d75d38fa87c647974208944accd1eb8b5e80330",
+        "init-v001/records/user/defaultCmsUserGroupsData.js": "966496a646545d0d44941b4c8c89e1e083f705f64611db0a7a9f1ec62357e602",
+        "init-v001/headers/content/defaultCmsSiteDataHeader.js": "8b200a816cb4370e6aae385b1aafb2e8fe4b734339100dbe7b5091bdd23dddbd",
+        "init-v001/headers/content/defaultCmsTypeCodeDataHeader.js": "118d8888cf51c1d34b5e58abd72fb20142500736b744cf229b0a5768dba65814",
+        "init-v001/headers/user/defaultCmsEmployeeDataHeader.js": "49774b4827e46141b8227d2b1cd8c62792be5d4bd704da2fae91720d4a084550",
+        "init-v001/headers/user/defaultCmsUserGroupsDataHeader.js": "62d0ac582f8e1907fa5e89a94c7c2a799feeaf503f88cf901257fc98ff673e7d"
+      },
+      "sourceRoot": "init-v001"
+    },
+    "cmsPublicationApproval": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "CMS Publication Approval Workflow",
+      "description": "WCMS-owned mandatory CMS publication approval workflow contribution",
+      "owningDomain": "cms",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "installer": "PROCESS_DEFINITION",
+      "files": {
+        "init-v001/records/process/cmsPublicationApprovalDefinitionData.js": "79fcc7631aaec57de3dd7a5351f2ff1fdb71e0ba0def1bd74485685e646a970e"
+      },
+      "sourceRoot": "init-v001"
+    },
+    "sample-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "version": "0.0.1",
+      "description": "Content Management sample data",
+      "owningDomain": "cms",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "LOCAL",
+        "DEVELOPMENT",
+        "TEST"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/records/components/sampleCmsComponentData.js": "c9bf2fba03019a454726b73aa010b92a5212a9f63eeb12cb7344d6587ad190db",
+        "sample-v001/records/components/sampleCmsComponentLocalizationData.js": "a25efb1ae3109be5886dc4a21cfb81c96df8cab59db84da2026be1d409295373",
+        "sample-v001/records/components/sampleFooterCmsComponentData.js": "abbd20804a043be14148c635a185da13da2b19246f0a6c08321f67c3f1c260a0",
+        "sample-v001/records/components/sampleHeaderCmsComponentData.js": "bca19ceedccbb4bd6e64ee09da7f2829946e3ecb91f4268b1faa876fec93d724",
+        "sample-v001/records/components/sampleMainCmsComponentData.js": "4d4aaa807dbac0b314392a0f813e75f7e67c55094c92e569e9b90e0cc5889636",
+        "sample-v001/records/pages/sampleCmsPageData.js": "172a7bf49c77069d38957ef64360fc8b47f04de93292f358621786d7bf46d7ce",
+        "sample-v001/records/pages/sampleCmsPageRouteData.js": "9b148d256944b5fce4f90f09cad2712d7236239d17ac93300167f55f372d61a4",
+        "sample-v001/records/sites/sampleCmsSiteData.js": "657de8059504d7c671c616d91ead1d63cbce0d84cbdaa13b1b6086d1082548c6",
+        "sample-v001/records/typeCodes/sampleTypeCode2RendererData.js": "459363a3b69d2c949fcbfddf39d19f17f25ee7f12504195b7a52681716af347f",
+        "sample-v001/records/typeCodes/sampleTypeCodeData.js": "4bb39fddeb15dab2f3c808981035d9b605d57a24382ca3bed5dac1fc8a315b5e",
+        "sample-v001/headers/components/sampleCmsComponentDataHeader.js": "8fc3644187649efed27acb21a1cdb0cae22ff23d0cc3d0e00ec63e9690d38b39",
+        "sample-v001/headers/components/sampleCmsComponentLocalizationDataHeader.js": "c9153b3579d2d59c986f9045ff028d83c954f052f3481aaccf5747be0d82c2b3",
+        "sample-v001/headers/components/sampleFooterCmsComponentDataHeader.js": "23b41df3589345406ad358be73f1cb7997ab9ff3b6afdfbafc5712a11feb2216",
+        "sample-v001/headers/components/sampleHeaderCmsComponentDataHeader.js": "6a50069c35c2ae541b2558355424723f388de42b3d7ccb5cb10298e699e67012",
+        "sample-v001/headers/components/sampleMainCmsComponentDataHeader.js": "02962cf181818275bae525cd5ccb99c322785699f2210535000dc8c78362080a",
+        "sample-v001/headers/pages/sampleCmsPageDataHeader.js": "98a633613a871b051f6fbf79ceb4da417f9049030af4fe690baddbce9d0dc7f4",
+        "sample-v001/headers/pages/sampleCmsPageRouteDataHeader.js": "4122887503d3d800b93beebc1187449ed5535c67f91f800d34d5f1fed99a4b34",
+        "sample-v001/headers/sites/sampleCmsSiteDataHeader.js": "155d0f9dd8c89b094bccca3bb69319dfffaa13fe8c18963e6b2be5dce80676c0",
+        "sample-v001/headers/typeCodes/sampleTypeCode2RendererDataHeader.js": "b43eb61d85fa1dfcb42ecedfcb950519ec2ecdbbcbe0407ac9ac905017ccc9ea",
+        "sample-v001/headers/typeCodes/sampleTypeCodeDataHeader.js": "34c7a8a62a84cede7ee80710fb129c84dff17b7ce750532d538377744b9251dc"
+      },
+      "sourceRoot": "sample-v001"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cms",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "005891b624d605fcbc2bc72d9f53ea42a186a950b7c3d7880ab4217ca4960e47",
+      "generatedHashes": {
+        "docs-v001/records/documentation/cmsDocumentationNodeData.js": "8900d93b89137fd30fc242d2a3ad584d9aa079f93edcf5028c1e67c805dec6ca",
+        "docs-v001/records/documentation/cmsDocumentationPageMetadataData.js": "87ba380224481f129f368595cf54290b00a3218bf34d3220993344d7cd1b3532",
+        "docs-v001/records/documentation/cmsDocumentationPublicationStateData.js": "a2ac394581537d791ba3cc0d4d8311b622ebf6e06eac26823c386382e55ea72c",
+        "docs-v001/records/documentation/cmsDocumentationSearchMetadataData.js": "280ca725534cd371bdee3134e45f9afb13b1ac0083e72c3f5011d6a968108122",
+        "docs-v001/records/documentation/cmsDocumentationComponentData.js": "05102073df53b10867b72fcd60fd1cea92296571884e5a134311f5afc1a0e982",
+        "docs-v001/records/documentation/cmsDocumentationPageData.js": "64584f8c7fada9203efbf3a5622c97a85cc227a57c2de289acd00a39e05fe686",
+        "docs-v001/records/documentation/cmsDocumentationRouteData.js": "30c571d8186862e08e3fa52d11b2cd80411377fc02d41ba724a2ba66a3a92e7e",
+        "docs-v001/headers/100_cmsDocumentationContentPackHeader.js": "310190d2ad5de701077fbd42c0c2f80f5058696a3d96b32daff1ff8b0097ec67"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

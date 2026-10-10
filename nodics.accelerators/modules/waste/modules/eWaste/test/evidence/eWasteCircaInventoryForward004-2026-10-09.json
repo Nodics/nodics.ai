@@ -1,0 +1,86 @@
+{
+  "contractVersion": 1,
+  "date": "2026-10-09",
+  "owner": "eWaste",
+  "status": "SOURCE_FROZEN",
+  "scope": "CANONICAL_CIRCA_DOCUMENTATION_INVENTORY_FORWARD_ONLY",
+  "nativeActionsPerformed": false,
+  "fingerprintedInputsEditedByThisFollowup": [],
+  "fingerprintedInputFreeze": "No package.json, src, config or test/common edits were made by this follow-up, including after main's topology launch began.",
+  "kickoffFilesEdited": [],
+  "documentation": {
+    "section": "eWaste:documentation",
+    "pack": "eWasteDocumentation",
+    "version": "0.0.4",
+    "contentPath": "docs-v001",
+    "releaseChecksum": "afbe08e362725ef74488bd58976f2ad1429e46f6169a67da7a5e056116e8c0d5",
+    "manifestSha256": "3320d9d1eadf18309d64ed04130b274993975b1e8bcd841d9fd425a084673c07",
+    "currentBusinessSections": 44,
+    "addedSections": 13,
+    "requiredSignedPublicationSelections": 7,
+    "requiredDistinctPublicationRoots": 98,
+    "additionalGoodsRoots": 14,
+    "optionalFiveRootSubsetAddsDistinctRoots": false,
+    "historicalFilesVerifiedUnchanged": 64,
+    "predecessorVersionsPreserved": [
+      "0.0.1",
+      "0.0.2",
+      "0.0.3"
+    ],
+    "referenceDocumentationVersionUnchanged": "0.0.2",
+    "onlyArticleBodyChanged": "accelerators.circa-source-inventory",
+    "lifecycle": "STAGED"
+  },
+  "sourceFiles": {
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease004NodeData.js": "d3195bfd0a455ef5e475b034eb2f5fdfcdd2c0c17bbbd01bb8241d378407849f",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease004PageMetadataData.js": "3d274975af27f5e1c0e2e19585bd5956b7cba7b298b3615f43549e7dc1e73b46",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease004PublicationStateData.js": "5dd25a7ef86367a58b9c359da3ba56b614e40889659c2a39931ba7acef652d35",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease004SearchMetadataData.js": "f2c6e84a28c90ce1e36d5cb9136d1feae6aa723ef4df5eb26709dabf2a15f728",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease004ComponentData.js": "d0addbd31febe2a3090dc923addbd879877c768525417d08bcd1ddd4b9641548",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/102_eWasteDocumentationRelease004ContentPackHeader.js": "39518f61cda0218a9c79c0a3326379de06370f6f07761b5b38ce8fd7a6bd184c",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json": "3320d9d1eadf18309d64ed04130b274993975b1e8bcd841d9fd425a084673c07",
+    "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js": "b1496182edac3db2ca1947740122984eb14ca204743dfb3d647c8663b91b5d3d",
+    "nodics.accelerators/modules/waste/modules/eWaste/test/fixtures/documentationFrozen003.json": "9200aaf746c2b7a03a40ede330fc8ca6f01c368652d28701df7c2b45385eea40"
+  },
+  "verification": [
+    {
+      "cwd": "nodics.ai",
+      "command": "node --test nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js",
+      "passed": 14,
+      "failed": 0,
+      "includes": [
+        "Historical frozen files",
+        "Owner validateGeneration/releaseChecksum",
+        "validateDataRelease for both packs",
+        "Owner-qualified reference graph",
+        "Derived article/PageMetadata/search/publication seals",
+        "Stable CMS codes, routes and header dispatch"
+      ]
+    },
+    {
+      "cwd": "nodics.kickoff",
+      "command": "node --test modules/circa.ewaste/test/circaDocumentationDataContract.test.js modules/circa.ewaste/test/circaStoreReferencePack.test.js",
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "command": "git diff --check -- nodics.accelerators/modules/waste/modules/eWaste",
+      "status": "PASS"
+    }
+  ],
+  "ownershipReview": {
+    "status": "PASS",
+    "mode": "Explicitly authorized Framework maintainer source documentation correction",
+    "placement": "Implementing eWaste module data and tests only",
+    "reuse": "Existing nTooling documentationText, countWords, sha256, releaseChecksum, validateGeneration and validateDataRelease contracts; no new generator/importer",
+    "runtimeAuthorityChanged": false,
+    "historyRewritten": false
+  },
+  "deploymentBoundary": {
+    "sourceSelection": "Manifest selects 0.0.4 only for future reviewed documentation adoption.",
+    "existingExactDocumentationPins": "Existing nodics.docs profile/publication baseline remains 0.0.3; reference pack remains 0.0.2. This task intentionally did not change runtime config.",
+    "observationAndPreparation": "K environment, preparation, revision-3 observation, profile digest and all launch inputs untouched.",
+    "adoption": "Source-ready optional documentation successor is not an installed/Online receipt. Normal separate reviewed exact-version documentation adoption and publication remain main/deployment-owner work; do not amend existing sealed runtime plans.",
+    "nativeLaunch": "No runtime fingerprint inputs were edited by this follow-up. Main's launch is not blocked by these source-only inventory changes."
+  }
+}

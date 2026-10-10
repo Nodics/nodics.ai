@@ -1,0 +1,4254 @@
+{
+  "date": "2026-10-07",
+  "executionScope": "SOURCE_CONTRACT_TESTS_AND_SIGNED_IN_NATIVE_AXIS",
+  "status": "OWNERSHIP_AND_OPTIONAL_IMPORT_REFACTOR_IMPLEMENTED_LOCAL_ACCEPTANCE_RECORDED",
+  "preservation": {
+    "existingDocuments": 190,
+    "totalDocuments": 204,
+    "unchangedBusinessFiles": 557,
+    "relocatedBusinessFilesWithOnlyOwnershipAnnotationsChanged": [
+      {
+        "from": "nodics.ai/nodics.commerce/modules/baseCommerce/data/core-v001/records/store/baseCommercePointOfServiceData.js",
+        "to": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/store/data/core-v001/records/store/baseCommercePointOfServiceData.js",
+        "originalChecksum": "6b07872b6961a635bb32680d00f5f14feac5129102575a44259d1f4def2684f8",
+        "checksum": "2b8791c8e09834b4f3fda3c10899b3986100852f582a7140f230a1f2b4c4fafd",
+        "exportedRecordsUnchanged": true
+      },
+      {
+        "from": "nodics.ai/nodics.commerce/modules/baseCommerce/data/core-v001/records/store/baseCommerceSalesChannelData.js",
+        "to": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/store/data/core-v001/records/store/baseCommerceSalesChannelData.js",
+        "originalChecksum": "0706f64ced621c99bfa67a5cf4a939f4c89aafba5a2a9885aef5a15c518fcf10",
+        "checksum": "1ab04a8dd52f629f6d08f2eaedc0f464132b2258c51e767239002a0648bdc285",
+        "exportedRecordsUnchanged": true
+      },
+      {
+        "from": "nodics.ai/nodics.commerce/modules/baseCommerce/data/core-v001/records/store/baseCommerceStoreData.js",
+        "to": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/store/data/core-v001/records/store/baseCommerceStoreData.js",
+        "originalChecksum": "923d66296d76d0254df39262a030f649c8c368362a1accdb30d9a7a07b521a1e",
+        "checksum": "072ed70f21058dc87acab47edad643c5868ad43d8bbd6a982cf7e14fcfbd23e0",
+        "exportedRecordsUnchanged": true
+      },
+      {
+        "from": "nodics.ai/nodics.commerce/modules/baseCommerce/data/core-v001/headers/store/baseCommerceCoreReferenceHeader.js",
+        "to": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/store/data/core-v001/headers/store/baseCommerceCoreReferenceHeader.js",
+        "originalChecksum": "bcc5198975a6667322ee1b75727038ece06eb1640ac504808e1156cfee19b5a5",
+        "checksum": "c8476162e75bcd13546dcf4030528bdf0f0d9ef0e558aa652bdaf3ee2aad056f",
+        "exportedRecordsUnchanged": true
+      }
+    ],
+    "preservedBusinessFilePayloads": 561,
+    "byteIdenticalBitmapFiles": 76,
+    "preservedExistingRoutes": 190,
+    "preservedExistingAnchors": 2044,
+    "unchangedBaselineBlocks": 7410,
+    "correctedSourceMapBlocks": 53,
+    "extendedExistingGuides": [
+      {
+        "documentId": "docs.documentation-publishing-runbook",
+        "addedBlocks": 19
+      },
+      {
+        "documentId": "commerce.search-guide",
+        "addedBlocks": 15
+      },
+      {
+        "documentId": "loyalty.wallets-rewards-ledger",
+        "addedBlocks": 14
+      },
+      {
+        "documentId": "process.workflow-bpm-source-map",
+        "addedBlocks": 1
+      },
+      {
+        "documentId": "commerce.fulfillment-core-source-map",
+        "addedBlocks": 1
+      },
+      {
+        "documentId": "accelerators.domain-commerce-source-map",
+        "addedBlocks": 16
+      },
+      {
+        "documentId": "circa.catalogue",
+        "addedBlocks": 10
+      },
+      {
+        "documentId": "circa.customer-journey",
+        "addedBlocks": 10
+      },
+      {
+        "documentId": "circa.demo-data",
+        "addedBlocks": 10
+      },
+      {
+        "documentId": "circa.customer-knowledge",
+        "addedBlocks": 10
+      }
+    ],
+    "newGuides": [
+      "accelerators.agora-electronics-product-semantics",
+      "accelerators.agora-telco-service-journey",
+      "copilot.provider-usage-budgets",
+      "copilot.evaluation-release-gates",
+      "rules.deterministic-evaluation",
+      "waste.material-taxonomy-evidence",
+      "location.approval-schema-boundary",
+      "location.draft-schema-boundary",
+      "location.marker-projection-boundary",
+      "location.search-projection-boundary",
+      "location.taxonomy-schema-boundary",
+      "location.shared-map-configuration",
+      "wcms.experience-placement-delivery",
+      "foundation.redis-provider-operations"
+    ]
+  },
+  "ownership": {
+    "centralFrameworkGuides": 29,
+    "formerlyCentralGuidesMovedToModuleOwners": 130,
+    "circaGuidesMovedToFrameworkAccelerator": 4,
+    "independentDocumentationSelections": 63,
+    "diagramCompanionFilesMovedToEWaste": 13,
+    "setupGovernanceOnly": true,
+    "groupingOnlyModulesOwnNoData": true,
+    "groupingOwnershipCorrection": [
+      {
+        "id": "framework.modular-architecture",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "framework.runtime-server-composition",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig"
+      },
+      {
+        "id": "framework.module-loading-service-precedence",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig"
+      },
+      {
+        "id": "framework.architecture-decision-guide",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "foundation.overview",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "accelerators.agora-industry-templates",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "framework.local-quick-start",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "framework.fresh-schema-setup-journey",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "framework.local-runtime-troubleshooting",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "localization.internationalization",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationCore"
+      },
+      {
+        "id": "schema.data-modeling-management",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nDatabase/database"
+      },
+      {
+        "id": "persistence.provider-data-access-layer",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nDatabase",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nDatabase/database"
+      },
+      {
+        "id": "cache.runtime-state-management",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nCache",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nCache/cache"
+      },
+      {
+        "id": "framework.customization-guide",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "framework.backend-extension-patterns",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "framework.axis-content-customization",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "commerce.base-foundations",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/baseCommerce",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "discovery.search-indexing",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.discovery",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.discovery/modules/discoveryRuntime"
+      },
+      {
+        "id": "commerce.overview",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "commerce.cart-order",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/checkout",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore"
+      },
+      {
+        "id": "commerce.payment-fulfillment",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/payment",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/payment/modules/paymentCore"
+      },
+      {
+        "id": "fulfillment.shipping-management",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/fulfillment",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore"
+      },
+      {
+        "id": "events.messaging-cluster-coordination",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nEms",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nEms/emsClient"
+      },
+      {
+        "id": "data.import-export-migration",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport/import"
+      },
+      {
+        "id": "framework.devops-runtime",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "framework.runtime-release-rollback",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "framework.local-browser-acceptance-journey",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "framework.local-verification-checklist",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "data.import-export-provider-guides",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport/import"
+      },
+      {
+        "id": "commerce.data-authoring-fulfillment",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/baseCommerce",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.docs"
+      },
+      {
+        "id": "commerce.search-guide",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore"
+      },
+      {
+        "id": "commerce.payment-provider-boundaries",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/payment",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/payment/modules/paymentCore"
+      },
+      {
+        "id": "foundation.cache-provider-runbooks",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nCache",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nCache/cache"
+      },
+      {
+        "id": "foundation.database-provider-boundaries",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nDatabase",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nDatabase/database"
+      },
+      {
+        "id": "communication.provider-runbooks",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.communication",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.communication/modules/commsCore"
+      },
+      {
+        "id": "process.workflow-bpm-source-map",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.process",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nbpm"
+      },
+      {
+        "id": "framework.release-upgrade-compatibility",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "foundation.ems-runtime-client-runbook",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nEms",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nEms/emsClient"
+      },
+      {
+        "id": "tooling.ai-developer-enablement",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling"
+      },
+      {
+        "id": "accelerators.agora-telco-service-journey",
+        "from": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/telco",
+        "to": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription"
+      }
+    ],
+    "counts": {
+      "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct": 1,
+      "nodics.ai/nodics.accelerators/modules/domainCommerceCore": 1,
+      "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct": 1,
+      "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web": 1,
+      "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription": 1,
+      "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste": 16,
+      "nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore": 1,
+      "nodics.ai/nodics.commerce/modules/baseCommerce/modules/inventory": 1,
+      "nodics.ai/nodics.commerce/modules/baseCommerce/modules/pricing": 1,
+      "nodics.ai/nodics.commerce/modules/baseCommerce/modules/product": 1,
+      "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList": 1,
+      "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore": 2,
+      "nodics.ai/nodics.commerce/modules/checkout/modules/order": 2,
+      "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore": 2,
+      "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore": 2,
+      "nodics.ai/nodics.communication/modules/commsCore": 3,
+      "nodics.ai/nodics.copilot/modules/copilotCapability": 3,
+      "nodics.ai/nodics.copilot/modules/copilotConversation": 1,
+      "nodics.ai/nodics.copilot/modules/copilotEvaluation": 1,
+      "nodics.ai/nodics.copilot/modules/copilotKnowledge": 3,
+      "nodics.ai/nodics.copilot/modules/copilotProviders/modules/copilotProvider": 1,
+      "nodics.ai/nodics.copilot/modules/copilotWorkbench": 8,
+      "nodics.ai/nodics.discovery/modules/discoveryRuntime": 1,
+      "nodics.ai/nodics.docs": 29,
+      "nodics.ai/nodics.engagement/modules/contactSubmission": 1,
+      "nodics.ai/nodics.engagement/modules/customerFeedback": 1,
+      "nodics.ai/nodics.engagement/modules/customerReview": 3,
+      "nodics.ai/nodics.engagement/modules/engagementCore": 3,
+      "nodics.ai/nodics.foundation/modules/nCache/cache": 2,
+      "nodics.ai/nodics.foundation/modules/nCache/redisCache": 1,
+      "nodics.ai/nodics.foundation/modules/nCommon": 1,
+      "nodics.ai/nodics.foundation/modules/nConfig": 5,
+      "nodics.ai/nodics.foundation/modules/nData/nImport/import": 2,
+      "nodics.ai/nodics.foundation/modules/nDatabase/database": 3,
+      "nodics.ai/nodics.foundation/modules/nEms/emsClient": 2,
+      "nodics.ai/nodics.foundation/modules/nNms": 1,
+      "nodics.ai/nodics.foundation/modules/nOtp": 1,
+      "nodics.ai/nodics.foundation/modules/nPipeline": 1,
+      "nodics.ai/nodics.foundation/modules/nRouter": 2,
+      "nodics.ai/nodics.foundation/modules/nService": 2,
+      "nodics.ai/nodics.foundation/modules/nTooling": 10,
+      "nodics.ai/nodics.foundation/modules/nbpm": 1,
+      "nodics.ai/nodics.localization/modules/localizationCore": 2,
+      "nodics.ai/nodics.location/modules/locationApproval": 1,
+      "nodics.ai/nodics.location/modules/locationDraft": 1,
+      "nodics.ai/nodics.location/modules/locationMap": 1,
+      "nodics.ai/nodics.location/modules/locationProjection": 1,
+      "nodics.ai/nodics.location/modules/locationSearch": 1,
+      "nodics.ai/nodics.location/modules/locationType": 1,
+      "nodics.ai/nodics.loyalty/modules/loyaltyWallet": 1,
+      "nodics.ai/nodics.platform/modules/axis": 18,
+      "nodics.ai/nodics.platform/modules/backoffice": 4,
+      "nodics.ai/nodics.platform/modules/installer": 2,
+      "nodics.ai/nodics.platform/modules/profile": 2,
+      "nodics.ai/nodics.process/modules/cronjob": 5,
+      "nodics.ai/nodics.process/modules/workflow": 15,
+      "nodics.ai/nodics.rulesEngine/modules/rulesEvaluation": 1,
+      "nodics.ai/nodics.waste/modules/wasteImpact": 1,
+      "nodics.ai/nodics.waste/modules/wasteMaterial": 1,
+      "nodics.ai/nodics.wcms/modules/cms": 2,
+      "nodics.ai/nodics.wcms/modules/media": 4,
+      "nodics.ai/nodics.wcms/modules/wcms": 4,
+      "nodics.ai/nodics.wcms/modules/wcmsExperience": 1,
+      "nodics.kickoff": 9
+    }
+  },
+  "referenceGraph": {
+    "documents": 204,
+    "routes": 204,
+    "references": 1187
+  },
+  "invariants": [
+    "Business release discovery does not select CONTENT_PACK sections.",
+    "Independent documentation selections stage only explicit declared files and foundation includes.",
+    "Canonical article, page metadata, page-link node, route, search metadata and publication state follow the same module owner.",
+    "Typed cross-module references validate document identity, canonical owner and existing anchors.",
+    "Online related and adjacent guide links use exact immutable publication scope without Staged fallback.",
+    "Unique bitmap, SVG and editable diagram assets follow their accelerator; genuinely shared assets remain shared.",
+    "New draft guides retain inactive public routes; no publication approval is fabricated.",
+    "Explicit coverage claims bind anchored detailed sections to selected source modules and label schema-only or composition-only boundaries."
+  ],
+  "liveAcceptance": {
+    "environment": "native kickoffLocal",
+    "scope": "Fresh-start data and documentation segregation acceptance through signed-in Axis; not full Circa or Agora business-journey qualification",
+    "privateCaptureQualification": "Confirmed by the user; run-local qualification flag used without changing privacy gates",
+    "reset": {
+      "ownedDatabasesDropped": 11,
+      "ownedSearchIndexesDropped": 4,
+      "deploymentAuthenticationNamespaceReset": true,
+      "unrelatedResourcesPreserved": true
+    },
+    "businessFoundationProfiles": {
+      "current": 10,
+      "documentationImportedByBusinessSetup": false
+    },
+    "framework": {
+      "version": "0.16.31",
+      "importRun": "contentPack_nodicsDocumentation_1791366172498_7af860da76b8",
+      "publication": "cmsBaseline_frameworkdocs_0_16_31",
+      "workflow": "cmsPublicationApproval-4abeef8d3cab50edf299d431",
+      "correlation": "210bcad8-6aae-425a-98d6-ea542184f5e6",
+      "publicationState": "ONLINE",
+      "revision": 6,
+      "readiness": "READY"
+    },
+    "axis": {
+      "version": "0.0.5",
+      "importRun": "contentPack_axisDocumentation_1791366217533_99f9fbba76b8",
+      "publication": "cmsBaseline_axisdocs_0_0_5",
+      "workflow": "cmsPublicationApproval-6998180802b23331159d89a2",
+      "correlation": "7fe770bf-0c03-44e3-8051-e4f4510e1ed1",
+      "readiness": "READY"
+    },
+    "media": {
+      "finalExactVersionRequests": 54,
+      "finalExactVersionApprovalsCompleted": 54,
+      "normalProcessApprovalUsed": true,
+      "limitsPreserved": true,
+      "queueAwaitingReview": 0
+    },
+    "onlineSummary": "2 / 2 Online-ready",
+    "draftDeliveryCheck": {
+      "route": "/docs/framework/location-approval-schema-boundary",
+      "outcome": "CMS content unavailable; CMS delivery HTTP 404",
+      "sourceRemainsDraft": true
+    },
+    "axisFinalOwnerGuidanceVerified": true,
+    "checks": {
+      "toolingTestsPassed": 185,
+      "cmsAndImportTestsPassed": 231,
+      "cmsAndImportTestsSkipped": 1,
+      "axisDocumentationTestsPassed": 42,
+      "axisTypecheck": "PASS",
+      "frameworkDocumentationAudits": "PASS",
+      "kickoffFullTestSuite": "PASS",
+      "kickoffFinalDocumentationAndGuidedSetupContracts": "PASS",
+      "generatedModuleContextsValidated": 202,
+      "fourRepositoryDiffChecks": "PASS"
+    },
+    "rendering": {
+      "circaCanonicalOwnerProseVerified": true,
+      "circaImageNaturalDimensions": [
+        2467,
+        680
+      ],
+      "imageEnlargementDialogVerified": true,
+      "mermaidAndTablesRendered": true,
+      "desktopViewport": [
+        1440,
+        1000
+      ],
+      "desktopDocumentWidth": 1440,
+      "mobileViewport": [
+        390,
+        844
+      ],
+      "mobileDocumentWidth": 390,
+      "mobileArticleAndNavigationVisuallyReviewed": true,
+      "crossModuleAnchor": "/docs/framework/docs-documentation-publishing-model#docsDocumentationPublishingModel-1-source-to-online-flow",
+      "crossModuleAnchorHeading": "Source to Online flow",
+      "crossAcceleratorTarget": "/docs/framework/accelerators-agora-apparel-product-data-authoring"
+    },
+    "setupCatalogue": {
+      "optionalModuleDocumentationVisibleSeparately": true,
+      "kickoffDocumentationVisibleSeparately": true,
+      "businessApplicationsBlockedForInactiveCommerceOrLocationRemainBlocked": true
+    },
+    "limitations": [
+      "Independent optional packs were source-contract validated; not every optional selection was imported and published independently in this round.",
+      "Kickoff 0.8.14 and Circa reference 0.0.2 packs are source-validated, not separately live-published in this round.",
+      "Fourteen new guides remain DRAFT in canonical source with inactive routes.",
+      "No claim of complete Circa customer, merchant, provider, or production acceptance is made."
+    ],
+    "screenshots": [
+      "screenshots/documentation-online-ready-2026-10-07.jpg",
+      "screenshots/circa-documentation-desktop-2026-10-07.jpg",
+      "screenshots/circa-documentation-mobile-2026-10-07.jpg",
+      "screenshots/circa-image-detail-2026-10-07.jpg",
+      "screenshots/draft-route-refused-2026-10-07.jpg"
+    ]
+  },
+  "coverage": {
+    "summary": {
+      "totalModules": 203,
+      "documents": 173,
+      "internal-only-candidate": 7,
+      "covered": 196
+    },
+    "validatedSourceBoundaries": [
+      {
+        "module": "nodics.rulesEngine",
+        "claims": [
+          {
+            "documentId": "rules.deterministic-evaluation",
+            "implementationState": "COMPOSITION_ONLY",
+            "anchors": [
+              "rulesDeterministicEvaluation-1-engine-ownership-and-business-result",
+              "rulesDeterministicEvaluation-2-availability-quality-and-group-logic",
+              "rulesDeterministicEvaluation-3-scores-bands-and-reproducibility",
+              "rulesDeterministicEvaluation-4-verification-and-recovery",
+              "rulesDeterministicEvaluation-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/defaultRuleEvaluationService.js",
+              "src/service/defaultRuleGroupEvaluationService.js",
+              "src/service/defaultRuleConditionEvaluationService.js",
+              "src/service/defaultRulePropertyResolutionService.js",
+              "src/service/defaultScoreBandResolutionService.js"
+            ],
+            "words": 1077
+          }
+        ]
+      },
+      {
+        "module": "locationMap",
+        "claims": [
+          {
+            "documentId": "location.shared-map-configuration",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "locationSharedMapConfiguration-1-shared-authority-and-reader-model",
+              "locationSharedMapConfiguration-2-providers-coordinates-and-safe-presentation",
+              "locationSharedMapConfiguration-3-delivery-and-user-interaction",
+              "locationSharedMapConfiguration-4-verification-and-operational-recovery",
+              "locationSharedMapConfiguration-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/defaultLocationMapConfigurationOperationService.js",
+              "src/service/defaultLocationMapCoordinateAdapterService.js",
+              "src/service/defaultLocationMapPresentationService.js",
+              "test/locationMapSharedConfigurationContract.test.js",
+              "test/locationMapProviderConfigurationContract.test.js"
+            ],
+            "words": 1054
+          }
+        ]
+      },
+      {
+        "module": "copilotProviders",
+        "claims": [
+          {
+            "documentId": "copilot.provider-usage-budgets",
+            "implementationState": "COMPOSITION_ONLY",
+            "anchors": [
+              "copilotProviderUsageBudgets-1-provider-boundary-and-business-outcome",
+              "copilotProviderUsageBudgets-2-calendar-accounting-and-allocation",
+              "copilotProviderUsageBudgets-3-inspection-and-reconciliation",
+              "copilotProviderUsageBudgets-4-verification-and-failure-recovery",
+              "copilotProviderUsageBudgets-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/defaultCopilotProviderService.js",
+              "src/service/defaultCopilotBudgetService.js",
+              "src/service/defaultCopilotUsageService.js",
+              "src/service/defaultCopilotReconciliationService.js",
+              "test/copilotBudgets.test.js",
+              "test/copilotReconciliation.test.js"
+            ],
+            "words": 1062
+          }
+        ]
+      },
+      {
+        "module": "wcmsExperience",
+        "claims": [
+          {
+            "documentId": "wcms.experience-placement-delivery",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "wcmsExperiencePlacementDelivery-1-placement-versus-renderable-content",
+              "wcmsExperiencePlacementDelivery-2-selection-and-fallback-semantics",
+              "wcmsExperiencePlacementDelivery-3-projection-indexing-and-deployment-qualification",
+              "wcmsExperiencePlacementDelivery-4-verification-and-failure-investigation",
+              "wcmsExperiencePlacementDelivery-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/defaultWcmsExperienceResolverService.js",
+              "src/service/defaultWcmsExperienceProjectionService.js",
+              "src/service/defaultWcmsExperiencePublicationIndexingService.js",
+              "test/wcmsExperienceResolverContract.test.js",
+              "test/wcmsExperiencePublicationIndexingContract.test.js",
+              "llm/contracts/experience-governance-contract.md"
+            ],
+            "words": 1054
+          }
+        ]
+      },
+      {
+        "module": "redisCache",
+        "claims": [
+          {
+            "documentId": "foundation.redis-provider-operations",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "foundationRedisProviderOperations-1-provider-ownership-and-activation",
+              "foundationRedisProviderOperations-2-values-ttl-and-atomic-operations",
+              "foundationRedisProviderOperations-3-lifecycle-invalidation-and-reset-safety",
+              "foundationRedisProviderOperations-4-verification-and-troubleshooting",
+              "foundationRedisProviderOperations-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/cache/defaultRedisCacheService.js",
+              "src/service/engine/defaultRedisCacheEngineService.js",
+              "src/service/engine/defaultSentinelRedisClientAdapterService.js",
+              "src/service/maintenance/defaultRedisLocalResetMaintenanceService.js",
+              "test/redisSentinelConfigurationContract.test.js",
+              "llm/contracts/local-reset-maintenance.md"
+            ],
+            "words": 1048
+          }
+        ]
+      },
+      {
+        "module": "copilotProvider",
+        "claims": [
+          {
+            "documentId": "copilot.provider-usage-budgets",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "copilotProviderUsageBudgets-1-provider-boundary-and-business-outcome",
+              "copilotProviderUsageBudgets-2-calendar-accounting-and-allocation",
+              "copilotProviderUsageBudgets-3-inspection-and-reconciliation",
+              "copilotProviderUsageBudgets-4-verification-and-failure-recovery",
+              "copilotProviderUsageBudgets-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/defaultCopilotProviderService.js",
+              "src/service/defaultCopilotBudgetService.js",
+              "src/service/defaultCopilotUsageService.js",
+              "src/service/defaultCopilotReconciliationService.js",
+              "test/copilotBudgets.test.js",
+              "test/copilotReconciliation.test.js"
+            ],
+            "words": 1062
+          }
+        ]
+      },
+      {
+        "module": "loyaltyWallet",
+        "claims": [
+          {
+            "documentId": "loyalty.wallets-rewards-ledger",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "loyalty-wallets-rewards-ledger-source-depth-1",
+              "loyalty-wallets-rewards-ledger-source-depth-2",
+              "loyalty-wallets-rewards-ledger-source-depth-3"
+            ],
+            "evidence": [
+              "src/service/defaultLoyaltyWalletOperationService.js",
+              "src/service/defaultLoyaltyRewardOperationService.js",
+              "test/loyaltyReversalRecoveryContract.test.js",
+              "test/loyaltyWalletProjectionPaging.test.js"
+            ],
+            "words": 848
+          }
+        ]
+      },
+      {
+        "module": "commerceSearchCore",
+        "claims": [
+          {
+            "documentId": "commerce.search-guide",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "commerce-search-guide-source-depth-1",
+              "commerce-search-guide-source-depth-2",
+              "commerce-search-guide-source-depth-3",
+              "commerce-search-guide-source-depth-4"
+            ],
+            "evidence": [
+              "src/service/defaultCommerceSearchRankingService.js",
+              "src/service/defaultCommerceSearchPublicationService.js",
+              "src/service/defaultCommerceSearchProjectionBuilderService.js",
+              "test/commerceSearchRankingContract.test.js",
+              "test/commerceSearchPublicationContract.test.js"
+            ],
+            "words": 829
+          }
+        ]
+      },
+      {
+        "module": "wasteMaterial",
+        "claims": [
+          {
+            "documentId": "waste.material-taxonomy-evidence",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "wasteMaterialTaxonomyEvidence-1-taxonomy-ownership-and-business-purpose",
+              "wasteMaterialTaxonomyEvidence-2-property-coverage-and-lifecycle",
+              "wasteMaterialTaxonomyEvidence-3-image-evidence-and-safe-consumer-behavior",
+              "wasteMaterialTaxonomyEvidence-4-verification-and-troubleshooting",
+              "wasteMaterialTaxonomyEvidence-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/schemas/schemas.js",
+              "src/service/defaultWasteItemDescriptorService.js",
+              "test/wasteItemDescriptorContract.test.js",
+              "test/wasteImageEvidenceReview.test.js"
+            ],
+            "words": 1080
+          }
+        ]
+      },
+      {
+        "module": "rulesEvaluation",
+        "claims": [
+          {
+            "documentId": "rules.deterministic-evaluation",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "rulesDeterministicEvaluation-1-engine-ownership-and-business-result",
+              "rulesDeterministicEvaluation-2-availability-quality-and-group-logic",
+              "rulesDeterministicEvaluation-3-scores-bands-and-reproducibility",
+              "rulesDeterministicEvaluation-4-verification-and-recovery",
+              "rulesDeterministicEvaluation-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/defaultRuleEvaluationService.js",
+              "src/service/defaultRuleGroupEvaluationService.js",
+              "src/service/defaultRuleConditionEvaluationService.js",
+              "src/service/defaultRulePropertyResolutionService.js",
+              "src/service/defaultScoreBandResolutionService.js"
+            ],
+            "words": 1077
+          }
+        ]
+      },
+      {
+        "module": "copilotEvaluation",
+        "claims": [
+          {
+            "documentId": "copilot.evaluation-release-gates",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "copilotEvaluationReleaseGates-1-purpose-and-evidence-boundary",
+              "copilotEvaluationReleaseGates-2-scoring-and-threshold-semantics",
+              "copilotEvaluationReleaseGates-3-suite-safety-and-release-decision",
+              "copilotEvaluationReleaseGates-4-verification-and-honest-limits",
+              "copilotEvaluationReleaseGates-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/service/defaultCopilotEvaluationService.js",
+              "src/schemas/schemas.js",
+              "test/copilotEvaluationReleaseGateContract.test.js"
+            ],
+            "words": 1087
+          }
+        ]
+      },
+      {
+        "module": "domainCommerceCore",
+        "claims": [
+          {
+            "documentId": "accelerators.domain-commerce-source-map",
+            "implementationState": "IMPLEMENTED",
+            "anchors": [
+              "accelerators-domain-commerce-source-map-source-depth-1",
+              "accelerators-domain-commerce-source-map-source-depth-2",
+              "accelerators-domain-commerce-source-map-source-depth-3",
+              "accelerators-domain-commerce-source-map-source-depth-4"
+            ],
+            "evidence": [
+              "src/service/defaultDomainCommerceCorePolicyService.js",
+              "test/domainCommerceCoreContract.test.js",
+              "test/domainSearchEnrichmentContract.test.js"
+            ],
+            "words": 834
+          }
+        ]
+      },
+      {
+        "module": "locationApproval",
+        "claims": [
+          {
+            "documentId": "location.approval-schema-boundary",
+            "implementationState": "SCHEMA_DEFINED",
+            "anchors": [
+              "locationApprovalSchemaBoundary-1-business-purpose-and-current-implementation",
+              "locationApprovalSchemaBoundary-2-record-contract-and-owner-responsibilities",
+              "locationApprovalSchemaBoundary-3-worked-adoption-and-extension-path",
+              "locationApprovalSchemaBoundary-4-failure-handling-and-verification",
+              "locationApprovalSchemaBoundary-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/schemas/schemas.js",
+              "src/service/defaultSampleService.js",
+              "src/router/routers.js"
+            ],
+            "words": 1097
+          }
+        ]
+      },
+      {
+        "module": "locationDraft",
+        "claims": [
+          {
+            "documentId": "location.draft-schema-boundary",
+            "implementationState": "SCHEMA_DEFINED",
+            "anchors": [
+              "locationDraftSchemaBoundary-1-business-purpose-and-current-implementation",
+              "locationDraftSchemaBoundary-2-record-contract-and-owner-responsibilities",
+              "locationDraftSchemaBoundary-3-worked-adoption-and-extension-path",
+              "locationDraftSchemaBoundary-4-failure-handling-and-verification",
+              "locationDraftSchemaBoundary-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/schemas/schemas.js",
+              "src/service/defaultSampleService.js",
+              "src/router/routers.js"
+            ],
+            "words": 1086
+          }
+        ]
+      },
+      {
+        "module": "locationProjection",
+        "claims": [
+          {
+            "documentId": "location.marker-projection-boundary",
+            "implementationState": "SCHEMA_DEFINED",
+            "anchors": [
+              "locationMarkerProjectionBoundary-1-business-purpose-and-current-implementation",
+              "locationMarkerProjectionBoundary-2-record-contract-and-owner-responsibilities",
+              "locationMarkerProjectionBoundary-3-worked-adoption-and-extension-path",
+              "locationMarkerProjectionBoundary-4-failure-handling-and-verification",
+              "locationMarkerProjectionBoundary-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/schemas/schemas.js",
+              "src/service/defaultSampleService.js",
+              "src/router/routers.js"
+            ],
+            "words": 1080
+          }
+        ]
+      },
+      {
+        "module": "locationSearch",
+        "claims": [
+          {
+            "documentId": "location.search-projection-boundary",
+            "implementationState": "SCHEMA_DEFINED",
+            "anchors": [
+              "locationSearchProjectionBoundary-1-business-purpose-and-current-implementation",
+              "locationSearchProjectionBoundary-2-record-contract-and-owner-responsibilities",
+              "locationSearchProjectionBoundary-3-worked-adoption-and-extension-path",
+              "locationSearchProjectionBoundary-4-failure-handling-and-verification",
+              "locationSearchProjectionBoundary-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/schemas/schemas.js",
+              "src/service/defaultSampleService.js",
+              "src/router/routers.js"
+            ],
+            "words": 1094
+          }
+        ]
+      },
+      {
+        "module": "locationType",
+        "claims": [
+          {
+            "documentId": "location.taxonomy-schema-boundary",
+            "implementationState": "SCHEMA_DEFINED",
+            "anchors": [
+              "locationTaxonomySchemaBoundary-1-business-purpose-and-current-implementation",
+              "locationTaxonomySchemaBoundary-2-record-contract-and-owner-responsibilities",
+              "locationTaxonomySchemaBoundary-3-worked-adoption-and-extension-path",
+              "locationTaxonomySchemaBoundary-4-failure-handling-and-verification",
+              "locationTaxonomySchemaBoundary-5-documentation-selection-assets-and-acceptance"
+            ],
+            "evidence": [
+              "src/schemas/schemas.js",
+              "src/service/defaultSampleService.js",
+              "src/router/routers.js"
+            ],
+            "words": 1098
+          }
+        ]
+      }
+    ],
+    "interpretation": "Documentation coverage is not implementation, Online publication, live-provider or signed-in acceptance proof. Other matches remain mention-based triage.",
+    "outstanding": []
+  },
+  "correctedBlocks": [
+    {
+      "documentId": "reference.source-map-glossary",
+      "block": 13,
+      "originalChecksum": "0852d08aafa9b06f39efd1b74dd98623a8a647ce6b2e2a9cd0e86620976e4629",
+      "correctedChecksum": "b425a621b880bf48bf5fb001680c879dd1143e9db25330f148ba8e1d9fe54e03",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "accelerators.domain-commerce-source-map",
+      "block": 4,
+      "originalChecksum": "49bdd3027ab72678193083be3fff1ea053e37246b1ba2e282199160af3927e07",
+      "correctedChecksum": "b57e903da4a2212536270f17d766814941d944f3606941c0394877cf06f34ae5",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "commerce.data-authoring-fulfillment",
+      "block": 2,
+      "originalChecksum": "f17a94a28730ae8b8cdf35cb2c7ada7660196601df21f9ad05ecb06b339f45ed",
+      "correctedChecksum": "5d7b319049f340f3b3ba71503cb376a4e336bae6a06fb55b920ad9be009dfa81",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "commerce.search-guide",
+      "block": 2,
+      "originalChecksum": "fc24584f4444d8066aae1215a3c4d634acaa12a40e8d08745449e63734c3050e",
+      "correctedChecksum": "602f1190837a2db249b1e40fc66872ef4a1ed224c65d67ea5d621150b35a92fd",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "commerce.shopping-list-commerce-boundary",
+      "block": 3,
+      "originalChecksum": "8d4b7008f7ec20b42729eee910bb6ed30eba73a79ac5b6d233aa3f8148e84a48",
+      "correctedChecksum": "d7e51f75332f0584602fb4ae04a74b47d818a24c69b2f692e786beceb8290049",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "commerce.fulfillment-core-source-map",
+      "block": 4,
+      "originalChecksum": "28bd72f971a4c8441d674f69f46cd20bff7d6607a5b329bd898ee74ee8d04097",
+      "correctedChecksum": "064ba32ae20686b041e1fa25ce6fb866d0cbdf261332d9e55e495bba9c3eccc0",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "commerce.payment-provider-boundaries",
+      "block": 2,
+      "originalChecksum": "00e2955ed245e93d0c55787f8e0f33cee76f19ab0b9ac67c550cf572274b59f6",
+      "correctedChecksum": "f63e8f2915fe998c4244052ff2b6fb454c1c5acfca78ed3a8c2147ceb3a5ff75",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "engagement.contact-submission-operations",
+      "block": 2,
+      "originalChecksum": "8915056c42e9b54705527e52d27ca49ecca48fb85bc024fe3c223b53d6e137aa",
+      "correctedChecksum": "8ab30e1820ce3ab6b3c9ac5e82a4ef964f35b101ba9d3791f82f514d4ed3d0de",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.cache-provider-runbooks",
+      "block": 2,
+      "originalChecksum": "04962bf77c5ada806c9584e8a7ccbd2a1dcea6678628b16491276d9d070e2c84",
+      "correctedChecksum": "41c1a278a48c8adacf0bd7243e109fcd37506e78835680f89a550778ba47b714",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.error-handling-status-codes",
+      "block": 6,
+      "originalChecksum": "2d10414df93adfaa100420e90bc2815db15dbf7123b89643e5a2b6c2704a045f",
+      "correctedChecksum": "14be0bfc209a49a27581d494722e1e52c1ba9390fdc537b82e93a313d1d4320e",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "data.import-export-provider-guides",
+      "block": 2,
+      "originalChecksum": "154949fcb13793996fc4dd83ad153ca682aa9be47511c8a250fa0680c003496b",
+      "correctedChecksum": "50c09e39effd632cd41a6e0d712292e86d48a45fce9770d2d567b53e82354ea6",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.database-provider-boundaries",
+      "block": 2,
+      "originalChecksum": "c9b3c78a238fae1f739ab56ecadb673ecd3b5e153cb84822d65a2bd55364d6c4",
+      "correctedChecksum": "1bf54fc4e7a5808cd34fb8087791fede5f9a50a0fda5c40ec47a3f9866c0f850",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.ems-runtime-client-runbook",
+      "block": 4,
+      "originalChecksum": "cd632d004169cc6164ea2dce247064d3d76dcaae4c549d7581de168adefab313",
+      "correctedChecksum": "6a2e3d93e54a2fce042608a06ec9f84328cd3e6bc3b7e5fc9e799f9d41603df4",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.nms-runtime-monitoring",
+      "block": 2,
+      "originalChecksum": "b0eba2634f710c3a9a9e51cfa4f5027802482a81c65a669f7d69d2daa420183b",
+      "correctedChecksum": "8bed44231f01d6aa78014a61c728a9408914df4b7239f03a0dbf5922a4880c51",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "security.otp-security-flow",
+      "block": 2,
+      "originalChecksum": "f5d4a288b18638c1a7ecc71a61ddcfcd42c107a2b6038a4e11ee701eb1dafac7",
+      "correctedChecksum": "89d1b529139604d0fbf2d4f8bed989999c40bf8f4e5dee7fe108843f921f21f3",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "routing.api-request-lifecycle",
+      "block": 3,
+      "originalChecksum": "f085298a3864f7ea2871bad9525e0ed4a9bfff477169105f52b274be6336655f",
+      "correctedChecksum": "c09df7338cce229cecbb7614d128446e23528111ef8c7f850d340ebaa490679d",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.service-runtime-overrides",
+      "block": 3,
+      "originalChecksum": "3218d76bd90baf4f3bf65adad160fd9955653cb86daebc121d981ba0ba293338",
+      "correctedChecksum": "ccdeb71d60cbb56be729b0c4b8c53b561110c408650b54e2e085dede3d5818c9",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.module-to-module-communication",
+      "block": 3,
+      "originalChecksum": "f969242440065b9ded420283180589cb2911766ccd2fb41cf1e6de836af73dc3",
+      "correctedChecksum": "79d9a9f51651e0f5be8c805d265a54ea4112dfe077fd662b955673099cfb7e1e",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "framework.release-upgrade-compatibility",
+      "block": 2,
+      "originalChecksum": "67df22be393920be8165c3098c9b46504d8e926d43e6c1053c22ee3b20e001f8",
+      "correctedChecksum": "b387f51a6594895864b7f9de345290bcc614be66c53d6bc05a8bcf314e036b3a",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "foundation.tooling-runtime-contracts",
+      "block": 8,
+      "originalChecksum": "18b134858d21f8f856f96c4bb6c6ef826792538e6e205b35a0cb391419784ebc",
+      "correctedChecksum": "0278ca07d6084f82309bf887936616e734969824659ebed837363a04999705c1",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "localization.runtime-authoring",
+      "block": 2,
+      "originalChecksum": "50e86852d888f315734354467c6bd9fc5f3702da81538bfce118d8535a191def",
+      "correctedChecksum": "f0ea6f63630c8057d198ae4eb44fa76771a8d67e1707c87a024607f0b9195eff",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "loyalty.wallets-rewards-ledger",
+      "block": 9,
+      "originalChecksum": "0e0d832a8a3b77cabd3111a5cee4d0c751fae8f5ec2219c37868ba7e1b6b0e23",
+      "correctedChecksum": "1d8d0e8f0809a7a53d6fcdbc8fc77eaa6ed4daccd99cb4de45b28d72293cd493",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "platform.module-registry-journey",
+      "block": 2,
+      "originalChecksum": "296e5817aa0e91817ee41de439f32c25e7fea847222ac22231a733fe02dd5bcb",
+      "correctedChecksum": "c9031c14b50db03cb97e7d15145d3088474c6dbed530bc64ea267dad987b4da4",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "process.workflow-bpm-source-map",
+      "block": 2,
+      "originalChecksum": "d5e3ffffaf57b24d0ed241854f11cbb3d7dd1d924856ef027944f3354a94861c",
+      "correctedChecksum": "1a2a217b22cf802f4b35c31b6c5e85fb274a80ec16fa159b4624191fc5ecf747",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "process.cronjob-data-authoring",
+      "block": 2,
+      "originalChecksum": "1443037f59842a5f19f5c97faaf456195c8ab9b0648993d578a6050bd6ec1f2b",
+      "correctedChecksum": "43af8a8ea7bb7a5e8dbd97a900a48672d0f8cfd1ee0f79d6da6597790919cb08",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "wcms.cms-source-map-authoring-contract",
+      "block": 2,
+      "originalChecksum": "204e2fd60609c695f1e9ac358da0780ec5407c630987c4c1b4e5124dbd4b9911",
+      "correctedChecksum": "3f95f39de9451d18a3d2ef29a3966202e3ad9458a6f9d0725279563e8ecdf0b4",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "wcms.media-operations-runbook",
+      "block": 4,
+      "originalChecksum": "f7093ece28b547e99a0b4e45ba6c3713af7775da136c8476535bf75f39009326",
+      "correctedChecksum": "809c5ea5fc5443ee133bc35017bfc3fcbe7a0add6ab2ecfe026e83a2535b62dc",
+      "reason": "Canonical guide identity or moved-owner source-map path"
+    },
+    {
+      "documentId": "docs.documentation-publishing-runbook",
+      "block": 2,
+      "originalChecksum": "792f625cb7f53deacc502c76b3081bb9a214608aef17b2b11e761efeb61c1f04",
+      "correctedChecksum": "3d1498b68cc75e996b9ebca341f2a2cb8ac1b5f2e9b4502fbc88dd8d41c79b06",
+      "reason": "Correct retired core documentation path and canonical record terminology"
+    },
+    {
+      "documentId": "docs.documentation-publishing-runbook",
+      "block": 7,
+      "originalChecksum": "3d7b1eb81b3bdeb35ffb26fbfee9a799a068b6ff912deec7489c29c23f89b255",
+      "correctedChecksum": "5f0424f7da2b8c3f75ab94d9b18452545af6388e519164034bf404227b020275",
+      "reason": "Correct retired core documentation path and canonical record terminology"
+    },
+    {
+      "documentId": "docs.documentation-publishing-runbook",
+      "block": 8,
+      "originalChecksum": "00f83d9a65c2d65732a2a7aeca6cfc882656309c83ed0466219cd1ad1f0c13e1",
+      "correctedChecksum": "dca9f01d3b52447549acbd5dc57e5e51fb8785148e2fbcc4e972f196a7c6410d",
+      "reason": "Correct retired core documentation path and canonical record terminology"
+    },
+    {
+      "documentId": "docs.documentation-publishing-runbook",
+      "block": 9,
+      "originalChecksum": "430387571fe1eb2d50f2479af4061e6f1d027b7f2a9088ab03c3caa4374dd3e2",
+      "correctedChecksum": "c88547ff7bbd279dc9668d1a27b312cdbcca7944bef739229ede5a7d76f7342c",
+      "reason": "Correct retired core documentation path and canonical record terminology"
+    },
+    {
+      "documentId": "circa.demo-data",
+      "block": 10,
+      "originalChecksum": "c1e1df0b90289de16906dacfdbb40897c98687eeadb236114b2c13f8d79da538",
+      "correctedChecksum": "3f5c0747b850a38928cb693ccd0ffc9cda4621601452dd338ead2de7cc064ef3",
+      "reason": "Align explanatory source root with the consolidated v001 business manifest"
+    },
+    {
+      "documentId": "framework.release-upgrade-compatibility",
+      "block": 2,
+      "originalChecksum": "b387f51a6594895864b7f9de345290bcc614be66c53d6bc05a8bcf314e036b3a",
+      "correctedChecksum": "7f611ba9ccfa38bee0f1f5b6c1754e9179a979d499d993d2ec5057826221168d",
+      "reason": "Keep nSetup governance-only and resolve source paths from the Foundation documentation owner"
+    },
+    {
+      "documentId": "accelerators.domain-commerce-source-map",
+      "block": 4,
+      "originalChecksum": "b57e903da4a2212536270f17d766814941d944f3606941c0394877cf06f34ae5",
+      "correctedChecksum": "4edfa6d7f8fd8bd7c3346c88e3f2feb6b9fcceeb00761b505b35313f54ca78e9",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "commerce.data-authoring-fulfillment",
+      "block": 2,
+      "originalChecksum": "5d7b319049f340f3b3ba71503cb376a4e336bae6a06fb55b920ad9be009dfa81",
+      "correctedChecksum": "27a89c5cab1b1637772b212afee7583755fac6cfe5aca8c69924615886231bba",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "commerce.search-guide",
+      "block": 2,
+      "originalChecksum": "602f1190837a2db249b1e40fc66872ef4a1ed224c65d67ea5d621150b35a92fd",
+      "correctedChecksum": "52540682bb536d19c3793f07f85e1304bd92dac4018d4b479c077b396b67fb51",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "commerce.fulfillment-core-source-map",
+      "block": 4,
+      "originalChecksum": "064ba32ae20686b041e1fa25ce6fb866d0cbdf261332d9e55e495bba9c3eccc0",
+      "correctedChecksum": "551bc6a99250d8b86146ce9f0d8c4ea706dc01a09e6c450bc00bd9a5f4d0e1ab",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "commerce.payment-provider-boundaries",
+      "block": 2,
+      "originalChecksum": "f63e8f2915fe998c4244052ff2b6fb454c1c5acfca78ed3a8c2147ceb3a5ff75",
+      "correctedChecksum": "893710cf7d1e80ee4940eb2eb00243d102dadd1161426e0c33186097e27fbbb3",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "docs.documentation-principles",
+      "block": 4,
+      "originalChecksum": "fd0ef1fe2d277c05cbdde1aee03d29a369161dcc942c9ca23e6b6be27e3aeba4",
+      "correctedChecksum": "50efef524bad1c12b631c6e11065d9b30a4f2181a13f2640dc2fd5cb15adbf10",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "docs.documentation-publishing-runbook",
+      "block": 2,
+      "originalChecksum": "3d1498b68cc75e996b9ebca341f2a2cb8ac1b5f2e9b4502fbc88dd8d41c79b06",
+      "correctedChecksum": "099ad79167de1b9a3f7ca5fb3a17fcd14ca0d352152caf990703e9e70536f454",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "reference.internal-source-boundary-register",
+      "block": 6,
+      "originalChecksum": "8d10e0fd76801d02ce018146556a03c290d2b7bbba4127b0e3175ab98e99bae8",
+      "correctedChecksum": "c2367a59022ce243d09d70ab9dffd14003b0ba55087be02c8f4558588327843f",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "reference.source-backed-documentation-coverage-audit",
+      "block": 6,
+      "originalChecksum": "9a130b8792ae6348c497bc575b904a606b6789a5ae6127bcdd17c514bcaf212d",
+      "correctedChecksum": "52c0a328c609d36d0101d15aecbc5d3ea460957f49ed15421259e44b9af9cec8",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "engagement.contact-submission-operations",
+      "block": 2,
+      "originalChecksum": "8ab30e1820ce3ab6b3c9ac5e82a4ef964f35b101ba9d3791f82f514d4ed3d0de",
+      "correctedChecksum": "949e512d2bcded74c9ced69b6cf79744e3b3d9f1681429a411ddffc112032cf0",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "framework.release-upgrade-compatibility",
+      "block": 2,
+      "originalChecksum": "7f611ba9ccfa38bee0f1f5b6c1754e9179a979d499d993d2ec5057826221168d",
+      "correctedChecksum": "de4681d2f51b6b9bfd9c47bbe237609ec9771ea07d2b69cee73babf36007dc5e",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "foundation.cache-provider-runbooks",
+      "block": 2,
+      "originalChecksum": "41c1a278a48c8adacf0bd7243e109fcd37506e78835680f89a550778ba47b714",
+      "correctedChecksum": "bb00517b3cf5f85432f8129221a689d1be4ab5d5d889af504bc203030ca4d9dc",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "data.import-export-migration",
+      "block": 29,
+      "originalChecksum": "897af51ec0bc78071c337a054769bb5a6da3baee44b240ab160e88d248a16814",
+      "correctedChecksum": "382fc5cbb4efdf171fe469080ae7c329dde516aa4a6eec6b135dc0f50e796603",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "data.import-export-migration",
+      "block": 53,
+      "originalChecksum": "2aa6dfa85c0bf0591032aa8205e2705004f7495059a920863c90d262fadff4a8",
+      "correctedChecksum": "39cb95d7c7a5f9b2093193398f336366e6810bdecbdd46be1c5435c6b5ecc40c",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "data.import-export-migration",
+      "block": 55,
+      "originalChecksum": "ba65475c63ec786dea9ef0b8c63962a024c88b43ef6d66d2e265864f52fec05c",
+      "correctedChecksum": "fab7bbdbf6bc85f4548429c8be48204450a9cde5df9dd4e8c184b9746c7cc6f8",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "data.import-export-provider-guides",
+      "block": 2,
+      "originalChecksum": "50c09e39effd632cd41a6e0d712292e86d48a45fce9770d2d567b53e82354ea6",
+      "correctedChecksum": "eb10a5cfcb2f09cb33acf45acc0e644ac737efb9ea0cc897c5b4a488c1e35044",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "foundation.database-provider-boundaries",
+      "block": 2,
+      "originalChecksum": "1bf54fc4e7a5808cd34fb8087791fede5f9a50a0fda5c40ec47a3f9866c0f850",
+      "correctedChecksum": "328e72588be07dacec16d4c07bd6e43992773963366f5da8139d95ec5d6af829",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "foundation.ems-runtime-client-runbook",
+      "block": 4,
+      "originalChecksum": "6a2e3d93e54a2fce042608a06ec9f84328cd3e6bc3b7e5fc9e799f9d41603df4",
+      "correctedChecksum": "074f8ad9e911a4ec89a7d868a255572758d1e6be43d141ef6814c45769001364",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "routing.api-request-lifecycle",
+      "block": 3,
+      "originalChecksum": "c09df7338cce229cecbb7614d128446e23528111ef8c7f850d340ebaa490679d",
+      "correctedChecksum": "3a55d13996fcfeebc773f706ea2a14a14022ec0302e00df0a75677909cd8fa96",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "foundation.tooling-runtime-contracts",
+      "block": 8,
+      "originalChecksum": "0278ca07d6084f82309bf887936616e734969824659ebed837363a04999705c1",
+      "correctedChecksum": "635df574132acedf77e0ee021a1776cb627d75adf8f78974bb8fc3f914d0d331",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "localization.runtime-authoring",
+      "block": 2,
+      "originalChecksum": "f0ea6f63630c8057d198ae4eb44fa76771a8d67e1707c87a024607f0b9195eff",
+      "correctedChecksum": "d639c04ed4987e7a86c5b866cf1ae71d1ad4166ae5b3a52b403a33fa8328d628",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "process.workflow-bpm-source-map",
+      "block": 2,
+      "originalChecksum": "1a2a217b22cf802f4b35c31b6c5e85fb274a80ec16fa159b4624191fc5ecf747",
+      "correctedChecksum": "1e3452e13ad5663163b442fad62185b2de3c56f02b105a8ab33d47ee75409878",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "wcms.cms-source-map-authoring-contract",
+      "block": 2,
+      "originalChecksum": "3f95f39de9451d18a3d2ef29a3966202e3ad9458a6f9d0725279563e8ecdf0b4",
+      "correctedChecksum": "6d725d2753ac9cd79c3335e8bc0a6506dc60470651cacfb62976707a2ac3d646",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "wcms.media-operations-runbook",
+      "block": 4,
+      "originalChecksum": "809c5ea5fc5443ee133bc35017bfc3fcbe7a0add6ab2ecfe026e83a2535b62dc",
+      "correctedChecksum": "69c39b9397f840defe95ad5f9cedd48f133f3bd685ec10d7329dc628ea11924e",
+      "reason": "Rebase verified source paths after capability-owner correction; content and anchors retained."
+    },
+    {
+      "documentId": "reference.source-map-glossary",
+      "block": 13,
+      "originalChecksum": "b425a621b880bf48bf5fb001680c879dd1143e9db25330f148ba8e1d9fe54e03",
+      "correctedChecksum": "750b3f96d91d61aecbe09675cd28fa591cf5aa2bf8a0d357222ee3b22ffc0026",
+      "reason": "Correct explicit code-example source paths after grouping-only owner removal."
+    },
+    {
+      "documentId": "schema.data-modeling-management",
+      "block": 93,
+      "originalChecksum": "1eb9a8122f124dd19002a3b0d0452ea76edc2c8462cd36415d6544c41ee353e6",
+      "correctedChecksum": "7467c1cdbdd17d7c3d935a77e97055fb302581885790cbc7337aed0ca50ed688",
+      "reason": "Correct nonexistent nSchema owner to the verified database schema compiler and distinguish functional visibility."
+    },
+    {
+      "documentId": "accelerators.circa-overview",
+      "block": 12,
+      "originalChecksum": "499368f4df5ff9857e3aa89f0df25e351a865ce3998788307f6b84a8c5b273bf",
+      "correctedChecksum": "6eaf424de6db02f081382af3f695b66266674154fda29640d8c1cc3e38654e37",
+      "reason": "Accelerator guide ownership follows implementing eWaste rather than shared composition."
+    },
+    {
+      "documentId": "docs.documentation-roadmap",
+      "block": 21,
+      "originalChecksum": "bd5508272e60ccedc24a8524db4d42f96c08606f46485aa957046f3aaee28f96",
+      "correctedChecksum": "66f6935b830a67d254130b882ae93abea34d8298ba41f97a32212e98552d817b",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "accelerators.agora-industry-templates",
+      "block": 21,
+      "originalChecksum": "5627f74eb46c7b6cab19f72f8349c19ce77eb844bd7c39b6a7188fabb5af2b65",
+      "correctedChecksum": "99a1b36eaacc2d69728bed391fb9897937aebbf902b61c4f193bd9d8ce23d3bf",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "applications.suite",
+      "block": 20,
+      "originalChecksum": "521e906572aaa1bbf7318c6ba9a53ffc3d49519c38eff521e4edac207e82311d",
+      "correctedChecksum": "2a053956b7e7c30dfa4b2eaaeaf76f3364bc0d9bb8e655e5e4b7fff19fb6b5e0",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "installer.installed-runtime-application-builder",
+      "block": 18,
+      "originalChecksum": "8d131e5d013eefde5ca1059ad83f1f2958e380d20ef282076a07870fbda20be8",
+      "correctedChecksum": "59eda61be85cffefe82c7459f626b48e036e030d502b6eaca32cec6aaa6783b0",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "accelerators.circa-deployment-verification",
+      "block": 25,
+      "originalChecksum": "660a338892f826a693a44222a24d0015014a332d070f815217c080b15a1bb59f",
+      "correctedChecksum": "7b0b54eef42054adede3f771200b0e0da2afc2af56edea390878cd88837fc961",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "platform.overview",
+      "block": 27,
+      "originalChecksum": "9f364c5b37947ce608dcc3fab216e9f722f7ae2a5dc575a9cf6371aabcc9af86",
+      "correctedChecksum": "cb28875553eeb56e3a866ec972704a24ce87802a7b9ccc42d9370a4eaec739eb",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "platform.overview",
+      "block": 45,
+      "originalChecksum": "0effc3991139bce8b44b6a6e8986680e092ddfeef82a76c64bc7748270bc7e63",
+      "correctedChecksum": "be3a2e3728a82da631de4504e15360845cda5fdb4ef5cb741e8fd36039caeb1f",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "axis.overview",
+      "block": 69,
+      "originalChecksum": "831b53156b38d00aa0e76985d77a8a473f53a925b656eb77ca8c158a3f221016",
+      "correctedChecksum": "8a4407f97e5c795e08f1caa4e5a5d40a2a56d3942a49228b2f8a879a6f865b28",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "axis.documentation-content",
+      "block": 1,
+      "originalChecksum": "0cf0b547cc613c1b82f5c808c643b9e683fc22542a0d5aadb80c9e58eda19776",
+      "correctedChecksum": "8861a6c46b0015f77bd13c3fbb5445879ff3275007e841a3e3762fd6f66c8688",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "axis.documentation-content",
+      "block": 2,
+      "originalChecksum": "ec00b6e8af79720b82a5fe1638aa28bd3d664834672edf3609deb5cd68b2fb29",
+      "correctedChecksum": "2a890f0e281e1c34c52a2ea6de286775600cedb864d977b5173c48a4f513e94f",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "axis.documentation-content",
+      "block": 41,
+      "originalChecksum": "a5868992c7661cf42991840e1623b04bb52aaca38ca33f54988d9e2a243d9f38",
+      "correctedChecksum": "2e67fefdec00269ecff07b302603a2290474072f1bc16c313a6ed0bd478bae5b",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "kickoff.overview",
+      "block": 1,
+      "originalChecksum": "27be22b8a9ab71bf24c46662c22f366849eae85a48b802d636833d875da3721e",
+      "correctedChecksum": "60eccc4a961a434828add29fb674516d934d7e30206b1040e1d18e6e9177e068",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    },
+    {
+      "documentId": "kickoff.overview",
+      "block": 49,
+      "originalChecksum": "f2bd2c0adff37ef7383ec66d0f4e927585413b5e5b015a25bf799b428fde786b",
+      "correctedChecksum": "a212dc2da125ede1c0a4d7d8462dd8e8d4ca2640fadb11a203c9bab4d43fd0ea",
+      "reason": "Clarify canonical implementing-module documentation ownership and remove retired authoring/generation language."
+    }
+  ],
+  "placementReview": [
+    {
+      "documentId": "accelerators.agora-industry-templates",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators-agora-industry-templates",
+      "words": 1149,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "commerce.overview",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-overview",
+      "words": 1073,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "commerce.base-foundations",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-base-foundations",
+      "words": 1259,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "commerce.data-authoring-fulfillment",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-data-authoring-fulfillment",
+      "words": 741,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "docs.gateway",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs",
+      "words": 934,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.what-is-nodics",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework",
+      "words": 1046,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.why-nodics-exists",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-why-nodics-exists",
+      "words": 941,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.how-nodics-works",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-how-nodics-works",
+      "words": 778,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.adoption-and-first-journey",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-adoption-and-first-journey",
+      "words": 1782,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "docs.documentation-roadmap",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/docs-documentation-roadmap",
+      "words": 1375,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "docs.documentation-principles",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/docs-documentation-principles",
+      "words": 963,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "docs.reader-journey-and-coverage",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/docs-reader-journey-and-coverage",
+      "words": 734,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "docs.documentation-publishing-model",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/docs-documentation-publishing-model",
+      "words": 959,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "applications.suite",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/applications-suite",
+      "words": 941,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "solutions.task-execution-engine",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/solutions-task-execution-engine",
+      "words": 1077,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "solutions.data-engineering-analytics-platform",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/solutions-data-engineering-analytics-platform",
+      "words": 1120,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.capability-documentation-maturity-pattern",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-capability-documentation-maturity-pattern",
+      "words": 1566,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "docs.overview",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/docs-overview",
+      "words": 563,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "docs.documentation-publishing-runbook",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/docs-documentation-publishing-runbook",
+      "words": 2089,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 4,
+        "diagram": 3
+      }
+    },
+    {
+      "documentId": "reference.internal-source-boundary-register",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/reference-internal-source-boundary-register",
+      "words": 553,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "reference.source-map-glossary",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/reference-source-map-glossary",
+      "words": 2122,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "reference.source-backed-documentation-coverage-audit",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/reference-source-backed-documentation-coverage-audit",
+      "words": 2385,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 9
+      }
+    },
+    {
+      "documentId": "reference.documentation-gap-backlog",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/reference-documentation-gap-backlog",
+      "words": 1408,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 4
+      }
+    },
+    {
+      "documentId": "framework.modular-architecture",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-modular-architecture",
+      "words": 2290,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 5
+      }
+    },
+    {
+      "documentId": "framework.architecture-decision-guide",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-architecture-decision-guide",
+      "words": 603,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "foundation.overview",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-overview",
+      "words": 1430,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 2,
+        "image": 8
+      }
+    },
+    {
+      "documentId": "framework.customization-guide",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-customization-guide",
+      "words": 512,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.backend-extension-patterns",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-backend-extension-patterns",
+      "words": 575,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.axis-content-customization",
+      "currentOwner": "nodics.ai/nodics.docs",
+      "declaredFunctionalOwner": "nodics.docs",
+      "technicalModule": "nodics.docs",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-axis-content-customization",
+      "words": 508,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "accelerators.agora-apparel-product-data-authoring",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "apparelProduct",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators-agora-apparel-product-data-authoring",
+      "words": 1871,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 6
+      }
+    },
+    {
+      "documentId": "accelerators.domain-commerce-source-map",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/domainCommerceCore",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "domainCommerceCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators-domain-commerce-source-map",
+      "words": 1441,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "accelerators.agora-electronics-product-semantics",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "electronicsProduct",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators-agora-electronics-product-semantics",
+      "words": 1310,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 2,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "applications.nexus-data-content-guide",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/nexus/modules/nexus.web",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "nexus.web",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/applications-nexus-data-content-guide",
+      "words": 1033,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "accelerators.agora-telco-service-journey",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "telcoSubscription",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators-agora-telco-service-journey",
+      "words": 1395,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 2,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "accelerators.circa-collection-reference",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/collection-reference",
+      "words": 1009,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 1,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "accelerators.circa-enterprise-reference",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/enterprise-reference",
+      "words": 997,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 1,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "accelerators.circa-source-inventory",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/source-inventory",
+      "words": 1013,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5
+      }
+    },
+    {
+      "documentId": "accelerators.circa-catalogue-reference",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/catalogue-reference",
+      "words": 967,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2
+      }
+    },
+    {
+      "documentId": "accelerators.circa-configuration-reference",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/configuration-reference",
+      "words": 988,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2
+      }
+    },
+    {
+      "documentId": "accelerators.circa-overview",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa",
+      "words": 1248,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 1,
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "accelerators.circa-data-network",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/data-network",
+      "words": 1124,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "accelerators.circa-submission-journey",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/submission",
+      "words": 1041,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 1,
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "accelerators.circa-operations-rewards",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/operations",
+      "words": 1082,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "accelerators.circa-coupons-commerce",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/coupons-commerce",
+      "words": 2229,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 2,
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "accelerators.circa-customization",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/customization",
+      "words": 1040,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "accelerators.circa-deployment-verification",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/accelerators/circa/deployment-verification",
+      "words": 1095,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2
+      }
+    },
+    {
+      "documentId": "commerce.search-guide",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "commerceSearchCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-search-guide",
+      "words": 1426,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "inventory.stock-management",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/inventory",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "inventory",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/inventory-stock-management",
+      "words": 1321,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "pricing.promotions-tax-management",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/pricing",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "pricing",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/pricing-promotions-tax-management",
+      "words": 1432,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "catalog.product-discovery-management",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/product",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "product",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/catalog-product-discovery-management",
+      "words": 1473,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "commerce.shopping-list-commerce-boundary",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "shoppingList",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-shopping-list-commerce-boundary",
+      "words": 1210,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "commerce.cart-order",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "checkoutCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-cart-order",
+      "words": 1091,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "commerce.enterprise-operations",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "checkoutCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-enterprise-operations",
+      "words": 1016,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "order.management-lifecycle",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/checkout/modules/order",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "order",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/order-management-lifecycle",
+      "words": 1342,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "commerce.returns-refunds",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/checkout/modules/order",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "order",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-returns-refunds",
+      "words": 1230,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "fulfillment.shipping-management",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "fulfillmentCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/fulfillment-shipping-management",
+      "words": 1345,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "commerce.fulfillment-core-source-map",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "fulfillmentCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-fulfillment-core-source-map",
+      "words": 531,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "commerce.payment-fulfillment",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "paymentCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-payment-fulfillment",
+      "words": 847,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "commerce.payment-provider-boundaries",
+      "currentOwner": "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore",
+      "declaredFunctionalOwner": "nodics.commerce",
+      "technicalModule": "paymentCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/commerce-payment-provider-boundaries",
+      "words": 500,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "communication.provider-runbooks",
+      "currentOwner": "nodics.ai/nodics.communication/modules/commsCore",
+      "declaredFunctionalOwner": "nodics.communication",
+      "technicalModule": "commsCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/communication-provider-runbooks",
+      "words": 2412,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "communication.overview",
+      "currentOwner": "nodics.ai/nodics.communication/modules/commsCore",
+      "declaredFunctionalOwner": "nodics.communication",
+      "technicalModule": "commsCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/communication-overview",
+      "words": 1246,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "communication.email-sms-templates",
+      "currentOwner": "nodics.ai/nodics.communication/modules/commsCore",
+      "declaredFunctionalOwner": "nodics.communication",
+      "technicalModule": "commsCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/communication-email-sms-templates",
+      "words": 4921,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 7,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "copilot.import-inspection",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotCapability",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotCapability",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/import-inspection",
+      "words": 1217,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "copilot.process-inspection",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotCapability",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotCapability",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/process-inspection",
+      "words": 2389,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1,
+        "image": 5
+      }
+    },
+    {
+      "documentId": "copilot.rules-inspection",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotCapability",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotCapability",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/rules-inspection",
+      "words": 1777,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "image": 4,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "copilot.retention-lifecycle",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotConversation",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotConversation",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/retention-lifecycle",
+      "words": 2527,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 5,
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "copilot.collection-inspection",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotKnowledge",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotKnowledge",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/collection-inspection",
+      "words": 1450,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "copilot.recorded-manual-refresh",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotKnowledge",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotKnowledge",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/recorded-manual-refresh",
+      "words": 1468,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1,
+        "image": 2
+      }
+    },
+    {
+      "documentId": "copilot.knowledge-generation-recovery",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotKnowledge",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotKnowledge",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/knowledge-generation-recovery",
+      "words": 3889,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1,
+        "image": 8
+      }
+    },
+    {
+      "documentId": "copilot.order-notification-operations",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/order-notification-operations",
+      "words": 1284,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "copilot.governed-schema-actions",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/governed-schema-actions",
+      "words": 1529,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "copilot.process-lifecycle-actions",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/process-lifecycle-actions",
+      "words": 1621,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "copilot.process-trigger-actions",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/process-trigger-actions",
+      "words": 1746,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3
+      }
+    },
+    {
+      "documentId": "copilot.process-task-actions",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/process-task-actions",
+      "words": 1557,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3
+      }
+    },
+    {
+      "documentId": "copilot.secure-coupon-fulfillment",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/secure-coupon-fulfillment",
+      "words": 1651,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "copilot.standalone-business-actions",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/standalone-business-actions",
+      "words": 2437,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 4,
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "copilot.original-business-results",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotWorkbench",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotWorkbench",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot/original-business-results",
+      "words": 1706,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 4,
+        "diagram": 1,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "discovery.search-indexing",
+      "currentOwner": "nodics.ai/nodics.discovery/modules/discoveryRuntime",
+      "declaredFunctionalOwner": "nodics.discovery",
+      "technicalModule": "discoveryRuntime",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/discovery-search-indexing",
+      "words": 1406,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "engagement.contact-submission-operations",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/contactSubmission",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "contactSubmission",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-contact-submission-operations",
+      "words": 505,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "engagement.customer-feedback",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/customerFeedback",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "customerFeedback",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-customer-feedback",
+      "words": 1388,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "engagement.customer-reviews",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/customerReview",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "customerReview",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-customer-reviews",
+      "words": 569,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "engagement.review-moderation-governance",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/customerReview",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "customerReview",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-review-moderation-governance",
+      "words": 555,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "engagement.review-aggregation-recovery",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/customerReview",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "customerReview",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-review-aggregation-recovery",
+      "words": 588,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "engagement.unified-operations",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/engagementCore",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "engagementCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-unified-operations",
+      "words": 1506,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "engagement.governed-automation",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/engagementCore",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "engagementCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-governed-automation",
+      "words": 1140,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "engagement.enterprise-operations",
+      "currentOwner": "nodics.ai/nodics.engagement/modules/engagementCore",
+      "declaredFunctionalOwner": "nodics.engagement",
+      "technicalModule": "engagementCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/engagement-enterprise-operations",
+      "words": 1268,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "cache.runtime-state-management",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nCache/cache",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "cache",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/cache-runtime-state-management",
+      "words": 1229,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.cache-provider-runbooks",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nCache/cache",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "cache",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-cache-provider-runbooks",
+      "words": 633,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.error-handling-status-codes",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nCommon",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nCommon",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-error-handling-status-codes",
+      "words": 1954,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 7,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.runtime-server-composition",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nConfig",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "config",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-runtime-server-composition",
+      "words": 517,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.module-loading-service-precedence",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nConfig",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "config",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-module-loading-service-precedence",
+      "words": 677,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "configuration.runtime-behavior-management",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nConfig",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "config",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/configuration-runtime-behavior-management",
+      "words": 4301,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "configuration.framework-startup-lifecycle",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nConfig",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "config",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/configuration-framework-startup-lifecycle",
+      "words": 3402,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 9,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "runtime.governed-change",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nConfig",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "config",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/runtime-governed-change",
+      "words": 1282,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "data.import-export-migration",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nData/nImport/import",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "import",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/data-import-export-migration",
+      "words": 6330,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 6,
+        "table": 18
+      }
+    },
+    {
+      "documentId": "data.import-export-provider-guides",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nData/nImport/import",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "import",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/data-import-export-provider-guides",
+      "words": 676,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "schema.data-modeling-management",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nDatabase/database",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "database",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/schema-data-modeling-management",
+      "words": 4557,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 8,
+        "diagram": 3
+      }
+    },
+    {
+      "documentId": "persistence.provider-data-access-layer",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nDatabase/database",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "database",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/persistence-provider-data-access-layer",
+      "words": 1141,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 4,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.database-provider-boundaries",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nDatabase/database",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "database",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-database-provider-boundaries",
+      "words": 578,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "events.messaging-cluster-coordination",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nEms/emsClient",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "emsClient",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/events-messaging-cluster-coordination",
+      "words": 1372,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.ems-runtime-client-runbook",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nEms/emsClient",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "emsClient",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-ems-runtime-client-runbook",
+      "words": 509,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.nms-runtime-monitoring",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nNms",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nms",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-nms-runtime-monitoring",
+      "words": 501,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "security.otp-security-flow",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nOtp",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "otp",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/security-otp-security-flow",
+      "words": 562,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "pipeline.business-logic-orchestration",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nPipeline",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "pipeline",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/pipeline-business-logic-orchestration",
+      "words": 2778,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 11,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "routing.api-governance",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nRouter",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "router",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/routing-api-governance",
+      "words": 2303,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "routing.api-request-lifecycle",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nRouter",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "router",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/routing-api-request-lifecycle",
+      "words": 1833,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.service-runtime-overrides",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nService",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nService",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-service-runtime-overrides",
+      "words": 1277,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.module-to-module-communication",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nService",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nService",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-module-to-module-communication",
+      "words": 1948,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 4,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "framework.local-quick-start",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-local-quick-start",
+      "words": 621,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.fresh-schema-setup-journey",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-fresh-schema-setup-journey",
+      "words": 596,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.local-runtime-troubleshooting",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-local-runtime-troubleshooting",
+      "words": 575,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.devops-runtime",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-devops-runtime",
+      "words": 584,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.runtime-release-rollback",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-runtime-release-rollback",
+      "words": 594,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.local-browser-acceptance-journey",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-local-browser-acceptance-journey",
+      "words": 596,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.local-verification-checklist",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-local-verification-checklist",
+      "words": 581,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "framework.release-upgrade-compatibility",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/framework-release-upgrade-compatibility",
+      "words": 1146,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "tooling.ai-developer-enablement",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/tooling-ai-developer-enablement",
+      "words": 1302,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "foundation.tooling-runtime-contracts",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nTooling",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "nTooling",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-tooling-runtime-contracts",
+      "words": 2330,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 4,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "process.workflow-bpm-source-map",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nbpm",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "bpm",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process-workflow-bpm-source-map",
+      "words": 530,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "localization.internationalization",
+      "currentOwner": "nodics.ai/nodics.localization/modules/localizationCore",
+      "declaredFunctionalOwner": "nodics.localization",
+      "technicalModule": "localizationCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/localization-internationalization",
+      "words": 1344,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "localization.runtime-authoring",
+      "currentOwner": "nodics.ai/nodics.localization/modules/localizationCore",
+      "declaredFunctionalOwner": "nodics.localization",
+      "technicalModule": "localizationCore",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/localization-runtime-authoring",
+      "words": 503,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "loyalty.wallets-rewards-ledger",
+      "currentOwner": "nodics.ai/nodics.loyalty/modules/loyaltyWallet",
+      "declaredFunctionalOwner": "nodics.loyalty",
+      "technicalModule": "loyaltyWallet",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/loyalty-wallets-rewards-ledger",
+      "words": 2425,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 3
+      }
+    },
+    {
+      "documentId": "platform.module-registry",
+      "currentOwner": "nodics.ai/nodics.platform/modules/backoffice",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "backoffice",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/platform-module-registry",
+      "words": 2395,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "axis.business-customization",
+      "currentOwner": "nodics.ai/nodics.platform/modules/backoffice",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "backoffice",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/axis-business-customization",
+      "words": 1114,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "applications.axis-setup-error-contracts",
+      "currentOwner": "nodics.ai/nodics.platform/modules/backoffice",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "backoffice",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/applications-axis-setup-error-contracts",
+      "words": 807,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "platform.module-registry-journey",
+      "currentOwner": "nodics.ai/nodics.platform/modules/backoffice",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "backoffice",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/platform-module-registry-journey",
+      "words": 2675,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "installer.installed-runtime-application-builder",
+      "currentOwner": "nodics.ai/nodics.platform/modules/installer",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "installer",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/installer-installed-runtime-application-builder",
+      "words": 2320,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 9,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "builder.workspace-generation",
+      "currentOwner": "nodics.ai/nodics.platform/modules/installer",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "installer",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/builder-workspace-generation",
+      "words": 1120,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "platform.overview",
+      "currentOwner": "nodics.ai/nodics.platform/modules/profile",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "profile",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/platform-overview",
+      "words": 1163,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "image": 2,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "security.identity-access-governance",
+      "currentOwner": "nodics.ai/nodics.platform/modules/profile",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "profile",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/security-identity-access-governance",
+      "words": 8387,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 9,
+        "diagram": 5
+      }
+    },
+    {
+      "documentId": "cron.inactive-schedule-drafts",
+      "currentOwner": "nodics.ai/nodics.process/modules/cronjob",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "cronjob",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/cron/inactive-schedule-drafts",
+      "words": 2427,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "image": 6,
+        "diagram": 1,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "cron.operations",
+      "currentOwner": "nodics.ai/nodics.process/modules/cronjob",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "cronjob",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/cron-operations",
+      "words": 675,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "cron.node-responsibility-tee",
+      "currentOwner": "nodics.ai/nodics.process/modules/cronjob",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "cronjob",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/cron-node-responsibility-tee",
+      "words": 566,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "cron.project-customization",
+      "currentOwner": "nodics.ai/nodics.process/modules/cronjob",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "cronjob",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/cron-project-customization",
+      "words": 570,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "process.cronjob-data-authoring",
+      "currentOwner": "nodics.ai/nodics.process/modules/cronjob",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "cronjob",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process-cronjob-data-authoring",
+      "words": 522,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "process.visual-designer",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/visual-designer",
+      "words": 823,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "process.developer-customization",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/developer-customization",
+      "words": 600,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "process.custom-project-extension",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/custom-project-extension",
+      "words": 546,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "process.overview",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process",
+      "words": 1088,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 3,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "process.runtime-lifecycle",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/runtime-lifecycle",
+      "words": 982,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "process.workflow-orchestration-patterns",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/workflow-orchestration-patterns",
+      "words": 2013,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 5,
+        "diagram": 3
+      }
+    },
+    {
+      "documentId": "process.first-workflow",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/first-workflow",
+      "words": 581,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "process.first-human-task",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/first-human-task",
+      "words": 1405,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "process.business-value",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/business-value",
+      "words": 663,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "process.process-cron-runtime",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/process-cron-runtime",
+      "words": 567,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "process.scheduled-automation",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/scheduled-automation",
+      "words": 749,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "process.action-adapters",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/action-adapters",
+      "words": 603,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "process.incident-recovery",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/incident-recovery",
+      "words": 699,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "process.devops-topology",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/devops-topology",
+      "words": 582,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "process.qa-regression-guide",
+      "currentOwner": "nodics.ai/nodics.process/modules/workflow",
+      "declaredFunctionalOwner": "nodics.process",
+      "technicalModule": "workflow",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/process/qa-regression-guide",
+      "words": 695,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "waste.impact-providers",
+      "currentOwner": "nodics.ai/nodics.waste/modules/wasteImpact",
+      "declaredFunctionalOwner": "nodics.waste",
+      "technicalModule": "wasteImpact",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/waste-impact-providers",
+      "words": 2202,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "wcms.publishing-lifecycle",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/cms",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "cms",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-publishing-lifecycle",
+      "words": 1198,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 2
+      }
+    },
+    {
+      "documentId": "wcms.cms-source-map-authoring-contract",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/cms",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "cms",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-cms-source-map-authoring-contract",
+      "words": 736,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "wcms.media-management",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/media",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "media",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-media-management",
+      "words": 610,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "wcms.media-storage-delivery",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/media",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "media",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-media-storage-delivery",
+      "words": 647,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "wcms.media-import-publication",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/media",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "media",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-media-import-publication",
+      "words": 603,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "wcms.media-operations-runbook",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/media",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "media",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-media-operations-runbook",
+      "words": 782,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "wcms.overview",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/wcms",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "wcms",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-overview",
+      "words": 539,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "wcms.content-catalog-model",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/wcms",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "wcms",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-content-catalog-model",
+      "words": 556,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "wcms.page-designer-components",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/wcms",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "wcms",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-page-designer-components",
+      "words": 505,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "wcms.site-publication-visibility",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/wcms",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "wcms",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-site-publication-visibility",
+      "words": 532,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "copilot.provider-usage-budgets",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotProviders/modules/copilotProvider",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotProvider",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot-provider-usage-budgets",
+      "words": 1231,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "copilot.evaluation-release-gates",
+      "currentOwner": "nodics.ai/nodics.copilot/modules/copilotEvaluation",
+      "declaredFunctionalOwner": "nodics.copilot",
+      "technicalModule": "copilotEvaluation",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/copilot-evaluation-release-gates",
+      "words": 1252,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "rules.deterministic-evaluation",
+      "currentOwner": "nodics.ai/nodics.rulesEngine/modules/rulesEvaluation",
+      "declaredFunctionalOwner": "nodics.rulesEngine",
+      "technicalModule": "rulesEvaluation",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/rules-deterministic-evaluation",
+      "words": 1252,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "waste.material-taxonomy-evidence",
+      "currentOwner": "nodics.ai/nodics.waste/modules/wasteMaterial",
+      "declaredFunctionalOwner": "nodics.waste",
+      "technicalModule": "wasteMaterial",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/waste-material-taxonomy-evidence",
+      "words": 1246,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "location.approval-schema-boundary",
+      "currentOwner": "nodics.ai/nodics.location/modules/locationApproval",
+      "declaredFunctionalOwner": "nodics.location",
+      "technicalModule": "locationApproval",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/location-approval-schema-boundary",
+      "words": 1252,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "location.draft-schema-boundary",
+      "currentOwner": "nodics.ai/nodics.location/modules/locationDraft",
+      "declaredFunctionalOwner": "nodics.location",
+      "technicalModule": "locationDraft",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/location-draft-schema-boundary",
+      "words": 1241,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "location.marker-projection-boundary",
+      "currentOwner": "nodics.ai/nodics.location/modules/locationProjection",
+      "declaredFunctionalOwner": "nodics.location",
+      "technicalModule": "locationProjection",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/location-marker-projection-boundary",
+      "words": 1240,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "location.search-projection-boundary",
+      "currentOwner": "nodics.ai/nodics.location/modules/locationSearch",
+      "declaredFunctionalOwner": "nodics.location",
+      "technicalModule": "locationSearch",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/location-search-projection-boundary",
+      "words": 1254,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "location.taxonomy-schema-boundary",
+      "currentOwner": "nodics.ai/nodics.location/modules/locationType",
+      "declaredFunctionalOwner": "nodics.location",
+      "technicalModule": "locationType",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/location-taxonomy-schema-boundary",
+      "words": 1253,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "location.shared-map-configuration",
+      "currentOwner": "nodics.ai/nodics.location/modules/locationMap",
+      "declaredFunctionalOwner": "nodics.location",
+      "technicalModule": "locationMap",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/location-shared-map-configuration",
+      "words": 1226,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "wcms.experience-placement-delivery",
+      "currentOwner": "nodics.ai/nodics.wcms/modules/wcmsExperience",
+      "declaredFunctionalOwner": "nodics.wcms",
+      "technicalModule": "wcmsExperience",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/wcms-experience-placement-delivery",
+      "words": 1228,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "foundation.redis-provider-operations",
+      "currentOwner": "nodics.ai/nodics.foundation/modules/nCache/redisCache",
+      "declaredFunctionalOwner": "nodics.foundation",
+      "technicalModule": "redisCache",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/framework/foundation-redis-provider-operations",
+      "words": 1221,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.overview",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis",
+      "words": 2869,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.architecture",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/architecture",
+      "words": 2209,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "axis.technology-stack",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/technology-stack",
+      "words": 1301,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.design-system",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/design-system",
+      "words": 2061,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.cms-renderers",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/cms-renderers",
+      "words": 1241,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.documentation-content",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/documentation-content",
+      "words": 2287,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.employee-access",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/employee-access",
+      "words": 1942,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.assistant",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/assistant",
+      "words": 2083,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.schema-workbench",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/schema-workbench",
+      "words": 5142,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "axis.page-designer",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/page-designer",
+      "words": 1443,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.experience-studio",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/experience-studio",
+      "words": 2301,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 7,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "axis.module-health",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/module-health",
+      "words": 1863,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "axis.imports-exports",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/imports-exports",
+      "words": 2582,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.media-management",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/media",
+      "words": 4451,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.customer-engagement",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/customer-engagement",
+      "words": 1350,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.openapi-reference",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/openapi-reference",
+      "words": 924,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "axis.feature-delivery",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/feature-delivery",
+      "words": 1176,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "axis.implementation-contract",
+      "currentOwner": "nodics.ai/nodics.platform/modules/axis",
+      "declaredFunctionalOwner": "nodics.platform",
+      "technicalModule": "axis",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-axis/implementation-contract",
+      "words": 1946,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2
+      }
+    },
+    {
+      "documentId": "kickoff.overview",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "nodics.kickoff",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff",
+      "words": 2238,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 3
+      }
+    },
+    {
+      "documentId": "kickoff.local-runtime",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "kickoffLocal",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-local-runtime",
+      "words": 5423,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 6
+      }
+    },
+    {
+      "documentId": "kickoff.local-setup-to-live",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "kickoffLocal",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-local-setup-to-live",
+      "words": 2639,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 9,
+        "image": 13
+      }
+    },
+    {
+      "documentId": "kickoff.local-acceptance",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "kickoffLocal",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-local-acceptance",
+      "words": 2100,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 3,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "kickoff.local-publishing-operations",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "kickoffLocal",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-local-publishing-operations",
+      "words": 1545,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "kickoff.deployment-qualification",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "kickoffLocal",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-deployment-qualification",
+      "words": 1341,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 2,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "kickoff.customization",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "modules",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-customization",
+      "words": 2245,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "diagram": 1,
+        "table": 3
+      }
+    },
+    {
+      "documentId": "kickoff.configuration-inheritance",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "modules",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-configuration-inheritance",
+      "words": 4244,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 4,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "kickoff.functional-journeys",
+      "currentOwner": "nodics.kickoff",
+      "declaredFunctionalOwner": "nodics.kickoff",
+      "technicalModule": "kickoffLocal",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/nodics-kickoff/kickoff-functional-journeys",
+      "words": 1509,
+      "lifecycleState": "ONLINE",
+      "visuals": {
+        "table": 1
+      }
+    },
+    {
+      "documentId": "circa.catalogue",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/circa-ewaste",
+      "words": 947,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    },
+    {
+      "documentId": "circa.customer-journey",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/circa-ewaste/circa-customer-journey",
+      "words": 4559,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "table": 4,
+        "diagram": 1
+      }
+    },
+    {
+      "documentId": "circa.demo-data",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/circa-ewaste/circa-demo-data",
+      "words": 1306,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "table": 2,
+        "diagram": 2
+      }
+    },
+    {
+      "documentId": "circa.customer-knowledge",
+      "currentOwner": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "declaredFunctionalOwner": "nodics.accelerators",
+      "technicalModule": "eWaste",
+      "classification": "CANONICAL_OWNER",
+      "route": "/docs/circa-ewaste/circa-customer-knowledge",
+      "words": 867,
+      "lifecycleState": "DRAFT",
+      "visuals": {
+        "diagram": 1,
+        "table": 1
+      }
+    }
+  ]
+}

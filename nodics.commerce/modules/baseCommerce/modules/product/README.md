@@ -1,7 +1,7 @@
 # Product
 
 Opt-in native create receipts retain original command identity without changing
-Product authoring authority. See [original results and continuation](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+Product authoring authority. See [original results and continuation](data/docs-v001/records/documentation/productDocumentationComponentData.js).
 
 ## Governed Catalogue Publication
 
@@ -35,6 +35,8 @@ Online customer cards, PDPs and Media hashes without publication writes. Separat
 `--legacy-projection-qualification` additionally exercises Staged projection writes.
 It does not transfer records to Online. Missing owner adapters or approved receipts
 are explicit prerequisites, not a reason to call internal ingestion routes.
+First activation accepts an omitted optional storage predecessor only with
+explicit matching null lineage in the operation, audit and committed target receipt.
 See [the acceptance contract](llm/contracts/README.md#commerce-publication-acceptance).
 
 Generic authoring follows effective schema publication metadata and the existing

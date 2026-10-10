@@ -17,6 +17,13 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Delegates exact protected runtime placement; the caller cannot supply tenant binding or persistence authorization. */
+    resolveRuntimeEnterprise: function (request, callback) {
+        const promise = FACADE.DefaultEnterpriseFacade.resolveRuntimeEnterprise({ ...request,
+            payload: request.httpRequest?.body || request.payload || {} });
+        if (!callback) return promise;
+        promise.then(value => callback(null, value), callback);
+    },
 
     /**
 

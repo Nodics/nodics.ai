@@ -8,21 +8,20 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
-
-'use strict';
-
-/** @module commsCore/data/core-v001/records/communication/commsRuntimeDefaultTemplateData @description Provides minimal runtime templates required for Communication activation. @layer data @owner commsCore */
+"use strict";
+/** @module commsCore/data/core-v001/commsRuntimeDefaultTemplateData @description Declares governed resource adoption references; presentation is module-owned. @owner commsCore @layer data */
 module.exports = {
-    record0: {
-        code: 'COMMUNICATION_RUNTIME_NOTICE',
-        tenant: 'default',
-        purpose: 'TRANSACTIONAL',
-        channels: ['EMAIL', 'IN_APP'],
-        declaredVariables: ['reference', 'message'],
-        currentVersion: 1,
-        status: 'ACTIVE',
-        correlationId: 'communication-runtime-defaults',
-        revision: 1,
-        active: true
-    }
+  record0: {
+    code: "COMMUNICATION_RUNTIME_NOTICE",
+    tenant: "default",
+    purpose: "TRANSACTIONAL",
+    channels: ["EMAIL", "SMS", "IN_APP"],
+    declaredVariables: ["reference", "message"],
+    sourceModules: ["commsCore"],
+    currentVersion: 2,
+    status: "ACTIVE",
+    correlationId: "communication-resource-migration",
+    revision: 1,
+    active: true,
+  },
 };

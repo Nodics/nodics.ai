@@ -13,10 +13,10 @@
 
 /**
  * @module product/service/defaultProductSearchEnrichmentService
- * @description Orchestrates customer-safe Pricing and Inventory summaries for Product search projections.
+ * @description Orchestrates customer-safe Pricing, Inventory and DigitalCore summaries for Product search projections.
  * @layer service
  * @owner product
- * @override Later projects may override enrichment orchestration while Pricing and Inventory retain source-of-truth ownership.
+ * @override Later projects may override enrichment orchestration while Pricing, Inventory and Promotion retain source-of-truth ownership.
  */
 module.exports = {
     /** Initializes the service lifecycle. @returns {Promise<boolean>} Initialization result. */
@@ -57,9 +57,9 @@ module.exports = {
         }
     },
 
-    /** Batches live consumer summaries once per owner/result set; retained projections are never mutated. */
-    consumerSummaries: async function (request, rows) {
-        if (!rows.length) return { prices: {}, availability: {} };
+    /** Resolves indexed identities to retained catalogue records without trusting incomplete indexed scope or payload. */
+    retainedProjections: async function (request, rows) {
+        if (!rows.length) return [];
         const codes = [...new Set(rows.map(row => row.code))];
         if (codes.some(code => typeof code !== 'string' || !code) || !SERVICE.DefaultProductSearchProjectionService) {
             throw new Error('Retained Product projection authority is unavailable');
@@ -67,21 +67,31 @@ module.exports = {
         const response = await SERVICE.DefaultProductSearchProjectionService.get({
             tenant: request.tenant, authData: this.serviceAuthData(request),
             query: { tenant: request.tenant, storeCode: request.storeCode, code: { $in: codes } },
+            options: { recursive: false, skipItemCache: true },
             searchOptions: { pageSize: codes.length + 1, limit: codes.length + 1, pageNumber: 1 }
         });
         const retained = response && response.result;
-        if (!Array.isArray(retained) || retained.length !== codes.length || new Set(retained.map(row => row.code)).size !== codes.length) {
+        if ((response?.code && !String(response.code).startsWith('SUC_')) || response?.error || response?.errors?.length ||
+            !Array.isArray(retained) || retained.length !== codes.length || new Set(retained.map(row => row.code)).size !== codes.length) {
             throw new Error('Retained Product projection authority is incomplete');
         }
         const byCode = new Map(retained.map(row => [row.code, row]));
-        rows = rows.map(row => {
+        return rows.map(row => {
             const stored = byCode.get(row.code);
             if (!stored || ['tenant', 'storeCode', 'productCode', 'locale', 'publicationVersion', 'sourceHash'].some(key => stored[key] !== row[key]) ||
-                stored.status !== 'STALE' || (row.enterpriseCode !== undefined && row.enterpriseCode !== stored.enterpriseCode)) {
+                !['CURRENT', 'STALE'].includes(stored.status) || stored.status !== row.status ||
+                (row.enterpriseCode !== undefined && row.enterpriseCode !== stored.enterpriseCode)) {
                 throw new Error('Retained Product projection scope mismatch');
             }
-            return { ...row, enterpriseCode: stored.enterpriseCode };
+            return stored;
         });
+    },
+
+    /** Batches live consumer summaries once per owner/result set; retained projections are never mutated. */
+    consumerSummaries: async function (request, rows) {
+        if (!rows.length) return { prices: {}, availability: {} };
+        rows = await this.retainedProjections(request, rows);
+        if (rows.some(row => row.status !== 'STALE')) throw new Error('Retained Product projection scope mismatch');
         const enterprises = new Set(rows.map(row => row.enterpriseCode));
         const enterpriseCode = rows[0].enterpriseCode;
         const auth = request.authData || {};
@@ -93,11 +103,9 @@ module.exports = {
         }
         request = { ...request, enterpriseCode, entCode: enterpriseCode,
             authData: { ...auth, enterpriseCode, entCode: enterpriseCode } };
-        const pricing = this.enrichmentPolicy('pricing'), inventory = this.enrichmentPolicy('inventory');
+        const pricing = this.enrichmentPolicy('pricing');
         const priceService = SERVICE[pricing.serviceName || 'DefaultCustomerPriceSummaryService'];
-        const inventoryService = SERVICE[inventory.serviceName || 'DefaultCustomerAvailabilitySummaryService'];
         this.assertConsumerProvider('pricing', 'DefaultPricingPublicationService', request, request, pricing, priceService);
-        this.assertConsumerProvider('inventory', 'DefaultInventoryPublicationService', request, request, inventory, inventoryService);
         const products = new Map();
         for (const row of rows) {
             const skus = products.get(row.productCode) || new Set();
@@ -134,11 +142,69 @@ module.exports = {
             pricing.enabled !== false && priceService && typeof priceService.summarize === 'function'
                 ? priceService.summarize({ ...context, productCodes: [...products.keys()],
                     currency, quantity: pricing.defaultQuantity || '1' }) : {},
-            inventory.enabled !== false && inventoryService && typeof inventoryService.summarize === 'function'
-                ? inventoryService.summarize({ ...context, products: [...products].map(([productCode, skus]) =>
-                    ({ productCode, skus: [...skus] })) }) : {}
+            this.consumerAvailability({ ...request, authData: auth }, rows)
         ]);
         return { prices, availability };
+    },
+
+    /** Partitions already retained consumer projections by availability owner. @param {Object} request Retained enterprise and selected Store/locale context. @param {Array} rows Product-verified STALE projections. @returns {Promise<Object>} Customer-safe summaries by Product; no catalogue or stock writes. @throws Owner faults reject without indexed/physical fallback for digital offers. @override Preserve one physical batch, distinct Product pool reads and customer redaction. */
+    consumerAvailability: async function (request, rows) {
+        const policy = this.enrichmentPolicy('inventory');
+        const service = SERVICE[policy.serviceName || 'DefaultCustomerAvailabilitySummaryService'];
+        const physical = new Map(), digital = new Map();
+        for (const row of rows) {
+            const attributes = row.payload?.localizedAttributes || {};
+            if (attributes.productType === 'DIGITAL' || attributes.inventoryStrategy === 'COUPON_CODE_POOL') {
+                if (physical.has(row.productCode)) throw new Error('Conflicting Product availability classification');
+                digital.set(row.productCode, row);
+            } else {
+                if (digital.has(row.productCode)) throw new Error('Conflicting Product availability classification');
+                const skus = physical.get(row.productCode) || new Set();
+                Object.values(row.payload?.variantSkuMap || {}).filter(sku => typeof sku === 'string' && sku)
+                    .forEach(sku => skus.add(sku));
+                physical.set(row.productCode, skus);
+            }
+        }
+        const physicalRequest = { ...request, authData: { ...request.authData,
+            enterpriseCode: request.enterpriseCode, entCode: request.enterpriseCode } };
+        if (physical.size) this.assertConsumerProvider('inventory', 'DefaultInventoryPublicationService', physicalRequest, physicalRequest, policy, service);
+        if (policy.enabled === false) return {};
+        const digitalService = SERVICE.DefaultDigitalCommerceCheckoutService;
+        if (digital.size && typeof digitalService?.availabilityFromProjection !== 'function')
+            throw new Error('Digital Product availability owner is unavailable');
+        const context = { tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+            storeCode: request.storeCode, locale: request.locale, authData: this.serviceAuthData(physicalRequest),
+            now: request.now, correlationId: request.correlationId };
+        const result = physical.size && service && typeof service.summarize === 'function'
+            ? await service.summarize({ ...context, products: [...physical].map(([productCode, skus]) =>
+                ({ productCode, skus: [...skus] })) }) : {};
+        const summaries = { ...result };
+        for (const [productCode, row] of digital) {
+            // Retained catalogue scope must not manufacture access-token enterprise authority for a digital owner.
+            const authority = request.authData || {}, admission = SERVICE.DefaultPromotionDistributionAdmissionService;
+            const read = { ...context, authData: structuredClone(authority), productCode, quantity: '1' };
+            const publicRead = row.payload?.localizedAttributes?.digitalDeliveryType === 'COUPON_CODE' &&
+                authority.isSystem !== true &&
+                (authority.principalType === undefined || authority.principalType === 'anonymous' ||
+                    ['human', 'customer'].includes(authority.principalType) && !authority.enterpriseCode && !authority.entCode);
+            const admitted = publicRead && admission?.selected(read) ? await admission.publicAvailability(read) : undefined;
+            let availability = admitted;
+            if (admitted === undefined) {
+                try {
+                    availability = await digitalService.availabilityFromProjection(read, row);
+                } catch (error) {
+                    if (error?.code !== 'ERR_DIGITAL_AVAILABILITY_METADATA') throw error;
+                    // A malformed offer is unavailable to customers, not a fallback or a checkout classification.
+                    availability = { available: false };
+                }
+            }
+            if (!availability || typeof availability.available !== 'boolean' ||
+                (availability.code && !String(availability.code).startsWith('SUC_')) ||
+                availability.error || availability.errors?.length) throw new Error('Digital Product availability is unavailable');
+            summaries[productCode] = { available: availability.available,
+                status: availability.available ? 'IN_STOCK' : 'OUT_OF_STOCK' };
+        }
+        return summaries;
     },
 
     /** Resolves one Product customer price summary. @param {Object} request Request. @param {Object} input Publication input. @returns {Promise<Object|undefined>} Price. */

@@ -13,6 +13,10 @@
 
 /** @module loyaltyApi/src/facade/defaultLoyaltyInternalFacade @description Validates internal Loyalty requests and delegates wallet, reservation and reversal operations to their owning services. @layer facade @owner loyaltyApi @override Later modules may extend validation while preserving owning services and stable movement references. */
 module.exports = {
+    /** Delegates exact read-only balance evidence without opening wallets. */
+    walletEvidence: function (request) { return this.service('DefaultLoyaltyReadEvidenceService').walletEvidence(request); },
+    /** Delegates exact read-only append-only movement evidence. */
+    ledgerEvidence: function (request) { return this.service('DefaultLoyaltyReadEvidenceService').ledgerEvidence(request); },
     /** Returns the result from a generated-service envelope without changing record ownership. */
     unwrap: function (response) {
         return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response;

@@ -13,6 +13,10 @@
 
 /** @module loyaltyApi/src/controller/defaultLoyaltyInternalController @description Maps Loyalty internal HTTP input to the Loyalty internal facade. @layer controller @owner loyaltyApi @override Later modules may adapt transport mapping while preserving resource contracts. */
 module.exports = {
+    /** Maps exact read-only owner evidence; the service rechecks the original signed runtime scope. */
+    walletEvidence: function (request, callback) { request.httpResponse?.setHeader?.('Cache-Control', 'no-store'); return this.invoke('walletEvidence', request, callback); },
+    /** Maps one exact original ledger/source or its reversal, never a caller query. */
+    ledgerEvidence: function (request, callback) { request.httpResponse?.setHeader?.('Cache-Control', 'no-store'); return this.invoke('ledgerEvidence', request, callback); },
     /** Completes the module initialization hook without creating business records. */
     init: function () { return Promise.resolve(true); },
     /** Completes the post-initialization hook without starting an independent runtime. */

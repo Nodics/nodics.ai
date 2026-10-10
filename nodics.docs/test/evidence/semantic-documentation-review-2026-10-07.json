@@ -1,0 +1,2384 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-07",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETE_SOURCE_EDITORIAL_REVIEW",
+  "frameworkRoot": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+  "backlogDefinition": "nodics.docs/scripts/audit-source-coverage.mjs#frameworkDocumentationBacklog",
+  "sourceSnapshot": {
+    "head": "77564981431ae20ac0eb1019c1c8902dd66b7dc5",
+    "basis": "Current working-tree canonical CMS records and non-data implementation files, including existing uncommitted changes. HEAD alone does not identify the reviewed bytes; per-guide block and source-file hashes below bind this evidence.",
+    "concurrentIntegration": "Parent changes to CMS exact Media readiness/recovery and Redis extension guidance were reread before finalization. Parent-reported Circa header/staging repair is not claimed as verified by this semantic review.",
+    "catalogueRead": "PASS: readDataCatalogue('./nodics.docs') returned 173 documents at final recheck. Earlier transient checksum/syntax reads during concurrent integration are not current unresolved findings. This read is not import, publication, runtime or browser acceptance."
+  },
+  "summary": {
+    "totalItems": 22,
+    "PASS_SOURCE_REVIEW": 3,
+    "OPEN_CONTENT_GAP": 19,
+    "canonicalDocumentsCited": 36,
+    "nonDataSourceFilesCited": 94,
+    "passItems": [
+      "Module Registry journey",
+      "Shopping List Commerce boundary",
+      "Communication providers"
+    ],
+    "browserLiveAcceptance": "NOT_EXECUTED"
+  },
+  "method": {
+    "governanceRead": [
+      "AGENTS.md",
+      "nodics.docs/AGENTS.md",
+      "nodics.docs/README.md",
+      ".github/CONTRIBUTING.md"
+    ],
+    "approach": "Read canonical CMS article blocks, related owner guides and the cited implementing source; compare the requested explanations, record shapes, lifecycle/authority boundaries, failure/recovery behavior and provider maturity. Anchors and file existence checks validate citations only; they do not perform semantic review by keyword.",
+    "passMeaning": "All requested explanations are satisfied by accurate source-backed editorial coverage within the named item's scope. A pass does not certify all adjacent examples, all modules, the implementation itself, provider maturity or any deployed journey.",
+    "openMeaning": "At least one requested explanation is materially incomplete or contradicted by current source. Existing covered concerns receive credit; remediation is section-specific and does not request duplicate canonical guides.",
+    "pathConvention": "Canonical component files and sourceFiles are repository-relative to frameworkRoot. evidence anchors identify exact canonical CMS heading anchors, not Markdown filenames. A public route or access field in authored data is not proof of published delivery.",
+    "actionsNotPerformed": [
+      "No runtime/server startup, import, publication, provider calls, browser actions, tests or acceptance suites.",
+      "No audit/report/manifest/content regeneration.",
+      "No production/runtime/prose/audit/manifest/test edits, commits or memory writes. Only this evidence JSON is authored."
+    ]
+  },
+  "auditCoverageBoundary": {
+    "report": "nodics.docs/test/reports/source-backed-documentation-coverage-report.json",
+    "observedModuleRows": 203,
+    "observedDocuments": 173,
+    "observedCoverageBasis": {
+      "mention-based-triage": 179,
+      "validated-source-sections": 17,
+      "owner-reviewed-reference": 7
+    },
+    "interpretation": "These report counts are source-coverage triage/provenance categories, not 203 semantic passes. This artifact reviews the 22 backlog requests only. In particular the 179 mention-based module matches are not all deep-coverage and are not individually certified here. Validated source-section declarations bind references, not live behavior."
+  },
+  "prioritizedGaps": [
+    {
+      "priority": "P0",
+      "focus": "Correct misleading contract examples, ownership and maturity before publication",
+      "items": [
+        "Cron job data authoring",
+        "Commerce Search guide",
+        "Commerce product, price, inventory, and fulfillment authoring",
+        "Media operations runbook",
+        "Payment Core and provider split",
+        "Database provider boundaries",
+        "OTP and security flow"
+      ]
+    },
+    {
+      "priority": "P0",
+      "focus": "Complete urgent source/operation explanations without confusing them with live acceptance",
+      "items": [
+        "Axis setup and user-safe error contracts",
+        "CMS exact source map",
+        "Import/export provider guides",
+        "Documentation publishing runbook"
+      ]
+    },
+    {
+      "priority": "P1",
+      "focus": "Complete remaining source-backed configuration, lifecycle and recovery detail",
+      "items": [
+        "Localization depth",
+        "NMS runtime monitoring",
+        "Service runtime and override precedence",
+        "Cache provider runbooks",
+        "Engagement and contact submission",
+        "Workflow and BPM source map",
+        "Release and upgrade compatibility"
+      ]
+    },
+    {
+      "priority": "P2",
+      "focus": "Reconcile per-module internal/broader-owner decisions against framework inventory",
+      "items": [
+        "Internal-only classification register"
+      ]
+    }
+  ],
+  "canonicalDocuments": {
+    "applications.axis-setup-error-contracts": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js",
+      "articleBlocksSha256": "dd359780b9fcecba709ec86acd59896f165f37d5d9db432919129f2377517b2f",
+      "sections": [
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-2-state-model",
+          "title": "State model"
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-3-error-contract",
+          "title": "Error contract"
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow",
+          "title": "Setup flow"
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        }
+      ]
+    },
+    "wcms.cms-source-map-authoring-contract": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "articleBlocksSha256": "aebe67636938a1bcb832602af822828d17b25f6a66111af3cac51899f0271ea0",
+      "sections": [
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-1-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+          "title": "Authoring contract"
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+          "title": "Publication and delivery"
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        },
+        {
+          "anchor": "wcmsCmsSourceMapAuthoringContract-6-operational-checks",
+          "title": "Operational checks"
+        }
+      ]
+    },
+    "wcms.publishing-lifecycle": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "articleBlocksSha256": "e9a7c4353f8a3e7e85b07cd6b8849c86bde829c74971d04256d32dd2fdfd7729",
+      "sections": [
+        {
+          "anchor": "wcmsPublishingLifecycle-3-running-example",
+          "title": "Running example"
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-4-site-bundle-shape",
+          "title": "Site bundle shape"
+        },
+        {
+          "anchor": "wcms-exact-media-readiness-capacity",
+          "title": "Exact Media readiness and capacity"
+        },
+        {
+          "anchor": "wcms-coordinated-pack-asset-approvals",
+          "title": "Coordinated pack and asset approvals"
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-6-security-and-integrity-rules",
+          "title": "Security and integrity rules"
+        }
+      ]
+    },
+    "wcms.media-operations-runbook": {
+      "owner": "nodics.wcms/modules/media",
+      "componentFile": "nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js",
+      "articleBlocksSha256": "71f16cc2738382403d79805c916446357419a9db265c2eb786fdfc1902d9ec6b",
+      "sections": [
+        {
+          "anchor": "wcmsMediaOperationsRunbook-2-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-3-import-contract",
+          "title": "Import contract"
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-4-storage-and-provider-model",
+          "title": "Storage and provider model"
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-5-publication-and-dr",
+          "title": "Publication and DR"
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-6-operations",
+          "title": "Operations"
+        },
+        {
+          "anchor": "wcmsMediaOperationsRunbook-9-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "data.import-export-provider-guides": {
+      "owner": "nodics.foundation/modules/nData/nImport/import",
+      "componentFile": "nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js",
+      "articleBlocksSha256": "5b57019a77daa15c614696929db0e84c244ab3d9a5806460e3690391d67968f7",
+      "sections": [
+        {
+          "anchor": "dataImportExportProviderGuides-2-provider-model",
+          "title": "Provider model"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-3-javascript-release-data",
+          "title": "JavaScript release data"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-4-json-csv-and-excel",
+          "title": "JSON, CSV, and Excel"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-5-export-contract",
+          "title": "Export contract"
+        },
+        {
+          "anchor": "dataImportExportProviderGuides-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        }
+      ]
+    },
+    "commerce.data-authoring-fulfillment": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "aa953b5e5550c137efb7e13e2a17b5c9ee3d0c55c1fe90bd5106b384ff11af2e",
+      "sections": [
+        {
+          "anchor": "commerceDataAuthoringFulfillment-1-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-3-authoring-sequence",
+          "title": "Authoring sequence"
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+          "title": "Header and record contract"
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+          "title": "Fulfillment flow"
+        },
+        {
+          "anchor": "commerceDataAuthoringFulfillment-8-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "accelerators.agora-apparel-product-data-authoring": {
+      "owner": "nodics.accelerators/modules/apparel/modules/apparelProduct",
+      "componentFile": "nodics.accelerators/modules/apparel/modules/apparelProduct/data/docs-v001/records/documentation/apparelProductDocumentationComponentData.js",
+      "articleBlocksSha256": "a8693eea13bb3a8c6a1fd613d9184376b30a958ffd735896762a3ff62bf3366c",
+      "sections": [
+        {
+          "anchor": "acceleratorsAgoraApparelProductDataAuthoring-4-step-by-step-authoring",
+          "title": "Step-by-step authoring"
+        },
+        {
+          "anchor": "acceleratorsAgoraApparelProductDataAuthoring-5-header-contract",
+          "title": "Header contract"
+        },
+        {
+          "anchor": "acceleratorsAgoraApparelProductDataAuthoring-7-product-dependency-map",
+          "title": "Product dependency map"
+        },
+        {
+          "anchor": "acceleratorsAgoraApparelProductDataAuthoring-9-import-execution-flow",
+          "title": "Import execution flow"
+        },
+        {
+          "anchor": "acceleratorsAgoraApparelProductDataAuthoring-12-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "catalog.product-discovery-management": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/product",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/product/data/docs-v001/records/documentation/productDocumentationComponentData.js",
+      "articleBlocksSha256": "d6b81b545972e8d65b50fcc8d27720d9824b980e7be9ca15522036812727d9df",
+      "sections": [
+        {
+          "anchor": "catalogProductDiscoveryManagement-8-current-implementation-coverage",
+          "title": "Current implementation coverage"
+        },
+        {
+          "anchor": "catalogProductDiscoveryManagement-9-source-authoring-apis",
+          "title": "Source authoring APIs"
+        }
+      ]
+    },
+    "pricing.promotions-tax-management": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/pricing",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/pricing/data/docs-v001/records/documentation/pricingDocumentationComponentData.js",
+      "articleBlocksSha256": "b01d46a74e43cc5607f54ed8bc59245cc9828503a4ea6065708a0041cec8d3dc",
+      "sections": [
+        {
+          "anchor": "pricingPromotionsTaxManagement-8-current-implementation-coverage",
+          "title": "Current implementation coverage"
+        },
+        {
+          "anchor": "pricingPromotionsTaxManagement-9-source-authoring-apis",
+          "title": "Source authoring APIs"
+        }
+      ]
+    },
+    "inventory.stock-management": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/inventory",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/inventory/data/docs-v001/records/documentation/inventoryDocumentationComponentData.js",
+      "articleBlocksSha256": "05a4810413eb02ab8e710716d7b13f7d15af95d483c7037d9991962e9c674347",
+      "sections": [
+        {
+          "anchor": "inventoryStockManagement-8-current-implementation-coverage",
+          "title": "Current implementation coverage"
+        }
+      ]
+    },
+    "commerce.fulfillment-core-source-map": {
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "c587e8afed2e5fa36539bee19eb44682e2963e8a89b81f83fd49253a484ad115",
+      "sections": [
+        {
+          "anchor": "commerceFulfillmentCoreSourceMap-4-contract",
+          "title": "Contract"
+        },
+        {
+          "anchor": "commerceFulfillmentCoreSourceMap-6-operating-rules",
+          "title": "Operating rules"
+        }
+      ]
+    },
+    "docs.documentation-publishing-runbook": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "b998b7d078e6d16b2cebcd9605f8802a469c4a92516e2f2af5ab1d467eb11ddd",
+      "sections": [
+        {
+          "anchor": "docsDocumentationPublishingRunbook-3-authoring-steps",
+          "title": "Authoring steps"
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-4-generated-data-contract",
+          "title": "Canonical data contract"
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+          "title": "Review and Online activation"
+        },
+        {
+          "anchor": "docs-publishing-module-ownership-composition",
+          "title": "Module Ownership and Optional Composition"
+        },
+        {
+          "anchor": "docsPublishingRunbook-functional-visibility-and-record-ownership",
+          "title": "Functional visibility and physical record ownership"
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-8-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "docs.documentation-publishing-model": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "15b09bb192e76e8f4eec740b3bcfc7ddf0929ee4ec3b5e9cc8136d6c4ad7bef9",
+      "sections": [
+        {
+          "anchor": "docsDocumentationPublishingModel-1-source-to-online-flow",
+          "title": "Source to Online flow"
+        },
+        {
+          "anchor": "docsDocumentationPublishingModel-3-access-and-workflow",
+          "title": "Access and workflow"
+        },
+        {
+          "anchor": "docsDocumentationPublishingModel-5-developer-and-operator-responsibilities",
+          "title": "Developer and operator responsibilities"
+        }
+      ]
+    },
+    "platform.module-registry-journey": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js",
+      "articleBlocksSha256": "ebd86dfe487ea37d352f2dfef84efc23bfb51bf99f050fa453d5408795254908",
+      "sections": [
+        {
+          "anchor": "platformModuleRegistryJourney-3-registry-contract",
+          "title": "Registry contract"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+          "title": "Dependency and activation rules"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states",
+          "title": "Read the registry without confusing its states"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-7-axis-administrator-walkthrough",
+          "title": "Axis administrator walkthrough"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-8-example-unavailable-target-independent-action",
+          "title": "Example: unavailable target, independent action"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-12-non-customizable-security-and-ownership",
+          "title": "Non-customizable security and ownership"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-13-troubleshooting-and-recovery",
+          "title": "Troubleshooting and recovery"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-15-revision-conflict-during-activation",
+          "title": "Revision conflict during activation"
+        }
+      ]
+    },
+    "commerce.search-guide": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v001/records/documentation/commerceSearchCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "ee5e27980c37db6ae63b6ff9b8f61966b5e402399402d31d26192ea80cfb9a78",
+      "sections": [
+        {
+          "anchor": "commerceSearchGuide-3-ranking-and-rules",
+          "title": "Ranking and rules"
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-1",
+          "title": "Commerce Search rule selection and ownership"
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-2",
+          "title": "Ranking actions deterministic order and edge cases"
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-3",
+          "title": "Publication batching and partial failure"
+        },
+        {
+          "anchor": "commerce-search-guide-source-depth-4",
+          "title": "Verification and adoption"
+        }
+      ]
+    },
+    "localization.runtime-authoring": {
+      "owner": "nodics.localization/modules/localizationCore",
+      "componentFile": "nodics.localization/modules/localizationCore/data/docs-v001/records/documentation/localizationCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "c9c0b4c5b7f8d431091a81ce267e57f65870b2b5dd5c8d5f5b1a79e4504af978",
+      "sections": [
+        {
+          "anchor": "localizationRuntimeAuthoring-2-resolution-model",
+          "title": "Resolution model"
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-3-authoring-contract",
+          "title": "Authoring contract"
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-6-evidence-checklist",
+          "title": "Evidence checklist"
+        }
+      ]
+    },
+    "localization.internationalization": {
+      "owner": "nodics.localization/modules/localizationCore",
+      "componentFile": "nodics.localization/modules/localizationCore/data/docs-v001/records/documentation/localizationCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "88d691729550d048b9707bc1cfc1f6b0bf86272d89ce1c9a818ada1af726d00f",
+      "sections": [
+        {
+          "anchor": "localizationInternationalization-8-current-implementation-coverage",
+          "title": "Current implementation coverage"
+        }
+      ]
+    },
+    "commerce.payment-provider-boundaries": {
+      "owner": "nodics.commerce/modules/payment/modules/paymentCore",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "b725673b0bac90c0a32340c727f05c22dc3cc1566d21d6baf9c8c967c0b1c5d5",
+      "sections": [
+        {
+          "anchor": "commercePaymentProviderBoundaries-2-boundary-model",
+          "title": "Boundary model"
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+          "title": "Safe payload contract"
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-6-evidence-checklist",
+          "title": "Evidence checklist"
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-8-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "commerce.shopping-list-commerce-boundary": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/shoppingList",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/shoppingList/data/docs-v001/records/documentation/shoppingListDocumentationComponentData.js",
+      "articleBlocksSha256": "72a2fb910da46fa3ade5581678b11b1ddd6fcc8f048f6be1f98feaa84d115515",
+      "sections": [
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-2-ownership-model",
+          "title": "Ownership model"
+        },
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-3-contract",
+          "title": "Contract"
+        },
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-8-migration-principle",
+          "title": "Migration principle"
+        },
+        {
+          "anchor": "commerceShoppingListCommerceBoundary-10-store-context-and-upgrade-behavior",
+          "title": "Store context and upgrade behavior"
+        }
+      ]
+    },
+    "foundation.nms-runtime-monitoring": {
+      "owner": "nodics.foundation/modules/nNms",
+      "componentFile": "nodics.foundation/modules/nNms/data/docs-v001/records/documentation/nmsDocumentationComponentData.js",
+      "articleBlocksSha256": "878932d33b2492876673052cf80af7c206516a97deebb44920404928aaa91279",
+      "sections": [
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-2-monitoring-model",
+          "title": "Monitoring model"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-3-health-contract",
+          "title": "Health contract"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-6-common-mistakes",
+          "title": "Common mistakes"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-7-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "foundation.service-runtime-overrides": {
+      "owner": "nodics.foundation/modules/nService",
+      "componentFile": "nodics.foundation/modules/nService/data/docs-v001/records/documentation/nServiceDocumentationComponentData.js",
+      "articleBlocksSha256": "8c094a732bd0c9c259bffd5f6024da943b6348374d80aac21faf298729f63ba9",
+      "sections": [
+        {
+          "anchor": "foundationServiceRuntimeOverrides-2-resolution-flow",
+          "title": "Resolution flow"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-3-precedence-contract",
+          "title": "Precedence contract"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-4-operational-evidence",
+          "title": "Operational evidence"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-10-separate-runtimes-and-profile-bootstrap",
+          "title": "Separate runtimes and Profile bootstrap"
+        }
+      ]
+    },
+    "framework.module-loading-service-precedence": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "eda538368f4cc8b3e3c94dbccb574caa0cac95e3ffb40d0c0bcb448bf935b77b",
+      "sections": [
+        {
+          "anchor": "frameworkModuleLoadingServicePrecedence-1-loading-order",
+          "title": "Loading order"
+        },
+        {
+          "anchor": "frameworkModuleLoadingServicePrecedence-3-customization-and-extension",
+          "title": "Customization and extension"
+        }
+      ]
+    },
+    "configuration.framework-startup-lifecycle": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "6bb8535904f5534dd216dabc479d1270688f2e7663f69f44c6cf7367f81417f6",
+      "sections": [
+        {
+          "anchor": "configurationFrameworkStartupLifecycle-7-file-and-artifact-loading",
+          "title": "File and artifact loading"
+        },
+        {
+          "anchor": "configurationFrameworkStartupLifecycle-11-entity-lifecycle-hooks",
+          "title": "Entity lifecycle hooks"
+        }
+      ]
+    },
+    "framework.release-upgrade-compatibility": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "37cfc4dd73ad49480e64e58e28e759de37161f8594dae33b495ad57945483c45",
+      "sections": [
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
+          "title": "Explaining an effective runtime"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+          "title": "Folder contract"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+          "title": "Compatibility rules"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+          "title": "Configuration behavior"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+          "title": "Upgrade flow"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+          "title": "Code and contract compatibility"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+          "title": "Security boundaries under customization"
+        }
+      ]
+    },
+    "foundation.cache-provider-runbooks": {
+      "owner": "nodics.foundation/modules/nCache/cache",
+      "componentFile": "nodics.foundation/modules/nCache/cache/data/docs-v001/records/documentation/cacheDocumentationComponentData.js",
+      "articleBlocksSha256": "a2b1fffabcaaa20e8f9a00743ffa5f6bef418bcc33d25fed54a3353c6f779a8a",
+      "sections": [
+        {
+          "anchor": "foundationCacheProviderRunbooks-3-configuration-contract",
+          "title": "Configuration contract"
+        },
+        {
+          "anchor": "foundationCacheProviderRunbooks-4-runbook",
+          "title": "Runbook"
+        },
+        {
+          "anchor": "foundationCacheProviderRunbooks-8-hazelcast-concurrent-mutations-and-deadlines",
+          "title": "Hazelcast concurrent mutations and deadlines"
+        }
+      ]
+    },
+    "foundation.redis-provider-operations": {
+      "owner": "nodics.foundation/modules/nCache/redisCache",
+      "componentFile": "nodics.foundation/modules/nCache/redisCache/data/docs-v001/records/documentation/redisCacheDocumentationComponentData.js",
+      "articleBlocksSha256": "8e709e0c9575ed2fd1af36c82ae45a0d16e383829e117d1c9bd0530cb35f5491",
+      "sections": [
+        {
+          "anchor": "foundationRedisProviderOperations-1-provider-ownership-and-activation",
+          "title": "Provider ownership and activation"
+        },
+        {
+          "anchor": "foundationRedisProviderOperations-2-values-ttl-and-atomic-operations",
+          "title": "Values TTL and atomic operations"
+        },
+        {
+          "anchor": "foundationRedisProviderOperations-3-lifecycle-invalidation-and-reset-safety",
+          "title": "Lifecycle invalidation and reset safety"
+        },
+        {
+          "anchor": "foundationRedisProviderOperations-4-verification-and-troubleshooting",
+          "title": "Verification and troubleshooting"
+        },
+        {
+          "anchor": "redis-cache-customize-and-extend-safely",
+          "title": "Customize and extend safely"
+        }
+      ]
+    },
+    "foundation.database-provider-boundaries": {
+      "owner": "nodics.foundation/modules/nDatabase/database",
+      "componentFile": "nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js",
+      "articleBlocksSha256": "5ebc23350c580612ec4aa480ef8e7047ac7b78f59aca5ce727bc29187118d486",
+      "sections": [
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-1-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-2-boundary-model",
+          "title": "Boundary model"
+        },
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-4-provider-comparison",
+          "title": "Provider comparison"
+        },
+        {
+          "anchor": "foundationDatabaseProviderBoundaries-8-customizing-mongodb-schema-keyword-selection",
+          "title": "Customizing MongoDB schema keyword selection"
+        }
+      ]
+    },
+    "persistence.provider-data-access-layer": {
+      "owner": "nodics.foundation/modules/nDatabase/database",
+      "componentFile": "nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js",
+      "articleBlocksSha256": "669e66eecbd56be27bd1cfd18fa099014944dc941fd0139727c8fbde84f1e030",
+      "sections": [
+        {
+          "anchor": "persistenceProviderDataAccessLayer-2-runtime-model",
+          "title": "Runtime model"
+        },
+        {
+          "anchor": "persistenceProviderDataAccessLayer-3-mongodb-provider-detail",
+          "title": "MongoDB provider detail"
+        },
+        {
+          "anchor": "persistenceProviderDataAccessLayer-5-operations-and-governance",
+          "title": "Operations and governance"
+        },
+        {
+          "anchor": "persistenceProviderDataAccessLayer-7-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "security.otp-security-flow": {
+      "owner": "nodics.foundation/modules/nOtp",
+      "componentFile": "nodics.foundation/modules/nOtp/data/docs-v001/records/documentation/otpDocumentationComponentData.js",
+      "articleBlocksSha256": "9e4e32b460e7f3568fe500e6d1504817b00bc8381f4d0735d0ec7ae3bd24ca25",
+      "sections": [
+        {
+          "anchor": "securityOtpSecurityFlow-2-flow",
+          "title": "Flow"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-3-policy-contract",
+          "title": "Policy contract"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-4-configuration-behavior",
+          "title": "Configuration behavior"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-6-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "securityOtpSecurityFlow-7-evidence-checklist",
+          "title": "Evidence checklist"
+        }
+      ]
+    },
+    "communication.provider-runbooks": {
+      "owner": "nodics.communication/modules/commsCore",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "2d9df8c1c8e267e669e7665a9438e9c31fde23b4a47299d033fbac7b873d8dff",
+      "sections": [
+        {
+          "anchor": "communicationProviderRunbooks-1-implemented-modes-and-limits",
+          "title": "Implemented modes and limits"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-3-delivery-sequence",
+          "title": "Delivery sequence"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+          "title": "Email: controlled SMTP configuration"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-9-email-injected-sandbox-mode",
+          "title": "Email: injected sandbox mode"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+          "title": "SMS: injected sandbox configuration"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-11-sms-safety-and-limits",
+          "title": "SMS safety and limits"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-12-customize-and-extend-safely",
+          "title": "Customize and extend safely"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-13-outcomes-and-recovery",
+          "title": "Outcomes and recovery"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-14-operations-and-troubleshooting",
+          "title": "Operations and troubleshooting"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-16-verification-and-joint-acceptance",
+          "title": "Verification and joint acceptance"
+        }
+      ]
+    },
+    "engagement.contact-submission-operations": {
+      "owner": "nodics.engagement/modules/contactSubmission",
+      "componentFile": "nodics.engagement/modules/contactSubmission/data/docs-v001/records/documentation/contactSubmissionDocumentationComponentData.js",
+      "articleBlocksSha256": "0643345d1aec0922f4ffa64da9b289f173bcafaa4722b1d9311b9dc494fa6c14",
+      "sections": [
+        {
+          "anchor": "engagementContactSubmissionOperations-2-lifecycle",
+          "title": "Lifecycle"
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-3-data-contract",
+          "title": "Data contract"
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-4-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-6-evidence-checklist",
+          "title": "Evidence checklist"
+        },
+        {
+          "anchor": "engagementContactSubmissionOperations-8-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "process.workflow-bpm-source-map": {
+      "owner": "nodics.foundation/modules/nbpm",
+      "componentFile": "nodics.foundation/modules/nbpm/data/docs-v001/records/documentation/bpmDocumentationComponentData.js",
+      "articleBlocksSha256": "3142a6e54bafed4638a8bc739e8c869a6acf0f82116e4bfcffe7b3c408a35c12",
+      "sections": [
+        {
+          "anchor": "processWorkflowBpmSourceMap-1-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-2-workflow-model",
+          "title": "Workflow model"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-3-contract",
+          "title": "Contract"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-6-evidence-checklist",
+          "title": "Evidence checklist"
+        }
+      ]
+    },
+    "process.runtime-lifecycle": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "12a962f27dd555f7ac17bd4f7be7c3c49978b1f8ba2646a8392cbb4b54ef4f48",
+      "sections": [
+        {
+          "anchor": "processRuntimeLifecycle-2-definition-lifecycle",
+          "title": "Definition lifecycle"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-3-starting-an-instance",
+          "title": "Starting an instance"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-4-task-lifecycle",
+          "title": "Task lifecycle"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-5-instance-detail-and-audit",
+          "title": "Instance detail and audit"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-6-scheduled-triggers",
+          "title": "Scheduled triggers"
+        }
+      ]
+    },
+    "process.action-adapters": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "684331782340723c2aceb84492be9459448c12693b0c4c1eb7a87a416cc630c3",
+      "sections": [
+        {
+          "anchor": "processActionAdapters-1-safe-default",
+          "title": "Safe default"
+        },
+        {
+          "anchor": "processActionAdapters-2-what-is-not-allowed",
+          "title": "What is not allowed"
+        },
+        {
+          "anchor": "processActionAdapters-5-adapter-operating-contract",
+          "title": "Adapter operating contract"
+        }
+      ]
+    },
+    "process.cronjob-data-authoring": {
+      "owner": "nodics.process/modules/cronjob",
+      "componentFile": "nodics.process/modules/cronjob/data/docs-v001/records/documentation/cronjobDocumentationComponentData.js",
+      "articleBlocksSha256": "d8585ef673fa3d1b1f4deeeb8639e08a3c28d46a3ddd149725b3bac2acbda139",
+      "sections": [
+        {
+          "anchor": "processCronjobDataAuthoring-2-data-shape",
+          "title": "Data shape"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-3-header-contract",
+          "title": "Header contract"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-4-runtime-behavior",
+          "title": "Runtime behavior"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-6-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "processCronjobDataAuthoring-8-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "reference.internal-source-boundary-register": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "a88b20e83f0cdf1fe1700dcf373e44aa2b0efdf90523dc200235f1b764f751c1",
+      "sections": [
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-2-classification-flow",
+          "title": "Classification flow"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-3-register",
+          "title": "Register"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-4-classification-contract",
+          "title": "Classification contract"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+          "title": "Promotion rules"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-8-verification",
+          "title": "Verification"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "item": "Axis setup and user-safe error contracts",
+      "backlogPriority": "P0",
+      "requestedAction": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "statusStates": "PARTIAL_CONCEPTUAL_NOT_CURRENT_ENUM_MAPPING",
+        "setupBlockers": "PARTIAL",
+        "retryActions": "PARTIAL",
+        "technicalEvidence": "PARTIAL",
+        "userSafeMessages": "COVERED_PRINCIPLE"
+      },
+      "rationale": "The guide correctly places setup authority in BackOffice, keeps raw exceptions out of the primary UI, and separates operator diagnostics from business-safe messages. Its diagram uses conceptual NotInitialized/WaitingApproval/SetupBlocked states without mapping them to the actual businessStatus/readiness/publication projection. The condition table and generic retry advice do not explain concrete blocker codes, repairActions, revision/readiness gates, or which repair is configuration rather than replay. This is missing current-contract explanation, not a finding that an unexecuted Axis smoke test makes the guide absent.",
+      "evidence": [
+        {
+          "documentId": "applications.axis-setup-error-contracts",
+          "anchors": [
+            "applicationsAxisSetupErrorContracts-2-state-model",
+            "applicationsAxisSetupErrorContracts-3-error-contract",
+            "applicationsAxisSetupErrorContracts-4-setup-flow",
+            "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js"
+      ],
+      "sourceFindings": [
+        "capabilityBusinessStatus returns NOT_PREPARED, PREPARING, APPROVAL_REQUIRED, APPROVAL_IN_PROGRESS, ONLINE, PREPARED_STAGED, RETIRED or NEEDS_ATTENTION based on technical preparation, Media qualification and publication facts.",
+        "capabilityBlockers projects stable findings and owner-specific next actions; targetFailureMessage/targetDiagnostic separate safe failure wording from bounded technical evidence."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add an explicit mapping from readiness, preparation and publication facts to actual businessStatus values; label the existing diagram conceptual.",
+        "Document representative invalid-release, validation/rate-limit, target-unavailable and Media-dependency blockers with safe message, allowed action, evidence fields and replay preconditions.",
+        "Bind Axis actions to backend-declared repairActions and permissions rather than imply every blocked state is retryable."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "CMS exact source map",
+      "backlogPriority": "P0",
+      "requestedAction": "Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "authoring": "COVERED_OVERVIEW",
+        "delivery": "PARTIAL",
+        "publicationManifest": "PARTIAL",
+        "migration": "PARTIAL",
+        "cache": "PARTIAL_MENTION_NO_EXACT_CONTRACT",
+        "documentationGovernance": "PARTIAL"
+      },
+      "rationale": "The source map identifies CMS model, designer/delivery, publication, migration and documentation folders and explains authoring versus Online delivery. It mentions delivery invalidation but does not split those areas into exact service contracts: cache resource/policy behavior is unexplained, migration preview/apply/rollback is only an extension topic, and governance is not distinguished from publication execution. The related publishing guide now explains exact Media readiness and recovery, which deserves credit, but not the omitted migration/cache/governance ownership contracts. A folder citation or one invalidation sentence is not the requested six-boundary source map.",
+      "evidence": [
+        {
+          "documentId": "wcms.cms-source-map-authoring-contract",
+          "anchors": [
+            "wcmsCmsSourceMapAuthoringContract-1-source-map",
+            "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+            "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+            "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+            "wcmsCmsSourceMapAuthoringContract-6-operational-checks"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-3-running-example",
+            "wcmsPublishingLifecycle-4-site-bundle-shape",
+            "wcms-exact-media-readiness-capacity"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js",
+        "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryCacheInvalidationService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js",
+        "nodics.wcms/modules/cms/src/service/migration/defaultCmsMigrationService.js",
+        "nodics.wcms/modules/cms/src/service/documentation/defaultCmsDocumentationGovernanceService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js"
+      ],
+      "sourceFindings": [
+        "DefaultCmsDeliveryCacheInvalidationService.invalidate delegates tenant-scoped router invalidation to nCache; resource names default to resolvePublicPage/resolveAuthenticatedPage and an absent cache service returns success without invalidating an external cache.",
+        "DefaultCmsMigrationService exposes preview/apply/rollback with snapshots, mapping decisions and per-operation evidence; its existence is not proof of atomic batch recovery.",
+        "Documentation governance evaluates documentation-specific metadata/access rules; manifest orchestration and delivery remain distinct owners.",
+        "Current Media readiness inspection validates exact pinned retained metadata and target bytes, batches owner pointer reads when supported, and reports UNAVAILABLE/BYTES_UNAVAILABLE/ACTIVATION_CHANGED without approving or repairing assets."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Replace directory-only mappings with exact authoring/designer, delivery, manifest orchestration, migration, cache invalidation and documentation-governance service/method references.",
+        "Explain migration preview conflicts, apply evidence, failure/rollback limits and approval boundaries, plus the mutation-to-delivery invalidation path.",
+        "Keep optional cache absence and governance validation separate from successful publication or delivered-cache freshness."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Media operations runbook",
+      "backlogPriority": "P0",
+      "requestedAction": "Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "upload": "PARTIAL",
+        "importHydration": "COVERED_OVERVIEW",
+        "storageProviders": "INCORRECT_MATURITY_IMPLICATION",
+        "cleanupLifecycle": "PARTIAL",
+        "replicationQueue": "NOT_EXPLAINED",
+        "deliveryFailures": "PARTIAL"
+      },
+      "rationale": "Import hydration, managed coordinates and the separation of metadata from physical bytes are explained accurately. Upload is only a source-folder mention; cleanup and delivery recovery remain checklists. The provider table calls cloud storage production-ready without identifying that the default cloud provider is unavailable/NOT_CONFIGURED, and the DR section omits the durable replication queue, retry/escalation and primary-first policy. Those omissions can lead an operator to infer storage or DR guarantees the default source does not provide. The updated CMS guide does cover exact pinned Media approval, byte verification, pointer rechecks and safe failure recovery; those sections close that particular readiness explanation, not storage-provider maturity, upload or replication-queue operations.",
+      "evidence": [
+        {
+          "documentId": "wcms.media-operations-runbook",
+          "anchors": [
+            "wcmsMediaOperationsRunbook-2-source-map",
+            "wcmsMediaOperationsRunbook-3-import-contract",
+            "wcmsMediaOperationsRunbook-4-storage-and-provider-model",
+            "wcmsMediaOperationsRunbook-5-publication-and-dr",
+            "wcmsMediaOperationsRunbook-6-operations",
+            "wcmsMediaOperationsRunbook-9-verification"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcms-coordinated-pack-asset-approvals",
+            "wcms-exact-media-readiness-capacity"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaUploadService.js",
+        "nodics.foundation/modules/nData/nImport/import/src/service/media/defaultMediaReleaseAssetHydrationService.js",
+        "nodics.wcms/modules/media/src/service/storage/provider/defaultCloudMediaStorageProviderService.js",
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaCleanupLifecycleService.js",
+        "nodics.wcms/modules/media/src/service/storage/defaultMediaLifecycleCoordinationService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTransferService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js"
+      ],
+      "sourceFindings": [
+        "Upload inspection rejects caller-owned physical coordinates and validates size/checksum; versioned reupload requires an exact version and respects legal hold.",
+        "Release hydration resolves release-owned asset.sourceFile bytes and forbids authored provider/storage/URL fields.",
+        "The default cloud provider methods fail ERR_MED_00032 and health reports NOT_CONFIGURED; a concrete qualified adapter is required.",
+        "Cleanup evaluates references, legal hold, retention and approval; lifecycle coordination does not imply unconditional physical deletion.",
+        "Publication transfer implements primary/replication placement and durable retry evidence; replication is configuration/policy dependent, not automatic DR acceptance.",
+        "CMS readiness batching keeps per-image physical-byte checks and before/after pointer consistency; it does not establish replication success or cloud-provider configuration."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add a concrete upload request/result/version-conflict walkthrough, and qualify local/NAS/cloud implementation and installation requirements separately.",
+        "Document cleanup refusal/defer/approval outcomes and safe retained-reference checks before any physical deletion.",
+        "Map replication queue identity/status/retry due time/attempt ceiling/escalation and primary-first behavior to exact owner operations; give delivery failure diagnosis without assuming Online metadata proves target bytes."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Import/export provider guides",
+      "backlogPriority": "P0",
+      "requestedAction": "Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "javascript": "PARTIAL",
+        "json": "PARTIAL",
+        "csv": "PARTIAL",
+        "excel": "PARTIAL",
+        "generatedExports": "PARTIAL",
+        "parserBehavior": "NOT_EXPLAINED",
+        "safety": "PARTIAL",
+        "masking": "PARTIAL",
+        "customization": "COVERED_PRINCIPLE"
+      },
+      "rationale": "The guide names all four import formats, keyed JavaScript releases and generated Media exports, but the format table does not explain actual parsing contracts or failure/merge behavior. It treats the export family too uniformly: the governed DataExportService dispatches CSV/JSON, while a standalone Excel renderer is not evidence that its path is selected there. Generic advice to mask sensitive values does not explain the enforced read/access-policy transformation before rendering. Customization must retain those constraints instead of implying any format package is a working generated-export provider.",
+      "evidence": [
+        {
+          "documentId": "data.import-export-provider-guides",
+          "anchors": [
+            "dataImportExportProviderGuides-2-provider-model",
+            "dataImportExportProviderGuides-3-javascript-release-data",
+            "dataImportExportProviderGuides-4-json-csv-and-excel",
+            "dataImportExportProviderGuides-5-export-contract",
+            "dataImportExportProviderGuides-6-customization-and-extension-guidance"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js",
+        "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+        "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js"
+      ],
+      "sourceFindings": [
+        "JavaScript mergeModels requires a keyed plain-object map, rejects dangerous keys, overlays by export key and replaces array field values rather than merging arrays by index.",
+        "JSON uses streamed root arrays; CSV delegates configured csvtojson parsing; Excel uses ExcelJS worksheet/header/empty-field rules, not interchangeable JavaScript-key semantics.",
+        "DataExportService normalizes tenant/enterprise/query bounds, applies export access policies, renders CSV/JSON and stores checksummed generated Media; default maximumRecords is 1000 and pageSize 50.",
+        "The Excel renderer has its own safe-value/formula-neutralization behavior; its presence does not prove governed export dispatch integration."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add small valid inputs and exact parser options/results for JS overlay/arrays, JSON root arrays, CSV headers/types/encoding and Excel sheet/header/empty/formula-value handling.",
+        "Separate implemented governed CSV/JSON exports from standalone or unintegrated renderers and skeletal packages.",
+        "Explain original-actor read authorization, policy masking/redaction before rendering, row limits/truncation, spreadsheet formula defenses and Media-owned download/retention."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "backlogPriority": "P0",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "dataDependencies": "COVERED_ACROSS_OWNER_GUIDES",
+        "creationLanes": "INCORRECT_OR_OVERGENERALIZED",
+        "publication": "PARTIAL",
+        "searchProjection": "COVERED_WITH_SEARCH_GUIDE_LIMITS",
+        "fulfillmentEvidence": "PARTIAL",
+        "browserProof": "SCENARIOS_DOCUMENTED_EXECUTION_SEPARATE"
+      },
+      "rationale": "The cross-framework overview and Agora owner guide provide useful dependencies, header/record examples, localization, Media and import flow; Product, Pricing and Fulfillment owner guides add current implementation limits. The overview nevertheless tells readers to create/import inventory balances with the same bundle and implies a general Axis creation lane, while Inventory explicitly rejects direct OPERATIONAL_VERSIONED stock snapshots and Staged stock mutations. It also points Order management at a nonexistent baseCommerce/modules/order path. Browser search/cart/order/fulfillment scenarios are already described; their non-execution is a separate acceptance gap, not the reason this item remains editorially open.",
+      "evidence": [
+        {
+          "documentId": "commerce.data-authoring-fulfillment",
+          "anchors": [
+            "commerceDataAuthoringFulfillment-1-source-map",
+            "commerceDataAuthoringFulfillment-3-authoring-sequence",
+            "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+            "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+            "commerceDataAuthoringFulfillment-8-verification"
+          ]
+        },
+        {
+          "documentId": "accelerators.agora-apparel-product-data-authoring",
+          "anchors": [
+            "acceleratorsAgoraApparelProductDataAuthoring-4-step-by-step-authoring",
+            "acceleratorsAgoraApparelProductDataAuthoring-5-header-contract",
+            "acceleratorsAgoraApparelProductDataAuthoring-7-product-dependency-map",
+            "acceleratorsAgoraApparelProductDataAuthoring-9-import-execution-flow",
+            "acceleratorsAgoraApparelProductDataAuthoring-12-verification"
+          ]
+        },
+        {
+          "documentId": "catalog.product-discovery-management",
+          "anchors": [
+            "catalogProductDiscoveryManagement-8-current-implementation-coverage",
+            "catalogProductDiscoveryManagement-9-source-authoring-apis"
+          ]
+        },
+        {
+          "documentId": "pricing.promotions-tax-management",
+          "anchors": [
+            "pricingPromotionsTaxManagement-8-current-implementation-coverage",
+            "pricingPromotionsTaxManagement-9-source-authoring-apis"
+          ]
+        },
+        {
+          "documentId": "inventory.stock-management",
+          "anchors": [
+            "inventoryStockManagement-8-current-implementation-coverage"
+          ]
+        },
+        {
+          "documentId": "commerce.fulfillment-core-source-map",
+          "anchors": [
+            "commerceFulfillmentCoreSourceMap-4-contract",
+            "commerceFulfillmentCoreSourceMap-6-operating-rules"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js"
+      ],
+      "sourceFindings": [
+        "Inventory validateImportTarget/requireOperationalRuntime separate Online stock operations from Staged policy publication; direct operational balance/movement/reservation snapshot import is not approved.",
+        "Product listing authoring is enabled only by marketplaceAuthoring policy and is a bounded source-referenced digital-listing path, not proof of universal authoring.",
+        "Pricing owns immutable publication/target pointers; inventory quantities are not price/publication records.",
+        "Carrier sandbox execution requires explicit enablement, sandboxOnly, injected credential/transport ports and idempotency. Readiness declarations do not certify a live carrier."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Correct the Order source path to nodics.commerce/modules/checkout/modules/order and distinguish reference/publishable product-price-policy releases from owner-operated stock receipts/adjustments.",
+        "Make the Axis, developer-release and specialized listing lanes explicit, with supported schemas/runtime roles and links to existing owner APIs rather than blanket CRUD claims.",
+        "Explain publication/search freshness versus operational availability and the exact consignment/carrier/refund evidence needed; retain browser scenarios as an independent unexecuted gate."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Documentation publishing runbook",
+      "backlogPriority": "P0",
+      "requestedAction": "Document canonical CMS data, optional CONTENT_PACK selection, Staged import, review, Online publication, rollback, and rendering.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "canonicalCms": "COVERED",
+        "optionalContentPack": "COVERED",
+        "stagedImport": "COVERED",
+        "review": "COVERED",
+        "onlinePublication": "COVERED_ACROSS_LINKED_GUIDES",
+        "rollback": "PARTIAL_NON_OPERATIONAL",
+        "rendering": "COVERED_SCENARIOS"
+      },
+      "rationale": "The runbook is strong on canonical CMS records, implementing-module ownership, optional CONTENT_PACK closure, independent business releases, Media declarations, Staged review and Online-only consumers. The linked publishing lifecycle explains immutable rollback conceptually, coordinated approvals, partial failure/resume and the newly added exact-Media byte/pointer recovery. That accurate explanation is credited. The documentation runbook still offers no operational rollback selection/preconditions or unavailable/conflict outcome procedure: its review section only says to keep rollback evidence. This narrow recovery gap, not lack of executed browser/publication proof, keeps it open.",
+      "evidence": [
+        {
+          "documentId": "docs.documentation-publishing-runbook",
+          "anchors": [
+            "docsDocumentationPublishingRunbook-3-authoring-steps",
+            "docsDocumentationPublishingRunbook-4-generated-data-contract",
+            "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+            "docs-publishing-module-ownership-composition",
+            "docsPublishingRunbook-functional-visibility-and-record-ownership",
+            "docsDocumentationPublishingRunbook-8-verification"
+          ]
+        },
+        {
+          "documentId": "docs.documentation-publishing-model",
+          "anchors": [
+            "docsDocumentationPublishingModel-1-source-to-online-flow",
+            "docsDocumentationPublishingModel-3-access-and-workflow",
+            "docsDocumentationPublishingModel-5-developer-and-operator-responsibilities"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-3-running-example",
+            "wcmsPublishingLifecycle-6-security-and-integrity-rules",
+            "wcms-coordinated-pack-asset-approvals",
+            "wcms-exact-media-readiness-capacity"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js",
+        "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js"
+      ],
+      "sourceFindings": [
+        "Catalogue/content-pack readers enforce explicit composition, owned records, containment and checksums; that validation is not import or activation.",
+        "CMS baseline rollback requires Staged, an authorized actor, a current ONLINE publication with previousOnlineVersion, and expectedRevision; otherwise CMS_BASELINE_ROLLBACK_UNAVAILABLE is returned.",
+        "nPublish rollback invokes the owning domain version provider and records ROLLED_BACK or failure; it is not a working-tree reset or reversal of arbitrary import/database writes.",
+        "The backlog sourceAreas entry nodics.process/modules/nPublish is stale; current nPublish ownership is nodics.foundation/modules/nPublish.",
+        "Exact Media readiness is read-only owner evidence; batching must preserve ordered complete responses and final pointer revision/version checks and cannot authorize approval, repair or deletion."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add or reference a concrete documentation rollback procedure: inspect publication and prior immutable version, preserve actor/reason/correlation, submit the governed rollback with current revision, then inspect pointer/receipt/Media/navigation evidence.",
+        "Explain no-previous-version and revision-conflict outcomes, and separate Online pointer restoration from source-code, data-import or physical-asset rollback.",
+        "Correct stale nPublish ownership when the parent updates the audit; do not move publication authority to nodics.docs or Axis."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Module Registry journey",
+      "backlogPriority": "P1",
+      "requestedAction": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "registration": "COVERED",
+        "activation": "COVERED",
+        "dependencies": "COVERED",
+        "requiredCapabilityChecks": "COVERED",
+        "statusProjection": "COVERED",
+        "axisVisibility": "COVERED"
+      },
+      "rationale": "The guide explains the distinct installation/runtime/registration/activation/data-receipt states rather than treating visibility as activation. It covers required versus optional capabilities, dependency checks, local/remote owner availability, complete paged registry reads, backend action eligibility, activation receipts and revision-conflict recovery. Its Axis walkthrough correctly lets an unavailable target block only its dependent operation and preserves original actor/owner authority. These explanations satisfy the backlog request without asserting the walkthrough was executed in a browser.",
+      "evidence": [
+        {
+          "documentId": "platform.module-registry-journey",
+          "anchors": [
+            "platformModuleRegistryJourney-3-registry-contract",
+            "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+            "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states",
+            "platformModuleRegistryJourney-7-axis-administrator-walkthrough",
+            "platformModuleRegistryJourney-8-example-unavailable-target-independent-action",
+            "platformModuleRegistryJourney-12-non-customizable-security-and-ownership",
+            "platformModuleRegistryJourney-13-troubleshooting-and-recovery",
+            "platformModuleRegistryJourney-15-revision-conflict-during-activation"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js"
+      ],
+      "sourceFindings": [
+        "getAllRecords traverses registry data rather than equating one default page with the catalogue.",
+        "Catalogue registration state and runtime observations are separate; human lifecycle transitions enforce protected/required-module and dependency rules.",
+        "Activation uses existing nImport execution and accepts required receipts only when CURRENT; failure does not imply rollback of earlier successful imports.",
+        "Capability/navigation registries project availability and actions from owner evidence rather than authorize work through frontend visibility."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "This is a source-editorial pass for the named journey, not certification of every BackOffice capability or UI state. Installed remote failure, concurrency and signed-in browser scenarios remain separate acceptance work."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": null
+    },
+    {
+      "item": "Commerce Search guide",
+      "backlogPriority": "P1",
+      "requestedAction": "Document ranking rules, projections, publishing, index ownership, and storefront impact.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "rankingRules": "COVERED_DETAIL_BUT_INVALID_EXAMPLE",
+        "projections": "COVERED",
+        "publishing": "COVERED",
+        "indexOwnership": "COVERED",
+        "storefrontImpact": "COVERED_EXPLANATION"
+      },
+      "rationale": "The added source-depth sections accurately explain tenant/store/locale and effective-window selection, Discovery delegation versus fallback PIN/BOOST/BURY ranking, deterministic ties/absent candidates, bounded publication and non-atomic projection/index failures. This is real semantic depth and should not be dismissed as a mention. However the earlier apparelBoosts example uses lowercase scopeType:'category' and a top-level boost with no required actions/status/revision; it does not conform to the current rule schema. The contradiction prevents a clean source-review pass despite otherwise sufficient explanation.",
+      "evidence": [
+        {
+          "documentId": "commerce.search-guide",
+          "anchors": [
+            "commerceSearchGuide-3-ranking-and-rules",
+            "commerce-search-guide-source-depth-1",
+            "commerce-search-guide-source-depth-2",
+            "commerce-search-guide-source-depth-3",
+            "commerce-search-guide-source-depth-4"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js"
+      ],
+      "sourceFindings": [
+        "Rule schema requires uppercase GLOBAL/CATEGORY/SEARCH_TERM scopeType, name/store/status/actions/revision; ranking consumes actionType and productCode rather than top-level boost.",
+        "Ranking returns early for fewer than two candidates and preserves input order when no rules match; fallback actions cannot introduce absent products.",
+        "Publication selects a bounded approved/published batch, saves projections then invokes search save sequentially; the inspected source does not guarantee cross-index batch atomicity."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Replace the old rule example with a complete schema-valid CATEGORY rule, categoryCode and actions containing productCode/actionType BOOST plus required lifecycle fields.",
+        "Align the older exclusions/market/analyzer language with the actual configured ranking engine or label it an extension; retain the existing detailed partial-failure and browser acceptance boundaries."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Localization depth",
+      "backlogPriority": "P1",
+      "requestedAction": "Document locale records, fallback behavior, content and product localization, import data, and API boundary.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "localeRecords": "PARTIAL",
+        "fallbackBehavior": "OVERGENERALIZED",
+        "contentLocalization": "PARTIAL",
+        "productLocalization": "PARTIAL",
+        "importData": "PARTIAL",
+        "apiBoundary": "NOT_EXPLAINED"
+      },
+      "rationale": "The guide supplies a basic Product localization example and correctly keeps language separate from price/tax authority. Its request-to-exact/fallback/base diagram suggests one universal fallback model, whereas CMS component resolution, Product publication policy and immutable UI/message bundles have different contracts. The related Localization overview names current keys/values/releases/pointers but does not supply the missing field/lifecycle/import/API examples. Asking future handoffs to document a fallback chain is not an explanation of the current chain.",
+      "evidence": [
+        {
+          "documentId": "localization.runtime-authoring",
+          "anchors": [
+            "localizationRuntimeAuthoring-2-resolution-model",
+            "localizationRuntimeAuthoring-3-authoring-contract",
+            "localizationRuntimeAuthoring-5-implementation-handoff",
+            "localizationRuntimeAuthoring-6-evidence-checklist"
+          ]
+        },
+        {
+          "documentId": "localization.internationalization",
+          "anchors": [
+            "localizationInternationalization-8-current-implementation-coverage"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js",
+        "nodics.localization/modules/localizationApi/src/router/routers.js",
+        "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js"
+      ],
+      "sourceFindings": [
+        "CMS localeChain canonicalizes requested/default plus configured fallbackLocales, rejects unsupported requested locales, chooses one variant and merges it with shared properties while reporting fallbackUsed/missing.",
+        "Product localization policy separately governs supported/default/fallback/required locales and READY translation requirements before publication.",
+        "Localization API serves scoped published bundles with PUBLIC exposure filtering, ETag/304 and optional gzip; protected registry/value/review/release routes are separate authoring authority."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Document CMS variant, Product/variant localization and UI/message bundle schemas as distinct owners with valid import headers/records and lifecycle fields.",
+        "Show exact supported, fallback, partial/missing and unsupported-locale results for each owner; do not promise universal base-record fallback.",
+        "Add the public bundle route and tenant/scope/channel/namespace/exposure/checksum boundary, contrasted with protected author/review/build/publish/rollback APIs."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Payment Core and provider split",
+      "backlogPriority": "P1",
+      "requestedAction": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "paymentDecisions": "COVERED_OVERVIEW",
+        "methodProviderSeparation": "PARTIAL_WITH_CONFLATED_EXAMPLES",
+        "reconciliation": "PARTIAL",
+        "safeCustomerPayloads": "COVERED_PRINCIPLE"
+      },
+      "rationale": "Payment Core decision ownership and customer-safe fields are explained, but the introduction groups card/wallet/bank/COD methods with gateway providers and says those modules implement external integration details without maturity qualifications. The actual Stripe adapter is deterministic offline conformance, not Stripe test-mode HTTP or live payments. Reconciliation is an evidence wish list rather than a source-grounded explanation of delayed/failed refund outcomes, persisted reconciliation records and the difference between recording an obligation and actually settling it.",
+      "evidence": [
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-2-boundary-model",
+            "commercePaymentProviderBoundaries-3-safe-payload-contract",
+            "commercePaymentProviderBoundaries-5-implementation-handoff",
+            "commercePaymentProviderBoundaries-6-evidence-checklist",
+            "commercePaymentProviderBoundaries-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js"
+      ],
+      "sourceFindings": [
+        "Card prepare validates an opaque tok_ token and returns method intent; it is not a network authorization adapter.",
+        "Stripe sandbox execute returns deterministic sim_ references for tok_test_ tokens without network I/O; delayed/failed refund token cases are simulator behavior.",
+        "Payment execution normalizes pending/failed refund outcomes and reconciliationRequired; refund execution builds and saves reconciliation evidence through generated Payment-owned persistence.",
+        "Readiness contract requires secrets in runtime configuration, signed/replay-protected webhook behavior and separately approved live evidence; validating declarations alone is not certification."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Separate method-policy modules from gateway/provider adapters and explicitly label each documented implementation as offline, sandbox, unavailable or separately qualified.",
+        "Explain authorize/capture/void/refund idempotency and pending/failed reconciliation record lifecycle with exact source operations and supported recovery limits; do not imply an automatic settlement worker exists.",
+        "Align the customer result example with the actual safe projection and explicitly exclude provider tokens, raw gateway evidence and secrets from public payloads."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Shopping List Commerce boundary",
+      "backlogPriority": "P1",
+      "requestedAction": "Document why shopping-intent lists belong to Base Commerce and what Profile owns.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "shoppingIntentBaseCommerceOwnership": "COVERED",
+        "profileOwnership": "COVERED"
+      },
+      "rationale": "The guide directly answers the requested boundary: wishlists, compare and save-for-later carry product/SKU/store shopping intent and belong to Base Commerce; Profile owns customer identity, authentication and enterprise access rather than a second list store. It explains stable owner/tenant keys, explicit store context, Commerce permission ownership, migration without dual authority and customer-safe service access. The current source enforces owner-scoped routes and operations. The pass is for that exact ownership request, not a blanket endorsement of every customization example in the article.",
+      "evidence": [
+        {
+          "documentId": "commerce.shopping-list-commerce-boundary",
+          "anchors": [
+            "commerceShoppingListCommerceBoundary-2-ownership-model",
+            "commerceShoppingListCommerceBoundary-3-contract",
+            "commerceShoppingListCommerceBoundary-8-migration-principle",
+            "commerceShoppingListCommerceBoundary-10-store-context-and-upgrade-behavior"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js",
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/controller/defaultShoppingListCustomerController.js"
+      ],
+      "sourceFindings": [
+        "Customer routes require commerce.shoppingList.own and the owning customer controller, not generic Profile CRUD.",
+        "Operation queries scope lists and entries by tenant and owner, list type and explicit store context; list policy remains a Commerce concern.",
+        "limit handles COMPARE and SAVE_FOR_LATER specially; all other types use maximumWishlistItems."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Nonblocking to the requested ownership explanation: the extra outfit/gift customization example suggests per-type maximumOutfitIdeaItems/maximumGiftIdeaItems settings. limit does not consume those keys. Correct that example or explain the required operation-service override; setting those properties alone does not enforce those limits."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": null
+    },
+    {
+      "item": "NMS runtime monitoring",
+      "backlogPriority": "P1",
+      "requestedAction": "Document node monitoring, topology, health checks, runtime evidence, and operator recovery.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "nodeMonitoring": "PARTIAL",
+        "topology": "PARTIAL",
+        "healthChecks": "PARTIAL",
+        "runtimeEvidence": "PARTIAL",
+        "operatorRecovery": "NOT_EXPLAINED"
+      },
+      "rationale": "The guide describes heartbeat, topology and health at a conceptual level and gives sensible evidence categories. It does not explain the implemented pingable-module selection, nodePingTimeout polling, in-memory node/responsibility state or the activation/responsibility/stop-health-check routes. It also does not distinguish this NMS coordination evidence from application readiness, durable monitoring history or an Axis topology/metrics product. The recovery section asks implementers to provide recovery rather than documenting current safe actions and limitations.",
+      "evidence": [
+        {
+          "documentId": "foundation.nms-runtime-monitoring",
+          "anchors": [
+            "foundationNmsRuntimeMonitoring-2-monitoring-model",
+            "foundationNmsRuntimeMonitoring-3-health-contract",
+            "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+            "foundationNmsRuntimeMonitoring-6-common-mistakes",
+            "foundationNmsRuntimeMonitoring-7-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js",
+        "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js",
+        "nodics.foundation/modules/nNms/src/router/routers.js",
+        "nodics.foundation/modules/nNms/config/properties.js"
+      ],
+      "sourceFindings": [
+        "Node manager coordinates startup notifications, configured ping checks and responsibility selection; nodePingTimeout defaults to 10000 ms.",
+        "Node configuration maintains module.nms node state in process memory; an absent node state can default active and is not affirmative live health proof.",
+        "Secured NMS routes expose /node/active/:nodeId, /node/request/responsibility/:nodeId and /node/health/check/stop for the system target; route declarations do not establish an operator UI."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add a concrete configuration and observed-node/ping/responsibility walkthrough, including timeout/failure/state meanings and volatile-state limitations.",
+        "Map supported recovery actions to secured owner APIs and explain stopping checks versus repairing a node; preserve topology/tenant/runtime identity.",
+        "Separate NMS coordination from lifecycle readiness, BackOffice availability and any separately implemented heavy monitoring/history/dashboard capability."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Service runtime and override precedence",
+      "backlogPriority": "P1",
+      "requestedAction": "Document generated services, virtual service behavior, override precedence, and extension safety.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "generatedServices": "PARTIAL",
+        "virtualServiceBehavior": "MISCHARACTERIZED",
+        "overrides": "PARTIAL_WITH_NON_EXECUTABLE_METADATA_EXAMPLE",
+        "extensionSafety": "COVERED_PRINCIPLE"
+      },
+      "rationale": "The guide correctly insists on stable identities, active module graph and owner-scoped extensions, and its later separate-runtime section is substantial. But the precedence diagram reads like request-time fallback selection, and the example exports code/ownerModule/overrides/contract metadata rather than a loader-recognized method override. vService is described as a stand-in without explaining its actual schema-operation initializer pipeline. Related startup/traceability guides improve context but do not supply a complete generated-baseline-to-indexed-member merge example or resolve the misleading primary example.",
+      "evidence": [
+        {
+          "documentId": "foundation.service-runtime-overrides",
+          "anchors": [
+            "foundationServiceRuntimeOverrides-2-resolution-flow",
+            "foundationServiceRuntimeOverrides-3-precedence-contract",
+            "foundationServiceRuntimeOverrides-4-operational-evidence",
+            "foundationServiceRuntimeOverrides-6-customization-and-extension-guidance",
+            "foundationServiceRuntimeOverrides-10-separate-runtimes-and-profile-bootstrap"
+          ]
+        },
+        {
+          "documentId": "framework.module-loading-service-precedence",
+          "anchors": [
+            "frameworkModuleLoadingServicePrecedence-1-loading-order",
+            "frameworkModuleLoadingServicePrecedence-3-customization-and-extension"
+          ]
+        },
+        {
+          "documentId": "configuration.framework-startup-lifecycle",
+          "anchors": [
+            "configurationFrameworkStartupLifecycle-7-file-and-artifact-loading",
+            "configurationFrameworkStartupLifecycle-11-entity-lifecycle-hooks"
+          ]
+        },
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "anchors": [
+            "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js",
+        "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js",
+        "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js"
+      ],
+      "sourceFindings": [
+        "Initializer loadModules loads server-generated Services/Facades/Controllers as generatedBaseline before indexed active modules.",
+        "File loader merges members and records xNodics.memberOrigins/override history; service resolution is not a per-request customer-to-core exception fallback.",
+        "Schema activation can build generated service files from common definitions; vService read initializers resolve current/history/exact-version schema operations with owning persistence/security contracts."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Replace metadata-only examples with an actual same-identity service file exporting an overridden method and retained inherited members in a later-indexed active module.",
+        "Explain generation/preparation, baseline loading, indexed overlays, init/postInit order and effective member-origin diagnostics with one reproducible example.",
+        "Describe vService as the implemented generated-schema operation pipeline and distinguish versioned current/history reads from mock providers or remote dispatch."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Cache provider runbooks",
+      "backlogPriority": "P1",
+      "requestedAction": "Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "redis": "COVERED_IN_OWNER_GUIDE",
+        "hazelcast": "PARTIAL_WITH_CONCRETE_LOCK_SECTION",
+        "nodeLocal": "PARTIAL",
+        "keyStrategy": "PARTIAL_ACROSS_GUIDES",
+        "invalidation": "PARTIAL",
+        "productionExpectations": "OVERGENERALIZED_FALLBACK"
+      },
+      "rationale": "The Redis owner guide supplies real activation, serialization, TTL, atomic consume/counter and scoped invalidation/reset safety, and the common runbook has a substantive Hazelcast lock/deadline section. Those should receive source-depth credit. The common page remains a conceptual configuration table without an exact Node-local setup/namespace/invalidation example, and its recommendation that each provider return a degraded state overlooks enabled-engine startup failure and strict security-channel requirements. Production partition/failover proof is explicitly separate in the Hazelcast text and is not a missing editorial requirement by itself.",
+      "evidence": [
+        {
+          "documentId": "foundation.cache-provider-runbooks",
+          "anchors": [
+            "foundationCacheProviderRunbooks-3-configuration-contract",
+            "foundationCacheProviderRunbooks-4-runbook",
+            "foundationCacheProviderRunbooks-8-hazelcast-concurrent-mutations-and-deadlines"
+          ]
+        },
+        {
+          "documentId": "foundation.redis-provider-operations",
+          "anchors": [
+            "foundationRedisProviderOperations-1-provider-ownership-and-activation",
+            "foundationRedisProviderOperations-2-values-ttl-and-atomic-operations",
+            "foundationRedisProviderOperations-3-lifecycle-invalidation-and-reset-safety",
+            "foundationRedisProviderOperations-4-verification-and-troubleshooting"
+          ]
+        },
+        {
+          "documentId": "foundation.redis-provider-operations",
+          "anchors": [
+            "redis-cache-customize-and-extend-safely"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService.js",
+        "nodics.foundation/modules/nCache/cache/src/service/engine/defaultCacheEngineService.js",
+        "nodics.foundation/modules/nCache/nodeCache/src/service/cache/defaultLocalCacheService.js",
+        "nodics.foundation/modules/nCache/hazelcastCache/src/service/cache/defaultHazelcastCacheService.js",
+        "nodics.foundation/modules/nCache/redisCache/src/service/cache/defaultRedisCacheService.js",
+        "nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService.js"
+      ],
+      "sourceFindings": [
+        "Cache configuration layers default/module channel and engine settings and builds logical channel/module-prefix/tenant key scope; TTL zero is explicit, not missing.",
+        "Cache engine validates declared operations/capabilities before binding; an enabled engine initialization failure rejects startup rather than silently selecting local storage.",
+        "Node consume/counters are process-local, prefix/key invalidation has explicit scope, and its atomicity does not extend across processes.",
+        "Hazelcast uses JSON values, millisecond map TTL conversion and isolated lock contexts for distributed mutations; Redis GETDEL refuses a non-atomic substitute."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Link the Redis owner runbook from the common provider flow and add an exact Node-local configuration/key/TTL/invalidation example plus restart/multi-node limitations.",
+        "Complete Hazelcast connection/map/key/invalidation setup without claiming local concurrency tests prove member-loss or split-brain guarantees.",
+        "Replace blanket degraded-fallback advice with per-channel rules, especially fail-closed authentication/atomic coordination and enabled-engine startup failure."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Database provider boundaries",
+      "backlogPriority": "P1",
+      "requestedAction": "Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "mongodb": "COVERED_ACROSS_GUIDES",
+        "virtualDatabase": "INCORRECT_SEMANTICS",
+        "cassandra": "UNIMPLEMENTED_PROVIDER_NOT_LABELLED",
+        "elasticsearchDatabase": "SKELETAL_NOT_SEARCH_ADAPTER_EQUIVALENCE",
+        "configurationContracts": "PARTIAL",
+        "validation": "COVERED_MONGODB_ONLY"
+      },
+      "rationale": "The provider overview and its MongoDB schema-keyword section provide useful contract/configuration detail, and the related persistence guide correctly names MongoDB as the current concrete provider. The primary introduction/diagram nevertheless presents Cassandra and elasticdb as interchangeable implemented storage choices, and calls vDatabase/vMongodb contract-test or fallback stubs. The inspected vDatabase is shared versioned-schema/interceptor behavior, not a substitute database. The empty/skeletal database adapter packages must not be confused with the separately implemented search engine.",
+      "evidence": [
+        {
+          "documentId": "foundation.database-provider-boundaries",
+          "anchors": [
+            "foundationDatabaseProviderBoundaries-1-source-map",
+            "foundationDatabaseProviderBoundaries-2-boundary-model",
+            "foundationDatabaseProviderBoundaries-4-provider-comparison",
+            "foundationDatabaseProviderBoundaries-8-customizing-mongodb-schema-keyword-selection"
+          ]
+        },
+        {
+          "documentId": "persistence.provider-data-access-layer",
+          "anchors": [
+            "persistenceProviderDataAccessLayer-2-runtime-model",
+            "persistenceProviderDataAccessLayer-3-mongodb-provider-detail",
+            "persistenceProviderDataAccessLayer-5-operations-and-governance",
+            "persistenceProviderDataAccessLayer-7-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nDatabase/mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService.js",
+        "nodics.foundation/modules/nDatabase/mongodb/src/service/model/defaultMongodbDatabaseModelHandlerService.js",
+        "nodics.foundation/modules/nDatabase/database/vDatabase/src/schemas/schemas.js",
+        "nodics.foundation/modules/nDatabase/database/vDatabase/src/service/interceptors/defaultVersionIdHandlerInterceptorService.js",
+        "nodics.foundation/modules/nDatabase/cassandradb/config/properties.js",
+        "nodics.foundation/modules/nDatabase/elasticdb/config/properties.js"
+      ],
+      "sourceFindings": [
+        "MongoDB connection code discovers topology/session transaction capabilities and refuses unqualified multi-record transactions; provider portability does not promise equal transaction semantics.",
+        "vDatabase defines the shared versioned schema and versionId handling with model/service/router disabled for the abstract schema itself.",
+        "Cassandra and elasticdb database package inventory lacks concrete connection/query/model provider implementations comparable to MongoDB; packaging is not provider acceptance.",
+        "MongoDB schemaProperties is a keyed boolean selector map and preserves declared zero/false values, as the added section explains."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add an implementation-status matrix: concrete MongoDB, shared vDatabase/vMongodb machinery, skeletal/unavailable Cassandra and elasticdb database adapters, separate nSearch Elasticsearch ownership.",
+        "Correct virtual-module descriptions and show actual database.default/module/tenant configuration with capabilities rather than imply a provider-name switch is sufficient.",
+        "Retain MongoDB validation examples and explicitly require adapter implementation plus provider-specific contract/transaction/tenant/index/recovery evidence before another database is advertised as usable."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "OTP and security flow",
+      "backlogPriority": "P1",
+      "requestedAction": "Document OTP generation, verification, expiry, retry, throttling, audit, and security controls.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "generation": "PARTIAL",
+        "verification": "PARTIAL",
+        "expiry": "PARTIAL",
+        "retry": "PARTIAL",
+        "throttling": "CLAIM_WITHOUT_OWNER_MAPPING",
+        "audit": "CLAIM_WITHOUT_OWNER_MAPPING",
+        "securityRequirements": "COVERED_PRINCIPLE_NOT_ENFORCEMENT"
+      },
+      "rationale": "The article gives good security expectations, but its opening and sequence diagram assign delivery, resend throttling, lockout and audit to OTP without mapping an implemented orchestration path. DefaultOtpService delegates generation/validation to nToken; nOtp contributes numeric generation and expiry configuration. Verification does decrement remaining attempts and deactivate expired/single-use tokens, so it is wrong to call all controls absent. However state updates occur after signaling success/error and are not awaited by that result, so the guide must not imply atomic one-time use or globally enforced abuse ceilings from this source.",
+      "evidence": [
+        {
+          "documentId": "security.otp-security-flow",
+          "anchors": [
+            "securityOtpSecurityFlow-2-flow",
+            "securityOtpSecurityFlow-3-policy-contract",
+            "securityOtpSecurityFlow-4-configuration-behavior",
+            "securityOtpSecurityFlow-6-implementation-handoff",
+            "securityOtpSecurityFlow-7-evidence-checklist"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nOtp/src/service/DefaultOtpService.js",
+        "nodics.foundation/modules/nOtp/src/service/handler/defaultOtpHandlerService.js",
+        "nodics.foundation/modules/nOtp/config/properties.js",
+        "nodics.foundation/modules/nToken/src/service/DefaultTokenService.js",
+        "nodics.foundation/modules/nToken/src/service/pipelines/defaultValidateTokenPipelineService.js",
+        "nodics.foundation/modules/nToken/config/properties.js"
+      ],
+      "sourceFindings": [
+        "OTP generation sets model.type OTP and delegates to DefaultTokenService; numeric handler uses crypto.randomInt with exclusive upper bound and token.OTP.validUpTo seconds.",
+        "Token validation selects active challenge data by key/ops, checks expireAt/value, decrements limit on a wrong value and disables at zero/expiry or after single use.",
+        "The token state update is asynchronous after process.nextSuccess/process.error, with update failures logged; this does not establish atomic consumption across concurrent validations.",
+        "Resend delay, channel dispatch, challenge audit and account lockout need explicit owning enforcement; generic guidance is not proof those are implemented by nOtp."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Document actual nOtp-to-nToken ownership, token.OTP configuration, request identity/purpose keys, expiry and attempt-limit behavior with source-backed examples.",
+        "Label delivery/resend throttling/lockout/audit as implemented by named owners only where a concrete call path exists; otherwise mark required integration/control gaps.",
+        "State the current concurrency/update limitation and require separately evidenced atomic single-use/abuse enforcement before claiming high-risk verification readiness; never include raw codes in evidence."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Communication providers",
+      "backlogPriority": "P1",
+      "requestedAction": "Document SMTP/SMS providers, templates, retry, failed delivery evidence, and extension rules.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "smtp": "COVERED",
+        "sms": "COVERED_WITH_INJECTED_ONLY_LIMIT",
+        "templates": "COVERED",
+        "retry": "COVERED",
+        "failedDeliveryEvidence": "COVERED",
+        "providerExtension": "COVERED"
+      },
+      "rationale": "The guide distinguishes implemented controlled SMTP from injected email/SMS sandbox ports and explicitly refuses a live-certification shortcut. It explains trusted template rendering/frozen intents, recipient/credential safeguards, bounded durable attempts/leases, UNCERTAIN outcomes and explicit operator reconciliation before resend. Retry scheduling is not advertised as an automatic worker, and business-domain completion remains separate from communication delivery. Those are the requested provider, template, retry, failure-evidence and extension explanations, supported by current source rather than just package names.",
+      "evidence": [
+        {
+          "documentId": "communication.provider-runbooks",
+          "anchors": [
+            "communicationProviderRunbooks-1-implemented-modes-and-limits",
+            "communicationProviderRunbooks-3-delivery-sequence",
+            "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+            "communicationProviderRunbooks-9-email-injected-sandbox-mode",
+            "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+            "communicationProviderRunbooks-11-sms-safety-and-limits",
+            "communicationProviderRunbooks-12-customize-and-extend-safely",
+            "communicationProviderRunbooks-13-outcomes-and-recovery",
+            "communicationProviderRunbooks-14-operations-and-troubleshooting",
+            "communicationProviderRunbooks-16-verification-and-joint-acceptance"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.communication/modules/commsCore/src/service/defaultCommunicationRuntimeService.js",
+        "nodics.communication/modules/commsCore/src/service/defaultCommunicationTemplateService.js",
+        "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js",
+        "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js"
+      ],
+      "sourceFindings": [
+        "Communication runtime owns persisted attempt/lease/outcome projection; resolveUncertain requires current expectedRevision, explicit confirmation/reason/operator and MARK_DELIVERED/AUTHORIZE_RESEND/CANCEL.",
+        "Retry uses persisted state and refuses uncertain or exhausted sends; delivery failure does not reset an owning domain operation.",
+        "Template service validates owner-contained resources, declared typed variables, locale fallback, bounded content and safe HTML/URL rendering.",
+        "SMTP has controlled Nodemailer transport plus injected sandbox mode; SMS uses injected transport with bounded UTF-8 text and rejects HTML, not an implemented live carrier."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "The SMS maximumContentBytes prose has a malformed range/list break, leaving its upper bound unclear; repair that small presentation defect against the provider's 65536-byte configuration ceiling. This does not negate the requested implemented-mode/retry/security explanation.",
+        "No emails/SMS were sent and no provider credentials, endpoint behavior, deliverability or signed-in operator flow was accepted in this review."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": null
+    },
+    {
+      "item": "Engagement and contact submission",
+      "backlogPriority": "P1",
+      "requestedAction": "Document contact forms, moderation, workflow, notification, audit, and recovery.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "contactForms": "PARTIAL_NOT_ACTUAL_VERSIONED_CONTRACT",
+        "moderation": "PARTIAL_WITH_CONCEPTUAL_STATES",
+        "workflow": "PARTIAL",
+        "notification": "PARTIAL",
+        "audit": "PARTIAL",
+        "recovery": "NOT_EXPLAINED"
+      },
+      "rationale": "The page correctly separates contact capture from routing and downstream work, but its Submitted/Moderation/Routed/Responded/Closed diagram and simple form fields are not mapped to current request, verification and handoff states. It does not explain capability admission, abuse/idempotency checks, guest verification, versioned form validation or the configured PROCESS handoff. Notification and audit are generic expectations; recovery asks for evidence but omits the implemented lease/backoff/dead-letter/reset/reconcile contract. This leaves operators unable to distinguish a persisted contact request from a failed workflow handoff or uncertain external notification.",
+      "evidence": [
+        {
+          "documentId": "engagement.contact-submission-operations",
+          "anchors": [
+            "engagementContactSubmissionOperations-2-lifecycle",
+            "engagementContactSubmissionOperations-3-data-contract",
+            "engagementContactSubmissionOperations-4-customization-and-extension-guidance",
+            "engagementContactSubmissionOperations-5-implementation-handoff",
+            "engagementContactSubmissionOperations-6-evidence-checklist",
+            "engagementContactSubmissionOperations-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactSubmissionOperationService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactRoutingService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRecoveryService.js",
+        "nodics.engagement/modules/contactSubmission/src/service/defaultContactOperatorService.js",
+        "nodics.engagement/modules/contactSubmission/src/schemas/schemas.js"
+      ],
+      "sourceFindings": [
+        "Submission operation checks the enabled capability, validates form/intake, applies dedupe/protection and guest verification, persists request/routing and creates a separate durable PROCESS handoff.",
+        "Request statuses include VERIFICATION_PENDING/OPEN and operational IN_PROGRESS/WAITING_CUSTOMER/RESOLVED/REJECTED/SPAM/DUPLICATE/ARCHIVED semantics, distinct from handoff PENDING/IN_PROGRESS/SUCCEEDED/RETRY_PENDING/DEAD_LETTER/RECONCILED.",
+        "Handoff recovery claims a lease, applies bounded exponential backoff/attempt ceiling, skips lost claims, allows explicit retry only in supported states and requires an external reference for reconciliation.",
+        "Operator operations retain request history/privacy authority rather than make workflow or Communication the contact-record owner."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Replace or label the conceptual lifecycle and supply actual form/version/request/guest-verification/status examples with owner validation and public-safe outcomes.",
+        "Map moderation/routing decisions, PROCESS instance handoff, notification intent/delivery and contact audit as separate evidence records and authorities.",
+        "Document run/retry/reconcile preconditions, leases/conflicts, nextRetryAt, maximumAttempts/dead-letter escalation and privacy-safe operator recovery without resetting a completed domain submission."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Workflow and BPM source map",
+      "backlogPriority": "P1",
+      "requestedAction": "Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "definitions": "COVERED_IN_PROCESS_GUIDES",
+        "transitions": "COVERED_IN_PROCESS_GUIDES",
+        "tasks": "COVERED_IN_PROCESS_GUIDES",
+        "callbacks": "INCORRECT_PRIMARY_EXAMPLE",
+        "history": "COVERED_IN_PROCESS_GUIDES",
+        "operatorVisibility": "PARTIAL_CROSS_OWNER_MAPPING"
+      },
+      "rationale": "The related Process lifecycle/action-adapter guides explain real versioned definitions, instances, human tasks, history, scheduled triggers and bounded adapters; they deserve substantive credit. The nbpm-owned source-map article only links those pages and does not identify exact nbpm coordination versus Process implementation services or their current definition contracts. Its transition example calls DefaultCmsPublicationWorkflowCallbackService.afterApprove, which is not the inspected publication-decision implementation. A conceptual callback string must not be presented as executable owner configuration.",
+      "evidence": [
+        {
+          "documentId": "process.workflow-bpm-source-map",
+          "anchors": [
+            "processWorkflowBpmSourceMap-1-source-map",
+            "processWorkflowBpmSourceMap-2-workflow-model",
+            "processWorkflowBpmSourceMap-3-contract",
+            "processWorkflowBpmSourceMap-5-implementation-handoff",
+            "processWorkflowBpmSourceMap-6-evidence-checklist"
+          ]
+        },
+        {
+          "documentId": "process.runtime-lifecycle",
+          "anchors": [
+            "processRuntimeLifecycle-2-definition-lifecycle",
+            "processRuntimeLifecycle-3-starting-an-instance",
+            "processRuntimeLifecycle-4-task-lifecycle",
+            "processRuntimeLifecycle-5-instance-detail-and-audit",
+            "processRuntimeLifecycle-6-scheduled-triggers"
+          ]
+        },
+        {
+          "documentId": "process.action-adapters",
+          "anchors": [
+            "processActionAdapters-1-safe-default",
+            "processActionAdapters-2-what-is-not-allowed",
+            "processActionAdapters-5-adapter-operating-contract"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js",
+        "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js"
+      ],
+      "sourceFindings": [
+        "nbpm DefaultWorkflowService dispatches workflow initialization locally or through DefaultModuleService with PROCESS target authority; it is not the canonical human-task definition store.",
+        "Process definition lifecycle owns versioned publication/validation and exact acknowledged mutation semantics; runtime lifecycle owns instances/tasks/history.",
+        "Publication decision callback validates configured target/context, uses service authentication and idempotency identity to call the owning publication decision API; it does not directly edit CMS data or replace human approval."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add an exact two-owner map for nbpm dispatch, Process definitions/versions/runtime/tasks/history, action adapters and CMS/nPublish decision execution.",
+        "Replace the invented callback example with the actual supported Process definition/action-adapter/decision contract or clearly label non-executable pseudocode.",
+        "Reference existing Process sections by exact anchors and describe callback failure/retry/history and operator visibility without creating another workflow authority."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Cron job data authoring",
+      "backlogPriority": "P1",
+      "requestedAction": "Document job records, schedules, execution policy, retry, idempotency, and Process server ownership.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "jobRecords": "INCORRECT_EXAMPLE",
+        "schedules": "PARTIAL",
+        "executionPolicy": "PARTIAL",
+        "retry": "UNSUPPORTED_EXAMPLE_POLICY",
+        "idempotency": "PARTIAL",
+        "processServerOwnership": "COVERED_PRINCIPLE"
+      },
+      "rationale": "The guide recognizes Process/Cron ownership and data-versus-execution separation, but its record example uses cronExpression/targetService/targetOperation/retryPolicy fields that the current cronJob schema/runtime does not consume. It omits required runOnNode, trigger and start fields and the jobDetail target contract. Thus the promised three-attempt retry is not supported by that record. Merely describing idempotency and a fresh-schema check does not make the example runnable or explain tenant/node admission, lifecycle state, trigger-to-Process authority and safe schedule recovery.",
+      "evidence": [
+        {
+          "documentId": "process.cronjob-data-authoring",
+          "anchors": [
+            "processCronjobDataAuthoring-2-data-shape",
+            "processCronjobDataAuthoring-3-header-contract",
+            "processCronjobDataAuthoring-4-runtime-behavior",
+            "processCronjobDataAuthoring-5-customization-and-extension-guidance",
+            "processCronjobDataAuthoring-6-implementation-handoff",
+            "processCronjobDataAuthoring-8-verification"
+          ]
+        },
+        {
+          "documentId": "process.runtime-lifecycle",
+          "anchors": [
+            "processRuntimeLifecycle-6-scheduled-triggers"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.process/modules/cronjob/src/schemas/schemas.js",
+        "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobRuntimeService.js",
+        "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleDraftService.js"
+      ],
+      "sourceFindings": [
+        "cronJob schema requires runOnNode, trigger and start; runOnInit defaults false, jobDetail supports processTrigger/startNode/internal/external, and execution status differs from scheduler state.",
+        "Runtime job creation validates tenant/node/trigger/date admission and owns per-tenant scheduled work; source bookkeeping does not implement a generic retryPolicy.maximumAttempts from the example.",
+        "ScheduleDraftService requires scoped verified human lifecycle permission and deployment-approved target allowlists, and inserts inactive schedule intent rather than immediately acquiring work."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Replace the job/header example with exact schema-valid fields and trigger/jobDetail shape from current Cron source; explain defaults and scheduler versus execution states.",
+        "Remove unsupported retryPolicy promises; document actual supported failure handler, explicit retry/recovery and owner-operation idempotency with no global exactly-once claim.",
+        "Show Process target/runtime/node/tenant admission, inactive draft review versus activation, concurrency acknowledgements and safe pause/deactivate recovery."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P0"
+    },
+    {
+      "item": "Release and upgrade compatibility",
+      "backlogPriority": "P1",
+      "requestedAction": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "versionFreeze": "COVERED_PRINCIPLE",
+        "upgradePath": "PARTIAL_FRESH_INSTALL_BIASED",
+        "rollback": "PARTIAL",
+        "checksumDrift": "PARTIAL",
+        "generatedManifestPolicy": "PARTIAL",
+        "customerExtensionCompatibility": "COVERED_DETAIL"
+      },
+      "rationale": "The guide preserves immutable versioned release principles and has meaningful code/contract compatibility, schema keyword, security and member-origin sections. Its upgrade flow is still a checklist to validate/import/publish against a fresh schema rather than an installed-version worked upgrade, and rollback is a generic restoration requirement. It does not explain the actual same-version checksum rejection, downgrade/development-baseline policy, retained-root forward release or why updating a generated manifest cannot legalize changed frozen bytes. These are source editorial gaps independent of deployment or provider acceptance.",
+      "evidence": [
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "anchors": [
+            "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+            "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+            "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+            "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+            "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+            "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+            "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+        "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js"
+      ],
+      "sourceFindings": [
+        "validateUpgradePolicy rejects non-development same-version checksum drift and disallowed downgrades; version 0.0.0 is an explicit mutable development baseline.",
+        "Project manifest tooling distinguishes development checksum refresh from planForwardRelease/retainedRoots and rejects rewriting immutable release files.",
+        "Effective member origins/override histories explain loaded compatibility but do not validate customer behavior, existing data migration or a deployed release.",
+        "Publication rollback is owner-provider restoration of a retained Online version, not a generic undo of code, data import or destructive migration."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Add a worked installed vN-to-vN+1 upgrade with exact selection/status/checksum/target receipts and a separate development-baseline example.",
+        "Explain same-version drift versus new forward release, downgrade policy, retained immutable roots and generated-manifest ownership; never recommend refreshing frozen hashes to hide edits.",
+        "Provide rollback decision boundaries for Online pointers, code/configuration and imported/migrated data, including irreversible operations and preserved customer extension contracts."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P1"
+    },
+    {
+      "item": "Internal-only classification register",
+      "backlogPriority": "P2",
+      "requestedAction": "Decide which technical modules remain internal and which broader page owns their explanation.",
+      "disposition": "OPEN_CONTENT_GAP",
+      "requestedExplanationSatisfied": false,
+      "coverage": {
+        "internalOnlyDecisions": "PARTIAL_NOT_INVENTORY_COMPLETE",
+        "broaderOwnerMapping": "PARTIAL_NO_EXACT_SECTION_OR_REASON",
+        "sourceBasedClassification": "NOT_ESTABLISHED_BY_SCORE"
+      },
+      "rationale": "The register has useful Discovery/Payment mappings and states the right requirement for a broader owner and per-boundary reason. Its actual table supplies only paths and page IDs, without that reason, exact explanatory anchor or provider maturity; it also mixes sibling Kickoff environments into a framework-default scope. Current low-score inventory includes additional Discovery, Loyalty, Rules, Communication and Waste modules not explicitly decided there. An audit mention or score cannot close those decisions, and this review does not certify all 179 mention-based modules as deep coverage.",
+      "evidence": [
+        {
+          "documentId": "reference.internal-source-boundary-register",
+          "anchors": [
+            "referenceInternalSourceBoundaryRegister-2-classification-flow",
+            "referenceInternalSourceBoundaryRegister-3-register",
+            "referenceInternalSourceBoundaryRegister-4-classification-contract",
+            "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+            "referenceInternalSourceBoundaryRegister-8-verification"
+          ]
+        },
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-2-boundary-model"
+          ]
+        },
+        {
+          "documentId": "communication.provider-runbooks",
+          "anchors": [
+            "communicationProviderRunbooks-1-implemented-modes-and-limits",
+            "communicationProviderRunbooks-10-sms-injected-sandbox-configuration"
+          ]
+        },
+        {
+          "documentId": "commerce.search-guide",
+          "anchors": [
+            "commerce-search-guide-source-depth-1"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.docs/scripts/audit-source-coverage.mjs",
+        "nodics.discovery/modules/discoveryMapping/package.json",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+        "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js"
+      ],
+      "sourceFindings": [
+        "Audit classify uses mention matches and source-volume scores for triage; coverageBasis separately distinguishes validated-source-sections and owner-reviewed-reference.",
+        "Card method preparation and Stripe offline execution have different contracts/maturity even though both map to Payment; a single parent ID does not explain that distinction.",
+        "SMS is an injected sandbox provider with a real configuration/recovery contract and is low-score despite substantive operator documentation.",
+        "Low-score inventory contains discoveryRanking/discoverySource, loyaltyProgram/Redemption/Reservation/RewardType, rulesCore, wasteApi/wasteReward/wasteRecycling, commsVerification/localCommsProvider/engagementComms and other entries requiring explicit owner decisions, not automatic internal-only labeling."
+      ],
+      "correctnessAndCoverageLimitations": [],
+      "remediation": [
+        "Reconcile the register with the framework-scoped inventory: per module record internal-only versus broader-guide decision, rationale, canonical owner/document/anchor, real non-data source and maturity/remaining gap.",
+        "Keep framework and customer-environment classifications separate; link project-owned deployment guidance rather than count sibling presence as framework semantic closure.",
+        "Retain already owner-reviewed mappings and promote actual configuration/public-API/operator boundaries where needed; do not create one public page per package or turn 179 mention matches into deep-coverage claims."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": "P2"
+    }
+  ],
+  "sourceFileSha256": {
+    "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "a82b1c70e5de05cf0c5d3e7311e8535a4bab996745fb69303bef90a584bc829b",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1",
+    "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js": "94b9b20470c1144e65ab0f6bdda35bbc8ecc8664d00ffc3b27732b712cefbbd8",
+    "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryCacheInvalidationService.js": "09fdbec5c3caa887f933ec1b650a76c0a9c7ef005fe112f895d1775c0e6818df",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js": "e42b73b47141d3a81765be6c7544ebc8dfa2940adecf5ebbcc3f9afc1b9e2958",
+    "nodics.wcms/modules/cms/src/service/migration/defaultCmsMigrationService.js": "aff50eda379674751597679a57bcfc4ea336dc8f02eed7ca6a9169986e9fffd7",
+    "nodics.wcms/modules/cms/src/service/documentation/defaultCmsDocumentationGovernanceService.js": "32d1ffb6d06f5e0fd64b8503248ae0d5efdba865483b672768136933907da02b",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js": "7f13c7062844cf966c7d360607e14a6f6999d5d53d70a8103fade7d436a70076",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaUploadService.js": "339eb2a87650cdbeaa2fd19528b1ba401027ae206debd17a1fc950f39188a584",
+    "nodics.foundation/modules/nData/nImport/import/src/service/media/defaultMediaReleaseAssetHydrationService.js": "fbbef12595e01e6b78d59ce2995530ea46fab2361d3646bb7b1c3c4a77a17874",
+    "nodics.wcms/modules/media/src/service/storage/provider/defaultCloudMediaStorageProviderService.js": "0c28f03d05e0ee7856d25a1776258b03d61bf83d33af3d786524bcadea89deb0",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaCleanupLifecycleService.js": "539e603f8687a10727c16fc2484c38fc31aa940bc9b6d0f42ebc7c307612e08e",
+    "nodics.wcms/modules/media/src/service/storage/defaultMediaLifecycleCoordinationService.js": "0767f5d50f96cec53498ca50de57bb37873a443637e65bfa496c1fd9d05938de",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTransferService.js": "f2e5c5bd8128fc92d9975c135d5c0e5c9ac089fc83009e58de844fbaf70d9c9c",
+    "nodics.foundation/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService.js": "9008fbb9e34620162576b6cf5ff6d308db86a9858ff5bd76c4aec490e984292a",
+    "nodics.foundation/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService.js": "9fccac9c928a42536e8e531239b1648e3ecd3e91b50961e2f8d695bf682e7c7b",
+    "nodics.foundation/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService.js": "6db5f614512ac70e9e7dd3a6d91d34ee4b97ee32d1d9afea9905eed4b2c9c660",
+    "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js": "e51088c4dfe34366a347e11e22d0f2c2979128ba1136e77b7a9072611267bdf9",
+    "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js": "4cc3e29444502ce4e670625c90c004cba33f4430cd9bc27ab84744e1c70198cd",
+    "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js": "fe5af5c5a583bc34f98d062dab3f61e3826f043969b775bd022b355eb047487a",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js": "2b7f151865e2ffdfdf6367e7f67cb04d33793521d4d23d8df49dc2271f99a18d",
+    "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js": "ccceb1a3435222922eb24b97b597fbc3274c7301e612429a4f94ae9b69a4872b",
+    "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js": "7a4c4403548396f5749baf9c9ed2c6d8bd7b2fbe6a467c9683b13fec8d6f3741",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
+    "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "12b6adbbe3253341324c64689d0138b026f6d4f307f7465c349bcd8993488678",
+    "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "406446bfd139172108ebf8f41598b0460ba03f1e0c875706cb64f3d0d40a83c6",
+    "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js": "350e200059cd7ccdbaf92f32700d0afaa51d4f210b2a01f85bbb0f69c6d94f24",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js": "d10fe0556198bf13ae502103d282028d18b19fb33a72401d14232e4f7a90ae06",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js": "03ad3aa2c914e3f3fd3a0940b122b3c956e0e8dddae7e19f7c127680caff7b24",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js": "a14b9eec909b350847c321a4b9fcc88e89310c12e9c6d938eb151a577ac9fbf3",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js": "2e031108e1c4044f4e6ffb0998b7b91545054d2101d6e09caa99dfae9104041c",
+    "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js": "27bd59b64b2c0b09ae88013d0f7d26d613c90cda1560f5e55acbdc0561742c28",
+    "nodics.localization/modules/localizationApi/src/router/routers.js": "d04ffcf0db95e0c4758a3b44c9f3b10e80386029040c758d44e6ae31a3ee03bc",
+    "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js": "f4103e4ba53736843d81072b916436d20308f4579eb751ad7c0761e93d13ed5e",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js": "fcc0b54f9e034d013bb200821ee3cf3df685ba2da5b002ec0c434974e733fb04",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js": "32c96ebdf484adce5be2cdf32df02e2249d8746c6b5c8a3abebb12af9326574e",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js": "7d3ace5bafb4679b6f4609dd55ef19d2229ae8bbf5f80b513fa6125ba84ef238",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js": "45fdcd1f4b182c083c2644af30b65d80a726e7dcd8ae17c4d0003370a963cda2",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js": "80b87cb3a76668b290c83688cc8f6e095e782279ba46997d4a69f62279962cbf",
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js": "1e3725794649b34cc17bbd3a53f8878b5facd7b08cdd874552911871f1c54a91",
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js": "42f3d84587f5fd781498bbd6f0f088ac6d8663b8f9097ed83f2a0e88cc400a71",
+    "nodics.commerce/modules/baseCommerce/modules/shoppingList/src/controller/defaultShoppingListCustomerController.js": "64c5f64215227937599197017be15aee55243e9424ef7601c610a7dea33c8f40",
+    "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js": "7448fb8528bd3e1dc6ccd67ec95e2c0346e254b83520a9b20a5ea8e00c3e8a27",
+    "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js": "c6e770e91319c3cf6a5b9b621dfa73c92a35adf67838e2e5b1742b7bb3a58331",
+    "nodics.foundation/modules/nNms/src/router/routers.js": "0ab4c670f6b5f1b552e17eb321936829ecfae6ec99a1c1aa7201a547b0c10733",
+    "nodics.foundation/modules/nNms/config/properties.js": "2c306fbdda9bf716f4aeb1c021993aace542b9195ebecbdd3737ab3677e2f99e",
+    "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js": "58047c2664c51d479083450197cd3ab763486838427715d939fdbc1a4b649e56",
+    "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+    "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
+    "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
+    "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js": "26368b14b5b4924421bc6177ac107ce9c48ed189f58a74fa74cf4a9f122582d8",
+    "nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService.js": "5b39818cb226a87f95ff7ba613bded7b212075448ae028a0fdcb2454c7723583",
+    "nodics.foundation/modules/nCache/cache/src/service/engine/defaultCacheEngineService.js": "4cc82ba9f4b1939789f3f2c2de4fea3d4e8fb7a43ed8b20c01982337d20db620",
+    "nodics.foundation/modules/nCache/nodeCache/src/service/cache/defaultLocalCacheService.js": "b72d76897f80e06025fcddd113768db53324a1b801df94f38a1d78b11f413ab8",
+    "nodics.foundation/modules/nCache/hazelcastCache/src/service/cache/defaultHazelcastCacheService.js": "3a755789dde463a4020339f18366cf0eeaf3ca188b5ed44d659706f076626065",
+    "nodics.foundation/modules/nCache/redisCache/src/service/cache/defaultRedisCacheService.js": "f164af3d81ea947a28682d615cedd0ef9309bba20cc8e0ce4afe6985ff0a904e",
+    "nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService.js": "45ee5962095ba2dfa06d75991b6b7807c197f620823087242c9bd837e6d09668",
+    "nodics.foundation/modules/nDatabase/mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService.js": "f1ed03653b6650144737d6b44e0d3d09c3fa97d49f2dad7b4a15a26cff3533a8",
+    "nodics.foundation/modules/nDatabase/mongodb/src/service/model/defaultMongodbDatabaseModelHandlerService.js": "2a02c04ea34b5a7bc025abbd89ff42bb75913a272208d8c504ebe0e12a05ac58",
+    "nodics.foundation/modules/nDatabase/database/vDatabase/src/schemas/schemas.js": "0433213dd8cb86cd3f5f70c9caa789a7be217022d8c1256a82896e7c87f2456f",
+    "nodics.foundation/modules/nDatabase/database/vDatabase/src/service/interceptors/defaultVersionIdHandlerInterceptorService.js": "69c1d2b4a7d19885561e36b82648df569a385b567bf4fab553372e5a02440ed6",
+    "nodics.foundation/modules/nDatabase/cassandradb/config/properties.js": "265c951a9ad5d37706902780f14d238c9c1b324647a96bf2c56f81e94077b6c0",
+    "nodics.foundation/modules/nDatabase/elasticdb/config/properties.js": "472346e77a7f94c24e64bf3668f5515300bbed992388495aac8753691981d123",
+    "nodics.foundation/modules/nOtp/src/service/DefaultOtpService.js": "7dcca1196faa28b4086029eac06a8d2db805a77fd0338047996248f842e60e55",
+    "nodics.foundation/modules/nOtp/src/service/handler/defaultOtpHandlerService.js": "f76742eaf3da03975eaca5e4f19a39c73b0f9258c1458fe750f29957c58248c6",
+    "nodics.foundation/modules/nOtp/config/properties.js": "09e7e8f8a486c31b198ab4fc27e87ae226a842054b63ef81e4e74b6a5ee4666a",
+    "nodics.foundation/modules/nToken/src/service/DefaultTokenService.js": "65f70e60a0f5ceef1898d6d24e5462f5b4b2fff6de261e6376e26b62aba2f9c6",
+    "nodics.foundation/modules/nToken/src/service/pipelines/defaultValidateTokenPipelineService.js": "804ab997383dc8eb581b27ea3fd59a108be1320eb26ef32ee85928d10ce8419f",
+    "nodics.foundation/modules/nToken/config/properties.js": "64211c73b0277595fcf10d4291e31418e29373d472e7a775da55ab8a2eaaedd8",
+    "nodics.communication/modules/commsCore/src/service/defaultCommunicationRuntimeService.js": "4251e5a6a50604a3572190e52689f4fb9869d56ef76e25ab9759a0c7985db28e",
+    "nodics.communication/modules/commsCore/src/service/defaultCommunicationTemplateService.js": "f199879a8400080f83fade094f31a3a11a9276bb37e42e0a03935beb7a86ae5c",
+    "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js": "0d957ed6e175e06164c608dd7f6713d32a0bdb7b8ee45ab3ca29ced402437d84",
+    "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js": "669ec9adde7acafcfbc3cc12ecebb117e1560d1dde2e1f287412da56b0e0d1ed",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactSubmissionOperationService.js": "0595ea5aeb87b7206f7bc7f5c0561e2a556e53a2c934502c027e6968873f0513",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactRoutingService.js": "aa82a1ad4a31e106d4794a79f7cf3e9fdb87fc03219a0f6fff7c241d4d103930",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRecoveryService.js": "cc39324f4aa72d70215013156882335f423238822befdb31fe4d48bcd01888dc",
+    "nodics.engagement/modules/contactSubmission/src/service/defaultContactOperatorService.js": "103147e012208f44fd3567ca2da83cb911972de4a0d2fb7e47eb0b37b50dc8cc",
+    "nodics.engagement/modules/contactSubmission/src/schemas/schemas.js": "d4afedcff636529f003a2955ee18f9759bffcc7e61a3ad46172211ba25f562c7",
+    "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js": "ae3010057215a7936f39293402028fddc84c08199aff644a844257dfd0a367dc",
+    "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js": "c2fd2ae6a1c208951e2b60aaedd96c705b61bbdd5c9230eb7856344e1d422482",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js": "a17dc3de5c1e0cf2da23fd094c008a31f58837215020b2592ac38dfeb15096ff",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js": "c98c0a6c4a2c66211257b0cc3a3f290eca50e999cd510bb6d966f2151d73021d",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js": "306a3bb3858f799184852f49ae0ba6e3188579f744cd0a2889005560f38744cd",
+    "nodics.process/modules/cronjob/src/schemas/schemas.js": "665cfbdbbbfef05f99e0c4853410c5586ae57913fb7942b49a17f8da7f241525",
+    "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobRuntimeService.js": "4709cc35631842fb7a422c1f913346add326da06a5e24373b9c84aff4fefd224",
+    "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleDraftService.js": "89a707ec51f610704cb1b353035b9d7070d8b32e03be6a83c668d4c704a71992",
+    "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "f3f67872ae2434dfa21366305cb8e599ed74c74274f5668b1de08e4591121d91",
+    "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+    "nodics.docs/scripts/audit-source-coverage.mjs": "eac1577aad1ed6693484466aa7b0d5fdfd49c853db412c161891e9649a627098",
+    "nodics.discovery/modules/discoveryMapping/package.json": "55599977e8f5d3a50269a7ef161cb94ac468562394457e32db70fbd83a86b556"
+  },
+  "integrationNotes": [
+    "Consume each exact item/disposition independently. Do not close all backlog entries because the catalogue loads, a source map names a module, or validation passes.",
+    "Fix residual content in its implementing owner's existing canonical CMS guide, then refresh this review for changed articleBlocksSha256 or sourceFileSha256 inputs before claiming semantic closure.",
+    "Passes are Module Registry journey, Shopping List Commerce boundary (requested ownership explanation), and Communication providers. Nonblocking adjacent example/presentation limitations are explicitly retained, not silently certified.",
+    "Parent integration may repair content after this snapshot; re-review the listed concerns rather than treating this artifact as evergreen approval.",
+    "Browser/live gates may stay separately open even for PASS_SOURCE_REVIEW. No approval actors, deployed versions, provider certifications or acceptance results are invented."
+  ]
+}

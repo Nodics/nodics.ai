@@ -92,6 +92,51 @@ supplies settlement acknowledgements; Waste never writes wallet balances. The
 former digital owner is restored only after the payment refund completes, and
 the original ownership event remains unchanged.
 
+## Original Digital Sale Refund
+
+The same reversal owner exposes `digitalEligible`, `digitalState`,
+`prepareDigital`, `settleDigital` and `completeDigital` to the secured domain
+coordinator. These are private service operations, not generated CRUD routes or
+new financial authority. eWaste must first verify the exact original Order
+approval and retained before-onward-transfer policy, then supply an immutable
+command containing original sale, asset, entitlement, buyer, case, approval key,
+capture and seller earning. See [the domain contract](../../../../../nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/digital-ownership-sale.md#original-sale-refund).
+
+Only active SOLD assets still held by the exact original buyer, with unchanged
+digital owner, original last-transfer/timestamp and no competing lock qualify.
+Use the transfer owner's inspected unique identity, CAS and exact readback.
+Asset metadata retains `pendingRefundCode/pendingRefundEvent` before inserting
+the linked REVERSAL event, so interrupted insertion recovers the original model.
+The original SELL event remains unchanged. The reversal retains the exact
+command, original physical owner/custody snapshot, seller reversal and Payment
+refund references under `metadata.digitalRefund`; none is a caller success flag.
+
+SETTLE retains only the owner-verified reversal of the sole original seller EARN.
+COMPLETE requires owner-verified original buyer Payment refund, restores owner
+and digital owner to the original seller under LOCKED, marks the linked event
+COMPLETED, then clears only that refund's lock to OWNED. Interrupted steps resume
+from exact owner readback. A failed/uncertain financial write never unlocks or
+re-lists the asset. Changed custody, onward transfer, foreign command/reference,
+missing CAS or malformed owner evidence refuses. Waste never debits/refunds a
+wallet, alters physical custody, rewrites original approval rewards or claims a
+cross-owner transaction. Source fixture coverage lives in eWaste's existing
+`eWasteDigitalOwnershipBridge.test.js`; installed/native qualification is separate.
+
+## Refunded Unfenced Reservation Cleanup
+
+The existing transfer owner supports
+[strict refunded-reservation cleanup](../../../../../nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/digital-ownership-sale.md#refunded-unfenced-reservation-cleanup),
+not completed-sale reversal. Only original RESERVED without capture/settlement
+fences qualifies. `digitalCompensationState` checks exact command, tenant/owner,
+asset lock, custody and revisions. `fenceDigitalCompensation` CAS-writes
+CANCELLED/FENCED, retaining the asset lock and preventing fresh/stale capture.
+After eWaste proves original full refund and successful entitlement/seller-EARN
+absence, `completeDigitalCompensation` persists bounded absence audit,
+CAS-clears only that lock to LISTED without owner/custody changes, then records
+COMPLETED. Lost acknowledgements recover only through exact readback. Original
+replay cannot clear a later lock; changed proof/revisions/custody or captured/
+settling state refuses. No financial execution, route or permission is added.
+
 ## Composed business navigation
 
 `waste-operations` is the stable Waste Management anchor owned by `wasteCore`. It contains the three generic operational views. Domain subgroups must attach with `parentModuleName: wasteCore`; the contributor retains ownership. Generic keyed view defaults are under `waste.reviewWorkspace.views`. Core must not declare Electronics, Clothing or future accelerator views. Native renderer dispatch comes from the validated `backendWorkspace` contract; configuration routes keep real schema-workbench targets.

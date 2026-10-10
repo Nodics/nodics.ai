@@ -1,6 +1,6 @@
 # Workflow Trigger Commands
 
-Read the canonical [operator, configuration and customization guide](../../../../../nodics.docs/docs/pages/nodics.copilot/process-trigger-actions.md).
+Read the canonical [operator, configuration and customization guide](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js).
 
 The existing Conversation review accepts `process.trigger.create`, `.update`,
 `.archive` and `.execute`. These are four fixed Workflow routes, not an arbitrary

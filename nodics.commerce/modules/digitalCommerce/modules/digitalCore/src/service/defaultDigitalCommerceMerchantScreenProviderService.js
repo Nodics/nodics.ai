@@ -14,6 +14,11 @@
 module.exports = {
   /** Acknowledges the persisted staff instruction without claiming an external POS transaction occurred. */
   confirm: async function (request, redemption) {
+    if (redemption.pricedBenefit?.benefitType === "ITEM") {
+      const provider = SERVICE.DefaultDigitalCommerceItemMerchantProviderService;
+      if (!provider?.confirm) throw new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID");
+      return provider.confirm(request, redemption);
+    }
     if (
       redemption.pricedBenefit ||
       CONFIG.get("promotion")?.merchantBenefits?.enabled === true

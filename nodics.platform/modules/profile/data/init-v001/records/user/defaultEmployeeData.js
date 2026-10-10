@@ -56,32 +56,6 @@ module.exports = {
     addresses: ["defaultEmployeeAddress"],
     contacts: ["defaultEmployeeContact"],
   },
-  record1: {
-    code: "apiAdmin",
-    active: true,
-    name: {
-      title: "Mr.",
-      firstName: "apiAdmin",
-      lastName: "Employee",
-    },
-    loginId: "apiAdmin",
-    password: {
-      loginId: "apiAdmin",
-      password: bootstrapIdentity.servicePassword,
-      active: true,
-    },
-    apiKey: bootstrapIdentity.serviceApiKey,
-    apiKeyScopes: [
-      "auth.internal.token.read",
-      "auth.internal.token.read.anyTenant",
-    ],
-    apiKeyStatus: "active",
-    identityMigrationVersion: 5,
-    principalType: "service",
-    userGroups: ["serviceAccountUserGroup"],
-    addresses: ["defaultEmployeeAddress"],
-    contacts: ["defaultEmployeeContact"],
-  },
   record2: {
     code: "contentCreator",
     active: false,

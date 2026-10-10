@@ -17,6 +17,22 @@
  * @override Projects may replace request mapping while retaining lifecycle permissions, optimistic revision, tenant, and audit contracts.
  */
 module.exports = {
+    /** Maps an explicit bounded publication setup plan to its existing owner without approval authority. */
+    setup: function (operation, request, callback) {
+        const promise = Promise.resolve().then(() => SERVICE.DefaultPublicationSetupService[operation](request, request.httpRequest?.body));
+        if (!callback) return promise;
+        promise.then(result => callback(null, { code: 'SUC_PUB_00000', result })).catch(callback);
+    },
+    /** Reads setup readiness without publishing. */
+    setupStatus: function (request, callback) { return this.setup('status', request, callback); },
+    /** Requests normal domain approvals for missing setup roots. */
+    setupSubmit: function (request, callback) { return this.setup('submit', request, callback); },
+    /** Observes one reviewed exact stage with signed deployment authority, never human setup authority. */
+    setupObserve: function (request, callback) {
+        const promise = Promise.resolve().then(() => SERVICE.DefaultPublicationSetupObservationService.observe(request, request.httpRequest?.body));
+        if (!callback) return promise;
+        promise.then(result => callback(null, { code: 'SUC_PUB_00000', result })).catch(callback);
+    },
     /** Rejects publication mutation on delivery-only runtimes and normalizes bounded request input. */
     prepare: function (request) {
         let body = request.httpRequest && request.httpRequest.body || {};

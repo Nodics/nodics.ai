@@ -10,6 +10,20 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+Local offline reset is a separate held-client contract, owned by loader-visible
+`DefaultElasticLocalResetMaintenanceService` under `src/service/maintenance`.
+The connection owner exports only `openLocalResetMaintenance(request)` delegation.
+Preserve sorted exact names, initial UUID pins, standalone cluster/node/PID/socket
+identity, one exact index per request, zero retries/sniffing and finite timeouts.
+Require 1..128 names of at most 200 characters under the exact lowercase
+environment plus underscore prefix; foreign/system/empty selections fail closed.
+Native acknowledgement followed by exact typed absence is required; originally
+absent names never delete and return `alreadyAbsent: true`. Post-acknowledgement
+failure preserves only `acknowledged: true` and the exact `index`, never an absence
+claim. Sanitize all failures and close failed holds. Tooling owns independent
+process/socket writer exclusion, uncertainty accounting and post-verification
+search cache invalidation. Never add CLI client adapters or cache operations here.
+
 Legacy erasure uses the existing index-retirement owner and connection. Qualify
 only an explicitly exhaustive API-key-only historical writer inventory whose
 keys the provider still reports invalidated, with automatic index creation off.

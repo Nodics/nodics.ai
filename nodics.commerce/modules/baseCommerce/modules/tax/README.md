@@ -1,5 +1,10 @@
 # Tax
 
+Independently prepared Stores may select exact retained policy roots through
+`publication.delivery.rootCodesByStore`. See
+[Store-scoped delivery](llm/contracts/tax-lifecycle-and-publication.md#publication-qualification-boundary);
+selection is not publication or acceptance evidence.
+
 Tax is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).

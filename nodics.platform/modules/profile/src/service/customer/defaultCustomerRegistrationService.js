@@ -32,23 +32,43 @@ module.exports = {
       )
     )
       throw new CLASSES.NodicsError("ERR_PROFILE_MEMBERSHIP_FORBIDDEN");
+    return this.readActiveRegistrationPlacement(
+      metadata.tenant,
+      metadata.enterpriseCode,
+    );
+  },
+  /** Reads exact active Enterprise/Tenant placement for ordinary and imported signup independently of optional eligibility. @param {string} tenant Trusted target tenant. @param {string} enterpriseCode Trusted mapper or admitted import target. @returns {Promise<Object>} Fresh existing placement. */
+  readActiveRegistrationPlacement: async function (tenant, enterpriseCode) {
+    if (
+      [tenant, enterpriseCode].some(
+        (value) =>
+          typeof value !== "string" ||
+          !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value),
+      )
+    )
+      throw new CLASSES.NodicsError("ERR_PROFILE_MEMBERSHIP_FORBIDDEN");
     const owner = SERVICE.DefaultEnterpriseManagementService;
     if (typeof owner?.retrieveEnterpriseForAccess !== "function")
       throw new CLASSES.NodicsError("ERR_PROFILE_MEMBERSHIP_UNAVAILABLE");
-    const placement = await owner.retrieveEnterpriseForAccess(
-      metadata.enterpriseCode,
-    );
+    const placement = await owner.retrieveEnterpriseForAccess(enterpriseCode);
     if (
-      placement?.enterprise?.code !== metadata.enterpriseCode ||
+      placement?.enterprise?.code !== enterpriseCode ||
       placement.enterprise.active !== true ||
-      placement.tenantCode !== metadata.tenant ||
-      placement.enterprise.tenant?.code !== metadata.tenant ||
+      placement.tenantCode !== tenant ||
+      placement.enterprise.tenant?.code !== tenant ||
       placement.enterprise.tenant.active !== true
     )
       throw new CLASSES.NodicsError("ERR_PROFILE_MEMBERSHIP_FORBIDDEN");
     return placement;
   },
-  /** Admits explicit active Customer signup placement only after configured eligibility-owner read-only readiness; unrelated Profile operations retain their existing admission. @param {Object} metadata Immutable release-header target selection. @returns {Promise<boolean>} Positive true only after placement and readiness validation. */
+  /** Selects optional ordinary-customer eligibility from trusted layered Profile configuration; missing or malformed selection never disables enforcement. @returns {boolean} Whether signup requires an authoritative decision. */
+  customerRegistrationRequiresEligibility: function () {
+    const enabled = CONFIG.get("profileCustomerEligibility")?.enabled;
+    if (typeof enabled !== "boolean")
+      throw new CLASSES.NodicsError("ERR_PROFILE_ELIGIBILITY_CONFIGURATION");
+    return enabled;
+  },
+  /** Admits explicit active Customer signup placement and, when enabled, configured eligibility-owner read-only readiness; unrelated operations retain existing admission. @param {Object} metadata Immutable release-header target selection. @returns {Promise<boolean>} Positive true after required checks. */
   validateImportTarget: async function (metadata) {
     if (
       metadata?.moduleName === "profile" &&
@@ -56,6 +76,7 @@ module.exports = {
       metadata.operation === "signUpAll"
     ) {
       await this.readImportRegistrationPlacement(metadata);
+      if (!this.customerRegistrationRequiresEligibility()) return true;
       const name = (CONFIG.get("profileCustomerParticipation") || {})
         .eligibilityService;
       const owner =
@@ -141,6 +162,7 @@ module.exports = {
       request.enterprise?.code || request.authData?.entCode;
     if (!enterpriseCode)
       throw new CLASSES.NodicsError("ERR_PROFILE_MEMBERSHIP_FORBIDDEN");
+    await this.readActiveRegistrationPlacement(request.tenant, enterpriseCode);
     return { tenant: request.tenant, enterpriseCode };
   },
   /** Pins import provenance for an awaited batch so admission loss cannot fall back to actor placement; cleanup never survives completion or failure. @param {Object} request Exact batch request. @param {Function} operation Awaited batch callback. @returns {Promise<*>} Original result. */
@@ -1435,33 +1457,42 @@ module.exports = {
     }
   },
   /**
-   * Updates customer information.
+   * Persists a registered Customer after fresh active placement and optional
+   * configured eligibility admission; never creates Employee membership.
    *
-   * @param {*} request Method input.
-   * @param {*} response Method input.
-   * @param {*} process Method input.
-   * @returns {*} Method result.
+   * @param {Object} request Registration pipeline request and generated Customer service.
+   * @param {Object} response Pipeline response populated with the save result.
+   * @param {Object} process Pipeline success/error callbacks.
+   * @returns {void} Completes through callbacks after owner checks and persistence.
    */
   createCustomer: function (request, response, process) {
     // The registration pipeline resolves placement before credential creation.
-    const gate = this.resolveRegistrationPlacement(request).then((placement) =>
-      this.enforceCustomerEligibility(request, {
+    const gate = this.resolveRegistrationPlacement(request).then((placement) => {
+      if (!this.customerRegistrationRequiresEligibility()) return null;
+      return this.enforceCustomerEligibility(request, {
         subjectType: "CUSTOMER",
         subjectCode: request.model.loginId,
         enterpriseCode: placement.enterpriseCode,
-      }),
-    );
+      });
+    });
     gate
       .then((kycDecision) => {
-        request.kycDecisionReference = kycDecision.decisionId;
-        const owner =
-          SERVICE.DefaultCustomerEligibilityDecisionGovernanceService;
-        if (typeof owner?.withRegistrationDecision !== "function")
-          throw new CLASSES.NodicsError("ERR_PROFILE_MEMBERSHIP_UNAVAILABLE");
         const command = Object.assign({}, request, {
           authData:
             SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
         });
+        if (!kycDecision) {
+          return this.resolveRegistrationPlacement(request).then(() => {
+            if (this.customerRegistrationRequiresEligibility())
+              throw new CLASSES.NodicsError("ERR_PROFILE_ELIGIBILITY_CONFIGURATION");
+            return request.defaultCustomerService.save(command);
+          });
+        }
+        command.kycDecisionReference = kycDecision.decisionId;
+        const owner =
+          SERVICE.DefaultCustomerEligibilityDecisionGovernanceService;
+        if (typeof owner?.withRegistrationDecision !== "function")
+          throw new CLASSES.NodicsError("ERR_PROFILE_MEMBERSHIP_UNAVAILABLE");
         return owner.withRegistrationDecision(
           command,
           kycDecision,

@@ -1,5 +1,21 @@
 # search AI Contracts
 
+## Offline Native Local Bindings
+
+`DefaultSearchConfigurationService.readLocalResetBindings` uses effective active
+module configuration plus the existing layered schema/index loaders. It merges
+schema-defined indexes with later physical-name overrides without engine startup,
+database reads or persisted-index expansion. Return private exact bindings and
+merge index contributions by `typeName || fileKey`, preserving runtime logical
+override precedence and the original physical cache-lookup name. Return
+configured connection handlers; nTooling owns destructive scope/outage admission
+and providers own physical UUID/deletion checks. Require default tenant and
+environment-prefixed names; retirement bindings fail closed. Physical reset admits
+only stopped process-local search caches. Changes to names remain deployment
+contributions, not project-specific framework defaults. Missing owners, ambiguous
+bindings, foreign names, external caches and unsupported tenant scopes refuse.
+Configuration projection and isolated fixtures never prove physical deletion.
+
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nSearch/search`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.

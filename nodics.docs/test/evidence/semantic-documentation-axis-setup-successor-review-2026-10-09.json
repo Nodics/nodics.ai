@@ -1,0 +1,671 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_SOURCE_REMEDIATION_FULL_SUITE_BLOCKED_BY_EXISTING_AUDIT",
+  "scope": "Authorized immutable BackOffice documentation 0.0.2 successor repairs the real Axis setup article gap. Existing 22-scope aggregate retained; a second scope is revalidated only for unchanged component provenance.",
+  "boundary": "Source/editorial remediation and local tests only. No native import, approval, publication, financial write, wallet creation, runtime mutation, browser acceptance, business end-to-end or provider qualification is executed or claimed. Parent owns native publication/integration and existing shared audit-policy remediation.",
+  "readiness": {
+    "mode": "IMPLEMENT_SOURCE_THEN_REVIEW",
+    "owner": "nodics.platform/modules/backoffice",
+    "reuse": "Existing eWaste forward-release pattern, docs-v001 records, nData/CMS dispatch and unmodified nTooling release/semantic contracts.",
+    "releasePolicy": "Old 0.0.1 paths retain exact bytes. One selected Release002 header and five successor families; original Page/Route and foundation include remain unchanged.",
+    "dataConfigFreeze": "FINAL_NO_FURTHER_EDITS",
+    "noRuntimeImplementationChange": true
+  },
+  "previousGap": {
+    "artifact": "semantic-documentation-frozen-source-revalidation-2026-10-09.json",
+    "sha256": "b5077788119b1ac2407f30f8f5bc619e1cb2d0b6135aad216744024842651bc5",
+    "disposition": "OPEN_CONTENT_GAP",
+    "preserved": true,
+    "previousCanonical": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
+      "route": "/docs/framework/applications-axis-setup-error-contracts",
+      "blocksha256": "90dfbde93d04d6551bccb1a3bb9da77ad272440a003c574ba95dfb83ba657f1e",
+      "articleBlocksSha256": "90dfbde93d04d6551bccb1a3bb9da77ad272440a003c574ba95dfb83ba657f1e",
+      "sections": [
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-2-state-model",
+          "title": "State model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-3-error-contract",
+          "title": "Error contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow",
+          "title": "Setup flow",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-6-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 16
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-7-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 18
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "item": "Axis setup and user-safe error contracts",
+      "backlogPriority": "P0",
+      "requestedAction": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "statusStates": "COVERED_EXISTING_MAPPER_AND_PHASE_TYPE_PRECEDENCE",
+        "setupBlockers": "COVERED_SIGNED_STAGE_SELECTION_AND_AUTHORITY_PENDING",
+        "retryActions": "COVERED_SINGLETON_LOCAL_ADMISSION_AND_FRESH_RECOVERY",
+        "technicalEvidence": "COVERED_EXACT_PLAN_AGGREGATE_ONLY_AND_ORIGINAL_RECEIPTS",
+        "userSafeMessages": "COVERED_PRIMARY_MESSAGE_VS_BOUNDED_DIAGNOSTICS"
+      },
+      "rationale": "Manually compared the 0.0.2 successor's current blocks and fourteen real anchors with initialization, controller and route source plus the governed setup and exact-plan observation contracts. The guide now distinguishes unscoped global publication admission from an explicitly selected signed operator's own CURRENT publications, preserving incomplete aggregate readiness and foreign AUTHORITY_PENDING. It explains false/empty versus true/bounded selection metadata, normal BEFORE/CMS recovery, narrow-group restrictions, singleton mutation and fresh original-receipt recovery. BEFORE Media SOURCE_READY is correctly metadata admission with separate exact CMS mediaDependencies.qualified=true; AFTER SOURCE_READY is never installed CURRENT. Read-only exact-plan observations, safe messages and business/provider limits are explicit. This satisfies the requested explanation without treating hashes, Online delivery or an installed release as financial/browser acceptance.",
+      "evidence": [
+        {
+          "documentId": "applications.axis-setup-error-contracts",
+          "anchors": [
+            "applicationsAxisSetupErrorContracts-1-source-map",
+            "applicationsAxisSetupErrorContracts-2-state-model",
+            "applicationsAxisSetupErrorContracts-3-error-contract",
+            "applicationsAxisSetupErrorContracts-4-setup-flow",
+            "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+            "applicationsAxisSetupErrorContracts-6-common-mistakes",
+            "applicationsAxisSetupErrorContracts-7-verification",
+            "axis-setup-publication-phases",
+            "axis-deferred-setup-recovery",
+            "axis-setup-phase-customization",
+            "axis-signed-operator-selection",
+            "axis-selection-and-authority-pending",
+            "axis-aggregate-read-observation",
+            "axis-selected-stage-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js",
+        "nodics.platform/modules/backoffice/src/controller/defaultBackofficeApplicationInitializationController.js",
+        "nodics.platform/modules/backoffice/llm/contracts/governed-application-setup.md",
+        "nodics.foundation/modules/nPublish/llm/contracts/setup-observation.md"
+      ],
+      "sourceFindings": [
+        "normalizePreparationStep/afterPublicationSelection/isPreparationOperator and controller/route schema confine one exact required AFTER stage to the original human access token, signed tenant/enterprise aliases and bounded Bearer. Narrow Commerce groups retain independent action permission and cannot omit selection to bootstrap CMS.",
+        "scopedAfterPublicationPreparation gates singleton DATA_RELEASE validation/install on every same-operator publication CURRENT, not foreign CURRENT. The selected publication alone submits; other own publications are status-only. Foreign required stages remain AUTHORITY_PENDING or separately observed, visible and non-optional; local success does not close the aggregate.",
+        "invoke preserves false/empty selection metadata before BEFORE/CMS/Media admission and true/bounded metadata afterward, including honest empty selectable lists. Selected AFTER ignores CMS forceRefresh, never writes BEFORE/Media/CMS approvals and retains receipts through a fresh full status invocation without automatic write retry.",
+        "mediaPreparationStatus returns SOURCE_READY for fresh persisted CURRENT metadata with storedBytesVerified:false; preparationStatus/sharedPreparationObservation admit that BEFORE Media state into preparation.status CURRENT. CMS READY/ONLINE and exact Media qualified=true remain a separate gate. Required AFTER steps must be CURRENT, never merely SOURCE_READY.",
+        "setupObservation validates complete effective profile before/after fixed exact-plan service reads; observeForeignPreparation compares SOURCE/TARGET/SOURCE publication operation/digests and exact installation/source bytes. Disabled-by-default adoption, minimal bounded evidence, no cached foreign proof and no local/financial mutation authority are correctly explained.",
+        "Existing capabilityBusinessStatus and user-safe message/diagnostic distinctions remain intact. New diagrams, worked request shape, rejection cases and fresh recovery instructions do not assert browser execution or provider acceptance."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Backend projection accuracy does not prove a deployed Axis screen renders or enforces the contract; browser and permission acceptance remain separate.",
+        "Frozen shared navigation searchText/searchKeywords remain unchanged. Axis's DocumentationNavigationRenderer searches those component properties locally; CMS governance search instead filters canonical SearchMetadata. New-term navigation/browser search is not qualified by the successor.",
+        "Exact installed-release observation is not current budget, consent, spending, issuance, payment, shipment or business end-to-end qualification."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-09",
+        "artifact": "semantic-documentation-axis-setup-successor-review-2026-10-09.json",
+        "previousDisposition": "OPEN_CONTENT_GAP",
+        "previousGapArtifact": "semantic-documentation-frozen-source-revalidation-2026-10-09.json",
+        "canonicalArticleBytes": "CORRECTED_IN_IMMUTABLE_0.0.2_SUCCESSOR",
+        "changedSourceFiles": [],
+        "manuallyReviewedSourceFiles": [
+          "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+          "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+          "nodics.platform/modules/backoffice/src/router/routers.js",
+          "nodics.platform/modules/backoffice/src/controller/defaultBackofficeApplicationInitializationController.js",
+          "nodics.platform/modules/backoffice/llm/contracts/governed-application-setup.md",
+          "nodics.foundation/modules/nPublish/llm/contracts/setup-observation.md"
+        ],
+        "boundary": "Authorized source CMS successor and exact baseline pin only; no owner runtime implementation change, native operation, approval, publication, financial write or provider acceptance."
+      },
+      "remediation": []
+    },
+    {
+      "item": "Module Registry journey",
+      "backlogPriority": "P1",
+      "requestedAction": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "registration": "COVERED",
+        "activation": "COVERED",
+        "dependencies": "COVERED",
+        "requiredCapabilityChecks": "COVERED",
+        "statusProjection": "COVERED",
+        "axisVisibility": "COVERED"
+      },
+      "rationale": "The guide explains the distinct installation/runtime/registration/activation/data-receipt states rather than treating visibility as activation. It covers required versus optional capabilities, dependency checks, local/remote owner availability, complete paged registry reads, backend action eligibility, activation receipts and revision-conflict recovery. Its Axis walkthrough correctly lets an unavailable target block only its dependent operation and preserves original actor/owner authority. These explanations satisfy the backlog request without asserting the walkthrough was executed in a browser.",
+      "evidence": [
+        {
+          "documentId": "platform.module-registry-journey",
+          "anchors": [
+            "platformModuleRegistryJourney-3-registry-contract",
+            "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+            "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states",
+            "platformModuleRegistryJourney-7-axis-administrator-walkthrough",
+            "platformModuleRegistryJourney-8-example-unavailable-target-independent-action",
+            "platformModuleRegistryJourney-12-non-customizable-security-and-ownership",
+            "platformModuleRegistryJourney-13-troubleshooting-and-recovery",
+            "platformModuleRegistryJourney-15-revision-conflict-during-activation"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js"
+      ],
+      "sourceFindings": [
+        "getAllRecords traverses registry data rather than equating one default page with the catalogue.",
+        "Catalogue registration state and runtime observations are separate; human lifecycle transitions enforce protected/required-module and dependency rules.",
+        "Activation uses existing nImport execution and accepts required receipts only when CURRENT; failure does not imply rollback of earlier successful imports.",
+        "Capability/navigation registries project availability and actions from owner evidence rather than authorize work through frontend visibility.",
+        "The selected 0.0.2 component carries these exact unchanged blocks; only source provenance moves. Freshly inspected getAllRecords, reconcileObservation, transition, recordActivationDataCompletion and permission-filtered catalogue projections still support the original eight-anchor explanation."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "This is a source-editorial pass for the named journey, not certification of every BackOffice capability or UI state. Installed remote failure, concurrency and signed-in browser scenarios remain separate acceptance work."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+      },
+      "remediationPriority": null,
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-09",
+        "artifact": "semantic-documentation-axis-setup-successor-review-2026-10-09.json",
+        "previousDisposition": "PASS_SOURCE_REVIEW",
+        "canonicalArticleBytes": "EXACT_BLOCKS_UNCHANGED_ACTIVE_COMPONENT_PATH_RELOCATED",
+        "changedSourceFiles": [],
+        "manuallyReviewedSourceFiles": [
+          "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+          "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+          "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js"
+        ],
+        "boundary": "Re-read eight cited current anchors and three registry owner files. Only canonical component provenance moves with the selected successor; registration/activation/dependency/status/visibility explanation and non-live boundary remain unchanged."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "applications.axis-setup-error-contracts": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js",
+      "componentCode": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
+      "route": "/docs/framework/applications-axis-setup-error-contracts",
+      "blocksha256": "0de2b296b78401a9ff9038f901fad0357ac1218e4b52874b9d42979361eba3af",
+      "articleBlocksSha256": "0de2b296b78401a9ff9038f901fad0357ac1218e4b52874b9d42979361eba3af",
+      "sections": [
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-2-state-model",
+          "title": "State model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-3-error-contract",
+          "title": "Error contract",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow",
+          "title": "Setup flow",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 13
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-6-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 16
+        },
+        {
+          "anchor": "applicationsAxisSetupErrorContracts-7-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 18
+        },
+        {
+          "anchor": "axis-setup-publication-phases",
+          "title": "Preparation phases and an already Online baseline",
+          "headingLevel": 2,
+          "blockIndex": 20
+        },
+        {
+          "anchor": "axis-deferred-setup-recovery",
+          "title": "Safe deferred setup diagnostics and recovery",
+          "headingLevel": 2,
+          "blockIndex": 26
+        },
+        {
+          "anchor": "axis-setup-phase-customization",
+          "title": "Customize and verify phased setup",
+          "headingLevel": 2,
+          "blockIndex": 29
+        },
+        {
+          "anchor": "axis-signed-operator-selection",
+          "title": "Select one signed operator stage",
+          "headingLevel": 2,
+          "blockIndex": 32
+        },
+        {
+          "anchor": "axis-selection-and-authority-pending",
+          "title": "Read selection metadata without losing pending authority",
+          "headingLevel": 2,
+          "blockIndex": 37
+        },
+        {
+          "anchor": "axis-aggregate-read-observation",
+          "title": "Aggregate-only exact-plan observation",
+          "headingLevel": 2,
+          "blockIndex": 41
+        },
+        {
+          "anchor": "axis-selected-stage-verification",
+          "title": "Verify selected-stage recovery",
+          "headingLevel": 2,
+          "blockIndex": 45
+        }
+      ]
+    },
+    "platform.module-registry-journey": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "ebd86dfe487ea37d352f2dfef84efc23bfb51bf99f050fa453d5408795254908",
+      "sections": [
+        {
+          "anchor": "platformModuleRegistryJourney-3-registry-contract",
+          "title": "Registry contract"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+          "title": "Dependency and activation rules"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states",
+          "title": "Read the registry without confusing its states"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-7-axis-administrator-walkthrough",
+          "title": "Axis administrator walkthrough"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-8-example-unavailable-target-independent-action",
+          "title": "Example: unavailable target, independent action"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-12-non-customizable-security-and-ownership",
+          "title": "Non-customizable security and ownership"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-13-troubleshooting-and-recovery",
+          "title": "Troubleshooting and recovery"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-15-revision-conflict-during-activation",
+          "title": "Revision conflict during activation"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "c77bbf60c8135a175324e7a27c107f04c342a064a7b41afb431428f36f3b21b5",
+    "nodics.platform/modules/backoffice/src/router/routers.js": "955bf8cd357859e16394ab66f425820fd2f76577e1139cf2b92086373c518a25",
+    "nodics.platform/modules/backoffice/src/controller/defaultBackofficeApplicationInitializationController.js": "7be3674991ed455f9248a6a3ddc27a049df8a7e7ceb14871b843f8d9a116bb23",
+    "nodics.platform/modules/backoffice/llm/contracts/governed-application-setup.md": "2ce85fc858451e4cab1330eee8df9d76b7ca34ac9806ca311a8b70a42cb2cc6c",
+    "nodics.foundation/modules/nPublish/llm/contracts/setup-observation.md": "119e4c8016ad8035d2d427960b360201f26932760bb4a9709c19b22c9a011271",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js": "350e200059cd7ccdbaf92f32700d0afaa51d4f210b2a01f85bbb0f69c6d94f24",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js": "71abc36501b5ecffe4aa743288103880fddb1735389ef4cfe4061f9a69a7d757",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1"
+  },
+  "manualReview": {
+    "actualAnchors": [
+      "applicationsAxisSetupErrorContracts-1-source-map",
+      "applicationsAxisSetupErrorContracts-2-state-model",
+      "applicationsAxisSetupErrorContracts-3-error-contract",
+      "applicationsAxisSetupErrorContracts-4-setup-flow",
+      "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+      "applicationsAxisSetupErrorContracts-6-common-mistakes",
+      "applicationsAxisSetupErrorContracts-7-verification",
+      "axis-setup-publication-phases",
+      "axis-deferred-setup-recovery",
+      "axis-setup-phase-customization",
+      "axis-signed-operator-selection",
+      "axis-selection-and-authority-pending",
+      "axis-aggregate-read-observation",
+      "axis-selected-stage-verification"
+    ],
+    "articleBlockCount": 48,
+    "articleWordCount": 3468,
+    "sourceInspection": [
+      "Initialization normalizePreparationStep, afterPublicationSelection, assertInitiationScope, isPreparationOperator, preparationStatus/mediaPreparationStatus, sharedPreparationObservation, setupObservation/observeForeignPreparation, publicationPreparation, scopedAfterPublicationPreparation and invoke.",
+      "Controller selector/body projection and rejected operations; initiate route groups, permission and request schema.",
+      "Governed application setup and nPublish exact-plan observation contracts.",
+      "Registry journey's eight unchanged cited anchors; catalogue paging, observation versus decisions, revision-protected transitions, CURRENT-only activation receipts and authorized capability projections."
+    ],
+    "findings": [
+      "normalizePreparationStep/afterPublicationSelection/isPreparationOperator and controller/route schema confine one exact required AFTER stage to the original human access token, signed tenant/enterprise aliases and bounded Bearer. Narrow Commerce groups retain independent action permission and cannot omit selection to bootstrap CMS.",
+      "scopedAfterPublicationPreparation gates singleton DATA_RELEASE validation/install on every same-operator publication CURRENT, not foreign CURRENT. The selected publication alone submits; other own publications are status-only. Foreign required stages remain AUTHORITY_PENDING or separately observed, visible and non-optional; local success does not close the aggregate.",
+      "invoke preserves false/empty selection metadata before BEFORE/CMS/Media admission and true/bounded metadata afterward, including honest empty selectable lists. Selected AFTER ignores CMS forceRefresh, never writes BEFORE/Media/CMS approvals and retains receipts through a fresh full status invocation without automatic write retry.",
+      "mediaPreparationStatus returns SOURCE_READY for fresh persisted CURRENT metadata with storedBytesVerified:false; preparationStatus/sharedPreparationObservation admit that BEFORE Media state into preparation.status CURRENT. CMS READY/ONLINE and exact Media qualified=true remain a separate gate. Required AFTER steps must be CURRENT, never merely SOURCE_READY.",
+      "setupObservation validates complete effective profile before/after fixed exact-plan service reads; observeForeignPreparation compares SOURCE/TARGET/SOURCE publication operation/digests and exact installation/source bytes. Disabled-by-default adoption, minimal bounded evidence, no cached foreign proof and no local/financial mutation authority are correctly explained.",
+      "Existing capabilityBusinessStatus and user-safe message/diagnostic distinctions remain intact. New diagrams, worked request shape, rejection cases and fresh recovery instructions do not assert browser execution or provider acceptance."
+    ]
+  },
+  "preservation": {
+    "baselineFileCount": 114,
+    "baselineChanged": [],
+    "sourceFreezeChanged": [],
+    "reviewedOwnerSourceChanged": [],
+    "other20ItemChanges": [],
+    "unrelatedCanonicalChanges": [],
+    "originalScopeCount": 22,
+    "preservedOtherScopeObjects": 20,
+    "unchangedUnrelatedCanonicalPins": 48,
+    "preservedHistoricalEvidenceFiles": 21,
+    "preservedBackoffice001Files": 8,
+    "preservedSharedDocumentationFiles": 38,
+    "preservedEWasteFiles": 47,
+    "preservedFileSha256": {
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationNodeData.js": "2fdfd7b375d95928c83ac049417f5941e2bb29db31005cc69e7eb7a99f99b336",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationPageMetadataData.js": "70355d6ac84c1a1046516746c3fa4309a400f303de849077ebae9fbc5b2b1992",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationPublicationStateData.js": "ab762beee03a5af8402357735406a80afe5d37b663b6ff004d1908e2fc899a20",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationSearchMetadataData.js": "d342e7b819846369039064055d0a47015f46c04569d39447547c2c4c3f2c93c7",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationComponentData.js": "87abf59f371a16ea01c63ae1ef26ad566b9ffbd91d80e4051c922b70756b71bb",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationPageData.js": "6b659fabcefc24463e74f03fa5c23bfed0407714c2d6b0ef506db47157258c7d",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRouteData.js": "524c21a379fcee5d5b41fb2029bea0bb90b61121df093113bb468c971cfa4078",
+      "nodics.platform/modules/backoffice/data/docs-v001/headers/100_backofficeDocumentationContentPackHeader.js": "770ad62b396851c3a4a1452cb03e13e0351bfd969f50b02994f858b3e1af82e8",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationNodeData.js": "7d40c97480759b1f30af1b5527cbb0d46836deca9bb100e19cdbb4ac4809c660",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationPageMetadataData.js": "ba88375667c2c7c365e20215af61b6b9cd8078a795d257c4a537d5bd0f9e5878",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationPublicationStateData.js": "2384240606275702698aecbcd58fe73c993204ebf42641262774f43f9772494f",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationSearchMetadataData.js": "fe9ecf644c80567ac93f6d0e49018634e540e82ae0bb384577b1de660781d4fc",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js": "0b6e833465ed50923c1e1a28b257b81f21d919294fe5b16bc2b5f19a4b5eaeaa",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationPageData.js": "5f3d63461c024141ed8609d88babba5814bb50491f1e323ab10a396930890d7c",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRouteData.js": "e0b513b28d106d25c0e27ff75dd69577cae39b15f2489c08c34c21ea0bb2260b",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationSiteData.js": "2c3a262be1c3d672c36c0f9f89dc9117c8b04297af1e1501491c1c7afc7e8089",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationProductData.js": "bb26c293963281c2ab4c09653908db0a1be1c366cb19680b8a2ef5b6fe48d26f",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationAccessPolicyData.js": "195dfa98fb6a08d8e4004f82fcdd7c75fd8d029ea0020ff6b4d35c1badc509e0",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationNavigationData.js": "ebec99ed3b4ec3b590dfa20f63d6b9a4e9595d3658826f087c407b4ce0a40720",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationDashboardData.js": "08af900f035aac6d4bc95eaa92c4313235c51d8ff1cfbb8528ac9d8e3ec516ba",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js": "883cda19fde2c3e291dff02df7b7d88ea84e333e97c93d12398aa998b1256b0a",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationTypeCodeData.js": "fb25cbec0a9705234f05032ef7a037078038c3b852f08ee2150443495fb7abfe",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRendererData.js": "922f5191aca55816275e9757ce27641781f56f2bdf79d5e006d3691a26daa430",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationSlotData.js": "ad3c54af5bd34f7af7c8e9fe9f354076149057519a1147159d2e0cd5bdc56af7",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationTemplateBootstrapData.js": "9479fbf8958c8e9fe48d7752469080b85041cf488a2cdd340ba2ba841eb5d3fd",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationTemplateData.js": "9e2a160453f7f3308917d4869282df6a9932154cad2100427d1665d36a2db32a",
+      "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationMediaData.js": "f534cf3de20661de966e967b38ffaeebe390faada2e0cfa259d78e5b0f5ced2e",
+      "nodics.docs/data/docs-v001/headers/000_nodicsDocumentationContentPackHeader.js": "1b13352d33aca988d34c5be6570f2316879e524e45c7f12c649aa60e12ee0e06",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/cloud-deployment-process.jpg": "564535cce2e19cd57c5bf57fbfef5d8e0a6b08a5c6b85aeb128dcbe8ffb98b1d",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/cron-job-lifecycle.png": "8290d52e1e5c9041795fb39b5b729fb6c7086ff73635788795ee93ae1a375a52",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/cronjob-process.jpg": "50550fb35544fd3b344f0f19986239356387500f7366819f69deec8f91323693",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/data-export-process-flow.jpg": "0b2c7b6514e4095749704b1a9d6f5749567758859398c7e6f9e238937f2ec2f1",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/data-import-process.jpg": "c2154b50090905f1830dc52281fb0745fad876a16a27293064dd67ca2e8a05ca",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/enterprise-tenant-design.jpg": "17dc2f8e88fb6fe9562f2306734d6fc9b379014c6d14c7cddc6949d59612491b",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/log-management-system.jpg": "671c80cf9200ba66755f82b3eaff3961343c968dc6cc0e22bc33ada2d648c8ff",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/microservices-architecture.jpg": "a8a9fd05d8cb370f02458f81d445f1ee559732ea937717aa19833838a27e619f",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/nodics-architecture.jpg": "164530e775a35b9c22c1314d87952f9de244390c8eaed310f3c69edc70b5226e",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/api-cache-flow.jpg": "5f9dec9155c243c85506cdd132d57001e23de120e4bb069480eeb8a8e428e8e3",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/ems-consumer-system.jpg": "61379238c526ed668981ae50eabedf5763e95df863bcd9b1a8e6568c57598160",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/ems-producer-system.jpg": "460ae3584baee14cd036c782c1979cca40fade7f9259e3dcb4f5d84d55f37f91",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/event-handler-process.jpg": "b52761cc826b3c37dfdb26d109a49c9c0fcdc8fcca2246598b6b46571afb08b4",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/item-cache-flow.jpg": "b144786ede6898a81a68ebc1a90cd4b465d1a688c14dca919742c669925cf0d2",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/request-process-design.jpg": "3a3376a50bb770d9ed24d036ee805734cbbadc661f84cda269396425fea32e65",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/request-processor-flow.jpg": "7a70f1b6afe4cae0026bd995d23a41fdad3d030a9bd8d21811d1babca0680e41",
+      "nodics.docs/data/docs-v001/assets/documentation/files/images/search-cache-flow.jpg": "bed208e5639cabdb443694d967978a9007151cca350f576e1fb9f93ee5b4ed9c",
+      "nodics.docs/data/docs-v001/assets/documentation/assetManifest.js": "4e66342352465a5964a5049cc27d020b3a479046ec8084b3e927df8e3d88e22a",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002NodeData.js": "99e1991424e47cf161d8b007b7bee8881a62010f0f71d69a6d2c09b35c25596f",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002PageMetadataData.js": "e437740e0405b3a1c2e2ea92c4ae87a5066999f309ab3f29a36817194090c1c4",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002PublicationStateData.js": "3cdcaa60b0ebdebc2d68a45de422a39229a883e36c047f865ea5f5e3c3cfd52e",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002SearchMetadataData.js": "2bd03b7ce6aa8a2bed022d8499adc4ce4f081f92f75f6b6a792ca445caa8f168",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease002ComponentData.js": "cc8e2f09f5420ee255effdac70a2baa8505cea450f65aa89663612543633d5c4",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationPageData.js": "b2a2445166e63de59910b8d46f495cf091684d075a5562a04214c52346568826",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRouteData.js": "7a4952a6c95ae7d1a9ccb70003a976aa29bc18464cac47937f9afcda063c161d",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationMediaData.js": "94b36113e804aca304ea35630fbb07de2d426a5fa3a7ae63e08b119cb2c6ced1",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/101_eWasteDocumentationRelease002ContentPackHeader.js": "8d6612b04f9f87eb931558326ba42af3f7b730cb923bb498f5c9d1d9dca0eda8",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-architecture.png": "8a863434057ea442ca58bae03f235c9fe72f022fe8ba5d2abd07f903ba68f67b",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-coupon.png": "d7e3133701b51b866ebc288b35e93847aec0f637cb02ca196e4fe94e4f434b4c",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-layers.png": "761e5c607da7b3952ab0688486f2d706b1fcf217ad19b78f9ac7ccac1c387099",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-notification-authority.png": "e3ee17309744359228b0ac4aacee771a6f83cb057b5f7c088e2e89897f3c5c69",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-record-network.png": "04cc18321002883fc61a7d995c773e4ab41b2213b4f8b2e74581e67f792f54a3",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-submission.png": "fa3273ca875807769edfe105d75c172c7854e7df5751935cf2e34a47de6d5518",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/diagrams/README.md": "9275c4a7b5191158d57981c00b224d9e1818968833c3a44e00c1e78a9f1f3f36",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/diagrams/circa-architecture.dot": "24564c7320b82d9e9142483a60af536850a6745c1181e32c9db1b822c9ba8b6c",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/diagrams/circa-coupon.dot": "1698d77f0ff05a9bf197acb59a0a47c8f3548f64c2562ba05b29f336e32ebc5e",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/diagrams/circa-layers.dot": "f61eb4f2032f13245e0ee666d811d8a677ba902aaa7ac6a5873334d00e4f6ba7",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/diagrams/circa-notification-authority.dot": "4047aef061ffaf43b91189ee52a13b2c501a9ad772418ee30aa4432567dfaede",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/diagrams/circa-record-network.dot": "169012cb095d4bb539d1b9d03f46d4be2607d9546b5a3efb585b355b322c9dad",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/diagrams/circa-submission.dot": "943945139f1af85ccfb3bc7de1192f9134d233163a5184989ab707208edc6ce8",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-architecture.svg": "175ecb79857001cb8d117f9d4cf2388a4008a1eeba865f657e9c5c2e577a797c",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-coupon.svg": "0106542c34f2f14cf882e1db60360567a80d86a3a170d57914c3ae2b30ff49fa",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-layers.svg": "6290712ff115b9612f00dd3e53fb19672c5002dd2c2f541b99ec7a98d717a535",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-notification-authority.svg": "6df1bb6b8d0a3a7b2b6c6716cc8c31a6f51b8855b82fbfd8b5c9106b32ac3f43",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-record-network.svg": "38de130b5605c374a58e6f0db2d7bbb4f58339c9fbb48817210cc20be88e61c9",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/files/images/circa-submission.svg": "a460135ceba159518a6325d129b4774ea33ce9fab32b611e4f1c572aee1298cd",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/assets/documentation/eWasteDocumentationAssetManifest.js": "ff625a27a0eabc7409d0613cc414a662e0a25f4e93835a892d5fb6fc5e1db09e",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationSiteData.js": "709889ce61cbc23538aaa3321bc2be89b584b5a11393ab856ec3221068852ce1",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationProductData.js": "1557a5771d7fcd0bddabca7cf5bbd9b0999d1520a2e5a7398973e2790a3b1a54",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationAccessPolicyData.js": "ea95af1c769a6f0d5711f278d39c14e85bb478a7f6e858d85f5b1ee0d2a99d0a",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationNavigationData.js": "9bc66557d17a72a46381c1da422059d23a0630332cafb0699a39a034f32d2a13",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationDashboardData.js": "ace9957354f9631414a0859a9cfa03e9885a54871d200e3eddec27a68dcb4386",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationLegacyNavigationCleanupData.js": "7d0830a19f0bba6845d4aeadb693a9d8b6eeffa42fdd7014026b089b723bc633",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationNodeData.js": "ae5bc82c2b8510819727eeeadf9545576de87b10b2fbd41d13e920a3c8ae005a",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002PageMetadataData.js": "1ffb76a3b18a3e9144d537d74ac0145dca00d49a1088ce45dceb14f7e466e18e",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002PublicationStateData.js": "fde92fa4d7fd0b97a0868007694c7db0461327db65d4f45857c1481643c81e56",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002SearchMetadataData.js": "1c15926a642a2f8445e15a0ffa1860ca45711d825e7653d191645da1489d7799",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationTypeCodeData.js": "979d539c0c5a5806a43878aace4b70334ce7ed182c534ecb0baacba71e23598b",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRendererData.js": "3d75676b9c83f5c9c72b20039c67de0a39b2ac1a6032ed3d9b172f712c5b1a57",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationSlotData.js": "7a75a1c0ffe12cdd6bace80fa53247c36f64b1c31af547255bc79511f06e5351",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationTemplateData.js": "16288f09d3b50c26c2df4dbc0a946a83108c487cfc78b116c53ca2d6a3393d93",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRelease002ComponentData.js": "f5e6b0f77deb97695b9b7472523e42a7413350fb83a656a58d4f371e76f6e20e",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationPageData.js": "0f8c3e99bc74aa87e9b6800fc8bb68a0a0300dac907d23b67b5c5ddee759e965",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/circaDocumentationRouteData.js": "f746046d5a3479585650c2921204af3781eaddfc277af83797e8513795e77176",
+      "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/circaDocumentationRelease002ContentPackHeader.js": "2a58bd5bc65a2e3c66d53aa2464d08bd7fc09659b95cc276aec717dc2523eab2",
+      "nodics.docs/test/evidence/circa-editorial-review-2026-10-07.json": "186b5fe331abe859ee03ac3d222c5ff07cf00e6ec3eceb43dfba62c370ae3c03",
+      "nodics.docs/test/evidence/cms-data-migration-preservation.json": "c1bf96acd3052efb80992a4ad371a07b13cce08429f9f414dbcaaf42114c35cc",
+      "nodics.docs/test/evidence/coordinated-publication-2026-10-07.json": "95e51a468c0b7267133e51be7edfedacd7b25c130109835dd14885fc431c70e4",
+      "nodics.docs/test/evidence/documentation-publication-receipts-2026-10-07.json": "87e279c81a293aa6fc98c2942ec6d5283e002aed9d9ecd2326559482813b55b4",
+      "nodics.docs/test/evidence/documentation-refactor-final-qualification-2026-10-07.json": "a3f7aba422955d68f33fd2fbd580a29e740c116faf81461a85ac423453327a32",
+      "nodics.docs/test/evidence/documentation-segregation-2026-10-07.json": "cdb6dca6a13636c22c2eaf74b34eadea1514c96f602171c343fe740986f769bb",
+      "nodics.docs/test/evidence/draft-editorial-review-a-2026-10-07.json": "7ba774db52f5abbaf34a0553c066311750c740b101f32bd96759eec10f327ceb",
+      "nodics.docs/test/evidence/draft-editorial-review-b-2026-10-07.json": "dad2aa10e4f9d2ed40fd799c408657651d381a0feabd21ba19bf2a8e1626e51c",
+      "nodics.docs/test/evidence/semantic-documentation-bounded-revalidation-2026-10-09.json": "4ffb1475305250fd24fd6b120c99b882cc0570d6214895d8c833bfec3804d856",
+      "nodics.docs/test/evidence/semantic-documentation-commerce-sidecar-revalidation-2026-10-09.json": "84d9f4c1297a99c8c0ec1bad6b0694ef61f37c6f8759d0ca8a318d59243a57a4",
+      "nodics.docs/test/evidence/semantic-documentation-completion-review-2026-10-08.json": "95c9302cc2ef0531024ffd272928d8b3722d1d48bbfba79faa3653e61a308bfe",
+      "nodics.docs/test/evidence/semantic-documentation-copilot-simulation-read-review-2026-10-09.json": "ab9249035eddce295926a343130cf1bf61b214c685863b408d2c82c8f9374c9f",
+      "nodics.docs/test/evidence/semantic-documentation-corrections-a-2026-10-07.json": "3ce33718adcad5a5db9ec6e529e4495abe0376828ccb970f5589de734ff53cf3",
+      "nodics.docs/test/evidence/semantic-documentation-corrections-b-2026-10-07.json": "48d0ad4d83ff0f7d20d12d2426cf541daca6cf222bc37881a37fe05886dd8398",
+      "nodics.docs/test/evidence/semantic-documentation-corrections-c-2026-10-07.json": "cd0c39ff880098a69374b83a90a9c42c29c0f400cca1327c645a68ca27f84e96",
+      "nodics.docs/test/evidence/semantic-documentation-coupon-lifecycle-guard-revalidation-2026-10-09.json": "33f695cda7e2d5d8daba339afcb48f0d0eabf09f1d2120164d74fdd6e3bf1da9",
+      "nodics.docs/test/evidence/semantic-documentation-frozen-source-revalidation-2026-10-09.json": "b5077788119b1ac2407f30f8f5bc619e1cb2d0b6135aad216744024842651bc5",
+      "nodics.docs/test/evidence/semantic-documentation-local-item-simulation-review-2026-10-09.json": "8bb7e09c5d81057f6085777e951996e2c1563fa2afc14e694321036abddfbd75",
+      "nodics.docs/test/evidence/semantic-documentation-rebase-review-2026-10-07.json": "381506ec163c2f68ef3dc972dd4acdc1b2604251be49b1bae5306f48a2999039",
+      "nodics.docs/test/evidence/semantic-documentation-review-2026-10-07.json": "d03589a466b8e1ed0498a87459e40204d3557f3795f279f0ae3726e536dd8949",
+      "nodics.docs/test/evidence/semantic-documentation-source-revalidation-2026-10-08.json": "4e4969f2995f89d161516f46a353a155faa846515dec83a0b082527f1ad15a51"
+    }
+  },
+  "sourceHandoff": {
+    "owner": "backoffice",
+    "manifestSection": "documentation",
+    "contentPath": "docs-v001",
+    "semanticVersion": "0.0.2",
+    "baselineCode": "docs-backoffice",
+    "baselineReleaseVersion": "0.0.2",
+    "baselineSourceVersion": "0",
+    "releaseChecksum": "1731c69aef697ba0cfe4fe8e52916cbadefb41e02dbdee20fa777787a6b7aa4f",
+    "selectedFilesSha256": {
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002NodeData.js": "0a67722745e13eb90f2e1ed2fba73d4bafaf7c800c644185bd03ee34d86e0457",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002PageMetadataData.js": "8b0e03f50010fc3a81416685ab4771bc08c133b596b76c23cc8087bec974a73e",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002PublicationStateData.js": "184a7bb1e721ce683eace0f4b1b3cd2943b2d67fc41a6e3ddf9784c41513b9d5",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002SearchMetadataData.js": "ce54760940d28b063725fa962cc0ac2b78f1fd9235443202d352213ecb3851aa",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js": "7e6b38d7e5f1aee8eef166a1850641c2354108df908cc180e868d31175ed0a54",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationPageData.js": "6b659fabcefc24463e74f03fa5c23bfed0407714c2d6b0ef506db47157258c7d",
+      "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRouteData.js": "524c21a379fcee5d5b41fb2029bea0bb90b61121df093113bb468c971cfa4078",
+      "nodics.platform/modules/backoffice/data/docs-v001/headers/101_backofficeDocumentationRelease002ContentPackHeader.js": "848dad826d9c3c47fb5af1a79c5f5dff60e49ffb8c22ad359b63510b0a16cb8e",
+      "nodics.platform/modules/backoffice/data/manifest.json": "71d9721d549b3d668e0f3f5f042823aa9b6c23ccab46fa57e04098fc559c8aa6",
+      "nodics.docs/config/properties.js": "435947e840c7f134459ca3889fce8542f836dad0a44d4ab8642c0da4a81841a2"
+    },
+    "articles": [
+      {
+        "id": "platform.module-registry",
+        "componentCode": "nodicsDocsComponentplatformModuleRegistry",
+        "articleBlocksSha256": "1659a42135e558b38e53cc65578ed0e590368261c1d9605669303bea6269731d",
+        "sourceChecksum": "f979521d9e9607718ea5566c54f25059252ee37294c2c43c717b6b5c8efa458f"
+      },
+      {
+        "id": "axis.business-customization",
+        "componentCode": "nodicsDocsComponentaxisBusinessCustomization",
+        "articleBlocksSha256": "1fc302586951d052a3fd71dffae2238d4e98cc98af707b1fcb80a80020d9a800",
+        "sourceChecksum": "da21a71ed638245a3fe525784a0c52e85ae8ff0d85b64a012c70f35068542953"
+      },
+      {
+        "id": "applications.axis-setup-error-contracts",
+        "componentCode": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
+        "articleBlocksSha256": "0de2b296b78401a9ff9038f901fad0357ac1218e4b52874b9d42979361eba3af",
+        "sourceChecksum": "7fb31e7cc0c723abdaa8f5876bd76b58454f7db5428b3c602ebc5b5998d43cde"
+      },
+      {
+        "id": "platform.module-registry-journey",
+        "componentCode": "nodicsDocsComponentplatformModuleRegistryJourney",
+        "articleBlocksSha256": "ebd86dfe487ea37d352f2dfef84efc23bfb51bf99f050fa453d5408795254908",
+        "sourceChecksum": "490628f6294594e5ac0ecb5132ea3c40af96cf044fd2d404b7f8cb8b57535261"
+      }
+    ],
+    "articlePublicationBoundary": "Source records are Staged authoring inputs; no new approval/Online actors fabricated. Four metadata records and matching page-search records are staged for active provenance; three unrelated article bodies are exact unchanged.",
+    "sourceAuthor": "codex.source-editorial-review identifies source authorship only, not an authenticated runtime actor or approval."
+  },
+  "searchProjectionBoundary": {
+    "status": "KNOWN_FROZEN_NAVIGATION_PROJECTION_BROWSER_SEARCH_UNQUALIFIED",
+    "finding": "Axis DocumentationNavigationRenderer.parseItems reads component.properties.items, bounds each item's searchText, and its local query filter uses that item.searchText (lines 57-76 and 195-217). It does not fetch or merge canonical SearchMetadata. New successor terms are therefore not established in this frozen nav projection. CMS governance search instead filters supplied canonical SearchMetadata (lines 331-356); this separate source contract does not prove the reader uses it.",
+    "sourceSha256": {
+      "../nodics.exp/nodics.axis/src/cms/renderers/components/documentation/DocumentationNavigationRenderer.tsx": "3f7dd7282628dcc0657ff71facd39de48c60605535fb5b1dc56b9c89626a3b59",
+      "nodics.wcms/modules/cms/src/service/documentation/defaultCmsDocumentationGovernanceService.js": "32d1ffb6d06f5e0fd64b8503248ae0d5efdba865483b672768136933907da02b"
+    },
+    "scopeDecision": "No shared foundation/nav or frontend change. Parent may inspect native bounded navigation separately; no new-term browser search qualification."
+  },
+  "checks": [
+    {
+      "command": "node --test nodics.platform/modules/backoffice/test/backofficeDocumentationForwardRelease.test.js",
+      "status": "PASS",
+      "tests": 9
+    },
+    {
+      "command": "node --test nodics.platform/modules/backoffice/test/applicationContributionReadiness.test.js",
+      "status": "PASS",
+      "tests": 63,
+      "boundary": "Mocked/source regression only; no financial qualification."
+    },
+    {
+      "command": "node --test nodics.docs/test/semanticReviewContract.test.mjs",
+      "status": "PASS",
+      "tests": 2,
+      "closedScopes": 22,
+      "openScopes": 0
+    },
+    {
+      "command": "npm --prefix nodics.docs run validate",
+      "status": "PASS",
+      "documents": 176
+    },
+    {
+      "command": "npm --prefix nodics.docs run audit:source-coverage",
+      "status": "PASS",
+      "sourceBoundaries": 203,
+      "documents": 176,
+      "semanticClosed": 22,
+      "semanticOpen": 0,
+      "generatedReportsOnly": true
+    },
+    {
+      "command": "npm --prefix nodics.docs test",
+      "status": "FAIL_EXISTING_HARDENING_AUDIT_ACTOR_POLICY",
+      "passedStages": [
+        "4 source/semantic tests",
+        "docs:check: 176 pages",
+        "validate: 176 documents",
+        "audit:source-coverage:check: 22 closed / 0 open"
+      ],
+      "failedStage": "audit:hardening",
+      "failure": "Publication state records require actor evidence and Staged review approval Online path",
+      "source": "nodics.docs/scripts/audit-hardening.mjs:193",
+      "sourceSha256": "6103cca7a294fa1fa8692d66d0059d4bb7135ef6ff24db19e28a642fed5dac1b",
+      "explanation": "The old hardening assertion unconditionally requires reviewer/approver/publisher on every state; existing shared AUTHORING validation instead requires author for DRAFT/STAGED and future actors only in later states. Truthful Staged successor records correctly omit unperformed review/publication actors. No actor fabrication, test weakening or out-of-scope audit change was made.",
+      "handoff": "Parent-owned alignment of the existing hardening audit with strict lifecycle-aware authoring rules; rerun full npm test afterward. No production/data/config successor change is required."
+    }
+  ],
+  "modifiedFilesSha256": {
+    "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js": "7e6b38d7e5f1aee8eef166a1850641c2354108df908cc180e868d31175ed0a54",
+    "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002PageMetadataData.js": "8b0e03f50010fc3a81416685ab4771bc08c133b596b76c23cc8087bec974a73e",
+    "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002NodeData.js": "0a67722745e13eb90f2e1ed2fba73d4bafaf7c800c644185bd03ee34d86e0457",
+    "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002SearchMetadataData.js": "ce54760940d28b063725fa962cc0ac2b78f1fd9235443202d352213ecb3851aa",
+    "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002PublicationStateData.js": "184a7bb1e721ce683eace0f4b1b3cd2943b2d67fc41a6e3ddf9784c41513b9d5",
+    "nodics.platform/modules/backoffice/data/docs-v001/headers/101_backofficeDocumentationRelease002ContentPackHeader.js": "848dad826d9c3c47fb5af1a79c5f5dff60e49ffb8c22ad359b63510b0a16cb8e",
+    "nodics.platform/modules/backoffice/data/manifest.json": "71d9721d549b3d668e0f3f5f042823aa9b6c23ccab46fa57e04098fc559c8aa6",
+    "nodics.docs/config/properties.js": "435947e840c7f134459ca3889fce8542f836dad0a44d4ab8642c0da4a81841a2",
+    "nodics.platform/modules/backoffice/test/fixtures/documentationFrozen001.json": "5f45b503907d678ad0b0ecfb7c64bb8aa24b1feb2937071ce458179943c0ad04",
+    "nodics.platform/modules/backoffice/test/backofficeDocumentationForwardRelease.test.js": "0cfe2bf7b0446c3df6e79b11252f015c9aab120697365562fc4314bd9ba0485c",
+    "nodics.docs/test/evidence/semantic-documentation-closure.json": "57861deac0f80662430813f8437c5c8c2c2b9e53c14f5223ee0741e6eb4667d9",
+    "nodics.docs/test/reports/framework-documentation-validation-report.json": "b00e81d50895f4bffcba58245b3e52d262e585c70463f1b75f4d00eb6a4c4dd3",
+    "nodics.docs/test/reports/framework-documentation-validation-report.md": "86cfc18903622a87d878cf4b0c0c18c80bd39db5a648ab8f5ef09d242587977a",
+    "nodics.docs/test/reports/source-backed-documentation-coverage-report.json": "385f28dcd3a5b61199e807914b030f31a0bd2b56dd239f706205efaa3a7dd51c",
+    "nodics.docs/test/reports/source-backed-documentation-coverage-report.md": "fd5a8d4abcaf92c2398aa4c1604b69cc09e470a2f7ccaabbd47dd6911b78e625"
+  },
+  "generatedReportSha256": {
+    "nodics.docs/test/reports/framework-documentation-validation-report.json": "b00e81d50895f4bffcba58245b3e52d262e585c70463f1b75f4d00eb6a4c4dd3",
+    "nodics.docs/test/reports/framework-documentation-validation-report.md": "86cfc18903622a87d878cf4b0c0c18c80bd39db5a648ab8f5ef09d242587977a",
+    "nodics.docs/test/reports/source-backed-documentation-coverage-report.json": "385f28dcd3a5b61199e807914b030f31a0bd2b56dd239f706205efaa3a7dd51c",
+    "nodics.docs/test/reports/source-backed-documentation-coverage-report.md": "fd5a8d4abcaf92c2398aa4c1604b69cc09e470a2f7ccaabbd47dd6911b78e625"
+  },
+  "summary": {
+    "scopesRetained": 22,
+    "PASS_SOURCE_REVIEW": 22,
+    "OPEN_CONTENT_GAP": 0,
+    "fullDocsNpmTest": "BLOCKED_EXISTING_SHARED_HARDENING_AUDIT",
+    "sourceFreeze": "STABLE",
+    "nativePublication": "NOT_EXECUTED_BY_SIDECAR",
+    "financialQualification": "NOT_CLAIMED"
+  }
+}

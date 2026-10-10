@@ -22,17 +22,20 @@
 - Do not turn this module into BackOffice API authority. BackOffice owns
   registry/bootstrap/discovery APIs; this module contributes Axis-specific
   metadata and data for those APIs to aggregate.
-- Documentation content that describes Axis belongs here. Framework
-  documentation belongs in `nodics.docs`; customer/project documentation belongs
-  in the owning project documentation package.
+- Documentation content that describes Axis belongs here. Framework capability
+  detail belongs with its owning backend module; `nodics.docs` owns central
+  discovery and cross-framework guidance. Accelerator guides belong with their
+  accelerators, and actual customer differences belong with the customer project.
 
 ## Data Rules
 
 - Backend-importable Axis records must be generated or authored here, never in
   `nodics.axis`.
-- The Axis documentation content pack is authored under `docs/`, generated
-  into `data/core-v001`, and described by the
+- The Axis documentation content pack is maintained directly as CMS records in
+  `data/docs-v001/records/documentation`, and described by the
   documentation section in `data/manifest.json`.
+- Image blocks reference Media identities in the same governed release. Do not
+  create a parallel `docs/` source or Markdown-to-CMS generator.
 - CMS data may target WCMS schemas, but WCMS remains the CMS schema,
   persistence, delivery, and runtime authority.
 - Use nData/nImport governed import flow; do not add an Axis-specific loader.

@@ -1,30 +1,30 @@
 {
-    "contractVersion": 2,
-    "module": "validator",
-    "sections": {
-        "sample-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "sample",
-            "version": "0.0.0",
-            "description": "Validation sample data",
-            "owningDomain": "validator",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "PLATFORM",
-            "environmentScope": [
-                "LOCAL",
-                "DEVELOPMENT",
-                "TEST"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "DELETE_EXPLICIT",
-            "files": {
-                "sample-v001/records/validator/defaultSampleValidatorData.js": "c395aba554302b79448491b0e5784e50c55e3866ded112725047736f5995bb46",
-                "sample-v001/headers/validator/defaultSampleValidatorHeader.js": "759e31ee098ed5e6bf78251f280b4240fa8a5670e3c6a2a7d11fe08f106074db"
-            },
-            "sourceRoot": "sample-v001"
-        }
+  "contractVersion": 2,
+  "module": "validator",
+  "sections": {
+    "sample-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "version": "0.0.1",
+      "description": "Validation sample data",
+      "owningDomain": "validator",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "LOCAL",
+        "DEVELOPMENT",
+        "TEST"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "DELETE_EXPLICIT",
+      "files": {
+        "sample-v001/records/validator/defaultSampleValidatorData.js": "c395aba554302b79448491b0e5784e50c55e3866ded112725047736f5995bb46",
+        "sample-v001/headers/validator/defaultSampleValidatorHeader.js": "759e31ee098ed5e6bf78251f280b4240fa8a5670e3c6a2a7d11fe08f106074db"
+      },
+      "sourceRoot": "sample-v001"
     }
+  }
 }

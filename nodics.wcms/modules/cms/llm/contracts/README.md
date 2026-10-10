@@ -32,6 +32,9 @@ CMS schema capabilities and generated safe-search API using the current employee
 and the registered Staged CMS connection. The authored lifecycle field is not
 proof of publication. Online manifests serve published pages, not the authoring
 product collection; never enable Online generic schema APIs for this discovery.
+Reviewed STAGED and APPROVED products may be discovered alongside legacy ONLINE
+metadata. DRAFT, retired, inactive and non-public records remain excluded. Only
+owner READY status unlocks article delivery; discovery grants no publication.
 Use advertised operations and bounded
 paging; deny/unavailable/invalid responses must not trigger a fallback API, Site
 or connection. Join products by exact Site to the existing authenticated
@@ -76,6 +79,14 @@ This folder contains module-specific AI/developer contracts for `nodics.wcms/mod
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
 ## WCMS authoring model
+
+Publication `loadLatest` bounds each descending-version owner read and excludes
+already resolved stable codes before continuing. Limits count distinct identities,
+not history rows. The original query, tenant and employee authority remain bound;
+ignored exclusion or excessive distinct identities rejects before a truncated
+graph can be approved. Exact immutable version loads and schema-owned generic
+HISTORY/CURRENT semantics are unchanged. Run
+`test/cmsPublicationHistoryCapacity.test.js` for repeated-import regression coverage.
 
 - `cms` owns the reusable WCMS authoring schemas. `wcms` owns
   workflow-enabled CMS behavior and should not duplicate plain authoring

@@ -133,6 +133,37 @@ module.exports = {
     this.validateLocalEndpointConfiguration(target);
     return target;
   },
+  /** Lists only non-default registry codes through a bounded native read; grants no binding/reset admission. @param {Object} options Explicit environment/configuration/defaultTenant. @returns {Promise<string[]>} Sorted codes, including inactive tenants so they cannot be silently omitted. */
+  discoverRegisteredTenantCodes: async function (options) {
+    const target = scope.nativeTarget(options, false);
+    this.validateLocalEndpointConfiguration(target);
+    if (!/^[A-Za-z0-9._-]{1,128}$/.test(options.defaultTenant || "") ||
+        ["__proto__", "constructor", "prototype"].includes(options.defaultTenant))
+      throw new Error("RESET_TENANT_SELECTION_INVALID");
+    const client = this.createClient(target);
+    let cursor;
+    try {
+      await client.connect();
+      const db = client.db(target.databaseName);
+      this.validateLocalTopology(target, await db.command({ hello: 1 }, { maxTimeMS: 5000 }));
+      cursor = db.collection("TenantModel").find({ code: { $ne: options.defaultTenant } }, {
+        projection: { _id: 0, code: 1 }, readPreference: "primary", maxTimeMS: 5000,
+      }).limit(33);
+      const rows = await cursor.toArray();
+      if (!Array.isArray(rows) || rows.length > 32 || rows.some(row =>
+        typeof row?.code !== "string" || !/^[A-Za-z0-9._-]{1,128}$/.test(row.code) ||
+        [options.defaultTenant, "__proto__", "constructor", "prototype"].includes(row.code)) ||
+        new Set(rows.map(row => row.code)).size !== rows.length)
+        throw new Error("RESET_TENANT_DISCOVERY_INVALID");
+      return rows.map(row => row.code).sort();
+    } catch {
+      throw new Error("RESET_TENANT_DISCOVERY_FAILED");
+    } finally {
+      try {
+        try { if (cursor) await cursor.close(); } finally { await client.close(); }
+      } catch { throw new Error("RESET_TENANT_DISCOVERY_FAILED"); }
+    }
+  },
   /** Reads exact registered tenant and enterprise provenance through one native maintenance connection; no schema initialization or writes. @param {Object} options Explicit project/environment/configuration/registeredTenants. @returns {Promise<Object>} Private frozen observation, not a public receipt. */
   readRegisteredTenantBindings: async function (options) {
     const target = scope.nativeTarget(options, false);

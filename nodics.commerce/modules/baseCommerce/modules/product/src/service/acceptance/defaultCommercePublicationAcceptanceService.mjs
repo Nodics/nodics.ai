@@ -18,7 +18,7 @@ import commands from '../../../../../../../../nodics.foundation/modules/nTooling
 import probe from '../../../../../../../../nodics.foundation/modules/nTooling/src/service/project/defaultProjectConfigurationProbeService.js';
 import { mediaSeedAssets } from '../../../../../../../../nodics.wcms/modules/media/src/service/acceptance/defaultMediaSeedAcceptanceService.mjs';
 
-/** Resolves application-owned media references with Media's existing confined resolver; no network, uploads or alternative loader. */
+/** Resolves selected manifests, including shared CMS-owned media, through Media's confined resolver without changing asset ownership. */
 export function resolveCommercePublicationFixtures(config, context, options = {}) {
   let profiles = options.profiles;
   let modules = options.modules;
@@ -31,7 +31,6 @@ export function resolveCommercePublicationFixtures(config, context, options = {}
       inheritEnvironment: true }).properties.backofficeApplicationInitialization?.profiles;
     modules ||= commands.collectModules(context.projectRoot, commands.collectModules(frameworkRoot, []));
     const media = mediaSeedAssets({ profiles, modules, selectedModules: catalog.mediaModules })
-      .filter(entry => entry.asset.ownerType === 'PRODUCT')
       .map(entry => ({ mediaCode: entry.asset.mediaCode, checksum: entry.checksum }));
     return { ...catalog, media };
   }) };
@@ -51,6 +50,80 @@ function requireSafeProduct(product, label) {
   }
 }
 
+/** Normalizes exact Product root evidence without treating a representative receipt as catalogue coverage. */
+export function commerceProductPublicationFixtures(catalog) {
+  const configured = catalog.publications?.product;
+  const receipts = Array.isArray(configured) ? configured : [configured];
+  requireValue(receipts.length > 0 && receipts.length <= 100, 'Each catalog requires 1..100 exact Product publication receipts');
+  const roots = new Set(), codes = new Set();
+  for (const receipt of receipts) {
+    requireValue(receipt?.code && receipt.rootCode && receipt.sourceVersion && receipt.targetVersion,
+      'Governed Online prerequisite missing for product: provide exact publication code, rootCode, sourceVersion and targetVersion; use the owner approved lifecycle, not internal restore APIs');
+    requireValue(!roots.has(receipt.rootCode) && !codes.has(receipt.code), 'Product publication fixtures contain duplicate roots or publication codes');
+    requireValue(catalog.productCodes.includes(receipt.rootCode), 'Product publication fixture is outside the expected catalogue: ' + receipt.rootCode);
+    roots.add(receipt.rootCode);
+    codes.add(receipt.code);
+  }
+  const missing = catalog.productCodes.filter(code => !roots.has(code));
+  requireValue(missing.length === 0, 'Governed Online Product receipt coverage is missing: ' + missing.join(', '));
+  return receipts;
+}
+
+/** Reads every bounded public discovery page and rejects repeats, changing totals and incomplete pagination. */
+export async function readCommercePublicationCatalogue(catalog, request, headers) {
+  const policy = catalog.discoveryPagination || {};
+  const pageSize = policy.pageSize ?? 24, maximum = policy.maximumProducts ?? 1000;
+  requireValue(Number.isSafeInteger(pageSize) && pageSize >= 1 && pageSize <= 100 &&
+    Number.isSafeInteger(maximum) && maximum >= catalog.productCodes.length && maximum <= 10000,
+  'Commerce discovery pagination limits are invalid');
+  const products = [], seen = new Set();
+  let effectivePageSize = pageSize, total;
+  for (let page = 1; page <= Math.ceil(maximum / effectivePageSize) + 1; page += 1) {
+    const query = new URLSearchParams({ storeCode: catalog.storeCode, locale: catalog.locale,
+      pageSize: String(pageSize), page: String(page), sortCode: 'name-asc' });
+    const listing = await request('COMMERCE', '/nodics/product/v0/products/discovery?' + query, { headers });
+    requireValue(Array.isArray(listing?.products), 'Online discovery returned invalid Product cards');
+    requireValue(listing.discovery?.source === 'SEARCH_INDEX', 'Online discovery must be search-index backed');
+    if (listing.page !== undefined) requireValue(listing.page === page, 'Online discovery returned an unexpected page');
+    if (listing.pagination?.page !== undefined) requireValue(listing.pagination.page === page, 'Online discovery returned an unexpected pagination page');
+    const reportedPageSize = listing.pageSize ?? listing.pagination?.pageSize ?? effectivePageSize;
+    requireValue(Number.isSafeInteger(reportedPageSize) && reportedPageSize >= 1 && reportedPageSize <= pageSize &&
+      (page === 1 || reportedPageSize === effectivePageSize), 'Online discovery page size is invalid or changed');
+    if (listing.pageSize !== undefined && listing.pagination?.pageSize !== undefined)
+      requireValue(listing.pageSize === listing.pagination.pageSize, 'Online discovery page sizes disagree');
+    effectivePageSize = reportedPageSize;
+    requireValue(listing.products.length <= effectivePageSize, 'Online discovery exceeded its page size');
+    const reportedTotal = listing.total ?? listing.pagination?.total;
+    if (reportedTotal !== undefined) {
+      requireValue(Number.isSafeInteger(reportedTotal) && reportedTotal >= 0 && reportedTotal <= maximum &&
+        (total === undefined || reportedTotal === total), 'Online discovery total is invalid, changed or exceeds its bound');
+      if (listing.total !== undefined && listing.pagination?.total !== undefined)
+        requireValue(listing.total === listing.pagination.total, 'Online discovery totals disagree');
+      total = reportedTotal;
+    } else requireValue(total === undefined, 'Online discovery lost its total during pagination');
+    const hasNext = listing.pagination?.hasNextPage;
+    requireValue(hasNext === undefined || typeof hasNext === 'boolean', 'Online discovery next-page evidence is invalid');
+    for (const product of listing.products) {
+      requireValue(typeof product?.productCode === 'string' && product.productCode && !seen.has(product.productCode),
+        'Online discovery repeated or omitted a Product identity');
+      requireSafeProduct(product, 'Product card');
+      seen.add(product.productCode);
+      products.push(product);
+      requireValue(products.length <= maximum, 'Online discovery exceeded its configured Product bound');
+    }
+    if (total !== undefined) {
+      requireValue(products.length <= total, 'Online discovery exceeded its reported total');
+      if (products.length === total) {
+        requireValue(hasNext !== true, 'Online discovery next-page evidence contradicts its total');
+        return products;
+      }
+      requireValue(hasNext !== false && listing.products.length === effectivePageSize, 'Online discovery ended before its reported total');
+    } else if (hasNext === false || hasNext === undefined && listing.products.length < effectivePageSize) return products;
+    else requireValue(listing.products.length > 0, 'Online discovery promised another page without progress');
+  }
+  throw new Error('Online discovery did not terminate within its configured Product bound');
+}
+
 /** Verifies governed delivery; optional legacy projection qualification never substitutes for approval or target activation. */
 export async function runCommercePublicationAcceptance(options = {}) {
   requireValue(options.execute === true && options.approvePublications === true,
@@ -63,7 +136,11 @@ export async function runCommercePublicationAcceptance(options = {}) {
     requireValue(catalog.catalogVersion && catalog.storeCode && catalog.locale, 'Each catalog needs catalogVersion, storeCode and locale');
     requireValue(Array.isArray(catalog.productCodes) && catalog.productCodes.length > 0 && catalog.productCodes.length <= 100,
       'Each catalog requires 1..100 expected productCodes');
+    requireValue(catalog.productCodes.every(code => typeof code === 'string' && code.trim() && code.length <= 192) &&
+      new Set(catalog.productCodes).size === catalog.productCodes.length, 'Expected productCodes must be bounded unique identities');
+    commerceProductPublicationFixtures(catalog);
     for (const domain of requiredDomains) {
+      if (domain === 'product') continue;
       const receipt = catalog.publications?.[domain];
       requireValue(receipt?.code && receipt.rootCode && receipt.sourceVersion && receipt.targetVersion,
         'Governed Online prerequisite missing for ' + domain + ': provide exact publication code, rootCode, sourceVersion and targetVersion; use the owner approved lifecycle, not internal restore APIs');
@@ -78,7 +155,8 @@ export async function runCommercePublicationAcceptance(options = {}) {
   // Existing lifecycle evidence is mandatory: no service credentials, approval bypass or direct ingestion fallback.
   for (const catalog of config.catalogs) {
     for (const domain of requiredDomains) {
-      const expected = catalog.publications[domain];
+      const receipts = domain === 'product' ? commerceProductPublicationFixtures(catalog) : [catalog.publications[domain]];
+      for (const expected of receipts) {
       const role = domain === 'media' ? 'WCMS_STAGED' : 'COMMERCE_STAGED';
       const receipt = await request(role, '/nodics/publish/v0/publications/' + encodeURIComponent(expected.code), { headers });
       requireValue(receipt?.code === expected.code && receipt.domain === domain && receipt.rootCode === expected.rootCode &&
@@ -92,9 +170,13 @@ export async function runCommercePublicationAcceptance(options = {}) {
           typeof proof.operationKey === 'string' && proof.operationKey.length > 0 &&
           proof.publicationCode === receipt.code && proof.sourceVersion === receipt.sourceVersion &&
           proof.targetVersion === expected.targetVersion && activation.version === expected.targetVersion &&
-          proof.previousOnlineVersion === receipt.previousOnlineVersion &&
+          proof.previousOnlineVersion === receipt.activationOperation?.previousOnlineVersion &&
+          proof.previousOnlineVersion === activation.previousOnlineVersion &&
+          (proof.previousOnlineVersion === receipt.previousOnlineVersion ||
+            (proof.previousOnlineVersion === null && !Object.hasOwn(receipt, 'previousOnlineVersion'))) &&
           (proof.previousOnlineVersion === null || typeof proof.previousOnlineVersion === 'string' && proof.previousOnlineVersion.length > 0),
         'Product qualified activation receipt is missing or mismatched');
+      }
       }
     }
   }
@@ -115,12 +197,11 @@ export async function runCommercePublicationAcceptance(options = {}) {
       Array.isArray(summary.projectionSnapshots) && summary.projectionSnapshots.length > 0,
     'Staged publication produced no Product projections or handoff snapshots');
     }
-    const query = new URLSearchParams({ storeCode: catalog.storeCode, locale: catalog.locale, pageSize: '100' });
-    const listing = await request('COMMERCE', '/nodics/product/v0/products/discovery?' + query, { headers });
-    requireValue(Array.isArray(listing?.products) && listing.products.length > 0, 'Online discovery returned no Product cards');
-    requireValue(listing.discovery?.source === 'SEARCH_INDEX', 'Online discovery must be search-index backed');
-    for (const card of listing.products) {
-      requireSafeProduct(card, 'Product card');
+    const query = new URLSearchParams({ storeCode: catalog.storeCode, locale: catalog.locale });
+    const products = await readCommercePublicationCatalogue(catalog, request, headers);
+    const missing = catalog.productCodes.filter(code => !products.some(product => product.productCode === code));
+    requireValue(missing.length === 0, 'Expected Online product is missing: ' + missing.join(', '));
+    for (const card of products) {
       requireValue(card.media?.primary?.mediaCode && card.media.primary.deliveryUrl, 'Product card is missing renderable media');
       const media = catalog.media.find(asset => asset.mediaCode === card.media.primary.mediaCode);
       requireValue(media, 'Product media is outside the governed fixture manifest');
@@ -128,7 +209,6 @@ export async function runCommercePublicationAcceptance(options = {}) {
       requireValue(card.media.primary.deliveryUrl === canonical, 'Product media delivery must use the canonical Media reference');
     }
     for (const productCode of catalog.productCodes) {
-      requireValue(listing.products.some(product => product.productCode === productCode), 'Expected Online product is missing: ' + productCode);
       const detail = await request('COMMERCE', '/nodics/product/v0/products/' + encodeURIComponent(productCode) + '?' + query, { headers });
       requireSafeProduct(detail?.product, 'Product PDP');
       requireValue(detail.product.productCode === productCode, 'Product PDP resolved an unexpected identity');
@@ -140,6 +220,8 @@ export async function runCommercePublicationAcceptance(options = {}) {
       requireValue(checksum === asset.checksum, 'Online Media checksum mismatch: ' + asset.mediaCode);
     }
     summaries.push({ catalogVersion: catalog.catalogVersion, storeCode: catalog.storeCode,
+      expectedProductCount: catalog.productCodes.length, discoveredProductCount: products.length,
+      qualifiedProductReceiptCount: commerceProductPublicationFixtures(catalog).length,
       legacyProjectionQualification: summary ? { published: summary.published, projectionCount: summary.projectionCount } : null });
   }
   return { state: 'PASSED', onlineTransfer: 'EXTERNAL_GOVERNED_PREREQUISITE', summaries };

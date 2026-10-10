@@ -1,5 +1,14 @@
 # nTooling AI Contracts
 
+`DefaultProjectLocalRuntimeCredentialService.ensureSecretKey` adds one explicitly
+selected `NODICS_*_KEY` to existing qualified native-Local storage during an
+operator-owned exclusive outage. It creates a stable 32-byte hex key only when
+absent, preserves all existing credentials, refuses malformed retained keys and
+returns no secrets. Atomic replacement and race checks never normalize other
+credentials, rotate keys or create missing storage. This is Local tooling, not a
+production provider. Capability configuration must bind the exact purpose input;
+file presence alone never qualifies live encryption or private capture.
+
 ## Reference Change Preparation
 
 The existing data-manifest owner exposes `preflightReferenceChanges` for a supplied
@@ -23,6 +32,70 @@ operations. Never add a parallel customer runner or automatically erase security
 caches on start. Physical destruction remains a separately approved operator task.
 
 ### Exact Local Reset Maintenance Preflight
+
+#### Optional Physical Search Scope
+
+The same command accepts `--search-indexes=ExactPhysicalA,ExactPhysicalB` alongside
+the complete database/auth selection. Omission preserves the original search
+exclusion. Selection must exactly match authored enabled bindings across selected
+runtimes, including schema search and later physical-name overrides. Require
+lower-case environment-prefixed names, unambiguous logical/provider bindings,
+default-tenant selection and process-local search caches. Registered-tenant search,
+retirement, external search caches and dynamically persisted-only index selection
+remain unqualified. Never expand a destructive scope by cluster prefix matches.
+Dry-run reads configuration only and opens no search client.
+Definitions merge using `typeName || fileKey`, matching runtime logical precedence;
+an alias contribution must replace rather than retain an obsolete physical target.
+Cache admission resolves each original physical name through the existing
+`getSearchCacheChannel` mapping and validates the resulting channel and engine,
+not merely the literal `search` channel.
+The admitted backing engine uses `DefaultLocalCacheEngineService` and
+`DefaultLocalCacheService`, with explicit non-distributed metadata; relabelling
+an external adapter `local` grants no admission. Other cache adapters need
+separate qualification rather than a renamed configuration entry.
+
+nSearch resolves bindings through existing layered file/schema loaders without
+initialization or persisted-index reads. Configured connection handlers expose
+`openLocalResetMaintenance`; Elastic alone constructs its client, inspects exact
+UUIDs and one-node topology, and performs bounded zero-retry exact-name deletion.
+No tooling driver calls, wildcard deletion, retirement-policy reuse, API-key
+change or cluster-setting mutation is admitted. Native host observation must
+corroborate the provider-reported same-user Java PID on both loopback HTTP and
+transport ports and exclude other connected clients, alongside Mongo/Redis and
+the canonical runtime outage. This remains `continuousFence: false` under an
+operator-controlled outage, not distributed isolation or a future-client lock.
+
+Search inspections complete before any mutation. Each physical drop follows
+database drops and precedes auth cleanup. Outage and source bindings are checked
+before each effect; the held owner revalidates original cluster/node/PID/UUID.
+Native acknowledgement plus exact typed absence is required. Originally absent
+indexes count separately from deletions. Timeout, reappearance, changed UUID or
+ambiguous absence is incomplete and never retried. Preserve attempted index,
+confirmed earlier effects, failed stage and `restartAllowed: false`; close all
+held targets even on failure. Stopped process-local caches and engine bookkeeping
+are absent; persistent cache layouts require a qualified owner and are refused.
+
+Final verification covers selected authored indexes only, databases/auth and
+unchanged outage, not historical/unrelated/dynamic indexes, Media, application
+readiness or business acceptance. Normal startup/reimport/publication remains a
+separate operator-controlled recovery stage. An evaluator uses dry-run to inspect
+names; an operator executes only with disposable-deployment and writer exclusion
+approval. A partner customizes physical names in deployment `src/search/indexes.js`,
+not framework source. Maintainers test success, absent originals, changed UUID,
+provider drift, partial failure and cleanup. AI tools never turn refusal into an
+override, raw provider call or automatic restart. Isolated tests are not live
+qualification.
+
+When registered codes are unknown, the same command supports the explicitly
+read-only `--discover-registered-tenants` mode with only `--environment` and
+`--project-code` identity selections. It verifies the selected deployment and
+maintenance outage, then delegates a bounded code-only registry read to the
+effective Mongo maintenance owner. It never creates credentials or initializes
+schemas. Reset selections, execution flags and injected adapters are forbidden
+in discovery mode. Its zero-effect receipt is not reset admission or proof that
+orphan databases do not exist. Use discovered codes as explicit selections in a
+subsequent ordinary dry-run; protected provenance, fresh pin validation and all
+operational exclusion checks still apply before execution.
 
 An optional `--registered-tenants=ExactTenantCode,...` extends this same owner,
 not a separate cleanup facility. It reads exact active Tenant and Enterprise
@@ -319,9 +392,10 @@ customer acceptance journeys or media seeds are discovered from conventional
 `nodics.project.json` or move these aliases into layered properties just to repeat
 the project structure. The existing executor supplies project and framework
 roots. Do not copy topology, release or configuration resolvers into the project.
-Project documentation generators read stable publication identifiers,
-routes, labels and channels from `docs/catalogue.json.publication`, validated
-before writing. The generic data-manifest command refreshes only explicitly
+Project documentation checks read stable publication identifiers, routes,
+labels and channels directly from canonical CMS data. There is no separate
+Markdown-to-CMS authoring workflow. The compatibility `docs:generate` command
+only validates existing records. The generic data-manifest command refreshes only explicitly
 declared development-baseline checksums; changed immutable releases fail before
 any manifest write. Environment composition selects an explicit code or the sole
 declared composition and reads only its declared environment variable.

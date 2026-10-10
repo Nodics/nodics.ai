@@ -11,6 +11,7 @@
 
 /** @module eWaste/utils/statusDefinitions @description Declares owned operation error codes. @layer utility @owner eWaste */
 module.exports = {
+  ...require("./digitalSaleDiagnostics").statuses,
   ERR_EWASTE_CUSTOMER_QUERY: { code: "400", message: "Choose valid item filters and pagination" },
   ERR_EWASTE_CHANNEL_LINK_CONFLICT: {
     code: "409",

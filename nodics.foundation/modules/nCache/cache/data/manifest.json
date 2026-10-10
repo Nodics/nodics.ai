@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "cache",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "cache",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "78f071c506179fba85b44c31a30aabffd43bcab151300db9ff6090758bea58c4",
+      "generatedHashes": {
+        "docs-v001/records/documentation/cacheDocumentationNodeData.js": "c2b817585f02cef38bc801c8f2379cda6c41029e6612d0db5bc38e93c36ebd60",
+        "docs-v001/records/documentation/cacheDocumentationPageMetadataData.js": "96dba89b02786897f106af1db5e38978861ad453992529846689a468339da327",
+        "docs-v001/records/documentation/cacheDocumentationPublicationStateData.js": "d97819bc124eea62e367fff021f8d37f74bab7972168b52cdd3f2ac284c49d91",
+        "docs-v001/records/documentation/cacheDocumentationSearchMetadataData.js": "23b8a946cb5b740fcd30553f6450f8a625bb6752d8415c2218eee086f44185bc",
+        "docs-v001/records/documentation/cacheDocumentationComponentData.js": "73d2d00c6d22c76d2238dff429ba2bc9f7571844de228e883e7eba848dde7019",
+        "docs-v001/records/documentation/cacheDocumentationPageData.js": "ce20e61e49a7615521c1e144b1271ada7c31181375d556c5c8ad41c6c362879b",
+        "docs-v001/records/documentation/cacheDocumentationRouteData.js": "b27102ecaac72fa84636a8b3278e60e791cfa9afb806ddd9c7e92ab9eb852ef8",
+        "docs-v001/headers/100_cacheDocumentationContentPackHeader.js": "32aef0c5d7cd37895c9bffc00ac44a3f710416723763364e2eb85efbf49f3e37"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "locationSearch",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "locationSearch",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "ace73a72ca3f84dde0fb7d14878b31a79d2a532727aba612a298e93fc86f7e02",
+      "generatedHashes": {
+        "docs-v001/records/documentation/locationSearchDocumentationComponentData.js": "774d8ef54f07f7fe015b3ce9b8acc18a1bb37c9fa57f3423ba7d9fd13cc64c8d",
+        "docs-v001/records/documentation/locationSearchDocumentationPageMetadataData.js": "43e6eec9cfdc687ac91d7a6244f683679d7d2a3155634116f9cf26948ece736f",
+        "docs-v001/records/documentation/locationSearchDocumentationNodeData.js": "014f4dc5753e68188df52075c7f4d78c567c48f330fb07217fe52d0388de1dc0",
+        "docs-v001/records/documentation/locationSearchDocumentationPageData.js": "8a7171247feccc6d5e59ab73dc5d36db60f0d61af45889844e082b9163411968",
+        "docs-v001/records/documentation/locationSearchDocumentationRouteData.js": "5131e549af35dcb33bdfea73786203b76ed9a3bd7ccdbfb1382f4326bb666dae",
+        "docs-v001/records/documentation/locationSearchDocumentationSearchMetadataData.js": "2a6f48d7e8f4f6871545744ce723453735637184cc85d915c5842cf9ed9ec710",
+        "docs-v001/records/documentation/locationSearchDocumentationPublicationStateData.js": "22f05f10f8392a0fd22ef7ecffef72f8dd9ce77b4a25cafa4903224c68436854",
+        "docs-v001/headers/100_locationSearchDocumentationContentPackHeader.js": "4b067bfbd358497599152a1556c2377c623985fd85bf02a2ec1143ce551de1d2"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

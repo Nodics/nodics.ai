@@ -25,7 +25,9 @@ AI/developer behavior contract. Detailed permanent human documentation belongs
 to the canonical documentation content pack; `llm/` contains nearby
 AI-specific guidance, examples, contracts, and generated context.
 
-Module packages must not create a parallel `docs/` directory. The root `docs/`
+Module packages, including documentation owners, must not create a parallel
+`docs/` directory. Documentation is CMS data under the owning module's `data/`
+release, not a separate Markdown authoring workflow. The root `docs/`
 workspace remains temporary, untracked, non-runtime planning and archive space.
 Raw module discovery must continue to skip folders named `docs` so copied
 historical material can never become a runtime module source.
@@ -36,18 +38,35 @@ for startup/bootstrap data, `data/core-vNNN` for core/reference imports, and
 `data/sample-vNNN` for demo/sample imports. Do not create empty `data/` folders
 on project roots or pure group modules.
 
+The current unreleased framework and Kickoff baseline uses only `v001` source
+roots within each data type. Future releases must use the existing forward-release
+contracts once installations depend on immutable release bytes; consolidation
+does not remove support for numbered upgrades.
+
+Existing local installations can retain receipts for the pre-consolidation
+bytes. Inspect installed history before adopting this rebased baseline and use
+an explicitly approved, governed fresh initialization or reset where required.
+Do not rewrite import receipts, bypass checksum drift protection, or replay Init
+against an established deployment to force the new baseline into place.
+
 Every non-empty published system-data root must contain exactly one aggregate
 `data/manifest.json` following `data-manifest-contract.md`. Init, core, sample,
 content-pack, and governed source contributions are separate versioned sections
 inside that file. Do not create a root `manifest/` directory or per-type
 `data/<type>/manifest.json` files.
 
-Canonical source files used to generate importable data must stay inside the
+Other canonical source files used to generate importable data must stay inside the
 same data ownership tree, for example `data/core-v001/source/...`, while
 importable records remain under the matching `data/core-v001/records/...` and
 `data/core-v001/headers/...` paths. Do not add module-root source folders such as
 `content/` for import-pack authoring unless a documented loader/generator
 contract explicitly introduces that folder as a new standard.
+
+CMS documentation pages, components, navigation and metadata are maintained
+directly under `data/docs-v001/records/documentation`. Documentation images belong
+under the same release's `assets/documentation` tree, are declared as Media
+records, and are referenced by `mediaCode`. Developer contracts and API guidance
+remain in `llm/contracts`; validation evidence remains under `test/`.
 
 `llm/contracts/` and `llm/examples/` are maintained source folders, not
 generated output. AI tools and developers must update them when functionality

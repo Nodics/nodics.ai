@@ -10,6 +10,7 @@
  */
 
 "use strict";
+const diagnostics = require("../utils/merchantValidationDiagnostics");
 /** @module digitalCore/controller/defaultDigitalCommerceMerchantController @description Maps customer claims and employee merchant confirmations while retaining trusted identity and stable command references. @layer controller @owner digitalCore */
 module.exports = {
   /** Maps only route, body and trace fields into the declared server-owned operation. */
@@ -49,7 +50,24 @@ module.exports = {
         return FACADE.DefaultDigitalCommerceMerchantFacade[operation](input);
       })
       .then((data) => ({ data }))
-      .catch(() => {
+      .catch((error) => {
+        const confirmation = operation === "confirm" &&
+          SERVICE.DefaultDigitalCommerceMerchantService?.confirmationDiagnostic?.(error);
+        const stage = operation === "validate" ?
+          SERVICE.DefaultDigitalCommerceMerchantService?.validationDiagnostic?.(error) : confirmation ? "CONFIRM:" + confirmation : undefined;
+        const admission = stage === "ISSUER_ADMISSION" ?
+          SERVICE.DefaultPromotionMerchantScopeService?.admissionFailureStage?.(error) : stage === "MERCHANT" ?
+          SERVICE.DefaultDigitalCommerceMerchantService?.merchantFailureStage?.(error) : stage === "RIGHTS" ?
+          SERVICE.DefaultPromotionPricedTransactionAdapterService?.failureStage?.(error) ||
+          SERVICE.DefaultPromotionOperationService?.merchantValidationFailureStage?.(error) : stage === "CONFIRM:PROVIDER" ?
+          SERVICE.DefaultDigitalCommercePricedMerchantProviderService?.failureStage?.(error) : stage === "CONFIRM:REDEEM" ?
+          SERVICE.DefaultPromotionBudgetMutationService?.failureStage?.(error) ||
+          SERVICE.DefaultPromotionCouponBudgetService?.failureStage?.(error) : undefined;
+        const detail = stage + ":" + admission;
+        const selected = Object.hasOwn(diagnostics.codes, detail) ? detail : stage;
+        if (Object.hasOwn(diagnostics.codes, selected))
+          throw new CLASSES.NodicsError({ code: diagnostics.codes[selected],
+            message: diagnostics.statuses[diagnostics.codes[selected]].message });
         throw new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID");
       });
     return callback

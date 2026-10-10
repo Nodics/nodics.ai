@@ -22,7 +22,11 @@ module.exports = {
       !enterpriseCode
     )
       throw this.contextError("Store context is invalid");
-    const response = await SERVICE.DefaultStoreService.get({
+    const response = request.authData?.principalType === 'human'
+      ? await SERVICE.DefaultStoreMerchantReadService.read(request, code).then(store => ({
+          code: 'SUC_STORE_READ', count: store ? 1 : 0, result: store ? [store] : []
+        }))
+      : await SERVICE.DefaultStoreService.get({
       tenant: request.tenant,
       authData: request.authData,
       query: { code },

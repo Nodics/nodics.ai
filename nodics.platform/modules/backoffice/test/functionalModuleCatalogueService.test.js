@@ -355,11 +355,11 @@ async function run() {
             return Object.assign({ built: true }, options);
         },
         fetch: async request => ({ code: 'SUC_IMP_00000', data: { requestUri: request.uri, releases: [
-            { releaseCode: 'baseCommerce:core-reference', status: 'CURRENT' }
+            { releaseCode: 'store:core-reference', status: 'CURRENT' }
         ] } })
     };
     let remotePreflight = await service.runActivationDataReleaseOperation('preflight',
-        { dataType: 'core', releaseCodes: ['baseCommerce:core-reference'] },
+        { dataType: 'core', releaseCodes: ['store:core-reference'] },
         { targetServer: 'commerceServer', targetModule: 'commerce' },
         { tenant: 'default', body: { correlationId: 'activation-1' } });
     assert.strictEqual(resolvedOptions.moduleName, 'system');
@@ -367,9 +367,9 @@ async function run() {
     assert.strictEqual(transportOptions.uri, 'http://localhost:4350/nodics/import/v0/core/validate');
     assert.deepStrictEqual(refreshedTenants, ['default']);
     assert.strictEqual(transportOptions.header.Authorization, 'Bearer refreshed-internal-token');
-    assert.strictEqual(transportOptions.requestBody.releaseCodes[0], 'baseCommerce:core-reference');
+    assert.strictEqual(transportOptions.requestBody.releaseCodes[0], 'store:core-reference');
     assert.strictEqual(remotePreflight.data.releases[0].status, 'CURRENT');
-    const release = { dataType: 'core', releaseCodes: ['baseCommerce:core-reference'] };
+    const release = { dataType: 'core', releaseCodes: ['store:core-reference'] };
     const target = { targetServer: 'commerceServer', targetModule: 'commerce' };
     const operator = { tenant: 'default', authData: { principalId: 'admin' }, httpRequest: { headers: { authorization: 'Bearer operator-token' } } };
     refreshedTenants = [];

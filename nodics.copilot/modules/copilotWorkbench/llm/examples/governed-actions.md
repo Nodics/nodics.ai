@@ -46,7 +46,7 @@ and checkout execution remain future descriptors. They must not be displayed or
 documented as executable merely because another CRUD adapter exists. Add future
 adapters in their owning framework layer with explicit receipt and recovery
 contracts, not in a customer kickoff module or through arbitrary model-generated
-URLs. See the [original-result operator guide](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md) for native journal admission, current permissions and remaining uncertainty boundaries.
+URLs. See the [original-result operator guide](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js) for native journal admission, current permissions and remaining uncertainty boundaries.
 
 ## Prepare and Review
 

@@ -1,11 +1,69 @@
 # profile Agent Contract
 
+The separate `/internal/enterprise/resolve` capability is default-off under
+`profileRuntimeEnterpriseResolution`. Admit only exact selected group-free
+deployment coordinates, service identity, signed tenant/principal enterprise,
+`profile` scope, `profile.enterprise.search` and reviewed business enterprise.
+Retain signed claims and header enterprise. Derive placement from fresh existing
+Enterprise/Tenant owners, never payload tenant or reference display fields.
+Return only active code/tenant binding; no properties, credentials or groups.
+Never widen `getRuntimeEnterprise` or touch customer-evidence authority to solve
+namespace placement. Preserve `test/profileRuntimeEnterpriseResolutionContract.test.js`.
+
+Commerce setup responsibilities follow [the explicit setup role contract](llm/contracts/commerce-setup-roles.md).
+Keep publisher and issuer groups in separate explicitly selected Core packs;
+never rewrite Init, assign staff from role-definition installation, add Administrator ancestry or
+enable qualifications. Existing native Employee group changes use authorized
+generated updates and stamp hooks; linked identities retain membership authority.
+Publisher composition also requires the separate forward
+`commercePublicationStarterRole` Core pack: Process start only, without speculative
+definition reads. Preserve the installed original publisher pack and receipt; `0.0.1` is not
+nImport's mutable `0.0.0` development baseline. Never repair it by checksum drift.
+
+Enterprise Commerce refund-reviewer setup follows
+[the scoped reviewer contract](llm/contracts/commerce-refund-reviewer.md).
+Its explicit core pack creates a new least-privilege group only. Preserve current
+Init receipts, default-off onboarding and ordinary administrator grants; invite
+through Profile after actual qualification, never through acceptance-owned identities.
+
+Read-only runtime-grant acceptance compares each deployment to its own resolved
+permission policy, as the bootstrap owner does. Never demand Platform's union
+from sibling runtimes or repair grants inside acceptance.
+
 Reference employee imports use `DefaultEmployeeService.ensureReferenceAll` when
 the source intends create-or-preserve rather than an account mutation. Keep
 existing credentials and groups untouched, reject key conflicts/inactive or
 linked identities, retain caller authorization on fresh reads and insert-only
 generated saves, and return code-only acknowledgements. This is not employee
 onboarding, membership activation or password-reset authority.
+
+Explicit application reference-role instructions use
+`DefaultEmployeeService.addReferenceGroupsAll`, never partial employee saveAll.
+Keep exact five-field instructions, current configured non-administrative roles,
+complete active group/Enterprise and native identity preflight, retained enterprise
+association, additive ordered groups, exact current-group/password/stamp CAS,
+normal generated access/governance/stamp hooks and strict acknowledgement/readback.
+No public role-add route, system-authority substitution, credential replay,
+qualification or scope grants. Already adopted groups are no-ops. See
+[release-backed adoption](llm/contracts/commerce-setup-roles.md#release-backed-reference-adoption).
+
+Bounded runtime references use the existing `POST /references/read` owner, not
+generic Enterprise CRUD or caller-supplied system groups. Enterprise projection
+is exactly `code`, `name`, `active`; preserve `active` so consumers can check a
+current active identity. Retain runtime scope/module/type permission, signed
+tenant isolation, `active: true` query and private owner-controlled persistence.
+See [bounded runtime references](llm/contracts/README.md#bounded-runtime-references).
+Exact customer code/login evidence is the separate private
+`/internal/customer-evidence` capability, disabled by default. Preserve one exact
+runtime deployment/business-enterprise grant, `profile.customer.reference.read`,
+private capture and fresh active placement/customer/placement reads. Return only
+code/loginId/active; no credentials, contact, eligibility or membership authority.
+Canonical Customer rows omit tenant. Project envelope tenant only from the
+admitted, verified original generated-read partition; reject explicit conflicting
+row tenant and any generated-request partition drift across await. Keep original
+caller/policy/private-capture and fresh placement rechecks; never add a stored
+tenant field, mutate rows or rewrite caller auth/groups to repair evidence.
+See `test/profileCustomerEvidence.test.js` and the exact-read contract.
 
 Enterprise parent references are code-owned: `superEnterprise` persists a string
 matching `refSchema.superEnterprise.propertyName: code`. Keep schema validation,
@@ -86,6 +144,15 @@ participation revision; never copy staff groups or credentials. Keep
 `profileCustomerParticipation` qualification false until configured terms,
 authoritative eligibility and installed customer sessions are accepted. An absent
 eligibility provider rejects. Generated CRUD cannot manufacture consent.
+
+Ordinary Customer signup is independent of Employee membership/participation.
+Use the existing `profileCustomerEligibility.enabled` Boolean: false preserves
+ordinary signup/import without a decision receipt; true retains qualified owner,
+policy and audit enforcement. Missing/malformed selection rejects. Always read
+fresh exact active Enterprise/Tenant placement, including before persistence.
+Do not turn qualification flags on to make reference Commerce tests pass or
+make optional eligibility mandatory through an unconditional registration call.
+See `llm/contracts/customer-registration-form.md` and its owner/placement tests.
 
 Unused invitation withdrawal uses the serialized team owner, private committed
 evidence and a separately false `invitationWithdrawalQualified` flag. Reject
@@ -241,7 +308,7 @@ metadata does not select the initializer employee. Custom identities require
 matching governed Init data; partial checks never reset existing credentials.
 Human bootstrap employees and the credential-bearing guest are authority-tenant
 Init records, not automatic tenant administrators. The forward `profile:init-v001`
-`0.0.1` source (`init-v007`) separates service employees and uses existing layered
+`0.0.1` source (`init-v001`) separates service employees and uses existing layered
 header `options.tenants` intersection for humans/guest. Preserve per-tenant
 groups/services, configured authority selectors, retained release evidence and
 the unchanged nonauthority review refusal. Never repair old clones by changing

@@ -383,7 +383,7 @@ function qualify(f) {
                           active: true,
                           status: 'PUBLISHED',
                           version: 1,
-                          ...clone(require('../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData').definitions[0])
+                          ...clone(require('../data/init-v001/records/process/mediaPublicationWorkflowDefinitionData').definitions[0])
                       }
                   ]
                 : definition;
@@ -451,6 +451,9 @@ test('legacy or overridden review policy cannot enable new Media requests', asyn
         const result = await library.inspect({ mediaCode: 'hero' }, f.request);
         assert.equal(result.publicationRequestAvailable, false);
         assert.equal(result.publicationReadiness.blockers.some(item => item.code === 'PROCESS_MEDIA_DECISION_POLICY_REQUIRED'), true);
+        const blocker = result.publicationReadiness.blockers.find(item => item.code === 'PROCESS_MEDIA_DECISION_POLICY_REQUIRED');
+        assert.match(blocker.message, /init catalogue/);
+        assert.doesNotMatch(blocker.message, /1\.0\.[01]/, 'repair guidance must not pin a retired release version');
         assert.equal(calls.length, 0);
     }
 });

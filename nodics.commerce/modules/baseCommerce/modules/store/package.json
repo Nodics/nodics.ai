@@ -14,7 +14,8 @@
       "configuration",
       "schema",
       "service",
-      "llm"
+      "llm",
+      "data"
     ],
     "runtime": {
       "router": true,

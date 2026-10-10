@@ -11,6 +11,7 @@
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 "use strict";
+const { isDeepStrictEqual } = require("node:util");
 /** @module order/src/service/defaultOrderLifecycleOperationService @description Persists immutable lifecycle intent and maker-checker decisions through generated repositories. @layer service @owner order */
 module.exports = {
   /** Resolves the lifecycle repository adapter. @returns {Object} Repository service. */
@@ -159,6 +160,8 @@ module.exports = {
   evidence: function (request) {
     const input = request.payload || {};
     const evidence = Object.assign({}, input.evidence || {});
+    for (const key of ["submissionIntent", "execution", "downstream", "approval", "steps"])
+      delete evidence[key];
     const quantity = Number(evidence.quantity || input.quantity || 1);
     const productCodes = evidence.productCodes || input.productCodes || [];
     return Object.assign(evidence, {
@@ -340,9 +343,15 @@ module.exports = {
       serviceAuth,
       1,
     );
-    if (matches && matches[0]) return matches[0];
+    const submissionIntent = this.submissionIntent(request);
+    if (matches && matches[0]) {
+      if (!isDeepStrictEqual(matches[0].evidence?.submissionIntent, submissionIntent))
+        throw new Error("Replay requires the original submission intent; legacy requests require manual review");
+      return matches[0];
+    }
     const preview = await this.preview(request);
     const evidence = this.evidence(request);
+    evidence.submissionIntent = submissionIntent;
     if (preview.rmaCode && !evidence.rmaCode)
       evidence.rmaCode = preview.rmaCode;
     if (preview.refundPreview) evidence.refundPreview = preview.refundPreview;
@@ -359,6 +368,36 @@ module.exports = {
       ),
       serviceAuth,
     );
+  },
+  /** Binds a submission key to normalized customer intent, excluding generated execution evidence. */
+  submissionIntent: function (request) {
+    const payload = request.payload || {};
+    const evidence = this.evidence(request);
+    for (const key of ["submissionIntent", "execution", "downstream", "approval", "steps"])
+      delete evidence[key];
+    return JSON.parse(JSON.stringify({
+      tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+      ownerId: request.ownerId, orderCode: request.orderCode,
+      code: payload.code, requestType: payload.requestType,
+      reasonCode: payload.reasonCode, policyVersion: payload.policyVersion || 1,
+      refundAmount: payload.refundAmount, currency: payload.currency, evidence,
+    }));
+  },
+  /** Generic requests are not a qualified physical reversal or original-payment approval authority. */
+  reverseExecutionGate: function (request, record) {
+    if (!["CANCELLATION", "RETURN", "REFUND"].includes(record.requestType)) return null;
+    const recovery = Object.keys(record.evidence?.downstream || {}).length > 0 ||
+      ["APPROVED", "RECONCILING", "RECONCILIATION_REQUIRED", "RETURN_RECEIVED", "INSPECTED", "DISPOSITION_RECORDED"].includes(record.status);
+    if (!recovery && request.actionCode === "REJECT") return null;
+    return {
+      status: "BLOCKED",
+      actionCode: request.actionCode,
+      missingGate: record.requestType === "REFUND"
+        ? "scoped-original-capture-refund-approval"
+        : "qualified-operator-physical-stock-reversal-owner",
+      recoveryRequired: recovery,
+      nextAction: recovery ? "MANUAL_RECONCILIATION_OF_EXISTING_OWNER_EVIDENCE" : "MANUAL_REVIEW_PENDING_QUALIFIED_OWNER",
+    };
   },
   /** Lists customer-owned lifecycle requests. @param {Object} request Request. @returns {Promise<Array>} Results. */
   listOwn: function (request) {
@@ -402,112 +441,13 @@ module.exports = {
       DISPOSITION: "DISPOSITION_RECORDED",
     }[actionCode];
   },
-  /** Resolves an operator-confirmed refundable amount for cancellation/refund execution. @param {Object} payload Operator payload. @param {Object} recordEvidence Persisted evidence. @returns {string|undefined} Refund amount. */
-  refundAmount: function (payload, recordEvidence) {
-    const amount =
-      payload.refundAmount ||
-      (recordEvidence.refundPreview && recordEvidence.refundPreview.amount);
-    if (!amount || amount === "PENDING_CALCULATION") return undefined;
-    return String(amount);
-  },
-  /** Returns whether the lifecycle request should execute Payment-owned refund. @param {Object} request Operator request. @param {Object} record Lifecycle record. @param {Object} payload Payload. @param {Object} recordEvidence Evidence. @returns {boolean} Eligibility. */
-  shouldExecuteRefund: function (request, record, payload, recordEvidence) {
-    if (!["APPROVE", "RECONCILE"].includes(request.actionCode)) return false;
-    if (!["CANCELLATION", "REFUND"].includes(record.requestType)) return false;
-    return !!this.refundAmount(payload, recordEvidence);
-  },
   /** Invokes downstream owner services for approved operator lifecycle actions. @param {Object} request Operator request. @param {Object} record Lifecycle record. @returns {Promise<Object>} Downstream evidence. */
   downstreamActionEvidence: async function (request, record) {
+    const gate = this.reverseExecutionGate(request, record);
+    if (gate) throw new Error("Reverse execution blocked: " + gate.missingGate);
     const evidence = {},
       payload = request.payload || {},
       recordEvidence = record.evidence || {};
-    if (
-      ["CANCELLATION", "RETURN", "REFUND"].includes(record.requestType) &&
-      ["APPROVE", "RECONCILE"].includes(request.actionCode) &&
-      SERVICE.DefaultDigitalCommerceEntitlementService &&
-      typeof SERVICE.DefaultDigitalCommerceEntitlementService
-        .revokeForOrderLifecycle === "function"
-    ) {
-      evidence.digitalCommerce =
-        await SERVICE.DefaultDigitalCommerceEntitlementService.revokeForOrderLifecycle(
-          {
-            tenant: request.tenant,
-            enterpriseCode: request.enterpriseCode || record.enterpriseCode,
-            ownerId: record.ownerId,
-            orderCode: record.orderCode,
-            cartCode: record.cartCode,
-            actorId: request.actorId,
-            idempotencyKey:
-              payload.digitalIdempotencyKey ||
-              [record.code, request.actionCode, "digital"].join(":"),
-            payload: Object.assign({}, payload, {
-              requestType: record.requestType,
-            }),
-            correlationId: request.correlationId || request.requestId,
-            authData: request.authData,
-          },
-        );
-    }
-    if (
-      this.shouldExecuteRefund(request, record, payload, recordEvidence) &&
-      SERVICE.DefaultPaymentRefundExecutionService &&
-      typeof SERVICE.DefaultPaymentRefundExecutionService.executeRefund ===
-        "function"
-    ) {
-      evidence.payment =
-        await SERVICE.DefaultPaymentRefundExecutionService.executeRefund({
-          tenant: request.tenant,
-          ownerId: record.ownerId,
-          orderCode: record.orderCode,
-          cartCode: record.cartCode,
-          idempotencyKey:
-            payload.refundIdempotencyKey ||
-            [record.code, request.actionCode, "refund"].join(":"),
-          payload: {
-            amount: this.refundAmount(payload, recordEvidence),
-            currency:
-              payload.currency ||
-              (recordEvidence.refundPreview &&
-                recordEvidence.refundPreview.currency),
-            providerToken: payload.providerToken || "tok_test_refund",
-          },
-          correlationId: request.correlationId || request.requestId,
-          authData: request.authData,
-        });
-    }
-    if (
-      record.requestType === "RETURN" &&
-      ["MARK_RECEIVED", "MARK_INSPECTED", "DISPOSITION"].includes(
-        request.actionCode,
-      ) &&
-      SERVICE.DefaultFulfillmentReturnExecutionService
-    ) {
-      const fulfillmentRequest = {
-        tenant: request.tenant,
-        ownerId: record.ownerId,
-        orderCode: record.orderCode,
-        cartCode: record.cartCode,
-        actorId: request.actorId,
-        idempotencyKey:
-          payload.fulfillmentIdempotencyKey ||
-          [record.code, request.actionCode, "fulfillment"].join(":"),
-        payload: Object.assign({}, payload, {
-          rmaCode: payload.rmaCode || recordEvidence.rmaCode,
-        }),
-        correlationId: request.correlationId || request.requestId,
-        authData: request.authData,
-      };
-      if (request.actionCode === "MARK_RECEIVED")
-        evidence.fulfillment =
-          await SERVICE.DefaultFulfillmentReturnExecutionService.recordReceipt(
-            fulfillmentRequest,
-          );
-      else
-        evidence.fulfillment =
-          await SERVICE.DefaultFulfillmentReturnExecutionService.recordInspection(
-            fulfillmentRequest,
-          );
-    }
     if (
       ["EXCHANGE", "REPLACEMENT"].includes(record.requestType) &&
       request.actionCode === "APPROVE"
@@ -602,6 +542,22 @@ module.exports = {
       throw new Error("Maker-checker separation is required");
     if (!this.isSupportedAction(request.actionCode))
       throw new Error("Unsupported lifecycle action");
+    const gate = this.reverseExecutionGate(request, record);
+    if (gate) {
+      const status = gate.recoveryRequired ? "RECONCILIATION_REQUIRED" : "SUBMITTED";
+      const prior = record.evidence?.execution;
+      const sameAction = prior?.actionCode === request.actionCode && prior?.actorId === request.actorId;
+      const execution = { ...gate, actorId: request.actorId,
+        correlationId: sameAction ? prior.correlationId : request.correlationId || request.requestId || record.correlationId || record.code,
+        beforeStatus: record.evidence?.execution?.beforeStatus || record.status, afterStatus: status,
+        occurredAt: record.evidence?.execution?.occurredAt };
+      if (record.status === status && isDeepStrictEqual(record.evidence?.execution, execution)) return record;
+      execution.occurredAt = new Date().toISOString();
+      return this.repository().update(request.tenant, record, {
+        status, revision: Number(record.revision || 0) + 1,
+        evidence: { ...record.evidence, execution, lastActionBy: request.actorId },
+      }, request.authData);
+    }
     const downstream = await this.downstreamActionEvidence(request, record);
     return this.repository().update(
       request.tenant,

@@ -124,6 +124,7 @@ test('withdrawal hides content and repeated activation/rollback cycles use disti
 
 test('governed root capture saves through versioned owner then requests normal approval and recovers interrupted creation', async () => {
     const f = fixture();
+    f.rows.product[0].enterpriseCode = 'enterprise-a';
     SERVICE.DefaultProductPublicationVersionProviderService = provider;
     let publication, writes = 0, failCreate = true;
     const effective = { ...graph, current: async (request, schema, query) => schema === 'product'
@@ -147,7 +148,18 @@ test('governed root capture saves through versioned owner then requests normal a
     await assert.rejects(governed.create(f.request, input), /lost create/);
     assert.equal((await governed.create(f.request, input)).state, 'PENDING_APPROVAL');
     assert.equal((await governed.create(f.request, input)).sourceVersion, '1');
+    assert.equal(publication.tenantCode, f.request.tenant);
+    assert.equal(publication.enterpriseCode, 'enterprise-a');
     assert.equal(writes, 1);
+});
+
+test('legacy publication ownership comes only from the exact sealed Product root', async () => {
+    const f = fixture();
+    f.rows.product[0].enterpriseCode = 'enterprise-a';
+    await captured(f);
+    assert.equal(await provider.getPublicationEnterprise(f.publication, f.request), 'enterprise-a');
+    f.rows.product[0].enterpriseCode = '*';
+    await assert.rejects(provider.getPublicationEnterprise(f.publication, f.request), /owner is invalid/);
 });
 
 test('target facade rejects token-only publication authority and callback domain is fixed', async () => {
@@ -210,11 +222,11 @@ test('governed routes and provider selections are disabled pending migration; fi
     assert.equal(properties.product.discovery.activationService, null);
     const release = require('../data/manifest.json').sections.productPublicationWorkflow;
     assert.equal(release.selectionPolicy, 'EXPLICIT');
-    assert.equal(release.sourceRoot, 'init-v002');
-    assert.equal(release.version, '2.0.0');
+    assert.equal(release.sourceRoot, 'init-v001');
+    assert.equal(release.version, '0.0.1');
     const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
     for (const [file, checksum] of Object.entries(release.files)) {
-        assert.ok(file.startsWith('init-v002/'));
+        assert.ok(file.startsWith('init-v001/'));
         assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../data', file))).digest('hex'), checksum);
     }
 });

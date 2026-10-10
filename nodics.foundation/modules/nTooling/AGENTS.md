@@ -3,7 +3,9 @@
 Offline fresh-reset planning uses the existing registered
 `project:local-reset-maintenance` entry. Preserve its exact scope, dry-run
 default, secret-free evidence, explicit operator exclusivity/writer attestations
-and outage rechecks. Database destruction and bounded auth reconciliation stay
+and outage rechecks. Unknown registered codes use its read-only
+`--discover-registered-tenants` mode, never raw tooling database access or
+implicit destructive selection. Database destruction and bounded auth reconciliation stay
 with configured provider owners, never raw tooling driver calls. Refuse missing
 owner capabilities, ambiguous scope, live writers and unconfirmed effects;
 retain partial counts and attempt every close. No CLI-provided adapters or
@@ -23,6 +25,16 @@ Preserve `continuousFence: false`: this is observed host exclusion under the
 operator-controlled outage, never a distributed or future-client lock. Injected
 adapters, attestations and copied selections cannot issue execution receipts.
 
+Optional `--search-indexes=ExactPhysicalA,ExactPhysicalB` extends that same
+maintenance command, never the tenant record-reset API. Require the complete
+authored nSearch binding set, Local environment-prefixed names and process-local
+search caches; registered-tenant search selection is not qualified. Providers
+own exact UUID/absence checks and zero-retry deletion. Native host inspection
+must corroborate the one-node provider's Java PID and loopback HTTP/transport
+ports; partial outcomes retain attempted index and earlier database effects.
+Media and unselected indexes remain excluded. No startup index provisioning,
+persisted-index expansion, cluster-setting change or receipt rewrite is allowed.
+
 Native-local migration uses the existing topology owner's `verifyMaintenanceOutage`
 to reject listening backend ports and active runtime/supervisor processes. Missing
 process inventory fails closed. Recheck before effects; this is evidence under
@@ -35,7 +47,7 @@ section identities; never recreate retained roots as conventional releases. See
 `llm/contracts/README.md#forward-data-releases` before integrating any generator.
 
 Copyright governance preserves the exact checksum-frozen Profile init-v007 service
-employee payload through a content-digest compatibility entry. Its existing root
+employee payload and ten core-v001 Commerce role payloads through content-digest compatibility entries. Their existing root
 license attribution stays intact; changed bytes or new short-header source do not
 inherit that compatibility. New source uses the standard Nodics header.
 
@@ -98,9 +110,13 @@ customer acceptance journeys or media seeds are discovered from conventional
 `nodics.project.json` or move these aliases into layered properties just to repeat
 the project structure. The existing executor supplies project and framework
 roots. Do not copy topology, release or configuration resolvers into the project.
-Project documentation generators read stable publication identifiers,
-routes, labels and channels from `docs/catalogue.json.publication`, validated
-before writing. The generic data-manifest command refreshes only explicitly
+Project documentation validators read canonical CMS records and stable publication
+identifiers from the selected documentation content-pack manifest. No parallel
+Markdown catalogue or prose generator owns them. `referenceCatalogues` declares
+bounded validation-only canonical targets using the existing local source resolver;
+it never expands `includes`, staging, imports, assets or delivery scope. Require
+real matching pack, document owner and anchor; missing/conflicting targets fail.
+The generic data-manifest command refreshes only explicitly
 declared development-baseline checksums; changed immutable releases fail before
 any manifest write. Environment composition selects an explicit code or the sole
 declared composition and reads only its declared environment variable.

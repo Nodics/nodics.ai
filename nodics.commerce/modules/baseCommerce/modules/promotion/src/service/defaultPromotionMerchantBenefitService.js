@@ -131,10 +131,21 @@ module.exports = {
       conditions.minimumSubtotal !== undefined
         ? this.amount(conditions.minimumSubtotal, true)
         : undefined;
+    const issuer = coupon.issuerEnterpriseRef;
+    const admittedIssuer = SERVICE.DefaultPromotionMerchantScopeService?.evidenceEnterprise?.(r, coupon);
+    const evidenceEnterprise = admittedIssuer === undefined ? r.enterpriseCode : admittedIssuer;
+    if (issuer?.moduleName !== "profile" || issuer.schemaName !== "enterprise" ||
+        typeof issuer.code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(issuer.code) ||
+        evidenceEnterprise !== issuer.code ||
+        r.enterpriseCode !== issuer.code && (coupon.vendorEnterpriseRef?.moduleName !== "profile" ||
+          coupon.vendorEnterpriseRef.schemaName !== "enterprise" || coupon.vendorEnterpriseRef.code !== r.enterpriseCode ||
+          coupon.enterpriseCode !== r.enterpriseCode))
+      throw new CLASSES.NodicsError("ERR_PROMOTION_BENEFIT_UNCONFIRMED");
     const proof = await SERVICE[p.evidenceService].evaluate({
       tenant: r.tenant,
-      enterpriseCode: r.enterpriseCode,
+      enterpriseCode: evidenceEnterprise,
       issuerEnterpriseRef: coupon.issuerEnterpriseRef,
+      ...(coupon.vendorEnterpriseRef ? { vendorEnterpriseRef: coupon.vendorEnterpriseRef } : {}),
       ownerId: coupon.soldTo,
       couponCode: coupon.code,
       promotionCode: coupon.promotionCode,
@@ -147,7 +158,7 @@ module.exports = {
       proof?.eligible !== true ||
       proof.verified !== true ||
       proof.tenant !== r.tenant ||
-      proof.enterpriseCode !== r.enterpriseCode ||
+      proof.enterpriseCode !== evidenceEnterprise ||
       proof.ownerId !== coupon.soldTo ||
       proof.couponCode !== coupon.code ||
       proof.promotionCode !== coupon.promotionCode ||

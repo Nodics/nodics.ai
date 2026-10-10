@@ -1,5 +1,8 @@
 # backoffice
 
+[Governed application setup](llm/contracts/governed-application-setup.md) coordinates
+full-catalogue publication approvals before opening stock and coupon contributions.
+
 BackOffice owns backend registry, discovery, compatibility, readiness projection and bootstrap for the separate Axis frontend.
 
 Business APIs remain with their capability owners. Registry observations do not activate runtimes or grant authority; repairs retain explicit permission, revision, publication and data-completion gates.

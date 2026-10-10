@@ -15,7 +15,7 @@ remain unchanged; full legacy manifest overrides keep literal values. See the
 [timestamp contract](llm/contracts/template-resources.md#readable-timestamps).
 
 For complete inventory, configuration, branding, locale overrides and new email/SMS
-examples, use [the authoring guide](../../../nodics.docs/docs/pages/nodics.communication/email-sms-templates.md).
+examples, use [the authoring guide](data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js).
 New plain-text email/SMS copy also belongs in resources, not configuration.
 
 The reusable Telegram delivery form is Communication-owned and projected for

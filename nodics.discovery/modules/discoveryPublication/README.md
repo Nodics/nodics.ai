@@ -3,7 +3,7 @@
 Private original index-retirement receipts coordinate one nSearch barrier after
 domain-owned replacement qualification. A separate reviewed erasure claim uses
 native writer decommissioning and exact one-shot deletion; retirement alone
-retains legacy data. See [the operator guide](../../../nodics.docs/docs/pages/nodics.copilot/knowledge-generation-recovery.md).
+retains legacy data. See [the operator guide](../discoveryRuntime/data/docs-v001/records/documentation/discoveryRuntimeDocumentationComponentData.js).
 
 `discoveryPublication` owns the reusable publication descriptors that connect
 Nodics publish lifecycles to Discovery indexes. It describes how indexable

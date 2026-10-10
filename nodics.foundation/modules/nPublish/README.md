@@ -1,5 +1,14 @@
 # nPublish
 
+The disabled-by-default [exact-plan setup observer](llm/contracts/setup-observation.md)
+separates shared/foreign read proof from human submission, approval and activation.
+Recognized permission is not a grant; native adoption requires explicit review.
+The [native review recipe](llm/examples/setup-observation-native-review.md) records
+the exact plan/caller shape and source-only deployment participation checks.
+
+[Coordinated setup](llm/contracts/publication-setup.md) submits bounded module-owned
+intents through existing domain capture and Process approvals, without approving for the operator.
+
 Version providers can opt into qualified target receipts while existing providers
 remain compatible. Activation retains operation identity before target work;
 reconciliation can inspect uncertain deployments without a target version. See

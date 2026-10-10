@@ -11,6 +11,9 @@
 
 /** @module digitalCore/utils/statusDefinitions @description Stable merchant authorization and fulfillment failures. @layer config @owner digitalCore */
 module.exports = {
+  ...require("./merchantValidationDiagnostics").statuses,
+  ERR_DIGITAL_OWNERSHIP_EVIDENCE: { code: "403", message: "Exact ownership evidence or binding admission could not be confirmed" },
+  ERR_DIGITAL_REVEAL_FORBIDDEN: { code: '403', message: 'Authenticated committed digital reveal is unavailable for this scope' },
   ERR_DIGITAL_MERCHANT_INVALID: {
     code: "400",
     message: "Merchant redemption could not be confirmed",

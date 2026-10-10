@@ -59,7 +59,7 @@ module.exports = {
           "sourceVersion": "0"
         },
         "axisassistant": {
-          "releaseCode": "axis:core-v002",
+          "releaseCode": "axis:core-v001",
           "dataType": "core",
           "rootType": "site",
           "rootCode": "axisCmsSite",
@@ -154,7 +154,7 @@ module.exports = {
               "moduleName": "axis",
               "sections": [
                 "axisBaseline",
-                "core-v002"
+                "core-v001"
               ]
             }
           ]

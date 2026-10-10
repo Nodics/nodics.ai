@@ -206,10 +206,14 @@ module.exports = {
           },
         );
       if (
+        checkpoint.code !== order.code || checkpoint.tenant !== r.tenant ||
+        checkpoint.enterpriseCode !== r.enterpriseCode || checkpoint.ownerId !== r.ownerId ||
         checkpoint.status !== "COMPLETED" ||
         checkpoint.evidence?.orderCode !== order.code ||
         !["PLACED", "COMPLETED", "FULFILLED"].includes(order.status) ||
         captures.length !== 1 ||
+        captures[0].tenant !== r.tenant || captures[0].orderCode !== order.code || captures[0].ownerId !== r.ownerId ||
+        captures[0].evidence?.operation !== 'CAPTURE' ||
         captures[0].status !== "CAPTURED" ||
         captures[0].currency !== order.currency ||
         !SERVICE.DefaultExactAmountService ||
@@ -249,6 +253,9 @@ module.exports = {
           );
         if (
           deliveries.length !== 1 ||
+          deliveries[0].tenant !== r.tenant || deliveries[0].enterpriseCode !== r.enterpriseCode ||
+          deliveries[0].ownerId !== r.ownerId || deliveries[0].orderCode !== r.orderCode ||
+          deliveries[0].entitlementCode !== item.code || deliveries[0].deliveryType !== 'COUPON_CODE' ||
           deliveries[0].status !== "DELIVERED" ||
           deliveries[0].providerCode !== item.providerCode ||
           !Number.isFinite(Date.parse(deliveries[0].deliveredAt))

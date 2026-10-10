@@ -28,7 +28,11 @@ test('framework scope is stable with arbitrary sibling projects; selected projec
             docs = path.join(framework, 'nodics.docs');
         const script = path.join(docs, 'scripts/audit-source-coverage.mjs');
         write(script, fs.readFileSync(source, 'utf8'));
-        write(path.join(docs, 'docs/catalogue.json'), { documents: [], release: 'test' });
+        write(path.join(docs, 'scripts/semantic-review-contract.mjs'),
+            fs.readFileSync(new URL('../scripts/semantic-review-contract.mjs', import.meta.url), 'utf8'));
+        write(path.join(docs, 'data/manifest.json'), { documents: [], release: 'test' });
+        write(path.join(framework, 'nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js'),
+            'module.exports = { readDataCatalogue(root) { return require("node:fs").readFileSync(root + "/data/manifest.json", "utf8") && { documents: [], release: "test" }; } };');
         write(path.join(framework, 'foundation/package.json'), {
             name: 'foundation',
             nodics: { kind: 'group' },
@@ -36,7 +40,7 @@ test('framework scope is stable with arbitrary sibling projects; selected projec
         write(path.join(framework, 'foundation/src/service/defaultTestService.js'), 'module.exports = {};');
         const run = (args) => execFileSync(process.execPath, [script, ...args], { encoding: 'utf8' });
         run([]);
-        const reportPath = path.join(docs, 'docs/reports/source-backed-documentation-coverage-report.json');
+        const reportPath = path.join(docs, 'test/reports/source-backed-documentation-coverage-report.json');
         const baseline = fs.readFileSync(reportPath, 'utf8');
         for (const name of ['nodics.kickoff', 'unrelated-customer'])
             write(path.join(home, name, 'package.json'), { name, nodics: { kind: 'application' } });
@@ -53,13 +57,13 @@ test('framework scope is stable with arbitrary sibling projects; selected projec
         const args = [
             '--source-root=' + customer,
             '--catalogue=' + path.join(customer, 'docs/catalogue.json'),
-            '--output-dir=' + path.join(customer, 'docs/reports'),
+            '--output-dir=' + path.join(customer, 'test/reports'),
         ];
         run(args);
         run([...args, '--check']);
         const report = JSON.parse(
             fs.readFileSync(
-                path.join(customer, 'docs/reports/source-backed-documentation-coverage-report.json'),
+                path.join(customer, 'test/reports/source-backed-documentation-coverage-report.json'),
             ),
         );
         assert.equal(report.release, 'customer-release');
@@ -72,7 +76,7 @@ test('framework scope is stable with arbitrary sibling projects; selected projec
             spawnSync(process.execPath, [
                 script,
                 ...args.slice(0, 2),
-                '--output-dir=' + path.join(docs, 'docs/reports'),
+                '--output-dir=' + path.join(docs, 'test/reports'),
             ]).status,
             0,
         );

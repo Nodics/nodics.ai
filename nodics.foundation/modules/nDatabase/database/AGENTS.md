@@ -100,6 +100,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Transaction contexts are module-, tenant-, database-, and callback-scoped.
   Reject missing capabilities, cross-database reuse, expired contexts, and
   adapters that cannot truthfully guarantee atomic commit and abort.
+- Connection registration reuses an opened default wrapper/client only within
+  the same tenant and with identical full resolved configuration and test-channel
+  selection. Preserve pre-provider namespace admission, actual wrapper identity,
+  isolated overrides and deduplicated shutdown. Never make transaction admission
+  compare endpoint strings instead of wrapper identity. Run the shared-registration
+  contract with generated-model and transaction qualification.
 - Only schemas that explicitly declare `transaction.enabled: true` and
   `transaction.sideEffects: 'none'` may receive a transaction context. Their
   cache and event side effects must be disabled so no generated pipeline effect

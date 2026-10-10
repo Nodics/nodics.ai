@@ -10,6 +10,7 @@
  */
 
 'use strict';
+const sellerReads = new WeakSet();
 
 /**
  * @module promotion/src/service/defaultPromotionPublicationService
@@ -23,8 +24,31 @@
  * and nPublish authority. Never implement a second journal or activate through restore.
  */
 module.exports = {
+    /** Captures an exact application setup intent through this domain's existing publication owner. */
+    prepareSetup: function (request, item) {
+        if (item.domain !== 'promotion' || item.input.rootType !== item.rootType || item.input.rootCode !== item.rootCode)
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
+        return this.createGoverned(request, item.input);
+    },
+    /** Qualifies this domain's applied policy receipt without borrowing Product commit flags. */
+    isSetupReceiptCommitted: function (publication, request, receipt) {
+        return receipt?.applied === true && receipt.tenant === request.tenant && receipt.enterpriseCode === request.enterpriseCode &&
+            receipt.fingerprint === publication.sourceVersion && receipt.previousOnlineVersion === publication.activationOperation?.previousOnlineVersion;
+    },
+    /** Verifies intended immutable policy membership and trusted scope without changing source or target. */
+    validateSetup: async function (publication, request, item) {
+        const release = await this.getVersion(publication, request), refs = item.input.references;
+        if (!Array.isArray(refs) || !refs.length || release.payload.tenant !== request.tenant ||
+            release.payload.enterpriseCode !== request.enterpriseCode || release.code !== item.sourceVersion ||
+            refs.length !== release.payload.records.length || new Set(refs.map(ref => ref.schema + ':' + ref.code)).size !== refs.length ||
+            refs.some(ref => !release.payload.records.some(row => row.schema === ref.schema && row.policy.code === ref.code && row.policy.versionId === ref.versionId)))
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
+        return release.code;
+    },
     /** Creates the nPublish request from retained capture with fixed domain and trusted scope. */
     createGoverned: async function (request, input) {
+        request = { ...request, authData: structuredClone(request.authData || {}) };
+        input = structuredClone(input);
         const scope = this.scope(request);
         const release = await this.capture(request, input);
         return SERVICE.DefaultPublicationLifecycleService.create({ ...request, publication: {
@@ -38,7 +62,14 @@ module.exports = {
         this.requireSource();
         const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'promotion');
         const scope = this.scope(request);
-        if (auth.entCode !== scope.enterpriseCode || auth.tenant !== scope.tenant) throw new Error('Publication runtime enterprise mismatch');
+        if (auth.tenant !== scope.tenant) throw new Error('Publication runtime tenant mismatch');
+        if (auth.entCode !== scope.enterpriseCode) {
+            const workflow = SERVICE.DefaultPublicationApprovalWorkflowService;
+            if (!workflow?.requireRuntimeEnterprise) throw new Error('Cross-enterprise publication is not selected');
+            workflow.requireRuntimeEnterprise(auth, scope.enterpriseCode);
+        }
+        if (command.enterpriseCode !== undefined && command.enterpriseCode !== scope.enterpriseCode)
+            throw new Error('Publication business enterprise mismatch');
         if (!command || !['prepare', 'activate', 'reconcile'].includes(command.operation) ||
             typeof command.publicationCode !== 'string' || !command.publicationCode ||
             typeof command.operationKey !== 'string' || !command.operationKey) throw new Error('Unsupported source authorization operation');
@@ -148,6 +179,20 @@ module.exports = {
     /** Resolves an explicit configured delivery set; empty/duplicate roots never fall back to authoring data. */
     deliveryRoots: function (request) {
         const delivery = this.publicationSettings().delivery || {};
+        if (delivery.rootCodesByStore !== undefined) {
+            const mapping = delivery.rootCodesByStore;
+            const maximum = this.publicationSettings().maxDependencies || 1000;
+            if (!this.deliveryEnabled(request) || !Array.isArray(delivery.storeCodes) ||
+                !mapping || typeof mapping !== 'object' || Array.isArray(mapping) ||
+                Object.keys(mapping).length !== delivery.storeCodes.length ||
+                delivery.storeCodes.some(store => !Object.hasOwn(mapping, store) ||
+                    !Array.isArray(mapping[store]) || !mapping[store].length ||
+                    mapping[store].length > maximum ||
+                    mapping[store].some(code => typeof code !== 'string' || !code.trim()) ||
+                    new Set(mapping[store]).size !== mapping[store].length))
+                throw new Error('Activated delivery roots require an exact Store mapping');
+            return [...mapping[request.storeCode]];
+        }
         if (!this.deliveryEnabled(request) || !Array.isArray(delivery.rootCodes) || !delivery.rootCodes.length ||
             delivery.rootCodes.length > (this.publicationSettings().maxDependencies || 1000) ||
             delivery.rootCodes.some(code => typeof code !== 'string' || !code) ||
@@ -224,10 +269,52 @@ targetReceiptContract: 'v1',
         if (!request || typeof request.tenant !== 'string' || !request.tenant || typeof enterpriseCode !== 'string' || !enterpriseCode) throw new Error('Publication scope is required');
         return { tenant: request.tenant, enterpriseCode };
     },
+    /** Admits the real Staged publisher for this owner's fixed scoped persistence, never generic schema CRUD. */
+    sourcePersistenceAuth: function (request) {
+        const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (auth.principalType !== 'human' || !security?.getGrantedPermissions || !security.isPermissionGranted ||
+            !['publish.lifecycle.create', 'commerce.product.publish', CONFIG.get('publish')?.setup?.permissions?.promotion]
+                .every(permission => typeof permission === 'string' && permission &&
+                    security.isPermissionGranted(permission, security.getGrantedPermissions(request), {}))) return request.authData;
+        const enterpriseCode = auth.enterpriseCode || auth.entCode;
+        if (auth.tokenType !== 'access' || auth.isSystem || !(auth.principalId || auth.loginId || auth.code) ||
+            typeof auth.tenant !== 'string' || !auth.tenant || request.tenant !== auth.tenant ||
+            typeof enterpriseCode !== 'string' || !enterpriseCode ||
+            [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode].some(value => value !== undefined && value !== enterpriseCode))
+            throw new Error('Authenticated Promotion publisher scope is required');
+        this.requireSource();
+        const owner = SERVICE.DefaultIdentityGovernanceService;
+        if (!owner?.getSystemAuthData) throw new Error('Promotion publication persistence owner is unavailable');
+        return owner.getSystemAuthData();
+    },
+    /** Admits Online human publication reads only for this owner's fixed retained services; never grants source capture or writes. */
+    activatedReadAuth: function (request, service) {
+        this.requireTarget();
+        const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (!['human', 'customer'].includes(auth.principalType)) return request.authData;
+        const enterpriseCode = auth.enterpriseCode || auth.entCode;
+        if (auth.tokenType !== 'access' || auth.isSystem || !(auth.principalId || auth.loginId || auth.code) ||
+            typeof auth.tenant !== 'string' || !auth.tenant || request.tenant !== auth.tenant ||
+            typeof enterpriseCode !== 'string' || !enterpriseCode ||
+            [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== auth.tenant) ||
+            [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode].some(value => value !== undefined && value !== enterpriseCode))
+            throw new Error('Authenticated Promotion activated reader scope is required');
+        if (auth.principalType !== 'human' || !security?.getGrantedPermissions || !security.isPermissionGranted ||
+            !['commerce.product.publish', CONFIG.get('publish')?.setup?.permissions?.promotion]
+                .every(permission => typeof permission === 'string' && permission &&
+                    security.isPermissionGranted(permission, security.getGrantedPermissions(request), {})) ||
+            !Object.values(this.targetServices()).includes(service)) return request.authData;
+        const owner = SERVICE.DefaultIdentityGovernanceService;
+        if (!owner?.getSystemAuthData) throw new Error('Promotion publication persistence owner is unavailable');
+        return owner.getSystemAuthData();
+    },
     /** Reads at most one scoped record through generated services, rejecting malformed or ambiguous results. */
     readRecord: async function (service, code, request) {
-        const response = await service.get({ tenant: request.tenant, authData: request.authData,
-            query: { ...this.scope(request), code }, searchOptions: { limit: 2 } });
+        const authData = this.publicationSettings().runtimeRole === 'ONLINE'
+            ? this.activatedReadAuth(request, service) : this.sourcePersistenceAuth(request);
+        const response = await service.get({ tenant: request.tenant, authData,
+            query: { ...this.scope(request), code }, searchOptions: { limit: 2, pageSize: 2 },
+            options: { recursive: false, skipItemCache: true } });
         if (!response || !Array.isArray(response.result) || response.result.length > 1) throw new Error('Invalid publication persistence response');
         const item = response.result[0];
         if (item && (item.code !== code || item.tenant !== request.tenant || item.enterpriseCode !== this.scope(request).enterpriseCode)) throw new Error('Publication persistence scope mismatch');
@@ -241,11 +328,13 @@ targetReceiptContract: 'v1',
     },
     /** Insert-only managed save; only an identical durable record can resolve a duplicate/lost response. */
     retain: async function (service, model, request) {
+        const scope = this.scope(request);
+        if (model.tenant !== scope.tenant || model.enterpriseCode !== scope.enterpriseCode) throw new Error('Retained publication scope mismatch');
         const matches = item => item && Object.keys(model).filter(key => key !== 'revision').every(key => this.fingerprint(item[key]) === this.fingerprint(model[key]));
         let existing = await this.readRecord(service, model.code, request);
         if (existing) { if (!matches(existing)) throw new Error('Retained publication identity conflict'); return existing; }
         try {
-            await service.save({ tenant: request.tenant, authData: request.authData, model: { ...model, revision: 0 } });
+            await service.save({ tenant: request.tenant, authData: this.sourcePersistenceAuth(request), model: { ...model, revision: 0 } });
         } catch (error) {
             existing = await this.readRecord(service, model.code, request);
             if (!matches(existing)) throw error;
@@ -261,6 +350,8 @@ targetReceiptContract: 'v1',
      * @returns {Promise<Object>} Retained release; use its code as nPublish sourceVersion.
      */
     capture: async function (request, input) {
+        request = { ...request, authData: structuredClone(request.authData || {}) };
+        input = structuredClone(input);
         this.requireSource();
         const services = {"promotion":"DefaultPromotionService"};
         const maximum = this.publicationSettings().maxDependencies || 1000;
@@ -275,7 +366,7 @@ targetReceiptContract: 'v1',
             if (!model || model.versioned !== true || !model.rawSchema || model.rawSchema.versionedReadMode !== 'CURRENT') {
                 throw new Error('Promotion publication requires qualified CURRENT versioned storage: ' + ref.schema);
             }
-            const response = await SERVICE[services[ref.schema]].get({ tenant: request.tenant, authData: request.authData,
+            const response = await SERVICE[services[ref.schema]].get({ tenant: request.tenant, authData: this.sourcePersistenceAuth(request),
                 query: { ...this.scope(request), code: ref.code, versionId: ref.versionId }, searchOptions: { limit: 2 } });
             if (!response || !Array.isArray(response.result) || response.result.length !== 1 ||
                 response.result[0].code !== ref.code || response.result[0].versionId !== ref.versionId) throw new Error('Exact policy version unavailable');
@@ -345,6 +436,20 @@ targetReceiptContract: 'v1',
         this.requireTarget();
         const pointer = await this.readRecord(this.targetServices().pointer, this.pointerCode(publication, request), request);
         return pointer ? { version: pointer.version ?? null, revision: pointer.revision } : { version: null, revision: 0 };
+    },
+    /** Pure exact target observation; never settles or repairs an incomplete activation receipt. */
+    observeSetupTarget: async function (publication, request) {
+        this.requireTarget();
+        const services = this.targetServices();
+        const pointer = await this.readRecord(services.pointer, this.pointerCode(publication, request), request);
+        if (!pointer || pointer.active === false || !pointer.version) return { version: null, revision: pointer?.revision, receipt: null };
+        const receipt = await this.readRecord(services.receipt, pointer.receiptCode, request);
+        const release = await this.retainedVersion(pointer.version, request);
+        if (!receipt || receipt.applied !== true || receipt.pointerCode !== pointer.code || receipt.targetVersion !== pointer.version ||
+            receipt.expectedRevision + 1 !== pointer.revision || receipt.fingerprint !== release.fingerprint ||
+            release.rootType !== publication.rootType || release.rootCode !== publication.rootCode)
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_OBSERVATION');
+        return { version: pointer.version, revision: pointer.revision, receipt };
     },
     /** Finalizes only a receipt proven by the durable pointer CAS, including a lost-update response. */
     settleReceipt: async function (receipt, pointer, request) {
@@ -452,6 +557,8 @@ targetReceiptContract: 'v1',
     /** Resolves one activated policy release, rejecting absence rather than querying source data. */
     readActivated: async function (publication, request) {
         this.requireTarget();
+        request = { ...request, authData: structuredClone(request.authData || {}) };
+        publication = { ...publication };
         const services = this.targetServices();
         const pointer = await this.readRecord(services.pointer, this.pointerCode(publication, request), request);
         if (!pointer || !pointer.version) throw new Error('No activated policy');
@@ -462,6 +569,92 @@ targetReceiptContract: 'v1',
         if (receipt.fingerprint !== release.fingerprint) throw new Error('Activated policy fingerprint mismatch');
         if (release.rootType !== publication.rootType || release.rootCode !== publication.rootCode) throw new Error('Activated root mismatch');
         return structuredClone(release.payload.records);
+    },
+    /** Selects exactly the original issuer-reviewed policy, without relaxing ordinary publication scope or exposing sibling records. @param {Array} records Verified activated records. @param {Object} binding Private original issuance binding. @returns {Object} Detached pinned policy. */
+    sellerPolicyFromRecords: function (records, binding) {
+        const matches = records.filter(item => item.schema === 'promotion' && item.policy?.code === binding.promotionCode);
+        if (matches.length !== 1) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        const policy = matches[0].policy, same = require('node:util').isDeepStrictEqual;
+        if (this.fingerprint(policy) !== binding.policyFingerprint || policy.tenant !== binding.tenant ||
+            policy.enterpriseCode !== binding.issuerEnterpriseCode || policy.status !== 'ACTIVE' || policy.active === false ||
+            policy.enterpriseRef?.moduleName !== 'profile' || policy.enterpriseRef?.schemaName !== 'enterprise' ||
+            policy.enterpriseRef.code !== binding.issuerEnterpriseCode ||
+            !same(policy.issuerEnterpriseRef, binding.issuerEnterpriseRef) || !same(policy.vendorEnterpriseRef, binding.vendorEnterpriseRef) ||
+            !policy.budget || Object.keys(policy.budget).join(',') !== 'limit' ||
+            typeof policy.budget.limit !== 'string' || !/^\d+(?:\.\d+)?$/.test(policy.budget.limit))
+            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        return structuredClone(policy);
+    },
+    /** Requires a completed current activation for a delegated read, without settling or repairing it. Reuses the canonical activated reader and exact issuer scope. @param {Object} root Pinned root. @param {Object} owner Private issuer read owner. @returns {Promise<Array>} Canonical activated records. */
+    readSellerActivated: async function (root, owner) {
+        const records = await this.readActivated(root, owner), services = this.targetServices();
+        const pointer = await this.readRecord(services.pointer, this.pointerCode(root, owner), owner);
+        const receipt = pointer && await this.readRecord(services.receipt, pointer.receiptCode, owner);
+        if (!pointer || !receipt || receipt.applied !== true || receipt.pointerCode !== pointer.code ||
+            receipt.targetVersion !== pointer.version || receipt.expectedRevision + 1 !== pointer.revision ||
+            typeof receipt.operationKey !== 'string' || !receipt.operationKey ||
+            receipt.code !== this.fingerprint({ ...this.scope(owner), pointerCode: pointer.code, operationKey: receipt.operationKey }))
+            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        const release = await this.retainedVersion(pointer.version, owner);
+        if (release.payload.tenant !== owner.tenant || release.payload.enterpriseCode !== owner.enterpriseCode ||
+            release.rootType !== root.rootType || release.rootCode !== root.rootCode || receipt.fingerprint !== release.fingerprint ||
+            this.fingerprint(records) !== this.fingerprint(release.payload.records))
+            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        return records;
+    },
+    /** Reads only an exact issuer policy and original budget admitted by the Seller bridge's in-flight identity. Constructs a distinct system-owner read context, never a seller impersonating an issuer. No mutation authority is returned. @param {Object} command Exact private bridge envelope. @returns {Promise<Object>} Pure retainedPolicy, consumption-enriched preview policy and safe issuer budget snapshot. */
+    readSellerPolicy: async function (command) {
+        const bridge = SERVICE.DefaultPromotionSellerPolicyService;
+        const { request, binding } = bridge.resolvePolicyRead(command);
+        this.requireTarget();
+        if (!this.deliveryRoots(request).includes(binding.rootCode)) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        const identity = SERVICE.DefaultIdentityGovernanceService;
+        if (!identity?.getSystemAuthData) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        // The verified original binding alone supplies this private read selector; caller authentication is untouched.
+        const owner = { tenant: binding.tenant, enterpriseCode: binding.issuerEnterpriseCode, authData: identity.getSystemAuthData() };
+        if (owner.authData?.isSystem !== true) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        sellerReads.add(owner);
+        try {
+            const root = { rootType: 'promotion', rootCode: binding.rootCode };
+            const policy = this.sellerPolicyFromRecords(await this.readSellerActivated(root, owner), binding);
+            const response = await SERVICE.DefaultPromotionService.get({ tenant: owner.tenant, authData: owner.authData,
+                query: { tenant: owner.tenant, enterpriseCode: owner.enterpriseCode, code: binding.promotionCode },
+                options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 2, limit: 2 } });
+            SERVICE.DefaultPromotionOperationService.assertLifecycleEnvelope(response);
+            const current = Array.isArray(response.result) && response.result.length === 1 ? response.result[0] : undefined;
+            const original = current?.budgetAdmission?.command, same = require('node:util').isDeepStrictEqual;
+            if (!current || current.tenant !== owner.tenant || current.enterpriseCode !== owner.enterpriseCode || current.code !== binding.promotionCode ||
+                current.budget?.limit !== policy.budget.limit || !same(current.issuerEnterpriseRef, binding.issuerEnterpriseRef) ||
+                !same(current.vendorEnterpriseRef, binding.vendorEnterpriseRef) || !same(current.enterpriseRef, policy.enterpriseRef) ||
+                typeof original?.commandReference !== 'string' || !/^[A-Za-z0-9_.:-]{1,128}$/.test(original.commandReference))
+                throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+            SERVICE.DefaultPromotionBudgetAdmissionService.replay(current, { tenant: owner.tenant, enterpriseCode: owner.enterpriseCode,
+                promotionCode: binding.promotionCode, actorId: original.actorId, contribution: binding.admissionContribution,
+                storeCode: binding.storeCode, rootCode: binding.rootCode, policyFingerprint: binding.policyFingerprint,
+                commandReference: binding.admissionCommandReference || original.commandReference });
+            this.sellerPolicyFromRecords(await this.readSellerActivated(root, owner), binding);
+            bridge.resolvePolicyRead(command);
+            return { retainedPolicy: policy,
+                policy: { ...structuredClone(policy), budget: { limit: policy.budget.limit, spent: current.budget.spent } },
+                budget: { tenant: owner.tenant, enterpriseCode: owner.enterpriseCode, promotionCode: binding.promotionCode,
+                    revision: current.revision, budget: { limit: policy.budget.limit, spent: current.budget.spent } } };
+        } finally { sellerReads.delete(owner); }
+    },
+    /** Reads an exact coupon-benefit policy under the private accounting identity, with uncached completed-activation checks and no general scope change. @param {Object} command Exact in-flight coupon budget envelope. @returns {Promise<Object>} Original pure retained policy. */
+    readCouponBudgetPolicy: async function (command) {
+        const bridge = SERVICE.DefaultPromotionCouponBudgetService;
+        if (!bridge?.resolveMutation || !bridge.persistenceOwner) throw new CLASSES.NodicsError('ERR_PROMOTION_BUDGET_ADMISSION_UNCONFIRMED');
+        const admitted = await bridge.resolveMutation(command), binding = admitted.binding;
+        if (admitted.mutationType !== 'COMMIT') throw new CLASSES.NodicsError('ERR_PROMOTION_BUDGET_ADMISSION_UNCONFIRMED');
+        this.requireTarget();
+        const owner = bridge.persistenceOwner(command);
+        if (!this.deliveryRoots(owner).includes(binding.rootCode)) throw new CLASSES.NodicsError('ERR_PROMOTION_BUDGET_ADMISSION_UNCONFIRMED');
+        sellerReads.add(owner);
+        try {
+            const policy = this.sellerPolicyFromRecords(await this.readSellerActivated({ rootType: 'promotion', rootCode: binding.rootCode }, owner), binding);
+            await bridge.resolveMutation(command);
+            return policy;
+        } finally { sellerReads.delete(owner); }
     },
     /**
      * Returns the domain's release field allowlist; technical schema identities are not runtime policy.
@@ -484,6 +677,7 @@ targetReceiptContract: 'v1',
                 "priority",
                 "conditions",
                 "actions",
+                "purchasedCouponPolicy",
                 "validFrom",
                 "validTo"
         ]

@@ -49,6 +49,31 @@ test('independent deployment verifies local and remote modules plus both permiss
   assert.deepEqual(await run(f.options), [{ code: f.grant.code, server: 'identity', state: 'VERIFIED' }]);
   assert.equal(f.calls.length, 1);
 });
+test('each runtime is verified against its own policy, never the Platform permission union', async () => {
+  const f = fixture();
+  f.options.configuration.topology.groups.backends.push({ role: 'WCMS_ONLINE', server: 'delivery', host: 'delivery.invalid', port: 1235 });
+  f.options.projections.push({ server: 'delivery', properties: {
+    runtimeIdentity: { instanceCode: 'delivery-one', remoteModules: ['profile'] }, activeModules: { modules: ['cms'] },
+    identityGovernance: { migration: { servicePrincipalScopes: { apiAdmin: ['profile.read'] },
+      localRuntimeDeploymentGrantPermissions: ['cms.delivery.read'] } },
+  } });
+  const delivery = structuredClone(f.grant);
+  delivery.code = 'partner-local-delivery-runtime-deployment';
+  Object.assign(delivery.runtimeScope, { serverCode: 'delivery', instanceCode: 'delivery-one',
+    modules: ['cms', 'profile'], permissions: ['profile.read', 'cms.delivery.read'] });
+  f.options.fetch = async (url, request) => {
+    assert.equal(request.method || 'GET', 'GET');
+    f.calls.push({ url });
+    return Response.json({ result: new URL(url).pathname.endsWith(delivery.code) ? delivery : f.grant });
+  };
+  assert.deepEqual(await run(f.options), [
+    { code: f.grant.code, server: 'identity', state: 'VERIFIED' },
+    { code: delivery.code, server: 'delivery', state: 'VERIFIED' },
+  ]);
+  assert.equal(f.calls.length, 2);
+  delivery.runtimeScope.permissions = ['profile.read', 'process.execute'];
+  await assert.rejects(run(f.options), /owner permissions/);
+});
 test('every identity, scope, lifecycle and permission mismatch rejects', async () => {
   for (const key of ['code', 'scopeType', 'principalType', 'principalCode', 'active', 'effect', 'status', 'tenantCode', 'enterpriseCode']) {
     const f = fixture(grant => { grant[key] = key === 'active' ? false : 'wrong'; });

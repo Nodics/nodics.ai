@@ -61,9 +61,21 @@ assert(fs.readFileSync(shorterHeaderFile, 'utf8').startsWith(copyrightHeaders.co
     'immutable release payloads must not be mechanically rewritten solely for header migration');
 assert(copyrightHeaders.requiredHeader.includes('Copyright (c) 2026 Nodics All rights reserved.'));
 
-const retainedPayload = fs.readFileSync(path.resolve(__dirname, '../../../../nodics.platform/modules/profile/data/init-v007/records/user/defaultServiceEmployeeData.js'), 'utf8');
+const retainedPayload = fs.readFileSync(path.resolve(__dirname, 'fixtures/compatibility/profileServiceEmployeeRetained.js'), 'utf8');
 assert(copyrightHeaders.hasRequiredHeader(retainedPayload), 'the exact retained release preserves its existing license attribution');
 assert(!copyrightHeaders.hasRequiredHeader(retainedPayload + '\n'), 'compatibility must reject changed retained bytes');
 assert(!copyrightHeaders.hasRequiredHeader('/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */\nmodule.exports = {};\n'), 'new source must use the standard header');
+
+const profileRoot = path.resolve(__dirname, '../../../../nodics.platform/modules/profile');
+const profileManifest = require(path.join(profileRoot, 'data/manifest.json'));
+const sealedRoleFiles = Object.values(profileManifest.sections).flatMap(section => Object.keys(section.files || {}))
+    .filter(file => /commerce(?:AxisRefundReviewer|CouponIssuer|PublicationStarter|RefundReviewer|SetupPublisher)(?:Header|GroupData)\.js$/.test(file));
+assert.strictEqual(sealedRoleFiles.length, 10);
+for (const file of sealedRoleFiles) {
+    const content = fs.readFileSync(path.join(profileRoot, 'data', file), 'utf8');
+    assert(content.startsWith('/* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */'));
+    assert(copyrightHeaders.hasRequiredHeader(content), 'preserve exact sealed role attribution: ' + file);
+    assert(!copyrightHeaders.hasRequiredHeader(content + '\n'), 'changed role bytes lose compatibility: ' + file);
+}
 
 console.log('Copyright header governance validated');

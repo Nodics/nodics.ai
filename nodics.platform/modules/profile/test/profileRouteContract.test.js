@@ -17,6 +17,7 @@ const { assertRouteContracts } = require(path.join(repositoryRoot,
 const routerConfig = require('../src/router/routers');
 
 const expectedRoutes = [
+    { key: '/internal/enterprise/resolve', method: 'POST', controller: 'DefaultEnterpriseController', operation: 'resolveRuntimeEnterprise', secured: true, permission: 'profile.enterprise.search' },
     { key: '/auth/token/:tntCode', method: 'GET', controller: 'DefaultInternalAuthenticationProviderController', operation: 'getInternalAuthToken', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
     { key: '/enterprise/get', method: 'GET', controller: 'DefaultEnterpriseController', operation: 'getEnterprise', secured: true },
     { key: '/tenant/get', method: 'GET', controller: 'DefaultTenantController', operation: 'getTenants', secured: true },

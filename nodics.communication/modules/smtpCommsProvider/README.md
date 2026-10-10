@@ -19,7 +19,7 @@ message, not that an inbox was inspected. Unknown transport outcomes are
 configuration without opening a connection or claiming mailbox delivery.
 
 Read the [provider contract](llm/contracts/README.md) and the canonical detailed
-[Communication provider runbook](../../../nodics.docs/docs/pages/nodics.communication/provider-runbooks.md).
+[Communication provider runbook](../commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js).
 Project/runtime selections belong in the actual sending environment, not here.
 
 ## Verification

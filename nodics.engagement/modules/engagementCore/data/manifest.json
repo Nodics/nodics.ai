@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "engagementCore",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "engagementCore",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 3,
+      "components": 3,
+      "routes": 3,
+      "releaseChecksum": "f4ebd0be1d336e891907db729c1fb9b0fcabfa357a01d260165da0c3cec966b0",
+      "generatedHashes": {
+        "docs-v001/records/documentation/engagementCoreDocumentationNodeData.js": "d4b19f7d4855c50f6b2a1d870974aed983fd1760cf4c0d7d397b542ef7f8d7b9",
+        "docs-v001/records/documentation/engagementCoreDocumentationPageMetadataData.js": "38eb9a17ae43186c51979194e6503d759af2791d58ae17b97dd06162e70eaf42",
+        "docs-v001/records/documentation/engagementCoreDocumentationPublicationStateData.js": "9e44975bfc4d47dcf8823de38992370836e123129128fff9d3046e40ac367b96",
+        "docs-v001/records/documentation/engagementCoreDocumentationSearchMetadataData.js": "29421aaa3d04fe4d4977f4edf1429d94fddbeeb1c25664c16dc67ebcd1fb4a64",
+        "docs-v001/records/documentation/engagementCoreDocumentationComponentData.js": "9c8cd9f7b5ac2dafac7690849af812117b39414e6532d73b1c6ce7ebea4da77f",
+        "docs-v001/records/documentation/engagementCoreDocumentationPageData.js": "4cbe22f36f8c4dfd23bc6e08f63cf99dfe43d75bab8a4ae462ad577eab74a1d8",
+        "docs-v001/records/documentation/engagementCoreDocumentationRouteData.js": "eded740e6a189c666ecf4fad952402f153b6e7036d15a05971fccce0a82487c6",
+        "docs-v001/headers/100_engagementCoreDocumentationContentPackHeader.js": "79bcbb5768511263cfc0679627643ffa5ccef27039fd6e8c6a75f6ee14e5d031"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

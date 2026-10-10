@@ -1,6 +1,6 @@
 # eWaste Reference Compatibility
 
-The selected `eWaste:core-reference` successor is `core-v002`, version `0.0.1`,
+The selected `eWaste:core-reference` successor is `core-v001`, version `0.0.1`,
 with `selectionPolicy: EXPLICIT`. The complete `core-v001` tree and original
 section metadata remain under the canonical manifest's `retainedRoots` contract.
 No new migration service, alias registry or installation authority is introduced.

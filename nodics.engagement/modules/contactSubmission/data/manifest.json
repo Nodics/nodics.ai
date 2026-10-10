@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "contactSubmission",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "contactSubmission",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "9123ba38409dfa000fc2a09d71497941661fc9e114df3cdd0c5e4fb58800cfe8",
+      "generatedHashes": {
+        "docs-v001/records/documentation/contactSubmissionDocumentationNodeData.js": "cfae16ca2fa9271cf5c51841e6c445ec43c77b678f3af491f6beef8ea05d3f21",
+        "docs-v001/records/documentation/contactSubmissionDocumentationPageMetadataData.js": "39221f8e6a1c18c3461ef3f4cd0766be45d786bd1ec3296d99c13153a5cfb6f1",
+        "docs-v001/records/documentation/contactSubmissionDocumentationPublicationStateData.js": "ac3bc37b886d7d42fa42c0bfe7dece35bbea36f0c7fff1ca36bd27fa46135475",
+        "docs-v001/records/documentation/contactSubmissionDocumentationSearchMetadataData.js": "113993b8b60cb350428b65013799ed43b2fe16968083675f6dcf11ca3860edff",
+        "docs-v001/records/documentation/contactSubmissionDocumentationComponentData.js": "2d328033c30f20f2392c14c6fd149fb99b77696b954a30a521d9f85142539da9",
+        "docs-v001/records/documentation/contactSubmissionDocumentationPageData.js": "3f2001f41c55e57157b99ed4b4ef5eea5d05cf55b4398ae560fb3da777a52b6d",
+        "docs-v001/records/documentation/contactSubmissionDocumentationRouteData.js": "b9d0536ac12f85f23864d56c244cd125588380f256c3df9d4f5c1f63c4729608",
+        "docs-v001/headers/100_contactSubmissionDocumentationContentPackHeader.js": "e8bcd69030c93efa21491ec3e80482646fdb3a4e477aeea94a82b05ea20cecd5"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

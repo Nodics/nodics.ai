@@ -23,5 +23,5 @@ module.exports = {
     /** Lists customer-owned digital entitlements. @param {Object} request Request. @returns {Promise<Object>} Entitlement response. */
     listEntitlements: function (request) { return Promise.resolve().then(() => SERVICE.DefaultDigitalCommerceEntitlementService.listOwn(this.applyContext(request))); },
     /** Reveals a customer-owned digital entitlement. @param {Object} request Request. @returns {Promise<Object>} Reveal response. */
-    revealEntitlement: function (request) { return Promise.resolve().then(() => SERVICE.DefaultDigitalCommerceEntitlementService.reveal(this.applyContext(request))); }
+    revealEntitlement: function (request) { return Promise.resolve().then(() => SERVICE.DefaultDigitalCommerceEntitlementService.reveal(request)); }
 };

@@ -54,6 +54,18 @@ must not be replaced with an inferred runtime or implicit approval. Keep these
 defaults out of cmsStaged and server overlays when unchanged.
 
 CMS owns the complete canonical `acceptance:guided-initialization` suite.
+Documentation navigation derives current reader metadata only from reachable,
+active canonical articles in the exact frozen Site/locale/channel/access scope.
+Never read latest content, mutate shared release scaffolding, or reuse stale
+search text when an article is absent or ambiguous. See [the manifest contract](llm/contracts/publication-manifest-contract.md#documentation-navigation-projection).
+Publication dependency collection must not truncate stable identities behind
+retained version history. Keep bounded descending-version reads, exclude already
+resolved codes, preserve the source query and original authority, and reject
+non-advancing evidence or too many distinct dependencies.
+Retained Media readiness uses bounded owner pointer batches around exact
+metadata and physical-byte checks. Reject incomplete batches and changed
+pointers; never cache READY on the server or relax target authorization to
+reduce request volume. Legacy provider overlays retain exact single-asset reads.
 Projects supply initialization/publication profiles and delivery fixtures, not
 assertions. Imports are inert; execution requires `--execute --approve-publications`.
 Verify idempotency, Online import denial, workflow lineage and delivery through

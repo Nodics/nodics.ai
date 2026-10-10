@@ -30,6 +30,15 @@ Capability builders may project the bounded native `backendWorkspace` variant th
 
 ## Tenant startup completion
 
+Public business-enterprise placement may opt into `enterpriseResolution.runtimeLookup.enabled`.
+Use the retained, independently verified runtime token through the fixed Profile
+resolver, preserving its signed enterprise/header and sending only the selected
+business code. Profile's default-off exact deployment allowlist and canonical
+Enterprise/Tenant placement decide the binding. Never forward the public
+caller's token, synthesize claims or fall back to a foreign bootstrap lookup.
+Default runtime enterprise inventory remains strict and unchanged. See the
+runtime enterprise placement section in `llm/contracts/README.md`.
+
 Inventory diagnostics use fixed credential/private-context/inventory stage names
 only; never expose upstream exceptions or payloads. Logger failures must preserve
 the canonical held status and fail-closed readiness.

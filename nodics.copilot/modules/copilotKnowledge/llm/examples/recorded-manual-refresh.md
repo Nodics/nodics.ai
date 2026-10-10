@@ -1,7 +1,7 @@
 # Recorded Manual Refresh
 
 Canonical user/admin/API/customization and recovery guide:
-[Recorded Manual Knowledge Refresh](../../../../../nodics.docs/docs/pages/nodics.copilot/recorded-manual-refresh.md).
+[Recorded Manual Knowledge Refresh](../../data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js).
 
 Knowledge owns employee admission, current source policy and explicit assignment.
 Process owns start identity, idempotency and recorded attempts. Default-disabled

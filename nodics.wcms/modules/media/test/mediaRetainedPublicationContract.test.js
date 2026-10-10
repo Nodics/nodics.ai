@@ -164,6 +164,50 @@ test('hidden target preparation, receipt replay, replacement and retained rollba
     assert.deepEqual(sent, f.bytes);
 });
 
+test('bounded target pointer batches preserve scope, missing activation and validation before reads', async () => {
+    const f = fixture();
+    f.online(); f.policy.maximumAssets = 2;
+    const before = f.reads.length;
+    for (const input of [{ mediaCodes: [] }, { mediaCodes: ['hero', 'hero'] },
+        { mediaCodes: ['hero', 'two', 'three'] }, { mediaCodes: ['hero', '../private'] },
+        { mediaCodes: ['hero'], mediaCode: 'hero' }, { mediaCodes: 'hero' }]) {
+        await assert.rejects(target.getStatus(input, f.context), /identities/);
+        assert.equal(f.reads.length, before);
+    }
+    assert.deepEqual(await target.getStatus({ mediaCodes: ['hero', 'absent'] }, f.context), {
+        statuses: [{ mediaCode: 'hero', status: null }, { mediaCode: 'absent', status: null }]
+    });
+    for (const read of f.reads) assert.equal(read.request.tenant, 'one');
+    f.policy.runtimeRole = 'STAGED';
+    await assert.rejects(target.getStatus({ mediaCodes: ['hero'] }, f.context), /scope/);
+});
+
+test('bounded integrity batches validate the whole selection before read-only owner checks', async () => {
+    const f = fixture(); f.online(); f.policy.maximumAssets = 2;
+    const calls = [];
+    const asset = { mediaCode: 'hero', manifestCode: 'a'.repeat(64) };
+    SERVICE.DefaultMediaCleanupLifecycleService = { reconcileRetainedPublication: async (input, request) => {
+        assert.equal(request, f.context); calls.push(input);
+        return { ...input, intact: input.mediaCode === 'hero', active: true, protected: true, repaired: false, deleted: false };
+    } };
+    for (const input of [null, { assets: [] }, { assets: 'hero' }, { assets: [asset, asset] },
+        { assets: [asset, { ...asset, mediaCode: '../private' }] },
+        { assets: [asset, { ...asset, mediaCode: 123 }] },
+        { assets: [asset], operation: 'DEPLOY' }, { assets: [asset], mediaCode: 'hero' },
+        { assets: [{ ...asset, repaired: true }] }, { assets: [{ ...asset, manifestCode: 'latest' }] },
+        { assets: [asset, { ...asset, mediaCode: 'two' }, { ...asset, mediaCode: 'three' }] }]) {
+        await assert.rejects(target.reconcile(input, f.context));
+        assert.equal(calls.length, 0);
+    }
+    const result = await target.reconcile({ assets: [asset, { ...asset, mediaCode: 'two' }] }, f.context);
+    assert.deepEqual(result.results.map(item => item.intact), [true, false]);
+    assert.equal(calls.length, 2);
+    assert.equal(f.reads.length, 0);
+    f.policy.runtimeRole = 'STAGED';
+    await assert.rejects(target.reconcile({ assets: [asset] }, f.context), /scope/);
+    assert.equal(calls.length, 2);
+});
+
 test('failed receipt rolls back activation, malformed bytes fail before storage and unqualified providers reject', async () => {
     const f = fixture();
     const manifest = await manifests.capture({ code: 'hero', versionId: 0 }, f.context);

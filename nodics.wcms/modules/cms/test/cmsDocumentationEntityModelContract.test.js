@@ -55,6 +55,7 @@ assert.deepStrictEqual(
   schemas.cmsDocumentationProduct.refSchema.contentCatalog,
   {
     enabled: true,
+    moduleName: "catalog",
     schemaName: "catalog",
     type: "one",
     propertyName: "code",

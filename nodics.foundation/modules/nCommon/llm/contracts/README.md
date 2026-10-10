@@ -2,6 +2,17 @@
 
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nCommon`.
 
+## Exact Decimal Arithmetic
+
+Use `src/utils/exactAmount.js` for deterministic canonical decimal-string
+arithmetic across independently deployed capabilities. Do not activate a foreign
+business runtime merely to obtain its arithmetic service. The utility preserves
+exact integer arithmetic, input rejection and method-receiver customization; it
+does not select currencies, rounding, precision policy, pricing or financial
+authority. Pricing's existing service delegates to the same implementation in
+its own export object. Capability accessors can remain mergeable without changing
+this pure shared module or inventing another utility registry.
+
 ## Interceptor Index Order
 
 The existing interceptor configuration owner orders signed numeric indexes

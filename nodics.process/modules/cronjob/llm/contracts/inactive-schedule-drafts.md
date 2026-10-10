@@ -8,7 +8,7 @@ Never infer activation from a generic success string or missing pool entry.
 Inspection/reconciliation never dispatch; explicit deactivation remains possible
 with new activation disabled. Preserve local command exclusion so deactivation
 cannot race a still-starting activation, while durable CAS remains authority.
-Read the [activation guide](../../../../../nodics.docs/docs/pages/nodics.process/inactive-schedule-drafts.md#reviewed-activation-and-recovery)
+Read the [activation guide](../../data/docs-v001/records/documentation/cronjobDocumentationComponentData.js#reviewed-activation-and-recovery)
 and run `test/cronJobScheduleLifecycle.test.js` plus wrapper/runtime contracts.
 
 Timer pipelines persist bookkeeping through the Cron runtime owner's bounded
@@ -125,4 +125,4 @@ Process trigger tests. Axis coverage lives in `test/cron/CronScheduleDraftPanel.
 Test current configuration drift, a lost acknowledgement, negative/multiple/count
 responses, real inactive activator behavior and original-scope inspection.
 
-See the canonical [operator and customization guide](../../../../../nodics.docs/docs/pages/nodics.process/inactive-schedule-drafts.md).
+See the canonical [operator and customization guide](../../data/docs-v001/records/documentation/cronjobDocumentationComponentData.js).

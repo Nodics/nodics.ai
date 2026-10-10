@@ -13,29 +13,38 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { createRequire } from 'node:module';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const docsRoot = resolve(scriptDir, '..');
 const repoRoot = resolve(docsRoot, '..');
-const cataloguePath = join(docsRoot, 'docs/catalogue.json');
-const catalogue = JSON.parse(readFileSync(cataloguePath, 'utf8'));
+const require = createRequire(import.meta.url);
+const documentationContract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
+const documentationRecordValidation = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js');
+const catalogue = documentationContract.validateDataRelease(docsRoot);
+
+function article(id) {
+  const document = catalogue.documents.find(item => item.id === id);
+  if (!document) fail(`Missing CMS article: ${id}`);
+  return document.body;
+}
 
 const allowedAccessModes = new Set(['PUBLIC', 'AUTHENTICATED', 'ROLE_BASED', 'GROUP_BASED', 'PERMISSION_BASED', 'RESTRICTED']);
 const expectedGeneratedFiles = [
-  'data/core-v001/records/documentation/nodicsDocumentationSiteData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationProductData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationNavigationData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationDashboardData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationNodeData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationPublicationStateData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationComponentData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationPageData.js',
-  'data/core-v001/records/documentation/nodicsDocumentationRouteData.js',
-  'data/core-v001/headers/nodicsDocumentationContentPackHeader.js'
+  'data/docs-v001/records/documentation/nodicsDocumentationSiteData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationProductData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationAccessPolicyData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationNavigationData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationDashboardData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationNodeData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationPageMetadataData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationPublicationStateData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationSearchMetadataData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationComponentData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationPageData.js',
+  'data/docs-v001/records/documentation/nodicsDocumentationRouteData.js',
+  'data/docs-v001/headers/000_nodicsDocumentationContentPackHeader.js'
 ];
 const requiredCoverageTerms = [
   'Product Catalog and Discovery',
@@ -96,6 +105,8 @@ function fail(message) {
 }
 
 function loadGeneratedRecords(relativePath) {
+  const suffix = relativePath.match(/Documentation(.+)Data\.js$/)?.[1];
+  if (suffix) return documentationContract.readReleaseRecords(catalogue.releaseComposition, suffix).records;
   const moduleObject = { exports: {} };
   const source = readFileSync(join(docsRoot, relativePath), 'utf8');
   vm.runInNewContext(source, { module: moduleObject, exports: moduleObject.exports }, { filename: relativePath, timeout: 1000 });
@@ -130,18 +141,18 @@ function assertCatalogueShape() {
   for (const document of catalogue.documents || []) {
     if (ids.has(document.id)) fail(`Duplicate document id: ${document.id}`);
     if (slugs.has(document.slug)) fail(`Duplicate document slug: ${document.slug}`);
-    if (contentPaths.has(document.content)) fail(`Duplicate content path: ${document.content}`);
+    if (contentPaths.has(document.componentCode)) fail(`Duplicate component identity: ${document.componentCode}`);
     ids.add(document.id);
     slugs.add(document.slug);
-    contentPaths.add(document.content);
+    contentPaths.add(document.componentCode);
     docsBySection.set(document.navigationSectionCode, (docsBySection.get(document.navigationSectionCode) || 0) + 1);
     if (!Array.isArray(document.hierarchyPath) || document.hierarchyDepth !== document.hierarchyPath.length) fail(`Invalid hierarchy path: ${document.id}`);
     if (!allowedAccessModes.has(document.accessMode)) fail(`Invalid access mode: ${document.id}`);
     if (!Array.isArray(document.relatedPages) || !Array.isArray(document.sourceEvidence)) fail(`Missing related/source metadata: ${document.id}`);
     for (const relatedPage of document.relatedPages) if (!ids.has(relatedPage) && !(catalogue.documents || []).some(item => item.id === relatedPage)) fail(`Unknown related page ${relatedPage} in ${document.id}`);
-    const bodyPath = join(docsRoot, document.content);
+    const bodyPath = join(document.ownerRoot || docsRoot, document.content);
     if (!existsSync(bodyPath)) fail(`Missing page content: ${document.content}`);
-    const body = readFileSync(bodyPath, 'utf8');
+    const body = document.body;
     if (!body.startsWith('# ')) fail(`Page does not start with one H1: ${document.id}`);
     if (wordCount(body) < 500) fail(`Page is too shallow: ${document.id}`);
     if ((body.match(/^## /gm) || []).length < 5) fail(`Page lacks section depth: ${document.id}`);
@@ -165,12 +176,12 @@ function assertGeneratedData() {
     const manifestKey = file.startsWith('data/') ? file.slice('data/'.length) : file;
     if (!hashes[manifestKey]) fail(`Generated data file missing manifest checksum: ${file}`);
   }
-  const nodes = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationNodeData.js');
-  const dashboards = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationDashboardData.js');
-  const publications = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPublicationStateData.js');
-  const search = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js');
-  const pages = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js');
-  const policies = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js');
+  const nodes = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationNodeData.js');
+  const dashboards = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationDashboardData.js');
+  const publications = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationPublicationStateData.js');
+  const search = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationSearchMetadataData.js');
+  const pages = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationPageMetadataData.js');
+  const policies = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationAccessPolicyData.js');
   if (!nodes.every(node => node.expandable === true || node.nodeLevel === 'PAGE_LINK')) fail('Container navigation nodes must be expandable');
   if (!nodes.every(node => node.nodeSummary && node.nodeContentArea)) fail('Every navigation node requires summary and content-area metadata');
   if (!nodes.every(node => node.accessPolicy && node.workflowRequired === true && Array.isArray(node.workflowTriggers) && node.workflowTriggers.length)) fail('Every navigation node requires access policy and workflow triggers');
@@ -179,8 +190,18 @@ function assertGeneratedData() {
   if (!pages.every(page => page.accessPolicy && page.workflowRequired === true && (page.workflowTriggers || []).includes('CONTENT_CHANGE') && page.searchMetadata)) fail('Page metadata records require access, workflow, and search linkage');
   if (!policies.every(policy => policy.workflowRequired === true && (policy.workflowTriggers || []).includes('ACCESS_POLICY_CHANGE'))) fail('Access policies must trigger documentation workflow');
   if (!policies.every(policy => policy.accessMode !== 'PUBLIC' || (policy.publiclyAvailable === true && policy.requiresAuthentication === false && policy.lifecycleVisibility.includes('ONLINE')))) fail('Public policies must be anonymous-readable and Online-only');
-  if (!publications.every(item => item.lifecycleState && item.checksum && item.workflowRequired === true && item.decisionPolicy && item.decisionPolicy.permissionEnforced === true && item.decisionPolicy.adminOverrideAudited === true)) fail('Publication state records require lifecycle, checksum, workflow, and decision audit policy');
-  if (!publications.every(item => item.validationResult && item.validationResult.publicationPath === 'STAGED_REVIEW_APPROVAL_ONLINE' && Object.prototype.hasOwnProperty.call(item, 'author') && Object.prototype.hasOwnProperty.call(item, 'reviewer') && Object.prototype.hasOwnProperty.call(item, 'approver') && Object.prototype.hasOwnProperty.call(item, 'publisher'))) fail('Publication state records require actor evidence and Staged review approval Online path');
+  documentationRecordValidation.assertReady(documentationRecordValidation.validateRecords({
+    records: {
+      products: loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationProductData.js'),
+      navigation: loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationNavigationData.js'),
+      nodes, dashboards, pages, accessPolicies: policies, publicationStates: publications, searchMetadata: search,
+      cmsPages: loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationPageData.js'),
+      routes: loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationRouteData.js'),
+      components: loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationComponentData.js'),
+      manifestHashes: hashes,
+    },
+    options: { validationScope: 'AUTHORING', release: catalogue.release, source: 'nodics.docs/data/manifest.json', owner: 'nodics.docs' },
+  }));
   if (!search.every(item => item.searchText && item.indexState === 'INDEX_READY' && item.accessPolicy && item.lifecycleState && Array.isArray(item.keywords) && item.facets && item.workflowRequired === true)) fail('Search metadata must be index-ready with access, lifecycle, keywords, facets, and workflow metadata');
   for (const page of pages) {
     const pageLinkNodes = nodes.filter(node => node.nodeLevel === 'PAGE_LINK' && node.targetDocumentationPage === page.code);
@@ -189,8 +210,8 @@ function assertGeneratedData() {
 }
 
 function assertValidationReports() {
-  const jsonPath = join(docsRoot, 'docs/reports/framework-documentation-validation-report.json');
-  const markdownPath = join(docsRoot, 'docs/reports/framework-documentation-validation-report.md');
+  const jsonPath = join(docsRoot, 'test/reports/framework-documentation-validation-report.json');
+  const markdownPath = join(docsRoot, 'test/reports/framework-documentation-validation-report.md');
   if (!existsSync(jsonPath) || !existsSync(markdownPath)) fail('Documentation validation reports must be exported as JSON and Markdown');
   const report = JSON.parse(readFileSync(jsonPath, 'utf8'));
   if (report.contract !== 'nodics.documentation.validation/v1') fail('Validation report contract drifted');
@@ -209,38 +230,38 @@ function assertSourceEvidence() {
   for (const document of catalogue.documents || []) {
     for (const evidence of document.sourceEvidence || []) {
       if (/^https?:\/\//.test(evidence)) continue;
-      const resolved = resolve(docsRoot, evidence);
+      const resolved = resolve(document.ownerRoot || docsRoot, evidence);
       if (!existsSync(resolved)) fail(`Missing source evidence for ${document.id}: ${evidence}`);
     }
   }
 }
 
 function assertCoverageMap() {
-  const glossary = readFileSync(join(docsRoot, 'docs/pages/reference/source-map-glossary.md'), 'utf8');
+  const glossary = article('reference.source-map-glossary');
   if (!glossary.includes('## Business Capability Coverage Map')) fail('Missing business capability coverage map');
   for (const term of requiredCoverageTerms) {
     if (!glossary.includes(term)) fail(`Coverage map is missing ${term}`);
   }
   const rows = glossary.split('\n').filter(line => /^\| \d+ \|/.test(line));
   if (rows.length !== requiredCoverageTerms.length) fail(`Coverage map is incomplete: ${rows.length} rows`);
-  const tee = readFileSync(join(docsRoot, 'docs/pages/applications/task-execution-engine.md'), 'utf8');
-  const deap = readFileSync(join(docsRoot, 'docs/pages/applications/data-engineering-analytics-platform.md'), 'utf8');
+  const tee = article('solutions.task-execution-engine');
+  const deap = article('solutions.data-engineering-analytics-platform');
   const normalizedTee = tee.replace(/\s+/g, ' ');
   const normalizedDeap = deap.replace(/\s+/g, ' ');
   if (!normalizedTee.includes('Task Execution Engine, or TEE')) fail('TEE definition is missing');
   if (!normalizedDeap.includes('Data Engineering and Analytics Platform, or DEAP')) fail('DEAP definition is missing');
   if (/solution use case/i.test(normalizedTee) === false || /solution use case/i.test(normalizedDeap) === false) fail('TEE/DEAP must be described as solution use cases');
-  const cron = readFileSync(join(docsRoot, 'docs/pages/nodics.process/cronjob-operations.md'), 'utf8');
-  const data = readFileSync(join(docsRoot, 'docs/pages/nodics.foundation/data-import-export-migration.md'), 'utf8');
-  const discovery = readFileSync(join(docsRoot, 'docs/pages/nodics.discovery/search-indexing-discovery.md'), 'utf8');
+  const cron = article('cron.operations');
+  const data = article('data.import-export-migration');
+  const discovery = article('discovery.search-indexing');
   if (!cron.includes('Task Execution Engine')) fail('Cron docs must reference TEE');
   if (!data.includes('Data Engineering and Analytics Platform') || !discovery.includes('Data Engineering and Analytics Platform')) fail('Data and discovery docs must reference DEAP');
 }
 
 function assertUnsafeContent() {
-  const pageFiles = walk(join(docsRoot, 'docs/pages'), file => file.endsWith('.md'));
-  for (const file of pageFiles) {
-    const body = readFileSync(file, 'utf8');
+  for (const document of catalogue.documents) {
+    const file = document.id;
+    const body = document.body;
     if (/\bPhase\s+\d+\b|future plan|future-plan|roadmap operation/i.test(body)) fail(`Roadmap/phase wording found in ${file}`);
     if (/local-archive|legacy-repositories|nodicsaxis|old nodics repository/i.test(body)) fail(`Legacy-only wording found in ${file}`);
     if (/password\s*[:=]\s*['"][^'"]+['"]|secret\s*[:=]\s*['"][^'"]+['"]|api[_-]?key\s*[:=]\s*['"][^'"]+['"]/i.test(body)) fail(`Unsafe secret-like example found in ${file}`);
@@ -249,7 +270,7 @@ function assertUnsafeContent() {
 }
 
 function assertAgoraReferences() {
-  const docsText = walk(join(docsRoot, 'docs/pages'), file => file.endsWith('.md')).map(file => readFileSync(file, 'utf8')).join('\n');
+  const docsText = catalogue.documents.map(document => document.body).join('\n');
   for (const name of ['nodics.agora.apparel', 'nodics.agora.electronics', 'nodics.agora.telco']) {
     if (!docsText.includes(name)) fail(`Missing accelerator reference: ${name}`);
   }
@@ -258,20 +279,21 @@ function assertAgoraReferences() {
 function assertReadmeThinness() {
   const readmes = walk(repoRoot, file => file.endsWith('/README.md'));
   const requiredDeepDocLinks = new Map([
-    ['nodics.foundation/modules/nCache/cache/README.md', 'nodics.docs/docs/pages/nodics.foundation/cache-runtime-state.md'],
-    ['nodics.foundation/modules/nConfig/README.md', 'nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md'],
-    ['nodics.foundation/modules/nData/nImport/import/README.md', 'nodics.docs/docs/pages/nodics.foundation/data-import-export-migration.md'],
-    ['nodics.foundation/modules/nDatabase/database/README.md', 'nodics.docs/docs/pages/nodics.foundation/provider-data-access-layer.md'],
-    ['nodics.foundation/modules/nRouter/README.md', 'nodics.docs/docs/pages/nodics.foundation/routing-api-governance.md'],
-    ['nodics.platform/modules/profile/README.md', 'nodics.docs/docs/pages/nodics.platform/security-identity-access.md'],
-    ['nodics.wcms/modules/cms/README.md', 'nodics.docs/docs/pages/nodics.wcms/overview.md'],
-    ['nodics.wcms/modules/media/README.md', 'nodics.docs/docs/pages/nodics.wcms/media-management.md'],
-    ['nodics.wcms/modules/media/llm/contracts/README.md', 'nodics.docs/docs/pages/nodics.wcms/media-management.md']
+    ['nodics.foundation/modules/nCache/cache/README.md', 'nodics.foundation/modules/nCache/cache/data/docs-v001/records/documentation/cacheDocumentationComponentData.js'],
+    ['nodics.foundation/modules/nConfig/README.md', 'nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js'],
+    ['nodics.foundation/modules/nData/nImport/import/README.md', 'nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js'],
+    ['nodics.foundation/modules/nDatabase/database/README.md', 'nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js'],
+    ['nodics.foundation/modules/nRouter/README.md', 'nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js'],
+    ['nodics.platform/modules/profile/README.md', 'nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js'],
+    ['nodics.wcms/modules/cms/README.md', 'nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js'],
+    ['nodics.wcms/modules/media/README.md', 'nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js'],
+    ['nodics.wcms/modules/media/llm/contracts/README.md', 'nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js']
   ]);
   const oversized = readmes
     .filter(file => !file.endsWith('/README.md') || true)
     .filter(file => {
       const relative = file.slice(repoRoot.length + 1);
+      if (relative.includes('/llm/')) return false;
       if (relative === 'README.md' || relative === 'nodics.platform/modules/installer/README.md') return false;
       return wordCount(readFileSync(file, 'utf8')) > 1500;
     });

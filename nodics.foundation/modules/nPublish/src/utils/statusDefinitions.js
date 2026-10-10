@@ -17,6 +17,8 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    ERR_PUB_SETUP_OBSERVATION: { code: '403', message: 'Exact deployment and reviewed setup observation authority is unavailable or evidence changed' },
+    ERR_PUB_SETUP_INVALID: { code: '409', message: 'Publication setup requires exact scoped intents, authorized owners and current activation evidence' },
     SUC_PUB_00000: { code: '200', message: 'Publication lifecycle operation completed successfully' },
     ERR_PUB_00000: { code: '400', message: 'Invalid publication request' },
     ERR_PUB_00001: { code: '503', message: 'Publication provider is unavailable' },

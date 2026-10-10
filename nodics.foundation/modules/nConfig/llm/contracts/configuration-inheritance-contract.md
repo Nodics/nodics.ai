@@ -46,7 +46,7 @@ contracts remain authoritative.
 
 Verify with `test/configurationOwnershipContract.test.js`,
 `test/configurationValidation.test.js`, and the consuming project's real
-`prepareStart` scenarios. Read `nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md`
+`prepareStart` scenarios. Read `nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js`
 for the human journey, examples, migration and operational limits.
 
 ## Capability role profiles

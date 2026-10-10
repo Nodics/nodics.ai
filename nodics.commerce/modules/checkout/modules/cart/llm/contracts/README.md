@@ -19,6 +19,17 @@ balances, excludes unactivated warehouses and uses retained sourcing priority.
 Balances and coupon-code pools remain live operational data, not release content.
 Private negotiated prices keep the existing Negotiated Pricing authority.
 
+Digital Core is consulted before physical Inventory policy/balance reads. It
+resolves the entry's pinned Product/SKU and approved digital classification, then
+delegates supply to Promotion. Coupon pools are never Inventory balances or
+Cart-owned counters. Missing digital policy/batch, foreign or duplicate evidence,
+failed reads and unsupported digital types fail closed; exhausted supply remains
+unavailable without a physical-stock fallback. Reads do not reserve units.
+The exact batch is resolved by Promotion from the selected Store's approved
+source-Product policy and one generated batch, not caller-supplied pool references.
+Multiple batches require an explicit owner selection extension, not first-match
+selection. The Digital Core availability fixture exercises this cross-owner path.
+
 Promotion delegates its existing quote owner and rejects a missing owner rather
 than falling back to mutable rules when enabled. Tax invokes its existing
 decision engine without a mutable Tax Policy pre-read and awaits the configured

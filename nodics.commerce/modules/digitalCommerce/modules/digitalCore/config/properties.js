@@ -28,6 +28,28 @@ module.exports = {
   digitalCore: {
     enabled: true,
     maximumCouponUnitsPerCheckout: 100,
+    ownershipEvidence: {
+      enabled: false,
+      runtimeRole: "COMMERCE",
+      callers: [],
+      bindingAdmission: {
+        enabled: false,
+        moduleName: null,
+        connectionName: null,
+        targetAuthority: null,
+        apiName: null,
+      },
+    },
+    digitalOwnership: {
+      enabled: false,
+      qualified: false,
+      owner: {
+        moduleName: null,
+        connectionName: null,
+        targetAuthority: null,
+        apiPrefix: null,
+      },
+    },
     notifications: {
       allowInsecureLoopback: false,
       enabled: false,
@@ -110,6 +132,7 @@ module.exports = {
 
   apiExposure: {
     categories: {
+      commerceOwnershipEvidence: { enabled: false },
       commerceNotificationManagement: { enabled: false },
       commerceNotificationSources: { enabled: false },
       commerceCustomer: {

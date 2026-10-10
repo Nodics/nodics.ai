@@ -108,6 +108,10 @@ module.exports = {
       });
       return this.notifyCommitted(request, ports, completed);
     } catch (error) {
+      if (Array.isArray(error.inventoryReservations)) {
+        checkpoint.results.reservation = error.inventoryReservations;
+        checkpoint.results.inventoryReservationRecoveryRequired = error.inventoryReservationRecoveryRequired === true;
+      }
       if (Array.isArray(error.digitalReservations)) {
         checkpoint.results.digitalReservation = error.digitalReservations;
         checkpoint.results.digitalReservationRecoveryRequired =

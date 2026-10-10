@@ -180,10 +180,21 @@ around copied defaults do not satisfy this principle.
 - Keep customer/project documentation in the owning customer backend project.
   Project-specific setup, demo flows, sample data, project modules, custom API
   behavior, onboarding, and extension guidance belong in the owning customer
-  backend project using authored `docs/`, generated
-  `data/core-v001/records/documentation`, `data/core-v001/headers`, and the documentation
-  section in `data/manifest.json`; they do not belong in `nodics.docs`,
+  backend project using canonical CMS records in
+  `data/docs-v001/records/documentation`, `data/docs-v001/headers`, same-release
+  assets, and the documentation section in `data/manifest.json`. There is no
+  parallel `docs/` authoring source; they do not belong in `nodics.docs`,
   `nodics.platform/modules/axis`, or `nodics.axis`.
+- Framework capability documentation belongs to its owning backend module;
+  composition-only functional groups are visibility/navigation boundaries, not
+  owners of importable business records or capability articles. Put records and
+  unique assets in the implementing child module. `nodics.docs` is the explicit
+  documentation-package exception for shared scaffolding and cross-module guides.
+  reusable accelerator journeys belong to the corresponding `nodics.accelerators`
+  module even when demonstrated by a reference customer project. Shared details
+  are referenced by stable document identity, not copied. `nodics.docs` owns
+  discovery, shared CMS scaffolding and genuine cross-framework guidance. Its
+  explicit content-pack composition never implicitly selects business releases.
 - Keep frontend applications outside this repository. `nodics.axis` is the
   Axis/BackOffice frontend application and must be managed as a separate
   project/repository parallel to the framework repository.

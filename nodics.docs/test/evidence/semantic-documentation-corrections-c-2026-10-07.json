@@ -1,0 +1,1437 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-07",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "REVIEW_COMPLETE_FOR_BOUNDED_CLASSIFICATION_ITEM",
+  "frameworkRoot": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai",
+  "backlogDefinition": {
+    "item": "Internal-only classification register",
+    "requestedAction": "Decide which technical modules remain internal and which broader page owns their explanation.",
+    "source": "nodics.docs/test/evidence/semantic-documentation-review-2026-10-07.json",
+    "originalReviewSha256": "d03589a466b8e1ed0498a87459e40204d3557f3795f279f0ae3726e536dd8949"
+  },
+  "sourceSnapshot": {
+    "basis": "Current working-tree canonical article blocks and inspected non-data source bytes. Bound at final source-editorial review; no HEAD-only or mention-count proof.",
+    "inventoryReport": "nodics.docs/test/reports/source-backed-documentation-coverage-report.json",
+    "totalFrameworkModules": 203,
+    "candidateRule": "priorityScore < 15",
+    "candidateCount": 40,
+    "concurrentIntegration": "Other article edits may occur in the same component file. Only record20/reference.internal-source-boundary-register was changed by this correction; exact blocks and current source hashes qualify this one-item evidence."
+  },
+  "summary": {
+    "totalItems": 1,
+    "PASS_SOURCE_REVIEW": 1,
+    "OPEN_CONTENT_GAP": 0,
+    "canonicalDocumentsCited": 15,
+    "nonDataSourceFilesCited": 64,
+    "decisions": 40,
+    "decisionCounts": {
+      "INTERNAL_HELPER": 8,
+      "BROADER_GUIDE": 27,
+      "INTERNAL_CONFIGURATION": 1,
+      "INTERNAL_SCAFFOLD": 3,
+      "INTERNAL_GOVERNANCE": 1
+    },
+    "existingSourceOwnershipMappingsPreserved": 7,
+    "browserLiveAcceptance": "NOT_EXECUTED"
+  },
+  "method": {
+    "governanceRead": [
+      "AGENTS.md",
+      "nodics.docs/AGENTS.md",
+      "nodics.docs/README.md",
+      ".github/CONTRIBUTING.md"
+    ],
+    "approach": "Manually inspected each low-score source/contract boundary, then recorded reasoned ownership decisions, exact existing guide sections, maturity and residual gaps. Compared source versus local scaffold claims. Citation existence/hash checks verify bindings after review; they do not decide semantic correctness.",
+    "passMeaning": "The exact requested classification/ownership explanation is complete for all 40 candidates. Adjacent guide depth and implementation/provider/live gaps remain explicit and are not closed.",
+    "pathConvention": "componentFile/sourceFiles/changedFiles are framework-relative. sourceFiles contain inspected non-data files within the framework; canonical CMS data is bound separately by articleBlocksSha256 and actual heading sections.",
+    "actionsNotPerformed": [
+      "No edits outside the target article and this corrections evidence; original review is immutable.",
+      "No projection, nav, manifest, hash/version metadata, config, test, runtime, approval or lifecycle changes.",
+      "No tests, generators, aggregate audit, server start, credential reads, database access, provider calls, import/publication or acceptance execution. Read-only syntax and semantic qualifier checks only."
+    ]
+  },
+  "auditCoverageBoundary": {
+    "totalFrameworkModules": 203,
+    "reviewedLowScoreCandidates": 40,
+    "preservedOwnerReviewedReferences": 7,
+    "mentionBasedTriageRowsNotPromoted": 179,
+    "depthCertification": "NOT_CLAIMED",
+    "deploymentScope": "Sibling customer environments are not framework inventory; project-owned deployment references remain separate."
+  },
+  "prioritizedGaps": [],
+  "canonicalDocuments": {
+    "reference.internal-source-boundary-register": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "7c07063075de6a247839cac5a57971c9d6a4495b7cf6452c22d6170791f67f4a",
+      "sections": [
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-1-business-problem",
+          "title": "Business problem"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-2-classification-flow",
+          "title": "Classification flow"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-3-register",
+          "title": "Register"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-4-classification-contract",
+          "title": "Classification contract"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+          "title": "Promotion rules"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-7-common-mistakes",
+          "title": "Common mistakes"
+        },
+        {
+          "anchor": "referenceInternalSourceBoundaryRegister-8-verification",
+          "title": "Verification"
+        }
+      ]
+    },
+    "discovery.search-indexing": {
+      "owner": "nodics.discovery/modules/discoveryRuntime",
+      "componentFile": "nodics.discovery/modules/discoveryRuntime/data/docs-v001/records/documentation/discoveryRuntimeDocumentationComponentData.js",
+      "articleBlocksSha256": "27c8f5e8a0b3f591b2f5aa83276449923fde2b3155108f78c048e74006eb6ff7",
+      "sections": [
+        {
+          "anchor": "discoverySearchIndexing-8-current-implementation-coverage",
+          "title": "Current implementation coverage"
+        }
+      ]
+    },
+    "accelerators.circa-operations-rewards": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "componentFile": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationComponentData.js",
+      "articleBlocksSha256": "44842e6baf1fac3c36e82ec18f0715b73152a89ec3a76db07cd970af2374d333",
+      "sections": [
+        {
+          "anchor": "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+          "title": "Staff roles and resource boundaries"
+        },
+        {
+          "anchor": "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+          "title": "Rewards and settlement"
+        },
+        {
+          "anchor": "circa-downstream-waste-owner-boundaries",
+          "title": "Downstream Waste owner boundaries"
+        }
+      ]
+    },
+    "loyalty.wallets-rewards-ledger": {
+      "owner": "nodics.loyalty/modules/loyaltyWallet",
+      "componentFile": "nodics.loyalty/modules/loyaltyWallet/data/docs-v001/records/documentation/loyaltyWalletDocumentationComponentData.js",
+      "articleBlocksSha256": "33cb33f51c1d1aa2c30e6bc9337ce6b31fdc9687cdf250bddc97d8a49244e9a9",
+      "sections": [
+        {
+          "anchor": "loyaltyWalletsRewardsLedger-3-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "loyaltyWalletsRewardsLedger-9-capture",
+          "title": "Capture"
+        },
+        {
+          "anchor": "loyaltyWalletsRewardsLedger-8-reserve",
+          "title": "Reserve"
+        },
+        {
+          "anchor": "loyaltyWalletsRewardsLedger-4-owner-model",
+          "title": "Owner model"
+        },
+        {
+          "anchor": "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern",
+          "title": "Reward payment provider checkout pattern"
+        }
+      ]
+    },
+    "rules.deterministic-evaluation": {
+      "owner": "nodics.rulesEngine/modules/rulesEvaluation",
+      "componentFile": "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationComponentData.js",
+      "articleBlocksSha256": "2b869d2eb4beef849bbfff0b38a549991d3432e689b0e2106de7e6919e9a23db",
+      "sections": [
+        {
+          "anchor": "rules-evaluation-customize-and-extend-safely",
+          "title": "Customize and extend safely"
+        }
+      ]
+    },
+    "wcms.publishing-lifecycle": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentwcmsPublishingLifecycle",
+      "route": "/docs/framework/wcms-publishing-lifecycle",
+      "blocksha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "articleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "sections": [
+        {
+          "anchor": "wcmsPublishingLifecycle-1-why-separate-staged-and-online",
+          "title": "Why separate Staged and Online",
+          "headingLevel": 2,
+          "blockIndex": 2
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-2-data-lifecycle-categories",
+          "title": "Data lifecycle categories",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-3-running-example",
+          "title": "Running example",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-4-site-bundle-shape",
+          "title": "Site bundle shape",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-5-initialization-and-reusable-site-bundles",
+          "title": "Initialization and reusable site bundles",
+          "headingLevel": 2,
+          "blockIndex": 21
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-6-security-and-integrity-rules",
+          "title": "Security and integrity rules",
+          "headingLevel": 2,
+          "blockIndex": 24
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-7-customization-boundary",
+          "title": "Customization boundary",
+          "headingLevel": 2,
+          "blockIndex": 26
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-8-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 28
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-9-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 30
+        },
+        {
+          "anchor": "wcms-coordinated-pack-asset-approvals",
+          "title": "Coordinated pack and asset approvals",
+          "headingLevel": 2,
+          "blockIndex": 34
+        },
+        {
+          "anchor": "wcms-exact-media-readiness-capacity",
+          "title": "Exact Media readiness and capacity",
+          "headingLevel": 2,
+          "blockIndex": 39
+        }
+      ]
+    },
+    "communication.overview": {
+      "owner": "nodics.communication/modules/commsCore",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "62e23d5681f376f3f14b500b64482f3535efc55cd0893a29b4c7deec15573b6d",
+      "sections": [
+        {
+          "anchor": "communicationOverview-6-verification-journey",
+          "title": "Verification journey"
+        },
+        {
+          "anchor": "communicationOverview-8-engagement-integration",
+          "title": "Engagement integration"
+        }
+      ]
+    },
+    "communication.provider-runbooks": {
+      "owner": "nodics.communication/modules/commsCore",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "2d9df8c1c8e267e669e7665a9438e9c31fde23b4a47299d033fbac7b873d8dff",
+      "sections": [
+        {
+          "anchor": "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+          "title": "SMS: injected sandbox configuration"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+          "title": "Email: controlled SMTP configuration"
+        },
+        {
+          "anchor": "communicationProviderRunbooks-1-implemented-modes-and-limits",
+          "title": "Implemented modes and limits"
+        }
+      ]
+    },
+    "copilot.provider-usage-budgets": {
+      "owner": "nodics.copilot/modules/copilotProviders/modules/copilotProvider",
+      "componentFile": "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationComponentData.js",
+      "articleBlocksSha256": "70252f14a6346e266d1b41ce398fff92d1e390d499ca5352beea90d4e11ab3ad",
+      "sections": [
+        {
+          "anchor": "copilot-provider-adapter-contracts",
+          "title": "Provider adapter contracts and shared ownership"
+        },
+        {
+          "anchor": "copilotProviderUsageBudgets-4-verification-and-failure-recovery",
+          "title": "Verification and failure recovery"
+        }
+      ]
+    },
+    "commerce.payment-provider-boundaries": {
+      "owner": "nodics.commerce/modules/payment/modules/paymentCore",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "279741d928679cf0e69af38d76a93a524f8e78f5a18637dfe1d282606744f45a",
+      "sections": [
+        {
+          "anchor": "commercePaymentProviderBoundaries-2-boundary-model",
+          "title": "Boundary model"
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+          "title": "Safe payload contract"
+        },
+        {
+          "anchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+          "title": "Implementation handoff"
+        }
+      ]
+    },
+    "applications.nexus-data-content-guide": {
+      "owner": "nodics.accelerators/modules/nexus/modules/nexus.web",
+      "componentFile": "nodics.accelerators/modules/nexus/modules/nexus.web/data/docs-v001/records/documentation/nexus_webDocumentationComponentData.js",
+      "articleBlocksSha256": "55d5270b30d7d6dbf3b7f5581bb3619450dba8ad9982b957b4ff60b329e058ba",
+      "sections": [
+        {
+          "anchor": "applicationsNexusDataContentGuide-2-release-layout",
+          "title": "Release layout"
+        }
+      ]
+    },
+    "foundation.overview": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "2075439784ccd8c3c65ebdfa3a8a9dfd6837e23a55dc328d3640f50ba9bdf22c",
+      "sections": [
+        {
+          "anchor": "foundationOverview-5-request-processing-model",
+          "title": "Request processing model"
+        },
+        {
+          "anchor": "foundationOverview-8-developer-workflow",
+          "title": "Developer workflow"
+        }
+      ]
+    },
+    "reference.source-backed-documentation-coverage-audit": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "01a5c9fd5e1a6820744e8f645ac82f0ae7ec2dd267147c8b16ed94af5712e632",
+      "sections": [
+        {
+          "anchor": "referenceSourceBackedDocumentationCoverageAudit-1-audit-method",
+          "title": "Audit method"
+        }
+      ]
+    },
+    "reference.documentation-gap-backlog": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "articleBlocksSha256": "1d0348d48232b50cc6bcc1cb36ff80c10ee0aae20d174aea0ec2a1ea4cfcd060",
+      "sections": [
+        {
+          "anchor": "referenceDocumentationGapBacklog-2-classification-policy",
+          "title": "Classification policy"
+        }
+      ]
+    },
+    "framework.local-quick-start": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "24b59a834157ebd8ad30692ca9a0ddda6679e4327db36530f62b73e95dad90b9",
+      "sections": [
+        {
+          "anchor": "frameworkLocalQuickStart-1-quick-path",
+          "title": "Quick path"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "item": "Internal-only classification register",
+      "backlogPriority": "P2",
+      "requestedAction": "Decide which technical modules remain internal and which broader page owns their explanation.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "internalOnlyDecisions": "COMPLETE_40_FRAMEWORK_CANDIDATES_WITH_EXPLICIT_DECISIONS",
+        "broaderOwnerMapping": "COMPLETE_REAL_OWNER_DOCUMENT_ANCHOR_REASON_AND_REMAINING_GAP",
+        "sourceBasedClassification": "MANUALLY_REVIEWED_IMPLEMENTATION_AND_CONTRACTS_NOT_SCORE"
+      },
+      "rationale": "The requested maintainer classification is complete for the exact 40 framework module rows with priorityScore < 15 in the 203-module inventory. Each has a source-reviewed internal-versus-broader-guide decision, reason, real canonical owner/document/heading, owned non-data source, source maturity and explicit remaining gap. The article distinguishes implemented nFacade from zero-score gateway scaffolds, retains all seven existing sourceOwnership mappings, excludes sibling Kickoff environments from framework inventory and avoids duplicating capability guides. This pass closes the requested classification/ownership explanation only; it does not close the retained guide-depth, implementation, installed-runtime, provider or full business acceptance gaps, nor promote 179 mention-based rows to detailed semantic coverage.",
+      "evidence": [
+        {
+          "documentId": "reference.internal-source-boundary-register",
+          "anchors": [
+            "referenceInternalSourceBoundaryRegister-1-business-problem",
+            "referenceInternalSourceBoundaryRegister-2-classification-flow",
+            "referenceInternalSourceBoundaryRegister-3-register",
+            "referenceInternalSourceBoundaryRegister-4-classification-contract",
+            "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance",
+            "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+            "referenceInternalSourceBoundaryRegister-7-common-mistakes",
+            "referenceInternalSourceBoundaryRegister-8-verification"
+          ]
+        },
+        {
+          "documentId": "discovery.search-indexing",
+          "anchors": [
+            "discoverySearchIndexing-8-current-implementation-coverage"
+          ]
+        },
+        {
+          "documentId": "accelerators.circa-operations-rewards",
+          "anchors": [
+            "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+            "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+            "circa-downstream-waste-owner-boundaries"
+          ]
+        },
+        {
+          "documentId": "loyalty.wallets-rewards-ledger",
+          "anchors": [
+            "loyaltyWalletsRewardsLedger-3-source-map",
+            "loyaltyWalletsRewardsLedger-9-capture",
+            "loyaltyWalletsRewardsLedger-8-reserve",
+            "loyaltyWalletsRewardsLedger-4-owner-model",
+            "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern"
+          ]
+        },
+        {
+          "documentId": "rules.deterministic-evaluation",
+          "anchors": [
+            "rules-evaluation-customize-and-extend-safely"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
+          ]
+        },
+        {
+          "documentId": "communication.overview",
+          "anchors": [
+            "communicationOverview-6-verification-journey",
+            "communicationOverview-8-engagement-integration"
+          ]
+        },
+        {
+          "documentId": "communication.provider-runbooks",
+          "anchors": [
+            "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+            "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+            "communicationProviderRunbooks-1-implemented-modes-and-limits"
+          ]
+        },
+        {
+          "documentId": "copilot.provider-usage-budgets",
+          "anchors": [
+            "copilot-provider-adapter-contracts",
+            "copilotProviderUsageBudgets-4-verification-and-failure-recovery"
+          ]
+        },
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-2-boundary-model",
+            "commercePaymentProviderBoundaries-3-safe-payload-contract",
+            "commercePaymentProviderBoundaries-5-implementation-handoff"
+          ]
+        },
+        {
+          "documentId": "applications.nexus-data-content-guide",
+          "anchors": [
+            "applicationsNexusDataContentGuide-2-release-layout"
+          ]
+        },
+        {
+          "documentId": "foundation.overview",
+          "anchors": [
+            "foundationOverview-5-request-processing-model",
+            "foundationOverview-8-developer-workflow"
+          ]
+        },
+        {
+          "documentId": "reference.source-backed-documentation-coverage-audit",
+          "anchors": [
+            "referenceSourceBackedDocumentationCoverageAudit-1-audit-method"
+          ]
+        },
+        {
+          "documentId": "reference.documentation-gap-backlog",
+          "anchors": [
+            "referenceDocumentationGapBacklog-2-classification-policy"
+          ]
+        },
+        {
+          "documentId": "framework.local-quick-start",
+          "anchors": [
+            "frameworkLocalQuickStart-1-quick-path"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.docs/scripts/audit-source-coverage.mjs",
+        "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js",
+        "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js",
+        "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js",
+        "nodics.waste/modules/wasteApi/src/router/routers.js",
+        "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js",
+        "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js",
+        "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+        "nodics.waste/modules/wasteReward/src/schemas/schemas.js",
+        "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js",
+        "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js",
+        "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js",
+        "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js",
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md",
+        "nodics.waste/modules/wasteCompliance/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteCompliance/AGENTS.md",
+        "nodics.waste/modules/wasteMovement/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteMovement/AGENTS.md",
+        "nodics.waste/modules/wasteReceipt/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteReceipt/AGENTS.md",
+        "nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js",
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/AGENTS.md",
+        "nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js",
+        "nodics.engagement/modules/engagementComms/src/service/defaultEngagementCommunicationService.js",
+        "nodics.engagement/modules/engagementComms/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+        "nodics.communication/modules/localCommsProvider/src/service/defaultLocalCommunicationProviderService.js",
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/AGENTS.md",
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md",
+        "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/package.json",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/AGENTS.md",
+        "nodics.foundation/modules/nFacade/src/facade/common.js",
+        "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js",
+        "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js",
+        "nodics.foundation/modules/nSetup/package.json",
+        "nodics.foundation/modules/nSetup/AGENTS.md"
+      ],
+      "sourceFindings": [
+        "Audit score weights counted schema/service/controller/router/data/test signals and classify uses mentions/thresholds for triage; there is no facade signal in the score. Current audit-source-coverage.mjs bytes, including the parent's corrected nPublish sourceAreas, are bound below.",
+        "Discovery field policy, ranking, source registry and query builder are implemented shared helpers. Domain projections, provider admission and authorization remain with consumers; all four receive distinct reasons and residual limits.",
+        "Loyalty Program, Redemption, Reservation and RewardType are schema-defined business contracts, not internal-only retirement. Loyalty reward method preparation and provider owner-API execution are distinct, with ledger authority preserved.",
+        "Rules operators and property/outcome registries implement generic extension contracts, not consumer-specific property semantics or side-effect execution.",
+        "Waste API secured routes/facade are implemented contracts rather than proof of persisted submissions. Waste reward assessment persistence is distinct from settlement; recycling handoff intents are not transport, outbox delivery, certification or physical completion.",
+        "Waste Receipt, Movement and Compliance retain their three existing SCHEMA_DEFINED owner-reviewed-reference mappings and explicit custody/logistics/legal limits.",
+        "Communication verification implements transient and stored challenges, bound one-use proofs, revision/readback and consumed receipts, not identity/business authority. SMS is injected sandbox-only; SMTP has controlled test transport; local delivery is simulation.",
+        "Engagement's source implements a one-way communication bridge despite stale scaffold wording in its local AGENTS. The register records that mismatch and leaves guidance reconciliation and durable retry acceptance to its owner.",
+        "Ollama/OpenAI/Claude/Gemini have real adapters and retain their four existing owner-reviewed-reference mappings. Request/response and stream limitations remain explicit; mockProvider is only an in-process test double.",
+        "Payment method preparation is not gateway execution. Callback HMAC/freshness/replay helpers require production store qualification; Stripe is offline sandbox code. CyberSource, PayPal and Visa packages have no source adapters and remain reserved scaffolds.",
+        "nFacade contains a generation template plus concrete cache/validator facades; its score of zero is not absence of capability. nSetup is deliberately non-runtime governance. nexusCore contributes inert initialization/acceptance descriptors rather than importing/publishing content itself.",
+        "All 40 table decisions link existing owner-qualified canonical heading anchors. Their residual guide-depth/implementation gaps are not silently certified by classification closure; sibling customer deployment guidance is described separately and not counted."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Scope is the requested 40-candidate classification register, not source-depth certification for all 203 modules, all related guide prose or the 179 mention-based-triage rows.",
+        "Broader guide sections sometimes supply ownership/context rather than full module-specific runbooks; each row explicitly retains that gap. No capability-body guide or sourceCoverage/sourceOwnership declaration is added or changed.",
+        "All remaining implementation, provider, generated-operation enforcement, physical-world and installed-runtime gaps remain exactly separate from this owner-authorized editorial decision.",
+        "Concurrent edits to any bound canonical blocks or inspected source bytes require refreshed evidence before parent aggregation. Parent-owned hashes, projections, integrity and release work were not performed."
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "No browser, runtime startup, credentials, database, import, publication, provider calls or business acceptance were performed. This source editorial classification neither bypasses nor grants eligibility, auth, private-capture, approval or lifecycle gates."
+      },
+      "remediationPriority": "P2"
+    }
+  ],
+  "sourceFileSha256": {
+    "nodics.docs/scripts/audit-source-coverage.mjs": "e8b354af5c7f56aa657fd020d7b1b5841b0b9b3c7580572764535a55cdcd982a",
+    "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js": "a19f16a4bbfc16c620baf01a66f62cbe768080273f9a9798eceb84d47efabd1c",
+    "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js": "d9650330503109f99d401dafde3b34e4241c86313824e32d9715d03aa2bd450d",
+    "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js": "76161f4a6739694191ef30108d5c8eab0f4830dac3bba6256ba079d6a5388648",
+    "nodics.waste/modules/wasteApi/src/router/routers.js": "4d7bff94086e182a7c44a550bed155cb997670317877f4c65b8acb067385e2df",
+    "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js": "f668d766a9210446c92f8556c0e771f490be13c3758135f6c40139601a473c6b",
+    "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js": "f4b5739c9a72d99f940601e34433f13f0463b5d5469e57d6e8cde366a3f85cd7",
+    "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js": "cb5ca2db5cc227045b5f73ecd649044493b0964a2ee62aa441783cab22d4dec3",
+    "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js": "2a2d175d6474cc9952976a5c557c98aec719bb89f91f9289196d45097ee5f082",
+    "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js": "f8f03d929bd24d1fdfd5a2cc5990f16ad08a97df4c563aeff590276f0c281493",
+    "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js": "6e6870fc78f7babb12acf1e04f079caa19ca68a410676932e5834ad6d7b8f216",
+    "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js": "46c6ad2537bcb03ec0a4db18e02394ee2266e5ebee8d1e2091fe0c59968ca752",
+    "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js": "44985be4001faee9f6a8a2f42296377417e074b2588d918abc939ba97f8eb326",
+    "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js": "0194664fa957dea6539c9c169bdba2105ab098fb3e4b5b89e8260f1e2df03c2d",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js": "b452d6e9569ffe67d7d4f4566974c5140e4a62338ce4deef1b82121dc1f36696",
+    "nodics.waste/modules/wasteReward/src/schemas/schemas.js": "bbe8c94935088d59fe9267a436f24893243ef7dd0e9737b34b89e23f1ab2c7bc",
+    "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js": "6582d85ece6a5f7721098980623818a21a9b36398e73c26bb1f896b18925515a",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js": "34dfb6abfa74a7d8f5ba87eb3176a6e0fbb56fd832c9365414e8380a5ae51cef",
+    "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js": "4233684db10ba846b70c647e88261d3e60dd833418e0d5e62cbedeef4031e98f",
+    "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js": "669ec9adde7acafcfbc3cc12ecebb117e1560d1dde2e1f287412da56b0e0d1ed",
+    "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js": "0d957ed6e175e06164c608dd7f6713d32a0bdb7b8ee45ab3ca29ced402437d84",
+    "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js": "78797613577acb984461600864cd4ac0f902ff350791edf944b69e7e9dc4c07e",
+    "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md": "779921aba4d3f9cf93cc61b6274e0a7d38e1439261f472179ec12d9b1d3dc982",
+    "nodics.waste/modules/wasteCompliance/src/schemas/schemas.js": "62fbb82f89970f890ebdf7460b3192dd2d03fa6ce77cdb94a3abee4022d4a4eb",
+    "nodics.waste/modules/wasteCompliance/AGENTS.md": "0634d5a941a68f5398bbb51a39d25be8166a5465833aad0828e2d379e453ba13",
+    "nodics.waste/modules/wasteMovement/src/schemas/schemas.js": "e88b8ba14caeafe610c8e92802c23e034ff6d2d8bea97faba55d17b0e38ddd5a",
+    "nodics.waste/modules/wasteMovement/AGENTS.md": "ac77263ae1f0417ee30fdf45dee1457d9c806320d9a0a174e3e4fbf2ac21ad31",
+    "nodics.waste/modules/wasteReceipt/src/schemas/schemas.js": "cba9fc5ce0c10c3ce68d2727afe14b76362b08c0d2956f2c46750f8db94597e4",
+    "nodics.waste/modules/wasteReceipt/AGENTS.md": "4f8af61b6f422120e4d4768dbced9d1390654198164fa1f89bf5c291c8659269",
+    "nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js": "e30c04d29390d23f08cb05cfa84b233448bdd5ca77036035ef38dabd4ac6df7f",
+    "nodics.copilot/modules/copilotProviders/modules/openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js": "3a428ad8eb2342a1ee5e64f87c5125bb72ffb9b9d55c52775f6b53d56b38f82f",
+    "nodics.copilot/modules/copilotProviders/modules/openAiProvider/AGENTS.md": "93c477a947ecfafefd35de2f88743147fe8c73f80450853abc6daabb75cdb94b",
+    "nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js": "d3ad69a7381db609d3a20c5c6bd5c1ba1f99a836bbe7d124b7a0a7028ae028a1",
+    "nodics.engagement/modules/engagementComms/src/service/defaultEngagementCommunicationService.js": "3305de4da523dbcab4a439f12ae9e1130397ef6267a1a33f2b9f2bb57fcd51b3",
+    "nodics.engagement/modules/engagementComms/AGENTS.md": "f2a835386dbddcd06a8fe8dbd91597104a672dd6dce89b781d38afb1ff8f22d4",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js": "df732b2269112552b8da52408371f6f8f32b2c81f213509575e7292293b5b035",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js": "a55b835f2b5591360ef726742115a5e71177351318136d8dcad03b091bb91509",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js": "2b8f5236100095057ba61f4fe1033cb95c5f7afbd0dd7e6100508335fa01dc44",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js": "5b298dd49b1193b50c6b4655df17a0de3c88b90a700acfc90de34f20a0ec39b7",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js": "80b87cb3a76668b290c83688cc8f6e095e782279ba46997d4a69f62279962cbf",
+    "nodics.communication/modules/localCommsProvider/src/service/defaultLocalCommunicationProviderService.js": "4c1c398477db29ab9afa151c5114bd0a8ed0c24ce60e82a60d21ee56ddc927db",
+    "nodics.copilot/modules/copilotProviders/modules/claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js": "f89fa2526c4d95e387311d8f81158af0bbc3f5df13d7b5f29abf12b14472a7e4",
+    "nodics.copilot/modules/copilotProviders/modules/claudeProvider/AGENTS.md": "1152cdc28163e480ddc44a1d92ba17b4eb4350547c14889d79f441faaaa60419",
+    "nodics.copilot/modules/copilotProviders/modules/geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js": "a5b9549c344ef215c36d0ff4e6601c337b3f1588297f78e452f0be4798bbd97c",
+    "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md": "01f39a4a1cf19fbe17b307f49ffcbe1b35e46e3d65bbe8ffa0b1e314e2b70530",
+    "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js": "cdb42d7206d15310f00d369c4c2b8ba0ac81beaf269bc0dfb35126e713036a9e",
+    "nodics.accelerators/modules/nexus/modules/nexusCore/package.json": "94f6e1187ee0c89370e59d41fc3f5a0041b4058f8637e15a1c503c897ff63f32",
+    "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js": "028cdc8aac418cba071e5df2ad056a1e993f3d374ac227bde64accf8adb83685",
+    "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md": "ef80c3a66903efb4878e865e94357a782a79bdb059840ed87074b6ade114e912",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json": "191fc0704b6e78a9786887e3a2d3bab0b77805bd67f9096b9714be34faba66e2",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md": "203b8ae0d092f03860c6b86bbcd5ad74e6fe29a149d3c61207de2486af187aca",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/AGENTS.md": "c245a2d5747c646d96f97b2797f334524150e28c3455e6502ac5c59b62be1449",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json": "3513b25e7de5df872b02b82e77eed54ac7345ac88c719e3a9fdfe529521d581d",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/README.md": "01f08382c3ac83cd0faeb392fbca8f2f82321feb220ebe054c5fc6a7a2e7c9f9",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/AGENTS.md": "e1e0eb04a490a45d1303a3cbf8c8eb5680744254b54389d001a22f3504392a50",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json": "5f834edd31c415d7e7ff14aa8c21e3b7d210260e4f4eee57d078c745b3861333",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/README.md": "6d52276597729d4a1143d50d934a24007605224619d994c5448da58186eef5ef",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/AGENTS.md": "848f6dade3751245f881ea75cb55354197c148a3472cd1fdf40c49bfa9724c40",
+    "nodics.foundation/modules/nFacade/src/facade/common.js": "d668d31bf044739021816a08c829f98fc1a6f7ba7b117b3270cccbe960005c8f",
+    "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js": "ea9dbdb7c2ed6bae23f2540fbd0b07441819a675824daa87c22958e0c02225ee",
+    "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js": "61d90ec5a6373fef9f9a9cc8b90ad99283b8f9532edae48164efeb7ad732c1d9",
+    "nodics.foundation/modules/nSetup/package.json": "89c196e15dd81342ae20224c57242fa95c915a54a530c6d1a4740e7cf74b9288",
+    "nodics.foundation/modules/nSetup/AGENTS.md": "7d0036dfb73f0278b435e20dfeb3a34aa7791a9ae186b2439e41b94c7bba3494"
+  },
+  "changedFiles": [
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+    "nodics.docs/test/evidence/semantic-documentation-corrections-c-2026-10-07.json"
+  ],
+  "decisions": [
+    {
+      "module": "discoveryMapping",
+      "modulePath": "nodics.discovery/modules/discoveryMapping",
+      "priorityScore": 14,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "Flat display-field allowlisting and sensitive-field exclusion support a domain projection; this is not a standalone search journey.",
+      "canonicalDocumentId": "discovery.search-indexing",
+      "canonicalOwner": "discoveryRuntime",
+      "canonicalAnchor": "discoverySearchIndexing-8-current-implementation-coverage",
+      "sourceFiles": [
+        "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js"
+      ],
+      "maturity": "IMPLEMENTED_HELPER",
+      "remainingGap": "No nested-field or domain authorization proof; the source owner must qualify each domain projection.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "discoveryRanking",
+      "modulePath": "nodics.discovery/modules/discoveryRanking",
+      "priorityScore": 14,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "Generic PIN, BOOST and BURY actions order existing results with stable original-order ties; consumers select the ranking policy.",
+      "canonicalDocumentId": "discovery.search-indexing",
+      "canonicalOwner": "discoveryRuntime",
+      "canonicalAnchor": "discoverySearchIndexing-8-current-implementation-coverage",
+      "sourceFiles": [
+        "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js"
+      ],
+      "maturity": "IMPLEMENTED_HELPER",
+      "remainingGap": "No business rule selection, index relevance qualification or tenant-safe consumer wiring is established by this helper.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "discoverySource",
+      "modulePath": "nodics.discovery/modules/discoverySource",
+      "priorityScore": 14,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "A process-local ownerType/sourceCode registry registers and resolves source providers; it is a reusable extension point, not a source business owner.",
+      "canonicalDocumentId": "discovery.search-indexing",
+      "canonicalOwner": "discoveryRuntime",
+      "canonicalAnchor": "discoverySearchIndexing-8-current-implementation-coverage",
+      "sourceFiles": [
+        "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js"
+      ],
+      "maturity": "IMPLEMENTED_REGISTRY",
+      "remainingGap": "Consumer registration, provider admission, authorization, rebuild and installed source coverage remain owner responsibilities.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "wasteApi",
+      "modulePath": "nodics.waste/modules/wasteApi",
+      "priorityScore": 14,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Secured routes and controller/facade delegation expose generic Waste operations; internal exposure is not a reason to hide an integration/security contract.",
+      "canonicalDocumentId": "accelerators.circa-operations-rewards",
+      "canonicalOwner": "eWaste",
+      "canonicalAnchor": "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+      "sourceFiles": [
+        "nodics.waste/modules/wasteApi/src/router/routers.js",
+        "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js",
+        "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js"
+      ],
+      "maturity": "IMPLEMENTED_API_CONTRACT",
+      "remainingGap": "The Circa guide supplies role context, not a complete generic API runbook. submitWaste returns a payload rather than proof of persistence; installed routing, authorization and full business acceptance remain separate.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "loyaltyProgram",
+      "modulePath": "nodics.loyalty/modules/loyaltyProgram",
+      "priorityScore": 13,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Program identity, status, default reward type, earning/spending settings and validity are business configuration, not disposable internal plumbing.",
+      "canonicalDocumentId": "loyalty.wallets-rewards-ledger",
+      "canonicalOwner": "loyaltyWallet",
+      "canonicalAnchor": "loyaltyWalletsRewardsLedger-3-source-map",
+      "sourceFiles": [
+        "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js"
+      ],
+      "maturity": "SCHEMA_DEFINED",
+      "remainingGap": "Schema/generated operations do not execute earning, spending, expiry or approval policy; the Loyalty owner must qualify effective program configuration.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "loyaltyRedemption",
+      "modulePath": "nodics.loyalty/modules/loyaltyRedemption",
+      "priorityScore": 13,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "rewardRedemption records a wallet/program/reward amount and target/reservation/ledger lineage across CREATED, CAPTURED, RELEASED, REVERSED and FAILED states.",
+      "canonicalDocumentId": "loyalty.wallets-rewards-ledger",
+      "canonicalOwner": "loyaltyWallet",
+      "canonicalAnchor": "loyaltyWalletsRewardsLedger-9-capture",
+      "sourceFiles": [
+        "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js"
+      ],
+      "maturity": "SCHEMA_DEFINED",
+      "remainingGap": "Enums and idempotency fields are not transition enforcement or Commerce completion; owner commands and reconciliation require separate validation.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "loyaltyReservation",
+      "modulePath": "nodics.loyalty/modules/loyaltyReservation",
+      "priorityScore": 13,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "rewardReservation models held value, source/target context, expiry, ledger references and revision; reservation is a customer-visible money/value boundary.",
+      "canonicalDocumentId": "loyalty.wallets-rewards-ledger",
+      "canonicalOwner": "loyaltyWallet",
+      "canonicalAnchor": "loyaltyWalletsRewardsLedger-8-reserve",
+      "sourceFiles": [
+        "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js"
+      ],
+      "maturity": "SCHEMA_DEFINED",
+      "remainingGap": "The schema alone does not reserve balances, prevent duplicate commands, expire holds or enforce optimistic concurrency.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "loyaltyRewardType",
+      "modulePath": "nodics.loyalty/modules/loyaltyRewardType",
+      "priorityScore": 13,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "POINT, CREDIT, STAMP, TOKEN and CUSTOM units, precision, negative-value policy and expiry are shared business data contracts.",
+      "canonicalDocumentId": "loyalty.wallets-rewards-ledger",
+      "canonicalOwner": "loyaltyWallet",
+      "canonicalAnchor": "loyaltyWalletsRewardsLedger-4-owner-model",
+      "sourceFiles": [
+        "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js"
+      ],
+      "maturity": "SCHEMA_DEFINED",
+      "remainingGap": "A unit definition is not a currency valuation, financial qualification or executable issuance/expiry policy.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "rulesCore",
+      "modulePath": "nodics.rulesEngine/modules/rulesCore",
+      "priorityScore": 11,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Generic operators and property/outcome registries are public extension contracts; outcome validation does not execute consumer side effects.",
+      "canonicalDocumentId": "rules.deterministic-evaluation",
+      "canonicalOwner": "rulesEvaluation",
+      "canonicalAnchor": "rules-evaluation-customize-and-extend-safely",
+      "sourceFiles": [
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js"
+      ],
+      "maturity": "IMPLEMENTED_EXTENSION_CONTRACT",
+      "remainingGap": "Consumer-owned property semantics, provider registration, outcome execution and domain governance must be supplied and tested by the consumer.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "loyaltyRewardProvider",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider",
+      "priorityScore": 9,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "The Payment adapter invokes Loyalty reserve/capture/release/reverse through owner APIs and checks customer/wallet context; it does not own a second ledger.",
+      "canonicalDocumentId": "loyalty.wallets-rewards-ledger",
+      "canonicalOwner": "loyaltyWallet",
+      "canonicalAnchor": "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js"
+      ],
+      "maturity": "IMPLEMENTED_OWNER_API_ADAPTER",
+      "remainingGap": "Authorized funded fixtures, installed service-account/customer scopes, persisted outcomes and interrupted reconciliation were not accepted by this editorial review.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "wasteReward",
+      "modulePath": "nodics.waste/modules/wasteReward",
+      "priorityScore": 9,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Append-only reward assessments retain policy/band/catalogue versions, input snapshots and explainable ESTIMATED/CONFIRMED/RECALCULATED evidence; they do not post Loyalty balances.",
+      "canonicalDocumentId": "accelerators.circa-operations-rewards",
+      "canonicalOwner": "eWaste",
+      "canonicalAnchor": "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+      "sourceFiles": [
+        "nodics.waste/modules/wasteReward/src/schemas/schemas.js"
+      ],
+      "maturity": "SCHEMA_DEFINED",
+      "remainingGap": "Read-only BackOffice and disabled direct router declarations do not prove append-only enforcement in every writer or settlement. Consumer calculation and Loyalty posting remain separately owned.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "cmsStaged",
+      "modulePath": "nodics.wcms/modules/cmsStaged",
+      "priorityScore": 9,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "A schema overlay opts ten CMS publishable schemas into versioning; it neither publishes content nor owns a second CMS lifecycle.",
+      "canonicalDocumentId": "wcms.publishing-lifecycle",
+      "canonicalOwner": "cms",
+      "canonicalAnchor": "wcmsPublishingLifecycle-1-why-separate-staged-and-online",
+      "sourceFiles": [
+        "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js"
+      ],
+      "maturity": "IMPLEMENTED_SCHEMA_OVERLAY",
+      "remainingGap": "Effective Staged/Online isolation, freeze, approval, publish and delivery require the owning CMS/nPublish runtime and separate acceptance.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "loyaltyRewardPayment",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment",
+      "priorityScore": 7,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Method preparation binds a calculated positive total, wallet, currency and authenticated context to the reward provider; it rejects conflicting amount/currency input.",
+      "canonicalDocumentId": "loyalty.wallets-rewards-ledger",
+      "canonicalOwner": "loyaltyWallet",
+      "canonicalAnchor": "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js"
+      ],
+      "maturity": "IMPLEMENTED_METHOD_VALIDATION",
+      "remainingGap": "Preparation does not hold or debit value. Installed method selection, wallet eligibility and provider settlement/reconciliation remain separate.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "commsVerification",
+      "modulePath": "nodics.communication/modules/commsVerification",
+      "priorityScore": 7,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Transient secret comparison and persisted challenge/proof issue, verify, consume, receipt, replace and cancel are security integration contracts, not an identity grant.",
+      "canonicalDocumentId": "communication.overview",
+      "canonicalOwner": "commsCore",
+      "canonicalAnchor": "communicationOverview-6-verification-journey",
+      "sourceFiles": [
+        "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js"
+      ],
+      "maturity": "IMPLEMENTED_CHALLENGE_CONTRACT",
+      "remainingGap": "The broader section explains possession versus authority; stored continuation/readback, expiry and conflict detail still needs owner runbook depth and installed-store acceptance. Profile/purpose owners decide business execution.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "smsCommsProvider",
+      "modulePath": "nodics.communication/modules/smsCommsProvider",
+      "priorityScore": 7,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Disabled sandbox-only delivery uses an injected credential/transport boundary, bounded SMS, tenant/channel/lease checks and suppression/uncertainty outcomes.",
+      "canonicalDocumentId": "communication.provider-runbooks",
+      "canonicalOwner": "commsCore",
+      "canonicalAnchor": "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+      "sourceFiles": [
+        "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js"
+      ],
+      "maturity": "IMPLEMENTED_INJECTED_SANDBOX",
+      "remainingGap": "No live SMS client, production qualification or handset delivery proof. Operators must supply authorized transport and qualify recovery without blind replay.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "smtpCommsProvider",
+      "modulePath": "nodics.communication/modules/smtpCommsProvider",
+      "priorityScore": 7,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Email has injected-sandbox and controlled nodemailer SMTP modes with testOnly/recipient allowlisting and explicit definitive-versus-uncertain recovery.",
+      "canonicalDocumentId": "communication.provider-runbooks",
+      "canonicalOwner": "commsCore",
+      "canonicalAnchor": "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+      "sourceFiles": [
+        "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js"
+      ],
+      "maturity": "IMPLEMENTED_CONTROLLED_TEST_TRANSPORT",
+      "remainingGap": "SMTP acceptance is not inbox receipt; production deliverability, credential provisioning and uncertain-send reconciliation remain unqualified.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "ollamaProvider",
+      "modulePath": "nodics.copilot/modules/copilotProviders/modules/ollamaProvider",
+      "priorityScore": 7,
+      "priorCoverageBasis": "owner-reviewed-reference",
+      "decision": "BROADER_GUIDE",
+      "reason": "Real chat mapping and bounded NDJSON transport require explicit remote-host policy; shared provider-neutral explanation avoids vendor-guide duplication.",
+      "canonicalDocumentId": "copilot.provider-usage-budgets",
+      "canonicalOwner": "copilotProvider",
+      "canonicalAnchor": "copilot-provider-adapter-contracts",
+      "sourceFiles": [
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md"
+      ],
+      "maturity": "IMPLEMENTED_ADAPTER; EXISTING_OWNER_REVIEWED_REFERENCE",
+      "remainingGap": "Retain the existing mapping, not a new depth claim. Local/remote deployment, model capability, privacy, measured usage and live endpoint qualification remain separate.",
+      "existingSourceOwnershipPreserved": true
+    },
+    {
+      "module": "wasteCompliance",
+      "modulePath": "nodics.waste/modules/wasteCompliance",
+      "priorityScore": 7,
+      "priorCoverageBasis": "owner-reviewed-reference",
+      "decision": "BROADER_GUIDE",
+      "reason": "Jurisdiction/family/hazard profiles and evidence/chain-of-custody decisions are business evidence; the existing shared guide owns their explanation.",
+      "canonicalDocumentId": "accelerators.circa-operations-rewards",
+      "canonicalOwner": "eWaste",
+      "canonicalAnchor": "circa-downstream-waste-owner-boundaries",
+      "sourceFiles": [
+        "nodics.waste/modules/wasteCompliance/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteCompliance/AGENTS.md"
+      ],
+      "maturity": "SCHEMA_DEFINED; EXISTING_OWNER_REVIEWED_REFERENCE",
+      "remainingGap": "Retain the existing mapping. An APPROVED value is not legal certification; jurisdiction policy, evidence verification and custody orchestration are not proved.",
+      "existingSourceOwnershipPreserved": true
+    },
+    {
+      "module": "wasteMovement",
+      "modulePath": "nodics.waste/modules/wasteMovement",
+      "priorityScore": 7,
+      "priorCoverageBasis": "owner-reviewed-reference",
+      "decision": "BROADER_GUIDE",
+      "reason": "Batch and movement schemas represent source/target locations, operator, status, dates and evidence; this is a downstream custody contract.",
+      "canonicalDocumentId": "accelerators.circa-operations-rewards",
+      "canonicalOwner": "eWaste",
+      "canonicalAnchor": "circa-downstream-waste-owner-boundaries",
+      "sourceFiles": [
+        "nodics.waste/modules/wasteMovement/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteMovement/AGENTS.md"
+      ],
+      "maturity": "SCHEMA_DEFINED; EXISTING_OWNER_REVIEWED_REFERENCE",
+      "remainingGap": "Retain the existing mapping. Planned pickup is not arrival/recycling; transitions, external logistics confirmation and replay enforcement remain separate.",
+      "existingSourceOwnershipPreserved": true
+    },
+    {
+      "module": "wasteReceipt",
+      "modulePath": "nodics.waste/modules/wasteReceipt",
+      "priorityScore": 7,
+      "priorCoverageBasis": "owner-reviewed-reference",
+      "decision": "BROADER_GUIDE",
+      "reason": "Physical receipt records observed facts, receiver/time, quantities, evidence and discrepancy status independently from submission approval.",
+      "canonicalDocumentId": "accelerators.circa-operations-rewards",
+      "canonicalOwner": "eWaste",
+      "canonicalAnchor": "circa-downstream-waste-owner-boundaries",
+      "sourceFiles": [
+        "nodics.waste/modules/wasteReceipt/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteReceipt/AGENTS.md"
+      ],
+      "maturity": "SCHEMA_DEFINED; EXISTING_OWNER_REVIEWED_REFERENCE",
+      "remainingGap": "Retain the existing mapping. Generated declarations and status enums do not prove custody, quantities, authorized transitions or installed permission enforcement.",
+      "existingSourceOwnershipPreserved": true
+    },
+    {
+      "module": "wasteRecycling",
+      "modulePath": "nodics.accelerators/modules/waste/modules/wasteRecycling",
+      "priorityScore": 5,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Provider-neutral donation handoff/completion contracts validate pending asset/transfer/receiver context and return movement intents and audit/domain-event evidence.",
+      "canonicalDocumentId": "accelerators.circa-operations-rewards",
+      "canonicalOwner": "eWaste",
+      "canonicalAnchor": "circa-downstream-waste-owner-boundaries",
+      "sourceFiles": [
+        "nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js"
+      ],
+      "maturity": "IMPLEMENTED_HANDOFF_CONTRACT",
+      "remainingGap": "The shared section supplies downstream ownership context, not a recycling runbook. No recycler transport, persistence, outbox delivery, certification or physical completion is implemented here.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "openAiProvider",
+      "modulePath": "nodics.copilot/modules/copilotProviders/modules/openAiProvider",
+      "priorityScore": 5,
+      "priorCoverageBasis": "owner-reviewed-reference",
+      "decision": "BROADER_GUIDE",
+      "reason": "Responses mapping supports profile-controlled retrieval, checked image formats and strict response schemas; normalization rejects explicit incomplete/refused responses.",
+      "canonicalDocumentId": "copilot.provider-usage-budgets",
+      "canonicalOwner": "copilotProvider",
+      "canonicalAnchor": "copilot-provider-adapter-contracts",
+      "sourceFiles": [
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/AGENTS.md"
+      ],
+      "maturity": "IMPLEMENTED_ADAPTER; EXISTING_OWNER_REVIEWED_REFERENCE",
+      "remainingGap": "Retain the existing mapping. invokeStream emits one completion, not incremental transport; live provider/model, privacy, limits and billing require separate qualification.",
+      "existingSourceOwnershipPreserved": true
+    },
+    {
+      "module": "discoveryQuery",
+      "modulePath": "nodics.discovery/modules/discoveryQuery",
+      "priorityScore": 5,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "Query construction trims text, bounds pagination and selects whitelisted sorts over a shallow base query; domain APIs own request DTOs and result projection.",
+      "canonicalDocumentId": "discovery.search-indexing",
+      "canonicalOwner": "discoveryRuntime",
+      "canonicalAnchor": "discoverySearchIndexing-8-current-implementation-coverage",
+      "sourceFiles": [
+        "nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js"
+      ],
+      "maturity": "IMPLEMENTED_HELPER",
+      "remainingGap": "No domain filter authorization, arbitrary query safety or provider-specific query semantics is established by this builder.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "engagementComms",
+      "modulePath": "nodics.engagement/modules/engagementComms",
+      "priorityScore": 5,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "The implemented one-way CONTACT/FEEDBACK/REVIEW/TESTIMONIAL bridge builds Communication commands and returns DEFERRED without changing domain state on failure.",
+      "canonicalDocumentId": "communication.overview",
+      "canonicalOwner": "commsCore",
+      "canonicalAnchor": "communicationOverview-8-engagement-integration",
+      "sourceFiles": [
+        "nodics.engagement/modules/engagementComms/src/service/defaultEngagementCommunicationService.js",
+        "nodics.engagement/modules/engagementComms/AGENTS.md"
+      ],
+      "maturity": "IMPLEMENTED_BRIDGE",
+      "remainingGap": "Local AGENTS still describes a scaffold, while source implements the bridge. Owner guidance reconciliation, durable retry scheduling and installed delivery remain separate; this change does not edit them.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "bankTransferPayment",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Method preparation requires tenant context and a bank_ reference, then freezes a BANK_TRANSFER provider-neutral request; it is a payment-method contract.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-2-boundary-model",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js"
+      ],
+      "maturity": "IMPLEMENTED_METHOD_VALIDATION",
+      "remainingGap": "No bank connection, transfer confirmation or reconciliation is implemented by prepare; owner guidance must retain that distinction.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "cardPayment",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Method preparation accepts a tenant-scoped tok_ reference and emits a frozen CARD contract; it does not collect or authorize raw card data.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js"
+      ],
+      "maturity": "IMPLEMENTED_METHOD_VALIDATION",
+      "remainingGap": "Token-prefix validation is not token authenticity, gateway authorization, PCI qualification or settlement evidence.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "cashOnDeliveryPayment",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Tenant context and explicit acceptTerms are required before a frozen CASH_ON_DELIVERY method contract is returned without a provider token.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-2-boundary-model",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js"
+      ],
+      "maturity": "IMPLEMENTED_METHOD_VALIDATION",
+      "remainingGap": "No cash collection, fulfilment confirmation or debt/reconciliation workflow is implemented by this method.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "walletPayment",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Tenant context and a wallet_ token produce a frozen WALLET method contract; generic token preparation does not own a wallet ledger.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js"
+      ],
+      "maturity": "IMPLEMENTED_METHOD_VALIDATION",
+      "remainingGap": "Wallet ownership, available funds, provider qualification and settlement need the actual wallet/provider owner; this is not the Loyalty reward adapter.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "paymentProviderCore",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "HMAC verification, freshness and replay-store checks are a reusable callback security helper beneath Payment, not an independent payment product.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js"
+      ],
+      "maturity": "IMPLEMENTED_SECURITY_HELPER",
+      "remainingGap": "Durable atomic replay admission and provider-specific signature/body mapping must be qualified; a caller-supplied exists/record store is not proof of race-safe production replay prevention.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "stripeProvider",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "A deterministic offline adapter exercises authorize/capture/void/refund with tok_test_ inputs and sim_ references, including decline/cancel/delay/refund-failure cases.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js"
+      ],
+      "maturity": "IMPLEMENTED_OFFLINE_SANDBOX",
+      "remainingGap": "Not a live Stripe gateway. No network authorization, production webhook mapping, acquiring, real funds or settlement qualification.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "localCommsProvider",
+      "modulePath": "nodics.communication/modules/localCommsProvider",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "A deterministic content-free local adapter returns a hash-based DELIVERED result for development contracts without an external send.",
+      "canonicalDocumentId": "communication.provider-runbooks",
+      "canonicalOwner": "commsCore",
+      "canonicalAnchor": "communicationProviderRunbooks-1-implemented-modes-and-limits",
+      "sourceFiles": [
+        "nodics.communication/modules/localCommsProvider/src/service/defaultLocalCommunicationProviderService.js"
+      ],
+      "maturity": "IMPLEMENTED_LOCAL_SIMULATION",
+      "remainingGap": "Local DELIVERED is not provider acceptance or recipient receipt; real transport and operational delivery evidence remain separate.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "claudeProvider",
+      "modulePath": "nodics.copilot/modules/copilotProviders/modules/claudeProvider",
+      "priorityScore": 3,
+      "priorCoverageBasis": "owner-reviewed-reference",
+      "decision": "BROADER_GUIDE",
+      "reason": "Messages transport separates system content, resolves backend secret references and normalizes text/tool descriptors and usage into the shared contract.",
+      "canonicalDocumentId": "copilot.provider-usage-budgets",
+      "canonicalOwner": "copilotProvider",
+      "canonicalAnchor": "copilot-provider-adapter-contracts",
+      "sourceFiles": [
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/AGENTS.md"
+      ],
+      "maturity": "IMPLEMENTED_ADAPTER; EXISTING_OWNER_REVIEWED_REFERENCE",
+      "remainingGap": "Retain the existing mapping. request.tools is not mapped; stream emits one completion, size check follows buffering and cancellation relies on supplied signal. Live/model/memory/timeout qualification remains separate.",
+      "existingSourceOwnershipPreserved": true
+    },
+    {
+      "module": "geminiProvider",
+      "modulePath": "nodics.copilot/modules/copilotProviders/modules/geminiProvider",
+      "priorityScore": 3,
+      "priorCoverageBasis": "owner-reviewed-reference",
+      "decision": "BROADER_GUIDE",
+      "reason": "generateContent transport maps system instructions, user/model roles and generation settings, normalizing first-candidate text/function descriptors and usage.",
+      "canonicalDocumentId": "copilot.provider-usage-budgets",
+      "canonicalOwner": "copilotProvider",
+      "canonicalAnchor": "copilot-provider-adapter-contracts",
+      "sourceFiles": [
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md"
+      ],
+      "maturity": "IMPLEMENTED_ADAPTER; EXISTING_OWNER_REVIEWED_REFERENCE",
+      "remainingGap": "Retain the existing mapping. request.tools is not mapped; stream emits one completion and response bounds follow buffering. Missing counts are null, not zero; live/model/timeout qualification remains separate.",
+      "existingSourceOwnershipPreserved": true
+    },
+    {
+      "module": "mockProvider",
+      "modulePath": "nodics.copilot/modules/copilotProviders/modules/mockProvider",
+      "priorityScore": 3,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_HELPER",
+      "reason": "An in-process deterministic response returns mock content with zero test usage; it supplies a provider test double, not a supported external model.",
+      "canonicalDocumentId": "copilot.provider-usage-budgets",
+      "canonicalOwner": "copilotProvider",
+      "canonicalAnchor": "copilotProviderUsageBudgets-4-verification-and-failure-recovery",
+      "sourceFiles": [
+        "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js"
+      ],
+      "maturity": "IMPLEMENTED_TEST_DOUBLE",
+      "remainingGap": "Cannot establish model behavior, authorization, provider cost, privacy or transport reliability; shared verification owns the distinction.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "nexusCore",
+      "modulePath": "nodics.accelerators/modules/nexus/modules/nexusCore",
+      "priorityScore": 2,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_CONFIGURATION",
+      "reason": "Inert configuration contributes Nexus initialization profiles, governed content/media/engagement package descriptors and acceptance tooling descriptors; it does not execute imports.",
+      "canonicalDocumentId": "applications.nexus-data-content-guide",
+      "canonicalOwner": "nexus.web",
+      "canonicalAnchor": "applicationsNexusDataContentGuide-2-release-layout",
+      "sourceFiles": [
+        "nodics.accelerators/modules/nexus/modules/nexusCore/package.json",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md"
+      ],
+      "maturity": "IMPLEMENTED_CONFIGURATION_CONTRIBUTION",
+      "remainingGap": "Project activation, effective profile ordering, import/publication and installed content acceptance remain separate. Release-layout context is not complete initializer/operator guidance.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "cyberSourceProvider",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider",
+      "priorityScore": 0,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_SCAFFOLD",
+      "reason": "Package/config/LLM boundary reserves a provider name; no source adapter implements gateway operations.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/AGENTS.md"
+      ],
+      "maturity": "RESERVED_SCAFFOLD",
+      "remainingGap": "Not a supported gateway. Requires an owner-approved adapter, secure configuration/callback/reconciliation contracts and separate qualification before advertising support.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "paypalProvider",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider",
+      "priorityScore": 0,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_SCAFFOLD",
+      "reason": "Package/config/LLM boundary reserves a provider name; no source adapter implements gateway operations.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/AGENTS.md"
+      ],
+      "maturity": "RESERVED_SCAFFOLD",
+      "remainingGap": "Not a supported gateway. Requires an owner-approved adapter, secure configuration/callback/reconciliation contracts and separate qualification before advertising support.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "visaProvider",
+      "modulePath": "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider",
+      "priorityScore": 0,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_SCAFFOLD",
+      "reason": "Package/config/LLM boundary reserves a provider name; no source adapter implements gateway operations.",
+      "canonicalDocumentId": "commerce.payment-provider-boundaries",
+      "canonicalOwner": "paymentCore",
+      "canonicalAnchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/AGENTS.md"
+      ],
+      "maturity": "RESERVED_SCAFFOLD",
+      "remainingGap": "Not a supported gateway. Requires an owner-approved adapter, secure configuration/callback/reconciliation contracts and separate qualification before advertising support.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "nFacade",
+      "modulePath": "nodics.foundation/modules/nFacade",
+      "priorityScore": 0,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "BROADER_GUIDE",
+      "reason": "Real schema-facade generation delegates operations to owning services; concrete cache and validator facades delegate runtime maintenance. A score of zero misses facade signals.",
+      "canonicalDocumentId": "foundation.overview",
+      "canonicalOwner": "nodics.docs",
+      "canonicalAnchor": "foundationOverview-5-request-processing-model",
+      "sourceFiles": [
+        "nodics.foundation/modules/nFacade/src/facade/common.js",
+        "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js",
+        "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js"
+      ],
+      "maturity": "IMPLEMENTED_FACADE_CAPABILITY",
+      "remainingGap": "Do not call this a scaffold. The broad request-flow guide is the canonical home; facade-specific generation/override examples and installed delegation tests remain owner work, not implied deep coverage.",
+      "existingSourceOwnershipPreserved": false
+    },
+    {
+      "module": "nSetup",
+      "modulePath": "nodics.foundation/modules/nSetup",
+      "priorityScore": 0,
+      "priorCoverageBasis": "mention-based-triage",
+      "decision": "INTERNAL_GOVERNANCE",
+      "reason": "Package metadata sets runtimeModule/loadable false; source contains governance and AI/developer contracts, not runtime schemas, routes or services.",
+      "canonicalDocumentId": "foundation.overview",
+      "canonicalOwner": "nodics.docs",
+      "canonicalAnchor": "foundationOverview-8-developer-workflow",
+      "sourceFiles": [
+        "nodics.foundation/modules/nSetup/package.json",
+        "nodics.foundation/modules/nSetup/AGENTS.md"
+      ],
+      "maturity": "MAINTAINED_NON_RUNTIME_CONTRACTS",
+      "remainingGap": "Keep governance instructions discoverable and inherited; absence of runtime code is intentional, not a missing deployed service or permission to invent one.",
+      "existingSourceOwnershipPreserved": false
+    }
+  ],
+  "integrationNotes": [
+    "Exactly one original item and exact requestedAction are retained. All item keys preserve the original shape.",
+    "Only sourceEvidence, blocks and references changed inside the target article. Derived searchText/headings, identities, lifecycle/version/approval metadata and other records are untouched by this correction.",
+    "The seven sourceOwnership declarations are unchanged and remain owner-reviewed-reference, not validated-source-sections.",
+    "Parent integration owns aggregate evidence, final .34/integrity hashes, derived artifacts and validation/publication. Any later canonical/source edits reopen stale bindings.",
+    "Residual gaps are retained per decision. This correction does not force source-depth, production, provider or complete Circa/Commerce acceptance closure."
+  ],
+  "parentIntegrationReview": {
+    "date": "2026-10-07",
+    "scope": "Re-read the classification article and replace one task-specific paragraph with durable projection/audit guidance. All 40 decisions and source boundaries are preserved; no runtime or approval claim was added. Added and reviewed a beginner reading path explaining owner/helper meanings, the Discovery example and schema/scaffold acceptance limits; the 40 decisions are unchanged."
+  },
+  "integrationReview": {
+    "date": "2026-10-07",
+    "scope": "Narrow final integration rereview of changed C canonical references only. No canonical prose, source, source hashes, classification decisions, item disposition/action, projections or manifests changed.",
+    "staleReferencesFound": [
+      "commerce.payment-provider-boundaries"
+    ],
+    "rereviewedSections": [
+      {
+        "documentId": "commerce.payment-provider-boundaries",
+        "anchors": [
+          "commercePaymentProviderBoundaries-2-boundary-model",
+          "commercePaymentProviderBoundaries-3-safe-payload-contract",
+          "commercePaymentProviderBoundaries-5-implementation-handoff"
+        ],
+        "previousArticleBlocksSha256": "74c17eea50adde862cab1e5d353a9f0c38c37412487478f4d1091a1086eda59a",
+        "reviewedArticleBlocksSha256": "decb17cac3eb89efb13aebf624079cac366a882729aca8eed08414995b75bb46",
+        "result": "VALID_FOR_CLASSIFICATION_PURPOSE",
+        "findings": "Reread all three cited sections. Boundary model and safe projection continue to distinguish method eligibility, implemented adapters, owner evidence and separately qualified external gateways. Implementation handoff now specifies exact refund normalization, passthrough of unrecognized provider statuses, stable reconciliation identity and lack of durable-save/settlement guarantees. These refinements preserve C's method-versus-provider, sandbox-versus-live and remaining-reconciliation-gap classifications; they do not justify any maturity or acceptance promotion."
+      }
+    ],
+    "unchangedReferences": "The other 14 canonical bindings, including CMS and the parent-reviewed register, matched current article blocks and were not refreshed or reread.",
+    "parentReviewPreserved": "Preserved parentIntegrationReview and the parent-updated reference.internal-source-boundary-register binding exactly.",
+    "sourceBindings": "All 64 inspected source-byte bindings were current; none were refreshed.",
+    "closureBoundary": "One requested classification item remains PASS_SOURCE_REVIEW only. All explicit guide-depth, implementation, production/provider and live-acceptance limitations remain unchanged."
+  },
+  "parentBeginnerGuidanceReview": {
+    "date": "2026-10-07",
+    "documents": [
+      "commerce.payment-provider-boundaries"
+    ],
+    "scope": "Parent authored and reviewed topic-specific beginner reading paths without broadening supported capability or live claims. Commerce Search diagram also corrected to separate Product discovery results from CURRENT Commerce rule projection/ranking. Existing section anchors and source boundaries remain unchanged. Parent also authored and reviewed explicit operator/developer diagnosis and negative-test guidance under the exact source-map sections, preserving existing limitations."
+  },
+  "parentHistoryCapacityReferenceReview": {
+    "date": "2026-10-07",
+    "disposition": "SOURCE_REFERENCE_REVIEWED",
+    "documentId": "wcms.publishing-lifecycle",
+    "finding": "The existing broader CMS guide remains the canonical internal-module reference. Its added bounded history-capacity explanation matches the inspected adapter and regression test; existing classification anchors and maturity boundaries are unchanged.",
+    "sourceFiles": [
+      "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+      "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js"
+    ]
+  },
+  "parentIntegrityBatchReferenceReview": {
+    "date": "2026-10-07",
+    "disposition": "SOURCE_REFERENCE_REVIEWED",
+    "documentId": "wcms.publishing-lifecycle",
+    "finding": "The canonical broader CMS runbook still owns the internal-module reference. Bounded read-only integrity transport does not alter classification, anchors, approval authority or maturity.",
+    "sourceFiles": [
+      "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js",
+      "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js",
+      "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js",
+      "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js",
+      "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js"
+    ]
+  }
+}

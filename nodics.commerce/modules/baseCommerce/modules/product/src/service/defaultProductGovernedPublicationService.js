@@ -14,8 +14,10 @@
 module.exports = {
     /** Captures and saves one successor root using the original version; retries reuse the publication's sealed root. */
     create: async function (request, input) {
+        request = { ...request, authData: structuredClone(request.authData || {}) };
+        input = structuredClone(input);
         SERVICE.DefaultProductPublicationVersionProviderService.assertStaged();
-        if (!input || !input.publicationCode || !input.productCode || !input.storeCode ||
+        if (!input || !['publicationCode', 'productCode', 'storeCode'].every(key => typeof input[key] === 'string' && input[key].trim()) ||
             !Number.isSafeInteger(input.versionId) || input.versionId < 0) throw new Error('Exact Product authoring identity is required');
         const lifecycle = SERVICE.DefaultPublicationLifecycleService;
         if (!lifecycle || typeof lifecycle.getRepository !== 'function' ||
@@ -41,14 +43,17 @@ module.exports = {
                 references.capturedFromVersion = input.versionId;
                 references.publicationCode = input.publicationCode;
                 // The existing versioned update rejects a stale selection and preserves root business fields.
-                await SERVICE.DefaultProductService.update({ tenant: request.tenant, authData: request.authData,
-                    query: { code: input.productCode, versionId: input.versionId }, model: { publicationReferences: references } });
+                await graph.sealRoot(request, input.productCode, input.versionId, references);
                 saved = await graph.read(request, { schema: 'product', code: input.productCode, versionId: input.versionId + 1 });
             }
             if (graph.hash(saved.publicationReferences) !== graph.hash(references) || saved.catalogVersion !== root.catalogVersion) {
                 throw new Error('Product root save needs reconciliation');
             }
+            const owner = graph.publisherScope(request);
+            if (saved.tenant !== request.tenant || saved.enterpriseCode !== root.enterpriseCode ||
+                (owner && saved.enterpriseCode !== owner.enterpriseCode)) throw new Error('Product publication source owner mismatch');
             publication = await lifecycle.create({ ...request, publication: { code: input.publicationCode, domain: 'product',
+                tenantCode: saved.tenant, enterpriseCode: saved.enterpriseCode,
                 rootType: 'product', rootCode: input.productCode, sourceVersion: String(saved.versionId) } });
         }
         if (publication.state === 'STAGED') publication = await lifecycle.validate({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });

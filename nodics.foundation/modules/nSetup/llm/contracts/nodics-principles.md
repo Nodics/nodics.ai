@@ -42,7 +42,7 @@ not silently changed by this rule.
 The executable detail belongs to
 [Communication's resource contract](../../../../../nodics.communication/modules/commsCore/llm/contracts/template-resources.md).
 The authoring and extension journey is in
-[Email and SMS templates](../../../../../nodics.docs/docs/pages/nodics.communication/email-sms-templates.md).
+[Email and SMS templates](../../../../../nodics.communication/modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js).
 
 ## Business Data Journeys
 

@@ -1,30 +1,32 @@
 {
-    "name": "nodics.accelerators",
-    "index": "92.99",
-    "description": "Reusable Nodics industry accelerators composed above standard framework capabilities.",
-    "main": "nodics.js",
-    "version": "0.0.0",
-    "private": true,
-    "license": "SEE LICENSE IN LICENSE",
-    "nodics": {
-        "kind": "group",
-        "displayName": "Nodics Accelerators",
-        "runtimeModule": true,
-        "loadableByNodicsModuleLoader": true,
-        "owns": [
-            "composition",
-            "configuration",
-            "llm",
-            "test"
-        ],
-        "runtime": {
-            "router": false,
-            "publish": false,
-            "web": false
-        },
-        "extends": [
-            "nodics.foundation"
-        ]
+  "name": "nodics.accelerators",
+  "index": "92.99",
+  "description": "Reusable Nodics industry accelerators composed above standard framework capabilities.",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "group",
+    "displayName": "Nodics Accelerators",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "llm",
+      "test"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
     },
-    "scripts": { "test": "node --test test/*.test.js" }
+    "extends": [
+      "nodics.foundation"
+    ]
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
 }

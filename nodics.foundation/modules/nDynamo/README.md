@@ -167,6 +167,29 @@ origins. The last file to contribute an artifact does not necessarily supply
 every method. Reports retain the selected server and node coordinates without
 embedding function bodies or secret configuration values.
 
+## Offline Governance Report
+
+From the framework checkout, run `npm run governance:report`. This reuses
+nTooling's retained repository-build composition, not the non-runtime repository
+root as a runtime module. The report stays beneath that composition's server
+`generated/governance/` directory.
+
+From a customer application, run
+`npm exec -- nodics governance:report --env <environment> --server <server>`.
+Optional `--node <node>` selects node coordinates; output remains server-owned.
+Target options use nTooling's normal argument normalization (space or equals
+syntax, `--env`/`--environment`, and `--project`/`--home`). Legacy environment
+variables `E`/`ENV` and `S`/`SERVER` remain available; explicit options win.
+Missing servers, unknown targets and duplicate options fail rather than widening
+the report to another runtime. The resolved roots follow the same project server
+metadata as build, including declared capability groups.
+
+Reporting prepares configuration and loads artifact registries only. It does not
+start listeners, initialize runtime entities/providers, import data or access the
+database. Generated evidence is not live deployment qualification. See the
+[report contract](llm/contracts/README.md#offline-report-target-selection) and
+[invocation examples](llm/examples/README.md#governance-report-invocation).
+
 This capability contributes an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
 Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.
 

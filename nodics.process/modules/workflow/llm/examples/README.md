@@ -1,5 +1,14 @@
 # workflow AI Examples
 
+## Missing CMS Approval Definition
+
+On fresh startup, the existing CMS approval owner selects
+`cms:cmsPublicationApproval` from nImport's init catalogue and executes with that
+observed version. An already installed definition is unchanged. A release change
+between selection and execution fails closed; inspect current publication and
+release evidence before explicitly retrying the same owner approval request.
+Never substitute a fixed historical pin or copy CMS workflow data into Process.
+
 This folder is reserved for workflow capability examples.
 
 Examples should show how schemas, lifecycle services, APIs, and Axis projections cooperate while keeping the backend as the process authority.

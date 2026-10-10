@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "emsClient",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "emsClient",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "a0c5eca97713165e9dba39f844c232e4cb2553a380c688f1d66178d68366392d",
+      "generatedHashes": {
+        "docs-v001/records/documentation/emsClientDocumentationNodeData.js": "1f04ba2ba33efca7951deeb6cd002244ead0f390e896fa58ea295c2cc58e55a6",
+        "docs-v001/records/documentation/emsClientDocumentationPageMetadataData.js": "8498ddeda4d4dc67f00a5ddfa109169aa3796f93505f0a8006c614d7bd4fb0b3",
+        "docs-v001/records/documentation/emsClientDocumentationPublicationStateData.js": "4a7cdc697cd7c2e9b025b1a64495274717049c0b843b1f78269df240a3c8c1ef",
+        "docs-v001/records/documentation/emsClientDocumentationSearchMetadataData.js": "ea5c6853100e4b83c6a5ae376c5c169c38ed2463f31fd0034a773a7f241c215a",
+        "docs-v001/records/documentation/emsClientDocumentationComponentData.js": "93fc62edfadd8f358b6807e137a917ed4510a704042c393f5958432e817b54fd",
+        "docs-v001/records/documentation/emsClientDocumentationPageData.js": "35503a8a42d779f0b8c05ba9a9b1e00a49ebdfae2f0535638aec04a28a38ee75",
+        "docs-v001/records/documentation/emsClientDocumentationRouteData.js": "3aea6478909c68ed4e4cab42f84aed412bbd793b0979ea319ee239ebaf0275f4",
+        "docs-v001/headers/100_emsClientDocumentationContentPackHeader.js": "d8b2960ef746f8566f238164a8ef66c1b8af975d591dc756424dfc7b22eb5b8c"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

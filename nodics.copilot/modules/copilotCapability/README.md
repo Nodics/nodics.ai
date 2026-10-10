@@ -5,17 +5,17 @@ Permissioned tool catalogue, query, export, and domain capability invocation.
 Process inspection adds eight fixed Workflow metadata reads under exact admitted
 record codes and original employee authorization. It never starts, claims,
 decides, retries or compensates a workflow. See the
-[Process operator and customization guide](../../../nodics.docs/docs/pages/nodics.copilot/process-inspection.md).
+[Process operator and customization guide](data/docs-v001/records/documentation/copilotCapabilityDocumentationComponentData.js).
 
 Rules inspection adds five default-disabled native metadata reads with exact
 enterprise scope, original employee authority and provider-history exclusion.
-See the [operator and customization guide](../../../nodics.docs/docs/pages/nodics.copilot/rules-inspection.md).
+See the [operator and customization guide](data/docs-v001/records/documentation/copilotCapabilityDocumentationComponentData.js).
 
 Order-notification inspection adds two default-disabled Digital Core reads for
 one admitted enterprise order. It exposes only bounded delivery state and keeps
 recipient, template and private financial data out of Copilot and provider
 history. See the
-[order-notification guide](../../../nodics.docs/docs/pages/nodics.copilot/order-notification-operations.md).
+[order-notification guide](data/docs-v001/records/documentation/copilotCapabilityDocumentationComponentData.js).
 
 The operation catalogue includes the implemented Product, enterprise/invitation,
 collection-centre and coupon adapters with permission-filtered source maturity.

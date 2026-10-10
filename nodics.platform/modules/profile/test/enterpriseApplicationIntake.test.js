@@ -879,7 +879,7 @@ const runtimeAuthority = require("../../../../nodics.foundation/modules/nAuth/sr
 const scopeSource = require("../src/service/identity/defaultPrincipalScopeGovernanceService");
 const authSource = require("../src/service/authentication/defaultAuthenticationProviderService");
 const definitionSource =
-  require("../data/init-v006/records/process/profileEmployeeApplicationReviewDefinitionData")
+  require("../data/init-v001/records/process/profileEmployeeApplicationReviewDefinitionData")
     .definitions[0];
 async function reviewFixture() {
   const f = fixture();

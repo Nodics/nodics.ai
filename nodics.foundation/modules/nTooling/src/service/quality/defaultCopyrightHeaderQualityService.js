@@ -39,8 +39,20 @@ const compatibleImmutableReleaseHeader = '/*\n' +
     ' *  LICENSE file in the root directory of this source tree.\n' +
     ' */\n';
 
-// Retained Profile init-v007 has equivalent license attribution; its published bytes are immutable.
-const compatibleRetainedReleaseDigest = 'bcf04cbde2633ef37ecc123e88b0c65d1a185450661cda925da3de8d3c0149dd';
+// Exact retained Profile payloads already attribute the root license; never rewrite their sealed bytes.
+const compatibleRetainedReleaseDigests = new Set([
+    'bcf04cbde2633ef37ecc123e88b0c65d1a185450661cda925da3de8d3c0149dd',
+    '16692dbc7afd337233df2771a9116b2cc6fa20fbe365db96c6e8ba4ad5f2b59c',
+    '5b71be8c0d5444a3c68b493c6bf41abeab496889d7e1545f257284d70cc5817f',
+    '9b1de22130042356ca0fec1b218be72632e0dea6871cb045e136fbb282d5282f',
+    '15e74adf1344e0f39e3da5adebd8e4cedd4644cb5d0336d0a4d1038a20bac0b7',
+    '4ea4c9064daffacd5364d679c1ede994cc7e13634fc9e9f9d9defb3a35fd54e6',
+    '549d0dd998f0a16ca5682f15c98a46be1e6401a378f9f903ac86c8f875fc209a',
+    '8ae719b1881be1612402939f82307b8e4b450668cfb6f51ea2f033cbaca41b60',
+    '5b8d0285ef00805d625e7599a28e73df51dd915fd46684af131b9aab050b0d7c',
+    '863f9867ecc68114f6c07e423335ebe5788660f94cf7ca776a0f14054c81a168',
+    'f09ec891ac50076a0e00e59cbb1fe63d6e569074f103d4c23c34484ce376f262'
+]);
 
 const excludedDirectories = new Set([
     '.git',
@@ -154,7 +166,7 @@ module.exports = exportedService = {
     const shebangParts = (this.splitShebang || exportedService.splitShebang).call(this, content);
     return shebangParts.body.startsWith(requiredHeader) ||
         shebangParts.body.startsWith(compatibleImmutableReleaseHeader) ||
-        crypto.createHash('sha256').update(content).digest('hex') === compatibleRetainedReleaseDigest;
+        compatibleRetainedReleaseDigests.has(crypto.createHash('sha256').update(content).digest('hex'));
 },
 
     /** Implements collect as an overrideable service operation. */

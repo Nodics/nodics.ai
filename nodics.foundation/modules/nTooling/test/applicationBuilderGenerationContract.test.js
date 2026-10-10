@@ -126,19 +126,19 @@ try {
       "Generated project must include a local deployment packaging draft",
     );
     assert(
-      fs.statSync(path.join(outputRoot, "docs/first-30-minutes.md")).isFile(),
+      fs.statSync(path.join(outputRoot, "llm/examples/first-30-minutes.md")).isFile(),
       "Generated project must include a first-30-minutes beginner guide",
     );
     assert(
-      fs.statSync(path.join(outputRoot, "docs/api-catalogue.md")).isFile(),
+      fs.statSync(path.join(outputRoot, "llm/contracts/api-catalogue.md")).isFile(),
       "Generated project must include a backend API catalogue",
     );
     assert(
-      fs.statSync(path.join(outputRoot, "docs/frontend-guide.md")).isFile(),
+      fs.statSync(path.join(outputRoot, "llm/examples/frontend-guide.md")).isFile(),
       "Generated project must include a frontend guide",
     );
     assert(
-      fs.statSync(path.join(outputRoot, "docs/customization-map.md")).isFile(),
+      fs.statSync(path.join(outputRoot, "llm/examples/customization-map.md")).isFile(),
       "Generated project must include a customization ownership map",
     );
     assert(
@@ -202,11 +202,11 @@ try {
       "Generated README must explain ownership boundaries",
     );
     assert(
-      readme.includes("docs/first-30-minutes.md"),
+      readme.includes("llm/examples/first-30-minutes.md"),
       "Generated README must point a new user to the beginner guide",
     );
     const firstThirty = fs.readFileSync(
-      path.join(outputRoot, "docs/first-30-minutes.md"),
+      path.join(outputRoot, "llm/examples/first-30-minutes.md"),
       "utf8",
     );
     assert(
@@ -215,7 +215,7 @@ try {
       "Beginner guide must include the first validation commands",
     );
     const apiCatalogue = fs.readFileSync(
-      path.join(outputRoot, "docs/api-catalogue.md"),
+      path.join(outputRoot, "llm/contracts/api-catalogue.md"),
       "utf8",
     );
     assert(
@@ -225,7 +225,7 @@ try {
       "API catalogue must document generated Commerce APIs",
     );
     const customization = fs.readFileSync(
-      path.join(outputRoot, "docs/customization-map.md"),
+      path.join(outputRoot, "llm/examples/customization-map.md"),
       "utf8",
     );
     assert(

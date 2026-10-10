@@ -16,12 +16,15 @@
  * @owner profile
  * @override Projects may override or extend this initializer data through layered import data rather than editing out-of-the-box framework records.
  */
+const authorityTenant = (typeof CONFIG !== 'undefined' && CONFIG.get('defaultTenant')) || 'default';
+
 module.exports = {
     profile: {
         defaultEmployee: {
             options: {
                 enabled: true,
                 schemaName: 'employee',
+                tenants: [authorityTenant],
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
                 dataFilePrefix: 'defaultEmployeeData',
                 userGroups: ['adminGroup']
@@ -58,10 +61,32 @@ module.exports = {
             }
         },
 
+        defaultServiceEmployee: {
+            options: {
+                enabled: true,
+                schemaName: 'employee',
+                operation: 'saveAll',
+                dataFilePrefix: 'defaultServiceEmployeeData',
+                userGroups: ['adminGroup']
+            },
+            query: { code: '$code', loginId: '$loginId' },
+            macros: {
+                addresses: {
+                    options: { model: 'address', returnProperty: 'code' },
+                    rule: { code: { type: 'string', index: 0 } }
+                },
+                contacts: {
+                    options: { model: 'contact', returnProperty: 'code' },
+                    rule: { code: { type: 'string', index: 0 } }
+                }
+            }
+        },
+
         defaultCustomer: {
             options: {
                 enabled: true,
                 schemaName: 'customer',
+                tenants: [authorityTenant],
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
                 dataFilePrefix: 'defaultCutomerData',
                 userGroups: ['adminGroup']

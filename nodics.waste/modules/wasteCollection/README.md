@@ -1,7 +1,7 @@
 # Waste Collection
 
 Collection-point native create receipts preserve Waste ownership and current
-authorization. See [original results and continuation](../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md)
+authorization. See [original results and continuation](../../../nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js)
 for opt-in configuration, read-only inspection and uncertain-outcome handling.
 
 Native collection-point HTTP creation is insert-only. An existing code is never

@@ -11,8 +11,8 @@ Review:
 
 - `AGENTS.md` for AI/developer rules and extension boundaries.
 - `README.md` for module purpose, usage, capabilities, and extension points.
-- `docs/` for architecture, runtime contracts, lifecycle, operations, and
-  troubleshooting.
+- `data/docs-v001/` for canonical CMS architecture, lifecycle, operations and
+  troubleshooting content, separately selectable from business releases.
 - `llm/` for AI guidance, examples, checklists, generated summaries, and module
   context.
 - `llm/contracts/` for behavior rules, extension boundaries, override
@@ -34,9 +34,12 @@ Not every change updates every file. Every change must make an explicit
 documentation-impact decision. Generated documentation and generated LLM context
 must be recreated from source definitions.
 
-Canonical public documentation content belongs in the separate documentation project
-repository and is projected into Nodics CMS through the governed content-pack
-contract. Retired `gDocs` content may remain only as temporary migration
+Canonical capability documentation belongs to its owning backend module's
+`data/docs-v001` content pack and is projected into CMS through the existing
+governed content-pack contract. Reusable accelerator guides belong with the
+accelerator and reference shared capabilities rather than copying their detail.
+`nodics.docs` owns central discovery and genuinely cross-framework guidance;
+it is not a second authority for module article bodies. Retired `gDocs` content may remain only as temporary migration
 evidence under ignored root `docs/`; it is not the authority for new public
 guidance and must not be reintroduced as a runtime or documentation module.
 Root `docs/` is temporary, untracked, and non-runtime unless implemented
@@ -507,8 +510,8 @@ ownership, implemented capabilities, setup, verification, safe extension
 boundaries, and links to the canonical detail. Migration may retire duplicated
 retired module documentation after the evidence gates pass, but it must never
 leave a module without its local README entry point or create a parallel
-module-level documentation tree outside an explicit backend documentation
-owner's governed `docs/` source catalogue.
+module-level documentation tree separate from the backend owner's governed CMS
+data records.
 
 ## Project Documentation Content-Pack Contract
 
@@ -518,34 +521,38 @@ Documentation is part of feature acceptance; tests and source code alone do not
 make a capability adoptable.
 
 A backend owner that supplies CMS-importable documentation data uses this
-stable source and generated-release shape:
+stable data-release shape:
 
 ```text
 project/
-  docs/
-    catalogue.json
-    pages/
   data/
-    core-v001/
+    docs-v001/
+      assets/
+        documentation/
       headers/
       records/
         documentation/
     manifest.json
 ```
 
-`docs/catalogue.json` is the authored catalogue authority and `docs/pages/`
-contains canonical documentation source. `data/manifest.json` is the aggregate
-release authority; its named documentation section describes the immutable
-content pack. Do not introduce a parallel documentation manifest or authored
-source beneath generated/runtime data. Generated `data/core-v001` is committed,
-deterministic, and directly consumable by the existing Nodics content-pack and
-`nImport` contracts. The backend owner owns its source-controlled release; CMS
-is the runtime projection.
+CMS pages, components and documentation metadata are the canonical source data.
+Maintain them directly when implementing functionality; no separate human
+Markdown authoring workflow or Markdown-to-CMS generator is required.
+`data/manifest.json` is the aggregate release authority; its named documentation
+section uses `sourceMode: cms-records` and identifies the owning record directory.
+The committed records are directly consumable by existing content-pack and
+`nImport` contracts. The backend owner owns the release; CMS is its runtime
+projection. Images live under the same release's `assets/documentation` tree,
+with checksums and Media records. Image blocks reference stable `mediaCode`;
+Media owns storage, access and delivery, and CMS publication transfers referenced
+assets through normal Staged review/approval and Online publication.
 
 Documentation ownership follows the backend owner of the thing being
 documented:
 
-- framework-level Nodics documentation belongs to `nodics.docs`;
+- capability detail belongs to the owning framework module;
+- reusable accelerator documentation belongs to the respective accelerator;
+- central discovery and genuinely cross-framework guidance belong to `nodics.docs`;
 - Axis product documentation belongs to the backend `axis` module under
   `nodics.platform`;
 - customer/project documentation belongs to the owning customer backend
@@ -556,21 +563,36 @@ documented:
 
 Project-specific setup, demo business flows, sample data, project modules,
 custom API behavior, customer onboarding, and project extension guidance belong
-in the owning customer backend project using the same `docs/`,
-`data/core-v001/records/documentation`,
-`data/core-v001/headers`, and the documentation section in `data/manifest.json`.
+in the owning customer backend project using the same
+`data/docs-v001/records/documentation`,
+`data/docs-v001/headers`, and the documentation section in `data/manifest.json`.
 Do not
 place customer project documentation in `nodics.docs`, the Platform `axis`
 module, or the `nodics.axis` frontend repository.
 
-The project must declare one canonical structured documentation source outside
-generated record/header files. Authored source stays under the backend owner's
-`docs/` tree, while generated records stay under `data/core-v001/records/...` and
-`data/core-v001/headers/...`. Content should be split into
+The project must maintain one canonical structured documentation source in its
+CMS records under `data/docs-v001/records/...` and import declarations under
+`data/docs-v001/headers/...`. Keep README/AGENTS/LLM guidance as developer
+contracts and test evidence under `test/`, not as duplicate CMS prose.
+Content should be split into
 independently navigable pages at the level users search, learn, operate,
 troubleshoot, customize, and verify a capability. One coarse project overview
 or one summary page per module does not satisfy the contract when richer
 implemented feature guidance exists.
+
+`docs-v001` is a separately selected CONTENT_PACK, not a new generic data type.
+Init/Core/Sample selection must never discover documentation as business data.
+nImport stages only manifest-declared files inside the selected content root and
+rechecks their bytes before dispatch. Shared-parent placement is not import
+authority. Do not move a business record or product image because a guide uses it.
+
+Preserve global document IDs, CMS codes, routes, hierarchy positions, section
+anchors and Media codes when moving ownership. Use related-page identities and
+owner-qualified section references instead of duplicate article bodies. Validate
+the reference graph across explicitly selected catalogues; unknown targets,
+duplicate identities/routes, owner mismatches and missing anchors are errors.
+Reference validation never installs optional packs or grants access. Source-valid,
+installed, authorized and Online are distinct states.
 
 Frontend startup may discover documentation-pack status and present authorized
 Import or Update actions. A frontend must never read sibling files, write CMS

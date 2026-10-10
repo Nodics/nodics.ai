@@ -15,9 +15,18 @@ const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const { merge } = require('lodash');
 const schemas = require('../src/schemas/schemas').store;
-const points = require('../../../data/core-v001/records/store/baseCommercePointOfServiceData');
-const stores = require('../../../data/core-v001/records/store/baseCommerceStoreData');
-const channels = require('../../../data/core-v001/records/store/baseCommerceSalesChannelData');
+const points = require('../data/core-v001/records/store/baseCommercePointOfServiceData');
+const stores = require('../data/core-v001/records/store/baseCommerceStoreData');
+const channels = require('../data/core-v001/records/store/baseCommerceSalesChannelData');
+
+test('Store declares its own operational release independently of the Base Commerce group', () => {
+    const manifest = require('../data/manifest.json');
+    assert.equal(manifest.module, 'store');
+    assert.equal(manifest.sections['core-reference'].kind, 'DATA_RELEASE');
+    assert.equal(manifest.sections['core-reference'].destinationRole, 'COMMERCE');
+    assert.equal(Object.keys(manifest.sections['core-reference'].files).length, 4);
+    assert.equal(require('node:fs').existsSync(require('node:path').join(__dirname, '../../../data')), false);
+});
 
 test('Store core data leaves technical revision ownership to generated CRUD', () => {
     for (const [name, records] of [['store', stores], ['salesChannel', channels], ['pointOfService', points]]) {

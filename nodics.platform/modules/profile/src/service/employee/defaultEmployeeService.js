@@ -17,6 +17,133 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  /** Adds reviewed reference-release roles to existing native employees through normal owner updates. */
+  addReferenceGroupsAll: async function (request) {
+    const fail = () => {
+      throw new CLASSES.NodicsError("ERR_PROFILE_CREDENTIAL_OWNERSHIP");
+    };
+    const plain = (value) => value && Object.getPrototypeOf(value) === Object.prototype;
+    const key = (value, maximum = 192) => typeof value === "string" &&
+      value.length > 0 && value.length <= maximum && value.trim() === value;
+    const codes = (value) => Array.isArray(value) && value.length > 0 &&
+      value.length <= 100 && value.every((item) => key(item)) &&
+      new Set(value).size === value.length;
+    const success = (response) => /^SUC_/.test(response?.code || "") &&
+      response.success !== false && !response.error &&
+      (!response.errors || (Array.isArray(response.errors) && !response.errors.length));
+    const rows = (response, maximum) => {
+      if (!success(response) || !Array.isArray(response.result) ||
+          response.count !== response.result.length || response.result.length > maximum)
+        fail();
+      return response.result;
+    };
+    const reference = (value) => typeof value === "string" ? value :
+      typeof value?.toHexString === "function" ? value.toHexString() : undefined;
+    const models = request?.models;
+    if (!key(request?.tenant) || !Array.isArray(models) || models.length > 100 ||
+        !plain(request.authData) || !Array.isArray(request.authData.userGroups) ||
+        !request.authData.userGroups.length) fail();
+    const roles = CONFIG.get("enterpriseManagement")?.accessAssignments?.roles;
+    if (!plain(roles)) fail();
+    const identities = new Set(), logins = new Set(), requiredGroups = new Set();
+    const instructions = models.map((model) => {
+      if (!plain(model) || Object.keys(model).sort().join("|") !==
+          "code|enterpriseCode|groupCodes|loginId|roleCodes" ||
+          !key(model.code) || !key(model.loginId, 320) || !key(model.enterpriseCode) ||
+          !codes(model.roleCodes) || !codes(model.groupCodes) ||
+          identities.has(model.code) || logins.has(model.loginId)) fail();
+      identities.add(model.code);
+      logins.add(model.loginId);
+      const resolved = new Set();
+      for (const roleCode of model.roleCodes) {
+        const role = Object.hasOwn(roles, roleCode) && roles[roleCode];
+        if (!plain(role) || role.delegable !== true || role.scopeType !== "ENTERPRISE" ||
+            role.administrationClass || !codes(role.groupCodes)) fail();
+        role.groupCodes.forEach((group) => resolved.add(group));
+      }
+      const serviceGroup = CONFIG.get("identityGovernance")?.principalPolicy?.serviceGroup;
+      if (resolved.size !== model.groupCodes.length || model.groupCodes.some((group) =>
+          !resolved.has(group) || ["adminGroup", "runtimeConfigAdminUserGroup", serviceGroup].includes(group)))
+        fail();
+      model.groupCodes.forEach((group) => requiredGroups.add(group));
+      return { ...model, roleCodes: [...model.roleCodes], groupCodes: [...model.groupCodes] };
+    });
+    const read = async (service, query, maximum) => rows(await service.get({
+      tenant: request.tenant, authData: request.authData, query,
+      options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: maximum + 1, pageNumber: 1 },
+    }), maximum);
+    if (typeof SERVICE.DefaultUserGroupService?.get !== "function" ||
+        typeof SERVICE.DefaultEnterpriseService?.get !== "function") fail();
+    if (requiredGroups.size) {
+      const groups = await read(SERVICE.DefaultUserGroupService,
+        { code: { $in: [...requiredGroups] }, active: true }, requiredGroups.size);
+      if (groups.length !== requiredGroups.size ||
+          new Set(groups.map((group) => group.code)).size !== groups.length ||
+          groups.some((group) => group.active !== true || !requiredGroups.has(group.code))) fail();
+    }
+    const snapshot = (record, instruction) => {
+      if (!record?._id || record.code !== instruction.code || record.loginId !== instruction.loginId ||
+          record.active !== true || record.authenticationIdentity ||
+          (record.principalType !== undefined && record.principalType !== "human") ||
+          record.apiKey || record.apiKeyHash || !codes(record.userGroups) ||
+          !reference(record.password) || record.metadata?.enterpriseCode !== instruction.enterpriseCode ||
+          (record.enterpriseCode !== undefined && record.enterpriseCode !== instruction.enterpriseCode) ||
+          (record.authVersion !== undefined && (!Number.isInteger(record.authVersion) ||
+            record.authVersion < 0 || record.authVersion >= 2147483647))) fail();
+      return { ...record, userGroups: [...record.userGroups], metadata: { ...record.metadata } };
+    };
+    const employeeRead = async (instruction) => {
+      const records = await read(this,
+        { $or: [{ code: instruction.code }, { loginId: instruction.loginId }] }, 1);
+      if (records.length !== 1) fail();
+      return snapshot(records[0], instruction);
+    };
+    // Complete all prerequisite reads before the first mutation; the batch is resumable, not transactional.
+    const prepared = [], enterprises = new Set();
+    for (const instruction of instructions) {
+      const original = await employeeRead(instruction);
+      if (!enterprises.has(instruction.enterpriseCode)) {
+        const masters = await read(SERVICE.DefaultEnterpriseService,
+          { code: instruction.enterpriseCode, active: true }, 1);
+        if (masters.length !== 1 || !masters[0]._id || masters[0].active !== true ||
+            masters[0].code !== instruction.enterpriseCode) fail();
+        enterprises.add(instruction.enterpriseCode);
+      }
+      const next = [...original.userGroups,
+        ...instruction.groupCodes.filter((group) => !original.userGroups.includes(group))];
+      prepared.push({ instruction, original, next });
+    }
+    const result = [];
+    for (const { instruction, original, next } of prepared) {
+      if (next.length !== original.userGroups.length) {
+        const query = {
+          _id: original._id, code: original.code, loginId: original.loginId, active: true,
+          userGroups: original.userGroups, password: original.password,
+          authVersion: original.authVersion === undefined ? { $exists: false } : original.authVersion,
+          authenticationIdentity: original.authenticationIdentity === undefined ?
+            { $exists: false } : original.authenticationIdentity,
+          principalType: original.principalType === undefined ? { $exists: false } : original.principalType,
+          "metadata.enterpriseCode": instruction.enterpriseCode,
+          enterpriseCode: original.enterpriseCode === undefined ? { $exists: false } : original.enterpriseCode,
+        };
+        const updated = await this.update({
+          tenant: request.tenant, authData: request.authData, query,
+          model: { userGroups: next }, options: { returnModified: true },
+        });
+        if (!success(updated) || updated.result?.acknowledged !== true ||
+            updated.result.matchedCount !== 1) fail();
+        const current = await employeeRead(instruction);
+        if (String(current._id) !== String(original._id) ||
+            reference(current.password) !== reference(original.password) ||
+            JSON.stringify(current.userGroups) !== JSON.stringify(next) ||
+            current.principalType !== original.principalType ||
+            current.authVersion === undefined || current.authVersion <= (original.authVersion || 0)) fail();
+      }
+      result.push({ code: instruction.code });
+    }
+    return { result };
+  },
   /**
    * Ensures bounded reference employees without rewriting existing identities or credentials.
    * Existing accounts must match both immutable source keys and remain active native employees.

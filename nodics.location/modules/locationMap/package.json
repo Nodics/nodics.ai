@@ -24,7 +24,8 @@
       "test",
       "llm",
       "controller",
-      "facade"
+      "facade",
+      "data"
     ],
     "runtime": {
       "router": true,

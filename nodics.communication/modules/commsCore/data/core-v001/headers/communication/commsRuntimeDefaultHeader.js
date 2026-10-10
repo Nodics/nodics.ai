@@ -8,18 +8,35 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
-
-'use strict';
-
-/** @module commsCore/data/core-v001/headers/commsRuntimeDefaultHeader @description Imports Communication runtime default templates required before activation. @layer data-header @owner commsCore */
-const entry = (schemaName, dataFilePrefix) => ({
-    options: { enabled: true, schemaName, operation: 'saveAll', dataFilePrefix, userGroups: ['adminGroup'] },
-    query: { code: '$code', tenant: '$tenant' }
-});
-
+"use strict";
+/** @module commsCore/data/core-v001/commsRuntimeDefaultHeader @description Imports governed resource selectors through the existing schema owner. @owner commsCore @layer data-header */
 module.exports = {
-    commsSchema: {
-        commsRuntimeDefaultTemplateData: entry('commsTemplate', 'commsRuntimeDefaultTemplateData'),
-        commsRuntimeDefaultTemplateVersionData: entry('commsTemplateVersion', 'commsRuntimeDefaultTemplateVersionData')
-    }
+  commsSchema: {
+    commsRuntimeDefaultTemplateData: {
+      options: {
+        enabled: true,
+        schemaName: "commsTemplate",
+        operation: "saveAll",
+        dataFilePrefix: "commsRuntimeDefaultTemplateData",
+        userGroups: ["adminGroup"],
+      },
+      query: {
+        code: "$code",
+        tenant: "$tenant",
+      },
+    },
+    commsRuntimeDefaultTemplateVersionData: {
+      options: {
+        enabled: true,
+        schemaName: "commsTemplateVersion",
+        operation: "saveAll",
+        dataFilePrefix: "commsRuntimeDefaultTemplateVersionData",
+        userGroups: ["adminGroup"],
+      },
+      query: {
+        code: "$code",
+        tenant: "$tenant",
+      },
+    },
+  },
 };

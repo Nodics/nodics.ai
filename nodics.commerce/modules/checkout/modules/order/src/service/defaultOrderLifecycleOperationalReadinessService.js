@@ -47,7 +47,7 @@ module.exports = {
     /** Returns missing release gates for a qualification evidence object. @param {Object} evidence Qualification evidence. @returns {Object} Gate result. */
     releaseGateResult: function (evidence) {
         const contract = this.contract();
-        const missing = contract.releaseGates.filter(gate => evidence && evidence[gate] !== true);
+        const missing = contract.releaseGates.filter(gate => evidence?.[gate] !== true);
         return Object.freeze({ ready: missing.length === 0, missing });
     }
 };

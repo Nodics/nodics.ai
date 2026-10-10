@@ -33,7 +33,13 @@ const lifecycle = require(path.join(root, 'checkout/modules/order/src/service/de
         authorizePayment: async () => 'auth', createOrder: async () => ({ code: 'o1' }), releaseFulfillment: async () => 'release',
         complete: async (checkpoint, result) => { completed.push(...checkpoint.completed); return result; }, compensate: async () => { throw new Error('unexpected compensation'); }
     });
-    assert.equal(placed.order.code, 'o1'); assert.deepEqual(completed, ['CALCULATED', 'RESERVED', 'AUTHORIZED', 'ORDERED', 'RELEASED']);
+    assert.equal(placed.order.code, 'o1');
+    assert.deepEqual(completed, ['VALIDATED', 'CALCULATED', 'RESERVED', 'DIGITAL_RESERVED', 'AUTHORIZED', 'ORDERED', 'DIGITAL_SOLD', 'RELEASED', 'DIGITAL_DELIVERED']);
+    assert.deepEqual(placed.digitalReservation, []);
+    assert.deepEqual(placed.digitalSale, []);
+    assert.deepEqual(placed.digitalDelivery, []);
+    assert.equal(placed.capture, undefined);
+    assert.equal(placed.promotionCommit, undefined);
     let compensation;
     await assert.rejects(() => placement.place({ tenant: 't1', idempotencyKey: 'failed', correlationId: 'failure' }, {
         findPlacement: async () => null, calculateCart: async () => 'calc', reserveInventory: async () => ['reserve'],
@@ -41,7 +47,11 @@ const lifecycle = require(path.join(root, 'checkout/modules/order/src/service/de
         createOrder: async () => { throw new Error('must not create'); }, releaseFulfillment: async () => { throw new Error('must not release'); },
         complete: async () => { throw new Error('must not complete'); }, compensate: async (checkpoint, error, request) => { compensation = { checkpoint, error, request }; }
     }), /provider unavailable/u);
-    assert.deepEqual(compensation.checkpoint.completed, ['CALCULATED', 'RESERVED']); assert.equal(compensation.error.code, 'PROVIDER_UNAVAILABLE'); assert.equal(compensation.request.idempotencyKey, 'failed');
+    assert.deepEqual(compensation.checkpoint.completed, ['VALIDATED', 'CALCULATED', 'RESERVED', 'DIGITAL_RESERVED']);
+    assert.deepEqual(compensation.checkpoint.results.validation, { status: 'SKIPPED' });
+    assert.deepEqual(compensation.checkpoint.results.digitalReservation, []);
+    assert.equal(compensation.checkpoint.results.authorization, undefined);
+    assert.equal(compensation.error.code, 'PROVIDER_UNAVAILABLE'); assert.equal(compensation.request.idempotencyKey, 'failed');
     let records = 0; const paid = await payment.execute({ tenant: 't1', operation: 'AUTHORIZE', amount: '18.9', currency: 'USD', providerToken: 'opaque', idempotencyKey: 'p1', correlationId: 'x' }, { code: 'sandbox', execute: async () => ({ reference: 'ref', status: 'AUTHORIZED' }) }, { find: async () => null, record: async value => { records += 1; return value; } });
     assert.equal(paid.status, 'AUTHORIZED'); assert.equal(records, 1);
     const sandboxAuthorization = await stripeSandbox.execute({ tenant: 't1', operation: 'AUTHORIZE', providerToken: 'tok_test_ok', idempotencyKey: 'sandbox-1' });
@@ -52,7 +62,16 @@ const lifecycle = require(path.join(root, 'checkout/modules/order/src/service/de
     assert.equal((await callback.verify({ signature, timestamp, body, eventId: 'evt1' }, secret, { exists: async () => false, record: async () => true }, timestamp)).verified, true);
     assert.throws(() => fulfillment.transition({ tenant: 't1', status: 'READY', revision: 1 }, 'DELIVERED', 'u1'), /Invalid/u);
     assert.equal(fulfillment.transition({ tenant: 't1', orderCode: 'o1', status: 'READY', revision: 1, correlationId: 'x' }, 'SHIPPED', 'u1').toStatus, 'SHIPPED');
-    const reversed = await lifecycle.process({ tenant: 't1', orderCode: 'o1', requestType: 'RETURN', idempotencyKey: 'r1' }, { find: async () => null, evaluatePolicy: async () => ({ eligible: true, requiresApproval: false }), fulfillmentIntent: async () => 'received', inventoryDisposition: async () => 'restocked', paymentIntent: async () => 'refunded', complete: async (request, evidence) => evidence });
-    assert.equal(reversed.payment, 'refunded');
+    const reversed = await lifecycle.process({ tenant: 't1', orderCode: 'o1', requestType: 'RETURN', idempotencyKey: 'r1' }, {
+        find: async () => null, evaluatePolicy: async () => ({ eligible: true, requiresApproval: false }),
+        fulfillmentIntent: async () => ({ status: 'RECEIVED', code: 'return-receipt' }),
+        inventoryDisposition: async () => ({ status: 'RESTOCKED', code: 'return-disposition' }),
+        paymentIntent: async () => ({ status: 'REFUND_SUCCEEDED', transactionCode: 'refund-transaction' }),
+        complete: async (request, evidence) => ({ status: 'COMPLETED', ...evidence })
+    });
+    assert.equal(reversed.status, 'COMPLETED');
+    assert.equal(reversed.fulfillment.status, 'RECEIVED');
+    assert.equal(reversed.inventory.status, 'RESTOCKED');
+    assert.deepEqual(reversed.payment, { status: 'REFUND_SUCCEEDED', transactionCode: 'refund-transaction' });
     console.log('Commerce transaction and checkout contract validated');
 })().catch(error => { console.error(error); process.exitCode = 1; });

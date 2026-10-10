@@ -15,6 +15,26 @@ test evidence, not a production provider qualification. Native `PRICED_CART`
 benefits are reviewed with their original source hash/revision, currency, amounts
 and outlet. Unrecognized benefit fields fail closed rather than being hidden.
 
+**ITEM preparation and execution are unsupported in Copilot**, including LOCAL
+ITEM simulation. The existing benefit parser admits only `PRICED_CART`; do not
+create an ITEM plan, reinterpret SKU promises as money or use queue visibility
+as mutation admission. Existing ordinary coupon actions remain available under
+their original owner validation and approval contract.
+
+The read-only merchant queue and original-receipt inspection preserve a native
+simulation label only as this complete exact triad:
+
+```json
+{ "simulated": true, "deliveryVerified": false, "evidenceMode": "LOCAL_SIMULATION" }
+```
+
+The label means explicitly unverified simulation, not authenticated delivery,
+immutable physical evidence or provider qualification. Partial, contradictory,
+coerced, inherited, hidden or accessor tags refuse the response; Copilot never
+fills in missing tags from request flags, authentication, current configuration
+or environment. Ordinary owner DTOs without any tags remain unchanged; absence
+does not assert verified delivery.
+
 ## Runtime Setup
 
 1. Deploy the normal Copilot API/Core/Workbench/Policy owners and generated private
@@ -122,6 +142,14 @@ Explicit approval -> action revision CAS -> explicit fulfillment
 6. Proof/approval expiry does not prevent inspecting an old completion. It always
    prevents new execution with that expired approval.
 
+Both `UNCONFIRMED` and `COMPLETED` receipt responses retain the validated native
+simulation triad at the response top level when present. Queue rows retain it
+per row. Completion still requires the exact original committed owner command
+receipt and acknowledged action CAS; a simulation label does not authorize a
+new ITEM action, establish physical delivery or allow redemption replay. Malformed
+tags leave an uncertain action unchanged. Unexpected simulated evidence during
+ordinary execution cannot mark the action complete or unlock retry.
+
 ## API And Stored Evidence
 
 | Entry | Meaning |
@@ -164,6 +192,10 @@ execution. A changed target/proof/review requires a new owner validation and rev
 Run the coupon adapter tests with Digital Core merchant contract tests. Exercise
 denied grants, missing privacy, expired proof, raw-token echo, bad benefit DTO,
 lost response, mismatched receipt, policy revocation and concurrent reconciliation.
+`test/copilotCouponAction.test.js` also exercises actual Core queue/reconciliation
+projection with complete and malformed native simulation tags, unchanged ordinary
+PRICED_CART execution and explicit ITEM preparation refusal. These isolated
+contracts do not qualify native deployment, physical delivery or an ITEM mutation.
 Axis tests cover masked input, no eager writes, separate commands, offline
 non-submission, closed metadata, reference reopening and uncertain recovery.
 The synthetic `test/assistant/coupon-fulfillment.visual.html` fixture exercises

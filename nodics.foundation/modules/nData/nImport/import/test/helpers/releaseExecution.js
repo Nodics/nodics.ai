@@ -46,13 +46,19 @@ module.exports = function releaseExecution({ modules, configuration, environment
                     (!request.query.code || item.code === request.query.code));
                 const size = request.searchOptions?.pageSize || 10;
                 const skip = size * ((request.searchOptions?.pageNumber || 1) - 1);
-                return { result: matched.slice(skip, skip + size) };
+                return { code: 'SUC_DBS_00000', result: matched.slice(skip, skip + size) };
             },
-            save: async request => { installations.push(request.model); return request.model; },
+            save: async request => {
+                const stored = { ...request.model, revision: 1 };
+                installations.push(stored);
+                return { code: 'SUC_DBS_00000', result: stored };
+            },
             update: async request => {
-                const index = installations.findIndex(item => item.code === request.query.code);
-                installations[index] = request.model;
-                return request.model;
+                const index = installations.findIndex(item => item.code === request.query.code &&
+                    (item.revision || 0) === request.query.revision);
+                if (index < 0) return { code: 'SUC_DBS_00000', result: { matchedCount: 0, modifiedCount: 0 } };
+                installations[index] = { ...request.model, revision: (installations[index].revision || 0) + 1 };
+                return { code: 'SUC_DBS_00000', result: { matchedCount: 1, modifiedCount: 1 } };
             }
         },
         DefaultImportService: { importInitData: importData, importCoreData: importData, importSampleData: importData }

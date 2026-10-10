@@ -1,5 +1,9 @@
 # Workflow
 
+Missing CMS approval definitions install through the governed nImport catalogue
+and executor using the observed contribution version. Existing definitions remain
+untouched, and release drift fails closed rather than forcing a replay.
+
 Legacy publication decisions may retain `action: APPROVE|REJECT` when it agrees
 with the stored approval boolean. Recovery validates the original completed task,
 actor and pinned graph; the label never reaches the domain callback. Typed

@@ -28,7 +28,7 @@ module.exports = {
         publication: { baselines: {
           "nexus": {
             "releaseCode": "nexus.web:nexusCorporateSite",
-            "releaseVersion": "0.0.22",
+            "releaseVersion": "0.0.1",
             "dataType": "sample",
             "rootType": "site",
             "rootCode": "nexusCorporateSite",
@@ -36,7 +36,7 @@ module.exports = {
           },
           "nexusupdate": {
             "releaseCode": "nexus.web:nexusCorporateSiteUpdate",
-            "releaseVersion": "0.0.0",
+            "releaseVersion": "0.0.1",
             "dataType": "sample",
             "rootType": "site",
             "rootCode": "nexusCorporateSite",
@@ -44,7 +44,7 @@ module.exports = {
           },
           "nexusecosystemrepair": {
             "releaseCode": "nexus.web:nexusCorporateEcosystemComponentRepair",
-            "releaseVersion": "0.0.0",
+            "releaseVersion": "0.0.1",
             "dataType": "sample",
             "rootType": "site",
             "rootCode": "nexusCorporateSite",

@@ -1501,6 +1501,22 @@ module.exports = {
   },
 
   /** Returns the authorized module catalogue and compatibility metadata required to bootstrap a BackOffice client. */
+  /** Reads only baseline admission for bootstrap users without detailed setup rights; never initiates or returns publication history. */
+  axisInitializationAdmission: async function (request) {
+    const permissions = request?.authData?.permissions || [];
+    if (permissions.includes("*") || permissions.includes("backoffice.axis.initialization.view")) return undefined;
+    try {
+      const owner = SERVICE.DefaultAxisInitializationService;
+      if (!owner || typeof owner.status !== "function") return "UNAVAILABLE";
+      const status = await owner.status(request);
+      if (!status || typeof status.readiness !== "string") return "UNAVAILABLE";
+      return status.readiness === "READY" ? "READY" : "NOT_READY";
+    } catch (_) {
+      return "UNAVAILABLE";
+    }
+  },
+
+  /** Builds the permission-filtered Axis bootstrap from current registry and presentation eligibility. @param {Object} request Authenticated client contract and runtime scope. @returns {Promise<Object>} Authorized catalogue, availability and initialization summary. */
   bootstrap: async function (request) {
     let clientContractVersion = this.getClientContractVersion(request);
     let result = await this.list(request);
@@ -1606,6 +1622,7 @@ module.exports = {
         documentationSources: documentationSources,
         axisPolicy: axisPolicy,
         startupValidation: startupValidation,
+        axisInitializationAdmission: await this.axisInitializationAdmission(request),
         tenantCode: request.tenant,
       },
     };

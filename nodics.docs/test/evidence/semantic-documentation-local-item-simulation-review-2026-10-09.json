@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "scope": "LOCAL_SIMULATION ITEM evidence and exact merchant coordination; no used inverse, runtime operations or qualification claim",
+  "reviewedItems": [
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "evidence": [
+        {
+          "documentId": "commerce.data-authoring-fulfillment",
+          "anchors": [
+            "commerceDataAuthoringFulfillment-1-source-map",
+            "commerceDataAuthoringFulfillment-2-data-bundle",
+            "commerceDataAuthoringFulfillment-3-authoring-sequence",
+            "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+            "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+            "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+            "commerceDataAuthoringFulfillment-7-common-mistakes",
+            "commerceDataAuthoringFulfillment-8-verification",
+            "commerce-stock-lane-boundaries"
+          ]
+        },
+        {
+          "documentId": "promotion.campaigns-coupon-issuance",
+          "anchors": [
+            "promotion-issuer-merchant-scope",
+            "promotion-coupon-bound-benefit-accounting",
+            "promotion-local-item-simulation",
+            "promotion-used-benefit-inverses-disabled"
+          ]
+        },
+        {
+          "documentId": "digital.purchase-delivery-reveal",
+          "anchors": [
+            "digital-issuer-merchant-confirmation",
+            "digital-original-sale-ownership-refund",
+            "digital-local-item-simulation",
+            "digital-simulation-recovery"
+          ]
+        },
+        {
+          "documentId": "fulfillment.shipping-management",
+          "anchors": [
+            "physical-cancellation-return-owner-bridge",
+            "physical-return-receipt-inspection",
+            "fulfillment-item-delivery-boundary",
+            "fulfillment-local-item-simulation",
+            "fulfillment-sim-receipt-boundary",
+            "fulfillment-simulation-recovery"
+          ]
+        },
+        {
+          "documentId": "commerce.fulfillment-core-source-map",
+          "anchors": [
+            "commerceFulfillmentCoreSourceMap-2-source-map",
+            "commerceFulfillmentCoreSourceMap-6-operating-rules"
+          ]
+        }
+      ],
+      "sourceFindings": [
+        "2026-10-09 LOCAL_SIMULATION re-review: DefaultFulfillmentItemSimulationService requires package-derived LOCAL class, exact selected-environment allowlist, strict enabled values and matching Promotion mode/service before and after context canonicalization. Its detached SKU-sorted context adds the merchant-observed positive Store revision and exact SIM: handle; no persistence, inventory, carrier or physical-receipt work occurs in this evaluator.",
+        "Raw simulation proof is explicitly simulated:true, verified:false, immutable:false, SIMULATED / ITEM_SIMULATION / SIMULATED_ITEMS, sourceRevision:0 and no deliveredAt. SHA-256 of ITEM_SIMULATION_V1 plus canonical context provides deterministic correlation only, not authentication, immutable storage or durable physical-delivery replay protection.",
+        "Promotion ItemBenefit rechecks actual simulator admission and mode across the evaluator await and requires exact original tenant/vendor/issuer/buyer/coupon/Product/campaign/revision/outlet/target, bundle, reference and source integrity. It refuses promoted verified/immutable flags, real delivery status/stage, deliveredAt and changed outlet revision. Its bound benefit retains simulated/unverified ITEM tags but does not project the raw immutable field or infer money.",
+        "Digital ITEM provider reuses the exact pricedAuthority object through validateCoupon, preserving private issuer admission. Existing canonical confirmation phases, current signed human/Profile/Store/consent, original vendor-owned encrypted stock, target, benefit binding and protected coordination receipt are unchanged. ITEM skips monetary COMMIT. Confirmation/queue and original pending/completed receipt inspection retain simulated:true, deliveryVerified:false, evidenceMode:LOCAL_SIMULATION.",
+        "Digital MERCHANT_RECEIPT generic DELIVERED status and deliveredAt derived from original marker.confirmedAt are workflow coordination metadata, not Fulfillment simulator proof, physical delivery or carrier authentication. Only the simulator is non-mutating; the existing merchant journey can claim/redeem disposable original records. Original exact receipt/key replay and failed/ambiguous readback remain authoritative.",
+        "The real DefaultFulfillmentItemDeliveryEvidenceService remains available:false and always refuses absent authenticated original Shipment allocation receipt admission. VERIFIED mode and independently qualified real receipt requirements are unchanged. Human-approved LOCAL simulation does not establish real delivery, installed persistence, current native acceptance or monetary qualification.",
+        "Already-redeemed benefit inverses are intentionally disabled in the approved scope: MerchantScope.resolveBudgetRequest admits COMMIT only, including when tested with a genuine in-flight COMMIT object. No RELEASE caller, budget replenishment, used-coupon refund or automatic compensation is supplied. Existing unused-purchase and original-sale DIGITAL_OWNERSHIP refunds remain independent.",
+        "Four canonical owner articles were re-read against those sources: Promotion owns retained ITEM rights/mode and disabled inverse; Fulfillment owns selection, exact SIM grammar/nonimmutable evidence and real-source refusal; Digital owns exact private dispatch, protected receipt/recovery and public labels; the Fulfillment source map references these owners. Existing central authoring/publication/search/browser-proof anchors remain accurate and unchanged.",
+        "Focused source contracts pass 200/200; owning CMS references/composition tests pass 16/16. All three optional documentation releases pass canonical validation; docs:check and validate pass 176 pages. The separate inspected project test passes 2/2, including all 29 unchanged exact ITEM promises and native-vs-Docker selection. These checks exercise source/configuration with isolated owner ports, not installed/native/browser or real delivery acceptance.",
+        "Copilot ITEM preparation/mutation remains unsupported; read-only consumer projection work is a separate source review, not authority to execute that path.",
+        "Final frozen SIM-handle review: only Digital Merchant confirm and original receipt inspection generic receipt character classes now admit @, preserving their existing bounds and all original key/outlet/marker/staff/receipt checks. Fulfillment still enforces the stricter canonical ^SIM:[A-Za-z0-9_.:@-]{1,115}$ grammar; this does not admit a wrong prefix, slash, whitespace or oversized simulation. Actual integrated private MerchantScope fixture now validates, confirms, redeems, replays, inspects the original receipt and reads queue with SIM:original@outlet, retaining issuer authority, vendor storage, original encrypted stock and unverified labels. Its 55/55 source cases pass. No auth/policy, real delivery qualification, monetary or inverse authority changed."
+      ]
+    }
+  ],
+  "canonicalDocuments": {
+    "promotion.campaigns-coupon-issuance": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationComponentData.js",
+      "articleBlocksSha256": "52cffc7dc618cfea146269e2a12e37c18cf91d97f449cc1d1f5cef5c01f0d085"
+    },
+    "digital.purchase-delivery-reveal": {
+      "owner": "nodics.commerce/modules/digitalCommerce/modules/digitalCore",
+      "componentFile": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v001/records/documentation/digitalCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "5c0579db80d532476f5e740270f55669f44b67d78637354a522fcf90e1385ced"
+    },
+    "fulfillment.shipping-management": {
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "5a6ca17cce7ca188c2308fbb4887b17425c6c2096aaa0b37057c244428d60db0"
+    },
+    "commerce.fulfillment-core-source-map": {
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "ef763053ea50378fd68c5823b49395c34a3890633d070dcaaae8b083b60467c2"
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionMerchantScopeService.js": "62b40e67b7efb25eada43cc3c0e6030d80cd44bf62592b26ae0f9f8322f4ec35",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionItemBenefitService.js": "ba324e00efc822256f8b94c7a78599cd91c41cadd7750a7d8bde72f1b71216f8",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-bound-issuer-budget.md": "c11865e5fa681eec108c4534335a27c5e4a4d620f7c2611181d95470582b0412",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md": "4261486e75b583f224e04e7afaefaa1bc029b5f78eaf11bbbd4a853dd4742bb7",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "f56e90f1323d0888b768f6f3b45664799250459cc967b442019e0eb94d3ad864",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js": "1ea6fbbd9287dfefdbd0caeb491ce48ed45d01861274de71b94370f7fc542804",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js": "30916f6ebfcc21e9fea0243bee960421b2425b6987d3e7e62b8f414ada2c7b25",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js": "097671a368f096d0965eee91ed0875364aadfa6f9511b496498a61a18fede881",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceItemMerchantProviderService.js": "d4067b8bba05111c9b5610a75d554024d85cb0d8b7216b8affb73ba76b61aff6",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/merchant-redemption-contract.md": "bbf398f85a7d29a711e3d3918f5530960a328bb383d3f9ed3589abb7d147be54",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js": "ab015a2fd29c1f9b8ed2ef87ebafa89b8bb3ddbc453380da1d6035fdf2028b7a",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js": "fe6325d7b34bb5a65007b5c5bb599dfafd873b6b4b499caf52cae922a5692540",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md": "43622d176764bad15588857765c5b0bbea78bc5d1bfd56512d23d3d79ce119ee",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js": "a40c51e5a1cc910b91a3f3768cc3da81efc6781956dde8231d71d7d9c888885b"
+  },
+  "inspectedReferenceSelection": {
+    "ownerRepository": "nodics.kickoff",
+    "sourceOnly": true,
+    "sourceFileSha256": {
+      "envs/kickoffLocal/config/properties.js": "2522f54ec0579984df623e77581f7258a6421f776bb27d55aaeb7f01a1e1d5e5",
+      "modules/circa.ewaste/test/circaItemSimulationSelection.test.js": "abc54b5ab3fda6616fdfbced479ea3537803025d677415a996c089a524b45c1e"
+    },
+    "observations": [
+      "Native kickoffLocal explicitly selects LOCAL_SIMULATION and the exact simulator; allowlist is only kickoffLocal. This is inspected reference-project selection, not reusable Framework enablement guidance.",
+      "Source selection test passes 2/2; native configuration remains real-qualified:false and Docker stays VERIFIED/simulator-disabled. All 29 original ITEM promises retain exact quantities.",
+      "This review does not import, issue, publish, activate or mutate application records."
+    ]
+  },
+  "validation": {
+    "focusedSourceContracts": {
+      "passed": 200,
+      "failed": 0
+    },
+    "cmsOwnershipAndReferences": {
+      "passed": 16,
+      "failed": 0
+    },
+    "optionalPacks": "promotion, digitalCore and fulfillmentCore canonical validateDataRelease PASS",
+    "documentationChecks": {
+      "docsCheck": 176,
+      "validate": 176
+    },
+    "projectSelectionContracts": {
+      "passed": 2,
+      "failed": 0
+    },
+    "semanticIntegrated": "PASS_2_OF_2_INTEGRATED_22_ITEMS"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED",
+    "boundary": "Source-editorial and isolated source/configuration validation only. Historical native/live records unchanged. No installed persistence, native, browser, carrier, physical delivery, monetary settlement or production acceptance claimed."
+  },
+  "limitations": [
+    "Real authenticated ITEM allocation receipt owner is absent and still refuses.",
+    "Raw simulated proof is unverified and nonimmutable; deterministic correlation is not a durable physical receipt.",
+    "Already-redeemed benefit inverses and RELEASE remain intentionally disabled.",
+    "Copilot ITEM prepare/mutation is not enabled; later read-projection review remains separately bounded."
+  ],
+  "preservation": "Prior semantic review bundles and liveAcceptance fields are retained; no blanket source re-pin or customer enablement instructions moved into Framework CMS.",
+  "changedFiles": [
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationPageMetadataData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationSearchMetadataData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationComponentData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationPageMetadataData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationSearchMetadataData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v001/records/documentation/digitalCoreDocumentationComponentData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v001/records/documentation/digitalCoreDocumentationPageMetadataData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v001/records/documentation/digitalCoreDocumentationSearchMetadataData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/manifest.json",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+    "nodics.copilot/modules/copilotWorkbench/data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js",
+    "nodics.copilot/modules/copilotWorkbench/data/docs-v001/records/documentation/copilotWorkbenchDocumentationPageMetadataData.js",
+    "nodics.copilot/modules/copilotWorkbench/data/docs-v001/records/documentation/copilotWorkbenchDocumentationSearchMetadataData.js",
+    "nodics.copilot/modules/copilotWorkbench/data/manifest.json",
+    "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "nodics.docs/test/evidence/semantic-documentation-local-item-simulation-review-2026-10-09.json",
+    "nodics.docs/test/evidence/semantic-documentation-copilot-simulation-read-review-2026-10-09.json"
+  ],
+  "followUpSourceReview": "semantic-documentation-copilot-simulation-read-review-2026-10-09.json",
+  "finalReferenceTestRevalidation": {
+    "reviewDate": "2026-10-09",
+    "file": "modules/circa.ewaste/test/circaItemSimulationSelection.test.js",
+    "sha256": "573a13818b6f828438d353037a0f4c1141e445ba08d2ed2abbd82377d2877b3c",
+    "finding": "Read final strengthened source: every declared Store for each of all 29 approved ITEM bundles is passed through actual ItemBenefit/simulator consumers with a distinct SIM:campaign:store handle; exact result Store, original items/quantities, unverified flags and unchanged original records are asserted. Runtime/config unchanged; this remains two isolated source/configuration tests, not native acceptance.",
+    "boundary": "Original inspected source snapshot above is preserved as history. This append records later test-only strengthening; project batch evidence remains with the parent."
+  },
+  "reportedSourceRisk": {
+    "status": "REPORTED_TO_RUNTIME_OWNER_NO_SOURCE_EDIT",
+    "files": [
+      "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js",
+      "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js"
+    ],
+    "finding": "Fulfillment SIM: suffix grammar accepts @; current Digital confirm and original receipt inspection use a narrower generic receipt regex excluding @. SIM:order@1 can pass evaluator/Promotion validation but cannot complete Digital confirmation. The source test does not cover that full-handle intersection. This affects a bounded handle case, not real qualification or reversal authority.",
+    "boundary": "Runtime owner notified; CMS names the evaluator grammar explicitly and uses a handle accepted by both. No runtime fix is included in this source-editorial scope."
+  },
+  "finalReceiptHandleRevalidation": {
+    "reviewDate": "2026-10-09",
+    "disposition": "PASS_SOURCE_REVIEW",
+    "previousSourceFileSha256": {
+      "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js": "671ad89c31d05570f38375ab435467a0bb97f2e017830a1c22935751624362c3",
+      "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "0981a94da1182846dd5e2e24776387abbc493a459d572aed37952b356a6137e4"
+    },
+    "currentSourceFileSha256": {
+      "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js": "097671a368f096d0965eee91ed0875364aadfa6f9511b496498a61a18fede881",
+      "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "f56e90f1323d0888b768f6f3b45664799250459cc967b442019e0eb94d3ad864"
+    },
+    "finding": "Final frozen SIM-handle review: only Digital Merchant confirm and original receipt inspection generic receipt character classes now admit @, preserving their existing bounds and all original key/outlet/marker/staff/receipt checks. Fulfillment still enforces the stricter canonical ^SIM:[A-Za-z0-9_.:@-]{1,115}$ grammar; this does not admit a wrong prefix, slash, whitespace or oversized simulation. Actual integrated private MerchantScope fixture now validates, confirms, redeems, replays, inspects the original receipt and reads queue with SIM:original@outlet, retaining issuer authority, vendor storage, original encrypted stock and unverified labels. Its 55/55 source cases pass. No auth/policy, real delivery qualification, monetary or inverse authority changed.",
+    "validation": {
+      "merchantScopeCasesPassed": 55,
+      "failed": 0
+    },
+    "riskResolution": "Reported SIM:/@ mismatch resolved in runtime-owner batch and independently checked here. The earlier reported risk record remains historical; no source or tests edited by this documentation reviewer."
+  }
+}

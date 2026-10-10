@@ -21,6 +21,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const crypto = require("node:crypto");
 const path = require("node:path");
+const { readFileSync } = require("node:fs");
 const source = require("../src/service/identity/defaultProfileBootstrapIdentityAssessmentService");
 const migration = require("../src/service/identity/defaultIdentityGovernanceMigrationService");
 const management = require("../src/service/enterprise/defaultEnterpriseManagementService");
@@ -247,31 +248,24 @@ async function fixture() {
 test("forward Init authority receives human/guest identities while dynamic tenants receive only service identities and groups", async () => {
   const f = await fixture();
   const manifest = require("../data/manifest.json");
-  assert.equal(manifest.sections["init-v001"].version, "0.0.3");
-  assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v009");
-  assert.equal(
-    manifest.retainedRoots["init-v001"].sections["init-v001"].version,
-    "0.0.0",
-  );
-  assert.equal(
-    manifest.retainedRoots["init-v007"].sections["init-v001"].version,
-    "0.0.1",
-  );
+  assert.equal(manifest.sections["init-v001"].version, "0.0.1");
+  assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v001");
+  assert.equal(manifest.retainedRoots, undefined);
   releases.validateRetainedRoots(path.resolve(__dirname, "../data"), manifest);
   const headerPath =
-    require.resolve("../data/init-v009/headers/user/defaultUsersHeader");
+    require.resolve("../data/init-v001/headers/user/defaultUsersHeader");
   delete require.cache[headerPath];
   const headers = require(headerPath).profile;
   const selector = SERVICE.DefaultFileDataImportProcessService;
   NODICS.getActiveTenants = () => ["default", "dynamic"];
   const humans = Object.values(
-    require("../data/init-v009/records/user/defaultEmployeeData"),
+    require("../data/init-v001/records/user/defaultEmployeeData"),
   );
   const services = Object.values(
-    require("../data/init-v009/records/user/defaultServiceEmployeeData"),
+    require("../data/init-v001/records/user/defaultServiceEmployeeData"),
   );
   const guests = Object.values(
-    require("../data/init-v009/records/user/defaultCutomerData"),
+    require("../data/init-v001/records/user/defaultCutomerData"),
   );
   assert.equal(humans.length, 5);
   assert(humans.every((r) => r.principalType === "human"));
@@ -289,7 +283,7 @@ test("forward Init authority receives human/guest identities while dynamic tenan
     );
   }
   const groups =
-    require("../data/init-v009/headers/groups/defaultUserGroupsHeader").profile
+    require("../data/init-v001/headers/groups/defaultUserGroupsHeader").profile
       .defaultUserGroups;
   for (const header of [headers.defaultServiceEmployee, groups]) {
     assert.deepEqual(
@@ -326,12 +320,12 @@ test("forward Init authority receives human/guest identities while dynamic tenan
 
 test("forward Init group snapshot preserves the final permissions of already-current later releases", () => {
   const baseline = require("../data/init-v001/records/groups/defaultBootstrapUserGroupsData");
-  const forward = require("../data/init-v008/records/groups/defaultBootstrapUserGroupsData");
+  const forward = require("../data/init-v001/records/groups/defaultBootstrapUserGroupsData");
   const historical = [
-    require("../data/init-v002/records/groups/runtimeConfigurationUserGroupsData"),
-    require("../data/init-v003/records/groups/runtimeConfigurationUpdateUserGroupsData"),
-    require("../data/init-v004/records/groups/serviceAccountCircaUserGroupsData"),
-    require("../data/init-v005/records/groups/backofficeCircaUserGroupsData"),
+    require("../data/init-v001/records/groups/runtimeConfigurationUserGroupsData"),
+    require("../data/init-v001/records/groups/runtimeConfigurationUpdateUserGroupsData"),
+    require("../data/init-v001/records/groups/serviceAccountCircaUserGroupsData"),
+    require("../data/init-v001/records/groups/backofficeCircaUserGroupsData"),
   ];
   const installed = new Map(
     Object.values(baseline).map((group) => [group.code, group]),
@@ -380,7 +374,7 @@ test("actual layered Init header preparation respects replacement tenant selecto
       data: {
         headerFiles: {
           users: [
-            require.resolve("../data/init-v009/headers/user/defaultUsersHeader"),
+            require.resolve("../data/init-v001/headers/user/defaultUsersHeader"),
             customPath,
           ],
         },
@@ -571,8 +565,21 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.equal(
     f.configuration.identityGovernance.migration.assessment.bootstrapReview
       .sources[0].version,
-    "0.0.3",
+    "0.0.1",
   );
+  const reviewSource =
+    f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0];
+  assert.equal(reviewSource.releaseCode, release.releaseCode);
+  assert.equal(reviewSource.version, release.version);
+  const guide = readFileSync(
+    path.resolve(__dirname, "../llm/contracts/identity-assessment.md"),
+    "utf8",
+  );
+  const documentedSources = Array.from(
+    guide.matchAll(/`(profile:init-v\d+)`\s+version `(\d+\.\d+\.\d+)`/g),
+    ([, releaseCode, version]) => ({ releaseCode, version }),
+  );
+  assert.deepEqual(documentedSources, [reviewSource, reviewSource]);
 });
 
 test("real layered Init owners produce six expected source principals without copying credentials", async () => {

@@ -22,6 +22,10 @@ module.exports = {
         const mapped = {
           tenant: r.tenant,
           authData: r.authData,
+          entCode: r.entCode,
+          enterpriseCode: r.enterpriseCode,
+          tenantCode: r.tenantCode,
+          httpRequest: { headers: r.httpRequest?.headers || {} },
           payload: r.httpRequest?.body || {},
           query: r.httpRequest?.query || {},
         };

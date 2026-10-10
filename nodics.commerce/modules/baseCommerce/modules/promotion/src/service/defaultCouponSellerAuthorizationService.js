@@ -12,9 +12,33 @@
 /* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
 "use strict";
 const crypto = require("node:crypto");
+const { isDeepStrictEqual } = require("node:util");
 const writes = new WeakSet();
+const consentWrites = new WeakMap();
 /** @module promotion/service/defaultCouponSellerAuthorizationService @description Owns issuer-reviewed seller consent on the existing campaign and fresh sale-time admission. @layer service @owner promotion @override Later layers may narrow policy and Profile scope matching; preserve issuer authority, bounded consent, private writes and revision binding. */
 module.exports = {
+  /** Rejects ambiguous authority without exposing Profile payloads or credentials. @returns {never} Typed refusal. */
+  failAuthority: function () {
+    throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Current Profile authority could not be confirmed");
+  },
+  /** Checks every bounded Profile wrapper, including terminal failure evidence. @param {*} value Owner response. @returns {*} Checked terminal result. */
+  profileResult: function (value) {
+    for (let depth = 0; depth <= 7; depth++) {
+      if (!value || typeof value !== "object" || value.error || value.success === false || value.acknowledged === false ||
+          (value.code !== undefined && !/^SUC_/.test(value.code) && !Array.isArray(value)) ||
+          (value.errors !== undefined && (!Array.isArray(value.errors) || value.errors.length))) this.failAuthority();
+      if (Array.isArray(value) || value.data === undefined && value.result === undefined) return value;
+      if (depth === 7 || value.data !== undefined && value.result !== undefined) this.failAuthority();
+      value = value.data !== undefined ? value.data : value.result;
+    }
+    this.failAuthority();
+  },
+  /** Detaches mutable command data before owner awaits; routed transport and opaque contexts stay outside cloning. @param {Object} r Original operation. @returns {Object} Stable caller inputs. */
+  detached: function (r) {
+    return { ...r, authData: structuredClone(r.authData || {}),
+      ...(r.payload !== undefined ? { payload: structuredClone(r.payload) } : {}),
+      ...(r.query !== undefined ? { query: structuredClone(r.query) } : {}) };
+  },
   /** Reads independently qualified seller-consent policy. @returns {Object|undefined} Enabled policy. */
   policy: function () {
     const p = CONFIG.get("promotion")?.sellerAuthorization;
@@ -86,40 +110,25 @@ module.exports = {
   },
   /** Requires one current active Profile enterprise; referenced business identity is never inferred from a campaign name. @param {Object} r Trusted context. @param {string} code Canonical enterprise. @returns {Promise<void>} Current active owner. */
   activeEnterprise: async function (r, code) {
-    let value = await SERVICE.DefaultModuleService.invokeModule({
+    r = this.detached(r);
+    if (typeof r.tenant !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(r.tenant) ||
+        typeof code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(code)) this.failAuthority();
+    const value = this.profileResult(await SERVICE.DefaultModuleService.invokeModule({
       local: false,
       moduleName: "profile",
       connectionName: "profile",
       targetAuthority: { runtimeRole: "PLATFORM" },
       tenant: r.tenant,
       request: { tenant: r.tenant },
-      apiName: "/enterprise",
+      apiName: "/references/read",
       methodName: "POST",
-      requestBody: {
-        query: { code, active: true },
-        options: { recursive: false, skipItemCache: true },
-        searchOptions: { pageSize: 2 },
-      },
+      requestBody: { type: "enterprise", codes: [code] },
       timeoutMs: 10000,
       maxAttempts: 1,
-    });
-    for (let n = 0; n < 7 && value && !Array.isArray(value); n++) {
-      if (
-        value.success === false ||
-        value.error ||
-        /^(ERR|FAIL)_/.test(value.code || "") ||
-        (value.errors && (!Array.isArray(value.errors) || value.errors.length))
-      )
-        throw new CLASSES.NodicsError(
-          "ERR_PROMOTION_SELLER_UNCONFIRMED",
-          "Enterprise authority read failed",
-        );
-      if (value.data !== undefined) value = value.data;
-      else if (value.result !== undefined) value = value.result;
-      else break;
-    }
-    const rows = Array.isArray(value) ? value : value?.code ? [value] : [];
-    if (rows.length !== 1 || rows[0].code !== code || rows[0].active !== true)
+    }));
+    const rows = Array.isArray(value) ? value : [];
+    // Profile's Enterprise.tenant is a business relationship, not the routed storage partition.
+    if (rows.length !== 1 || !rows[0] || rows[0].code !== code || rows[0].active !== true)
       throw new CLASSES.NodicsError(
         "ERR_PROMOTION_SELLER_UNCONFIRMED",
         "Current active issuer and seller enterprises are required",
@@ -127,6 +136,7 @@ module.exports = {
   },
   /** Inspects bounded seller consents using current issuer authority. @param {Object} r Signed issuer request. @returns {Promise<Object>} Safe revisioned list. */
   inspect: async function (r) {
+    r = this.detached(r);
     if (
       !this.policy() ||
       Object.keys(r.query || {}).length ||
@@ -152,18 +162,22 @@ module.exports = {
   },
   /** Re-resolves the signed issuer employee's current Profile scope, with explicit denial precedence. @param {Object} r Signed employee context. @param {string} issuer Issuer code. @returns {Promise<void>} Authority or refusal. */
   issuer: async function (r, issuer) {
+    r = this.detached(r);
     const auth = r.authData || {},
       router = SERVICE.DefaultSecuredRequestPipelineService;
     if (
       auth.tokenType !== "access" ||
       auth.principalType !== "human" ||
       auth.tenant !== r.tenant ||
+      typeof r.tenant !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(r.tenant) ||
+      typeof issuer !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(issuer) ||
       (auth.enterpriseCode || auth.entCode) !== issuer ||
-      (auth.enterpriseCode &&
-        auth.entCode &&
-        auth.enterpriseCode !== auth.entCode) ||
-      !auth.loginId ||
-      !r.authorization ||
+      [r.tenantCode, auth.tenantCode].some(value => value !== undefined && value !== r.tenant) ||
+      [r.enterpriseCode, r.entCode, auth.enterpriseCode, auth.entCode].some(value => value !== undefined && value !== issuer) ||
+      typeof auth.loginId !== "string" || !auth.loginId.trim() || auth.loginId !== auth.loginId.trim() ||
+      auth.loginId.length > 192 || /[\u0000-\u001f\u007f]/.test(auth.loginId) ||
+      typeof r.authorization !== "string" || !/^Bearer [^\s\u0000-\u001f\u007f]{1,16384}$/i.test(r.authorization) ||
+      typeof router?.isPermissionGranted !== "function" || typeof router?.getGrantedPermissions !== "function" ||
       !router.isPermissionGranted(
         "commerce.coupon.seller.manage",
         router.getGrantedPermissions(r),
@@ -174,7 +188,7 @@ module.exports = {
         "ERR_PROMOTION_SELLER_UNCONFIRMED",
         "Current issuer administration is required",
       );
-    let value = await SERVICE.DefaultModuleService.invokeModule({
+    const value = this.profileResult(await SERVICE.DefaultModuleService.invokeModule({
       local: false,
       moduleName: "profile",
       connectionName: "profile",
@@ -186,25 +200,26 @@ module.exports = {
       header: { Authorization: r.authorization, "X-Enterprise-Code": issuer },
       timeoutMs: 10000,
       maxAttempts: 1,
-    });
-    for (let n = 0; n < 6 && value && !Array.isArray(value); n++) {
-      if (
-        value.success === false ||
-        value.error ||
-        (value.errors && (!Array.isArray(value.errors) || value.errors.length))
-      )
-        throw new CLASSES.NodicsError(
-          "ERR_PROMOTION_SELLER_UNCONFIRMED",
-          "Issuer scope read failed",
-        );
-      if (value.data !== undefined) value = value.data;
-      else if (value.result !== undefined) value = value.result;
-      else break;
+    }));
+    if (value.principalCode !== auth.loginId ||
+        value.principalType !== undefined && value.principalType !== "human" ||
+        !Array.isArray(value.scopes) || !Array.isArray(value.deniedScopes) ||
+        value.scopes.length + value.deniedScopes.length > 1000 ||
+        value.scopeCount !== undefined && value.scopeCount !== value.scopes.length) this.failAuthority();
+    const text = item => typeof item === "string" && item.length > 0 && item.length <= 128 &&
+      item === item.trim() && !/[\u0000-\u001f\u007f]/.test(item);
+    for (const [scopes, effect] of [[value.scopes, "ALLOW"], [value.deniedScopes, "DENY"]]) for (const scope of scopes) {
+      if (!scope || typeof scope !== "object" || Array.isArray(scope) || !text(scope.scopeType) || !text(scope.scopeCode) ||
+          ["tenantCode", "enterpriseCode", "capabilityCode", "permissionCode"].some(key => scope[key] !== undefined &&
+            scope[key] !== null && scope[key] !== "" && !text(scope[key])) ||
+          scope.effect !== undefined && scope.effect !== effect || scope.active === false ||
+          scope.status !== undefined && scope.status !== "ACTIVE") this.failAuthority();
     }
     const matches = (scope) =>
       (!scope.tenantCode || scope.tenantCode === r.tenant) &&
+      (!scope.enterpriseCode || scope.enterpriseCode === issuer) &&
       (!scope.capabilityCode ||
-        ["commerce", "promotion"].includes(scope.capabilityCode)) &&
+        ["*", "commerce", "promotion"].includes(scope.capabilityCode)) &&
       (!scope.permissionCode ||
         router.isPermissionGranted(
           "commerce.coupon.seller.manage",
@@ -228,6 +243,7 @@ module.exports = {
   },
   /** Admits a bounded issuer command and retains revisioned consent on the campaign, never a parallel seller registry. @param {Object} r Signed context and exact command. @returns {Promise<Object>} Safe seller consent. */
   manage: async function (r) {
+    r = this.detached(r);
     const policy = this.policy(),
       p = r.payload || {};
     SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
@@ -241,6 +257,7 @@ module.exports = {
             "action",
             "expiresAt",
             "commandReference",
+            "benefitConsumption",
           ].includes(key),
       ) ||
       Object.keys(r.query || {}).length ||
@@ -248,7 +265,9 @@ module.exports = {
       typeof p.commandReference !== "string" ||
       !/^[A-Za-z0-9_.:-]{1,128}$/.test(p.sellerEnterpriseCode || "") ||
       !/^[A-Za-z0-9_.:-]{8,128}$/.test(p.commandReference || "") ||
-      !["GRANT", "REVOKE"].includes(p.action)
+      !["GRANT", "REVOKE"].includes(p.action) ||
+      Object.hasOwn(p, "benefitConsumption") &&
+        (p.action !== "GRANT" || p.benefitConsumption !== "ISSUED_COUPON_BENEFIT_V1")
     )
       throw new CLASSES.NodicsError(
         "ERR_PROMOTION_SELLER_UNCONFIRMED",
@@ -280,6 +299,9 @@ module.exports = {
       );
     if (p.action === "GRANT")
       await this.activeEnterprise(r, p.sellerEnterpriseCode);
+    const distribution = SERVICE.DefaultPromotionDistributionAdmissionService;
+    if (typeof distribution?.assertInstalled !== "function" || await distribution.assertInstalled(r) !== true)
+      this.failAuthority();
     const grants = campaign.sellerAuthorizations || [];
     if (
       !Array.isArray(grants) ||
@@ -294,23 +316,21 @@ module.exports = {
         (g) => g.sellerEnterpriseCode === p.sellerEnterpriseCode,
       ),
       actor = r.authData.principalId || r.authData.loginId;
+    if (previous?.benefitConsumption !== undefined && previous.benefitConsumption !== "ISSUED_COUPON_BENEFIT_V1")
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Original consent benefit purpose is invalid");
+    const benefitConsumption = p.action === "GRANT" ? p.benefitConsumption : previous?.benefitConsumption;
+    const commandParts = [campaign.code, issuer, actor, p.sellerEnterpriseCode, p.action,
+      p.expiresAt || null, p.expectedRevision, p.commandReference];
+    // Absence keeps the original distribution-only command hash/replay contract unchanged.
+    if (benefitConsumption !== undefined) commandParts.push({ benefitConsumption });
     const commandHash = crypto
       .createHash("sha256")
       .update(
-        JSON.stringify([
-          campaign.code,
-          issuer,
-          actor,
-          p.sellerEnterpriseCode,
-          p.action,
-          p.expiresAt || null,
-          p.expectedRevision,
-          p.commandReference,
-        ]),
+        JSON.stringify(commandParts),
       )
       .digest("hex");
     if (previous?.commandReference === p.commandReference) {
-      if (previous.commandHash !== commandHash)
+      if (previous.commandHash !== commandHash || previous.benefitConsumption !== benefitConsumption)
         throw new CLASSES.NodicsError(
           "ERR_PROMOTION_SELLER_UNCONFIRMED",
           "Seller command replay conflicts",
@@ -344,6 +364,7 @@ module.exports = {
       reviewedAt: new Date().toISOString(),
       commandReference: p.commandReference,
       commandHash,
+      ...(benefitConsumption !== undefined ? { benefitConsumption } : {}),
     };
     const command = {
       tenant: r.tenant,
@@ -364,13 +385,15 @@ module.exports = {
         ],
       },
     };
-    writes.add(command);
+    consentWrites.set(command, structuredClone({
+      tenant: command.tenant, query: command.query, model: command.model,
+    }));
     try {
       await SERVICE.DefaultPromotionService.update(command);
     } catch (_) {
       /* Exact readback below reconciles a lost acknowledgement without another write. */
     } finally {
-      writes.delete(command);
+      consentWrites.delete(command);
     }
     const saved = await this.campaign(r, campaign.code),
       persisted = saved.sellerAuthorizations?.find(
@@ -397,7 +420,33 @@ module.exports = {
       status: grant.status,
       revision: grant.revision,
       expiresAt: grant.expiresAt,
+      ...(grant.benefitConsumption !== undefined ? { benefitConsumption: this.benefitPurpose(grant.benefitConsumption) } : {}),
     };
+  },
+  /** Projects only the exact reviewed coupon-benefit purpose, refusing malformed retained authority. @param {*} value Stored purpose. @returns {string} Exact supported purpose. */
+  benefitPurpose: function (value) {
+    if (value !== "ISSUED_COUPON_BENEFIT_V1")
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Original consent benefit purpose is invalid");
+    return value;
+  },
+  /** Recognizes only the exact in-flight campaign consent CAS with unchanged tenant, equality selector and narrow fields. Copies grant nothing; mutation of an admitted command fails before persistence. @param {Object} command Generated update request. @returns {boolean} Private consent-only admission. */
+  isSellerConsentWrite: function (command) {
+    const expected = consentWrites.get(command);
+    if (!expected) return false;
+    if (
+      command.models !== undefined ||
+      Object.keys(command.query || {}).sort().join(",") !== "code,revision,tenant" ||
+      Object.keys(command.model || {}).sort().join(",") !== "code,revision,sellerAuthorizations" ||
+      !require("node:util").isDeepStrictEqual(
+        { tenant: command.tenant, query: command.query, model: command.model },
+        expected,
+      )
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_PROMOTION_SELLER_UNCONFIRMED",
+        "Seller consent command cannot mutate other campaign fields",
+      );
+    return true;
   },
   /** Writes only an owner-built coupon CAS under private request-identity admission. @param {Object} command Fixed owner request. @returns {Promise<Object>} Generated result. */
   writeCoupon: async function (command) {
@@ -408,10 +457,16 @@ module.exports = {
       writes.delete(command);
     }
   },
+  /** Recognizes only the exact in-flight lifecycle CAS; callers cannot manufacture this identity. @param {Object} command Generated request. @returns {boolean} Private admission. */
+  isCouponWrite: function (command) {
+    if (SERVICE.DefaultPromotionCouponBudgetService?.isFenceWrite?.(command)) return true;
+    return writes.has(command);
+  },
   /** Prevents generic coupon writes from manufacturing or clearing reserved issuer-consent evidence. @param {Object} r Generated request. @returns {boolean} Admitted legacy non-proof write. */
   protectCoupon: function (r) {
     if (writes.has(r)) return true;
     this.assertMutationShape(r.model);
+    if (SERVICE.DefaultCouponSecureIssuanceService?.isIssuanceWrite(r)) return true;
     if (/sellerAuthorizationProof/.test(JSON.stringify(r.model || {})))
       throw new CLASSES.NodicsError(
         "ERR_PROMOTION_SELLER_UNCONFIRMED",
@@ -425,7 +480,10 @@ module.exports = {
   },
   /** Prevents generic writes from manufacturing seller consent or changing its issuer. @param {Object} r Generated owner request. @returns {Promise<boolean>} Admitted non-consent mutation. */
   protect: async function (r) {
+    if (this.isSellerConsentWrite(r)) return true;
     if (writes.has(r)) return true;
+    if (SERVICE.DefaultPromotionBudgetAdmissionService?.isAdmissionWrite(r))
+      return true;
     this.assertMutationShape(r.model);
     if (/sellerAuthorizations/.test(JSON.stringify(r.model || {})))
       throw new CLASSES.NodicsError(
@@ -507,12 +565,113 @@ module.exports = {
     }
     SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
     const issuer = this.enterprise(coupon.issuerEnterpriseRef),
-      seller = this.enterprise(coupon.vendorEnterpriseRef),
-      campaign = await this.campaign(r, coupon.promotionCode);
-    const proof = this.proof(r, coupon, campaign);
+      seller = this.enterprise(coupon.vendorEnterpriseRef);
     await this.activeEnterprise(r, issuer);
     if (seller !== issuer) await this.activeEnterprise(r, seller);
-    return proof;
+    const campaign = await this.campaign(r, coupon.promotionCode);
+    return this.proof(r, coupon, campaign);
+  },
+  /** Authorizes delegated stock for a signed issuer, never a caller-selected seller session. The vendor comes only from pinned policy; expected proof prevents adopting a changed grant during issuance or replay. @param {Object} r Signed issuer management context. @param {Object} policy Pinned activated policy. @param {Object} expected Original observed proof, when rechecking. @returns {Promise<Object>} Current issuer-approved grant binding. */
+  authorizeIssuance: async function (r, policy, expected) {
+    const issuer = this.enterprise(policy.issuerEnterpriseRef),
+      seller = this.enterprise(policy.vendorEnterpriseRef);
+    if (!this.policy() || r.enterpriseCode !== issuer ||
+        (r.entCode !== undefined && r.entCode !== issuer) || issuer === seller ||
+        policy.tenant !== r.tenant || policy.code !== r.promotionCode || policy.status !== "ACTIVE")
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED",
+        "Delegated issuance requires current issuer authority and qualified consent");
+    SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
+    await this.issuer(r, issuer);
+    await this.activeEnterprise(r, issuer);
+    await this.activeEnterprise(r, seller);
+    const campaign = await this.campaign(r, policy.code);
+    if (campaign.tenant !== r.tenant ||
+        this.enterprise(campaign.vendorEnterpriseRef) !== seller)
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED",
+        "Live issuance vendor does not match pinned policy");
+    // Pure consent validation uses the policy-derived vendor, not an impersonated authentication context.
+    return this.proof({ enterpriseCode: seller }, {
+      promotionCode: policy.code,
+      issuerEnterpriseRef: policy.issuerEnterpriseRef,
+      vendorEnterpriseRef: policy.vendorEnterpriseRef,
+      ...(expected ? { sellerAuthorizationProof: expected } : {}),
+    }, campaign);
+  },
+  /** Captures authenticated human/customer access-token seller scope without inventing principals or replacing enterprise aliases. Service and anonymous callers require a separate trusted owner admission and remain refused here. Caller routes retain permission checks. @param {Object} r Secured storefront context. @returns {Object} Detached bounded read context. */
+  sellerReadContext: function (r) {
+    const admitted = SERVICE.DefaultPromotionDistributionAdmissionService?.resolveReadContext(r);
+    if (admitted) return admitted;
+    const auth = r.authData || {}, enterpriseCode = auth.enterpriseCode || auth.entCode;
+    const principal = auth.principalId || auth.loginId;
+    if (auth.tokenType !== "access" || !["human", "customer"].includes(auth.principalType) ||
+        typeof principal !== "string" || !principal.trim() || principal !== principal.trim() ||
+        principal.length > 192 || /[\u0000-\u001f\u007f]/.test(principal) ||
+        typeof auth.tenant !== "string" || !auth.tenant || r.tenant !== auth.tenant ||
+        typeof enterpriseCode !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(enterpriseCode) ||
+        [auth.enterpriseCode, auth.entCode, r.enterpriseCode, r.entCode].some(value => value !== undefined && value !== enterpriseCode) ||
+        typeof r.storeCode !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(r.storeCode))
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Authenticated seller policy scope is required");
+    return { tenant: auth.tenant, enterpriseCode, storeCode: r.storeCode, authData: structuredClone(auth) };
+  },
+  /** Narrows already receipt-bound discovery by fresh operational Product metadata, never grants policy or budget authority. Full pinned policy/Profile/consent validation remains mandatory for every candidate. @param {Object} r Signed seller. @param {string} productCode Exact Product. @param {Array} bindings Validated private receipt bindings. @returns {Promise<Array<string>>} Candidate campaign identities only. */
+  productPolicyCandidates: async function (r, productCode, bindings) {
+    const context = this.sellerReadContext(r);
+    const deny = () => { throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED"); };
+    if (!this.policy() || typeof productCode !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(productCode) ||
+        !Array.isArray(bindings) || !bindings.length || bindings.length > 1000) deny();
+    const byCode = new Map();
+    for (const binding of bindings) {
+      if (binding.tenant !== context.tenant || binding.storeCode !== context.storeCode ||
+          binding.sellerEnterpriseCode !== context.enterpriseCode ||
+          this.enterprise(binding.vendorEnterpriseRef) !== context.enterpriseCode ||
+          this.enterprise(binding.issuerEnterpriseRef) !== binding.issuerEnterpriseCode ||
+          binding.issuerEnterpriseCode === context.enterpriseCode || !binding.sellerAuthorizationProof ||
+          typeof binding.promotionCode !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(binding.promotionCode) ||
+          byCode.has(binding.promotionCode)) deny();
+      byCode.set(binding.promotionCode, binding);
+    }
+    const owner = SERVICE.DefaultPromotionOperationService;
+    owner.requireOperationalRuntime();
+    const response = await SERVICE.DefaultPromotionService.get({
+      tenant: context.tenant, authData: owner.serviceAuthData(context),
+      query: { tenant: context.tenant, "vendorEnterpriseRef.code": context.enterpriseCode,
+        "conditions.sourceProductCode": productCode,
+        $or: bindings.map(binding => ({ code: binding.promotionCode, enterpriseCode: binding.issuerEnterpriseCode })) },
+      options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: bindings.length + 1, limit: bindings.length + 1 },
+    });
+    owner.assertLifecycleEnvelope(response);
+    if (!Array.isArray(response.result) || response.result.length > bindings.length) deny();
+    const selected = new Set();
+    for (const row of response.result) {
+      const binding = byCode.get(row.code);
+      if (!binding || selected.has(row.code) || row.tenant !== context.tenant ||
+          row.enterpriseCode !== binding.issuerEnterpriseCode || row.conditions?.sourceProductCode !== productCode ||
+          !isDeepStrictEqual(row.issuerEnterpriseRef, binding.issuerEnterpriseRef) ||
+          !isDeepStrictEqual(row.vendorEnterpriseRef, binding.vendorEnterpriseRef)) deny();
+      selected.add(row.code);
+    }
+    return [...selected];
+  },
+  /** Rechecks receipt-bound seller distribution, never issuer management or caller-supplied grants. @param {Object} r Signed storefront context. @param {Object} binding Owner-resolved issuance binding. @returns {Promise<Object>} Matching original live consent. */
+  authorizePolicyRead: async function (r, binding) {
+    const context = this.sellerReadContext(r);
+    if (!this.policy() || binding.tenant !== context.tenant || binding.storeCode !== context.storeCode ||
+        binding.sellerEnterpriseCode !== context.enterpriseCode ||
+        this.enterprise(binding.issuerEnterpriseRef) !== binding.issuerEnterpriseCode ||
+        this.enterprise(binding.vendorEnterpriseRef) !== context.enterpriseCode ||
+        binding.issuerEnterpriseCode === context.enterpriseCode || !binding.sellerAuthorizationProof)
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Issuer-pinned distribution is required");
+    SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
+    await this.activeEnterprise(context, binding.issuerEnterpriseCode);
+    await this.activeEnterprise(context, context.enterpriseCode);
+    const campaign = await this.campaign(context, binding.promotionCode);
+    if (campaign.tenant !== context.tenant || this.enterprise(campaign.vendorEnterpriseRef) !== context.enterpriseCode)
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Live seller distribution has changed");
+    return this.proof(context, {
+      promotionCode: binding.promotionCode, issuerEnterpriseRef: binding.issuerEnterpriseRef,
+      vendorEnterpriseRef: binding.vendorEnterpriseRef, sellerAuthorizationProof: binding.sellerAuthorizationProof,
+    }, campaign);
   },
   /** Rechecks observed owner campaign consent before rights capture without treating it as an atomic cross-owner snapshot. @param {Object} r Context. @param {Object} coupon Reserved unit. @param {Object} campaign Fresh owner record. @returns {Object} Matching consent binding. */
   proof: function (r, coupon, campaign) {

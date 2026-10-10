@@ -505,13 +505,9 @@ module.exports = {
                         deleteQuery = _.merge(deleteQuery, {
                             index: _self.indexDef.indexName.toLowerCase()
                         });
-                        _self.searchEngine.getConnection().indices.delete(deleteQuery, function (error, response) {
-                            if (error) {
-                                reject(error);
-                            } else {
-                                resolve(response);
-                            }
-                        });
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection().indices, 'delete', deleteQuery)
+                            .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
                     }

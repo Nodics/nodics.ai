@@ -11,6 +11,54 @@
 
 /** @module promotion/src/interceptors/interceptors @description Separates Staged policy authoring from operational mutations. @layer interceptors @owner promotion */
 module.exports = {
+  promotionBudgetReceiptSave: {
+    type: 'schema', item: 'promotionBudgetLedger', trigger: 'preSave', active: 'true', index: -60,
+    handler: 'DefaultPromotionBudgetMutationService.protectSave',
+  },
+  promotionBudgetReceiptUpdate: {
+    type: 'schema', item: 'promotionBudgetLedger', trigger: 'preUpdate', active: 'true', index: -60,
+    handler: 'DefaultPromotionBudgetMutationService.protect',
+  },
+  promotionBudgetReceiptRemove: {
+    type: 'schema', item: 'promotionBudgetLedger', trigger: 'preRemove', active: 'true', index: -60,
+    handler: 'DefaultPromotionBudgetMutationService.protectRemove',
+  },
+  couponSecretSave: {
+    type: 'schema', item: 'coupon', trigger: 'preSave', active: 'true', index: -60,
+    handler: 'DefaultCouponSecureIssuanceService.protectSave',
+  },
+  couponSecretUpdate: {
+    type: 'schema', item: 'coupon', trigger: 'preUpdate', active: 'true', index: -60,
+    handler: 'DefaultCouponSecureIssuanceService.protect',
+  },
+  couponSecretRemove: {
+    type: 'schema', item: 'coupon', trigger: 'preRemove', active: 'true', index: -60,
+    handler: 'DefaultCouponSecureIssuanceService.protectRemove',
+  },
+  couponIssuanceSave: {
+    type: 'schema', item: 'couponBatch', trigger: 'preSave', active: 'true', index: -60,
+    handler: 'DefaultCouponSecureIssuanceService.protectSave',
+  },
+  couponIssuanceUpdate: {
+    type: 'schema', item: 'couponBatch', trigger: 'preUpdate', active: 'true', index: -60,
+    handler: 'DefaultCouponSecureIssuanceService.protect',
+  },
+  couponIssuanceRemove: {
+    type: 'schema', item: 'couponBatch', trigger: 'preRemove', active: 'true', index: -60,
+    handler: 'DefaultCouponSecureIssuanceService.protectRemove',
+  },
+  promotionBudgetAdmissionSave: {
+    type: "schema", item: "promotion", trigger: "preSave", active: "true", index: -50,
+    handler: "DefaultPromotionBudgetAdmissionService.protectSave",
+  },
+  promotionBudgetAdmissionUpdate: {
+    type: "schema", item: "promotion", trigger: "preUpdate", active: "true", index: -50,
+    handler: "DefaultPromotionBudgetAdmissionService.protect",
+  },
+  promotionBudgetAdmissionRemove: {
+    type: "schema", item: "promotion", trigger: "preRemove", active: "true", index: -50,
+    handler: "DefaultPromotionBudgetAdmissionService.protectRemoval",
+  },
   couponSellerProofSave: {
     type: "schema",
     item: "coupon",

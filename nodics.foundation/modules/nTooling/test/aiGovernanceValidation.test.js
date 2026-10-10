@@ -27,7 +27,7 @@ const {
 } = require('../src/service/quality/defaultAiGovernanceValidationService');
 
 assert.strictEqual(ownsDocumentation(require('path').resolve(__dirname, '../../../..', 'nodics.docs')), true,
-    'an explicit backend documentation owner must be allowed to keep its canonical docs source tree');
+    'canonical documentation ownership remains declared even though records now live in data');
 assert.strictEqual(ownsDocumentation(require('path').resolve(__dirname, '..')), false,
     'an ordinary capability package must not gain docs ownership merely by creating a directory');
 

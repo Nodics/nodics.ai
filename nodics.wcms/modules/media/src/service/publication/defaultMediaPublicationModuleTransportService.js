@@ -46,8 +46,13 @@ module.exports = {
         if (operation === 'authorize') {
             valid = !!result && result.authorized === true && result.fingerprint === SERVICE.DefaultMediaRetainedPublicationService.digest(input);
         } else if (operation === 'getStatus') {
-            valid = result === null || !!result && /^[a-f0-9]{64}$/.test(result.version || '') &&
-                Number.isSafeInteger(result.revision) && result.revision > 0;
+            const validStatus = value => value === null || !!value && /^[a-f0-9]{64}$/.test(value.version || '') &&
+                Number.isSafeInteger(value.revision) && value.revision > 0;
+            valid = input.mediaCodes !== undefined
+                ? Array.isArray(input.mediaCodes) && !!result && Array.isArray(result.statuses) &&
+                    result.statuses.length === input.mediaCodes.length && result.statuses.every((item, index) =>
+                        item && item.mediaCode === input.mediaCodes[index] && validStatus(item.status))
+                : validStatus(result);
         } else if (operation === 'reconcile' && input.operationKey) {
             valid = !!result && ['ACTIVE', 'NOT_COMMITTED', 'CONFLICT'].includes(result.status) &&
                 result.operationKey === input.operationKey && result.publicationCode === input.publicationCode &&
@@ -59,8 +64,13 @@ module.exports = {
                     receipt.targetVersion === input.manifestCode && receipt.previousOnlineVersion === input.expectedVersion;
             }
         } else if (operation === 'reconcile') {
-            valid = !!result && result.manifestCode === input.manifestCode && result.mediaCode === input.mediaCode &&
-                typeof result.intact === 'boolean' && result.protected === true && result.deleted === false && result.repaired === false;
+            const validIntegrity = (item, expected) => !!item && item.manifestCode === expected.manifestCode && item.mediaCode === expected.mediaCode &&
+                typeof item.intact === 'boolean' && typeof item.active === 'boolean' &&
+                item.protected === true && item.deleted === false && item.repaired === false;
+            valid = input.assets !== undefined
+                ? Array.isArray(input.assets) && !!result && Array.isArray(result.results) &&
+                    result.results.length === input.assets.length && result.results.every((item, index) => validIntegrity(item, input.assets[index]))
+                : validIntegrity(result, input);
         } else if (operation === 'deploy' && input.prepareOnly === true) {
             valid = !!result && result.version === input.manifest.code && result.prepared === true && result.active === false;
         } else {
@@ -80,8 +90,12 @@ module.exports = {
     authorize: function (input, request) { return this.send('authorize', input, request); },
     /** Reads active target version evidence. */
     getStatus: function (input, request) { return this.send('getStatus', input, request); },
+    /** Reads bounded pointer evidence through the same authenticated read-only target route. */
+    getStatuses: function (input, request) { return this.send('getStatus', input, request); },
     /** Restores an exact retained target manifest. */
     rollback: function (input, request) { return this.send('rollback', input, request); },
     /** Checks target manifest integrity without pointer repair or deletion. */
-    reconcile: function (input, request) { return this.send('reconcile', input, request); }
+    reconcile: function (input, request) { return this.send('reconcile', input, request); },
+    /** Checks a bounded exact-version selection through the same read-only integrity route. */
+    reconcileVersions: function (input, request) { return this.send('reconcile', input, request); }
 };

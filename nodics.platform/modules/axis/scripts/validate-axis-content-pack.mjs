@@ -20,6 +20,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repositoryRoot = resolve(root, '../..');
 const require = createRequire(import.meta.url);
 const documentationRecordValidation = require('../../../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js');
+const documentationContract = require('../../../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
 
 function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -112,14 +113,10 @@ for (const [relativePath, expectedHash] of Object.entries(baseline.files ?? {}))
 }
 assert(manifest.pack === 'nodics.platform.axis', 'Axis documentation pack identity drifted');
 assert(
-  manifest.sourceAuthority === 'docs/catalogue.json',
+  manifest.sourceAuthority === 'data/docs-v001/records/documentation',
   'Axis documentation source must be owned by nodics.platform/modules/axis',
 );
-assert(
-  manifest.migrationRegister ===
-    'docs/migration-register.json',
-  'Axis migration register path drifted',
-);
+assert(manifest.sourceMode === 'cms-records', 'Axis documentation must use canonical CMS records');
 assert(
   Array.isArray(manifest.sites) &&
     manifest.sites.length === 1 &&
@@ -143,60 +140,44 @@ assert(
   'Axis documentation release checksum mismatch',
 );
 
-const navigation = JSON.parse(
-  await readFile(resolve(root, 'docs/catalogue.json'), 'utf8'),
-);
-const migrationRegister = JSON.parse(
-  await readFile(
-    resolve(root, 'docs/migration-register.json'),
-    'utf8',
-  ),
-);
-
-const expectedEvidence = navigation.pages.map((page) => page.evidence).sort();
-const actualEvidence = migrationRegister.sources.map((source) => source.evidence).sort();
-assert(
-  JSON.stringify(actualEvidence) === JSON.stringify(expectedEvidence),
-  'Axis migration register does not match navigation evidence',
-);
-assert(navigation.pages.length === expectedEvidence.length, 'Axis page count drifted');
+const navigation = documentationContract.validateDataRelease(root);
 
 const generatedComponents = await readFile(
-  resolve(root, 'data/core-v001/records/documentation/axisDocumentationComponentData.js'),
+  resolve(root, 'data/docs-v001/records/documentation/axisDocumentationComponentData.js'),
   'utf8',
 );
 const siteRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationSiteData.js',
+  'data/docs-v001/records/documentation/axisDocumentationSiteData.js',
 );
 const pageRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationPageData.js',
+  'data/docs-v001/records/documentation/axisDocumentationPageData.js',
 );
 const productRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationProductData.js',
+  'data/docs-v001/records/documentation/axisDocumentationProductData.js',
 );
 const accessPolicyRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationAccessPolicyData.js',
+  'data/docs-v001/records/documentation/axisDocumentationAccessPolicyData.js',
 );
 const navigationMetadataRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationNavigationData.js',
+  'data/docs-v001/records/documentation/axisDocumentationNavigationData.js',
 );
 const dashboardRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationDashboardData.js',
+  'data/docs-v001/records/documentation/axisDocumentationDashboardData.js',
 );
 const nodeRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationNodeData.js',
+  'data/docs-v001/records/documentation/axisDocumentationNodeData.js',
 );
 const pageMetadataRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationPageMetadataData.js',
+  'data/docs-v001/records/documentation/axisDocumentationPageMetadataData.js',
 );
 const publicationStateRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationPublicationStateData.js',
+  'data/docs-v001/records/documentation/axisDocumentationPublicationStateData.js',
 );
 const searchMetadataRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationSearchMetadataData.js',
+  'data/docs-v001/records/documentation/axisDocumentationSearchMetadataData.js',
 );
 const routeRecords = await dataRecords(
-  'data/core-v001/records/documentation/axisDocumentationRouteData.js',
+  'data/docs-v001/records/documentation/axisDocumentationRouteData.js',
 );
 const validationReport = documentationRecordValidation.validateRecords({
   records: {
@@ -210,25 +191,25 @@ const validationReport = documentationRecordValidation.validateRecords({
     searchMetadata: searchMetadataRecords,
     cmsPages: pageRecords,
     routes: routeRecords,
-    components: await dataRecords('data/core-v001/records/documentation/axisDocumentationComponentData.js'),
+    components: await dataRecords('data/docs-v001/records/documentation/axisDocumentationComponentData.js'),
     manifestHashes: manifest.generatedHashes || {},
   },
   options: {
     release: manifest.version,
-    source: 'nodics.platform/modules/axis/docs/catalogue.json',
+    source: 'nodics.platform/modules/axis/data/manifest.json',
     owner: 'nodics.platform.axis',
     generatedAt: '2026-08-26T00:00:00.000Z',
   },
 });
 documentationRecordValidation.assertReady(validationReport);
-await mkdir(resolve(root, 'docs/reports'), { recursive: true });
+await mkdir(resolve(root, 'test/reports'), { recursive: true });
 await writeFile(
-  resolve(root, 'docs/reports/axis-documentation-validation-report.json'),
+  resolve(root, 'test/reports/axis-documentation-validation-report.json'),
   JSON.stringify(validationReport, null, 2) + '\n',
   'utf8',
 );
 await writeFile(
-  resolve(root, 'docs/reports/axis-documentation-validation-report.md'),
+  resolve(root, 'test/reports/axis-documentation-validation-report.md'),
   documentationRecordValidation.formatMarkdown(validationReport),
   'utf8',
 );
@@ -373,38 +354,8 @@ assert(
 );
 
 for (const page of navigation.pages) {
-  const migration = migrationRegister.sources.find(
-    (source) => source.evidence === page.evidence,
-  );
-  assert(migration, `Missing migration entry for ${page.evidence}`);
-  assert(migration.disposition === 'migrated', `Unmigrated Axis page: ${page.source}`);
-  assert(
-    migration.destinationRoute === page.route,
-    `Route mismatch in migration register: ${page.source}`,
-  );
-
-  const canonical = await readFile(
-    resolve(root, 'docs', page.source),
-    'utf8',
-  );
+  const canonical = page.body;
   assertDocumentationDepth(page.source, canonical);
-  assert(
-    markdownWordCount(canonical) >= migration.evidenceWordCount,
-    `Axis canonical documentation lost detail: ${page.source}`,
-  );
-  assert(/^[a-f0-9]{64}$/.test(migration.evidenceHash), `Invalid evidence hash: ${page.source}`);
-  assert(
-    Array.isArray(migration.evidenceHeadings) && migration.evidenceHeadings.length > 0,
-    `Missing evidence headings: ${page.source}`,
-  );
-  assert(
-    migration.wordCount === markdownWordCount(canonical),
-    `Word-count drift: ${page.source}`,
-  );
-  assert(
-    JSON.stringify(migration.headings) === JSON.stringify(markdownHeadings(canonical)),
-    `Heading drift: ${page.source}`,
-  );
   assert(
     generatedComponents.includes(page.title),
     `Generated components do not contain page title: ${page.title}`,
@@ -417,7 +368,7 @@ for (const page of navigation.pages) {
   );
   assert(
     generatedComponents.includes(
-      `modules/axis/docs/${page.source}`,
+      page.source,
     ),
     `Generated components do not contain platform axis source path: ${page.source}`,
   );

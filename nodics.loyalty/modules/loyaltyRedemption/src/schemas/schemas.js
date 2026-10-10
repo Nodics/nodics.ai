@@ -29,3 +29,4 @@ module.exports = { loyaltyRedemption: {
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } })
 } };
+module.exports.loyaltyRedemption.rewardRedemption.transaction = { enabled: true, sideEffects: 'none' };

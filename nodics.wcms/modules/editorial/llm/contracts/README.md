@@ -3,7 +3,7 @@
 ## Process definition authoring authority
 
 Editorial owns the neutral `editorial:editorialWorkflows` release in
-`data/init-v002/records/process/editorialWorkflowDefinitionData.js`. Its approval
+`data/init-v001/records/process/editorialWorkflowDefinitionData.js`. Its approval
 and publication graphs contain only Editorial actions, with no customer reviewer
 queue. Process installs it through `PROCESS_DEFINITION`; nImport may explicitly
 select this inactive domain contribution without activating Editorial in the

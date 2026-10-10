@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "pipeline",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "pipeline",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "b4c29b6a522c32786510947a3ffe8dd0bba93813f5017d357794bae8c2b9d87c",
+      "generatedHashes": {
+        "docs-v001/records/documentation/pipelineDocumentationNodeData.js": "b1b325c4c9879f3f4db68c6215ae28beae9268fe7d2ed85b0794ecc826594d09",
+        "docs-v001/records/documentation/pipelineDocumentationPageMetadataData.js": "e8cc0c0d181604361f883d3760f931c94face7d05094432e04134f2d8b0c1b41",
+        "docs-v001/records/documentation/pipelineDocumentationPublicationStateData.js": "7ff6fe687be35378e23248c3ce1f56586b2ad80689dea1d89ccb8573b1dae0f9",
+        "docs-v001/records/documentation/pipelineDocumentationSearchMetadataData.js": "6559b52f3e2bf4f61e33e037122948107046f2147b6434e43f788e943765ad26",
+        "docs-v001/records/documentation/pipelineDocumentationComponentData.js": "d564a7b259fb1c6ce0f39974fd84256c2e4339d9b7fb7192c84eb7a0b20f35d6",
+        "docs-v001/records/documentation/pipelineDocumentationPageData.js": "935cc95f0ee092f07a78bde9a7c3117b9c9f0e07e6872e6d85ec7b578aeab2b3",
+        "docs-v001/records/documentation/pipelineDocumentationRouteData.js": "81756a3fd7597bd47da79da7d4908e1971381ce7c5a774fa8f43743f5c568086",
+        "docs-v001/headers/100_pipelineDocumentationContentPackHeader.js": "1f873e4cee6763fa489ab08e44a90ce5c35f47ab6e689ad7cd866d09c981efdb"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

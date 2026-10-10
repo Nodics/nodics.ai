@@ -38,6 +38,7 @@ function employee(payload = {}) {
 test.beforeEach(() => {
   row = {
     code: "entitlement",
+    tenant: "runtime",
     enterpriseCode: "partition",
     ownerId: "buyer",
     status: "ACTIVE",
@@ -150,6 +151,11 @@ test.beforeEach(() => {
           throw Error("coupon unavailable");
         return {
           code: "coupon",
+          tenant: "runtime",
+          enterpriseCode: "partition",
+          soldTo: "buyer",
+          productCode: "product",
+          orderCode: "order",
           issuerEnterpriseRef: {
             moduleName: "profile",
             schemaName: "enterprise",

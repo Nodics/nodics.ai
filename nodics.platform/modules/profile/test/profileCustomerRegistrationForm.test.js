@@ -115,11 +115,16 @@ test("service registration persists customer through Profile system write contex
   CONFIG.get = (key) =>
     key === "profileCustomerParticipation"
       ? { eligibilityService: "DefaultKycDecisionEnforcementService" }
-      : currentConfig(key);
+      : key === "profileCustomerEligibility"
+        ? { enabled: true }
+        : currentConfig(key);
   SERVICE.DefaultEnterpriseManagementService = {
     retrieveEnterpriseForAccess: async (code) => {
       assert.equal(code, "fixture-enterprise");
-      return { enterprise: { code, active: true }, tenantCode: "default" };
+      return {
+        enterprise: { code, active: true, tenant: { code: "default", active: true } },
+        tenantCode: "default",
+      };
     },
   };
   const approved = Object.freeze({
@@ -188,6 +193,15 @@ test("service registration persists customer through Profile system write contex
 
 test("service registration with no selected eligibility owner completes failure and never saves", async () => {
   let savedRequest;
+  const original = CONFIG.get;
+  CONFIG.get = (key) =>
+    key === "profileCustomerEligibility" ? { enabled: true } : original(key);
+  SERVICE.DefaultEnterpriseManagementService = {
+    retrieveEnterpriseForAccess: async (code) => ({
+      tenantCode: "default",
+      enterprise: { code, active: true, tenant: { code: "default", active: true } },
+    }),
+  };
   SERVICE.DefaultKycDecisionEnforcementService = null;
   const failure = await new Promise((resolve, reject) =>
     registration.createCustomer(
@@ -211,4 +225,103 @@ test("service registration with no selected eligibility owner completes failure 
   );
   assert.match(String(failure), /ERR_PROFILE_MEMBERSHIP_UNAVAILABLE/);
   assert.equal(savedRequest, undefined);
+});
+
+/** Exercises the signup step with default policy and fresh placement doubles, without runtime data or credentials. */
+function ordinarySignupFixture() {
+  const defaults = require("../config/properties");
+  const original = CONFIG.get;
+  CONFIG.get = (key) => defaults[key] ?? original(key);
+  const systemAuth = { isSystem: true };
+  SERVICE.DefaultIdentityGovernanceService = {
+    getSystemAuthData: () => systemAuth,
+  };
+  SERVICE.DefaultEnterpriseManagementService = {
+    retrieveEnterpriseForAccess: async (code) => ({
+      tenantCode: "default",
+      enterprise: { code, active: true, tenant: { code: "default", active: true } },
+    }),
+  };
+  let persisted;
+  const signup = () => new Promise((resolve, reject) =>
+    registration.createCustomer(
+      {
+        tenant: "default",
+        enterprise: { code: "shop" },
+        model: { loginId: "buyer@example.invalid" },
+        defaultCustomerService: {
+          save: async (request) => {
+            persisted = request;
+            return { code: "SUC_SAVE_00000", result: { code: "buyer" } };
+          },
+        },
+      },
+      {},
+      { nextSuccess: resolve, error: (request, response, error) => reject(error) },
+    ),
+  );
+  return { signup, systemAuth, persisted: () => persisted };
+}
+
+test("default ordinary signup does not require an eligibility owner or manufacture decision evidence", async () => {
+  const f = ordinarySignupFixture();
+  await f.signup();
+  assert.equal(f.persisted().authData, f.systemAuth);
+  assert.equal(f.persisted().kycDecisionReference, undefined);
+  assert.equal(f.persisted().model.customerEligibilityDecision, undefined);
+});
+
+test("ordinary signup rejects inactive, foreign and unavailable placement with eligibility disabled", async () => {
+  for (const change of [
+    (placement) => { placement.enterprise.active = false; },
+    (placement) => { placement.enterprise.tenant.active = false; },
+    (placement) => { placement.tenantCode = "foreign"; },
+    (placement) => { placement.enterprise.tenant.code = "foreign"; },
+  ]) {
+    const f = ordinarySignupFixture();
+    const read = SERVICE.DefaultEnterpriseManagementService.retrieveEnterpriseForAccess;
+    SERVICE.DefaultEnterpriseManagementService.retrieveEnterpriseForAccess = async (code) => {
+      const placement = await read(code);
+      change(placement);
+      return placement;
+    };
+    await assert.rejects(f.signup());
+    assert.equal(f.persisted(), undefined);
+  }
+  const f = ordinarySignupFixture();
+  delete SERVICE.DefaultEnterpriseManagementService;
+  await assert.rejects(f.signup());
+  assert.equal(f.persisted(), undefined);
+});
+
+test("missing or malformed eligibility selection cannot silently select ordinary signup", async () => {
+  for (const enabled of [undefined, null, "false", 0]) {
+    const f = ordinarySignupFixture();
+    const original = CONFIG.get;
+    CONFIG.get = (key) => key === "profileCustomerEligibility" ? { enabled } : original(key);
+    await assert.rejects(f.signup(), (error) =>
+      /ERR_PROFILE_ELIGIBILITY_CONFIGURATION/.test(String(error)),
+    );
+    assert.equal(f.persisted(), undefined);
+  }
+});
+
+test("ordinary signup rechecks placement and policy immediately before persistence", async () => {
+  for (const drift of ["tenant", "policy"]) {
+    const f = ordinarySignupFixture();
+    let reads = 0, enabled = false;
+    const original = CONFIG.get;
+    CONFIG.get = (key) => key === "profileCustomerEligibility" ? { enabled } : original(key);
+    const read = SERVICE.DefaultEnterpriseManagementService.retrieveEnterpriseForAccess;
+    SERVICE.DefaultEnterpriseManagementService.retrieveEnterpriseForAccess = async (code) => {
+      const placement = await read(code);
+      if (++reads === 2) {
+        if (drift === "tenant") placement.enterprise.tenant.active = false;
+        else enabled = true;
+      }
+      return placement;
+    };
+    await assert.rejects(f.signup());
+    assert.equal(f.persisted(), undefined);
+  }
 });

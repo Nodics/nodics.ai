@@ -12,6 +12,7 @@
 /** @module tax/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner tax */
 module.exports = {
   publish: {
+    setup: { permissions: { tax: 'publish.lifecycle.create' } },
     providers: { domainAdapters: { tax: null }, versionProviders: { tax: null }, workflowProviders: { tax: null } },
     approvalWorkflow: { domains: { tax: { definitionCode: 'taxPublicationApproval', ownerModule: 'tax',
       actionKey: 'tax.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } }

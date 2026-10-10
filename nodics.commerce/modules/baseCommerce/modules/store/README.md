@@ -6,7 +6,21 @@ original read token; no-op saves leave it unchanged. This does not change domain
 or publication versions. See the Foundation Data Modeling documentation for
 project customization and conflict recovery.
 
+Merchant outlet reads preserve original staff authority through Store's private
+generated-read admission. The first Mongo envelope is projected before generated
+get supplies its success code; the final response must still confirm `SUC_`, exact
+count and genuine projection. See [Narrow Merchant Outlet Reads](llm/contracts/README.md#narrow-merchant-outlet-reads).
+Run `node --test nodics.commerce/modules/baseCommerce/modules/store/test/merchant*Contract.test.js`
+for isolated admission and actual generated-pipeline regressions, not native qualification.
+
 Store is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
+
+Store owns the optional operational `store:core-reference` release declared in
+`data/manifest.json`, including Store, Sales Channel and Point of Service records
+under `data/core-v001`. The historical `baseCommerce*` filenames are retained for
+stable header prefixes; they do not make the composition-only parent the owner.
+Axis derives the release selection from this manifest and its COMMERCE destination.
+This business release does not install documentation or approve publication.
 
 Points of service may be online or physical. The `locationRef` association is
 optional for general records, so Commerce activation does not depend on Location.

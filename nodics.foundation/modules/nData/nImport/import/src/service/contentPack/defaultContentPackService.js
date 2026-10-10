@@ -189,7 +189,7 @@ module.exports = {
     },
 
     /** Inspects and validates the available immutable pack release. */
-    inspectRelease: function (context) {
+    inspectRelease: function (context, traversal) {
         if (!context.enabled) {
             return { available: false };
         }
@@ -197,6 +197,16 @@ module.exports = {
             let repositoryPath = this.resolveRepositoryPath(context.source);
             let manifestPath = this.resolveContainedPath(repositoryPath, context.source.manifestPath, 'manifest');
             if (!fs.existsSync(manifestPath)) return { available: false };
+            traversal = traversal || { active: new Set(), releases: new Map() };
+            let identity = fs.realpathSync(manifestPath) + '#' + (context.source.manifestSection || '');
+            if (traversal.active.has(identity)) throw this.createError('ERR_IMP_00003', 'Content-pack composition contains a cycle');
+            if (traversal.releases.has(identity)) {
+                let cached = traversal.releases.get(identity);
+                if (cached.manifest.pack !== this.resolveExpectedManifestPack(context, repositoryPath)) throw this.createError('ERR_IMP_00003', 'Included content-pack identity is incompatible');
+                return cached;
+            }
+            if (traversal.releases.size + traversal.active.size >= 256) throw this.createError('ERR_IMP_00003', 'Content-pack composition exceeds its limit');
+            traversal.active.add(identity);
             let manifestDocument = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
             let manifest = this.resolveManifestSection(context, manifestDocument);
             let fileRoot = manifestDocument.sections ? path.dirname(manifestPath) : repositoryPath;
@@ -207,18 +217,41 @@ module.exports = {
                 : this.resolveContainedPath(fileRoot, manifest.contentPath, 'content');
             if (!fs.existsSync(contentPath)) return { available: false };
             this.validateManifest(context, manifest, fileRoot, repositoryPath);
+            Object.keys(manifest.generatedHashes).forEach(relativeFile => {
+                let filePath = this.resolveContainedPath(fileRoot, relativeFile, 'generated file');
+                this.resolveContainedPath(contentPath, path.relative(contentPath, filePath), 'generated file');
+            });
             let checksum = this.createReleaseChecksum(manifest.generatedHashes);
             if (manifest.releaseChecksum && manifest.releaseChecksum !== checksum) {
                 throw this.createError('ERR_IMP_00003', 'Content-pack release checksum validation failed');
             }
-            return {
+            let includes = manifest.includes || [];
+            if (!Array.isArray(includes) || includes.length > 256) throw this.createError('ERR_IMP_00003', 'Content-pack composition is invalid');
+            let children = includes.map(include => {
+                if (!include || !include.source || !include.manifestPack) throw this.createError('ERR_IMP_00003', 'Content-pack composition source is incomplete');
+                let child = this.inspectRelease({ enabled: true, configuration: context.configuration,
+                    pack: { manifestPack: include.manifestPack }, source: include.source }, traversal);
+                if (!child.available) throw this.createError('ERR_IMP_00004', 'Included content-pack release is unavailable');
+                return child;
+            });
+            let release = {
                 available: true,
                 version: manifest.version,
                 contractVersion: manifest.contractVersion,
                 checksum: checksum,
                 contentPath: contentPath,
-                manifest: manifest
+                fileRoot: fileRoot,
+                manifest: manifest,
+                identity: identity,
+                children: children
             };
+            if (children.length) release.checksum = crypto.createHash('sha256').update(JSON.stringify({
+                local: checksum, includes: children.map(child => ({ pack: child.manifest.pack,
+                    version: child.version, checksum: child.checksum }))
+            })).digest('hex');
+            traversal.active.delete(identity);
+            traversal.releases.set(identity, release);
+            return release;
         } catch (error) {
             if (error && error.code && String(error.code).startsWith('ERR_IMP_')) throw error;
             throw this.createError('ERR_IMP_00003', 'Configured content-pack release is invalid');
@@ -258,6 +291,8 @@ module.exports = {
         }
         let nodicsHome = path.resolve(NODICS.getNodicsHome());
         let parentPath = path.dirname(nodicsHome);
+        let parentPackage = path.join(parentPath, 'package.json');
+        if (fs.existsSync(parentPackage) && JSON.parse(fs.readFileSync(parentPackage, 'utf8')).name === repositoryName) return parentPath;
         let repositoryPath = path.resolve(parentPath, repositoryName);
         if (path.dirname(repositoryPath) !== parentPath) {
             throw this.createError('ERR_IMP_00003', 'Content-pack repository escapes the configured workspace');
@@ -276,6 +311,13 @@ module.exports = {
         let resolved = path.resolve(rootPath, relativePath);
         if (resolved !== rootPath && !resolved.startsWith(rootPath + path.sep)) {
             throw this.createError('ERR_IMP_00003', 'Content-pack ' + label + ' path escapes its repository');
+        }
+        if (fs.existsSync(resolved)) {
+            let realRoot = fs.realpathSync(rootPath);
+            let realPath = fs.realpathSync(resolved);
+            if (realPath !== realRoot && !realPath.startsWith(realRoot + path.sep)) {
+                throw this.createError('ERR_IMP_00003', 'Content-pack ' + label + ' path escapes through a symlink');
+            }
         }
         return resolved;
     },
@@ -310,7 +352,9 @@ module.exports = {
             typeof manifest.version !== 'string' ||
             !allowedVersions.includes(manifest.contractVersion) ||
             !manifest.generatedHashes ||
-            typeof manifest.generatedHashes !== 'object') {
+            typeof manifest.generatedHashes !== 'object' ||
+            Array.isArray(manifest.generatedHashes) ||
+            (!Object.keys(manifest.generatedHashes).length && !(Array.isArray(manifest.includes) && manifest.includes.length))) {
             throw this.createError('ERR_IMP_00003', 'Content-pack manifest is incompatible');
         }
         Object.keys(manifest.generatedHashes).forEach(relativeFile => {
@@ -341,13 +385,51 @@ module.exports = {
             directory,
             runId
         );
-        let inputPath = path.join(rootPath, 'input');
+        // Header finalization resolves Media assets from the enclosing data release.
+        let inputPath = path.join(rootPath, 'input', 'data', 'content-pack');
         let outputPath = path.join(rootPath, 'output');
-        fse.ensureDirSync(rootPath);
-        fse.copySync(release.contentPath, inputPath, {
-            overwrite: true,
-            errorOnExist: false
-        });
+        // Stage only the selected pack's declared bytes, never adjacent business data.
+        // Recheck after inspection so a changed source cannot enter the importer.
+        try {
+            let visited = new Set();
+            let staged = new Map();
+            let stage = selected => {
+                if (visited.has(selected.identity || selected)) return;
+                visited.add(selected.identity || selected);
+                (selected.children || []).forEach(stage);
+                for (let [relativeFile, expectedHash] of Object.entries(selected.manifest.generatedHashes)) {
+                    let sourcePath = this.resolveContainedPath(selected.fileRoot, relativeFile, 'staged file');
+                    let relative = path.relative(selected.contentPath, sourcePath);
+                    if (relative.split(path.sep)[0] === 'headers' &&
+                        (path.dirname(relative) !== 'headers' || !/Headers?\.[^.]+$/.test(path.basename(relative)))) {
+                        throw this.createError('ERR_IMP_00003', 'Content-pack header is not discoverable by the local importer');
+                    }
+                    let contentSource = this.resolveContainedPath(selected.contentPath, relative, 'staged file');
+                    if (!fs.statSync(contentSource).isFile()) {
+                        throw this.createError('ERR_IMP_00003', 'Content-pack staged file is not a regular file');
+                    }
+                    let bytes = fs.readFileSync(contentSource);
+                    if (crypto.createHash('sha256').update(bytes).digest('hex') !== expectedHash) {
+                        throw this.createError('ERR_IMP_00003', 'Content-pack changed before staging');
+                    }
+                    let destination = this.resolveContainedPath(inputPath, relative, 'staging destination');
+                    if (staged.has(relative)) {
+                        if (staged.get(relative) !== expectedHash) throw this.createError('ERR_IMP_00003', 'Content-pack composition has conflicting files');
+                        continue;
+                    }
+                    staged.set(relative, expectedHash);
+                    fse.ensureDirSync(path.dirname(destination));
+                    fs.writeFileSync(destination, bytes, { flag: 'wx' });
+                }
+            };
+            stage(release);
+            if (![...staged.keys()].some(file => path.dirname(file) === 'headers' && /Headers?\.[^.]+$/.test(path.basename(file)))) {
+                throw this.createError('ERR_IMP_00003', 'Content-pack has no discoverable import header');
+            }
+        } catch (error) {
+            fse.removeSync(rootPath);
+            throw error;
+        }
         return { rootPath: rootPath, inputPath: inputPath, outputPath: outputPath };
     },
 

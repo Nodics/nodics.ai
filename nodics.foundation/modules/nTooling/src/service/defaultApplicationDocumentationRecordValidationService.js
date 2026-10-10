@@ -103,6 +103,7 @@ const exportedService = {
             release: options && options.release || '0.0.0',
             source: options && options.source || 'documentationContentCatalog',
             owner: options && options.owner || 'nodics.docs',
+            validationScope: options && options.validationScope === 'AUTHORING' ? 'AUTHORING' : 'PUBLIC_DELIVERY',
             targetAudience: ['business-user', 'administrator', 'developer', 'operator'],
             categories: Object.fromEntries(BLOCKING_CATEGORIES.map(category => [category, { errors: 0, warnings: 0, infos: 0 }])),
             checks: [],
@@ -373,9 +374,9 @@ const exportedService = {
         this.addCheck(report, {
             id: 'public-record-online-state',
             category: 'access',
-            passed: publicNonOnline.length === 0,
+            passed: options.validationScope === 'AUTHORING' || publicNonOnline.length === 0,
             target: publicNonOnline.map(item => this.key(item.type, item.code)).join(', ') || 'public documentation records',
-            message: 'Nexus-visible public documentation records must be Online.',
+            message: options.validationScope === 'AUTHORING' ? 'Authoring records may retain drafts; public delivery still requires Online publication.' : 'Nexus-visible public documentation records must be Online.',
             remediation: 'Keep draft/staged/review records out of public payloads until nPublish activates them Online.',
         });
 
@@ -391,12 +392,14 @@ const exportedService = {
             'publisher',
             'publishedAt',
         ];
+        // Unreviewed authoring inputs must not need invented review or publication actors.
+        const requiredActorFields = item => options.validationScope === 'AUTHORING' && ['DRAFT', 'STAGED'].includes(item.lifecycleState)
+            ? ['author'] : ['author', 'reviewer', 'approver', 'publisher'];
         const invalidPublication = publicationStateRecords.filter(item => !VALID_LIFECYCLE.has(item.lifecycleState) || !item.checksum || item.workflowRequired !== true ||
             !Array.isArray(item.workflowTriggers) || item.workflowTriggers.length === 0 || !item.validationResult ||
             item.validationResult.publicationPath !== 'STAGED_REVIEW_APPROVAL_ONLINE' || !item.decisionPolicy ||
             item.decisionPolicy.permissionEnforced !== true || item.decisionPolicy.adminOverrideAudited !== true ||
-            !Object.prototype.hasOwnProperty.call(item, 'author') || !Object.prototype.hasOwnProperty.call(item, 'reviewer') ||
-            !Object.prototype.hasOwnProperty.call(item, 'approver') || !Object.prototype.hasOwnProperty.call(item, 'publisher') ||
+            requiredActorFields(item).some(field => !Object.prototype.hasOwnProperty.call(item, field) || item[field] === null) ||
             optionalPublicationStringFields.some(field => item[field] === null));
         this.addCheck(report, {
             id: 'publication-state-evidence',
@@ -404,7 +407,7 @@ const exportedService = {
             passed: invalidPublication.length === 0,
             target: invalidPublication.map(item => item.code).join(', ') || 'cmsDocumentationPublicationState',
             message: 'Publication states must carry lifecycle, checksum, workflow, decision policy, and actor evidence.',
-            remediation: 'Regenerate or repair publication state records with workflow triggers, decisionPolicy, and actor audit fields.',
+            remediation: 'Repair workflow triggers, decisionPolicy and lifecycle-appropriate actor evidence; do not fabricate approvals for draft or staged authoring data.',
         });
 
         const publishableTargets = [

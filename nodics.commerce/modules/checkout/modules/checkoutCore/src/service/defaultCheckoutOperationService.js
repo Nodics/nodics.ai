@@ -13,6 +13,14 @@
 'use strict';
 /** @module checkoutCore/src/service/defaultCheckoutOperationService @description Starts idempotent checkout placement through the standard Commerce owner ports. @layer service @owner checkoutCore */
 module.exports = {
+    /** Reads bounded original-command checkpoint metadata without invoking placement or recovery. */
+    commandStatus: function (request) {
+        return SERVICE.DefaultCheckoutCompensationRecoveryService.commandStatus(request);
+    },
+    /** Recovers only the retained original compensation command, never placement or Payment execution. */
+    recoverCompensation: function (request) {
+        return SERVICE.DefaultCheckoutCompensationRecoveryService.recover(request);
+    },
     /** Reads only a completed checkout owned by the authenticated customer. */
     status: async function(request) {
         let value=await SERVICE.DefaultCheckoutCheckpointService.get({tenant:request.tenant,authData:request.authData,query:{code:request.orderCode,ownerId:request.ownerId,status:'COMPLETED',...(request.enterpriseCode?{enterpriseCode:request.enterpriseCode}:{})},searchOptions:{pageSize:1},options:{recursive:false}});

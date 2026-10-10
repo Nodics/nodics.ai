@@ -7,7 +7,7 @@ holds, immutable selection fingerprints, journaled atomic removal+receipt and
 the existing nDynamo revision fence. Never delete uncertain actions, provider
 accounting or the deletion receipt itself. Lost acknowledgement permits original
 inspection and stop/release, not automatic command replay. See the
-[operator and API guide](../../../../../nodics.docs/docs/pages/nodics.copilot/retention-lifecycle.md#independent-audit-retention)
+[operator and API guide](../../data/docs-v001/records/documentation/copilotConversationDocumentationComponentData.js#independent-audit-retention)
 and `test/copilotAuditRetention.test.js`.
 
 The [bounded retention contract](../examples/bounded-retention-execution.md)

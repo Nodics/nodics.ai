@@ -48,7 +48,7 @@ the pre-existing record, reinterpret it as an update, or retry automatically.
 Runtime service variants must retain the shared insert/journal guards described
 in [insert-only saves](../examples/insert-only-save.md#qualify-runtime-variants).
 
-See [business operation recovery](../../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md).
+See [business operation recovery](../../data/docs-v001/records/documentation/databaseDocumentationComponentData.js).
 Run `test/modelCommandReceipt.test.js`, generated controller/router contracts,
 Copilot selected-schema action tests, and provider durable-journal tests after
 modifications.

@@ -1,0 +1,55 @@
+{
+  "contractVersion": 2,
+  "module": "installer",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "installer",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 2,
+      "components": 2,
+      "routes": 2,
+      "releaseChecksum": "f4408ea4b51e59ec39531b6d12652b77e8e164b7cf620343862db3f3c71a5170",
+      "generatedHashes": {
+        "docs-v001/records/documentation/installerDocumentationNodeData.js": "4cb73a28f2b9a18be24d9a1aad4da43b006c2bbc6a0532ad8808b04e94530229",
+        "docs-v001/records/documentation/installerDocumentationPageMetadataData.js": "e15ebf1d0c2108543fb8d4a05502f63aa1fe06568c3402478968395474995839",
+        "docs-v001/records/documentation/installerDocumentationPublicationStateData.js": "a71255bd0f1f5a5b6954c05cf40f6863cc90675a4c9c2c775efa97390f032920",
+        "docs-v001/records/documentation/installerDocumentationSearchMetadataData.js": "425d07df0e66482447e83ac6f220128ca7887f231ba7ba9193fba4ce0856a906",
+        "docs-v001/records/documentation/installerDocumentationComponentData.js": "95212627375e206664309ce62993cdf48b0f5013563ece1660ebd677819d3373",
+        "docs-v001/records/documentation/installerDocumentationPageData.js": "a110df4b671a0defbd4937fbeb555f70ebd3e7f9e5c8e291f417e8e5ef1544df",
+        "docs-v001/records/documentation/installerDocumentationRouteData.js": "05609340ca27b5f1a6ab29619a346981ff55bb98480ae4fff77fd416b59865ef",
+        "docs-v001/headers/100_installerDocumentationContentPackHeader.js": "51a79346d2d1059c75f2975d6eb411b2cf888fcf019094b779f0837b36e56099"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

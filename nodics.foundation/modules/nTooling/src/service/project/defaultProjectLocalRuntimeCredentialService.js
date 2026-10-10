@@ -149,6 +149,41 @@ module.exports = {
         }
     },
 
+    /** Adds one explicitly selected 256-bit Local purpose key during an exclusive runtime outage. Preserves existing credentials and refuses rotation or invalid storage. @param {string} projectRoot Canonical project path. @param {string} environmentCode Local environment. @param {string} name Exact purpose key environment name. @returns {Object} Content-free receipt. */
+    ensureSecretKey: function (projectRoot, environmentCode, name) {
+        let temporary, committed = false;
+        try {
+            if (typeof name !== 'string' || !/^NODICS_[A-Z0-9_]+_KEY$/.test(name)) throw new Error();
+            const values = this.readExistingEnvironment(projectRoot, environmentCode, {});
+            const file = this.credentialPath(projectRoot, environmentCode), stat = fs.lstatSync(file);
+            const before = fs.readFileSync(file);
+            if (JSON.stringify(JSON.parse(before.toString('utf8'))) !== JSON.stringify(values)) throw new Error();
+            if (Object.hasOwn(values, name)) {
+                if (!/^[a-f0-9]{64}$/i.test(values[name]) || Buffer.from(values[name], 'hex').every(byte => byte === Buffer.from(values[name], 'hex')[0])) throw new Error();
+                return { changedKeys: [], retainedKey: name, mode: '0600' };
+            }
+            const serialized = Buffer.from(JSON.stringify({ ...values, [name]: crypto.randomBytes(32).toString('hex') }, null, 2) + '\n');
+            if (serialized.length > 65536) throw new Error();
+            temporary = path.join(path.dirname(file), '.purpose-key-' + crypto.randomBytes(16).toString('hex') + '.tmp');
+            const fd = fs.openSync(temporary, 'wx', 0o600);
+            try { fs.writeFileSync(fd, serialized); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
+            const current = fs.lstatSync(file);
+            if (current.ino !== stat.ino || current.dev !== stat.dev || !current.isFile() || current.nlink !== 1 ||
+                (current.mode & 0o777) !== 0o600 || current.mtimeMs !== stat.mtimeMs || current.ctimeMs !== stat.ctimeMs ||
+                !fs.readFileSync(file).equals(before)) throw new Error();
+            fs.renameSync(temporary, file); temporary = undefined; committed = true;
+            const directory = fs.openSync(path.dirname(file), 'r');
+            try { fs.fsyncSync(directory); } finally { fs.closeSync(directory); }
+            this.readExistingEnvironment(projectRoot, environmentCode, {});
+            if (!fs.readFileSync(file).equals(serialized)) throw new Error();
+            return { changedKeys: [name], unchangedKeys: Object.keys(values), mode: '0600' };
+        } catch (_) {
+            throw new Error(committed ? 'LOCAL_SECRET_KEY_COMMITTED_REQUIRES_RECONCILIATION' : 'LOCAL_SECRET_KEY_REFUSED');
+        } finally {
+            if (temporary) { try { fs.unlinkSync(temporary); } catch (_) { /* Content-free cleanup. */ } }
+        }
+    },
+
     /** Creates stable native-local credential values on first use. */
     ensureCredentials: function (projectRoot, environmentCode) {
         const file = this.credentialPath(projectRoot, environmentCode);

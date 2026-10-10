@@ -89,4 +89,4 @@ Provider acceptance uses injected transports or disposable loopback SMTP only;
 test execution never enables live mail or changes deployment qualification.
 
 Detailed setup, examples, operator recovery and evidence interpretation are in
-`nodics.docs/docs/pages/nodics.communication/provider-runbooks.md`.
+`nodics.communication/modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js`.

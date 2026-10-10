@@ -9,7 +9,7 @@
 
  */
 "use strict";
-/** @module commsCore/test/communicationChannelMigration @description Proves all current email/SMS adoption records select resources, source gating and legacy text use one renderer, and historical releases remain separate. @owner commsCore @layer test */
+/** @module commsCore/test/communicationChannelMigration @description Proves all current email/SMS adoption records select resources, source gating and legacy text use one renderer, and v001 business releases remain separate from documentation. @owner commsCore @layer test */
 const { test, beforeEach, afterEach } = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
@@ -58,14 +58,24 @@ beforeEach(() => {
 });
 afterEach(() => Object.assign(global, saved));
 const manifest = require("../data/manifest.json");
-for (const section of Object.values(manifest.sections)) {
-  const file = Object.keys(section.files).find((name) =>
+const dataReleases = Object.values(manifest.sections).filter(
+  (section) => section.kind === "DATA_RELEASE",
+);
+assert.deepEqual(dataReleases.map((section) => section.sourceRoot), [
+  "core-v001",
+  "sample-v001",
+]);
+for (const section of dataReleases) {
+  const files = Object.keys(section.files).filter((name) =>
     name.endsWith("TemplateVersionData.js"),
   );
-  const records = require(path.join(__dirname, "../data", file));
-  for (const record of Object.values(records).filter((row) =>
+  assert.equal(files.length, 1, "Each business release must test its template versions");
+  const records = require(path.join(__dirname, "../data", files[0]));
+  const channelRecords = Object.values(records).filter((row) =>
     ["EMAIL", "SMS"].includes(row.channel),
-  )) {
+  );
+  assert.equal(channelRecords.length, section.dataType === "core" ? 2 : 4);
+  for (const record of channelRecords) {
     test(
       "current release selects a complete optional resource: " + record.code,
       () => {
@@ -103,9 +113,9 @@ for (const section of Object.values(manifest.sections)) {
 }
 test("published reference activation requires matching source, version and a complete resource", async () => {
   const parent =
-    require("../data/sample-v002/records/communication/commsSampleTemplateData").record0;
+    require("../data/sample-v001/records/communication/commsSampleTemplateData").record0;
   const version =
-    require("../data/sample-v002/records/communication/commsSampleTemplateVersionData").record0;
+    require("../data/sample-v001/records/communication/commsSampleTemplateVersionData").record0;
   policy.trustedSourceModules = ["contactSubmission", "customerReview"];
   let stored,
     creates = 0;
@@ -203,9 +213,9 @@ test("legacy compatibility delegates to the effective renderer and never upgrade
 });
 test("published records cannot bypass source ownership or mix resource and inline content", async () => {
   const parent =
-    require("../data/sample-v002/records/communication/commsSampleTemplateData").record0;
+    require("../data/sample-v001/records/communication/commsSampleTemplateData").record0;
   const version =
-    require("../data/sample-v002/records/communication/commsSampleTemplateVersionData").record0;
+    require("../data/sample-v001/records/communication/commsSampleTemplateVersionData").record0;
   policy.trustedSourceModules = ["contactSubmission"];
   const command = {
     sourceModule: "contactSubmission",
@@ -242,15 +252,20 @@ test("published records cannot bypass source ownership or mix resource and inlin
     );
   }
 });
-test("current import manifests never reference historical inline email releases", () => {
-  for (const section of Object.values(manifest.sections)) {
-    assert.match(section.sourceRoot, /-v002$/);
+test("current v001 business releases remain separate from documentation content packs", () => {
+  for (const section of dataReleases) {
+    assert.match(section.sourceRoot, /-v001$/);
     assert.ok(
       Object.keys(section.files).every((file) =>
         file.startsWith(section.sourceRoot + "/"),
       ),
     );
   }
+  assert.equal(manifest.sections.documentation.kind, "CONTENT_PACK");
+  assert.equal(manifest.sections.documentation.contentPath, "docs-v001");
+  assert.ok(Object.keys(manifest.sections.documentation.generatedHashes).every(
+    (file) => file.startsWith("docs-v001/"),
+  ));
   assert.ok(
     fs.existsSync(
       path.join(

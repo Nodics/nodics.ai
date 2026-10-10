@@ -354,8 +354,10 @@ Profile selects its preflight owner through
 `data.dataReleases.targetValidators.profile = "DefaultCustomerRegistrationService"`.
 The exported `validateImportTarget(metadata)` returns positive `true` for
 Customer `signUpAll` only after fresh exact active Enterprise and active Tenant
-resolution matching the import tenant and positive configured eligibility-owner
-readiness. Other Profile schemas/operations retain
+resolution matching the import tenant and, when
+`profileCustomerEligibility.enabled === true`, positive configured eligibility-owner
+readiness. An explicit false selects ordinary registration without eligibility
+collaborators; missing/malformed enablement rejects. Other Profile schemas/operations retain
 their existing admission; this helper does not authorize their mutations.
 
 `identityGovernance.customerRegistration.importPlacement.metadataOwnerService`
@@ -369,8 +371,10 @@ Fresh placement is checked again before the generated Customer save. Public
 registration retains its existing trusted enterprise mapper, not an import marker.
 
 Placement is not an eligibility decision, credential, canonical link or consent.
-Existing eligibility policy/provider qualification and private decision-receipt
-guards remain mandatory. No configuration flag is enabled by the owner selections.
+When ordinary-customer eligibility is enabled, existing policy/provider
+qualification and private decision-receipt guards remain mandatory. Linked
+Employee-backed participation retains its independent mandatory eligibility.
+No configuration flag is enabled by the owner selections.
 New import metadata never copies the administrative actor into the Customer.
 The Profile fixture `customerRegistrationPlacementContract.test.js` covers
 missing/malformed placement, cross-tenant and inactive targets, request copies,
@@ -383,8 +387,9 @@ complete and test its transport before an authorized runtime retry.
 
 The selected `profileCustomerParticipation.eligibilityService` must export both
 `enforce` and `assertOnboardingReady({tenant,enterpriseCode}): Promise<true>`.
-Profile calls readiness after placement validation, with a frozen exact two-field
-context. Only literal `true` admits preflight. Missing custom-owner support,
+For eligibility-enabled ordinary signup imports, Profile calls readiness after
+placement validation, with a frozen exact two-field context. Only literal `true`
+admits preflight. Missing custom-owner support,
 false, undefined, malformed results and unknown exceptions fail closed. Later
 layers may select their own reviewed owner; they must implement real prerequisite
 inspection, not an eligible stub, synthetic subject or identity copied from the
@@ -429,15 +434,21 @@ missing collaborators/policy, expired/ambiguous versions and invalid fields/outc
 Evaluation and mutation callbacks throw if invoked during readiness. These isolated
 fixtures do not qualify an installed provider, imported policy or browser journey.
 
-Ordinary `createCustomer` and linked participation now call the same exported
-`enforceCustomerEligibility` member. The configured `eligibilityService` must have
+Eligibility-enabled ordinary `createCustomer` and linked participation call the
+same exported `enforceCustomerEligibility` member. Ordinary signup with explicit
+`profileCustomerEligibility.enabled: false` skips only eligibility evaluation and
+receipt creation; it revalidates active exact placement and uses the existing
+system-write/generated persistence path. No synthetic approval or membership is
+created. If policy becomes enabled before persistence, the ordinary attempt
+rejects instead of saving without a decision. See [registration](customer-registration-form.md).
+The configured `eligibilityService` must have
 a callable `enforce(request,"ONBOARDING",subject)` and explicitly return
 `eligible:true` with a bounded non-secret `decisionId`. Missing owner, denied,
 malformed or explicitly failed response rejects before Customer persistence.
 Linked acceptance and renewal retain the reference in existing private
 `customerParticipation.eligibilityDecisionId`; renewal retains the previous
 reference with its bounded consent history. Ordinary registration passes the
-reference through its existing `request.kycDecisionReference` context. The authored
+reference through the generated-save command's `kycDecisionReference` context. The authored
 `DefaultCustomerEligibilityDecisionGovernanceService` retains the actual Rules
 receipt on the existing Customer private `customerEligibilityDecision` metadata,
 not a separate decision store or fabricated KYC certificate.

@@ -41,6 +41,10 @@ also approve; do not introduce requester exclusion, admin-login special cases,
 or a separate Media approval implementation. Retain exact-version publication,
 native identity, tenant/enterprise scope and decision audit.
 
+Select explicit workflow releases through the existing init catalogue and retain
+expected-version drift checks. Do not embed historical release numbers in repair
+messages or confuse executable data releases with numeric Process graph versions.
+
 - Do not let frontend clients provide raw filesystem paths, NAS paths, cloud bucket paths, or public URLs as authoritative storage locations.
 - Do not duplicate media storage under CMS, Product, Import, Documentation, Axis, or project modules.
 - Do not add a provider directly to a caller module. Add a provider implementation behind the `media` provider contract.
@@ -104,6 +108,15 @@ Provider-specific configuration rules:
   nImport, Documentation, or project modules.
 
 ## Implementation Order
+
+Read-only target pointer batches reuse the existing service-only status route,
+validate the complete bounded unique selection before reads and return only
+ordered identity/version/revision evidence. They do not approve, activate or
+verify bytes; CMS still requires physical integrity and an unchanged reread.
+Exact integrity batches reuse service-only reconciliation and existing cleanup
+authority. Validate the full bounded unique selection before reads; reject mixed
+operation fields and require complete ordered non-repaired/non-deleted evidence.
+Never relax router rate limits or cache READY to mask request amplification.
 
 Retained publication is gated, not registered. Read
 `llm/contracts/README.md#retained-publication` before modifying capture, target

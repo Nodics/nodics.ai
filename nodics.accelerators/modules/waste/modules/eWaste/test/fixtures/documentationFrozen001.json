@@ -1,0 +1,135 @@
+{
+  "contractVersion": 1,
+  "releaseVersion": "0.0.1",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "eWaste",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 12,
+      "components": 12,
+      "routes": 12,
+      "releaseChecksum": "ac159bf7a00757e8876cc3dd872e9e6c701091ce3c5ebc31d9665ae18e70a067",
+      "generatedHashes": {
+        "docs-v001/records/documentation/eWasteDocumentationNodeData.js": "4ddbc307997cc9e822eb947079cb0657ef81efa46816c125d2090275c45df8d2",
+        "docs-v001/records/documentation/eWasteDocumentationPageMetadataData.js": "b069866c788f5ae0d8bf1a74dd66f78f2dbb7776209730337b9e907faf95459d",
+        "docs-v001/records/documentation/eWasteDocumentationPublicationStateData.js": "c0f34055d5ccc8e2f05c48a72368e5c107262615ea95f80520bfbce798945f73",
+        "docs-v001/records/documentation/eWasteDocumentationSearchMetadataData.js": "6661f5646e53041a28b109d8d6a29a3f02440edcc86281938dbd2bf4c0fba91d",
+        "docs-v001/records/documentation/eWasteDocumentationComponentData.js": "7e43255d3ffff8edbebc6baf0281ae2ef801f68a6522e8b4b46478f4770597a5",
+        "docs-v001/records/documentation/eWasteDocumentationPageData.js": "b2a2445166e63de59910b8d46f495cf091684d075a5562a04214c52346568826",
+        "docs-v001/records/documentation/eWasteDocumentationRouteData.js": "7a4952a6c95ae7d1a9ccb70003a976aa29bc18464cac47937f9afcda063c161d",
+        "docs-v001/records/documentation/eWasteDocumentationMediaData.js": "94b36113e804aca304ea35630fbb07de2d426a5fa3a7ae63e08b119cb2c6ced1",
+        "docs-v001/headers/100_eWasteDocumentationContentPackHeader.js": "04700243ee1796b780927d8b8b5bc3a67211deba0534d246580e30847ae11cbc",
+        "docs-v001/assets/documentation/files/images/circa-architecture.png": "8a863434057ea442ca58bae03f235c9fe72f022fe8ba5d2abd07f903ba68f67b",
+        "docs-v001/assets/documentation/files/images/circa-coupon.png": "d7e3133701b51b866ebc288b35e93847aec0f637cb02ca196e4fe94e4f434b4c",
+        "docs-v001/assets/documentation/files/images/circa-layers.png": "761e5c607da7b3952ab0688486f2d706b1fcf217ad19b78f9ac7ccac1c387099",
+        "docs-v001/assets/documentation/files/images/circa-notification-authority.png": "e3ee17309744359228b0ac4aacee771a6f83cb057b5f7c088e2e89897f3c5c69",
+        "docs-v001/assets/documentation/files/images/circa-record-network.png": "04cc18321002883fc61a7d995c773e4ab41b2213b4f8b2e74581e67f792f54a3",
+        "docs-v001/assets/documentation/files/images/circa-submission.png": "fa3273ca875807769edfe105d75c172c7854e7df5751935cf2e34a47de6d5518",
+        "docs-v001/assets/documentation/files/diagrams/README.md": "9275c4a7b5191158d57981c00b224d9e1818968833c3a44e00c1e78a9f1f3f36",
+        "docs-v001/assets/documentation/files/diagrams/circa-architecture.dot": "24564c7320b82d9e9142483a60af536850a6745c1181e32c9db1b822c9ba8b6c",
+        "docs-v001/assets/documentation/files/diagrams/circa-coupon.dot": "1698d77f0ff05a9bf197acb59a0a47c8f3548f64c2562ba05b29f336e32ebc5e",
+        "docs-v001/assets/documentation/files/diagrams/circa-layers.dot": "f61eb4f2032f13245e0ee666d811d8a677ba902aaa7ac6a5873334d00e4f6ba7",
+        "docs-v001/assets/documentation/files/diagrams/circa-notification-authority.dot": "4047aef061ffaf43b91189ee52a13b2c501a9ad772418ee30aa4432567dfaede",
+        "docs-v001/assets/documentation/files/diagrams/circa-record-network.dot": "169012cb095d4bb539d1b9d03f46d4be2607d9546b5a3efb585b355b322c9dad",
+        "docs-v001/assets/documentation/files/diagrams/circa-submission.dot": "943945139f1af85ccfb3bc7de1192f9134d233163a5184989ab707208edc6ce8",
+        "docs-v001/assets/documentation/files/images/circa-architecture.svg": "175ecb79857001cb8d117f9d4cf2388a4008a1eeba865f657e9c5c2e577a797c",
+        "docs-v001/assets/documentation/files/images/circa-coupon.svg": "0106542c34f2f14cf882e1db60360567a80d86a3a170d57914c3ae2b30ff49fa",
+        "docs-v001/assets/documentation/files/images/circa-layers.svg": "6290712ff115b9612f00dd3e53fb19672c5002dd2c2f541b99ec7a98d717a535",
+        "docs-v001/assets/documentation/files/images/circa-notification-authority.svg": "6df1bb6b8d0a3a7b2b6c6716cc8c31a6f51b8855b82fbfd8b5c9106b32ac3f43",
+        "docs-v001/assets/documentation/files/images/circa-record-network.svg": "38de130b5605c374a58e6f0db2d7bbb4f58339c9fbb48817210cc20be88e61c9",
+        "docs-v001/assets/documentation/files/images/circa-submission.svg": "a460135ceba159518a6325d129b4774ea33ce9fab32b611e4f1c572aee1298cd",
+        "docs-v001/assets/documentation/eWasteDocumentationAssetManifest.js": "ff625a27a0eabc7409d0613cc414a662e0a25f4e93835a892d5fb6fc5e1db09e"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    },
+    "referenceDocumentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "eWaste",
+      "version": "0.0.1",
+      "owningDomain": "eWaste",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "referenceCatalogues": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "documentation"
+          }
+        }
+      ],
+      "sites": [
+        "circaDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 4,
+      "components": 5,
+      "routes": 4,
+      "releaseChecksum": "09b71b0c36190de655cf98b13f90ba5ef82b1025231b16328d2efc632d8adb52",
+      "generatedHashes": {
+        "docs-v001/records/documentation/circaDocumentationSiteData.js": "709889ce61cbc23538aaa3321bc2be89b584b5a11393ab856ec3221068852ce1",
+        "docs-v001/records/documentation/circaDocumentationProductData.js": "1557a5771d7fcd0bddabca7cf5bbd9b0999d1520a2e5a7398973e2790a3b1a54",
+        "docs-v001/records/documentation/circaDocumentationAccessPolicyData.js": "ea95af1c769a6f0d5711f278d39c14e85bb478a7f6e858d85f5b1ee0d2a99d0a",
+        "docs-v001/records/documentation/circaDocumentationNavigationData.js": "9bc66557d17a72a46381c1da422059d23a0630332cafb0699a39a034f32d2a13",
+        "docs-v001/records/documentation/circaDocumentationDashboardData.js": "ace9957354f9631414a0859a9cfa03e9885a54871d200e3eddec27a68dcb4386",
+        "docs-v001/records/documentation/circaDocumentationLegacyNavigationCleanupData.js": "7d0830a19f0bba6845d4aeadb693a9d8b6eeffa42fdd7014026b089b723bc633",
+        "docs-v001/records/documentation/circaDocumentationNodeData.js": "ae5bc82c2b8510819727eeeadf9545576de87b10b2fbd41d13e920a3c8ae005a",
+        "docs-v001/records/documentation/circaDocumentationPageMetadataData.js": "49c48cc67c1e2386f041795063fe94910bfdb1629f983de915623c30b4c29c57",
+        "docs-v001/records/documentation/circaDocumentationPublicationStateData.js": "3bc33fff6f6cc53d4a51176e599de6ea02b4e66311580db84a18cc5a76b9a6b0",
+        "docs-v001/records/documentation/circaDocumentationSearchMetadataData.js": "18729afdf6bf07a7372a226e4aae26a37745e903e18c0bbc36753dd506ff8b42",
+        "docs-v001/records/documentation/circaDocumentationTypeCodeData.js": "979d539c0c5a5806a43878aace4b70334ce7ed182c534ecb0baacba71e23598b",
+        "docs-v001/records/documentation/circaDocumentationRendererData.js": "3d75676b9c83f5c9c72b20039c67de0a39b2ac1a6032ed3d9b172f712c5b1a57",
+        "docs-v001/records/documentation/circaDocumentationSlotData.js": "7a75a1c0ffe12cdd6bace80fa53247c36f64b1c31af547255bc79511f06e5351",
+        "docs-v001/records/documentation/circaDocumentationTemplateData.js": "16288f09d3b50c26c2df4dbc0a946a83108c487cfc78b116c53ca2d6a3393d93",
+        "docs-v001/records/documentation/circaDocumentationComponentData.js": "60ce610bf5da82962899304d151b444f7b456862ee5961c2ae94b972b7d26019",
+        "docs-v001/records/documentation/circaDocumentationPageData.js": "0f8c3e99bc74aa87e9b6800fc8bb68a0a0300dac907d23b67b5c5ddee759e965",
+        "docs-v001/records/documentation/circaDocumentationRouteData.js": "f746046d5a3479585650c2921204af3781eaddfc277af83797e8513795e77176",
+        "docs-v001/headers/circaDocumentationContentPackHeader.js": "44b3e19f7348b5e084a1bb4e42347cce706eb44545b99c906ce88460dbb04374"
+      }
+    }
+  }
+}

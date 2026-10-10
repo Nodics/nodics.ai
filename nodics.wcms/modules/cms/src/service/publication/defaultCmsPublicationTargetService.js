@@ -177,6 +177,7 @@ module.exports = {
     /** Finds the active site-index manifest matching the current route pointers for one site. */
     findActiveSiteIndex: async function (site, pointers, request) {
         let response = await SERVICE.DefaultCmsPublicationManifestService.get({ tenant: request.tenant,
+            options: { recursive: false, skipItemCache: true },
             authData: request.authData, query: { rootCode: site, active: true }, searchOptions: { limit: 1000 } });
         let pointerMap = new Map(pointers.map(pointer => [this.scopeIdentity(pointer), pointer.manifestCode]));
         return this.manifests().items(response).find(manifest => {

@@ -17,6 +17,10 @@
  * @override Preserve verified runtime scope and the enterprise projection when customizing.
  */
 module.exports = {
+    /** Resolves reviewed business placement without changing the runtime's own enterprise lookup. */
+    resolveRuntimeEnterprise: function (request) {
+        return SERVICE.DefaultEnterpriseService.resolveRuntimeEnterprise(request);
+    },
     /** Returns the Profile-authorized runtime enterprise projection. */
     getRuntimeEnterprise: function (request) {
         return SERVICE.DefaultEnterpriseService.getRuntimeEnterprise(request);

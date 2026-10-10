@@ -32,10 +32,20 @@ module.exports = {
         const context = { ...request, tenant: request.tenant || request.authData && request.authData.tenant };
         const service = SERVICE.DefaultPromotionPublicationService;
         const promise = Promise.resolve().then(async () => {
-            service.scope(context);
             const principal = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(context, 'promotion');
-            if (principal.entCode !== service.scope(context).enterpriseCode ||
-                principal.tenant !== context.tenant) throw new Error('Target runtime scope mismatch');
+            if ([context.enterpriseCode, context.entCode, principal.enterpriseCode].some(value =>
+                value !== undefined && value !== principal.entCode)) throw new Error('Target runtime scope mismatch');
+            const enterpriseCode = operation === 'authorize' ? input.enterpriseCode : input.publication?.enterpriseCode;
+            if (enterpriseCode !== undefined) {
+                if (enterpriseCode !== principal.entCode) {
+                    const workflow = SERVICE.DefaultPublicationApprovalWorkflowService;
+                    if (!workflow?.requireRuntimeEnterprise) throw new Error('Cross-enterprise publication is not selected');
+                    workflow.requireRuntimeEnterprise(principal, enterpriseCode);
+                }
+                context.enterpriseCode = enterpriseCode;
+            }
+            service.scope(context);
+            if (principal.tenant !== context.tenant) throw new Error('Target runtime scope mismatch');
             const persistenceAuth = structuredClone(context.authData);
             let recoveryAuthorization;
             if (operation === 'authorize') return service.authorizeTarget(input, context);
@@ -60,7 +70,7 @@ module.exports = {
                         throw new Error('Prepared release does not match publication authority');
                     }
                 }
-                const command = { operation, publicationCode: publication.code, sourceVersion: publication.sourceVersion,
+                const command = { operation, enterpriseCode: scope.enterpriseCode, publicationCode: publication.code, sourceVersion: publication.sourceVersion,
                     rootType: publication.rootType, rootCode: publication.rootCode,
                     operationKey: input.operationKey || publication.activationOperation && publication.activationOperation.key,
                     targetVersion: operation === 'prepare' ? input.release.code : input.targetVersion,

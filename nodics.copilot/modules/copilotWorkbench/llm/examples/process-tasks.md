@@ -1,6 +1,6 @@
 # Governed Human Task Commands
 
-Follow the [operator and customization guide](../../../../../nodics.docs/docs/pages/nodics.copilot/process-task-actions.md).
+Follow the [operator and customization guide](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js).
 
 `DefaultCopilotProcessTaskActionService` owns bounded preparation and fixed-route
 dispatch for `process.task.claim`, `.assign`, `.complete` and `.cancel`. Reuse

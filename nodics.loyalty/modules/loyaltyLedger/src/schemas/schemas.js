@@ -157,3 +157,4 @@ module.exports.loyaltyLedger.rewardLedgerEntry.indexes = {
     mongodb: { enabled: true, options: { unique: true } },
   },
 };
+module.exports.loyaltyLedger.rewardLedgerEntry.transaction = { enabled: true, sideEffects: 'none' };

@@ -284,3 +284,41 @@ assert(/^[a-f0-9]{64}$/.test(positive.integrity.checksum));
 });
 
 console.log('Application documentation record validation service validated');
+
+const authoringDraft = fixture();
+authoringDraft.pages[0].lifecycleState = 'DRAFT';
+const authoring = service.validateRecords({ records: authoringDraft, options: { validationScope: 'AUTHORING' } });
+assert.equal(authoring.validationScope, 'AUTHORING');
+assert.equal(authoring.summary.errors, 0);
+const deliveryDraft = service.validateRecords({ records: authoringDraft });
+assert.equal(deliveryDraft.validationScope, 'PUBLIC_DELIVERY');
+assert(deliveryDraft.issues.some(issue => issue.rule === 'public-record-online-state'));
+
+for (const lifecycleState of ['DRAFT', 'STAGED']) {
+    const records = fixture();
+    records.pages[0].lifecycleState = lifecycleState;
+    for (const item of records.publicationStates) {
+        item.lifecycleState = lifecycleState;
+        for (const field of ['reviewer', 'approver', 'publisher']) delete item[field];
+    }
+    const before = clone(records);
+    const report = service.validateRecords({ records, options: { validationScope: 'AUTHORING' } });
+    assert.equal(report.summary.errors, 0, lifecycleState + ' authoring does not have approval actors yet');
+    assert.deepEqual(records, before, 'Validation must not fill in missing actors');
+    assert(service.validateRecords({ records }).issues.some(issue => issue.rule === 'publication-state-evidence'));
+    for (const state of ['REVIEW_IN_PROGRESS', 'APPROVED', 'ONLINE']) {
+        const invalid = clone(records);
+        invalid.publicationStates[0].lifecycleState = state;
+        assert(service.validateRecords({ records: invalid, options: { validationScope: 'AUTHORING' } }).issues
+            .some(issue => issue.rule === 'publication-state-evidence'), state + ' keeps existing actor checks');
+    }
+    for (const field of ['author', 'reviewer', 'approver', 'publisher']) {
+        const invalid = clone(records);
+        invalid.publicationStates[0][field] = null;
+        assert(service.validateRecords({ records: invalid, options: { validationScope: 'AUTHORING' } }).issues
+            .some(issue => issue.rule === 'publication-state-evidence'), 'Null ' + field + ' remains invalid');
+    }
+    delete records.publicationStates[0].author;
+    assert(service.validateRecords({ records, options: { validationScope: 'AUTHORING' } }).issues
+        .some(issue => issue.rule === 'publication-state-evidence'), 'Author provenance remains required');
+}

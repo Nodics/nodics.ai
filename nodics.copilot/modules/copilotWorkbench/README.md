@@ -10,26 +10,29 @@ assignment, completion and cancellation through Workflow. Native actor policy,
 original employee identity and private command receipts remain authoritative;
 uncertain decisions are never retried. The target is independently disabled by default.
 
-[Governed selected-schema actions](../../../nodics.docs/docs/pages/nodics.copilot/governed-schema-actions.md)
+[Governed selected-schema actions](data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js)
 provide opt-in single-record generated create, update, and delete for exact
 Knowledge-selected and deployment-allowlisted collections. nDatabase retains
 descriptor, authoring, validation, concurrency, persistence, and private receipt
 authority. Wildcards, bulk mutation, business aggregate forms, arbitrary routes,
 and automatic replay are excluded.
 
-[Order-notification operations](../../../nodics.docs/docs/pages/nodics.copilot/order-notification-operations.md)
+[Order-notification operations](data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js)
 provide bounded workspace inspection and explicit retry of eligible Digital Core
 delivery intents. The retry review binds the current order revision and exact
 intent set. Uncertain outcomes are inspected once and remain unconfirmed; Copilot
 never replays the retry automatically.
 
-[Original Business Results and Safe Continuation](../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md)
+[Original Business Results and Safe Continuation](data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js)
 documents opt-in native receipts, original-result inspection and fresh approval
 of only never-started rows. Unknown and completed mutations are never replayed.
 
 The [secure coupon guide](llm/examples/secure-coupon-fulfillment.md) covers masked
 input, Commerce validation, immutable review, original-employee execution and
 read-only receipt reconciliation. It is disabled until explicitly configured.
+Queue and receipt reads preserve exact native LOCAL simulation labels without
+claiming verified delivery. Partial or contradictory labels fail closed. ITEM
+preparation/execution remains unsupported; read visibility adds no mutation path.
 
 The [collection-centre guide](llm/examples/collection-centres.md) covers explicit
 Waste preparation, full review, configuration, denial and uncertain outcomes.
@@ -40,7 +43,7 @@ For Profile-owned creation, read the [enterprise and invitation guide](llm/examp
 
 Standalone existing-enterprise invitations and price rows use the same review,
 native execution and receipt owners. Both admission flags default off. See the
-[canonical business guide](../../../nodics.docs/docs/pages/nodics.copilot/standalone-business-actions.md)
+[canonical business guide](data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js)
 for configuration, operator steps, recovery and local Ollama validation.
 It documents explicit JSON, full-field review, pending invitations, runtime
 enablement and uncertain outcomes, not active employee creation.

@@ -8,6 +8,11 @@ back to mutable policy when retained evidence is unavailable. Tax resolution
 remains awaited and Inventory reads, but does not mutate, live balances.
 
 Cart owns customer purchase intent and its secured APIs for every application.
+Digital coupon availability delegates to Product/Digital Core/Promotion; warehouse
+balances cannot stand in for a live coupon pool. Reservation remains checkout-only.
+Blocked entry-response validation returns an Inventory conflict (409) or other
+Cart validation rejection (422), not an internal error. An owner read failure
+remains distinct; inspect persisted entries before retrying a rejected mutation.
 Pricing, Promotion, Tax, Inventory and Checkout retain their own decisions and
 lifecycles. Archived gComm is reference-only.
 

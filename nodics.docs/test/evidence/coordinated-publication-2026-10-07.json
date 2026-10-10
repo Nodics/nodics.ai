@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-07",
+  "scope": "SOURCE_REGRESSIONS_AND_NATIVE_KICKOFF_LOCAL_OWNER_APIS_AND_AXIS",
+  "releasePins": {
+    "framework": "0.16.32",
+    "axis": "0.0.6",
+    "localAndDockerStagedPinsAligned": true
+  },
+  "implemented": [
+    "Explicit Axis coordination retains independent CMS and Media Process approvals.",
+    "Media requests bind the CMS publication, target manifest, asset identity, version and checksum.",
+    "Native Media checks expectedChecksum before capture/create or replay effects.",
+    "Media decisions use the strict approved/reason payload and exact workflow-bound task.",
+    "Denial stops coordination; explicit resume skips qualified assets without automatic mutation retries.",
+    "Approval-task caches are isolated by documentation profile; refresh does not invent missing workflow tasks.",
+    "Shell, dashboard and article observers share readiness for at most 30 seconds, with 10-second pending polling and explicit owner refresh preserved.",
+    "Current baseline instructions reference consolidated v001 source folders.",
+    "Shared provider and Waste schema ownership is referenced without duplicated guides or false depth claims."
+  ],
+  "sourceCoverage": {
+    "modules": 203,
+    "frameworkGuides": 173,
+    "validatedSourceSections": 17,
+    "sharedGuideOwnerReferences": 7,
+    "mentionBasedTriage": 179,
+    "semanticBacklogItemsStillRequiringReview": 22
+  },
+  "validation": {
+    "documentationSuite": "PASSED",
+    "toolingNodeTests": 109,
+    "cmsMediaImportNodeTestsPassed": 304,
+    "cmsMediaImportOptInTestsSkipped": 2,
+    "mediaMochaTestsPassed": 21,
+    "axisFocusedTestsPassed": 85,
+    "axisReadinessQueryPolicyTestsPassed": 2,
+    "axisTypecheckLintBuild": "PASSED",
+    "kickoffFullSuite": "PASSED",
+    "frameworkJavaScriptSyntaxFiles": 6065,
+    "frameworkJavaScriptSyntaxFailures": 0,
+    "frameworkDocumentationGovernance": "PASSED",
+    "generatedModuleContexts": 202
+  },
+  "live": {
+    "environment": "native kickoffLocal",
+    "freshResetRepeated": false,
+    "captureQualification": "USER_CONFIRMED_EXISTING_LOCAL_BINDING",
+    "framework": {
+      "import": "EXPLICIT_AXIS_PACK_UPDATE_WITH_DECLARED_ASSETS",
+      "publicationCode": "cmsBaseline_frameworkdocs_0_16_32",
+      "state": "ONLINE",
+      "revision": 6,
+      "readiness": "READY",
+      "exactAssets": 54,
+      "qualifiedAssets": 54,
+      "normalApprovalAndExplicitCoordinatedResume": true,
+      "intermediateFailures": [
+        "The previous 10-second browser budget expired during CMS publication; status was reconciled without mutation replay.",
+        "Process rejected the legacy outcome field on a Media decision; the payload was corrected without changing permissions or policy.",
+        "Exact Media readiness briefly returned UNAVAILABLE after qualification. A later fresh owner read again qualified all 54 assets. Repeated UI reads were reduced; rate-limit causation was not independently established."
+      ],
+      "publishedGuideAnchor": "wcms-coordinated-pack-asset-approvals",
+      "guideFlowchartRenderedInAxis": true
+    },
+    "axis": {
+      "import": "EXPLICIT_AXIS_PACK_UPDATE",
+      "publicationCode": "cmsBaseline_axisdocs_0_0_6",
+      "state": "ONLINE",
+      "revision": 6,
+      "readiness": "READY",
+      "mediaStatus": "NOT_REQUIRED",
+      "exactAssets": 0,
+      "normalProcessApproval": true
+    },
+    "axisDashboardReadySources": "2/2",
+    "localAxisRequestTimeoutMs": 120000,
+    "screenshots": [
+      "/tmp/nodics-coordinated-publication-ready-2026-10-07.jpg",
+      "/tmp/nodics-coordinated-publication-guide-2026-10-07.jpg"
+    ]
+  },
+  "notClaimed": [
+    "Fourteen new guides remain DRAFT pending normal content review and publication; no reviewer or Online receipt was fabricated.",
+    "Each of the 63 optional selections has source isolation coverage, not a separate fresh live deployment qualification.",
+    "Kickoff and Circa reference documentation packs are not separately live qualified by this evidence.",
+    "Full Circa and Agora business journey acceptance is not established by documentation tests.",
+    "Mention-based triage and shared-owner mappings do not prove detailed semantic coverage or external provider behavior.",
+    "CMS, Media and Process coordination is not a cross-runtime atomic transaction."
+  ]
+}

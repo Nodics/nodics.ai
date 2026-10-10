@@ -64,6 +64,8 @@ module.exports = {
     if (options.query) serviceRequest.query = options.query;
     if (options.model) serviceRequest.model = options.model;
     if (options.pageSize) serviceRequest.pageSize = options.pageSize;
+    if (request.transactionContext)
+      serviceRequest.transactionContext = request.transactionContext;
     return serviceRequest;
   },
   /** Unwraps the first record returned by a generated-service read. */

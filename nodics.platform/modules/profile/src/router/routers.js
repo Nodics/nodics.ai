@@ -500,6 +500,13 @@ module.exports = {
       },
     },
     references: {
+      customerEvidence: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permission: "profile.customer.reference.read", apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/internal/customer-evidence", method: "POST",
+        controller: "DefaultProfileCustomerEvidenceController", operation: "read",
+      },
       read: {
         secured: true,
         authTokenTypes: ["service"],
@@ -530,6 +537,18 @@ module.exports = {
       },
     },
     loadDefaults: {
+      resolveRuntimeEnterprise: {
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permission: "profile.enterprise.search",
+        apiExposure: "profileManagement",
+        cache: { enabled: false },
+        key: "/internal/enterprise/resolve",
+        method: "POST",
+        controller: "DefaultEnterpriseController",
+        operation: "resolveRuntimeEnterprise",
+      },
       inspectCreationReceipt: {
         secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
         permission: 'profile.enterprise.create', apiExposure: 'profileManagement',
@@ -807,6 +826,10 @@ module.exports = {
                     enum: [
                       "ENTERPRISE_ADMIN",
                       "CONTENT_MANAGER",
+                      "COMMERCE_REFUND_REVIEWER",
+                      "COMMERCE_AXIS_REFUND_REVIEWER",
+                      "COMMERCE_SETUP_PUBLISHER",
+                      "COMMERCE_COUPON_ISSUER",
                       "OPERATOR",
                       "VIEWER",
                     ],

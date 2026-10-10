@@ -40,3 +40,9 @@ test('Order lifecycle release readiness reports missing qualification gates', ()
         missing: ['operatorActionMetadata', 'paymentRefundExecution', 'fulfillmentReturnExecution', 'ciCommerceSuite', 'liveQualification']
     });
 });
+test('missing and non-boolean qualification evidence never passes release gates', () => {
+    const gates = readiness.contract().releaseGates;
+    for (const evidence of [undefined, null, {}, Object.fromEntries(gates.map(gate => [gate, 'true']))]) {
+        assert.deepEqual(readiness.releaseGateResult(evidence), { ready: false, missing: gates });
+    }
+});

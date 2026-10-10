@@ -1,0 +1,412 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-08",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "boundary": "Manual source-editorial review only. The audit independently reopens stale canonical sections or source bytes. This artifact grants no publication approval and does not certify browser, provider or business acceptance.",
+  "items": [
+    {
+      "item": "Axis setup and user-safe error contracts",
+      "backlogPriority": "P0",
+      "requestedAction": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "statusStates": "COVERED_EXISTING_MAPPER_AND_PHASE_PRECEDENCE",
+        "setupBlockers": "COVERED_EXACT_REQUIRED_OWNER_PUBLICATIONS",
+        "retryActions": "COVERED_CURRENT_BASELINE_REUSE_AND_FRESH_RECEIPTS",
+        "technicalEvidence": "COVERED_AUTHORIZED_BOUNDED_DIAGNOSTICS",
+        "userSafeMessages": "COVERED_PRIMARY_MESSAGE_VS_TECHNICAL_DETAIL"
+      },
+      "rationale": "The expanded guide now explains BEFORE_PUBLICATION setup, exact CMS and Media Online qualification, required GOVERNED_PUBLICATIONS and deferred AFTER_PUBLICATION data releases. Current-baseline reuse preserves approval authority; INITIALIZE follows backend allowedActions and fresh required phase receipts, not a replacement status mapper. Bounded diagnostics remain separate from user-safe messages and private publication plans.",
+      "evidence": [
+        {
+          "documentId": "applications.axis-setup-error-contracts",
+          "anchors": [
+            "applicationsAxisSetupErrorContracts-1-source-map",
+            "applicationsAxisSetupErrorContracts-2-state-model",
+            "applicationsAxisSetupErrorContracts-3-error-contract",
+            "applicationsAxisSetupErrorContracts-4-setup-flow",
+            "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+            "applicationsAxisSetupErrorContracts-6-common-mistakes",
+            "applicationsAxisSetupErrorContracts-7-verification",
+            "axis-setup-publication-phases",
+            "axis-deferred-setup-recovery",
+            "axis-setup-phase-customization"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js"
+      ],
+      "sourceFindings": [
+        "capabilityBusinessStatus guards can return NEEDS_ATTENTION before otherwise ready/retired readiness; READY also requires confirmed publication.state ONLINE and no UPDATE_AVAILABLE.",
+        "capabilityRepairProjection distinguishes read-only REFRESH_READINESS, unavailable owner handoffs and explicitly confirmed Media repair. Axis cannot infer mutation authority from action metadata.",
+        "invoke lines 3104-3338 gates required AFTER_PUBLICATION work on CMS READY/ONLINE, exact Media qualification and non-invalid release. GOVERNED_PUBLICATIONS must be CURRENT before deferred DATA_RELEASE execution.",
+        "publicationPreparation lines 3054-3101 calls fixed secured publish /publications/setup/status|submit endpoints, checks exact intended identities and bounded evidence, and projects CURRENT/VALIDATION_BLOCKED/NOT_INSTALLED/RUNNING without exposing publicationPlan.",
+        "Actionable deferred setup with an existing Online baseline can yield readiness IMPORTED and allowedActions INITIALIZE; preparation guards still precede the IMPORTED-to-APPROVAL_REQUIRED mapper. Labels alone grant no approval.",
+        "The expanded guide now explains BEFORE_PUBLICATION setup, exact CMS and Media Online qualification, required GOVERNED_PUBLICATIONS and deferred AFTER_PUBLICATION data releases. Current-baseline reuse preserves approval authority; INITIALIZE follows backend allowedActions and fresh required phase receipts, not a replacement status mapper. Bounded diagnostics remain separate from user-safe messages and private publication plans."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Backend projection accuracy does not prove a deployed Axis screen renders or enforces the contract; browser and permission acceptance remain separate."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-completion-review-2026-10-08.json",
+        "boundary": "Manual review of expanded canonical explanations and inspected current owner contracts; no native, browser or external-provider acceptance."
+      }
+    },
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "backlogPriority": "P0",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "dataDependencies": "COVERED_OWNER_RELATIONS_AND_OPERATIONAL_EXCLUSIONS",
+        "creationLanes": "COVERED_SEQUENTIAL_ATOMIC_AND_OWNER_REVERSE_LANES",
+        "publication": "COVERED_STAGED_APPROVAL_VS_OPERATIONAL_STOCK",
+        "searchProjection": "COVERED_INDEPENDENT_OWNER_FRESHNESS",
+        "fulfillmentEvidence": "COVERED_SHIPMENT_RECEIPT_INSPECTION_AND_OFFLINE_PAYMENT_BOUNDARIES",
+        "browserProof": "COVERED_SCENARIOS_EXECUTION_REMAINS_SEPARATE"
+      },
+      "rationale": "The corrected authoring guide distinguishes sequential RECEIVE/ADJUST authoring, atomic opening receipts and Checkout reservations, and reviewed physical owner reversals. Generic Inventory RETURN remains refused. Original owner-issued SHIPPED quantities are not customer delivery: retained receipt and accepted inspection/disposition are required before return settlement. Typed references delegate physical authority and original-capture offline Payment details to their canonical owners. Publication and search freshness remain independently qualified.",
+      "evidence": [
+        {
+          "documentId": "commerce.data-authoring-fulfillment",
+          "anchors": [
+            "commerceDataAuthoringFulfillment-1-source-map",
+            "commerceDataAuthoringFulfillment-2-data-bundle",
+            "commerceDataAuthoringFulfillment-3-authoring-sequence",
+            "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+            "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+            "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+            "commerceDataAuthoringFulfillment-7-common-mistakes",
+            "commerceDataAuthoringFulfillment-8-verification",
+            "commerce-stock-lane-boundaries"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultPhysicalOrderReversalService.js",
+        "nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderRefundRecoveryService.js"
+      ],
+      "sourceFindings": [
+        "Inventory rejects stock mutation in COMMERCE_STAGED/STAGED and direct operational snapshots for balance/movement/reservation in OPERATIONAL_VERSIONED mode.",
+        "balanceAction replay identity does not make sequential balance/movement writes a proven cross-worker transaction.",
+        "Product listing creation is gated specialized DIGITAL/DIGITAL_COMMERCE behavior with source/owner/listing identity, not general Axis product CRUD.",
+        "Carrier sandbox execute requires enabled sandboxOnly policy, references and injected ports; liveQualified:true is refused, not certified.",
+        "Pricing createGoverned uses retained capture and shared publication authority, not operational inventory or frontend approval.",
+        "Inventory requireReturnAuthority lines 96-100 rejects RETURN/return or payload.actionCode RETURN. operationDelta and balanceAction both invoke it; balanceAction does so before balance/idempotency validation and generated owner reads/writes.",
+        "Pricing prepareSetup delegates to createGoverned, validateSetup checks retained membership/version and trusted scope, and isSetupReceiptCommitted checks applied tenant/enterprise/fingerprint/previous-version evidence. rootCodesByStore requires exact configured Store mappings; it does not fall back to Staged authoring.",
+        "inventoryReturnAuthorityContract.test.js asserts zero reads/writes for RETURN with caller-claimed receipt/disposition/quantity. Parent-reported ongoing Order/Payment reverse-safety work is not certified by this snapshot.",
+        "The corrected authoring guide distinguishes sequential RECEIVE/ADJUST authoring, atomic opening receipts and Checkout reservations, and reviewed physical owner reversals. Generic Inventory RETURN remains refused. Original owner-issued SHIPPED quantities are not customer delivery: retained receipt and accepted inspection/disposition are required before return settlement. Typed references delegate physical authority and original-capture offline Payment details to their canonical owners. Publication and search freshness remain independently qualified."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "No atomic transaction spans catalog publication, Inventory, carrier and Payment.",
+        "Browser sellability, live carrier support and settled refunds require separate operational evidence."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-completion-review-2026-10-08.json",
+        "boundary": "Manual review of expanded canonical explanations and inspected current owner contracts; no native, browser or external-provider acceptance."
+      }
+    },
+    {
+      "item": "Payment Core and provider split",
+      "backlogPriority": "P1",
+      "requestedAction": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "paymentDecisions": "COVERED_ORIGINAL_CAPTURE_FULL_REFUND_AND_RECOVERY_AUTHORITY",
+        "methodProviderSeparation": "COVERED_CARD_METHOD_OFFLINE_STRIPE_INTERNAL_WALLET_AND_PLACEHOLDER_PROVIDERS",
+        "reconciliation": "COVERED_READBACK_AMBIGUITY_AND_ABSENT_REAL_SETTLEMENT_WORKER",
+        "safeCustomerPayloads": "COVERED_DECLARED_ALLOWLIST_AND_PRIVATE_RECEIPT_REDACTION"
+      },
+      "rationale": "The owner guide explains fresh bound offline captures, retained tenant/enterprise/buyer/Order/amount/currency/original-key authority, guarded tokenless full refunds and stable financial replay keys. Payment and adapter both validate original authority and remaining refundable value; ambiguous outcomes retain recovery evidence without redispatch. Historical unbound captures, real CARD settlement, partial/split refunds and real provider reconciliation remain explicitly unsupported. Offline deterministic receipts are not external money movement.",
+      "evidence": [
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-1-source-map",
+            "commercePaymentProviderBoundaries-2-boundary-model",
+            "commercePaymentProviderBoundaries-3-safe-payload-contract",
+            "commercePaymentProviderBoundaries-4-customization-and-extension-guidance",
+            "commercePaymentProviderBoundaries-5-implementation-handoff",
+            "commercePaymentProviderBoundaries-6-evidence-checklist",
+            "commercePaymentProviderBoundaries-7-common-mistakes",
+            "commercePaymentProviderBoundaries-8-verification",
+            "commerce-payment-provider-boundaries-original-capture-contract"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js"
+      ],
+      "sourceFindings": [
+        "Card prepare accepts opaque tok_ descriptors; offline Stripe simulation does not call a gateway. Provider package names do not establish integration.",
+        "execute uses tenant:key in-flight dedupe and sequential repository find -> adapter execution -> record; no multi-worker exactly-once guarantee follows.",
+        "Only REFUND_DELAYED/REFUND_FAILED/REFUND_RECONCILIATION_REQUIRED set reconciliationRequired; unknown adapter statuses are not automatically normalized safely.",
+        "Reconciliation is ACTION_REQUIRED or PENDING_PROVIDER_CONFIRMATION and may not be saved if the generated service is absent; the inspected services do not supply a settlement worker.",
+        "refundOrder currently requires matching original Loyalty capture/total/currency and uses a stable full-refund identity; it is not general partial-card refund execution.",
+        "The owner guide explains fresh bound offline captures, retained tenant/enterprise/buyer/Order/amount/currency/original-key authority, guarded tokenless full refunds and stable financial replay keys. Payment and adapter both validate original authority and remaining refundable value; ambiguous outcomes retain recovery evidence without redispatch. Historical unbound captures, real CARD settlement, partial/split refunds and real provider reconciliation remain explicitly unsupported. Offline deterministic receipts are not external money movement."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Readiness declaration validation is not independent live certification, signed-callback execution or production traffic approval evidence.",
+        "A safe-field declaration is not proof every channel response enforces it; provider tokens/raw evidence/secrets must remain private."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+      },
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-completion-review-2026-10-08.json",
+        "boundary": "Manual review of expanded canonical explanations and inspected current owner contracts; no native, browser or external-provider acceptance."
+      }
+    },
+    {
+      "item": "Internal-only classification register",
+      "backlogPriority": "P2",
+      "requestedAction": "Decide which technical modules remain internal and which broader page owns their explanation.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "coverage": {
+        "internalOnlyDecisions": "COMPLETE_40_FRAMEWORK_CANDIDATES_WITH_EXPLICIT_DECISIONS",
+        "broaderOwnerMapping": "COMPLETE_REAL_OWNER_DOCUMENT_ANCHOR_REASON_AND_REMAINING_GAP",
+        "sourceBasedClassification": "MANUALLY_REVIEWED_IMPLEMENTATION_AND_CONTRACTS_NOT_SCORE"
+      },
+      "rationale": "The bounded 40-candidate classification register retains existing owner classifications and promotion rules. Its Stripe entry now links the implemented original-capture offline contract: explicit bound sandbox capture, guarded tokenless full refund, exact readback and recovery. The broader guide classification does not qualify real provider lookup, refunds, callback security, settlement or finance reconciliation. Other owner classifications and evidence anchors are preserved, not promoted by hash renewal.",
+      "evidence": [
+        {
+          "documentId": "reference.internal-source-boundary-register",
+          "anchors": [
+            "referenceInternalSourceBoundaryRegister-1-business-problem",
+            "referenceInternalSourceBoundaryRegister-2-classification-flow",
+            "referenceInternalSourceBoundaryRegister-3-register",
+            "referenceInternalSourceBoundaryRegister-4-classification-contract",
+            "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance",
+            "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+            "referenceInternalSourceBoundaryRegister-7-common-mistakes",
+            "referenceInternalSourceBoundaryRegister-8-verification"
+          ]
+        },
+        {
+          "documentId": "discovery.search-indexing",
+          "anchors": [
+            "discoverySearchIndexing-8-current-implementation-coverage"
+          ]
+        },
+        {
+          "documentId": "accelerators.circa-operations-rewards",
+          "anchors": [
+            "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+            "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+            "circa-downstream-waste-owner-boundaries"
+          ]
+        },
+        {
+          "documentId": "loyalty.wallets-rewards-ledger",
+          "anchors": [
+            "loyaltyWalletsRewardsLedger-3-source-map",
+            "loyaltyWalletsRewardsLedger-9-capture",
+            "loyaltyWalletsRewardsLedger-8-reserve",
+            "loyaltyWalletsRewardsLedger-4-owner-model",
+            "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern"
+          ]
+        },
+        {
+          "documentId": "rules.deterministic-evaluation",
+          "anchors": [
+            "rules-evaluation-customize-and-extend-safely"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
+          ]
+        },
+        {
+          "documentId": "communication.overview",
+          "anchors": [
+            "communicationOverview-6-verification-journey",
+            "communicationOverview-8-engagement-integration"
+          ]
+        },
+        {
+          "documentId": "communication.provider-runbooks",
+          "anchors": [
+            "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+            "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+            "communicationProviderRunbooks-1-implemented-modes-and-limits"
+          ]
+        },
+        {
+          "documentId": "copilot.provider-usage-budgets",
+          "anchors": [
+            "copilot-provider-adapter-contracts",
+            "copilotProviderUsageBudgets-4-verification-and-failure-recovery"
+          ]
+        },
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-2-boundary-model",
+            "commercePaymentProviderBoundaries-3-safe-payload-contract",
+            "commercePaymentProviderBoundaries-5-implementation-handoff"
+          ]
+        },
+        {
+          "documentId": "applications.nexus-data-content-guide",
+          "anchors": [
+            "applicationsNexusDataContentGuide-2-release-layout"
+          ]
+        },
+        {
+          "documentId": "foundation.overview",
+          "anchors": [
+            "foundationOverview-5-request-processing-model",
+            "foundationOverview-8-developer-workflow"
+          ]
+        },
+        {
+          "documentId": "reference.source-backed-documentation-coverage-audit",
+          "anchors": [
+            "referenceSourceBackedDocumentationCoverageAudit-1-audit-method"
+          ]
+        },
+        {
+          "documentId": "reference.documentation-gap-backlog",
+          "anchors": [
+            "referenceDocumentationGapBacklog-2-classification-policy"
+          ]
+        },
+        {
+          "documentId": "framework.local-quick-start",
+          "anchors": [
+            "frameworkLocalQuickStart-1-quick-path"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.docs/scripts/audit-source-coverage.mjs",
+        "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js",
+        "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js",
+        "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js",
+        "nodics.waste/modules/wasteApi/src/router/routers.js",
+        "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js",
+        "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js",
+        "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+        "nodics.waste/modules/wasteReward/src/schemas/schemas.js",
+        "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js",
+        "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js",
+        "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js",
+        "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js",
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md",
+        "nodics.waste/modules/wasteCompliance/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteCompliance/AGENTS.md",
+        "nodics.waste/modules/wasteMovement/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteMovement/AGENTS.md",
+        "nodics.waste/modules/wasteReceipt/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteReceipt/AGENTS.md",
+        "nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js",
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/AGENTS.md",
+        "nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js",
+        "nodics.engagement/modules/engagementComms/src/service/defaultEngagementCommunicationService.js",
+        "nodics.engagement/modules/engagementComms/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+        "nodics.communication/modules/localCommsProvider/src/service/defaultLocalCommunicationProviderService.js",
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/AGENTS.md",
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md",
+        "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/package.json",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/AGENTS.md",
+        "nodics.foundation/modules/nFacade/src/facade/common.js",
+        "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js",
+        "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js",
+        "nodics.foundation/modules/nSetup/package.json",
+        "nodics.foundation/modules/nSetup/AGENTS.md"
+      ],
+      "sourceFindings": [
+        "Audit score weights counted schema/service/controller/router/data/test signals and classify uses mentions/thresholds for triage; there is no facade signal in the score. Current audit-source-coverage.mjs bytes, including the parent's corrected nPublish sourceAreas, are bound below.",
+        "Discovery field policy, ranking, source registry and query builder are implemented shared helpers. Domain projections, provider admission and authorization remain with consumers; all four receive distinct reasons and residual limits.",
+        "Loyalty Program, Redemption, Reservation and RewardType are schema-defined business contracts, not internal-only retirement. Loyalty reward method preparation and provider owner-API execution are distinct, with ledger authority preserved.",
+        "Rules operators and property/outcome registries implement generic extension contracts, not consumer-specific property semantics or side-effect execution.",
+        "Waste API secured routes/facade are implemented contracts rather than proof of persisted submissions. Waste reward assessment persistence is distinct from settlement; recycling handoff intents are not transport, outbox delivery, certification or physical completion.",
+        "Waste Receipt, Movement and Compliance retain their three existing SCHEMA_DEFINED owner-reviewed-reference mappings and explicit custody/logistics/legal limits.",
+        "Communication verification implements transient and stored challenges, bound one-use proofs, revision/readback and consumed receipts, not identity/business authority. SMS is injected sandbox-only; SMTP has controlled test transport; local delivery is simulation.",
+        "Engagement's source implements a one-way communication bridge despite stale scaffold wording in its local AGENTS. The register records that mismatch and leaves guidance reconciliation and durable retry acceptance to its owner.",
+        "Ollama/OpenAI/Claude/Gemini have real adapters and retain their four existing owner-reviewed-reference mappings. Request/response and stream limitations remain explicit; mockProvider is only an in-process test double.",
+        "Payment method preparation is not gateway execution. Callback HMAC/freshness/replay helpers require production store qualification; Stripe is offline sandbox code. CyberSource, PayPal and Visa packages have no source adapters and remain reserved scaffolds.",
+        "nFacade contains a generation template plus concrete cache/validator facades; its score of zero is not absence of capability. nSetup is deliberately non-runtime governance. nexusCore contributes inert initialization/acceptance descriptors rather than importing/publishing content itself.",
+        "All 40 table decisions link existing owner-qualified canonical heading anchors. Their residual guide-depth/implementation gaps are not silently certified by classification closure; sibling customer deployment guidance is described separately and not counted.",
+        "The bounded 40-candidate classification register retains existing owner classifications and promotion rules. Its Stripe entry now links the implemented original-capture offline contract: explicit bound sandbox capture, guarded tokenless full refund, exact readback and recovery. The broader guide classification does not qualify real provider lookup, refunds, callback security, settlement or finance reconciliation. Other owner classifications and evidence anchors are preserved, not promoted by hash renewal."
+      ],
+      "correctnessAndCoverageLimitations": [
+        "Scope is the requested 40-candidate classification register, not source-depth certification for all 203 modules, all related guide prose or the 179 mention-based-triage rows.",
+        "Broader guide sections sometimes supply ownership/context rather than full module-specific runbooks; each row explicitly retains that gap. No capability-body guide or sourceCoverage/sourceOwnership declaration is added or changed.",
+        "All remaining implementation, provider, generated-operation enforcement, physical-world and installed-runtime gaps remain exactly separate from this owner-authorized editorial decision.",
+        "Concurrent edits to any bound canonical blocks or inspected source bytes require refreshed evidence before parent aggregation. Parent-owned hashes, projections, integrity and release work were not performed."
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "No browser, runtime startup, credentials, database, import, publication, provider calls or business acceptance were performed. This source editorial classification neither bypasses nor grants eligibility, auth, private-capture, approval or lifecycle gates."
+      },
+      "sourceRevalidation": {
+        "reviewDate": "2026-10-08",
+        "artifact": "semantic-documentation-completion-review-2026-10-08.json",
+        "boundary": "Manual review of expanded canonical explanations and inspected current owner contracts; no native, browser or external-provider acceptance."
+      }
+    }
+  ]
+}

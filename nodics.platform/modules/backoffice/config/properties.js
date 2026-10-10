@@ -60,6 +60,7 @@ module.exports = {
   },
 
   backofficeApplicationInitialization: {
+    dataReleaseTimeoutMs: 120000,
     planPresentation: {
       capabilities: { title: "Business capabilities", summary: "Required capabilities are shared with other applications that use them." },
       preparation: { title: "Data and media", summary: "The owning modules define the preparation order and required data. Optional packages remain separate." },

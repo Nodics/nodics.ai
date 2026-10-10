@@ -1,32 +1,81 @@
 {
-    "contractVersion": 2,
-    "module": "wasteMaterial",
-    "sections": {
-        "core-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "core",
-            "sourceRoot": "core-v001",
-            "version": "0.0.0",
-            "description": "Waste Material core data",
-            "files": {
-                "core-v001/headers/material/wasteMaterialCoreHeader.js": "4c3f1e53a4d55e2b56561e0144d3931cac851efe5b20879f42a3a7a0ba1d6748",
-                "core-v001/records/material/wasteCategoryCoreData.js": "24274840c5398d2c75dd3bc32e5204489764968659d8dba5e6e3010c78d2b052",
-                "core-v001/records/material/wasteFamilyCoreData.js": "e75722b0c0eaefbdc8605a57e5dea62f6ba1a5d8469147ec3ead3f31eea851d4",
-                "core-v001/records/material/wasteItemTypeCoreData.js": "6e94c8be77fff399a77b9342610d210dcfd1503a49289f1acb992e031ed219d1",
-                "core-v001/records/material/wasteMaterialTypeCoreData.js": "d387c9bc6f56f6576371c9ca98f43d6e22efce5b9c4674b296422db30290ce52"
-            },
-            "displayName": "Generic Waste Taxonomy",
-            "owningDomain": "waste",
-            "lifecycle": "REFERENCE",
-            "destinationRole": "WASTE",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "PUBLIC",
-            "versioningPolicy": "NONE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN"
+  "contractVersion": 2,
+  "module": "wasteMaterial",
+  "sections": {
+    "core-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "sourceRoot": "core-v001",
+      "version": "0.0.1",
+      "description": "Waste Material core data",
+      "files": {
+        "core-v001/headers/material/wasteMaterialCoreHeader.js": "4c3f1e53a4d55e2b56561e0144d3931cac851efe5b20879f42a3a7a0ba1d6748",
+        "core-v001/records/material/wasteCategoryCoreData.js": "24274840c5398d2c75dd3bc32e5204489764968659d8dba5e6e3010c78d2b052",
+        "core-v001/records/material/wasteFamilyCoreData.js": "e75722b0c0eaefbdc8605a57e5dea62f6ba1a5d8469147ec3ead3f31eea851d4",
+        "core-v001/records/material/wasteItemTypeCoreData.js": "6e94c8be77fff399a77b9342610d210dcfd1503a49289f1acb992e031ed219d1",
+        "core-v001/records/material/wasteMaterialTypeCoreData.js": "d387c9bc6f56f6576371c9ca98f43d6e22efce5b9c4674b296422db30290ce52"
+      },
+      "displayName": "Generic Waste Taxonomy",
+      "owningDomain": "waste",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "WASTE",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN"
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "wasteMaterial",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "26004e391daa5b90dff16925593cf14533b301a5118aa1cb541c5e4c24bb636d",
+      "generatedHashes": {
+        "docs-v001/records/documentation/wasteMaterialDocumentationComponentData.js": "46314fb8f6a827d7850a06aee4bf85ba2b02e17a2f10e812f17b6f1f7b15fb79",
+        "docs-v001/records/documentation/wasteMaterialDocumentationPageMetadataData.js": "3c1c0d35cdc7e831183b2fb6adfa908e6e67a255a6cf23b42e5a79a1cf14befa",
+        "docs-v001/records/documentation/wasteMaterialDocumentationNodeData.js": "9fbe40aba5f205d04b55e4c47f45af2fe774c8ced7db87ff014c0d41b35a1dfe",
+        "docs-v001/records/documentation/wasteMaterialDocumentationPageData.js": "6b1d4d313a57d5430d0473bc0120a57a55d34ca05936b877770d51b86531a723",
+        "docs-v001/records/documentation/wasteMaterialDocumentationRouteData.js": "29f6b7c41bfb24070e7fe6430d507b0d1b485761a65b1a4e654d563917a843c7",
+        "docs-v001/records/documentation/wasteMaterialDocumentationSearchMetadataData.js": "0a97005b9c38eb56dc05160c476fe7f1eec92d6a8147466888ed6abf0b6f6de2",
+        "docs-v001/records/documentation/wasteMaterialDocumentationPublicationStateData.js": "1d9e6a3e43c98ba0398f217b6df40d267c6722f7735c5e36be6bf2b5c962d837",
+        "docs-v001/headers/100_wasteMaterialDocumentationContentPackHeader.js": "90fc17367ab686d95a0b578de08b8924e377c457133cb1a702573f5356d96cf0"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
         }
+      ]
     }
+  }
 }

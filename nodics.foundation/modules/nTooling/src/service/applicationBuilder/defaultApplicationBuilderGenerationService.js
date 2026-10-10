@@ -472,9 +472,9 @@ module.exports = {
       "`\n\n" +
       "Read `builder-handoff.json` for the machine-readable summary and `solution-lock.json` for the approved generated state.\n\n" +
       "## 20-30 minutes: know where to work\n\n" +
-      "- Backend starter APIs are explained in `docs/api-catalogue.md`.\n" +
-      "- Storefront renderer hierarchy is explained in `docs/frontend-guide.md`.\n" +
-      "- Safe and managed customization areas are explained in `docs/customization-map.md`.\n" +
+      "- Backend starter APIs are explained in `llm/contracts/api-catalogue.md`.\n" +
+      "- Storefront renderer hierarchy is explained in `llm/examples/frontend-guide.md`.\n" +
+      "- Safe and managed customization areas are explained in `llm/examples/customization-map.md`.\n" +
       "- Starter pages, components, products, prices, inventory, and content live under each selected `data/*` pack.\n" +
       "- Optional frontend repository wiring is in `integrations/`.\n\n" +
       "Rule of thumb: customer data and project-specific hooks live here; reusable framework and domain behavior belongs in `nodics.ai`.\n"
@@ -694,7 +694,7 @@ module.exports = {
         "`\n\n" +
         "## First commands\n\n" +
         "```bash\nnpm test\nnpm run verify:runtime\n```\n\n" +
-        "If this is your first time with Nodics, start with `docs/first-30-minutes.md` and then open the API, frontend, and customization guides in `docs/`.\n\n" +
+        "If this is your first time with Nodics, start with `llm/examples/first-30-minutes.md` and then open the API, frontend, and customization guides in `llm/`.\n\n" +
         "Run Builder qualification after those commands pass:\n\n" +
         "```bash\nbuilder:qualify --solution=/path/to/solution.json --plan=/path/to/approved-plan.json --output=" +
         projectCode +
@@ -729,8 +729,8 @@ module.exports = {
         ";\n" +
         "expected.forEach(file => { if (!fs.existsSync(path.join(__dirname, file))) throw new Error('Missing generated artifact: ' + file); });\n" +
         "const readme = fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8');\n" +
-        "if (!readme.includes('Nodics Application Builder') || !readme.includes('## Ownership') || !readme.includes('docs/first-30-minutes.md')) throw new Error('Generated README handoff is incomplete');\n" +
-        "['docs/first-30-minutes.md', 'docs/api-catalogue.md', 'docs/frontend-guide.md', 'docs/customization-map.md'].forEach(file => {\n" +
+        "if (!readme.includes('Nodics Application Builder') || !readme.includes('## Ownership') || !readme.includes('llm/examples/first-30-minutes.md')) throw new Error('Generated README handoff is incomplete');\n" +
+        "['llm/examples/first-30-minutes.md', 'llm/contracts/api-catalogue.md', 'llm/examples/frontend-guide.md', 'llm/examples/customization-map.md'].forEach(file => {\n" +
         "  const content = fs.readFileSync(path.join(__dirname, file), 'utf8');\n" +
         "  if (!content.includes('customer') && !content.includes('Customer')) throw new Error('Generated beginner guide is incomplete: ' + file);\n" +
         "});\n" +
@@ -1173,16 +1173,16 @@ module.exports = {
         ) + "\n"
       );
     }
-    if (relativePath === "docs/first-30-minutes.md") {
+    if (relativePath === "llm/examples/first-30-minutes.md") {
       return this.firstThirtyMinutesGuide(solution, plan);
     }
-    if (relativePath === "docs/api-catalogue.md") {
+    if (relativePath === "llm/contracts/api-catalogue.md") {
       return this.apiCatalogueGuide(solution);
     }
-    if (relativePath === "docs/frontend-guide.md") {
+    if (relativePath === "llm/examples/frontend-guide.md") {
       return this.frontendGuide(solution);
     }
-    if (relativePath === "docs/customization-map.md") {
+    if (relativePath === "llm/examples/customization-map.md") {
       return this.customizationMap(solution);
     }
     if (relativePath === "integrations/frontend-wiring.json") {

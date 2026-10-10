@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-09",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "scope": "Only the existing Internal-only classification register scope affected by the eWaste 0.0.3 source path and two inert Loyalty schema declarations",
+  "previousArtifact": "semantic-documentation-frozen-source-revalidation-2026-10-09.json",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedAction": "Decide which technical modules remain internal and which broader page owns their explanation.",
+  "reviewedCanonicalArticle": {
+    "documentId": "accelerators.circa-operations-rewards",
+    "componentFile": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease003ComponentData.js",
+    "articleBlocksSha256": "7443c6afb0364b76037a7165dba449a46fa68707062c9114360a943edc2914fd",
+    "completeBodyRead": true,
+    "blocksIdenticalToReviewed002": true,
+    "mappedAnchors": [
+      "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+      "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+      "circa-downstream-waste-owner-boundaries"
+    ]
+  },
+  "manuallyReviewedSourceFiles": [
+    {
+      "path": "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
+      "previousSha256": "2a2d175d6474cc9952976a5c557c98aec719bb89f91f9289196d45097ee5f082",
+      "currentSha256": "22743131c279f0a17251ceca6ddd1939ad5a920243fd5d20bf01a36d719a778d",
+      "onlyAddition": "rewardRedemption.transaction = { enabled: true, sideEffects: 'none' }"
+    },
+    {
+      "path": "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js",
+      "previousSha256": "f8f03d929bd24d1fdfd5a2cc5990f16ad08a97df4c563aeff590276f0c281493",
+      "currentSha256": "254addf3434ab62457fd91600ea7a4b764e65c33c06d77825e6425e57b8170d1",
+      "onlyAddition": "rewardReservation.transaction = { enabled: true, sideEffects: 'none' }"
+    }
+  ],
+  "sourceFindings": [
+    "The complete operations guide retains Profile employee/scope ownership, separate verification and approval claims, separate Loyalty settlement and schema-defined downstream custody/logistics/compliance limits.",
+    "All eleven non-inventory article bodies in the 0.0.3 family are byte-identical to 0.0.2. The source-inventory article alone adds the 31st optional sample-credit pack, detailed owner admission table, source references and failure/recovery flow.",
+    "The two complete Loyalty schemas preserve their fields, operational policies, generated router/service declarations and disabled cache/event/search. Removing the one appended transaction declaration from each reproduces the previous reviewed source hashes exactly.",
+    "Transaction eligibility does not activate a provider, change these modules' business-owner classification or prove installed settlement. Existing classification decisions, broader owner mappings and residual limitations remain accurate."
+  ],
+  "preservedBoundaries": {
+    "originalScopes": 22,
+    "classificationDecisionsChanged": 0,
+    "openGapClosedByHashRenewal": false,
+    "historicalReviewArtifactsRewritten": false,
+    "nativeFinancialAcceptance": "NOT_EXECUTED",
+    "documentationPublication": "NOT_EXECUTED"
+  }
+}

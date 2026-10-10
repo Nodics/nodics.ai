@@ -55,10 +55,7 @@ runtime grants. See the [deployment selector example](llm/contracts/configuratio
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md`
-- `nodics.docs/docs/pages/nodics.foundation/framework-startup-lifecycle.md`
-- `nodics.docs/docs/pages/nodics.foundation/governed-runtime-change.md`
-- `nodics.docs/docs/pages/nodics.foundation/events-messaging-cluster.md`
+- `nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js`
 
 ## Verification
 

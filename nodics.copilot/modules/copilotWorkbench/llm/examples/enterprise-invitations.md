@@ -204,7 +204,7 @@ These fault options belong only to the test fixture, never runtime defaults.
    reach the action controls by keyboard. Restore the viewport and close the
    disposable session. Require every owned cleanup resource to be CLOSED.
 
-The canonical [original-results guide](../../../../../nodics.docs/docs/pages/nodics.copilot/original-business-results.md)
+The canonical [original-results guide](../../data/docs-v001/records/documentation/copilotWorkbenchDocumentationComponentData.js)
 contains signed-in screenshots. Browser evidence covers this local enterprise
 journey, not all Axis business operations. It does not demonstrate delivered
 invitations, activated employee accounts or future external logging systems.

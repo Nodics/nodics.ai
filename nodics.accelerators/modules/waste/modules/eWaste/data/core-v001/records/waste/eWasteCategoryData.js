@@ -11,30 +11,224 @@
 
 'use strict';
 
-/** @module eWaste/data/core-v001/records/eWasteCategoryData @description Provides reusable e-waste category seed records for nodics.waste. @layer data @owner eWaste */
-const category = (code, familyCode, name, itemTypeCodes, materialTypeCodes, options) => Object.assign({
-    code,
-    familyCode,
-    name: { en: name },
-    itemTypeCodes,
-    materialTypeCodes,
-    evidencePolicyCode: 'EWASTE_STANDARD_PHOTO',
-    impactProfileCode: 'CIRCA_EWASTE_ESTIMATE',
-    hazardFlags: [],
-    status: 'ACTIVE',
-    revision: 1,
-    active: true
-}, options || {});
-
+/** @description Immutable forward reference records. @owner eWaste @layer data */
 module.exports = {
-    record0: category('MOBILE_DEVICE', 'ELECTRONICS', 'Mobile Device', ['MOBILE_PHONE', 'SMARTPHONE', 'FEATURE_PHONE'], ['LITHIUM_BATTERY', 'CIRCUIT_BOARD', 'PLASTIC_CASING', 'GLASS_SCREEN']),
-    record1: category('LAPTOP_COMPUTER', 'ELECTRONICS', 'Laptop Computer', ['LAPTOP'], ['LITHIUM_BATTERY', 'CIRCUIT_BOARD', 'ALUMINUM', 'PLASTIC_CASING']),
-    record2: category('TABLET', 'ELECTRONICS', 'Tablet', ['TABLET_DEVICE'], ['LITHIUM_BATTERY', 'CIRCUIT_BOARD', 'GLASS_SCREEN', 'PLASTIC_CASING']),
-    record3: category('DESKTOP_COMPUTER', 'ELECTRONICS', 'Desktop Computer', ['DESKTOP_TOWER'], ['CIRCUIT_BOARD', 'COPPER', 'ALUMINUM', 'PLASTIC_CASING']),
-    record4: category('MONITOR_DISPLAY', 'ELECTRONICS', 'Monitor Or Display', ['COMPUTER_MONITOR'], ['GLASS_SCREEN', 'CIRCUIT_BOARD', 'PLASTIC_CASING']),
-    record5: category('CABLE_CHARGER', 'ELECTRONICS', 'Cable Or Charger', ['CHARGER', 'CABLE', 'EARPHONES'], ['COPPER', 'PLASTIC_CASING']),
-    record6: category('SMALL_APPLIANCE', 'ELECTRONICS', 'Small Appliance', ['SMALL_HOME_APPLIANCE'], ['CIRCUIT_BOARD', 'COPPER', 'ALUMINUM', 'PLASTIC_CASING']),
-    record7: category('LITHIUM_BATTERY', 'BATTERY', 'Lithium Battery', ['LOOSE_LITHIUM_BATTERY'], ['LITHIUM_BATTERY'], { evidencePolicyCode: 'EWASTE_BATTERY_PHOTO', impactProfileCode: 'EWASTE_BATTERY_COUNT', hazardFlags: ['BATTERY_HANDLING'] }),
-    record8: category('POWER_BANK', 'BATTERY', 'Power Bank', ['POWER_BANK_DEVICE'], ['LITHIUM_BATTERY', 'CIRCUIT_BOARD', 'PLASTIC_CASING'], { evidencePolicyCode: 'EWASTE_BATTERY_PHOTO', impactProfileCode: 'EWASTE_BATTERY_COUNT', hazardFlags: ['BATTERY_HANDLING'] }),
-    record9: category('MIXED_ELECTRONICS', 'ELECTRONICS', 'Mixed Electronics', ['UNKNOWN_ELECTRONIC_ITEM'], ['MIXED_ELECTRONIC_MATERIAL'], { evidencePolicyCode: 'EWASTE_STANDARD_PHOTO', impactProfileCode: 'CIRCA_EWASTE_ESTIMATE' })
+    "record0": {
+        "code": "MOBILE_DEVICE",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Mobile Device"
+        },
+        "itemTypeCodes": [
+            "MOBILE_PHONE",
+            "SMARTPHONE",
+            "FEATURE_PHONE"
+        ],
+        "materialTypeCodes": [
+            "LITHIUM_BATTERY",
+            "CIRCUIT_BOARD",
+            "PLASTIC_CASING",
+            "GLASS_SCREEN"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record1": {
+        "code": "LAPTOP_COMPUTER",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Laptop Computer"
+        },
+        "itemTypeCodes": [
+            "LAPTOP"
+        ],
+        "materialTypeCodes": [
+            "LITHIUM_BATTERY",
+            "CIRCUIT_BOARD",
+            "ALUMINUM",
+            "PLASTIC_CASING"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record2": {
+        "code": "TABLET",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Tablet"
+        },
+        "itemTypeCodes": [
+            "TABLET_DEVICE"
+        ],
+        "materialTypeCodes": [
+            "LITHIUM_BATTERY",
+            "CIRCUIT_BOARD",
+            "GLASS_SCREEN",
+            "PLASTIC_CASING"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record3": {
+        "code": "DESKTOP_COMPUTER",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Desktop Computer"
+        },
+        "itemTypeCodes": [
+            "DESKTOP_TOWER"
+        ],
+        "materialTypeCodes": [
+            "CIRCUIT_BOARD",
+            "COPPER",
+            "ALUMINUM",
+            "PLASTIC_CASING"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record4": {
+        "code": "MONITOR_DISPLAY",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Monitor Or Display"
+        },
+        "itemTypeCodes": [
+            "COMPUTER_MONITOR"
+        ],
+        "materialTypeCodes": [
+            "GLASS_SCREEN",
+            "CIRCUIT_BOARD",
+            "PLASTIC_CASING"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record5": {
+        "code": "CABLE_CHARGER",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Cable Or Charger"
+        },
+        "itemTypeCodes": [
+            "CHARGER",
+            "CABLE",
+            "EARPHONES"
+        ],
+        "materialTypeCodes": [
+            "COPPER",
+            "PLASTIC_CASING"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record6": {
+        "code": "SMALL_APPLIANCE",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Small Appliance"
+        },
+        "itemTypeCodes": [
+            "SMALL_HOME_APPLIANCE"
+        ],
+        "materialTypeCodes": [
+            "CIRCUIT_BOARD",
+            "COPPER",
+            "ALUMINUM",
+            "PLASTIC_CASING"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record7": {
+        "code": "LITHIUM_BATTERY",
+        "familyCode": "BATTERY",
+        "name": {
+            "en": "Lithium Battery"
+        },
+        "itemTypeCodes": [
+            "LOOSE_LITHIUM_BATTERY"
+        ],
+        "materialTypeCodes": [
+            "LITHIUM_BATTERY"
+        ],
+        "evidencePolicyCode": "EWASTE_BATTERY_PHOTO",
+        "impactProfileCode": "EWASTE_BATTERY_COUNT",
+        "hazardFlags": [
+            "BATTERY_HANDLING"
+        ],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record8": {
+        "code": "POWER_BANK",
+        "familyCode": "BATTERY",
+        "name": {
+            "en": "Power Bank"
+        },
+        "itemTypeCodes": [
+            "POWER_BANK_DEVICE"
+        ],
+        "materialTypeCodes": [
+            "LITHIUM_BATTERY",
+            "CIRCUIT_BOARD",
+            "PLASTIC_CASING"
+        ],
+        "evidencePolicyCode": "EWASTE_BATTERY_PHOTO",
+        "impactProfileCode": "EWASTE_BATTERY_COUNT",
+        "hazardFlags": [
+            "BATTERY_HANDLING"
+        ],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    },
+    "record9": {
+        "code": "MIXED_ELECTRONICS",
+        "familyCode": "ELECTRONICS",
+        "name": {
+            "en": "Mixed Electronics"
+        },
+        "itemTypeCodes": [
+            "UNKNOWN_ELECTRONIC_ITEM"
+        ],
+        "materialTypeCodes": [
+            "MIXED_ELECTRONIC_MATERIAL"
+        ],
+        "evidencePolicyCode": "EWASTE_STANDARD_PHOTO",
+        "impactProfileCode": "EWASTE_ENVIRONMENTAL_ESTIMATE",
+        "hazardFlags": [],
+        "status": "ACTIVE",
+        "revision": 1,
+        "active": true
+    }
 };

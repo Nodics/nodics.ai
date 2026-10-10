@@ -6,7 +6,13 @@ Keep credential types distinct, preserve strict distributed security state and n
 
 Recognized permission names are not default grants. Location create/update are
 independently assignable through Profile; native route policy remains unchanged.
+The existing Promotion permission `commerce.coupon.seller.manage` is likewise
+recognized without granting seller-consent administration to default roles.
 See [catalogue versus grants](llm/contracts/README.md#permission-catalogue-versus-grants).
+
+`publish.setup.observe` is also recognition-only. Its disabled-by-default
+[exact-plan observer](../nPublish/llm/contracts/setup-observation.md) requires
+explicit reviewed deployment and plan policy; catalogue membership grants no access.
 
 Detailed material is preserved in the adjacent [implementation and operations guide](authentication-security-guide.md). This README is the discovery index, not a replacement authority or evidence that runtime qualification passed.
 

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-07",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_CORRECTION_REVIEW",
+  "item": "Documentation publishing runbook",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "changeReviewed": "The source baseline assertion in mediaPublicationIntegrationContract.test.js now expects release 0.0.1 rather than 1.0.1. The hypothetical installed 1.0.0 to 1.0.1 forward-upgrade scenario remains independent and unchanged.",
+  "sourceFile": "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js",
+  "previousSourceSha256": "7fd18d5d1e58e2ca33b9e52220d13fe91f96712a1ecced25b57d9a3058c526db",
+  "reviewedSourceSha256": "9363bc706d16a4ddce2cf56a53b1bab165bdefd3cc5f8f849a1a289384f4bfd6",
+  "canonicalDocuments": ["docs.documentation-publishing-runbook", "wcms.publishing-lifecycle"],
+  "rationale": "Reviewed the changed assertion, the explicit checksum-qualified PROCESS selection, normal completed-task callback, service-token and tenant checks, physical integrity acknowledgements, native permission checks and retained forward/replay/drift tests. Reviewed the canonical publishing runbook sections for the manifest contract, Staged review and Online activation, same-release pictures and coordinated approvals. The articles do not pin the former data release version. Their blocks and anchors remain unchanged, and their existing ownership and approval explanations still match these tests. Only the inspected test-file binding in the integrated closure is renewed; the original reviews remain unchanged.",
+  "validation": "The Media publication integration and workflow upgrade contracts passed, together with focused Profile bootstrap contracts: 33 tests passed.",
+  "boundary": "Source-editorial re-review only. This does not qualify native 0.0.1 import, publication, browser, provider or business acceptance. The previous runtime report applies only to its recorded pre-rebase identities."
+}

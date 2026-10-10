@@ -221,7 +221,10 @@ module.exports = {
         const operationRequest = Object.assign({}, request, { cartCode: cart.code, payload });
         const validation = await this.validateDirect(operationRequest);
         if (validation.status === 'BLOCKED') {
-            const error = new Error('Cart validation failed');
+            const reasons = validation.blockingReasons || [];
+            const code = reasons.length && reasons.every(reason => reason.code === 'STOCK_UNAVAILABLE')
+                ? 'ERR_CART_INVENTORY_UNAVAILABLE' : 'ERR_CART_VALIDATION_FAILED';
+            const error = new CLASSES.NodicsError(code);
             error.validation = validation;
             throw error;
         }
@@ -293,7 +296,7 @@ module.exports = {
             customerGroup: request.payload && request.payload.customerGroup,
             idempotencyKey: request.payload && request.payload.idempotencyKey || request.idempotencyKey
         });
-        const result = await SERVICE.DefaultCartValidationService.validate(validationCart, SERVICE.DefaultCommerceCalculationPortsService.create(validationCart));
+        const result = await SERVICE.DefaultCartValidationService.validate(validationCart, SERVICE.DefaultCommerceCalculationPortsService.create(validationCart, request));
         return request.internalUse === true ? result : this.redactCustomerCalculation(result);
     },
     /** Loads an owned Cart and persists an exact calculation snapshot. @param {Object} request Tenant and customer request. @returns {Promise<Object>} Stored calculation. */
@@ -319,7 +322,7 @@ module.exports = {
             customerGroup: request.payload && request.payload.customerGroup,
             idempotencyKey: request.payload && request.payload.idempotencyKey || request.idempotencyKey
         });
-        const result = await SERVICE.DefaultCartCalculationEngineService.calculate(calculationCart, SERVICE.DefaultCommerceCalculationPortsService.create(calculationCart));
+        const result = await SERVICE.DefaultCartCalculationEngineService.calculate(calculationCart, SERVICE.DefaultCommerceCalculationPortsService.create(calculationCart, request));
         const sourceHash = crypto.createHash('sha256').update(JSON.stringify(result)).digest('hex');
         const calculationCode = request.payload.calculationCode || ['calc', cart.code, cart.revision].join('-');
         const model = Object.assign({}, result, { code: calculationCode, ownerId: request.ownerId, cartRevision: cart.revision, status: 'CURRENT', active: true, revision: 0, sourceHash, calculatedAt: new Date() });

@@ -26,6 +26,12 @@ model. Reconciliation is an original-receipt read plus action CAS, not a redempt
 retry. Preserve actor/digest/target/receipt/outlet binding and current independent
 grants. Read `llm/examples/secure-coupon-fulfillment.md` and run both coupon adapter
 and Digital Core merchant tests when changing this contract.
+Queue and original-receipt projections preserve only the native complete triad
+`simulated: true`, `deliveryVerified: false`, `evidenceMode: LOCAL_SIMULATION`.
+Partial, contradictory, coerced, inherited or accessor tags fail closed. Never
+infer these tags or verified delivery from identity, environment or absent tags.
+ITEM and simulated ITEM preparation/execution remain unsupported; read visibility
+does not enable a new Copilot mutation or plan shape.
 
 Collection-centre preparation follows `llm/examples/collection-centres.md`.
 Keep canonical references, current-enterprise binding, complete nested review,

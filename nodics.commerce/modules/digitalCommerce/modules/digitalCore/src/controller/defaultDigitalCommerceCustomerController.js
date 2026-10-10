@@ -29,5 +29,9 @@ module.exports = {
     /** Lists customer-owned digital entitlements. @param {Object} request Request. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Response. */
     listEntitlements: function (request, callback) { return this.invoke('listEntitlements', request, callback); },
     /** Reveals one customer-owned digital entitlement through its provider. @param {Object} request Request. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Response. */
-    revealEntitlement: function (request, callback) { return this.invoke('revealEntitlement', request, callback); }
+    revealEntitlement: function (request, callback) {
+        request.httpResponse?.setHeader('Cache-Control', 'no-store');
+        request.httpResponse?.setHeader('Pragma', 'no-cache');
+        return this.invoke('revealEntitlement', request, callback);
+    }
 };

@@ -101,16 +101,15 @@ test('ordinary Cart Pricing and async Tax use retained receipts without source p
     assert.equal(tax.jurisdiction, 'AE');
 });
 
-test('ordinary Cart Inventory uses active warehouse policy while balances and coupon pools remain live', async () => {
+test('ordinary Cart Inventory uses active warehouse policy and live physical balances only', async () => {
     const { ports, balances } = setup();
     assert.deepEqual((await ports.inventory(input)).candidates.map(item => item.warehouseCode), ['warehouse-a']);
     balances[0].available = '1';
     assert.equal((await ports.inventory(input)).available, false);
     balances.splice(0, balances.length, { ...cart, sku: 'sku-a', available: '8', revision: 9, inventoryStrategy: 'COUPON_CODE_POOL', couponBatchCode: 'batch-a' });
-    const coupon = await ports.inventory(input);
-    assert.equal(coupon.strategy, 'COUPON_CODE_POOL');
-    assert.equal(coupon.couponBatchCode, 'batch-a');
-    assert.equal(coupon.availableQuantity, '8');
+    const unsupported = await ports.inventory(input);
+    assert.equal(unsupported.strategy, 'PHYSICAL_STOCK');
+    assert.equal(unsupported.available, false);
 });
 
 test('missing active receipts and conflicting Cart scope reject without source fallback', async () => {
@@ -146,4 +145,28 @@ test('disabled delivery retains legacy reads and synchronous Tax compatibility',
     assert.equal((await ports.pricing(input)).unitAmount, '2');
     assert.equal((await ports.tax(input)).taxAmount, '2');
     assert.equal(reads, 3);
+});
+
+test('activated Promotion quote preserves detached original signed authority, not synthetic Cart service auth', async t => {
+    const previous = { SERVICE: global.SERVICE, CONFIG: global.CONFIG };
+    t.after(() => Object.assign(global, previous));
+    const { settings } = setup();
+    const authData = { tenant: cart.tenant, enterpriseCode: cart.enterpriseCode, tokenType: 'access',
+        principalType: 'customer', principalId: cart.ownerId };
+    const original = { ...input, ownerId: cart.ownerId, authData: structuredClone(authData) };
+    const ports = portsService.create(cart, original), reads = [];
+    SERVICE.DefaultPromotionOperationService = { quote: async request => { reads.push(request); return { discountAmount: '0' }; } };
+    original.authData.enterpriseCode = 'foreign';
+    await ports.promotion(input);
+    assert.deepEqual(reads[0].authData, authData);
+    assert.notEqual(reads[0].authData, original.authData);
+    reads[0].authData.enterpriseCode = 'mutated-downstream';
+    await ports.promotion(input);
+    assert.deepEqual(reads[1].authData, authData, 'A quote cannot alter the retained origin for the next call');
+    assert.notEqual(reads[0].authData, reads[1].authData);
+    await assert.rejects(ports.promotion({ ...input, enterpriseCode: 'foreign' }), /scope mismatch/);
+    assert.equal(reads.length, 2);
+    settings.promotion.publication.delivery.enabled = false;
+    await portsService.create(cart, original).promotion({ ...input, authData: { principalType: 'customer' } });
+    assert.equal(reads[2].authData.principalType, 'service', 'Unselected defaults preserve existing internal calculation authority');
 });

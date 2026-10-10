@@ -11,14 +11,28 @@
 
 /** @module promotion/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner promotion */
 module.exports = {
+  secretProtection: {
+    purposes: {
+      PROMOTION_COUPON_TOKEN: {
+        activeKeyId: 'primary',
+        keys: { primary: { encryptionKey: {
+          $config: 'env', name: 'NODICS_PROMOTION_COUPON_TOKEN_KEY', type: 'string', fallback: null,
+        } } },
+      },
+    },
+  },
   data: {
     dataReleases: {
+      installers: {
+        PROMOTION_CAMPAIGN_ISSUANCE: "DefaultPromotionSetupContributionService",
+      },
       targetValidators: {
         promotion: "DefaultPromotionOperationService",
       },
     },
   },
   publish: {
+    setup: { permissions: { promotion: 'publish.lifecycle.create' } },
     providers: {
       domainAdapters: { promotion: null },
       versionProviders: { promotion: null },
@@ -71,6 +85,13 @@ module.exports = {
   promotion: {
     enabled: true,
     legacyTokenHashPolicies: [],
+    budgetAdmission: {
+      maximumCampaignsPerContribution: 50,
+    },
+    setupPacing: {
+      preflightDelayMs: 0,
+      issuanceDelayMs: 0,
+    },
     sellerAuthorization: {
       enabled: false,
       qualified: false,
@@ -80,6 +101,8 @@ module.exports = {
       enabled: false,
       qualified: false,
       evidenceService: "DefaultPromotionPricedTransactionAdapterService",
+      itemEvidenceService: null,
+      itemEvidenceMode: "VERIFIED",
       pricedSource: {
         qualified: false,
         connectionName: "pricing",

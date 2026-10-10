@@ -166,13 +166,41 @@ module.exports = {
         const input = this.applyOperatorContext(request);
         return SERVICE.DefaultPromotionOperationService.setCouponBatchReservation(Object.assign({}, input, { payload: Object.assign({}, input.payload, { batchCode: input.batchCode || input.payload && input.payload.batchCode }) }), 'ACTIVE');
     },
+    /** Derives ledger scope only from the original authenticated claims and checks every presented namespace alias. Legacy authenticated requests without any enterprise claim/selector stay explicitly unscoped. No header or body grants enterprise authority. @param {Object} request Original secured ledger request. @returns {Object} Detached operator context with exact signed tenant and optional enterprise; original auth remains unchanged. @throws {NodicsError} Unconfirmed ledger scope before persistence. @override Later layers may narrow admission while preserving signed-scope agreement. */
+    applyBudgetLedgerContext: function (request) {
+        const auth = request.authData || {},
+            tenantClaims = [auth.tenant, auth.tenantCode].filter(value => value !== undefined),
+            enterpriseClaims = [auth.entCode, auth.enterpriseCode].filter(value => value !== undefined),
+            tenant = tenantClaims[0], enterpriseCode = enterpriseClaims[0],
+            actorId = auth.principalId || auth.userId || auth.loginId || auth.code,
+            payload = request.payload || {}, query = request.query || {},
+            tenants = [...tenantClaims, request.tenant, request.tenantCode, request.auth?.tenant, request.auth?.tenantCode, payload.tenant, payload.tenantCode,
+                query.tenant, query.tenantCode],
+            enterprises = [...enterpriseClaims, request.enterpriseCode, request.entCode,
+                request.auth?.entCode, request.auth?.enterpriseCode, payload.enterpriseCode, payload.entCode,
+                query.enterpriseCode, query.entCode];
+        for (const [key, value] of Object.entries(request.httpRequest?.headers || {})) {
+            if (['x-enterprise-code', 'entcode', 'enterprisecode'].includes(key.toLowerCase())) enterprises.push(value);
+            if (['x-tenant-code', 'tenant', 'tenantcode'].includes(key.toLowerCase())) tenants.push(value);
+        }
+        if (
+            typeof tenant !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(tenant) ||
+            typeof actorId !== 'string' || !actorId ||
+            (auth.tokenType !== undefined && auth.tokenType !== 'access') ||
+            (enterpriseCode !== undefined && (typeof enterpriseCode !== 'string' ||
+                !/^[A-Za-z0-9_.:@-]{1,128}$/.test(enterpriseCode))) ||
+            tenants.some(value => value !== undefined && value !== tenant) ||
+            enterprises.some(value => value !== undefined && (enterpriseCode === undefined || value !== enterpriseCode))
+        ) throw new CLASSES.NodicsError('ERR_PROMOTION_BUDGET_LEDGER_UNCONFIRMED');
+        return { ...this.applyOperatorContext(request), tenant, enterpriseCode, actorId };
+    },
     /**
-     * Executes `budgetLedger` as a loader-visible operation owned by this module.
+     * Executes `budgetLedger` using its independently validated original signed issuer scope.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    budgetLedger: function (request) { return SERVICE.DefaultPromotionOperationService.budgetLedger(this.applyOperatorContext(request)); },
+    budgetLedger: function (request) { return SERVICE.DefaultPromotionOperationService.budgetLedger(this.applyBudgetLedgerContext(request)); },
     /**
      * Executes `analytics` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.

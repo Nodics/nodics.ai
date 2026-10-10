@@ -19,6 +19,23 @@
  * @override Later layers may decorate diagnostics, preserving immutable release bindings and Media approval authority.
  */
 module.exports = {
+    /** Rejects omitted, duplicated, reordered or malformed batch evidence from an owner overlay. */
+    readOnlineVersions: async function (owner, codes, request) {
+        const response = await owner.getOnlineVersions(codes, request);
+        if (!response || !Array.isArray(response.statuses) || response.statuses.length !== codes.length ||
+            response.statuses.some((item, index) => !item || item.mediaCode !== codes[index] ||
+                (item.status !== null && (!item.status || !/^[a-f0-9]{64}$/.test(item.status.version || '') ||
+                    !Number.isSafeInteger(item.status.revision) || item.status.revision < 1)))) {
+            throw new Error('Media pointer batch was not acknowledged');
+        }
+        return new Map(response.statuses.map(item => [item.mediaCode, item.status]));
+    },
+    /** Names an exact asset approval cycle without exposing commands or duplicating Media state. */
+    publicationCode: function (publication, asset) {
+        return 'cmsMedia_' + require('node:crypto').createHash('sha256')
+            .update(JSON.stringify([publication.code, publication.targetVersion, asset.code, asset.versionId, asset.checksum]))
+            .digest('hex');
+    },
     /** Reuses Media's inert navigation contribution; this never grants permission or submits a command. */
     handoff: function (mediaCode) {
         try {
@@ -62,12 +79,15 @@ module.exports = {
                 dependencies: []
             };
         }
-        const unavailable = () => ({
+        let inspectionStage = 'CMS_MANIFEST';
+        const unavailable = (cause) => ({
             contractVersion: 1,
             owner: 'media',
             status: 'UNAVAILABLE',
             qualified: false,
             dependencies: [],
+            inspectionStage,
+            ownerErrorCode: cause && /^ERR_[A-Z0-9]+_[0-9]{5}$/.test(cause.code) ? cause.code : undefined,
             message:
                 'Exact Media dependency evidence is unavailable. Review Media publication before declaring the application ready.'
         });
@@ -148,11 +168,20 @@ module.exports = {
                 };
             }
             const dependencies = [];
+            const owner = SERVICE.DefaultMediaPublicationVersionProviderService;
+            const pinnedCodes = [...assets.values()].filter(asset =>
+                Number.isSafeInteger(asset.versionId) && asset.versionId >= 0).map(asset => asset.code);
+            const batching = owner && typeof owner.getOnlineVersions === 'function' && pinnedCodes.length > 0;
+            const integrityBatch = batching && typeof owner.reconcileVersions === 'function';
+            const integritySelection = [];
+            inspectionStage = 'MEDIA_POINTERS';
+            const initial = batching ? await this.readOnlineVersions(owner, pinnedCodes, request) : undefined;
             for (const asset of assets.values()) {
                 const dependency = {
                     mediaCode: asset.code,
                     versionId: asset.versionId,
                     checksum: asset.checksum,
+                    publicationCode: this.publicationCode(publication, asset),
                     owner: 'media',
                     status: 'VERSION_UNPINNED',
                     qualified: false,
@@ -181,10 +210,9 @@ module.exports = {
                     asset.versionId >= 0
                 ) {
                     dependency.status = 'NOT_ACTIVATED';
-                    const owner =
-                        SERVICE.DefaultMediaPublicationVersionProviderService;
                     if (!owner) return unavailable();
-                    const active = await owner.getOnlineVersion(
+                    inspectionStage = 'MEDIA_POINTERS';
+                    const active = batching ? initial.get(asset.code) : await owner.getOnlineVersion(
                         { rootCode: asset.code },
                         request
                     );
@@ -195,6 +223,7 @@ module.exports = {
                             active.revision < 1
                         )
                             return unavailable();
+                        inspectionStage = 'MEDIA_MANIFEST';
                         const retained = await owner.getVersion(
                             {
                                 domain: 'media',
@@ -234,35 +263,41 @@ module.exports = {
                                 ? 'ACTIVE'
                                 : 'VERSION_MISMATCH';
                         if (dependency.status === 'ACTIVE') {
-                            const physical = await owner.transport().reconcile(
-                                {
-                                    mediaCode: asset.code,
-                                    manifestCode: active.version
-                                },
-                                request
-                            );
-                            const fresh = await owner.getOnlineVersion(
-                                { rootCode: asset.code },
-                                request
-                            );
-                            if (
-                                !physical ||
-                                physical.mediaCode !== asset.code ||
-                                physical.manifestCode !== active.version ||
-                                physical.intact !== true ||
-                                physical.active !== true ||
-                                physical.repaired !== false ||
-                                physical.deleted !== false
-                            ) {
-                                dependency.status = 'BYTES_UNAVAILABLE';
-                            } else if (
-                                !fresh ||
-                                fresh.version !== active.version ||
-                                fresh.revision !== active.revision
-                            ) {
-                                dependency.status = 'ACTIVATION_CHANGED';
+                            if (integrityBatch) {
+                                integritySelection.push({ mediaCode: asset.code, manifestCode: active.version });
                             } else {
-                                dependency.storedBytesVerified = true;
+                                inspectionStage = 'MEDIA_BYTES';
+                                const physical = await owner.transport().reconcile(
+                                    {
+                                        mediaCode: asset.code,
+                                        manifestCode: active.version
+                                    },
+                                    request
+                                );
+                                inspectionStage = 'MEDIA_POINTER_RECHECK';
+                                const fresh = batching ? active : await owner.getOnlineVersion(
+                                    { rootCode: asset.code },
+                                    request
+                                );
+                                if (
+                                    !physical ||
+                                    physical.mediaCode !== asset.code ||
+                                    physical.manifestCode !== active.version ||
+                                    physical.intact !== true ||
+                                    physical.active !== true ||
+                                    physical.repaired !== false ||
+                                    physical.deleted !== false
+                                ) {
+                                    dependency.status = 'BYTES_UNAVAILABLE';
+                                } else if (
+                                    !fresh ||
+                                    fresh.version !== active.version ||
+                                    fresh.revision !== active.revision
+                                ) {
+                                    dependency.status = 'ACTIVATION_CHANGED';
+                                } else {
+                                    dependency.storedBytesVerified = true;
+                                }
                             }
                         }
                         dependency.qualified = dependency.status === 'ACTIVE';
@@ -270,6 +305,34 @@ module.exports = {
                     }
                 }
                 dependencies.push(dependency);
+            }
+            if (integritySelection.length) {
+                inspectionStage = 'MEDIA_BYTES';
+                const physical = await owner.reconcileVersions(integritySelection, request);
+                if (!physical || !Array.isArray(physical.results) || physical.results.length !== integritySelection.length ||
+                    physical.results.some((item, index) => !item || item.mediaCode !== integritySelection[index].mediaCode ||
+                        item.manifestCode !== integritySelection[index].manifestCode || typeof item.intact !== 'boolean' ||
+                        typeof item.active !== 'boolean' || item.protected !== true || item.repaired !== false || item.deleted !== false)) return unavailable();
+                for (const item of physical.results) {
+                    const dependency = dependencies.find(value => value.mediaCode === item.mediaCode);
+                    if (!item.intact || !item.active) {
+                        dependency.status = 'BYTES_UNAVAILABLE';
+                        dependency.qualified = false;
+                    } else dependency.storedBytesVerified = true;
+                }
+            }
+            if (batching && dependencies.some(item => item.qualified)) {
+                inspectionStage = 'MEDIA_POINTER_RECHECK';
+                const fresh = await this.readOnlineVersions(owner, pinnedCodes, request);
+                for (const dependency of dependencies.filter(item => item.qualified)) {
+                    const before = initial.get(dependency.mediaCode);
+                    const after = fresh.get(dependency.mediaCode);
+                    if (!after || after.version !== before.version || after.revision !== before.revision) {
+                        dependency.status = 'ACTIVATION_CHANGED';
+                        dependency.qualified = false;
+                        delete dependency.storedBytesVerified;
+                    }
+                }
             }
             const qualified = dependencies.every((item) => item.qualified);
             return {
@@ -282,8 +345,8 @@ module.exports = {
                     ? 'Exact Media dependencies have owner activation evidence.'
                     : 'CMS is Online, but referenced Media requires separate exact-version publication and normal Process approval.'
             };
-        } catch (_) {
-            return unavailable();
+        } catch (cause) {
+            return unavailable(cause);
         }
     }
 };

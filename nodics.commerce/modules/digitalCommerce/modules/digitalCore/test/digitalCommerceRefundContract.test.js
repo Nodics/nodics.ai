@@ -178,3 +178,13 @@ test("foreign owner or provider evidence cannot qualify a coupon reversal", () =
     false,
   );
 });
+
+test("coupon settlement remains a no-financial-effect phase but refuses missing complete order units", async () => {
+  await service.prepare(r);
+  const before = revocations.length;
+  assert.deepEqual(await service.settle(r), { status: "COMPLETED" });
+  assert.equal(revocations.length, before);
+  SERVICE.DefaultDigitalCommerceEntitlementService.listEntitlements = async () => [];
+  await assert.rejects(service.settle(r), /incomplete or ambiguous/);
+  assert.equal(revocations.length, before);
+});

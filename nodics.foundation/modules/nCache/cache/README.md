@@ -17,9 +17,7 @@ This module owns the cache adapter boundary, cache key handling, invalidation be
 
 Deep documentation lives in:
 
-- `nodics.docs/docs/pages/nodics.foundation/cache-runtime-state.md`
-- `nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md`
-- `nodics.docs/docs/pages/nodics.foundation/events-messaging-cluster.md`
+- `nodics.foundation/modules/nCache/cache/data/docs-v001/records/documentation/cacheDocumentationComponentData.js`
 
 ## Verification
 

@@ -13,6 +13,37 @@
 'use strict';
 const test = require('node:test');
 
+test('Store root mappings isolate retained policies and reject incomplete selection before reads', async () => {
+    const f = setup();
+    const delivery = { enabled: true, storeCodes: ['store-a', 'store-b'],
+        rootCodes: ['legacy-root'], rootCodesByStore: { 'store-a': ['root-a'], 'store-b': ['root-b'] } };
+    f.target.publicationSettings = () => ({ runtimeRole: 'ONLINE', delivery });
+    const roots = [];
+    f.target.readActivated = async publication => { roots.push(publication.rootCode); return []; };
+    const selected = { ...request, storeCode: 'store-a' };
+    assert.deepEqual(f.target.deliveryRoots(selected), ['root-a']);
+    await f.target.readConfigured(selected);
+    assert.deepEqual(roots, ['root-a']);
+    const result = f.target.deliveryRoots(selected);
+    result.push('foreign');
+    assert.deepEqual(delivery.rootCodesByStore['store-a'], ['root-a']);
+    assert.deepEqual(f.target.deliveryRoots({ ...request, storeCode: 'store-b' }), ['root-b']);
+    for (const invalid of [null, [], {}, { 'store-a': ['root-a'] },
+        { 'store-a': ['root-a'], 'store-b': [] },
+        { 'store-a': ['root-a'], 'store-b': ['root-b', 'root-b'] },
+        { 'store-a': ['root-a'], 'store-b': [' '] },
+        { 'store-a': ['root-a'], 'store-b': [null] },
+        { 'store-a': ['root-a'], 'store-b': ['root-b'], foreign: ['root-x'] }]) {
+        delivery.rootCodesByStore = invalid;
+        await assert.rejects(f.target.readConfigured(selected), /delivery roots/);
+    }
+    assert.deepEqual(roots, ['root-a']);
+    delivery.rootCodesByStore = { 'store-a': ['root-a'], 'store-b': ['root-b'] };
+    await assert.rejects(f.target.readConfigured({ ...request, storeCode: 'foreign' }), /delivery roots/);
+    delete delivery.storeCodes;
+    assert.throws(() => f.target.deliveryRoots(selected), /exact Store mapping/);
+});
+
 test('delivery Store opt-in preserves unrelated consumers and rejects direct unselected root reads', async () => {
     const f = setup();
     f.target.publicationSettings = () => ({ runtimeRole: 'ONLINE',
@@ -341,7 +372,7 @@ test('private authority is bounded in both directions and transport retains call
     for (const key of ['tenantCode', 'enterpriseCode', 'domain', 'rootType']) {
         await assert.rejects(controller.status({ ...incoming, httpRequest: { body: {
             publication: { ...publication, [key]: 'foreign' }
-        } } }), /scope mismatch|root required/);
+        } } }), /scope mismatch|root required|Cross-enterprise publication is not selected/);
     }
     await assert.rejects(controller.invoke('unknown', incoming), /Unknown/);
     await assert.rejects(controller.activate(incoming), /source authority/);
@@ -370,7 +401,7 @@ test('private authority is bounded in both directions and transport retains call
     await assert.rejects(f.source.authorizeTarget(command, incoming), /permission denied/);
     denied = false;
     principal = { ...authData, tenant: 'foreign' };
-    await assert.rejects(f.source.authorizeTarget(command, incoming), /enterprise mismatch/);
+    await assert.rejects(f.source.authorizeTarget(command, incoming), /tenant mismatch/);
     principal = authData;
     await assert.rejects(f.source.authorizeTarget({ ...command, operation: 'unknown' }, incoming), /Unsupported/);
     assert.equal(reads, 0);
@@ -475,7 +506,8 @@ test('fixed callback delegates Process authority and null registrations stay dis
     assert.deepEqual(selected, { domain: 'inventory', actionKey: 'inventory.applyPublicationDecision' });
     const manifest = require('../data/manifest.json');
     const release = manifest.sections.inventoryPublicationWorkflow;
-    assert.equal(release.sourceRoot, 'init-v002');
+    assert.equal(release.sourceRoot, 'init-v001');
+    assert.equal(release.version, '0.0.1');
     const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
     for (const [file, expected] of Object.entries(release.files)) {
         assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname, '../data', file))).digest('hex'), expected);
@@ -588,7 +620,121 @@ test('target transport routes require runtime internal identity and distinct Onl
 const assert = require('node:assert/strict');
 const provider = require('../src/service/defaultInventoryPublicationService');
 const schemas = require('../src/schemas/schemas').inventory;
+/** Exercises source admission with real permission, schema-access and canonical identity owners; stores remain isolated doubles. */
+function publisherFixture() {
+    const f = setup(), calls = [];
+    const root = '../../../../../../nodics.foundation/modules/';
+    global.CONFIG = { get: name => name === 'identityGovernance' ? { systemAccessGroups: ['serviceAccountUserGroup'] } :
+        name === 'publish' ? { setup: { permissions: { inventory: 'commerce.product.publish' } } } : {} };
+    global.UTILS.isBlank = value => !value || !Object.keys(value).length;
+    SERVICE.DefaultSecuredRequestPipelineService = require(root + 'nRouter/src/service/request/defaultSecuredRequestPipelineService');
+    SERVICE.DefaultIdentityGovernanceService = require(root + 'nAuth/src/service/identity/defaultIdentityGovernanceService');
+    const access = require(root + 'nDatabase/database/src/service/schema/defaultSchemaAccessHandlerService');
+    const groups = require('../config/properties').schemaPolicies.inventory.tenantOwned.accessGroups;
+    const context = { ...request, authData: { tenant: request.tenant, entCode: request.enterpriseCode, principalType: 'human',
+        tokenType: 'access', principalId: 'publisher', userGroups: ['setupPublisher'],
+        permissions: ['publish.lifecycle.create', 'commerce.product.publish'] } };
+    for (const service of [...Object.values(f.sources).map(name => SERVICE[name]), f.sourceStore.release]) {
+        for (const method of ['get', 'save']) {
+            const original = service[method].bind(service);
+            service[method] = async input => {
+                assert(access.getAccessPoint(input.authData, groups) >= 1, 'generated schema access denied');
+                calls.push({ method, ...input });
+                return original(input);
+            };
+        }
+    }
+    return { ...f, context, calls, access, groups };
+}
+
+test('scoped publisher captures and retains exact policy through owner persistence, preserving lifecycle caller', async () => {
+    const f = publisherFixture(), original = structuredClone(f.context);
+    assert.equal(f.access.getAccessPoint(f.context.authData, f.groups), 0);
+    let submitted;
+    SERVICE.DefaultPublicationLifecycleService = { create: async input => { submitted = input; return input.publication; } };
+    await f.source.createGoverned(f.context, { ...f.input, publicationCode: 'reviewed-pub' });
+    assert.equal(f.sourceStore.release.rows.size, 1);
+    assert(f.calls.every(call => call.authData.isSystem === true));
+    assert(f.calls.filter(call => call.method === 'get').every(call => call.query.tenant === request.tenant && call.query.enterpriseCode === request.enterpriseCode));
+    assert.deepEqual(submitted.authData, f.context.authData);
+    assert.deepEqual(f.context, original);
+    assert.equal(f.access.getAccessPoint(f.context.authData, f.groups), 0);
+});
+
+test('publisher scope conflicts and missing permission cannot read sources or retain policy', async () => {
+    for (const mutate of [r => { r.enterpriseCode = 'foreign'; }, r => { r.tenant = 'foreign'; },
+        r => { r.authData.enterpriseCode = 'foreign'; }, r => { r.authData.tokenType = 'service'; },
+        r => { r.authData.isSystem = true; }, r => { r.authData.permissions = []; }]) {
+        const f = publisherFixture(); mutate(f.context);
+        await assert.rejects(f.source.capture(f.context, f.input), /publisher scope|generated schema access denied/);
+        assert.equal(f.calls.length, 0); assert.equal(f.sourceStore.release.rows.size, 0);
+    }
+});
+
+test('owner persistence requires lifecycle, commerce publication and effective domain permission independently', async () => {
+    for (const permissions of [['publish.lifecycle.create'], ['commerce.product.publish'], []]) {
+        const f = publisherFixture();
+        f.context.authData.permissions = permissions;
+        assert.equal(f.source.sourcePersistenceAuth(f.context), f.context.authData);
+        await assert.rejects(f.source.capture(f.context, f.input), /generated schema access denied/);
+        await assert.rejects(f.source.readRecord(f.sourceStore.release, 'reviewed-release', f.context), /generated schema access denied/);
+        await assert.rejects(f.source.retain(f.sourceStore.release, {
+            tenant: request.tenant, enterpriseCode: request.enterpriseCode, code: 'reviewed-release',
+        }, f.context), /generated schema access denied/);
+        assert.equal(f.calls.length, 0);
+        assert.equal(f.sourceStore.release.rows.size, 0);
+    }
+    const f = publisherFixture(), get = CONFIG.get;
+    for (const configured of [undefined, '', 'domain.reviewed.publish']) {
+        CONFIG.get = name => name === 'publish' ? { setup: { permissions: { inventory: configured } } } : get(name);
+        assert.equal(f.source.sourcePersistenceAuth(f.context), f.context.authData);
+        await assert.rejects(f.source.capture(f.context, f.input), /generated schema access denied/);
+        assert.equal(f.calls.length, 0);
+    }
+    f.context.authData.permissions.push('domain.reviewed.publish');
+    assert.equal(f.source.sourcePersistenceAuth(f.context).isSystem, true);
+    await f.source.capture(f.context, f.input);
+    assert.equal(f.sourceStore.release.rows.size, 1);
+});
+
+test('foreign exact source and provider scope violations fail before any retained policy write', async () => {
+    const f = publisherFixture();
+    const service = SERVICE[f.sources[f.input.rootType]], row = service.rows.get(f.input.rootCode);
+    service.get = async () => ({ result: [{ ...row, enterpriseCode: 'foreign' }] });
+    await assert.rejects(f.source.capture(f.context, f.input), /enterprise boundary/);
+    assert.equal(f.sourceStore.release.rows.size, 0);
+    assert.equal(f.calls.filter(call => call.method === 'save').length, 0);
+});
+
+test('await-boundary source mutation cannot replace the signed capture scope or exact reference', async () => {
+    const f = publisherFixture(), input = structuredClone(f.input);
+    const service = SERVICE[f.sources[input.rootType]], get = service.get;
+    service.get = async request => {
+        f.context.enterpriseCode = 'foreign'; f.context.authData.entCode = 'foreign';
+        input.rootCode = 'foreign'; input.references[0].code = 'foreign';
+        return get(request);
+    };
+    const release = await f.source.capture(f.context, input);
+    assert.equal(release.enterpriseCode, request.enterpriseCode);
+    assert.equal(release.rootCode, f.input.rootCode);
+    assert(f.calls.filter(call => call.method === 'get').every(call => call.query.enterpriseCode === request.enterpriseCode));
+});
+
+test('service observation retains original default-enterprise identity and exact reviewed target query', async () => {
+    const f = publisherFixture();
+    f.context.authData = { tenant: request.tenant, entCode: 'default', principalType: 'service', tokenType: 'service',
+        userGroups: ['serviceAccountUserGroup'], permissions: ['publish.lifecycle.create'] };
+    let read;
+    const service = { get: async input => { read = input; return { result: [] }; } };
+    await f.source.readRecord(service, 'reviewed-release', f.context);
+    assert.equal(read.authData, f.context.authData);
+    assert.equal(read.authData.entCode, 'default');
+    assert.deepEqual(read.query, { tenant: request.tenant, enterpriseCode: request.enterpriseCode, code: 'reviewed-release' });
+});
+
 const request = { tenant: 'tenant-a', enterpriseCode: 'enterprise-a', authData: { principalId: 'publisher' } };
+require('../../../../../test/helpers/policyRuntimeEnterprise')({ domain: 'inventory', setup, request });
+require('../../../../../test/helpers/policyActivatedReadAdmission')({ domain: 'inventory', setup, request });
 
 /** Models insert-only managed saves and revision-checked atomic updates, with response-loss injection. */
 function store() {

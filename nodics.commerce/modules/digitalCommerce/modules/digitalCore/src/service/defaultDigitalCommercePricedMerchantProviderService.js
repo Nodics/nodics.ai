@@ -11,10 +11,14 @@
 
 /* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
 "use strict";
+const failures = new WeakMap();
 /** @module digitalCore/service/defaultDigitalCommercePricedMerchantProviderService @description Revalidates frozen native priced basket evidence before staff merchant attestation; never reports external POS settlement. @layer service @owner digitalCore @override Actual POS providers may replace fulfillment through later layers while retaining original evidence and fixed owner authorization. */
 module.exports = {
+  /** Returns the fixed original priced-provider failure stage without private details. */
+  failureStage: function (error) { return error && typeof error === "object" ? failures.get(error) : undefined; },
   /** Confirms only fresh canonical monetary rights matching the persisted original instruction. @param {Object} request Fresh signed staff and stored entitlement. @param {Object} redemption Original stored marker. @returns {Promise<Object>} Native receipt attestation. */
   confirm: async function (request, redemption) {
+    let stage = "AUTHORITY";
     try {
       request =
         await SERVICE.DefaultDigitalCommerceMerchantService.pricedAuthority(
@@ -26,6 +30,7 @@ module.exports = {
           CONFIG.get("digitalCore")?.merchantRedemption?.pricedProvider,
         item = request.entitlement,
         benefit = redemption.pricedBenefit;
+      stage = "INSTRUCTION";
       if (
         policy?.qualified !== true ||
         CONFIG.get("promotion")?.merchantBenefits?.enabled !== true ||
@@ -49,18 +54,10 @@ module.exports = {
         ) !== redemption.pricedBinding
       )
         throw new Error("Unconfirmed priced instruction");
+      stage = "RIGHTS";
       const validated =
-        await SERVICE.DefaultPromotionOperationService.validateMerchantCoupon({
-          ...request,
-          ownerId: item.ownerId,
-          couponCode: item.providerCode,
-          productCode: item.productCode,
-          storeCode: request.merchant.store.code,
-          targetCode: redemption.code,
-          payload: {
-            merchantReceiptReference: redemption.merchantReceiptReference,
-          },
-        });
+        await SERVICE.DefaultDigitalCommerceMerchantService.validateCoupon(request, item, request.merchant);
+      stage = "BINDING";
       if (
         SERVICE.DefaultDigitalCommerceMerchantService.pricedBinding(
           validated.conditions?.benefit,
@@ -80,7 +77,9 @@ module.exports = {
         pricedBenefit: benefit,
       };
     } catch (_) {
-      throw new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID");
+      const failure = new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID");
+      failures.set(failure, stage);
+      throw failure;
     }
   },
 };

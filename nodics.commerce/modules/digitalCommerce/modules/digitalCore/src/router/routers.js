@@ -34,6 +34,8 @@ module.exports = {
         method: "POST",
         controller: "DefaultDigitalCommerceCustomerController",
         operation: "revealEntitlement",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
       },
     },
   },
@@ -41,6 +43,23 @@ module.exports = {
 
 /** Merchant confirmation is separated from the customer-owned claim operation. */
 module.exports.digitalCore.merchant = {};
+// nRouter admits approved runtimeScope through configured runtimeAccessGroups, without adding groups to signed claims.
+module.exports.digitalCore.ownershipEvidence = {
+  queryOwnershipEvidence: {
+    secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+    permission: "commerce.digital.own.read", apiExposure: "commerceOwnershipEvidence",
+    key: "/internal/ownership/evidence/query", method: "POST",
+    controller: "DefaultDigitalCommerceOwnershipEvidenceController", operation: "query",
+    requestPrivacy: { sensitive: true }, cache: { enabled: false },
+  },
+  admitOwnershipBinding: {
+    secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+    permission: "commerce.product.publish", apiExposure: "commerceOwnershipEvidence",
+    key: "/internal/ownership/bindings/admit", method: "POST",
+    controller: "DefaultDigitalCommerceOwnershipEvidenceController", operation: "admitBinding",
+    requestPrivacy: { sensitive: true }, cache: { enabled: false },
+  },
+};
 module.exports.digitalCore.notifications = {
   recipientSource: {
     secured: true,

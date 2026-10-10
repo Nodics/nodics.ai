@@ -173,6 +173,17 @@ isolated from customer runtimes. Standard functional exceptions are tested by
 
 ## Maintenance Outage
 
+If registered tenant codes are unknown, discover them without writing data:
+
+```bash
+npm exec -- nodics project:local-reset-maintenance --environment=acmeLocal --project-code=acme.project --discover-registered-tenants
+```
+
+This bounded code-only read requires the stopped local deployment. It cannot be
+combined with reset selections or execution flags and grants no reset admission.
+Include the returned codes explicitly in the subsequent ordinary dry-run; inactive
+or unbound tenants still refuse protected-binding verification.
+
 `project:local-reset-maintenance` defaults to dry-run. Execution requires both
 operator attestations plus independent inspection of the stopped deployment,
 same-user native loopback MongoDB/Redis processes and their connected clients.

@@ -120,8 +120,10 @@ const requiredGovernancePhrases = [
     assert.equal(publicResult.diagnostics.placementCount, 0);
     assert.equal(capturedSearch.query.site, 'agoraApparelSite');
     assert.equal(capturedSearch.query.pageType, 'PRODUCT_LISTING');
-    assert.deepEqual(capturedSearch.query.targetTypes, ['DEFAULT', 'DEFAULT']);
-    assert.deepEqual(capturedSearch.query.targetCodes, ['*', '*']);
+    assert.deepEqual(capturedSearch.query.targetType, ['DEFAULT', 'DEFAULT']);
+    assert.deepEqual(capturedSearch.query.targetCode, ['*', '*']);
+    assert.equal(Object.hasOwn(capturedSearch.query, 'targetTypes'), false);
+    assert.equal(Object.hasOwn(capturedSearch.query, 'targetCodes'), false);
     assert.equal(capturedSearch.searchOptions.pageSize, 3);
 
     const previewResult = await resolver.resolve({ tenant: 'default', experience: {
