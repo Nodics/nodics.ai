@@ -16,6 +16,7 @@ const path = require('path');
 const rootDir = path.resolve(__dirname, '../../..');
 const ignoredDirectories = new Set(['.git', 'node_modules', 'temp']);
 const statusCodePattern = /['"]((?:SUC|ERR|RSN)_[A-Z0-9]+_\d{5})['"]/g;
+const contentPackFiles = new Set();
 
 function walk(directory, callback) {
     fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {
@@ -34,6 +35,15 @@ function walk(directory, callback) {
 function collectJavaScriptFiles() {
     let files = [];
     walk(rootDir, filePath => {
+        // Content-pack examples are documentation, not runtime status-code usages.
+        if (path.basename(filePath) === 'manifest.json' && path.basename(path.dirname(filePath)) === 'data') {
+            const manifest = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            Object.values(manifest.sections || {}).filter(section => section.kind === 'CONTENT_PACK').forEach(section => {
+                Object.keys(section.generatedHashes || {}).forEach(relativeFile => {
+                    contentPackFiles.add(path.resolve(path.dirname(filePath), relativeFile));
+                });
+            });
+        }
         if (filePath.endsWith('.js')) {
             files.push(filePath);
         }
@@ -70,7 +80,8 @@ function collectStatusDefinitions(javaScriptFiles) {
 
 function collectUsedStatusCodes(javaScriptFiles) {
     let usages = {};
-    javaScriptFiles.filter(filePath => filePath.indexOf(path.sep + 'test' + path.sep) === -1).forEach(filePath => {
+    javaScriptFiles.filter(filePath => filePath.indexOf(path.sep + 'test' + path.sep) === -1
+        && !contentPackFiles.has(filePath)).forEach(filePath => {
         let contents = fs.readFileSync(filePath, 'utf8');
         let match;
         while ((match = statusCodePattern.exec(contents)) !== null) {

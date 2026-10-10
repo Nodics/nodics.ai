@@ -21,7 +21,10 @@ const manifest = require(path.join(releaseRoot, 'manifest.json'));
 const sections = manifest.sections;
 
 assert.strictEqual(manifest.module, 'commsCore');
-assert.deepStrictEqual(Object.keys(sections).sort(), ['runtime-defaults', 'sample-templates']);
+assert.deepStrictEqual(Object.keys(sections).sort(), ['documentation', 'runtime-defaults', 'sample-templates']);
+assert.strictEqual(sections.documentation.kind, 'CONTENT_PACK');
+assert.strictEqual(sections.documentation.installationPolicy, 'OPTIONAL_AXIS_INITIATED');
+assert.strictEqual(sections.documentation.contentPath, 'docs-v001');
 assert.strictEqual(sections['runtime-defaults'].displayName, 'Communication Runtime Defaults');
 assert.strictEqual(sections['runtime-defaults'].dataType, 'core');
 assert.strictEqual(sections['sample-templates'].displayName, 'Communication Sample Templates');
@@ -50,7 +53,7 @@ try {
 }
 
 Object.values(sections).forEach(section => {
-    Object.entries(section.files).forEach(([relativeFile, expectedChecksum]) => {
+    Object.entries(section.files || section.generatedHashes).forEach(([relativeFile, expectedChecksum]) => {
         const filePath = path.join(releaseRoot, relativeFile);
         assert(fs.existsSync(filePath), `${relativeFile} must exist`);
         const actualChecksum = crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
@@ -60,15 +63,15 @@ Object.values(sections).forEach(section => {
 
 const runtimeTemplates = require(path.join(
     releaseRoot,
-    'core-v002/records/communication/commsRuntimeDefaultTemplateData.js'
+    'core-v001/records/communication/commsRuntimeDefaultTemplateData.js'
 ));
 const runtimeHeader = require(path.join(
     releaseRoot,
-    'core-v002/headers/communication/commsRuntimeDefaultHeader.js'
+    'core-v001/headers/communication/commsRuntimeDefaultHeader.js'
 ));
 const sampleTemplates = require(path.join(
     releaseRoot,
-    'sample-v002/records/communication/commsSampleTemplateData.js'
+    'sample-v001/records/communication/commsSampleTemplateData.js'
 ));
 
 assert.strictEqual(runtimeTemplates.record0.code, 'COMMUNICATION_RUNTIME_NOTICE');
