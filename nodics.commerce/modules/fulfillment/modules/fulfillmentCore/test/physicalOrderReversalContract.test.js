@@ -80,7 +80,8 @@ async function fixture(resolution = 'CANCELLATION') {
         SERVICE[serviceName]={
             get:async r=>{
                 if(r.transactionContext)assert.equal(r.transactionContext.moduleName,group,'transaction tokens never cross owner databases');
-                return{code:'SUC_GET',result:clone(data[group][name].filter(row=>matches(row,r.query)))};
+                const result=clone(data[group][name].filter(row=>matches(row,r.query)));
+                return{code:'SUC_GET',result,count:result.length};
             },
             save:async r=>{
                 if(['inventory','fulfillmentCore'].includes(group)){assert.equal(r.transactionContext?.moduleName,group);assert.equal(r.options.insertOnly,true);}
@@ -91,8 +92,8 @@ async function fixture(resolution = 'CANCELLATION') {
             update:async r=>{
                 if(['inventory','fulfillmentCore'].includes(group))assert.equal(r.transactionContext?.moduleName,group);
                 const row=data[group][name].find(row=>matches(row,r.query));
-                if(!row||state.lostCas)return{code:'SUC_UPDATE',result:{acknowledged:true,matchedCount:0}};
-                Object.assign(row,clone(r.model.$set || r.model));return{code:'SUC_UPDATE',result:{acknowledged:true,matchedCount:1}};
+                if(!row||state.lostCas)return{code:'SUC_UPDATE',result:{acknowledged:true,matchedCount:0,modifiedCount:0}};
+                Object.assign(row,clone(r.model.$set || r.model));return{code:'SUC_UPDATE',result:{acknowledged:true,matchedCount:1,modifiedCount:1}};
             }
         };
     }
@@ -110,7 +111,9 @@ test('full pre-dispatch cancellation uses retained holds, real approval and one 
     assert.equal((await recovery.execute(input)).status,'COMPLETED');
     assert.equal(f.balance().available,'3');assert.equal(f.balance().reserved,'0');assert.equal(f.balance().onHand,'3');
     assert.equal(f.data.inventory.inventoryReservation[0].status,'RELEASED');assert.equal(f.data.fulfillmentCore.consignment[0].status,'CANCELLED');
+    const completedCaseRevision=f.data.order.orderLifecycleRequest[0].revision;
     assert.equal(f.state.payments,1);assert.equal((await recovery.execute(input)).status,'COMPLETED');assert.equal(f.state.payments,1);
+    assert.equal(f.data.order.orderLifecycleRequest[0].revision,completedCaseRevision);
     assert.equal(f.data.inventory.inventoryMovement.length,2);assert.equal(f.data.fulfillmentCore.shipment.length,0);
     await reservation.reserveAll({tenant:'t',enterpriseCode:'e',ownerId:'other-buyer',authData:{tenant:'t',enterpriseCode:'e',principalId:'other-buyer',principalType:'customer',tokenType:'access'},payload:{orderCode:'other-order'}},
         [{code:'other-order:entry',tenant:'t',enterpriseCode:'e',warehouseCode:'w',sku:'sku',ownerType:'ORDER',ownerCode:'other-order',quantity:'1',expectedBalanceRevision:f.balance().revision,idempotencyKey:'later-reservation',correlationId:'trace'}]);

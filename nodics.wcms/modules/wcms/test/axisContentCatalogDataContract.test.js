@@ -51,20 +51,17 @@ assert.strictEqual(wcmsProperties.data.contentPacks.enabled, true,
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.axisDocumentation.source, {
     type: 'LOCAL_SIBLING',
     repositoryName: 'nodics.platform',
-    contentPath: 'modules/axis/data/core-v001',
     manifestPath: 'modules/axis/data/manifest.json',
     manifestSection: 'documentation'
 }, 'Axis documentation pack must be imported by WCMS from the Platform axis backend module');
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.nodicsDocumentation.source, {
     type: 'LOCAL_SIBLING',
     repositoryName: 'nodics.docs',
-    contentPath: 'data/core-v001',
     manifestPath: 'data/manifest.json',
     manifestSection: 'documentation'
 }, 'Framework documentation pack must be imported by WCMS from the nodics.docs backend documentation module');
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.customerProjectDocumentation.source, {
     type: 'LOCAL_PROJECT',
-    contentPath: 'data/core-v001',
     manifestPath: 'data/manifest.json',
     manifestSection: 'documentation'
 }, 'Customer project documentation pack must be imported by WCMS from the active customer project');
@@ -304,7 +301,7 @@ async function verifyCanonicalWcmsStartup() {
         state.installations[0].checksum = 'offline-drift';
         const beforeListeners = listeners;
         const beforeGrants = grants;
-        await assert.rejects(runtime.start({}), /changed without a new version/);
+        await assert.rejects(runtime.start({}), /changed without a version change/);
         assert.strictEqual(listeners, beforeListeners);
         assert.strictEqual(grants, beforeGrants);
         assert.strictEqual(serverState, 'stopped');
