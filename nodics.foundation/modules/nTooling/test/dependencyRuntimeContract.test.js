@@ -71,6 +71,13 @@ assert.strictEqual(governance.lockfile.required, true, 'Lockfile must be require
 assert.strictEqual(governance.lockfile.file, 'package-lock.json', 'Lockfile path must be declared');
 assert.strictEqual(governance.lockfile.installCommand, 'npm ci', 'Release installs must use npm ci');
 assert.strictEqual(governance.lockfile.commitWithPackageJson, true, 'Dependency changes must commit package and lockfile together');
+(packageJson.workspaces || []).forEach(workspace => {
+    ['package-lock.json', 'npm-shrinkwrap.json'].forEach(filename => {
+        assert(!fs.existsSync(path.join(repositoryRoot, workspace, filename)),
+            'Workspace must not declare an installation lockfile; root package-lock.json is the only install authority: ' +
+            workspace + '/' + filename);
+    });
+});
 assert.strictEqual(packageJson.allowScripts && packageJson.allowScripts['@scarf/scarf'], false,
     'Swagger UI transitive Scarf install script must remain denied until reviewed as a Nodics-owned runtime need');
 assert(packageJson.overrides && /^\^4\./.test(packageJson.overrides['elastic-apm-node']),

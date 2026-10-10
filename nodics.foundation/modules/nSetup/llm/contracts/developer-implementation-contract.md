@@ -406,6 +406,10 @@ Root `package.json` is the only npm dependency installation authority. Module
 owner module, purpose, and restricted-provider boundary. Provider SDKs must
 stay inside their owner module or an explicitly allowed test/release consumer.
 
+Workspace roots must not contain `package-lock.json` or `npm-shrinkwrap.json`.
+Remove obsolete workspace locks rather than regenerating a parallel install graph;
+the repository-root `package-lock.json` is the only installation lockfile.
+
 Use `npm run release:check` to print the clean-checkout release gate before
 claiming release readiness. Use `npm run release:check -- --execute` to run the
 standard gate and `npm run release:check -- --execute --full` for a release
