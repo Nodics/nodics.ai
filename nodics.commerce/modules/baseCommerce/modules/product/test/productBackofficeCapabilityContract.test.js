@@ -15,6 +15,7 @@ const assert = require('assert');
 const path = require('path');
 
 const root = path.resolve(__dirname, '../../../../../..');
+global.CONFIG = { get: key => require('../config/properties')[key] };
 
 global.SERVICE = {
     DefaultBackofficeCapabilityDefinitionService: require(path.join(

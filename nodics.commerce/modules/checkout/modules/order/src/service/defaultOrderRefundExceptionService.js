@@ -13,7 +13,7 @@
 "use strict";
 const crypto = require("node:crypto");
 const { isDeepStrictEqual } = require("node:util");
-/** @module order/service/defaultOrderRefundExceptionService @description Audits exact Local unused-coupon missing-policy exceptions without altering purchase terms or executing finance. @layer service @owner order */
+/** @module order/service/defaultOrderRefundExceptionService @description Audits exact deployment-selected unused-coupon missing-policy exceptions without altering purchase terms or executing finance. @layer service @owner order */
 module.exports = {
   /** Produces a fixed safe refusal, without retaining dependency errors. */
   fail: function () { throw new CLASSES.NodicsError("ERR_ORDER_REFUND_EXCEPTION"); },
@@ -36,15 +36,18 @@ module.exports = {
       value && typeof value === "object" ? Object.fromEntries(Object.keys(value).sort().map(key => [key, normalize(value[key])])) : value;
     return crypto.createHash("sha256").update(JSON.stringify(normalize(structuredClone(value)))).digest("hex");
   },
-  /** Requires exact metadata-owned Local classification and explicitly selected environment, never a name suffix. */
+  /** Requires explicit layered selection and exact canonical environment admission, never a deployment class or name suffix. */
   settings: function () {
     const policy = (CONFIG.get("order") || {}).refunds || {}, config = policy.policyExceptions || {};
-    const role = CONFIG.get("runtimeRole"), environment = CONFIG.get("environment");
-    const name = NODICS.getSelectedEnvironmentName?.() || NODICS.getEnvironmentName?.();
-    if (policy.enabled !== true || config.enabled !== true || environment?.class !== "LOCAL" ||
+    const role = CONFIG.get("runtimeRole");
+    const name = typeof NODICS !== "undefined" &&
+      (typeof NODICS.getSelectedEnvironmentName === "function" ? NODICS.getSelectedEnvironmentName() :
+        typeof NODICS.getEnvironmentName === "function" ? NODICS.getEnvironmentName() : undefined);
+    if (policy.enabled !== true || config.enabled !== true ||
         (typeof role === "string" ? role : role?.code) !== "COMMERCE" ||
         !Array.isArray(config.environmentNames) || !config.environmentNames.length || config.environmentNames.length > 16 ||
-        config.environmentNames.some(value => typeof value !== "string" || !value || value.includes("*")) ||
+        new Set(config.environmentNames).size !== config.environmentNames.length ||
+        Array.from(config.environmentNames).some(value => typeof value !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(value)) ||
         !config.environmentNames.includes(name) || !Array.isArray(config.approvals) || !config.approvals.length || config.approvals.length > 16) this.fail();
     return { config, name };
   },
@@ -113,7 +116,7 @@ module.exports = {
     const { config, name } = this.settings();
     const selectionHash = this.digest({ config, name });
     const fields = ["tenant", "enterpriseCode", "ownerId", "orderCode", "caseCode", "amount", "currency", "entitlementCode", "couponCode"];
-    if (config.approvals.some(pin => !pin || Object.keys(pin).length !== fields.length ||
+    if (Array.from(config.approvals).some(pin => !pin || Object.keys(pin).length !== fields.length ||
       fields.some(key => !Object.hasOwn(pin, key) || typeof pin[key] !== "string" || !pin[key] || pin[key].includes("*")))) this.fail();
     const unit = await SERVICE.DefaultDigitalCommerceRefundService.exceptionCandidate(r, phase);
     const pins = { tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, orderCode: r.orderCode,
@@ -128,6 +131,7 @@ module.exports = {
     if (capture.captureCode !== raw.code || SERVICE.DefaultExactAmountService.compare(capture.amount, r.totalAmount) !== 0 || capture.currency !== r.currency ||
         capture.providerCode !== "loyalty-reward-points" || capture.methodCode !== "LOYALTY_REWARD") this.fail();
     if (this.digest(this.settings()) !== selectionHash) this.fail();
+    // Retained audit kind is an immutable compatibility identifier, not environment-class authority.
     return { contractVersion: 1, kind: "LOCAL_UNUSED_COUPON_MISSING_REFUND_POLICY", environmentName: name, ...pins,
       productCode: unit.productCode, sku: unit.sku, policyHash: unit.policyHash,
       captureHash: this.digest({ ...capture, amount: SERVICE.DefaultExactAmountService.normalize(capture.amount) }) };

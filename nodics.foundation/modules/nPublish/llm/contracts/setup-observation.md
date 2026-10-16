@@ -6,8 +6,11 @@ Implemented, disabled by default, and not native-qualified by local tests.
 See the [native review recipe](../examples/setup-observation-native-review.md)
 for destination-derived release pins and explicit deployment adoption.
 `POST /publications/setup/observe` accepts service tokens only, the
-`serviceAccountUserGroup` route class and `publish.setup.observe`. nAuth recognizes
-that permission but grants it to no default group. The normal router must verify
+`serviceAccountUserGroup` route class and `publish.setup.observe`. The nPublish
+owner data pack declares that permission in Profile's persisted catalogue;
+recognition does not grant it to a caller. Runtime observation does not consult a
+configuration catalogue or treat an editable vocabulary record as authority.
+The normal router must verify
 signature, expiry, security stamp, deployment module scope and exposure first.
 The service independently requires the original non-system service principal,
 explicit signed permission (a wildcard alone is insufficient), exact tenant and

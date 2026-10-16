@@ -1,4 +1,4 @@
-# Reviewed Local Sample Credits
+# Reviewed Sample Credits
 
 `DefaultLoyaltySampleCreditContributionService` is the Loyalty owner adapter for
 the existing nImport custom-installer mechanism, not a second importer. Its fixed
@@ -10,7 +10,7 @@ installer is `LOYALTY_SAMPLE_CREDITS`; its fixed JSON basename is
 | Boundary | Required evidence |
 | --- | --- |
 | Source | Checksummed nImport-qualified `sample`, `EXPLICIT`, `OPERATIONAL_VERSIONED`, destination `LOYALTY` |
-| Deployment | Local class, allowed environment, selected sample-credit policy |
+| Deployment | Actual selected environment explicitly present in `loyalty.sampleCredits.allowedEnvironments`, enabled sample-credit policy, LOYALTY runtime role |
 | Approval | Exact environment, signed enterprise, release/version/checksum, instruction and approval reference in deployment policy |
 | Operator | Original human access token, verified tenant and enterprise, independent `loyalty.sampleCredit.apply` permission, not general reward earnings |
 | Wallet | One existing OPEN sample CUSTOMER wallet with exact source owner/code |
@@ -20,8 +20,22 @@ installer is `LOYALTY_SAMPLE_CREDITS`; its fixed JSON basename is
 
 Import permission, source JSON, deployment flags and successful preflight do not
 independently grant earning authority. Configuration is off by default. Do not
-allow production or carbon funding through this adapter. Partner modules can
+use this adapter for real production funding or carbon funding. Partner modules can
 narrow validation through loader composition without replacing the importer.
+
+Environment class is not an admission authority. A later environment/server layer
+may explicitly select a non-Local demo environment using the existing allowlist
+and exact `approvedSources` pins; changing its class alone grants nothing. Request
+fields cannot select the deployment environment. Defaults remain disabled with
+empty environment and source lists. Each selected environment needs its own exact
+environment/enterprise/release/version/checksum/instruction/approval match; an
+approval for a different environment is not portable authority. No real funds,
+new wallets or ordinary reward earning are authorized by this customization.
+
+The historical `localDemoOnly: true` receipt/ledger metadata is retained as a
+sample-only compatibility marker, not a deployment-class check. Changing it would
+conflict with persisted original replay evidence; non-Local demo credits preserve
+the same once-only ledger and balance transaction contract.
 
 Preflight refusals may include a fixed owner gate label for operator diagnosis.
 The label never contains provider exception text, wallet data or credentials, and

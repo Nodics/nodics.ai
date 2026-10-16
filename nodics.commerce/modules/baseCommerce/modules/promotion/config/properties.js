@@ -14,10 +14,17 @@ module.exports = {
   secretProtection: {
     purposes: {
       PROMOTION_COUPON_TOKEN: {
-        activeKeyId: 'primary',
-        keys: { primary: { encryptionKey: {
-          $config: 'env', name: 'NODICS_PROMOTION_COUPON_TOKEN_KEY', type: 'string', fallback: null,
-        } } },
+        activeKeyId: "primary",
+        keys: {
+          primary: {
+            encryptionKey: {
+              $config: "env",
+              name: "NODICS_PROMOTION_COUPON_TOKEN_KEY",
+              type: "string",
+              fallback: null,
+            },
+          },
+        },
       },
     },
   },
@@ -32,7 +39,7 @@ module.exports = {
     },
   },
   publish: {
-    setup: { permissions: { promotion: 'publish.lifecycle.create' } },
+    setup: { permissions: { promotion: "publish.lifecycle.create" } },
     providers: {
       domainAdapters: { promotion: null },
       versionProviders: { promotion: null },
@@ -45,6 +52,27 @@ module.exports = {
           ownerModule: "promotion",
           actionKey: "promotion.applyPublicationDecision",
           sourceRuntimeRole: "COMMERCE_STAGED",
+        },
+      },
+    },
+
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        providers: {
+          domainAdapters: { promotion: "DefaultPromotionPublicationService" },
+          versionProviders: { promotion: "DefaultPromotionPublicationService" },
+          workflowProviders: {
+            promotion: "DefaultPublicationApprovalWorkflowService",
+          },
+        },
+      },
+      COMMERCE: {
+        setup: {
+          observation: {
+            targetObservers: {
+              promotion: "DefaultPromotionPublicationService",
+            },
+          },
         },
       },
     },
@@ -102,6 +130,7 @@ module.exports = {
       qualified: false,
       evidenceService: "DefaultPromotionPricedTransactionAdapterService",
       itemEvidenceService: null,
+      // SIMULATION requires the independently enabled Fulfillment simulator and exact environment admission.
       itemEvidenceMode: "VERIFIED",
       pricedSource: {
         qualified: false,
@@ -114,6 +143,45 @@ module.exports = {
       enabled: false,
       qualified: false,
       maximumValidityDays: 3650,
+    },
+
+    // Registration remains separate from availability; installed qualification is an operator gate.
+    publication: {
+      runtimeRole: null,
+      sourceVersioningQualified: false,
+      delivery: { enabled: false, rootCodes: [] },
+      legacyCasRecovery: { enabled: false, operations: [] },
+      targetTransportProvider: null,
+      maxDependencies: 1000,
+
+      target: {
+        moduleName: "promotion",
+        connectionName: null,
+        connectionType: "abstract",
+        runtimeRole: "COMMERCE",
+      },
+      sourceAuthority: {
+        moduleName: "promotion",
+        connectionName: null,
+        connectionType: "abstract",
+        runtimeRole: "COMMERCE_STAGED",
+      },
+    },
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        publication: {
+          runtimeRole: "STAGED",
+          targetTransportProvider:
+            "DefaultPromotionPublicationTransportService",
+        },
+      },
+      COMMERCE: {
+        publication: {
+          runtimeRole: "ONLINE",
+          targetTransportProvider:
+            "DefaultPromotionPublicationTransportService",
+        },
+      },
     },
   },
   schemaPolicies: {
@@ -153,6 +221,17 @@ module.exports = {
         },
       },
     },
+
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        promotion: {
+          publicationVersioned: {
+            isVersionedEnabled: true,
+            versionedReadMode: "CURRENT",
+          },
+        },
+      },
+    },
   },
   apiExposure: {
     categories: {
@@ -172,14 +251,4 @@ module.exports = {
       },
     },
   },
-};
-
-// Registration remains separate from availability; installed qualification is an operator gate.
-module.exports.promotion.publication = {
-  runtimeRole: null,
-  sourceVersioningQualified: false,
-  delivery: { enabled: false, rootCodes: [] },
-  legacyCasRecovery: { enabled: false, operations: [] },
-  targetTransportProvider: null,
-  maxDependencies: 1000,
 };

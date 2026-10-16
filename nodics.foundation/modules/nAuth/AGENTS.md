@@ -20,6 +20,18 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Authentication And Authorization Rules
 
+- Keep `identityGovernance.migration.runtimeDeploymentBootstrapEnabled` default
+  false and limited to provisioning admission. Persisted Profile assignments own
+  runtime permission ceilings; migration properties never define or restore them.
+  Do not infer grants or principal classification from account names, restore
+  retired-key fallbacks, rewrite retained grant identities, or repair installed
+  credentials/groups/lockouts on startup in any environment.
+
+- `waste.asset.listing.intent.read` recognizes only the retained seller-intent
+  proof read. Do not add default group/migration grants or substitute the broader
+  marketplace-project permission. Waste retains private runtime, exact business
+  delegation, tenant, Store and immutable intent checks. It cannot admit completion.
+
 - `commerce.refund.exception.adjudicate` is catalogue recognition only, not a
   default group or migration grant. Profile owns reviewed human assignment;
   Order still requires exact Local deployment pins, original capture, unused
@@ -36,9 +48,9 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   system claims or financial action grants to make an observation pass.
 
 - `commerce.coupon.seller.manage` recognizes Promotion's existing seller-consent
-  routes. Catalogue membership is not a grant: do not add it to default group
-  targets or Init data. Profile owns explicit reviewed assignment; Promotion
-  retains issuer scope, consent and qualification checks. Preserve the existing
+  routes. Catalogue membership is not a grant: Promotion owns its explicit
+  business-group definitions; do not duplicate them in nAuth/Profile. Profile owns
+  reviewed assignment; Promotion retains issuer scope, consent and qualification checks. Preserve the existing
   Profile user-group permission-resolution regression for assignability and
   non-granting runtime-admin, merchant and customer inheritance.
 
@@ -47,10 +59,9 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   merely to make a client or Copilot scenario pass. Location retains execution
   validation and runtime exposure; Profile retains assignment governance.
 
-- Copilot migration read, execute and erase are separate catalogue entries, not
-  default role grants. Preserve the full inherited catalogue when composing
-  properties; ordinary array overrides merge positionally. The Copilot Knowledge
-  permission-catalogue regression uses nConfig and Profile's real group validator.
+- Copilot migration read, execute and erase are separate module-owned permission
+  records, not default role grants. Profile validates fresh persisted catalogue
+  rows; never compose permission vocabulary or grant targets in properties.
 
 - Independent person security bindings validate fail-closed even under legacy
   policy exceptions. Keep shape/stamps generic; Profile owns identity and context.

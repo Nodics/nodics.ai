@@ -1,5 +1,16 @@
 # commsSchema contracts
 
+## Private Telegram Update Receipt
+
+`commsTelegramUpdate` owns native Telegram replay binding through generated
+insert-only durable persistence. Keep its code and tenant/bot/update uniqueness,
+dedicated service-only policy, private claim/payload hashes and disabled generic
+routes/BackOffice/cache/events/search. It has no managed revision, mutable
+delivery lifecycle, raw payload or identity fields. Read the
+[inbound contract](../../../commsCore/llm/contracts/telegram-inbound-launch.md).
+The schema-generation test executes actual MongoDB option generation and named
+policy materialization without installing a database or qualifying delivery.
+
 ## Resource-backed message versions
 
 `commsTemplate.sourceModules` is the explicit source allowlist for published

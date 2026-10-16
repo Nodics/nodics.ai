@@ -80,6 +80,10 @@ module.exports = {
     code: "503",
     message: "External identity integration is unavailable.",
   },
+  ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED: {
+    code: "503",
+    message: "Telegram access is not configured. Contact your administrator.",
+  },
   SUC_PRFL_00000: {
     code: "200",
     message: "Request successfully processed",

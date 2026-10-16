@@ -105,7 +105,9 @@ const owner = {
       stage.gate = "EVIDENCE_GENERATED_CONTEXT";
       const storedRequest = { ...waste.store().context(r), query: { code: record.code },
         searchOptions: { pageSize: 2, pageNumber: 1 }, options: { recursive: false, skipItemCache: true } };
-      if (storedRequest.tenant !== scope.tenant || storedRequest.authData?.tenant !== scope.tenant) this.fail("GENERATED_PARTITION");
+      // Generated model selection uses request.tenant; canonical local system authority has no tenant claim.
+      if (storedRequest.tenant !== scope.tenant || storedRequest.authData?.isSystem !== true ||
+          !isDeepStrictEqual(storedRequest.authData, SERVICE.DefaultIdentityGovernanceService.getSystemAuthData())) this.fail("GENERATED_PARTITION");
       const storedAuth = structuredClone(storedRequest.authData);
       const response = await this.dependency("GENERATED_READ_OWNER", () => waste.store().repository(schema).get(storedRequest));
       check();

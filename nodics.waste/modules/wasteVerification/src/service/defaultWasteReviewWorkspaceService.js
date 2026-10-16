@@ -20,6 +20,13 @@ module.exports = {
   settings: function () {
     return (CONFIG.get("waste") || {}).reviewWorkspace || {};
   },
+  /** Projects review presentation with Waste Material's vocabulary and explicit later-layer overrides. */
+  presentation: function () {
+    return {
+      descriptorOptions: structuredClone(require('../../../wasteMaterial/src/utils/descriptorDefinitions')),
+      ...this.settings(),
+    };
+  },
   /** Rejects malformed queries through the stable owner error. */
   invalid: function () {
     SERVICE.DefaultWastePersistenceService.fail(
@@ -134,13 +141,78 @@ module.exports = {
   literal: function (value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   },
+  /** Projects bounded delivery evidence and registered static diagnostics, never source error text or recipient data. */
+  outcomeDelivery: function (delivery) {
+    if (!delivery || typeof delivery !== "object" || Array.isArray(delivery) ||
+      !["PENDING", "ACCEPTED", "SUPPRESSED", "QUEUED", "DELIVERING", "DELIVERED", "FAILED", "CANCELLED", "RETRY_PENDING", "UNCERTAIN", "DEAD_LETTER", "UNCONFIGURED"].includes(delivery.status)) return undefined;
+    const result = { status: delivery.status };
+    if (typeof delivery.intentCode === "string" && /^[A-Za-z0-9][A-Za-z0-9._-]{0,179}$/.test(delivery.intentCode)) result.intentCode = delivery.intentCode;
+    for (const key of ["revision", "attempt"]) {
+      if (Number.isSafeInteger(delivery[key]) && delivery[key] >= 0) result[key] = delivery[key];
+    }
+    if (delivery.status === "RETRY_PENDING" &&
+      (delivery.nextAttemptAt instanceof Date || typeof delivery.nextAttemptAt === "string" && delivery.nextAttemptAt.length <= 32) &&
+      Number.isFinite(new Date(delivery.nextAttemptAt).getTime())) result.nextAttemptAt = new Date(delivery.nextAttemptAt).toISOString();
+    const diagnostic = delivery.diagnostic;
+    if (diagnostic && typeof diagnostic.code === "string" && /^ERR_[A-Z0-9_]{1,100}$/.test(diagnostic.code) &&
+      ["ADMISSION", "COMMAND", "OWNER_STORAGE", "DISPATCH", "ACKNOWLEDGEMENT", "LINK_CONFIGURATION"].includes(diagnostic.stage)) {
+      try {
+        const message = SERVICE.DefaultStatusService.get(diagnostic.code).message;
+        if (typeof message === "string" && message) {
+          result.message = message;
+          result.diagnostic = { code: diagnostic.code, stage: diagnostic.stage, message, retryAllowed: diagnostic.retryAllowed === true };
+        }
+      } catch (_) { /* Unknown codes disclose neither their source text nor private fields. */ }
+    }
+    return result;
+  },
+  /** Describes recorded delivery and existing retry prerequisites without inventing historical review authority or pending work. */
+  outcomeNotification: function (record, delivery) {
+    if (!["APPROVED", "REJECTED"].includes(record.submissionStatus)) return undefined;
+    const key = record.metadata?.reviewKey;
+    const recordedCommand = typeof key === "string" && /^[A-Za-z0-9._:-]{8,180}$/.test(key);
+    const labels = CONFIG.get("waste")?.reviewWorkspace?.labels || {};
+    const status = delivery && (recordedCommand || delivery.intentCode)
+      ? delivery.status
+      : "NOT_ESTABLISHED";
+    const message = !recordedCommand
+      ? labels.outcomeReviewAuthorityMissing
+      : status === "NOT_ESTABLISHED"
+        ? labels.outcomeNotEstablished
+        : delivery?.message;
+    return {
+      status,
+      ...(typeof message === "string" && message.trim() && message.length <= 500 &&
+        !/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(message) ? { message } : {}),
+      retryAllowed: recordedCommand && (delivery
+        ? ["PENDING", "ACCEPTED", "RETRY_PENDING", "DELIVERING"].includes(delivery.status)
+        : record.metadata?.outcomeDelivery === undefined),
+    };
+  },
   /** Projects customer/reviewer facts while excluding origin identifiers, private notes and command keys. */
   project: function (record) {
     const metadata = record.metadata || {};
+    const diagnostic = metadata.reviewDiagnostic;
+    const outcomeDelivery = this.outcomeDelivery(metadata.outcomeDelivery);
+    const outcomeNotification = this.outcomeNotification(record, outcomeDelivery);
+    let reviewDiagnostic;
+    if (diagnostic && typeof diagnostic.code === "string" && /^ERR_[A-Z0-9_]{1,100}$/.test(diagnostic.code) &&
+      ["REWARD_ASSESSMENT", "REWARD_SETTLEMENT"].includes(diagnostic.stage)) {
+      try {
+        reviewDiagnostic = { code: diagnostic.code, stage: diagnostic.stage,
+          message: SERVICE.DefaultStatusService.get(diagnostic.code).message,
+          retryAllowed: diagnostic.retryAllowed === true };
+      } catch (_) { /* Unknown diagnostics are not source error text. */ }
+    }
     return {
       code: record.code,
       revision: record.revision,
       submissionStatus: record.submissionStatus,
+      evidenceRejectionAvailable: false,
+      ...(metadata.verificationPending ? { verificationPending: {
+        principalCode: metadata.verificationPending.principalCode,
+        facts: metadata.verificationPending.facts,
+      } } : {}),
       submitterRef: record.submitterRef,
       evidenceReview: SERVICE.DefaultWasteItemDescriptorService.evidenceReview(record),
       reviewPending:
@@ -148,8 +220,11 @@ module.exports = {
           ? {
               decision: metadata.reviewDecision,
               principalCode: metadata.reviewPrincipal?.code,
+              ...(metadata.reviewBasis === "EVIDENCE_ONLY" ? { basis: "EVIDENCE_ONLY" } : {}),
             }
           : undefined,
+      ...(reviewDiagnostic ? { reviewDiagnostic } : {}),
+      ...(outcomeNotification ? { outcomeNotification } : {}),
       submittedFacts: record.submittedFacts || {},
       confirmedFacts: record.confirmedFacts,
       verificationRef: record.verificationRef,
@@ -161,6 +236,8 @@ module.exports = {
           "submittedAt",
           "reviewedAt",
           "publicReason",
+          "reviewBasis",
+          "reviewedBy",
           "verifiedFacts",
           "verifiedEstimate",
           "reviewedFacts",
@@ -170,10 +247,10 @@ module.exports = {
           "approvedBy",
           "preApprovalVerificationRef",
           "reviewAssignment",
-          "outcomeDelivery",
         ]
           .filter((key) => metadata[key] !== undefined)
-          .map((key) => [key, metadata[key]]),
+          .map((key) => [key, metadata[key]])
+          .concat(outcomeDelivery ? [["outcomeDelivery", outcomeDelivery]] : []),
       ),
     };
   },
@@ -282,7 +359,9 @@ module.exports = {
     if (!record || !this.statuses("ALL").includes(record.submissionStatus))
       store.fail("ERR_WASTE_RECORD_NOT_FOUND", "Submission was not found");
     await access.assertRecord(request, "waste.review.queue.read", record);
-    return { ...this.project(record), descriptor: SERVICE.DefaultWasteItemDescriptorService.describe(record, await SERVICE.DefaultWasteItemDescriptorService.catalogue(request)) };
+    return { ...this.project(record),
+      evidenceRejectionAvailable: await SERVICE.DefaultWasteEvidenceRejectionService?.available(request, record) === true,
+      descriptor: SERVICE.DefaultWasteItemDescriptorService.describe(record, await SERVICE.DefaultWasteItemDescriptorService.catalogue(request)) };
   },
   /** Enforces employee ownership; review mutations require a claim while claim commands may start from the queue. */
   assertAssignment: function (request, record, requireClaim = false) {
@@ -316,6 +395,7 @@ module.exports = {
     await access.assertRecord(request, permission, current);
     if (
       (current.metadata && current.metadata.reviewDecision) ||
+      current.metadata?.verificationPending ||
       !this.statuses("OPEN").includes(current.submissionStatus) ||
       request.confirmed !== true ||
       !["CLAIM", "RELEASE"].includes((request.payload || {}).action)

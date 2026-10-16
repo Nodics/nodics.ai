@@ -21,6 +21,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const facade = require("../src/facade/defaultCommunicationApiFacade");
+const controller = require("../src/controller/defaultCommunicationApiController");
+const runtime = require("../../commsCore/src/service/defaultCommunicationRuntimeService");
 const intentCode = "COMM_" + "a".repeat(64);
 let effects, reads, intents;
 
@@ -145,6 +147,78 @@ test("another source's stored intent cannot be retried or resolved", async () =>
   await assert.rejects(facade.retryDelivery(r), /CONTEXT/);
   await assert.rejects(facade.resolveDelivery(r), /CONTEXT/);
   assert.deepEqual(effects, []);
+});
+
+function resolutionRequest() {
+  const r = request();
+  r.authData.modules = ["commsApi", "eWaste"];
+  r.httpRequest = {
+    params: { intentCode },
+    body: {
+      sourceModule: "eWaste", sourceCode: "WST_TEST",
+      action: "AUTHORIZE_RESEND", confirmed: true, expectedRevision: 4,
+      reason: "Original delivery remains uncertain; authorize one retry.",
+      operatorRef: { module: "profile", schema: "employee", code: "reviewer" },
+    },
+  };
+  intents = [{ code: intentCode, sourceModule: "eWaste", sourceCode: "WST_TEST",
+    status: "UNCERTAIN", revision: 4, attempt: 1 }];
+  CONFIG.get = () => ({ trustedSourceModules: ["eWaste", "profile"], maximumAttempts: 3 });
+  SERVICE.DefaultLoggerService.assertSensitiveRequest = () => {};
+  global.FACADE = { DefaultCommunicationApiFacade: facade };
+  Object.assign(SERVICE.DefaultCommunicationRuntimeService, {
+    resolveUncertain: runtime.resolveUncertain,
+    read: async () => structuredClone(intents[0]),
+    update: async (context, current, changes) => {
+      effects.push(["resolve", changes]);
+      return { ...current, ...changes, revision: current.revision + 1 };
+    },
+    project: (value) => value,
+  });
+  return r;
+}
+
+test("HTTP source-bound resolution preserves signed admission and real revision/confirmation guards without sending", async () => {
+  const r = resolutionRequest();
+  const result = await controller.resolveDelivery(r);
+  assert.equal(result.data.status, "RETRY_PENDING");
+  assert.equal(reads, 1);
+  assert.equal(effects.length, 1);
+  assert.equal(effects[0][1].reconciliation[0].reason, r.httpRequest.body.reason);
+  assert.deepEqual(effects[0][1].reconciliation[0].operatorRef, r.httpRequest.body.operatorRef);
+  assert.equal(effects[0][1].reconciliation[0].intentRevision, 4);
+});
+
+test("HTTP resolution refuses source binding drift, missing signed authority and incomplete binding before effects", async () => {
+  for (const mutate of [
+    (r) => { r.authData.modules = ["commsApi"]; },
+    (r) => { r.authData.permissions = []; },
+    (r) => { r.authData.tenant = "other"; },
+    (r) => { r.authData.principalType = "human"; },
+    (r) => { r.httpRequest.body.sourceCode = "WST_OTHER"; },
+    () => { intents[0].sourceModule = "profile"; },
+    (r) => { delete r.httpRequest.body.sourceCode; },
+    (r) => { delete r.httpRequest.body.sourceModule; },
+    (r) => { r.httpRequest.body.sourceModule = ["eWaste"]; },
+    (r) => { r.httpRequest.body.sourceCode = { code: "WST_TEST" }; },
+  ]) {
+    const r = resolutionRequest();
+    mutate(r);
+    await assert.rejects(controller.resolveDelivery(r), /ERR_COMMS_INTEGRATION_(CONTEXT|INPUT)/);
+    assert.deepEqual(effects, []);
+  }
+});
+
+test("HTTP resolution preserves current-revision, confirmation, reason and operator requirements", async () => {
+  for (const changes of [
+    { expectedRevision: 3 }, { confirmed: false }, { reason: "" },
+    { operatorRef: {} }, { action: "SEND" },
+  ]) {
+    const r = resolutionRequest();
+    Object.assign(r.httpRequest.body, changes);
+    await assert.rejects(controller.resolveDelivery(r), /ERR_COMMS_INTEGRATION_STORAGE/);
+    assert.deepEqual(effects, []);
+  }
 });
 
 test("unadmitted service cannot inspect private intents", async () => {

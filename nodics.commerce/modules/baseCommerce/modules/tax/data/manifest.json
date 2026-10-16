@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "tax",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "tax permissionCatalogue",
+      "description": "Explicit tax identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "tax",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/taxPermissionHeader.js": "e5bc2379f76d8facec0ca93bf2f6eae5726b7e8177fad71a66377889c3be8046",
+        "init-v001/records/identity/taxPermissionData.js": "970b7454ea63143aa2c35360c4368cf795cabf2fa1999059722c886c4221b98c"
+      }
+    },
     "taxPublicationWorkflow": {
       "kind": "DATA_RELEASE",
       "selectionPolicy": "EXPLICIT",

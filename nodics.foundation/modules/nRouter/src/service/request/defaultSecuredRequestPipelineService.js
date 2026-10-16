@@ -222,6 +222,7 @@ module.exports = {
      * @returns {boolean} True when user has one allowed access group.
      */
     hasAccessGroup: function (request) {
+        if (this.hasPlatformFullAccess(request)) return true;
         if (request.authData && request.authData.runtimeScope) {
             const policy = (CONFIG.get('authSecurity') || {}).internalToken || {};
             const allowed = Array.isArray(policy.runtimeAccessGroups) ? policy.runtimeAccessGroups : [];
@@ -309,7 +310,7 @@ module.exports = {
      */
     getGrantedPermissions: function (request) {
         let authData = request.authData || {};
-        if (authData.runtimeScope) return this.normalizePermissions(authData.permissions);
+        if (authData.runtimeScope) return this.normalizePermissions(authData.permissions).filter(permission => permission !== '*');
         let permissions = [];
         ['permissions', 'userGroupPermissions', 'actionPermissions', 'authorities', 'scopes'].forEach(property => {
             if (Array.isArray(authData[property])) {
@@ -317,8 +318,35 @@ module.exports = {
             }
         });
         permissions = permissions.concat(this.getHydratedGroupPermissions(authData.userGroups || []));
-        permissions = permissions.concat(this.getGroupPermissions(authData.userGroups || []));
-        return Array.from(new Set(permissions.filter(Boolean)));
+        return Array.from(new Set(permissions.filter(permission => permission &&
+            (permission !== '*' || this.hasPlatformFullAccessContext(authData, request.tenant) ||
+                authData.isSystem === true && !authData.principalType && !authData.tokenType))));
+    },
+
+    /**
+     * Admits the reserved persisted full-access grant only for a native human Platform session.
+     * Authentication and current security stamps are verified by the existing credential owner.
+     * @param {Object} auth Authenticated claims, never request headers or a platform-admin flag.
+     * @param {string} [tenant] Target request tenant; full access never grants a cross-tenant shortcut.
+     * @returns {boolean} Eligibility only; the caller must still possess the explicit permission.
+     */
+    hasPlatformFullAccessContext: function (auth, tenant) {
+        const groups = auth?.userGroups || [];
+        const serviceGroup = CONFIG.get('identityGovernance')?.principalPolicy?.serviceGroup;
+        if (typeof serviceGroup !== 'string' || !serviceGroup.trim()) return false;
+        return auth?.principalType === 'human' && auth.tokenType === 'access' &&
+            auth.authenticationMethod === 'PASSWORD' && !auth.isSystem && !auth.runtimeScope &&
+            !auth.sessionContext && !auth.externalIdentityLinkCode &&
+            auth.tenant === (CONFIG.get('defaultTenant') || 'default') &&
+            (tenant === undefined || tenant === auth.tenant) &&
+            auth.entCode === (CONFIG.get('defaultEnterprise') || 'default') &&
+            groups.some(group => this.resolveUserGroupCode(group) === 'platformAdministratorUserGroup' && group?.active !== false) &&
+            !this.getEffectiveUserGroupCodes(groups).includes(serviceGroup);
+    },
+
+    /** Returns explicit human Platform full access; other owners retain their tenant and lifecycle checks. */
+    hasPlatformFullAccess: function (request) {
+        return this.hasPlatformFullAccessContext(request.authData, request.tenant) && this.getGrantedPermissions(request).includes('*');
     },
 
     /**
@@ -339,89 +367,23 @@ module.exports = {
     },
 
     /**
-     * Returns permissions granted by authenticated user groups.
-     *
-     * Route-local group grants are read first for backward compatibility. When
-     * authenticated human or service tokens carry only group codes, the router
-     * also resolves current governed group permissions from the identity
-     * governance contract. This keeps permission ownership in nAuth/Profile
-     * while allowing the router to enforce newly introduced route permissions
-     * without duplicating module-specific grants in router configuration.
-     *
-     * @param {string[]} userGroups Authenticated user group codes.
-     * @returns {string[]} Group-derived permissions.
-     */
-    getGroupPermissions: function (userGroups) {
-        let groupPermissions = this.getRouteActionAuthorizationConfig().groupPermissions || {};
-        let configuredPermissions = userGroups.reduce((permissions, userGroup) => {
-            let userGroupCode = this.resolveUserGroupCode(userGroup);
-            if (Array.isArray(groupPermissions[userGroupCode])) {
-                return permissions.concat(groupPermissions[userGroupCode]);
-            }
-            return permissions;
-        }, []);
-        return Array.from(new Set(configuredPermissions.concat(this.getGovernedGroupPermissions(userGroups))));
-    },
-
-    /**
-     * Resolves permissions from the nAuth-owned identity governance group catalog.
-     *
-     * @param {Array<string|Object>} userGroups Authenticated user group codes or group objects.
-     * @returns {string[]} Governed group and inherited parent group permissions.
-     */
-    getGovernedGroupPermissions: function (userGroups) {
-        let identityGovernance = this.getConfigurationValue('identityGovernance') || {};
-        let groupTargets = identityGovernance.migration && identityGovernance.migration.groupTargets
-            ? identityGovernance.migration.groupTargets
-            : {};
-        let permissions = [];
-        let visited = {};
-        let visitGroup = userGroup => {
-            let userGroupCode = this.resolveUserGroupCode(userGroup);
-            if (!userGroupCode || visited[userGroupCode]) return;
-            visited[userGroupCode] = true;
-            let groupTarget = groupTargets[userGroupCode];
-            if (!groupTarget) return;
-            if (Array.isArray(groupTarget.permissions)) {
-                permissions = permissions.concat(groupTarget.permissions);
-            }
-            if (Array.isArray(groupTarget.parentGroups)) {
-                groupTarget.parentGroups.forEach(parentGroup => visitGroup(parentGroup));
-            }
-        };
-        (userGroups || []).forEach(userGroup => visitGroup(userGroup));
-        return Array.from(new Set(permissions.filter(Boolean)));
-    },
-
-    /**
-     * Returns all effective group codes for the authenticated principal,
-     * including inherited parent groups declared on hydrated group objects or in
-     * the nAuth-owned identity governance catalog.
-     *
+     * Returns group codes only from authenticated claims or persisted hydrated ancestry.
+     * Configuration defines route requirements, never additional principal authority.
      * @param {Array<string|Object>} userGroups Authenticated group codes or objects.
-     * @returns {string[]} User group and inherited parent group codes.
+     * @returns {string[]} Effective persisted group codes.
      */
     getEffectiveUserGroupCodes: function (userGroups) {
-        let identityGovernance = this.getConfigurationValue('identityGovernance') || {};
-        let groupTargets = identityGovernance.migration && identityGovernance.migration.groupTargets
-            ? identityGovernance.migration.groupTargets
-            : {};
-        let groupCodes = [];
-        let visited = {};
-        let visitGroup = userGroup => {
-            let userGroupCode = this.resolveUserGroupCode(userGroup);
-            if (!userGroupCode || visited[userGroupCode]) return;
-            visited[userGroupCode] = true;
-            groupCodes.push(userGroupCode);
-            if (userGroup && typeof userGroup === 'object' && Array.isArray(userGroup.parentGroups)) {
-                userGroup.parentGroups.forEach(parentGroup => visitGroup(parentGroup));
-            }
-            let groupTarget = groupTargets[userGroupCode];
-            if (groupTarget && Array.isArray(groupTarget.parentGroups)) {
-                groupTarget.parentGroups.forEach(parentGroup => visitGroup(parentGroup));
+        const groupCodes = [], visited = new Set();
+        const visit = group => {
+            const code = this.resolveUserGroupCode(group);
+            if (!code || visited.has(code) || group?.active === false) return;
+            visited.add(code);
+            groupCodes.push(code);
+            if (group && typeof group === 'object' && Array.isArray(group.parentGroups)) {
+                group.parentGroups.forEach(visit);
             }
         };
-        (userGroups || []).forEach(userGroup => visitGroup(userGroup));
+        (userGroups || []).forEach(visit);
         return groupCodes;
     },
 

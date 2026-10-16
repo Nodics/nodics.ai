@@ -21,7 +21,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const original = require("../src/service/enterprise/defaultEnterpriseManagementService");
 const enterpriseSource = require("../src/service/enterprise/defaultEnterpriseService");
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 const metadata = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultSchemaUtilityService");
 const setupSource = require("../src/service/enterprise/defaultEnterpriseSetupContinuationService");
 const teamSource = require("../src/service/enterprise/defaultEnterpriseTeamAdministrationService");
@@ -87,6 +87,7 @@ function fixture() {
     },
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultTenantProvisioningGuardService: { ...tenantGuardSource },
     DefaultEnterpriseSetupContinuationService: { ...setupSource },
     DefaultEnterpriseTeamAdministrationService: { ...teamSource },

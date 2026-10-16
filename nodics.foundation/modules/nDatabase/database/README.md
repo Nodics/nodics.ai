@@ -1,5 +1,15 @@
 # database
 
+Generated schema group access uses nRouter's explicit native human Platform
+full-access predicate. Generated CRUD and schema operation metadata pass the
+target tenant; record ownership, field policies and publication constraints
+remain independent. See [Platform schema access](llm/contracts/README.md#platform-schema-access).
+
+Single-save failures use the canonical logger, with only a fixed status diagnostic
+for sensitive requests and unchanged original pipeline errors. Direct console
+sinks are prohibited. See [failure diagnostics](llm/contracts/README.md#single-save-failure-diagnostics)
+and its base/merged-layer regression before overriding `saveModel`.
+
 Private create-once records use [explicit insert-only generated saves](llm/examples/insert-only-save.md).
 
 The shared save/update admission also applies after `vService` loads. Provider

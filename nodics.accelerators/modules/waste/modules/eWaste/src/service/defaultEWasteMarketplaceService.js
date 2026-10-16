@@ -283,6 +283,8 @@ module.exports = {
   },
   /** Joins only currently listed Waste assets with published Product prices and safe offer fields. */
   list: async function (request) {
+    if (this.settings().catalogueDiscovery === true)
+      return SERVICE.DefaultEWasteCatalogueService.marketplace(request);
     const storeCode = this.settings().storeCode;
     if (!storeCode) return { assets: [], coupons: [] };
     const catalogue = await this.experience().remote(

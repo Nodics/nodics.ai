@@ -76,12 +76,12 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   const authProperties = require("../../nAuth/config/properties");
   const importProperties = require("../../nData/nImport/import/config/properties");
   const provisioningPolicy = require("../../../../nodics.platform/modules/profile/config/properties").profileTenantProvisioning;
-  // A selected deployment must explicitly approve binding in its existing native grant policy.
+  // Installed governed assignments, not configuration, approve tenant binding.
   const migration = { ...authProperties.identityGovernance.migration,
-    localRuntimeDeploymentGrantPermissions: [...authProperties.identityGovernance.migration.localRuntimeDeploymentGrantPermissions, provisioningPolicy.permission] };
+    runtimeDeploymentBootstrapEnabled: true };
   const key = "fictional-runtime-proof-not-for-deployment-only";
   const scope = { projectCode: "test.project", environmentCode: "testLocal", serverCode: "platformServer", instanceCode: "platform-1",
-    modules: ["profile"], permissions: bootstrap.runtimeGrantPermissions(migration) };
+    modules: ["profile"], permissions: ["auth.internal.token.read", provisioningPolicy.permission] };
   assert(scope.permissions.includes(provisioningPolicy.permission));
   const grant = { code: "platform-grant", principalType: "service", principalCode: "apiAdmin", scopeType: "RUNTIME_DEPLOYMENT",
     tenantCode: "default", enterpriseCode: "platform", inheritanceMode: "DIRECT", status: "ACTIVE", effect: "ALLOW", runtimeScope: scope };
@@ -91,7 +91,9 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   f.record.properties.enterpriseProvisioning = { version: 1, enterpriseCode: "enterprise-a", setupRequestKey: setupKey,
     setupRequestHash: setupHash, deploymentScopes: { [scopeKey]: { scope: { projectCode: scope.projectCode,
       environmentCode: scope.environmentCode, serverCode: scope.serverCode }, modules: scope.modules } } };
-  const targetGrants = [];
+  const targetGrants = [{ ...structuredClone(grant), _id: "target-grant-id", active: true,
+    code: "approved-target-grant", scopeCode: "approved-target-grant",
+    tenantCode: "tenant-a", enterpriseCode: "enterprise-a" }];
   const tenantProperties = {};
   CONFIG.setProperties = (properties, tenant) => { tenantProperties[tenant] = properties; if (properties.database) f.state.config = properties.database; };
   const original = CONFIG.get;
@@ -111,7 +113,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
     getRawModule: name => name === "profile" ? { name, path: require("node:path").resolve(__dirname, "../../../../nodics.platform/modules/profile") } : undefined });
   let grantActive = true;
   const proofReads = [], issuedTenants = [];
-  const native = { code: "apiAdmin", loginId: "apiAdmin", active: true, principalType: "human",
+  const native = { code: "apiAdmin", loginId: "apiAdmin", active: true, principalType: "service",
     userGroups: [], apiKeyScopes: scope.permissions, apiKeyHash: apiKeys.digest(key), apiKeyStatus: "active",
     identityMigrationVersion: migration.version || 1, password: "retained-target-reference" };
   const originalNative = structuredClone(native);
@@ -138,13 +140,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
             ? [{ loginId: "apiAdmin", principalType: "service", active: true, authVersion: 2, apiKeyStatus: "active", apiKeyScopes: scope.permissions }]
             : [structuredClone(native)] };
         }
-        assert.equal(request.tenant, "tenant-a");
-        if (request.query.code.$in.includes("admin")) {
-          f.state.order.push("administrator-inventory");
-          return { code: "SUC_FIND_00000", result: [{ code: "admin", loginId: "admin", active: true }] };
-        }
-        assert.deepEqual(request.query.code.$in, migration.servicePrincipalCodes);
-        return { code: "SUC_FIND_00000", result: [structuredClone(native)] };
+        throw new Error("Startup must not repair service principals or administrators");
       },
       update: async request => {
         assert.equal(request.tenant, "tenant-a"); assert.deepEqual(request.query, { code: "apiAdmin" });
@@ -153,16 +149,8 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
         return { code: "SUC_UPDATE_00000", result: { acknowledged: true, matchedCount: 1 } };
       },
     }),
-    DefaultUserGroupService: { get: async request => {
-      assert.equal(request.tenant, "tenant-a"); f.state.order.push("reconcile");
-      return { code: "SUC_FIND_00000", result: Object.keys(migration.groupTargets).map(code => ({ code, active: true })) };
-    } },
-    DefaultIdentityMigrationAuditService: { save: async request => {
-      assert.equal(request.tenant, "tenant-a");
-      assert.equal(request.model.result.reconciledRuntimeDeploymentGrants.length, 1);
-      assert.deepEqual(request.model.result.reconciledAdministrators, []);
-      return { code: "SUC_SAVE_00000", result: request.model };
-    } },
+    DefaultIdentityMigrationAuditService: { save: async () => { throw new Error("Read-only validation cannot emit a mutation audit"); } },
+    DefaultPrincipalSecurityStampGovernanceService: require("../../../../nodics.platform/modules/profile/src/service/identity/defaultPrincipalSecurityStampGovernanceService"),
     DefaultAuthenticationProviderService: Object.assign(Object.create(authentication), { recordAuthEvent: async () => true }),
     DefaultRuntimeAuthorizationService: authorization,
     DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
@@ -174,7 +162,9 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
       assert.equal(request.options.skipItemCache, true);
       if (request.tenant === "default") return { code: "SUC_FIND_00000", result: [{ ...grant, status: grantActive ? "ACTIVE" : "INACTIVE" }] };
       assert.equal(request.tenant, "tenant-a");
-      return { code: "SUC_FIND_00000", result: targetGrants.filter(item => Object.entries(request.query).every(([name, value]) => item[name] === value)) };
+      if (request.searchOptions) f.state.order.push("reconcile");
+      const result = targetGrants.filter(item => Object.entries(request.query).every(([name, value]) => item[name] === value));
+      return { code: "SUC_FIND_00000", count: result.length, result };
     }, save: async request => {
       authorization.validateAssignment(request.model);
       assert.equal(request.model.tenantCode, "tenant-a"); assert.equal(request.model.enterpriseCode, "enterprise-a");
@@ -212,7 +202,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   SERVICE.DefaultInternalAuthenticationProviderService = Object.assign(Object.create(provider), { getInternalAuthToken: issuer.getInternalAuthToken });
   const enterprise = { code: "enterprise-a", active: true, tenant: { code: "tenant-a", active: true } };
   await f.owner.buildEnterprise([enterprise]);
-  assert.deepEqual(proofReads, ["default", "default", "tenant-a"]);
+  assert.deepEqual(proofReads, ["default", "tenant-a"]);
   assert.deepEqual(issuedTenants, ["default", "tenant-a"]);
   assert.deepEqual(Object.keys(f.state.tokens), ["tenant-a"]);
   assert.equal(targetGrants.length, 1);
@@ -221,8 +211,8 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   assert.equal(headers.Authorization, "Bearer fictional-issued-runtime-proof-tenant-a");
   assert(f.state.order.indexOf("init") > f.state.order.indexOf("provider"));
   assert(f.state.order.indexOf("reconcile") > f.state.order.indexOf("init"));
-  assert(f.state.order.includes("administrator-inventory"));
-  assert.deepEqual(nativeUpdates, ["tenant-a"]);
+  assert(!f.state.order.includes("administrator-inventory"));
+  assert.deepEqual(nativeUpdates, []);
   assert.equal(native.principalType, "service");
   assert.equal(native.apiKeyHash === originalNative.apiKeyHash, true, "Target retained credentials are not rebound");
   assert.equal(native.password === originalNative.password, true, "Service reconciliation does not touch retained password references");
@@ -232,26 +222,27 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   const originalProjection = bootstrap.readResolvedRuntimeDeployment;
   const extension = { ...scope, modules: [...scope.modules, "commsApi"] };
   const deployment = { properties: { runtimeIdentity: { instanceCode: scope.instanceCode, remoteModules: ["commsApi"] },
-    profileTenantProvisioning: { localRuntimeRemoteModuleExtensions: ["commsApi"] } }, modules: ["profile"] };
+    identityGovernance: { migration: { runtimeDeploymentBootstrapEnabled: true } },
+    profileTenantProvisioning: { runtimeRemoteModuleExtensions: ["commsApi"] } }, modules: ["profile"] };
   bootstrap.getProjectRoot = () => "/fictional/project";
   bootstrap.readResolvedRuntimeDeployment = () => deployment;
   try {
-    await assert.rejects(provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", extension),
+    await assert.rejects(provisioning.authorizeRuntimeBootstrapScope("tenant-a", extension),
       { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" }, "Configuration alone cannot replace the current authenticated grant");
     grant.runtimeScope = extension;
-    assert.equal(await provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", extension), "enterprise-a");
+    assert.equal(await provisioning.authorizeRuntimeBootstrapScope("tenant-a", extension), "enterprise-a");
     for (const denied of [[], ["differentModule"]]) {
-      deployment.properties.profileTenantProvisioning.localRuntimeRemoteModuleExtensions = denied;
-      await assert.rejects(provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", extension),
+      deployment.properties.profileTenantProvisioning.runtimeRemoteModuleExtensions = denied;
+      await assert.rejects(provisioning.authorizeRuntimeBootstrapScope("tenant-a", extension),
         { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
     }
-    deployment.properties.profileTenantProvisioning.localRuntimeRemoteModuleExtensions = ["commsApi"];
+    deployment.properties.profileTenantProvisioning.runtimeRemoteModuleExtensions = ["commsApi"];
     deployment.modules.push("commsApi");
-    await assert.rejects(provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", extension),
+    await assert.rejects(provisioning.authorizeRuntimeBootstrapScope("tenant-a", extension),
       { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" }, "Active module growth is not a remote-only upgrade");
     deployment.modules.pop();
     deployment.properties.runtimeIdentity.remoteModules = [];
-    await assert.rejects(provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", extension),
+    await assert.rejects(provisioning.authorizeRuntimeBootstrapScope("tenant-a", extension),
       { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
     assert.deepEqual(f.record.properties.enterpriseProvisioning, originalSnapshot);
     assert.equal(targetGrants.length, 1, "Admission alone does not persist a grant");
@@ -262,12 +253,12 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   }
   for (const unapproved of [{ ...scope, projectCode: "other.project" },
     { ...scope, modules: ["unapproved"] }, { ...scope, permissions: ["unapproved.execute"] }]) {
-    await assert.rejects(provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", unapproved), { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
+    await assert.rejects(provisioning.authorizeRuntimeBootstrapScope("tenant-a", unapproved), { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
     assert.equal(targetGrants.length, 1, "Rejected declarations cannot add target grants");
   }
   const originalSetupHash = f.record.properties.enterpriseProvisioning.setupRequestHash;
   f.record.properties.enterpriseProvisioning.setupRequestHash = "c".repeat(64);
-  await assert.rejects(provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", scope), { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
+  await assert.rejects(provisioning.authorizeRuntimeBootstrapScope("tenant-a", scope), { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
   f.record.properties.enterpriseProvisioning.setupRequestHash = originalSetupHash;
   assert.equal(targetGrants.length, 1);
   assert.equal(f.owner.isEnterpriseRuntimeReady({ ...enterprise, code: "another-enterprise" }), false);
@@ -282,7 +273,7 @@ test("actual Init, Profile bootstrap, API-key provider and grants issue target p
   await assert.rejects(SERVICE.DefaultInternalAuthenticationProviderService.fetchInternalAuthToken("default"));
   assert.equal(issuedTenants.length, 2, "Revoked source grants cannot issue renewed proof");
   const opened = f.state.opened;
-  await assert.rejects(provisioning.authorizeLocalRuntimeBootstrapScope("tenant-a", scope), { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
+  await assert.rejects(provisioning.authorizeRuntimeBootstrapScope("tenant-a", scope), { code: "ERR_PROFILE_TENANT_PROVISIONING_HELD" });
   await assert.rejects(f.owner.prepareEnterpriseTenant(enterprise));
   assert.equal(f.state.opened, opened, "Revoked grant refuses before another provider admission");
   assert.equal(f.owner.isEnterpriseRuntimeReady(enterprise), false);

@@ -34,20 +34,16 @@ module.exports = {
       callers: [],
       bindingAdmission: {
         enabled: false,
-        moduleName: null,
         connectionName: null,
         targetAuthority: null,
-        apiName: null,
       },
     },
     digitalOwnership: {
       enabled: false,
       qualified: false,
       owner: {
-        moduleName: null,
         connectionName: null,
         targetAuthority: null,
-        apiPrefix: null,
       },
     },
     notifications: {

@@ -32,7 +32,7 @@ async function main() {
             }
         }
     };
-    const service = Object.assign({}, experience, { store: () => ({ context: () => ({ tenant: 'visibility-test' }), list: async () => [] }) });
+    const service = Object.assign({}, experience, { settings: () => ({}), publicJourney: () => ({}), store: () => ({ context: () => ({ tenant: 'visibility-test' }), list: async () => [] }) });
     const result = await service.experience({ tenant: 'visibility-test' });
     assert.deepStrictEqual(queries[0], { operatingStatus: 'ACTIVE', publicVisibility: 'PUBLIC', active: true });
     assert.deepStrictEqual(result.centres.map(centre => centre.code), ['VISIBLE']);

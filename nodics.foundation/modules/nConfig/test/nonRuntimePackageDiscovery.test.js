@@ -131,3 +131,100 @@ assert.strictEqual(utils.isRuntimeModule({
 fs.rmSync(root, { recursive: true, force: true });
 
 console.log('Non-runtime package discovery validated');
+
+// Explicit installed sources use the canonical descriptor builder without widening runtime discovery.
+const installedRoot = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-installed-source-')));
+const frameworkRoot = path.join(installedRoot, 'framework');
+const projectRoot = path.join(installedRoot, 'project');
+const oldNodics = global.NODICS;
+const oldConfig = global.CONFIG;
+const selectedRoots = [path.join(frameworkRoot, 'foundation'), projectRoot];
+const active = ['selectedOwner'];
+const raw = { selectedOwner: { name: 'selectedOwner' } };
+const properties = { selected: true };
+/** Creates only disposable package metadata, never executable runtime fixtures. */
+function packageAt(relative, name, kind, extra = {}) {
+    const directory = path.join(installedRoot, relative);
+    fs.mkdirSync(directory, { recursive: true });
+    fs.writeFileSync(path.join(directory, 'package.json'), JSON.stringify({
+        name, index: '1.0', nodics: { kind, ...extra }
+    }));
+    return directory;
+}
+try {
+    packageAt('framework', 'fixtureFramework', 'framework', { runtimeModule: false });
+    packageAt('framework/foundation', 'fixtureFoundation', 'group');
+    packageAt('framework/catalogue', 'catalogueGroup', 'group');
+    const owner = packageAt('framework/catalogue/modules/owner', 'installedOwner', 'capability');
+    packageAt('framework/foundation/publisher', 'publisherOwner', 'publish');
+    packageAt('project', 'fixtureProject', 'application');
+    packageAt('project/modules', 'structuralModules', 'group', { runtimeModule: false });
+    const projectOwner = packageAt('project/modules/owner', 'projectOwner', 'capability');
+    packageAt('project/modules/disabled', 'disabledOwner', 'capability', { loadableByNodicsModuleLoader: false });
+    packageAt('project/test/fixtures/copied', 'copiedOwner', 'capability');
+    fs.mkdirSync(path.join(owner, 'config'));
+    fs.writeFileSync(path.join(owner, 'config/properties.js'), 'throw new Error("Configuration must not execute");');
+    global.NODICS = {
+        getNodicsHome: () => selectedRoots[0], getCustomHome: () => projectRoot,
+        getRawModules: () => raw, getIndexedModules: () => active,
+        addRawModules: () => { throw new Error('Installed sources must not register'); }
+    };
+    global.CONFIG = { get: () => properties, set: () => { throw new Error('Configuration must not change'); } };
+    const before = JSON.stringify({ selectedRoots, active, raw, properties });
+    const descriptor = utils.resolveInstalledSourceDescriptor('installedOwner');
+    assert.strictEqual(descriptor.path, owner);
+    assert.strictEqual(descriptor.parent, 'catalogueGroup');
+    assert.strictEqual(descriptor.canonicalIdentity, 'catalogueGroup/installedOwner');
+    assert.strictEqual(utils.resolveInstalledSourceDescriptor('publisherOwner').metaData.nodics.kind, 'publish');
+    assert.strictEqual(utils.resolveInstalledSourceDescriptor('projectOwner').path, projectOwner);
+    assert.strictEqual(utils.resolveInstalledSourceDescriptor('projectOwner').parent, 'fixtureProject');
+    assert.strictEqual(JSON.stringify({ selectedRoots, active, raw, properties }), before);
+    assert.strictEqual(require.cache[path.join(owner, 'package.json')], undefined, 'metadata must not populate require cache');
+    for (const name of ['missingOwner', 'disabledOwner', 'copiedOwner']) {
+        assert.throws(() => utils.resolveInstalledSourceDescriptor(name), /Missing installed source owner/);
+    }
+    for (const name of ['../installedOwner', '*', '', null, 'owner/path']) {
+        assert.throws(() => utils.resolveInstalledSourceDescriptor(name), /Invalid installed source owner selection/);
+    }
+    const duplicate = packageAt('project/modules/duplicate', 'installedOwner', 'capability');
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('installedOwner'), /Duplicate runtime module name/);
+    fs.rmSync(duplicate, { recursive: true });
+    const duplicateConstructor = packageAt('project/modules/constructor1', 'constructor', 'capability');
+    const duplicateConstructor2 = packageAt('project/modules/constructor2', 'constructor', 'capability');
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('constructor'), /Duplicate runtime module name/);
+    fs.rmSync(duplicateConstructor, { recursive: true });
+    fs.rmSync(duplicateConstructor2, { recursive: true });
+    const outside = packageAt('outside', 'outsideOwner', 'capability');
+    const escaping = path.join(projectRoot, 'modules/escaping');
+    fs.symlinkSync(outside, escaping);
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('outsideOwner'), /escapes its trusted root/);
+    fs.unlinkSync(escaping);
+    const packageFile = path.join(owner, 'package.json');
+    const original = fs.readFileSync(packageFile);
+    fs.unlinkSync(packageFile);
+    fs.symlinkSync(path.join(outside, 'package.json'), packageFile);
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('installedOwner'), /Invalid installed source package metadata/);
+    fs.unlinkSync(packageFile);
+    fs.writeFileSync(packageFile, '{invalid');
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('installedOwner'), SyntaxError);
+    fs.writeFileSync(packageFile, ' '.repeat(262145));
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('installedOwner'), /Invalid installed source package metadata/);
+    fs.writeFileSync(packageFile, original);
+    const firstServer = packageAt('project/modules/serverA', 'repeatedServer', 'server');
+    const secondServer = packageAt('project/modules/serverB', 'repeatedServer', 'server');
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('repeatedServer'), /Ambiguous installed source owner/);
+    fs.rmSync(secondServer, { recursive: true });
+    assert.throws(() => utils.resolveInstalledSourceDescriptor('repeatedServer'), /must not be a topology package/);
+    fs.rmSync(firstServer, { recursive: true });
+    assert.throws(() => utils.collectModuleRecords(projectRoot, [], null, {
+        root: projectRoot, visited: new Set(), directories: 8192, depth: 0
+    }), /bound exceeded/);
+    assert.strictEqual(JSON.stringify({ selectedRoots, active, raw, properties }), before);
+} finally {
+    if (oldNodics === undefined) delete global.NODICS;
+    else global.NODICS = oldNodics;
+    if (oldConfig === undefined) delete global.CONFIG;
+    else global.CONFIG = oldConfig;
+    fs.rmSync(installedRoot, { recursive: true, force: true });
+}
+console.log('Bounded installed-source descriptor resolution validated');

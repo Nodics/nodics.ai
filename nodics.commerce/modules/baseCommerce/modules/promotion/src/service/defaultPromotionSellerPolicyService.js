@@ -153,8 +153,8 @@ module.exports = {
         if (coupon.secureIssuanceCode !== binding.batchCode || observed.promotionCode !== binding.promotionCode) this.fail();
         return { campaign: (await this.readBound(r, binding)).retainedPolicy, activated: true };
     },
-    /** Discovers private stock once, narrows receipt-bound candidates through current Product metadata, then verifies only candidate pinned policies. Metadata grants no authority; parent retains stock counting/reservation. @param {Object} request Signed Storefront context. @param {string} productCode Canonical Product. @returns {Promise<Object|undefined>} Exact delegated campaign and batch. */
-    readProduct: async function (request, productCode) {
+    /** Resolves bounded receipt-backed Product candidates without granting policy, reference or stock authority. Both batch preflight and the actual policy read use this fresh owner selector. @param {Object} request Signed or privately admitted Product context. @param {string} productCode Exact Product. @returns {Promise<Object|undefined>} Original context and candidate bindings. */
+    productBindings: async function (request, productCode) {
         SERVICE.DefaultPromotionDistributionAdmissionService?.assertReadPurpose(request, 'PRODUCT', productCode);
         const r = this.context(request);
         if (!r) return undefined;
@@ -166,11 +166,18 @@ module.exports = {
         const bindings = batches.filter(batch => batch.secureIssuance?.command?.storeCode === r.storeCode &&
             roots.has(batch.secureIssuance.command.rootCode) &&
             batch.issuerEnterpriseRef?.code !== r.enterpriseCode).map(batch => this.binding(r, batch));
-        if (!bindings.length) return undefined;
+        if (!bindings.length) return { context: r, bindings: [] };
         if (new Set(bindings.map(binding => binding.promotionCode)).size !== bindings.length) this.fail();
         const candidates = new Set(await SERVICE.DefaultCouponSellerAuthorizationService.productPolicyCandidates(r, productCode, bindings));
+        return { context: r, bindings: bindings.filter(item => candidates.has(item.promotionCode)) };
+    },
+    /** Discovers receipt-bound candidates, then verifies every selected pinned policy with fresh receipt and consent checks. Metadata grants no authority; parent retains stock counting/reservation. @param {Object} request Signed Storefront context. @param {string} productCode Canonical Product. @returns {Promise<Object|undefined>} Exact delegated campaign and batch. */
+    readProduct: async function (request, productCode) {
+        const resolved = await this.productBindings(request, productCode);
+        if (!resolved) return undefined;
+        const r = resolved.context;
         const selected = [];
-        for (const binding of bindings.filter(item => candidates.has(item.promotionCode))) {
+        for (const binding of resolved.bindings) {
             const policy = (await this.readBound(r, binding)).policy;
             SERVICE.DefaultPromotionDistributionAdmissionService?.assertProductPolicy(r, policy);
             if (policy.conditions?.sourceProductCode !== productCode) this.fail();

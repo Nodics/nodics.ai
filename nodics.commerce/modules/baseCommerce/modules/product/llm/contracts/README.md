@@ -1,5 +1,12 @@
 # Product contracts
 
+## Ordinary Product Roots
+
+Read [ordinary Product authoring](ordinary-product-authoring.md) for signed
+enterprise View/Edit/Full control, scoped Workbench discovery, generated
+versioned persistence and source-only archive. This grants no child-schema
+CRUD, generic schema access or publication authority.
+
 Native Product create receipts use private `productCommandReceipt` storage and
 the existing generated controller path. Explicit `commandReceipts` admission
 requires a stable key and qualified durable journal. Inspection preserves schema
@@ -11,6 +18,26 @@ This is the concise contract index. The complete, unchanged owner guidance is in
 ## Exact Product Graph And Activation
 
 Read the [complete contract section](product-lifecycle-and-publication.md#exact-product-graph-and-activation).
+
+## Public Coupon Browsing
+
+Consumer enrichment sends distinct selected public coupon codes to Promotion's
+internal `publicAvailabilityBatch`, preserving original authentication rather
+than synthetic Product service auth. Pass selectors only, never indexed/retained
+rows as admission. Require a complete Map with every selected value containing
+exactly own data fields `available` (Boolean) and its matching `IN_STOCK` or
+`OUT_OF_STOCK` status. Detach those safe fields before further awaits. Undefined,
+inert, malformed, accessor or extra-field values reject before any Digital call;
+an initially selected Product never falls back when selection changes during
+the batch await. Missing/broken selected ownership rejects without per-item or
+Digital fallback. Physical Inventory remains one
+batch, scoped customers retain Digital's existing path and unselected delivery
+is unchanged. Promotion independently verifies every Product before/after and
+consolidates only fresh bounded Profile activity references. No cross-request
+reuse, approval cache, limit/grant change or financial authority is introduced.
+See [Promotion's exact contract](../../../promotion/llm/contracts/trusted-distribution-read-admission.md#bounded-public-browsing-batch).
+Run Product's digital availability suite with Promotion's distribution/bridge
+and DigitalCore suites; isolated source tests do not prove native latency.
 
 ### Owner Integration And Deployment Selection
 

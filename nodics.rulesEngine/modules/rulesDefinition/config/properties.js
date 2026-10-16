@@ -11,28 +11,35 @@
 
 /** @module rulesDefinition/config/properties @description Configurable defaults for governed rule definitions. @layer config @owner rulesDefinition */
 module.exports = {
-    localResetProvider: {
-        contributions: {
-            rulesDefinition: {
-                serviceNames: {
-                    DefaultRuleSetService: true,
-                    DefaultRuleSetVersionService: true,
-                    DefaultScoreBandSetService: true,
-                    DefaultScoreBandSetVersionService: true,
-                    DefaultRuleAuditEventService: true
-                }
-            }
-        }
+  rulesEngine: {
+    limits: {
+      maximumRuleGroupsPerSet: 250,
+      maximumConditionsPerGroup: 50,
+      maximumGroupDepth: 5,
     },
-    schemaPolicies: {
-        rulesDefinition: {
-            operational: {
-                accessGroups: {
-                    adminGroup: 10,
-                    serviceAccountUserGroup: 10,
-                    employeeUserGroup: 10
-                }
-            }
-        }
-    }
+  },
+  localResetProvider: {
+    contributions: {
+      rulesDefinition: {
+        serviceNames: {
+          DefaultRuleSetService: true,
+          DefaultRuleSetVersionService: true,
+          DefaultScoreBandSetService: true,
+          DefaultScoreBandSetVersionService: true,
+          DefaultRuleAuditEventService: true,
+        },
+      },
+    },
+  },
+  schemaPolicies: {
+    rulesDefinition: {
+      operational: {
+        accessGroups: {
+          adminGroup: 10,
+          serviceAccountUserGroup: 10,
+          employeeUserGroup: 10,
+        },
+      },
+    },
+  },
 };

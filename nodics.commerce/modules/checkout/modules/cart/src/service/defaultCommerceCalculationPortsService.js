@@ -70,6 +70,20 @@ module.exports = {
         let books, rows;
         if (this.activatedDelivery('pricing', cart)) {
             request = this.ownerContext(request, cart, authData);
+            if (CONFIG.get('pricing')?.publication?.delivery?.rowReleases === true) {
+                const publication = SERVICE.DefaultPricingPublicationService;
+                if (typeof publication.rowProductCodes !== 'function') throw new Error('Pricing row selection owner unavailable');
+                request = { ...request, productReferences: undefined };
+                const needed = await publication.rowProductCodes(structuredClone(request));
+                if (!Array.isArray(needed) || needed.some(code => code !== request.productCode)) throw new Error('Pricing row selection mismatch');
+                if (needed.length) {
+                    const product = SERVICE.DefaultProductDiscoveryService;
+                    if (typeof product?.consumerReferences !== 'function') throw new Error('Consumed Product publication owner unavailable');
+                    request = { ...request, locale: cart.locale,
+                        productReferences: await product.consumerReferences({ ...request, locale: cart.locale },
+                            [{ productCode: request.productCode, sku: request.sku, variantCode: request.variantCode }]) };
+                }
+            }
             const records = await SERVICE.DefaultPricingPublicationService.readConfigured(request);
             books = records.filter(item => item.schema === 'priceBook').map(item => item.policy);
             rows = records.filter(item => item.schema === 'priceRow').map(item => item.policy);

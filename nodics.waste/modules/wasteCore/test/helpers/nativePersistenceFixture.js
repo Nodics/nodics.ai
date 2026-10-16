@@ -94,6 +94,7 @@ async function create(t, { listing = false } = {}) {
   global.UTILS = { isBlank: value => value == null || Object.keys(value).length === 0,
     createModelName: value => value, isObject: _.isPlainObject };
   global.SERVICE = {
+    DefaultIdentityGovernanceService: foundation("nAuth/src/service/identity/defaultIdentityGovernanceService"),
     DefaultDatabaseTransactionService: foundation("nDatabase/database/src/service/transaction/defaultDatabaseTransactionService"),
     DefaultMongodbDatabaseConnectionHandlerService: connectionOwner,
     DefaultMongodbDatabaseModelHandlerService: { ...provider, LOG: quiet },

@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "contactSubmission",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "contactSubmission permissionCatalogue",
+      "description": "Explicit contactSubmission identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "contactSubmission",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/contactSubmissionPermissionHeader.js": "10aafe6e08db60526f9338a49c6acd0286e4937bd7a9ae075e49d5fcdc5e0b0d",
+        "init-v001/records/identity/contactSubmissionPermissionData.js": "49e0bdd20a2d301b5b1a0a008ca861160c102d0056b16f6d4d4e14dad0d4755f"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

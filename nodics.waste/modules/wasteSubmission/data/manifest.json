@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "wasteSubmission",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "wasteSubmission permissionCatalogue",
+      "description": "Explicit wasteSubmission identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "wasteSubmission",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wasteSubmissionPermissionHeader.js": "ee283367d616ace1fcb46e65210b7b3b2147adf134692b715e4d42000aee3203",
+        "init-v001/records/identity/wasteSubmissionPermissionData.js": "72f7cdc16be74e0aa3ccc8d5360dcecf020a140d21df4a52917c4a5465a0962a"
+      }
+    }
+  }
+}

@@ -39,6 +39,7 @@ module.exports = {
     },
 
     cronjob: {
+        processRetrySleepTime: 2000,
         runOnStartup: false,
         waitTime: 1000,
         scheduleDrafts: {

@@ -19,7 +19,7 @@ const assert = require("node:assert/strict");
 const provider = require("../src/service/authentication/defaultAuthenticationProviderService");
 const browser = require("../src/service/authentication/defaultBrowserSessionService");
 const membership = require("../src/service/enterprise/defaultEnterpriseMembershipService");
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 const routes = require("../src/router/routers").profile.loadDefaults;
 const capability = require("../src/service/defaultProfileBackofficeCapabilityService");
 
@@ -65,6 +65,7 @@ function fixture() {
         removed = [],
         consumed = [];
     global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
         DefaultAuthSecurityService: {
             ...require("../../../../nodics.foundation/modules/nAuth/src/service/security/defaultAuthSecurityService"),
         },

@@ -23,3 +23,9 @@ the `ENGAGEMENT` runtime role. Applications contribute only their selected
 credential reference/path binding; schema availability never enables sending.
 See [delivery configuration authoring](llm/contracts/README.md#telegram-delivery-configuration-authoring)
 for runtime targeting, customization, prerequisites and safe setup.
+
+Native Telegram /start intake is implemented and disabled by default. Read the
+[inbound launch contract](llm/contracts/telegram-inbound-launch.md) for private
+pre-body authentication, deployed secret references, trusted Mini App URLs,
+durable replay isolation, overrides and local validation. A launch reply is
+neither delivered-outcome evidence nor Profile-signed customer identity.

@@ -18,6 +18,16 @@
  */
 module.exports = {
   copilot: {
+    runtimeRoleProfiles: {
+      PLATFORM: {
+        workbench: {
+          target: {
+            productModule: "product",
+            pricingModule: "pricing",
+          },
+        },
+      },
+    },
     workbench: {
       receiptRecovery: {
         enabled: false,

@@ -410,12 +410,10 @@ module.exports = {
   },
   /** Lists bounded operator lifecycle requests. @param {Object} request Request. @returns {Promise<Array>} Results. */
   list: function (request) {
-    return this.repository().list(
-      request.tenant,
-      {},
-      request.authData,
-      request.query.limit,
-    );
+    const owner = SERVICE.DefaultOrderBusinessAccessService;
+    const context = owner.context(request, "commerce.lifecycle.read");
+    const limit = request.query?.limit === undefined ? 50 : Number(request.query.limit);
+    return owner.lifecycleRows(request, context, {}, limit);
   },
   /** Returns true when an action is supported by Order lifecycle orchestration. @param {string} actionCode Action code. @returns {boolean} Supported flag. */
   isSupportedAction: function (actionCode) {
@@ -526,11 +524,12 @@ module.exports = {
   },
   /** Applies an approved maker-checker action. @param {Object} request Request. @returns {Promise<Object>} Updated request. */
   action: async function (request) {
-    const record = await this.repository().get(
-      request.tenant,
-      request.requestCode,
-      request.authData,
-    );
+    const owner = SERVICE.DefaultOrderBusinessAccessService;
+    const context = owner.context(request, "commerce.lifecycle.act");
+    request = { ...request, enterpriseCode: context.enterpriseCode, actorId: context.actorId };
+    const records = await owner.lifecycleRows(request, context, { code: request.requestCode }, 2);
+    if (records.length > 1) throw new Error("Lifecycle request identity is ambiguous");
+    const record = records[0];
     if (!record) throw new Error("Lifecycle request not found");
     if (record.evidence?.caseCode && record.evidence?.approval)
       throw new Error(
@@ -553,12 +552,14 @@ module.exports = {
         occurredAt: record.evidence?.execution?.occurredAt };
       if (record.status === status && isDeepStrictEqual(record.evidence?.execution, execution)) return record;
       execution.occurredAt = new Date().toISOString();
+      owner.assertCurrent(request, context);
       return this.repository().update(request.tenant, record, {
         status, revision: Number(record.revision || 0) + 1,
         evidence: { ...record.evidence, execution, lastActionBy: request.actorId },
-      }, request.authData);
+      }, owner.persistenceAuth());
     }
     const downstream = await this.downstreamActionEvidence(request, record);
+    owner.assertCurrent(request, context);
     return this.repository().update(
       request.tenant,
       record,
@@ -571,7 +572,7 @@ module.exports = {
           downstream,
         }),
       },
-      request.authData,
+      owner.persistenceAuth(),
     );
   },
 };

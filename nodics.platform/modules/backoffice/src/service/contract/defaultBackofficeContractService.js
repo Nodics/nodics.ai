@@ -187,10 +187,20 @@ module.exports = {
             "quickFilters",
             "fixedFilters",
             "recoveryActions",
+            "schemaDiscovery",
           ].includes(key),
       )
     )
       return false;
+    if (presentation.schemaDiscovery !== undefined) {
+      const discovery = presentation.schemaDiscovery;
+      if (!discovery || typeof discovery !== "object" || Array.isArray(discovery) ||
+          Object.keys(discovery).sort().join(",") !== "apiVersion,path" ||
+          typeof discovery.path !== "string" || discovery.path.length > 256 ||
+          !/^\/[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*$/.test(discovery.path) ||
+          typeof discovery.apiVersion !== "string" ||
+          !/^v[0-9]{1,3}$/.test(discovery.apiVersion)) return false;
+    }
     if (
       presentation.summary !== undefined &&
       !this.isString(presentation.summary, 320)

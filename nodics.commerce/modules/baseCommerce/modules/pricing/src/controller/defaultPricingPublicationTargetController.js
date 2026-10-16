@@ -11,6 +11,13 @@
 
 /** @module pricing/controller/defaultPricingPublicationTargetController @description Maps internal-service policy transport to owner operations without accepting body-supplied authentication/scope. @layer controller @owner pricing */
 module.exports = {
+    /** Reads one exact individual-row release; preserves original private runtime and standard response envelope. */
+    rowEvidence: function (request, callback) {
+        request.payload = request.httpRequest?.body || {};
+        const promise = SERVICE.DefaultPricingPublicationService.rowEvidence(request).then(result => ({ code: 'SUC_SYS_00000', result }));
+        if (!callback) return promise;
+        promise.then(value => callback(null, value)).catch(callback);
+    },
     /** Starts a governed capture; approval remains exclusively in nPublish and Process. */
     createGoverned: function (request, callback) {
         const promise = Promise.resolve().then(() => FACADE.DefaultPricingPublicationFacade.createGoverned(request))
@@ -35,6 +42,8 @@ module.exports = {
             const principal = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(context, 'pricing');
             if ([context.enterpriseCode, context.entCode, principal.enterpriseCode].some(value =>
                 value !== undefined && value !== principal.entCode)) throw new Error('Target runtime scope mismatch');
+            const checkCaller = ['prepare', 'activate', 'reconcile', 'authorize'].includes(operation)
+                ? service.requirePublicationCaller(request, operation) : () => {};
             const enterpriseCode = operation === 'authorize' ? input.enterpriseCode : input.publication?.enterpriseCode;
             if (enterpriseCode !== undefined) {
                 if (enterpriseCode !== principal.entCode) {
@@ -48,7 +57,10 @@ module.exports = {
             if (principal.tenant !== context.tenant) throw new Error('Target runtime scope mismatch');
             const persistenceAuth = structuredClone(context.authData);
             let recoveryAuthorization;
-            if (operation === 'authorize') return service.authorizeTarget(input, context);
+            if (operation === 'authorize') {
+                const approved = await service.authorizeTarget(input, context);
+                checkCaller(); return approved;
+            }
             if (!['prepare', 'status', 'activate', 'reconcile'].includes(operation)) throw new Error('Unknown policy transport operation');
             service.requireTarget();
             service.pointerCode(input.publication, context);
@@ -76,16 +88,17 @@ module.exports = {
                     targetVersion: operation === 'prepare' ? input.release.code : input.targetVersion,
                     expectedVersion: input.expectedVersion, expectedRevision: input.expectedRevision };
                 const approved = await SERVICE.DefaultPricingPublicationTransportService.authorizeTarget(command, context);
+                checkCaller();
                 if (!approved || approved.authorized !== true || approved.fingerprint !== service.fingerprint(command)) throw new Error('Independent publication source authority missing');
                 recoveryAuthorization = approved.legacyCasRecovery;
             }
             // Router/runtime checks and independent source authority precede private persistence.
             const local = { ...context, legacyCasRecoveryAuthorization: recoveryAuthorization, authData: Object.assign({}, persistenceAuth,
                 SERVICE.DefaultIdentityGovernanceService.getSystemAuthData()) };
-            if (operation === 'prepare') return service.prepareTarget(input.release, local);
             if (operation === 'status') return service.getTargetStatus(input.publication, local);
-            if (operation === 'activate') return service.switchTarget(input, local);
-            if (operation === 'reconcile') return service.reconcileTarget(input.publication, input.operationKey, local);
+            checkCaller();
+            if (['prepare', 'activate', 'reconcile'].includes(operation))
+                return service.executePublicationTarget(operation, input, local, request);
             throw new Error('Unknown policy transport operation');
         });
         if (!callback) return promise.then(result => ({ code: 'SUC_SYS_00000', result }));

@@ -18,7 +18,7 @@ const employee = require("../src/service/employee/defaultEmployeeService");
 const governance = require("../src/service/identity/defaultPrincipalGovernanceService");
 const stamps = require("../src/service/identity/defaultPrincipalSecurityStampGovernanceService");
 const interceptor = require("../src/service/interceptors/defaultEmployeeUpdateInterceptorService");
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 
 function matches(row, query) {
   return Object.entries(query).every(([field, value]) => {
@@ -66,6 +66,7 @@ function fixture(t) {
     return { code: "SUC_OWNER_UPDATE", result: { acknowledged: true, matchedCount: selected.length } };
   } };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEmployeeService: owner, DefaultUserGroupService: port(groups), DefaultEnterpriseService: port(enterprises),
     DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
     DefaultPrincipalSecurityStampService: {

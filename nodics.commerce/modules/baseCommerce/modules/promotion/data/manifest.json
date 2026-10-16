@@ -2,6 +2,62 @@
   "contractVersion": 2,
   "module": "promotion",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "promotion permissionCatalogue",
+      "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "promotion",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/promotionPermissionHeader.js": "d77e5ae6725f7e47e881537ee53093ae78ac2555e11ed72b4230a3086049b56b",
+        "init-v001/records/identity/promotionPermissionData.js": "04c871870e5dc289a986551743e2f111adc28b2287d871512bc31b4d30524d49"
+      }
+    },
+    "enterpriseRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "promotion enterpriseRoles",
+      "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "promotion",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/promotionEnterpriseRoleHeader.js": "89ea6f04d5b9dcbf3877c06d67ea807a73aac82b2effa10b04a74781a204c797",
+        "init-v001/records/identity/promotionEnterpriseRoleData.js": "da5450b8c506eb20bcc43ecb8aabe38b5371d80670457e67339bd08c68c3af14"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "promotion",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "5cb91f339856a26c4d864eed4918c318318d50061792a357c045737c8c26ee4c"
+        }
+      ]
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
@@ -112,6 +168,151 @@
       "files": {
         "init-v001/records/process/promotionPublicationWorkflowDefinitionData.js": "ad5dc795058f225d31f37cba22d63751e722d25de162ab0a629e949c3b395628"
       }
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "promotion accessGroups",
+      "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "promotion",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/promotionUserGroupHeader.js": "1a4bc963f7b1ccdfe50af64f787e9c486083215e51ffa81eea010b66792f14e3",
+        "init-v001/records/identity/promotionUserGroupData.js": "490b9cee8df6a20e71f9dd7f20845af0b97028f83b045a9b6d9e88ec81be35f7"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "6f411a90fd89c1894fa7a92a1de5d35796dec3481514073a2aa38e0247c44b1c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "backoffice",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "8ad193e9316013aa5a65de9c57d2b3a09cd8855b46d218173353793b448eefba",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "import",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b2eb5d1d7c50f2f4f885f407144dcf613634ffc2f441cd8b1f0c91e05425c7a1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "businessAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Promotions business access groups",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "promotion",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/promotionBusinessAccessGroupData.js": "9a0f27afa5c050e7a2325587925ed4d59186934fa33d31d88d8167fd9ec272f6",
+        "init-v001/headers/identity/promotionBusinessAccessGroupHeader.js": "d229aac13754b5e7aad5024c8ca6fd768068dc725a4b924b49d483b735cf2d5e"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "businessAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Promotions business access roles",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "promotion",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/promotionBusinessAccessRoleData.js": "94ea72a886b3c63a603658bde0bbd9b0e4fe4321e3e7f35be61257eca2a73456",
+        "init-v001/headers/identity/promotionBusinessAccessRoleHeader.js": "dad5c09f57740a3227ee074bfcf6cb33633402b9b6166dac5f7fe90868524803"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "promotion",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.1",
+          "checksum": "66a5e6ee1a6ab25e076c1bfe6beecb6c9b318fcf451a775ad051f42ad086e7a0"
+        }
+      ]
     }
   }
 }

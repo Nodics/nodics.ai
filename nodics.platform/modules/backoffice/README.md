@@ -17,6 +17,9 @@ Routine bootstrap readiness reuses profile results only within its authenticated
 request and reads bounded Media-owned CURRENT metadata rather than inspecting
 every asset over HTTP. See [bounded readiness composition](llm/contracts/capability-registry-contract.md#bounded-readiness-composition)
 for evidence limits, customization and focused regression tests.
+Remaining profile reads settle through four workers per composition with ordered
+results and unchanged readiness/admission gates. This bounds that phase's logical
+reads, not nested owner work or total concurrent requests, and promises no latency.
 
 See [Responsibilities](backoffice-operations-guide.md#responsibilities).
 
@@ -25,6 +28,10 @@ See [Responsibilities](backoffice-operations-guide.md#responsibilities).
 See [Explicit Exclusions](backoffice-operations-guide.md#explicit-exclusions).
 
 ## Runtime Interaction
+
+Registration batches consolidate resolver snapshot work while preserving
+per-item authority checks and partial-failure coherence. See the
+[batch snapshot contract](llm/contracts/backoffice-governance-contracts.md#batched-lease-snapshot-work).
 
 See [Runtime Interaction](backoffice-operations-guide.md#runtime-interaction).
 

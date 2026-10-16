@@ -54,6 +54,16 @@ Runtime-bound JWTs authorize only declared modules and their explicit route
 permissions. Keep runtime base-route eligibility separate from group permission
 expansion; preserve restricted-group and accepted-token-type boundaries.
 
+Route authorization consumes authenticated permission claims and persisted hydrated
+group ancestry only. Neither migration `groupTargets` nor router `groupPermissions`
+may supplement principal authority. Configuration owns route requirements, not
+role grants. Preserve explicit trusted system permissions and token boundaries;
+an `isSystem` marker alone is not a grant.
+
+The reserved human Platform full-access check excludes the service group from
+nAuth's `identityGovernance.principalPolicy.serviceGroup`. Missing or invalid
+principal policy fails closed; never hardcode a second service-group identity.
+
 OpenAPI generation resolves the selected project environment and server through the
 existing runtime metadata owner. It loads schema/router metadata without invoking
 application service initialization hooks: static generation must not start runtime

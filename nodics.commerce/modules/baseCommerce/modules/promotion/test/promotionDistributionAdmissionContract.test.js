@@ -19,6 +19,20 @@ const interceptors = require('../src/interceptors/interceptors');
 const discovery = require('../../product/src/service/defaultProductDiscoveryService');
 const enrichment = require('../../product/src/service/defaultProductSearchEnrichmentService');
 
+test('distribution behavior passes the canonical export audit without exposing a capability factory', () => {
+    const audit = require('../../../../../../nodics.foundation/modules/nTooling/src/service/quality/defaultDesignPrincipleAuditService');
+    const failures = [];
+    audit.auditServiceExportStyle(failures, [
+        'nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionDistributionAdmissionService.js',
+    ]);
+    assert.deepEqual(failures, []);
+    assert.deepEqual(Object.keys(admission).sort(), [
+        'fail', 'identifier', 'selected', 'detached', 'assertInstalled', 'resolveReadContext',
+        'referenceReadAdmitted', 'assertReadPurpose', 'assertProductPolicy', 'visibleProduct',
+        'dispatchAvailability', 'publicRequest', 'publicAvailabilityBatch', 'publicAvailability', 'trustedAvailability',
+    ].sort());
+});
+
 /** Installs canonical owner code and bounded in-memory boundary doubles, not readiness flags for a native deployment. @param {Object} t Test context. @returns {Object} Mutable isolated state. */
 function fixture(t) {
     const saved = Object.fromEntries(['SERVICE', 'CONFIG', 'NODICS', 'UTILS', 'CLASSES'].map(key => [key, global[key]]));
@@ -142,6 +156,36 @@ test('public scope, classification, activation and post-read drift cannot widen 
         const f = fixture(t); mutate(f);
         await assert.rejects(admission.publicAvailability(f.request));
     }
+});
+
+test('fixed batch preparation expires private identities on success, failure and scope drift', async t => {
+    for (const kind of ['success', 'failure', 'command', 'context', 'original']) await t.test(kind, async t => {
+        const f = fixture(t), captured = [];
+        SERVICE.DefaultPromotionSellerPolicyService.productBindings = async command => {
+            const context = admission.resolveReadContext(command);
+            assert.ok(context);
+            captured.push(command, context);
+            assert.equal(admission.resolveReadContext(structuredClone(command)), undefined);
+            assert.equal(admission.resolveReadContext({ ...context, distributionAdmitted: true }), undefined);
+            assert.throws(() => admission.assertReadPurpose(context, 'MUTATION', 'product'));
+            if (kind === 'failure') throw new Error('binding failure');
+            if (kind === 'command') command.productCode = 'other';
+            if (kind === 'context') context.enterpriseCode = 'other';
+            if (kind === 'original') f.request.storeCode = 'other';
+            return { context, bindings: [] };
+        };
+        if (kind === 'success') {
+            const result = await admission.publicAvailabilityBatch(f.request, ['product']);
+            assert.deepEqual(result.get('product'), { available: true, status: 'IN_STOCK' });
+            assert.equal(f.state.poolCalls, 1);
+        } else {
+            await assert.rejects(admission.publicAvailabilityBatch(f.request, ['product']));
+            assert.equal(f.state.poolCalls, 0);
+        }
+        for (const request of [...captured, ...f.state.captured])
+            assert.equal(admission.resolveReadContext(request), undefined);
+        await assert.rejects(admission.dispatchAvailability(captured[0], captured[1]));
+    });
 });
 
 test('installed readiness checks actual consent and encrypted aggregate protections, never flags alone', async t => {

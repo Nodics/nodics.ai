@@ -83,14 +83,16 @@ Validation: `test/orderDisputeContract.test.js`,
 `test/orderRefundRecoveryContract.test.js`, Payment original-capture tests,
 Digital Core revocation tests and connected refund/replay qualification.
 
-## Local Missing-Policy Adjudication
+<a id="local-missing-policy-adjudication"></a>
+
+## Selected Missing-Policy Adjudication
 
 Missing retained refund policy still returns
 `PURCHASE_REFUND_POLICY_REQUIRES_REVIEW`. A separate explicit
 `POST /disputes/:code/refund-exception` operation records an exceptional review;
 it does not execute finance or change original purchase terms. It is disabled
-by default, available only on operational COMMERCE with canonical `LOCAL`
-environment classification and an exact environment-name allowlist. An
+by default, available only on operational COMMERCE with explicit layered selection
+and an exact canonical environment-name allowlist. Environment class is not a gate. An
 environment suffix, role name, import or caller flag cannot enable it.
 
 Deployment configuration under `order.refunds.policyExceptions` has `enabled`,
@@ -100,6 +102,14 @@ Deployment configuration under `order.refunds.policyExceptions` has `enabled`,
 accepted; amounts use the existing exact decimal owner. Keep project identities
 in the deployment layer, never framework defaults. Selection must remain
 unchanged across owner evidence reads.
+Environment names must be bounded, unique and nonsparse; missing/malformed
+selection cannot fall back to another environment getter. No unselected
+deployment is admitted merely because it is LOCAL or a demo. Defaults remain
+`{enabled:false, environmentNames:[], approvals:[]}` and no approvals are added.
+The retained audit kind LOCAL_UNUSED_COUPON_MISSING_REFUND_POLICY remains an
+immutable compatibility identifier, not a class restriction or a real-money
+qualification claim. Historical audits still require their original environment
+name, exact current approval pins and every unchanged owner revalidation.
 
 | Gate | Required Evidence | Refusal / Recovery |
 | --- | --- | --- |
@@ -121,7 +131,7 @@ PAYMENT and COMPLETE phases.
 
 ```mermaid
 flowchart LR
-  Review[Exact Local review] --> Scope[Fresh Profile scope]
+  Review[Exact explicitly selected review] --> Scope[Fresh Profile scope]
   Scope --> Owners[Original Order Payment Digital Promotion evidence]
   Owners --> Audit[Case CAS and readback]
   Audit --> Preview[Normal refund preview]
@@ -146,6 +156,39 @@ Native installation, original financial movement and replay require separate
 deployment evidence.
 
 ## Reverse Execution Safety
+
+### Ordinary Employee Access
+
+Order owns its View, Edit and Full control data definitions. View reads the
+enterprise's immutable Orders and lifecycle requests. Edit additionally handles
+permitted lifecycle actions. Full control additionally admits manual dispute
+review; it does not include `commerce.refund.execute`, exception adjudication,
+deletion of Orders, automatic approval or any provider/stock authority.
+
+Axis discovers these projections through `/business/orders/schemas`, as advertised
+by the Order navigation contribution. Fixed Order and lifecycle capability/search
+routes reuse nDatabase's effective schema metadata and bounded safe-query parser.
+They do not require or grant `system.schema.view/manage`, and do not expose
+private evidence, correlation identifiers or tenant-neutral records. Each read
+requires signed human employee tenant/enterprise and the owner permission before
+obtaining canonical persistence authority. Provider rows must independently match
+that scope; failed, ambiguous, oversized or unconfirmed results cannot become
+successful business responses. Original employee identity remains unchanged.
+
+Lifecycle operator reads and writes use the same admission boundary. The observed
+tenant, enterprise, owner, Order and revision bind the write and persisted
+readback. A caller cannot broaden that selection with body/query scope or an
+undefined request code. The authority is checked again after awaited reads and
+before writes. Existing maker-checker and reverse preflight rules below remain
+mandatory regardless of access level.
+
+Partners may extend effective schema metadata through the normal module hierarchy;
+the immutable owner projections deliberately expose only their reviewed fields.
+Additional financial/identity fields need an Order contract change, not an Axis
+column override. Owner discovery never enables policy or imports optional demos.
+Regression coverage: `orderBusinessWorkbenchContract.test.js` plus lifecycle
+business-admission, reverse-safety and dispute tests. Isolated generated ports do
+not certify installed employee assignment or live financial/provider execution.
 
 Generic `CANCELLATION`, `RETURN` and `REFUND` requests are submission/review
 intent, not financial or physical reversal authority. Generic approval,

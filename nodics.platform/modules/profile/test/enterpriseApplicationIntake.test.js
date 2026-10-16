@@ -26,7 +26,7 @@ const enterpriseSource = require("../src/service/enterprise/defaultEnterpriseSer
 const reviewSource = require("../src/service/enterprise/defaultEnterpriseApplicationReviewService");
 const membershipSource = require("../src/service/enterprise/defaultEnterpriseMembershipService");
 const permissionSource = require("../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService");
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 function fixture() {
   const config = structuredClone(properties.enterpriseManagement);
   config.applications.enabled = true;
@@ -112,6 +112,7 @@ function fixture() {
   const service = { ...source },
     management = { ...managementSource };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultLoggerService: {
       runSensitiveOperation: async (request, operation) => {
         captured.add(request);
@@ -497,8 +498,7 @@ test("submission consumes proof once and saves pending data without credentials 
   assert.equal(record.identityClaimed, undefined);
   assert.equal(record.registration, undefined);
   assert.ok(!JSON.stringify(record).includes("controlled-proof"));
-  assert.throws(
-    () => f.base.assertAssignment(record, f.session.email),
+  await assert.rejects(() => f.base.assertAssignment(record, f.session.email),
     /ASSIGNMENT/,
   );
 });
@@ -758,9 +758,7 @@ test("existing Profile provisioning still refuses a submitted self-application",
   await ready(f);
   await f.service.apply(f.context, f.session, f.input);
   const item = [...f.rows.values()][0];
-  assert.throws(
-    () =>
-      f.base.assertAssignment({ ...item, status: "PENDING" }, f.session.email),
+  await assert.rejects(() => f.base.assertAssignment({ ...item, status: "PENDING" }, f.session.email),
     /ASSIGNMENT/,
   );
   assert.equal(f.counts.identityWrites, 0);
@@ -904,17 +902,7 @@ async function reviewFixture() {
         }
       : key === "principalAuthorizationScopes"
         ? properties.principalAuthorizationScopes
-        : key === "identityGovernance"
-          ? {
-              migration: {
-                groupTargets: {
-                  reviewers: {
-                    permissions: ["profile.enterpriseAccess.assign"],
-                  },
-                },
-              },
-            }
-          : originalGet(key);
+        : originalGet(key);
   const runtime = (name) => ({
     tokenType: "service",
     principalType: "service",
@@ -946,10 +934,11 @@ async function reviewFixture() {
     principalType: "human",
     active: true,
     _id: "reviewer-id",
-    userGroups: ["reviewers"],
+    userGroups: [{ code: "reviewers", permissions: ["profile.enterpriseAccess.assign"] }],
     userGroupCodes: ["reviewers"],
   };
   f.identities.push(f.reviewer);
+  global.UTILS = { ...require("../../../../nodics.foundation/modules/nCommon/src/utils/utils"), isObject: value => value !== null && typeof value === "object" };
   f.state = { locked: false };
   global.SERVICE.DefaultUserStateService = {
     findUserState: async () => f.state,
@@ -1153,8 +1142,7 @@ for (const approved of [true, false])
       if (approved)
         assert.equal(f.review.assertApprovedAssignment(f.record()), true);
       else
-        assert.throws(() =>
-          f.base.assertAssignment(f.record(), f.session.email),
+        await assert.rejects(() => f.base.assertAssignment(f.record(), f.session.email),
         );
     },
   );
@@ -1265,8 +1253,7 @@ test("approval does not consume the application proof again for registration", a
   const result = await f.service.status(f.context, f.session);
   assert.equal(result.stage, "APPLICATION_APPROVED");
   assert.equal(f.counts.consumed, 1);
-  assert.doesNotThrow(() =>
-    f.base.assertAssignment(f.record(), f.session.email),
+  await assert.doesNotReject(() => f.base.assertAssignment(f.record(), f.session.email),
   );
 });
 test("application intake can be disabled without invalidating an already recorded approval", async () => {
@@ -1275,8 +1262,7 @@ test("application intake can be disabled without invalidating an already recorde
   await f.review.applyDecision(f.prepareDecision());
   f.config.applications.enabled = false;
   f.config.applications.review.enabled = false;
-  assert.doesNotThrow(() =>
-    f.base.assertAssignment(f.record(), f.session.email),
+  await assert.doesNotReject(() => f.base.assertAssignment(f.record(), f.session.email),
   );
 });
 for (const fault of [false, true])

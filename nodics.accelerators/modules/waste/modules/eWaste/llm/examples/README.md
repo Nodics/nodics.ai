@@ -1,5 +1,34 @@
 # Configuring an e-waste application
 
+## Inspect Protected Draft Media
+
+An explicitly authorized later customer/deployment layer can enable read-only
+inspection without deciding retention periods:
+
+```js
+module.exports = {
+  eWaste: {
+    acceptanceReadiness: { draftMedia: { cleanup: { enabled: true, batchSize: 10 } } },
+  },
+};
+```
+
+Supply runtime identity/grants through existing nAuth/deployment governance,
+then target the secured owner inspection API using Cron's existing internal
+handler. Leave all retention durations null until decided. Inherit execution
+and deletion defaults; setting them true cannot qualify the missing Media
+contract. Follow `nextCursor` for a longer inspection, and retry the same cursor
+after a failed read. Never pass a clock, tenant, owner, storage path or generated
+Media query in the body. See the
+[retention contract](../contracts/e-waste-domain.md#protected-draft-media-retention)
+for exact coverage and blocker details. `eWasteDraftMediaRetention.test.js`
+proves later service-member overrides and independent application selection.
+Permanent demo media/sample data stays in its respective owner's `/data` packs;
+this inspector never creates or replaces it. Unknown pack origin stays protected.
+Inspection activation does not approve retention or prove a scheduled job exists.
+
+## Application Policy
+
 A later customer module contributes small deltas to `config/properties.js`:
 
 ```js

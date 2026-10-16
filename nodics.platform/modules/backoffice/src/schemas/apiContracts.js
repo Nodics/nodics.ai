@@ -453,6 +453,16 @@ const navigationWorkbenchPresentation = {
   type: "object",
   additionalProperties: false,
   properties: {
+    schemaDiscovery: {
+      type: "object",
+      additionalProperties: false,
+      required: ["path", "apiVersion"],
+      properties: {
+        path: { type: "string", minLength: 2, maxLength: 256,
+          pattern: "^/[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*$" },
+        apiVersion: { type: "string", pattern: "^v[0-9]{1,3}$" },
+      },
+    },
     summary: { type: "string", minLength: 1, maxLength: 320 },
     defaultColumns: {
       type: "array",

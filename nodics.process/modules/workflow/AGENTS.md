@@ -92,7 +92,7 @@ Workflow is a capability module inside `nodics.process`. Keep the internal split
 - place validation, lifecycle, and runtime engine services in `src/service`;
 - place routers, controllers, facades, and API projections in `src/router`, `src/controller`, and `src/facade`.
 
-Do not place runtime code directly under `nodics.process/src`. The process group root is for composition, contracts, and shared defaults only.
+Do not place runtime code directly under `nodics.process/src`. The process group root is for composition and contracts only. Concrete defaults belong to the implementing child module, including shared Workflow action-adapter, designer and definition-installer mechanics.
 
 Do not move or duplicate `nbpm` from Core without a dedicated migration plan and compatibility test.
 
@@ -109,3 +109,7 @@ Route-category defaults belong to this capability; deployments supply only inten
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
 
 Remote actions use the existing allowlist and nService with scoped runtime identity. Process persists an expiring single-claim execution in its instance; the target claims authoritative context before mutation. Completed task decisions and immutable versions are read-only through generic APIs. See `llm/contracts/README.md`; no domain HTTP implementation or new identity authority belongs in Process.
+
+Workflow owns process.actionAdapters, process.designer and the PROCESS_DEFINITION
+installer contribution. Child-only compositions inherit them without loading
+group defaults. Action allowlists and approval/activation gates remain explicit.

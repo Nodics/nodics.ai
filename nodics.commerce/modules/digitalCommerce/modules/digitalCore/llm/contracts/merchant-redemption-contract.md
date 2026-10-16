@@ -120,10 +120,12 @@ Already-redeemed benefit reversals are explicitly unsupported in the approved
 local-demo scope: no canonical RELEASE caller exists or is enabled. Policy-read
 admission alone grants none of those authorities.
 
-## Explicit Local Item Simulation
+<a id="explicit-local-item-simulation"></a>
 
-Promotion's [separate simulation mode](../../../../../baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md#explicit-local-simulation)
-uses Fulfillment's default-off, canonical LOCAL/selected-environment allowlist.
+## Explicit Item Simulation
+
+Promotion's [separate simulation mode](../../../../../baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md#explicit-simulation)
+uses Fulfillment's default-off, exact canonical selected-environment allowlist.
 It does not qualify real delivery. The ITEM provider checks fresh signed staff,
 issuer, Store and original instruction, then passes the exact `pricedAuthority`
 object to `validateCoupon`. SIMULATED_ITEMS is accepted only while the real
@@ -133,11 +135,16 @@ bundle, hash, reference or outlet cannot be acknowledged as the original result.
 
 Confirmation and queue summaries, and both pending/completed original receipt
 inspection, preserve `simulated: true`, `deliveryVerified: false` and
-`evidenceMode: LOCAL_SIMULATION`. A REDEEMED entitlement means this coordinated
+`evidenceMode: SIMULATION`. A REDEEMED entitlement means this coordinated
 demo redemption completed, not that physical goods were delivered. The benefit
 has no deliveredAt or monetary amount; existing merchant command timestamps are
-coordination metadata, not carrier proof. Frontends must display explicit local
+coordination metadata, not carrier proof. Frontends must display explicit
 simulation/unverified goods rather than a money discount or verified fulfillment.
+Retired LOCAL_SIMULATION is not a current execution selector. Existing retained
+SIMULATED_ITEMS/ITEM_SIMULATION hashes, benefit bindings and immutable receipt
+contents remain unchanged and readable; public projection uses generic SIMULATION
+while preserving simulated/unverified flags. Read compatibility cannot bypass
+current deployment admission for a new confirmation or promote evidence to real.
 
 The actual MerchantScope source fixture covers the complete isolated simulator
 flow through validation, claim, protected receipt, redemption, replay and query.

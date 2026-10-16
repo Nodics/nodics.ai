@@ -530,14 +530,6 @@ module.exports = {
   resolveUncertain: async function (request, code, decision) {
     const current = await this.read(request, code);
     if (
-      !current ||
-      current.status !== "UNCERTAIN" ||
-      current.revision !== decision.expectedRevision
-    )
-      throw new Error(
-        "Communication outcome changed; reload before reconciliation",
-      );
-    if (
       decision.confirmed !== true ||
       !["MARK_DELIVERED", "AUTHORIZE_RESEND", "CANCEL"].includes(
         decision.action,
@@ -549,11 +541,23 @@ module.exports = {
     )
       throw new Error("Explicit operator confirmation and reason are required");
     if (
-      decision.sourceCode &&
+      !current || (decision.sourceCode &&
       (current.sourceCode !== decision.sourceCode ||
-        current.sourceModule !== decision.sourceModule)
+        current.sourceModule !== decision.sourceModule))
     )
       throw new Error("Communication source mismatch");
+    // Recover an acknowledged-or-lost original decision without granting another send.
+    const original = (current.reconciliation || []).find(entry =>
+      entry.intentRevision === decision.expectedRevision);
+    if (original && Number.isSafeInteger(decision.expectedRevision) &&
+      current.revision > decision.expectedRevision) {
+      if (original.action !== decision.action || original.reason !== decision.reason.trim() ||
+        ["module", "schema", "code"].some(key => original.operatorRef?.[key] !== decision.operatorRef?.[key]))
+        throw new Error("Communication reconciliation command changed");
+      return this.project(current);
+    }
+    if (current.status !== "UNCERTAIN" || current.revision !== decision.expectedRevision)
+      throw new Error("Communication outcome changed; reload before reconciliation");
     const evidence = {
       action: decision.action,
       reason: decision.reason.trim(),

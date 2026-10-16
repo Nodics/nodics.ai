@@ -311,8 +311,9 @@ module.exports = {
         if (request.enterpriseCode) entryQuery.enterpriseCode = request.enterpriseCode;
         const entriesResponse = await SERVICE.DefaultCartEntryService.get({ tenant: request.tenant, authData: request.authData, query: entryQuery, pageSize: 500 }).then(this.unwrap);
         const entries = Array.isArray(entriesResponse) ? entriesResponse : [];
-        const operations = ((CONFIG.get('commerce') || {}).operations || {});
-        const maximumCartEntries = Number((operations.limits || {}).maximumCartEntries || 500);
+        const defaults = require('../../config/properties').cart.limits;
+        const limits = (CONFIG.get('cart') || {}).limits || defaults;
+        const maximumCartEntries = Number(limits.maximumCartEntries ?? defaults.maximumCartEntries);
         if (entries.length > maximumCartEntries) throw new Error('Cart entry limit exceeded');
         const calculationCart = Object.assign({}, cart, {
             entries,

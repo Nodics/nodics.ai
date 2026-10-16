@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "fulfillmentCore",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "fulfillmentCore permissionCatalogue",
+      "description": "Explicit fulfillmentCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "fulfillmentCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/fulfillmentCorePermissionHeader.js": "f83b9bf9086db584554c5427eab13357c981bcaccf8aedd1bde512afa268cdcd",
+        "init-v001/records/identity/fulfillmentCorePermissionData.js": "707976a77aa64249cadf5fa00b9914f8bb68cc5279e0f3a409d1f0d01ade87f5"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

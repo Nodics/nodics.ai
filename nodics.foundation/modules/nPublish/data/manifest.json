@@ -1,0 +1,69 @@
+{
+  "contractVersion": 2,
+  "module": "publish",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "publish permissionCatalogue",
+      "description": "Explicit publish identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "publish",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/publishPermissionHeader.js": "a027966ba1080aee58e83e30f992006745b79d54d117b31d8f295023ef312eb8",
+        "init-v001/records/identity/publishPermissionData.js": "f545f0b4ebae15b46b2c23665713183bd400f926a5c2848ad0cf85c87e12d14f"
+      }
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "publish accessGroups",
+      "description": "Explicit publish identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "publish",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/publishUserGroupHeader.js": "f2fee7646ba57c0a3e12bc00752638bac426e3fd4bdbf51f7366e8eef0b9489b",
+        "init-v001/records/identity/publishUserGroupData.js": "88f00f438184653fc7b9b945d0c6de6acdc3c3f02d2b3de4e4168b485c1c84e8"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "workflow",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9566b57a2b8b6230534305adaef173c7e1ecf28d5493c7193e9dd79c54d3a35e",
+          "partition": "DEFAULT"
+        }
+      ]
+    }
+  }
+}

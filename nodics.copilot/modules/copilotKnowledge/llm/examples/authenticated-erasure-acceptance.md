@@ -101,7 +101,7 @@ This fixture verifies real Profile authentication, Copilot source authority,
 generated MongoDB validators and persistence, Discovery publication, secured
 Elastic retirement/removal and restart inspection. It creates only synthetic data
 in an owned temporary composition and uniquely named test database. It does not
-use an existing administrator, grant permissions to existing users, migrate an
+use an administrator from an existing deployment, grant permissions to existing users, migrate an
 existing index, launch Axis or qualify backups and unknown writer inventories.
 
 ```text
@@ -112,11 +112,24 @@ Profile operator -> registered Copilot HTTP routes -> source admission
   -> full runtime restart with write gates off -> original inspection
 ```
 
-The source permission catalogue belongs to nAuth. Catalogue membership permits
-Profile to validate a grant; it is not a default employee grant. Both migration
+Knowledge contributes its permission definitions through its identity data pack;
+Profile owns the persisted catalogue and validates grants asynchronously against
+fresh active records. Catalogue membership is not a default employee grant.
+Disposable assignments use generated Profile operations and preserve retained
+narrowing or revocation on restart; configuration never supplies grants. Both migration
 gates remain false outside the fixture. Source, tenant, enterprise and actor
 checks are unchanged. Historical retirement bindings register for inspection but
 must not provision an index or overwrite the active projection binding at startup.
+
+The fixture authenticates its disposable Init administrator through the normal
+password and token owners before Profile group and deployment assignment calls.
+The copied test-only Employee extension supplies explicit initial API-key scopes
+to Profile's private `ensureBootstrapAll` operation; retained credentials and
+scopes are never updated. Selected runtime module coordinates come from nConfig's
+deployment projection, while exact test permissions remain bounded fixture data.
+`test/copilotAcceptanceIdentityOwnership.test.js` covers these source contracts,
+negative role scopes and preservation after narrowing or revocation without
+starting a backend.
 
 ## Prerequisites
 

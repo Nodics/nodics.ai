@@ -36,6 +36,12 @@ module.exports = {
         let activeBooks = (books || []).filter(book => book.tenant === request.tenant && this.sameEnterprise(request, book) && book.currency === request.currency && book.status === 'ACTIVE' && this.effective(book, request.now));
         let activeCodes = new Set(activeBooks.map(book => book.code));
         let considered = (rows || []).filter(row => row.tenant === request.tenant && this.sameEnterprise(request, row) && row.productCode === request.productCode);
+        for (const row of considered.filter(row => row.productReference)) {
+            const pin = (request.productReferences || []).find(pin => pin.productCode === request.productCode);
+            if (!pin || pin.storeCode !== request.storeCode || row.productReference.storeCode !== request.storeCode ||
+                pin.targetVersion !== row.productReference.targetVersion)
+                throw new Error('Price row requires the consumed immutable Product version');
+        }
         let eligible = considered.filter(row => activeCodes.has(row.priceBookCode) && row.currency === request.currency && this.effective(row, request.now) && exact.compare(row.minQuantity || '1', quantity) <= 0);
         eligible.sort((left, right) => exact.compare(right.minQuantity || '1', left.minQuantity || '1') || String(left.code).localeCompare(String(right.code)));
         if (!eligible[0]) return { selected: undefined, quantity: quantity, conflicts: [], explanation: considered.map(row => ({ rowCode: row.code, eligible: false, reason: activeCodes.has(row.priceBookCode) ? 'QUANTITY_OR_WINDOW' : 'PRICE_BOOK_INACTIVE' })) };

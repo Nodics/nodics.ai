@@ -221,7 +221,10 @@ eligibility. Returned command paths are not executable routing authority.
 The operator must explicitly submit the form; navigation and inspection never
 POST, grant permissions, install workflows or approve/activate publication.
 
-Override desired presentation leaves in `media.library.workspace` and
+Canonical workspace definitions live in `data/backoffice/mediaLibraryWorkspaceData.js`
+and are projected by the existing capability provider. They are declarative UI
+data, not a separate import release or configuration catalogue. Override only
+desired presentation leaves in `media.library.workspace` and
 `media.library.publicationWorkspace` through existing module/project/runtime
 configuration. Preserve fixed owner endpoints, DTO field names, permissions,
 version semantics and strict BackOffice workspace validation. Mergeable service,
@@ -266,10 +269,13 @@ CURRENT model prerequisite, missing operation grants, stale version rejection,
 real Media createGoverned delegation, stable reference retry, no automatic
 approval/activation, callbacks and strict BackOffice metadata validation.
 
-This source does not enable schema APIs, version policy or publication providers;
-it does not import workflow/data, backfill metadata, restart runtimes or certify
-connected storage/Process/target transport. Retained-provider defaults remain
-off. Main owns runtime selection and CMS dependency coordination; BackOffice
+The Media owner contributes Staged provider/transport registrations and source
+versioning through runtime role profiles. Registration does not enable retained
+publication: `versionProviderEnabled` stays false, connections stay unselected,
+and installed storage/Process/target qualification remains mandatory. A deployment
+may explicitly keep versioning off in its role profile. No workflow/data import,
+metadata backfill, restart or certification follows from registration. CMS owns
+dependency coordination; BackOffice
 owns refreshed registry/permission projection; Axis owns route presentation and
 the joint visual acceptance. Canonical framework product documentation may be
 promoted by its documentation owner; that shared source is outside this batch.

@@ -19,6 +19,18 @@
  * @owner commsApi
  */
 module.exports = {
+  ERR_COMMS_TELEGRAM_CONTEXT: {
+    code: "403", message: "Telegram receiver is not available in this context.",
+  },
+  ERR_COMMS_TELEGRAM_INPUT: {
+    code: "400", message: "Invalid Telegram update.",
+  },
+  ERR_COMMS_TELEGRAM_CONFLICT: {
+    code: "409", message: "Telegram update binding conflicts with stored evidence.",
+  },
+  ERR_COMMS_TELEGRAM_STORAGE: {
+    code: "503", message: "Telegram receipt could not be confirmed.",
+  },
   ERR_COMMS_INTEGRATION_INPUT: {
     code: "400",
     message: "Communication inspection requires an empty object body.",

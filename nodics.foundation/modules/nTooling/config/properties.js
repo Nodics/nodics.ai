@@ -18,6 +18,34 @@
  */
 module.exports = {
     tooling: {
+        referenceDemoOwnership: {
+            // Demo composition only; runtime policy belongs to owners or actual deployment config.
+            configurationPaths: [
+                'backofficeApplicationVisual',
+                'backofficeApplicationInitialization.profiles.*',
+                'backofficeApplicationInitialization.runtimeRoleProfiles.*.profiles.*',
+                'data.dataReleases.runtimeRoleProfiles.*.initializationProfiles.*',
+                'cms.publication.baselines.*',
+                'cms.runtimeRoleProfiles.*.publication.baselines.*',
+                'tooling.acceptance.*'
+            ],
+            // Identity and display values only, never domain behavior or deployment policy.
+            configurationLeafPaths: [
+                'eWaste.presentation.brandName',
+                'eWaste.presentation.brandByline', 'eWaste.presentation.sampleMode',
+                'eWaste.presentation.walletLabels.*',
+                'eWaste.application.code', 'eWaste.application.displayName',
+                'eWaste.application.frontendModuleName', 'eWaste.application.projectModuleName',
+                'eWaste.application.visual.mediaCode', 'eWaste.application.visual.alt',
+                'eWaste.application.requiredScenarioModules',
+                'eWaste.applicationCode'
+            ],
+            accessKeys: ['schemaPolicies', 'permissions', 'rolePermissions', 'userGroups',
+                'parentGroups', 'groupCodes', 'assignmentPermissions',
+                'runtimeAssignments', 'apiExposure', 'bootstrapIdentity', 'authSecurity'],
+            accessSchemas: ['permission', 'role', 'enterpriseRole', 'userGroup', 'principalScopeAssignment',
+                'runtimeDeployment', 'runtimeDeploymentGrant', 'runtimeServiceAccount']
+        },
         acceptance: {
             "browserValidation": {
                 "enabled": false,
@@ -227,6 +255,7 @@ module.exports = {
                 { tool: ['test:capability-behavior', '--area=system'] },
                 { suite: 'import' },
                 { suite: 'profile' },
+                { suite: 'business-access' },
                 { suite: 'backoffice' },
                 { suite: 'cache' },
                 { suite: 'cronjob' },
@@ -240,6 +269,15 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nOtp/test/otpCapabilityContract.test.js' }
             ],
             full: [
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteSavedRewardRecovery.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteRewardSettlementContract.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteOutcomeRecovery.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteListingHandoff.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/product/test/productListingAuthoringAdmission.test.js' },
+                { node: 'nodics.waste/modules/wasteVerification/test/wasteVerificationConcurrency.test.js' },
+                { node: 'nodics.waste/modules/wasteVerification/test/wasteEvidenceRejection.test.js' },
+                { node: 'nodics.waste/modules/wasteCore/test/wasteVerificationPresentationContract.test.js' },
+                { node: 'nodics.waste/modules/wasteVerification/test/wasteReviewWorkspace.test.js' },
                 { node: 'nodics.commerce/modules/baseCommerce/modules/shoppingList/test/shoppingListCustomerApiContract.test.js' },
                 { node: 'nodics.commerce/modules/checkout/modules/cart/test/cartCustomerApiContract.test.js' },
                 { node: 'nodics.commerce/test/commercePhase2FoundationContract.test.js' },
@@ -262,6 +300,19 @@ module.exports = {
                 { suite: 'basic' }
             ],
             config: [
+                { node: 'nodics.foundation/modules/nTooling/test/concreteDefaultOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nSystem/test/runtimeCredentialPathOwnership.test.js' },
+                { node: 'nodics.commerce/test/publicationConfigurationOwnership.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/store/test/storePlacementContract.test.js' },
+                { node: 'nodics.wcms/modules/cms/test/cmsBaselineRootOwnership.test.js' },
+                { node: 'nodics.wcms/modules/media/test/mediaConfigurationOwnership.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteOutcomeTemplateOwnership.test.js' },
+                { node: 'nodics.process/modules/cronjob/test/cronjobRetryConfigurationOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nEms/emsClient/test/emsRetryConfigurationOwnership.test.js' },
+                { node: 'nodics.platform/modules/backoffice/test/applicationTargetDefaults.test.js' },
+                { node: 'nodics.copilot/modules/copilotCore/test/copilotEnvironmentConfigurationOwnership.test.js' },
+                { node: 'nodics.copilot/modules/copilotWorkbench/test/copilotTargetConfigurationOwnership.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteApplicationConfigurationOwnership.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/configurationBindingContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/scriptsCompletionContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/serverGeneratedArtifactContract.test.js' },
@@ -277,6 +328,8 @@ module.exports = {
                 { tool: ['llm:validate'] }
             ],
             tooling: [
+                { node: 'nodics.foundation/modules/nTooling/test/referenceDemoOwnership.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/dataBaselineConsolidationContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectConfigurationHarness.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectRuntimePreparationContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectTopologyLifecycleContract.test.mjs' },
@@ -355,6 +408,8 @@ module.exports = {
                 { node: 'nodics.waste/modules/wasteCore/test/wasteDataContributionPolicyContract.test.js' },
                 { node: 'nodics.location/modules/locationCore/test/locationDistanceService.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseService.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleasePrerequisites.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/identityAuthorityReleaseExecution.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/installedMigrationJournalContract.test.js' },
                 { node: 'nodics.commerce/modules/baseCommerce/modules/product/test/productLocalizedSearchPublicationContract.test.js' },
                 { node: 'nodics.commerce/modules/baseCommerce/modules/product/test/productGovernedPublicationContract.test.js' },
@@ -536,6 +591,9 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nData/nExport/export/test/dataExportCapabilityBehavior.test.js' }
             ],
             profile: [
+                { node: 'nodics.platform/modules/profile/test/identityAuthorityPacks.test.js' },
+                { node: 'nodics.platform/modules/profile/test/identityCatalogueContract.test.js' },
+                { node: 'nodics.platform/modules/profile/test/bootstrapRecordPreservation.test.js' },
                 { node: 'nodics.platform/modules/profile/test/enterpriseWorkbenchSetupContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/profileExternalIdentity.test.js' },
                 { node: 'nodics.platform/modules/profile/test/runtimeScopeInvalidationContract.test.js' },
@@ -548,6 +606,31 @@ module.exports = {
                 { node: 'nodics.platform/modules/profile/test/profileAuthenticationServiceContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/profileRuntimeBoundInternalToken.test.js' },
                 { tool: ['test:capability-behavior', '--area=profile'] }
+            ],
+            'business-access': [
+                { node: 'nodics.foundation/modules/nRouter/test/platformAdministratorAccess.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/platformAdministratorSchemaAccess.test.js' },
+                { node: 'nodics.platform/modules/profile/test/platformAdministratorFullAccess.test.js' },
+                { node: 'nodics.platform/modules/profile/test/businessAccessLevels.test.js' },
+                { node: 'nodics.platform/modules/profile/test/enterpriseBusinessAccess.test.js' },
+                { node: 'nodics.platform/modules/profile/test/enterpriseBusinessAccessMembership.test.js' },
+                { node: 'nodics.platform/modules/profile/test/runtimeDeploymentConfigurationContract.test.js' },
+                { node: 'nodics.platform/modules/profile/test/runtimeDeploymentSeedPreservation.test.js' },
+                { node: 'nodics.platform/modules/backoffice/test/workbenchOwnerDiscoveryContract.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/product/test/productBusinessAuthoring.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/product/test/productConsumerReferences.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionAnalyticsScopeContract.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionBusinessWorkbenchContract.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionDraftContract.test.js' },
+                { node: 'nodics.commerce/modules/checkout/modules/order/test/orderBusinessAccessContract.test.js' },
+                { node: 'nodics.commerce/modules/checkout/modules/order/test/orderBusinessWorkbenchContract.test.js' },
+                { node: 'nodics.commerce/modules/checkout/modules/order/test/specialAccessRoles.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/inventory/test/specialAccessRoles.test.js' },
+                { node: 'nodics.loyalty/modules/loyaltyWallet/test/specialAccessRoles.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/specialAccessRoles.test.js' },
+                { node: 'nodics.waste/modules/wasteCore/test/wasteBusinessWorkbench.test.js' },
+                { node: 'nodics.wcms/modules/cms/test/cmsBusinessAuthoringAccess.test.js' },
+                { node: 'nodics.wcms/modules/cms/test/cmsFreshSourceOwnership.test.js' }
             ],
             'enterprise-lifecycle': [
                 { node: 'nodics.foundation/modules/nService/test/tenantNamespaceHandshakeContract.test.js' },

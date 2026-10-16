@@ -100,6 +100,11 @@ first caller, current customer, or possible future reuse.
 | Customer project/application module | Customer identity, experience, policies, integrations, data contributions and specific functionality | Customer or implementation partner |
 | Customer frontend | Presentation and interaction consuming authorized backend contracts | Customer or implementation partner |
 
+Circa and Agora reference extensions are a narrower case: demo data/composition
+ONLY. They do not exercise the real partner project's right to implement genuine
+custom functionality. Reusable behavior, defaults and access definitions belong
+to the existing implementing framework module or accelerator, not the reference.
+
 The dependency direction is customer project -> domain accelerator -> framework
 capabilities. A project may also consume framework capabilities directly. A
 framework module must not depend on an accelerator or customer project; an
@@ -113,6 +118,13 @@ composes their contracts without taking over their persistence or lifecycle.
 
 ### Mechanism and policy extraction
 
+Apply the [mandatory default ownership gate](customer-config-classification-contract.md#mandatory-default-ownership-gate).
+Standard framework property definitions, defaults and implementation bindings
+must not become mandatory customer setup. Genuine partner-specific capabilities
+may define their own properties in their implementing customer modules; this
+does not transfer ownership of existing framework capabilities or grant partner
+write access to framework dependencies.
+
 Keep customer modules and runtimes lightweight. Classify each algorithm,
 configuration block, descriptor and script separately. An application-owned file
 may contain reusable behavior that should be contributed to its functional or
@@ -125,11 +137,12 @@ policy as explicit inputs: identifiers, valuation rates, provider selection,
 release subsets, trust origins and enablement are not reusable defaults simply
 because the underlying mechanism is reusable. Use existing owner metadata where
 it already describes structural facts; do not duplicate it in project scripts.
-Retain deployment routing, permission gates and deliberate compatibility pins.
+Retain deployment routing and permission gates. The authorized reference/access
+refactor has no backwards compatibility: update current consumers and remove old
+adapters, routes, role aliases and duplicate definitions. Retaining historical
+release evidence does not authorize executable compatibility or fallback authority.
 
-A retained compatibility snapshot must name its dependency, reason, affected
-persisted identities and review trigger. It is not a permanent exemption from
-ownership review. Moving source must not reassign installed contribution owners,
+Moving source must not reassign installed contribution owners,
 rewrite immutable checksums, rename historical business keys or discard pending
 workflow instances. Separate source extraction from migration execution and
 record both states. A passing isolated test does not establish installed release
@@ -147,28 +160,28 @@ contribution channel; this rule grants no new framework write authority.
 
 ### Classify applications before moving source
 
-The following are customer applications in nodics.kickoff, each consuming a
-separate reusable accelerator:
+The following are demo data/composition reference extensions in nodics.kickoff,
+each consuming a separate reusable accelerator:
 
-| Customer application | Reusable accelerator |
+| Reference extension | Reusable accelerator |
 | --- | --- |
 | agora.apparel | apparel |
 | agora.electronics | electronics |
 | agora.telco | telco |
 | circa.ewaste | eWaste |
 
-Application configuration, BackOffice initialization profiles, branding, catalogues,
-media and importable data stay with the application in the customer repository.
-Data-only packaging, sample/reference status, Nodics authorship and module `extends`
-do not promote the application into an accelerator. Sample data describes lifecycle,
-not source ownership. A profile displayed under an Accelerators heading still
-belongs to its actual application owner.
+Reference identity, branding, catalogues, media, optional sample records and
+explicit deployment/composition selections stay in Kickoff. Reusable behavior,
+standard defaults, permission contributions and business-area access definitions
+belong to the module implementing the capability, even if previously packaged in
+a reference BackOffice profile. A display heading, `extends` or data-pack metadata
+does not change ownership. The reference module itself is not an accelerator.
 
 Before extraction, record the established owner and identify the exact reusable
 domain behavior that works without application identity or policy. Extract only
-that behavior through the maintainer contribution process. Preserve application
-modules and their later-layer configuration. Relocating an entire application
-requires an explicit ownership decision; do not infer one from a request to clean
+that behavior through the maintainer contribution process. Preserve reference
+modules as demo data/composition and their intentional selection inputs. Relocating
+an entire application requires an explicit ownership decision; do not infer one from a request to clean
 up configuration. Test framework-only discovery, customer discovery and effective
 runtime selection to prevent customer packs leaking into framework ownership.
 
@@ -184,7 +197,35 @@ the accelerator, and customer-specific data in the customer project. Use the
 existing manifest, import, validation and publication lifecycle for each data
 contribution; frontend repositories must not become backend-import data owners.
 
+### Bootstrap, business access and optional demos
+
+Profile owns standard bootstrap users, identity/access mechanics and runtime
+assignments. Implementing modules own permission contributions and business-area
+access definitions, contributed through existing Profile contracts. Do not gather
+all domain permissions into Profile, Kickoff or a new shared access module.
+
+Axis exposes business area + No access / View / Edit / Full control + Scope.
+Profile resolves effective assignments and scope; each backend owner enforces
+access. Full control is bounded by approval permissions/workflow, ledger and
+financial command rules, simulation enablement/qualification, tenant isolation,
+lifecycle and audit. It is never an approval, ledger, simulation or tenant bypass.
+Exact business-level mappings and runtime assignments stay in Profile's contracts
+and the relevant implementing owners, not frontend or reference role definitions.
+
+Demo identities, accounts and assignments are optional Kickoff data selected
+explicitly through governed owner operations. A selected complete demo can require
+its own fixtures; standard bootstrap and access administration cannot depend on
+them. Documentation and business releases remain separate selections, with their
+own validation and publication. Importing documentation must not select demo
+accounts, grant permissions or activate business data, and business setup must not
+implicitly import documentation. Historical approvals, receipts and observations
+remain evidence, not standing authority for replay or live mutation.
+
 ## Supported Customization
+
+This section applies to genuine partner/customer projects. Circa and Agora
+reference extensions remain demo data/composition ONLY; move their reusable
+behavior to the implementing owner under authorized maintainer scope.
 
 Reuse existing capabilities first. Apply the smallest supported project,
 environment, server, node, tenant or provider contribution second: layered
@@ -236,8 +277,10 @@ they are not mandatory identities for other projects or domains.
 
 - Generic waste submission and verification belong in `nodics.waste`.
 - Electronic-device taxonomy and reusable e-waste journeys belong in `eWaste`.
-- I2E branding, collection policy, integrations and customer-specific data belong
-  in its own project module. Circa-specific equivalents stay in `circa.ewaste`.
+- I2E branding, genuine collection-policy customization, integrations and
+  customer-specific data belong in its own project module. `circa.ewaste` retains
+  demo branding, data and composition selections only; reusable behavior belongs
+  to eWaste or its implementing framework owner.
 - A project waste-category record uses the existing owning schema. A reward
   formula can be project policy while Loyalty remains the wallet authority.
 - A reusable missing e-waste extension is proposed to Nodics; the partner does
@@ -268,8 +311,9 @@ mechanics belong to the existing Foundation owner. Customer identities, policy,
 release selections, fixtures and integration bindings stay in the application.
 
 Keep `kickoffApi` and `kickoffInt` as intentional customer extension templates,
-even when minimal. Agora and Circa are customer applications consuming
-accelerators, not framework accelerators themselves.
+even when minimal. This does not require retaining empty compatibility adapters
+in reference extensions. Agora and Circa consume accelerators as demo
+data/composition ONLY; genuine partner projects retain supported customization.
 
 Before relocation, prove effective configuration and override behavior, preserve
 activation and authorization boundaries, and check installed release provenance.

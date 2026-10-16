@@ -17,11 +17,13 @@ authenticated provider admission and protected original Shipment allocations
 exist. It neither writes receipts nor enables ITEM benefits. The owner contract
 specifies the required authority, replay, revocation and return integration.
 
-A separate, default-off [LOCAL simulation](llm/contracts/verified-item-delivery.md#explicit-local-simulation)
+A separate, default-off [explicit simulation](llm/contracts/verified-item-delivery.md#explicit-simulation)
 can exercise the existing ITEM merchant flow. It preserves exact purchased bundles
 and labels every result simulated and unverified; it delivers no goods, creates no
 physical receipt and changes no stock. Real delivery still requires its owner
 integration and independent qualification.
+Existing config layers must select the canonical environment by exact allowlist
+and Promotion's SIMULATION mode; deployment class alone grants nothing.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

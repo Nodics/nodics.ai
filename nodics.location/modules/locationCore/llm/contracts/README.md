@@ -36,12 +36,30 @@ through normal layered services. Test with
 
 ## Route contract
 
-Create/update/read/search permissions are recognized by the shared nAuth
-catalogue used by Profile group validation. Listing a permission does not grant
-it to an employee or runtime, or activate `locationInternal` exposure. Assign
-write permissions only through authorized Profile governance. The catalogue
-regression verifies all four declared route permissions and that create/update
-are absent from default migration group grants.
+Location owns `location.location.create`, `location.location.update`,
+`location.location.read` and `location.location.search` in
+`data/init-v001/records/identity/locationCorePermissionData.js`. The explicit
+`permissionCatalogue` manifest section selects those records and
+`data/init-v001/headers/identity/locationCorePermissionHeader.js`; that header
+targets Profile's `permission` schema through `ensureReferenceAll`. Profile Init
+pins the owner catalogue as an authority-partition prerequisite. Insert-only
+imports preserve existing governed records, including narrowed or inactive ones.
+
+Profile's `DefaultIdentityCatalogueService.requirePermissions` validates fresh
+persisted vocabulary asynchronously for group governance. Missing, inactive,
+duplicate or incomplete evidence rejects; neither nAuth properties nor module
+activation supplies a fallback. Vocabulary validation is not an employee/runtime
+grant and does not activate `locationInternal` exposure. Persisted `userGroup`
+records own permission mappings; enterprise-role records reference groups, while
+Profile's assignment owners separately govern actual access. Do not infer grants
+from route verbs, catalogue membership or imports.
+
+`test/locationPermissionCatalog.test.js` preserves the exact four permissions,
+Profile header/prerequisite contract, awaited catalogue validation and refusal of
+missing/inactive vocabulary. It reads standard `accessGroups` records selected
+by the canonical Profile prerequisite manifests and verifies that create/update
+are not implicitly added to those group definitions. Intentional new write grants
+require separately authorized Profile governance, not migration-property targets.
 
 Location Core exposes secured internal routes:
 

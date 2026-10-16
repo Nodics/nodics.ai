@@ -1,5 +1,17 @@
 # Nodics Principles Contract
 
+## Complete Ownership Review
+
+The default-ownership rule includes lifecycle hooks, AI profiles, protocol role
+maps, data builders, documentation and tests, not just config/properties.js.
+Reusable startup belongs to its capability; domain registrations belong to their
+implementing owners, not the generic loader or a reference project. Pure builders
+of optional demo records remain with those records. Projects retain genuine
+deployment/market selections and explicit safety gates, never copied mechanics.
+Apply the mandatory gate in customer-config-classification-contract.md to mixed
+objects individually. Keep immutable history distinct from the active release;
+source completion and generated context do not certify testing or live readiness.
+
 ## Module-Owned Email And SMS Presentation
 
 Email and SMS are framework-governed delivery capabilities, not strings embedded
@@ -7,6 +19,11 @@ in project configuration. Domain modules own the reason, approved dynamic values
 and neutral default presentation. Communication owns resource resolution, rendering,
 intents, suppression, provider selection, attempts and recovery. Providers deliver
 frozen representations; they never load templates or decide business state.
+
+The same ownership rule applies to Telegram and in-app review messages. Their
+module-owned `src/templates/telegram` and `src/templates/in_app` resources use
+locale `subject.txt` and `message.txt`, the same typed resolver and frozen-intent
+contract. Resource selection does not activate a channel or authorize delivery.
 
 - Author new email under `<module>/src/templates/email/<name>/template.json`
   with locale `subject.txt`, `email.html` and `email.txt`. Author SMS under
@@ -129,17 +146,20 @@ but cannot use token optimisation to waive authorization or required validation.
 ### Application ownership survives accelerator reuse
 
 Consuming or extending an accelerator expresses a dependency, not a transfer of
-ownership. A customer application remains customer-owned even when Nodics authors
-it, ships it as a demonstration/reference application, or packages it as data-only.
-Reuse potential, a folder name, `content-pack` metadata and `extends` are not
-evidence that an application belongs in the framework.
+ownership. Real partner/customer projects remain extensible through supported
+module, configuration, provider, service and schema contributions. This does not
+permit a Nodics reference extension to retain reusable framework behavior merely
+because that behavior was first implemented for a demonstration.
 
 Apparel, Electronics, Telco and eWaste are reusable accelerators. Their consumer
 applications agora.apparel, agora.electronics, agora.telco and circa.ewaste belong
-in the customer project. Generic capability defaults may be extracted separately;
-application identities, branding, catalogues, profiles and data remain with the
-application. Ownership changes require an explicit product-ownership decision,
-not an inferred refactoring opportunity. Apply the customer-project-mode contract.
+in Kickoff as demo data/composition ONLY. They own reference identities, branding,
+catalogues, sample records and explicit composition selections. Reusable behavior,
+defaults, access definitions and permission contributions belong to the existing
+implementing framework module or domain accelerator. Reference extensions must
+not own reusable adapters, policy engines or access mechanics. Extract those into
+their actual owners; do not move the demo application wholesale into the framework
+or introduce a catch-all module. Apply the customer-project-mode contract.
 
 ### Lightweight customer modules and runtimes
 
@@ -147,8 +167,9 @@ Classify individual behavior and configuration, not whole files or application
 names. Domain primitives shared within or across domains belong to their existing
 functional owner. Reusable solution orchestration over those primitives belongs
 to an accelerator. Only application-specific policy, identity, presentation,
-content, selections and thin adaptations belong to a customer module. Runtime
-servers assemble and deploy capabilities; they do not own business algorithms.
+content, selections and genuine custom adaptations belong to a real customer
+module. Circa and Agora reference extensions are limited to demo data/composition.
+Runtime servers assemble and deploy capabilities; they do not own business algorithms.
 
 Separate a reusable mechanism from the customer's decision to use it. For
 example, a configurable valuation provider can be accelerator-owned while its
@@ -158,9 +179,11 @@ follows the same semantic owner as behavior, through existing layered properties
 
 Before adding customer implementation, check the owning capability and its
 extension points. During maintainer refactoring, replace duplicate implementations
-with delegation, remove proven redundant defaults, and retain explicit security
-or compatibility pins. Apply this to scripts, generators, tests and administrative
-descriptors as well as runtime services. A smaller customer file that merely
+with the canonical owner, remove proven redundant defaults, and retain explicit
+security constraints. The authorized reference/access refactor has no backwards
+compatibility path: migrate current consumers and remove superseded adapters,
+aliases and access definitions. Apply this to scripts, generators, tests and
+administrative descriptors as well as runtime services. A smaller customer file that merely
 relocates a project-specific implementation is not a successful extraction.
 
 Prove extracted behavior with an unrelated customer policy, rejected inputs,
@@ -278,15 +301,17 @@ Remove a duplicated interface only after every supported consumer has a proven
 canonical replacement. Keep unique discovery, bounded bulk and domain lifecycle
 behavior with the existing owners. Do not merely rename an adapter, introduce
 another operation registry, weaken a gate or fabricate context to make a
-migration pass. Temporary compatibility delegates require an explicit removal
-condition and must not become a permanent second implementation.
+migration pass. The authorized Circa/Agora reference and access refactor must not
+retain compatibility delegates, aliases, legacy role mappings or fallback routes.
+Preserve historical release and audit evidence separately from executable contracts.
 
 For an unreleased framework, do not invent compatibility obligations for old
 routes or exported adapters. Replace the interface and update current repository
 consumers together, then remove superseded entry points. Retain compatibility
 only when an actual released contract or explicitly identified external consumer
-requires it. Needed, unmigrated capabilities remain implementation work; they are
-not a reason to maintain obsolete routes after their replacement is complete.
+requires it outside this explicitly no-backwards-compatibility refactor. Needed,
+unmigrated capabilities remain implementation work; they are not a reason to
+maintain obsolete routes after their replacement is complete.
 
 Selective schema APIs reuse the existing router template groups and generated
 persistence pipeline. They do not require a consumer-labelled service, grants or
@@ -321,6 +346,9 @@ assumptions, not by the first customer that uses them.
 - Customer project modules own application identity, customer-specific behavior,
   policies, integrations, branding and data contributions. Customer frontends
   own presentation and interaction against backend contracts.
+- Circa and Agora reference extensions are demo data/composition ONLY. This
+  restriction does not outlaw genuine partner customization. Reusable reference
+  behavior and access definitions must move to their implementing owners.
 - Dependencies flow from customer project to domain accelerator to framework
   capabilities; projects may also consume framework capabilities directly.
   Lower layers must never depend on customer identity or implementation.
@@ -861,6 +889,23 @@ keep source defaults empty, and enforce recurrence checks in nTooling.
 
 ## Configuration Ownership
 
+### Framework defaults, customer deltas
+
+Every reusable property definition and default belongs to its implementing
+framework module. Customer configuration is an override, not a required copy of
+framework setup. This includes standard provider wiring and runtime-role
+behavior, not only values already duplicated in two files. Missing owner defaults
+are framework defects, not a reason to put the implementation in a customer project.
+Required deployment inputs retain owner-defined validation and safe unconfigured
+states; credentials, customer identities and business selections are not defaults
+to promote. Registration is not activation or authorization.
+
+Apply the [mandatory default ownership gate](customer-config-classification-contract.md#mandatory-default-ownership-gate)
+to every declaration, source fallback, generator and consumer. A publishable
+schema identifies capability; framework owners supply its standard mechanics,
+while deployment selection, governed approvals and exact-version checks remain
+mandatory. A functional group or common helper must not become a catch-all owner.
+
 `config/properties.js` is a runtime-property contribution, not a business
 definition registry. It must not contain functions, navigation catalogues,
 BackOffice capability definitions, localization messages, workflow
@@ -928,6 +973,41 @@ practical.
 
 Security, access control, validation, audit, rollback, diagnostics, and test
 coverage are platform contracts, not optional enhancements.
+
+Profile owns standard bootstrap users, identity, access mechanics and runtime
+assignments. Each implementing module owns its permission contributions and the
+business-area access definitions for its capability; contribute them through the
+existing Profile contracts. Profile is not a catch-all owner for every domain's
+permission catalogue. Standard bootstrap/access must work without Circa, Agora or
+any optional Kickoff demo identities, accounts or assignments.
+
+Axis presents access as **business area + No access / View / Edit / Full control +
+Scope**. Profile resolves effective assignments and scope, and the implementing
+backend owner enforces every operation. Axis neither invents permissions nor
+becomes an alternative assignment authority. Scope bounds the permitted records
+and business context; an access level cannot widen tenant or enterprise authority.
+Full control remains subject to explicit approval permissions and workflow,
+ledger/financial command rules, simulation enablement and qualification, tenant
+isolation, lifecycle and audit. It never grants an approval, ledger, simulation or
+tenant bypass. Exact business-level mappings and runtime assignment contracts
+belong to Profile and the contributing owners, not reference role packs.
+
+Verify ordinary levels through actual owner commands, not only catalogue or
+assignment tests. Business screens must use capability-owned, scoped operations
+through the existing Workbench contracts; do not solve inaccessible screens by
+adding generic schema administration or broad operator memberships. Scope must
+bind privileged persistence reads and writes, including analytics and provider
+readback. View never inherits a legacy write route. Full control must name the
+additional supported business operations, not pretend immutable records allow
+deletion or grant unrelated publishing/financial authority.
+
+Demo identities/accounts/assignments are optional, explicitly selected Kickoff
+data. Selecting a complete demo may require its declared fixtures, but those are
+not prerequisites for framework bootstrap, access administration or documentation.
+Documentation and business releases remain independently selected and governed;
+neither documentation publication nor demo composition alone grants access or
+activates business data. Preserve historical evidence without treating it as current grants
+or permission to replay imports or mutate a live installation.
 
 Approval authority follows effective access rights. A user with the required
 submission and approval permissions may perform both actions, including on the

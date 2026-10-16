@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "workflow",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "workflow permissionCatalogue",
+      "description": "Explicit workflow identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "workflow",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/workflowPermissionHeader.js": "77c23e21da186497c968cb03b2123c29e85887c34927e4a571cffc4caa73c4a8",
+        "init-v001/records/identity/workflowPermissionData.js": "2961d1d472d82384c492b05dc036fe37b4656d59c37840929211c0f5f1aaf064"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

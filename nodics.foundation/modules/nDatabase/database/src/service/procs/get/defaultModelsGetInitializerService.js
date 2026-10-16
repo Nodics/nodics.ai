@@ -120,6 +120,7 @@ module.exports = {
             SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(
                 request.authData,
                 rawSchema.accessGroups,
+                request,
             ) >= CONFIG.get('accessPoints').readAccessPoint
         ) {
             SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, 'read')

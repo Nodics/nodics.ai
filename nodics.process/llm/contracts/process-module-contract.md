@@ -16,7 +16,7 @@ rollback.
 
 - `nodics.process` is a functional module group, not the direct owner of
   runtime source files. It must follow the same repository shape as the other
-  standard groups: group root for composition/contracts/defaults, child modules
+  standard groups: group root for composition/contracts, child modules
   under `modules/` for real runtime behavior.
 - Standard process capabilities are `workflow` and `cronjob`. `workflow`
   directly owns schema contracts, process status definitions, graph validation,

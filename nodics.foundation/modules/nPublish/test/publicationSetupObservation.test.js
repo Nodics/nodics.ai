@@ -110,12 +110,21 @@ function fixture(t) {
     return { service, request, authData, policy, plan, profile, release, installation, row, receipt, state, reads, input, root, writePlan, catalog };
 }
 
-test('disabled policy and unrecognized/missing explicit permission refuse before owner reads', async t => {
+test('disabled policy and missing explicit permission refuse before owner reads', async t => {
     const f = fixture(t); f.policy.enabled = false;
     await assert.rejects(f.service.observe(f.request, f.input()), { code: 'ERR_PUB_SETUP_OBSERVATION' });
-    f.policy.enabled = true; f.catalog.length = 0;
-    await assert.rejects(f.service.observe(f.request, f.input())); f.catalog.push('publish.setup.observe');
+    f.policy.enabled = true; f.authData.permissions = [];
+    await assert.rejects(f.service.observe(f.request, f.input()));
     f.authData.permissions = ['*']; await assert.rejects(f.service.observe(f.request, f.input())); assert.deepEqual(f.reads, []);
+});
+test('a configuration catalogue is neither a grant nor a prerequisite for an exact signed grant', async t => {
+    const f = fixture(t);
+    f.catalog.length = 0;
+    assert.equal((await f.service.observe(f.request, f.input())).ready, true);
+    f.catalog.push('publish.setup.observe'); f.authData.permissions = [];
+    const reads = f.reads.length;
+    await assert.rejects(f.service.observe(f.request, f.input()));
+    assert.equal(f.reads.length, reads);
 });
 test('exact original signed deployment observes foreign publication source without financial or submit grants', async t => {
     const f = fixture(t), original = structuredClone(f.authData);
@@ -292,8 +301,8 @@ test('service-only observer has its own permission; human submission and all dec
     for (const name of ['approve', 'reject', 'activate']) assert.deepEqual(routes[name].accessGroups, ['runtimeConfigAdminUserGroup']);
     assert.equal(require('../config/properties').publish.setup.observation.enabled, false);
     const auth = structuredClone(require('../../nAuth/config/properties'));
-    assert.equal(auth.identityGovernance.permissionCatalog.filter(permission => permission === 'publish.setup.observe').length, 1);
-    auth.identityGovernance.permissionCatalog = [];
+    const permissions = Object.values(require('../data/init-v001/records/identity/publishPermissionData'));
+    assert.equal(permissions.filter(permission => permission.code === 'publish.setup.observe' && permission.active).length, 1);
     assert(!JSON.stringify(auth).includes('publish.setup.observe'), 'recognition must not create default grants');
 });
 test('actual secured route admits group-free scoped service only with its explicit module and permission', async t => {

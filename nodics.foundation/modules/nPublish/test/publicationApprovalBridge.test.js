@@ -101,6 +101,45 @@ function fixture(domain = 'example', owner = 'exampleOwner') {
         apply: () => callback.applyDecision(request, { domain, actionKey: policy.actionKey }) };
 }
 
+test('neutral bridge defaults require an explicit Process connection and do not select a provider', () => {
+    const f = fixture();
+    const target = structuredClone(defaults.publish.approvalWorkflow.target);
+    assert.deepEqual(target, { connectionName: null, connectionType: 'abstract', runtimeRole: 'PROCESS' });
+    assert.equal(defaults.publish.providers.workflowProvider, null);
+    assert.deepEqual(defaults.publish.providers.workflowProviders, {});
+    f.settings.publish.approvalWorkflow.target = target;
+    assert.throws(() => workflow.target(), error => error.code === 'ERR_PUB_00001');
+    target.connectionName = 'default';
+    assert.throws(() => workflow.target(), error => error.code === 'ERR_PUB_00001');
+    target.connectionName = 'partnerProcess';
+    assert.equal(workflow.target(), target);
+    target.runtimeRole = 'WCMS_ONLINE';
+    assert.throws(() => workflow.target(), error => error.code === 'ERR_PUB_00001');
+    target.runtimeRole = 'PROCESS';
+    target.connectionType = null;
+    assert.throws(() => workflow.target(), error => error.code === 'ERR_PUB_00001');
+    assert.deepEqual(f.calls, []);
+});
+
+test('inherited bridge mechanics preserve explicit connection and original caller transport', async () => {
+    const f = fixture('otherDomain', 'otherOwner');
+    f.settings.publish.approvalWorkflow.target = {
+        ...structuredClone(defaults.publish.approvalWorkflow.target),
+        connectionName: 'partnerProcess', timeoutMs: 43210,
+    };
+    f.request.httpRequest.headers = { authorization: 'Bearer original-access-token' };
+    await workflow.requestApproval(f.stored, f.request);
+    const transport = f.calls.find(call => call[0] === 'transport')[1];
+    assert.equal(transport.connectionName, 'partnerProcess');
+    assert.equal(transport.connectionType, 'abstract');
+    assert.deepEqual(transport.targetAuthority, { runtimeRole: 'PROCESS' });
+    assert.equal(transport.timeoutMs, 43210);
+    assert.equal(transport.local, false);
+    assert.equal(transport.maxAttempts, 1);
+    assert.equal(transport.header.Authorization, 'Bearer original-access-token');
+    assert.equal(f.calls.some(call => call[0] === 'elevate'), false);
+});
+
 test('approval uses configured domain and original caller on the existing Process start API', async () => {
     const f = fixture('otherDomain', 'otherOwner');
     f.request.httpRequest.headers = { authorization: 'Bearer original-access-token' };

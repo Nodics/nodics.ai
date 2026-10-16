@@ -55,7 +55,8 @@ module.exports = {
       if (
         !response ||
         !/^SUC_/.test(response.code || "") ||
-        response.success === false ||
+        (response.success !== undefined && response.success !== true) ||
+        (response.acknowledged !== undefined && response.acknowledged !== true) ||
         response.error ||
         (response.errors &&
           (!Array.isArray(response.errors) || response.errors.length)) ||

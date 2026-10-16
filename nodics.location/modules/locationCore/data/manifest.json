@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "locationCore",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "locationCore permissionCatalogue",
+      "description": "Explicit locationCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "locationCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/locationCorePermissionHeader.js": "4e50d3bdfcdf53fdf9fbbbbf33f897ee4e130dbca66c24672f630ac7ad0183dc",
+        "init-v001/records/identity/locationCorePermissionData.js": "1a043b83ba1b7d53940d149a94bf01a658d1bb42bba183510331d232ed9aa57b"
+      }
+    }
+  }
+}

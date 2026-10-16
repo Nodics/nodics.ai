@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "cache",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "cache permissionCatalogue",
+      "description": "Explicit cache identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "cache",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cachePermissionHeader.js": "4a6e66c6895e9df871aba58b4f25bbf159a30bb2f5ab0ddb2a0e4ce3e3802e0a",
+        "init-v001/records/identity/cachePermissionData.js": "66a794e161f2de5589197c7f14fa46ac0645ab02ab643242316ce4da82b8d262"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

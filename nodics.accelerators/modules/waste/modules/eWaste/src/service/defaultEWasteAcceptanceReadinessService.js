@@ -69,15 +69,16 @@ module.exports = {
       },
     };
   },
-  /** Validates Telegram channel policy, Profile application mapping and credential reference presence. */
+  /** Checks local channel policy and, only when co-located, Profile-owned configuration. Remote credential readiness stays unknown. */
   channelReadiness: function () {
     const eWaste = this.config("eWaste");
     const channelConfig = eWaste.channelAuthentication || {};
     const telegram = (channelConfig.channels || {}).TELEGRAM || {};
-    const profile = this.config("profileExternalIdentity");
+    const localProfile = this.hasService("DefaultExternalIdentityService");
+    const profile = localProfile ? this.config("profileExternalIdentity") : {};
     const appCode = telegram.applicationCode;
     const application = appCode && (profile.applications || {})[appCode];
-    const credentialReference = application && application.credentialReference;
+    const credentialReference = application && (application.credentialReference || application.secretEnvironmentVariable);
     const blockers = [];
     if (channelConfig.enabled !== true || telegram.enabled !== true) blockers.push(this.blocker(
       "EWASTE_TELEGRAM_CHANNEL_DISABLED",
@@ -92,33 +93,67 @@ module.exports = {
       "Configure the Telegram application code",
       "The eWaste Telegram channel does not declare the Profile application code it should use."
     ));
-    if (profile.enabled !== true) blockers.push(this.blocker(
+    if (typeof telegram.seamlessSignIn !== "boolean") blockers.push(this.blocker(
+      "EWASTE_TELEGRAM_CHANNEL_POLICY_INVALID",
+      "NEEDS_ATTENTION",
+      "Configure the Telegram sign-in mode as a boolean",
+      "The Telegram seamless sign-in setting must be true or false, matching channel admission."
+    ));
+    const channelPolicyConfigured = blockers.length === 0;
+    let credentialReadinessStatus = localProfile ? "NOT_INSPECTED" : "REMOTE_OWNER_NOT_INSPECTED";
+    if (localProfile && profile.enabled !== true) blockers.push(this.blocker(
       "PROFILE_EXTERNAL_IDENTITY_DISABLED",
       "NEEDS_ATTENTION",
       "Enable Profile external identity",
       "Profile external identity is not enabled, so Telegram proof cannot be exchanged for a customer handoff.",
       { businessImpact: "Telegram users will be forced into reconnect/login paths even when their channel proof is valid." }
     ));
-    if (!application || application.enabled !== true) blockers.push(this.blocker(
+    if (localProfile && (!application || application.enabled !== true)) blockers.push(this.blocker(
       "PROFILE_EXTERNAL_APPLICATION_MISSING",
       "NEEDS_ATTENTION",
       "Configure the Profile external identity application for the eWaste channel",
       "Profile does not expose an enabled external-identity application matching the eWaste Telegram channel."
     ));
-    if (application && application.provider !== "TELEGRAM") blockers.push(this.blocker(
+    if (localProfile && application && application.provider !== "TELEGRAM") blockers.push(this.blocker(
       "PROFILE_EXTERNAL_PROVIDER_MISMATCH",
       "BLOCKED",
       "Align the Profile application provider with Telegram",
       "The configured Profile external-identity application is not mapped to the Telegram provider."
     ));
-    if (!credentialReference || !this.readCredential(credentialReference)) blockers.push(this.blocker(
+    if (localProfile && profile.enabled === true && application?.enabled === true && application.provider === "TELEGRAM") {
+      const verifierName = profile.providers?.TELEGRAM?.service;
+      const verifier = verifierName && SERVICE[verifierName];
+      credentialReadinessStatus = "INSPECTION_UNAVAILABLE";
+      if (verifier && typeof verifier.configuredCredential === "function") {
+        try {
+          const credential = verifier.configuredCredential(application, profile);
+          credentialReadinessStatus = credentialReference && typeof credential?.token === "string" && credential.token.length > 0
+            ? "CONFIGURED" : "UNCONFIGURED";
+        } catch {
+          // Resolver diagnostics may contain private configuration; never project them.
+        }
+      }
+    }
+    if (credentialReadinessStatus === "UNCONFIGURED") blockers.push(this.blocker(
       "TELEGRAM_BOT_CREDENTIAL_MISSING",
       "NEEDS_ATTENTION",
       "Configure the Telegram bot credential through runtime configuration",
       "The Telegram bot credential reference is missing or unresolved.",
       { businessImpact: "Profile cannot verify Telegram launch assertions without the configured bot credential.",
-        recoveryHint: "Provide the configured credential reference through layered properties or persisted runtime configuration; readiness never displays the secret value." }
+        recoveryHint: "Configure the credential only at its Profile verification and Communication delivery owners through layered properties or persisted runtime configuration; do not copy it into Waste." }
     ));
+    if (!localProfile || credentialReadinessStatus === "INSPECTION_UNAVAILABLE") blockers.push(this.blocker(
+      "EWASTE_PROFILE_OWNER_READINESS_UNKNOWN",
+      "NEEDS_ATTENTION",
+      "Inspect Telegram configuration at the Profile owner",
+      "Telegram verification configuration has not been inspected at its owning Profile runtime.",
+      { recoveryHint: "Use the Profile owner's authorized configuration inspection and a separate native acceptance check. A module connection or Waste-local secret is not remote readiness evidence." }
+    ));
+    const profileConfigurationReady = profile.enabled === true && application?.enabled === true &&
+      application.provider === "TELEGRAM" && credentialReadinessStatus === "CONFIGURED";
+    const profileOwnerReadinessStatus = !localProfile ? "REMOTE_OWNER_NOT_INSPECTED" :
+      credentialReadinessStatus === "INSPECTION_UNAVAILABLE" ? "LOCAL_INSPECTION_UNAVAILABLE" :
+        profileConfigurationReady ? "LOCAL_CONFIGURATION_READY" : "LOCAL_CONFIGURATION_REQUIRED";
     if (!this.hasService("DefaultEWasteChannelAuthenticationService")) blockers.push(this.blocker(
       "EWASTE_CHANNEL_SERVICE_UNAVAILABLE",
       "BLOCKED",
@@ -133,11 +168,14 @@ module.exports = {
     ));
     return {
       configured: blockers.length === 0,
+      channelPolicyConfigured,
+      profileOwnerReadinessStatus,
+      credentialReadinessStatus,
       blockers,
       applicationCode: appCode || null,
       seamlessSignIn: telegram.seamlessSignIn === true,
-      profileApplicationConfigured: !!application,
-      credentialReferenceConfigured: !!credentialReference,
+      profileApplicationConfigured: localProfile ? profile.enabled === true && application?.enabled === true && application.provider === "TELEGRAM" : null,
+      credentialReferenceConfigured: localProfile ? !!credentialReference : null,
     };
   },
   /** Validates photo analysis, manual fallback and OpenAI environmental assessment prerequisites without provider calls. */
@@ -232,6 +270,26 @@ module.exports = {
       "Configure rejected draft media cleanup policy",
       "Rejected or abandoned eWaste draft media cleanup policy is not declared."
     ));
+    const cleanup = SERVICE.DefaultEWasteDraftMediaRetentionService?.readiness?.() || {
+      ownerInspectionCapabilityAvailable: false, ownerCleanupCapabilityAvailable: false,
+      inspectionEnabled: false, dryRunOnly: true, executionEnabled: false, deletionEnabled: false,
+      executionSupported: false, retentionPolicyConfigured: false,
+      retentionApprovalStatus: "NOT_ESTABLISHED", schedulerActivationStatus: "UNKNOWN_NOT_PROVISIONED_BY_EWASTE",
+      permanentDemoDataPolicy: "PRESERVE_OWNER_DATA_PACKS_UNCONDITIONALLY",
+      packProvenanceStatus: "UNAVAILABLE_THROUGH_SCOPED_WASTE_CONTRACT",
+    };
+    if (!cleanup.retentionPolicyConfigured || cleanup.retentionApprovalStatus !== "APPROVED") blockers.push(this.blocker(
+      "EWASTE_DRAFT_MEDIA_RETENTION_DECISION_REQUIRED",
+      "NEEDS_ATTENTION",
+      "Review separate abandoned, rejected and replaced media retention policies",
+      "User-created abandoned drafts require a future retention decision. Permanent owner /data demo packs must be preserved; configuration is not approval."
+    ));
+    if (!cleanup.executionSupported) blockers.push(this.blocker(
+      "EWASTE_DRAFT_MEDIA_CLEANUP_CONTRACT_UNQUALIFIED",
+      "NEEDS_ATTENTION",
+      "Qualify exact protected Media cleanup before scheduling deletion",
+      "Only read-only inspection is supported. Media cleanup cannot yet fence Waste references and retained evidence for exact resumable deletion."
+    ));
     return {
       configured: blockers.length === 0,
       blockers,
@@ -239,6 +297,7 @@ module.exports = {
       rejectedDraftCleanupStatus: policy.rejectedCleanupStatus || "NOT_DECLARED",
       acceptedEvidenceRetentionStatus: policy.acceptedEvidenceRetentionStatus || "NOT_DECLARED",
       customerUploadPathReady: this.hasService("DefaultModuleService"),
+      cleanup,
     };
   },
   /** Checks service/config prerequisites for governed accept and reject scenarios. */
@@ -295,6 +354,9 @@ module.exports = {
         blockers.length ? "NEEDS_ATTENTION" : "READY",
       summary: {
         telegramChannelConfigured: channel.configured,
+        telegramChannelPolicyConfigured: channel.channelPolicyConfigured,
+        telegramCredentialReadinessStatus: channel.credentialReadinessStatus,
+        profileOwnerReadinessStatus: channel.profileOwnerReadinessStatus,
         profileExternalIdentityConfigured: channel.profileApplicationConfigured,
         customerAccountLinkReady: channel.configured,
         imageAnalysisConfigured: image.openAiProfileConfigured && image.openAiAdapterEnabled,
@@ -302,6 +364,7 @@ module.exports = {
         openAiCredentialReferenceConfigured: image.openAiCredentialReferenceConfigured,
         draftPhotoRetentionStatus: media.draftPhotoRetentionStatus,
         rejectedDraftCleanupStatus: media.rejectedDraftCleanupStatus,
+        draftMediaCleanup: media.cleanup,
         acceptedEvidenceRetentionStatus: media.acceptedEvidenceRetentionStatus,
         acceptScenarioReady: scenarios.acceptScenarioReady,
         rejectScenarioReady: scenarios.rejectScenarioReady,

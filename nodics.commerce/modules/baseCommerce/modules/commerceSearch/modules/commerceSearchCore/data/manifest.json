@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "commerceSearchCore",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "commerceSearchCore permissionCatalogue",
+      "description": "Explicit commerceSearchCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "commerceSearchCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/commerceSearchCorePermissionHeader.js": "64b96b9d9db38c40c92827dd3ed433a022b160221055dfe8ea8756ffef0a4b37",
+        "init-v001/records/identity/commerceSearchCorePermissionData.js": "ec3a7035461a9e08ba41a4416b88237154c5ea760a7b9c54d41c51f0d2b3d3d4"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

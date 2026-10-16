@@ -72,6 +72,13 @@ release process. nTooling's principle audit checks its discovery and core clause
 
 ## Runtime Boundary
 
+The [mandatory default ownership gate](llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate)
+keeps standard property definitions, defaults and wiring in their implementing
+framework modules. Customer projects supply only actual choices and overrides.
+Its review covers consumers, generators and tests, including missing owner
+defaults rather than only duplicated values. nTooling protects this guidance's
+presence; runtime correctness still requires the consuming owners' checks.
+
 Email/SMS changes follow the
 [module-owned presentation principle](llm/contracts/nodics-principles.md#module-owned-email-and-sms-presentation):
 domain-owned resource files, framework-owned rendering/delivery and minimal

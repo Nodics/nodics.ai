@@ -579,7 +579,7 @@ module.exports = {
     )
       this.fail("ASSIGNMENT");
     if (!history)
-      this.base().assertAssignment(item, item.normalizedEmail, true);
+      await this.base().assertAssignment(item, item.normalizedEmail, true);
     const target = await this.enterprise(item.enterpriseCode, enterpriseReader);
     if (target.tenantCode !== item.tenantCode) this.fail("ASSIGNMENT");
     return { item, enterprise: target.enterprise };
@@ -629,7 +629,7 @@ module.exports = {
         current.enterpriseCode !== binding.enterpriseCode
       )
         this.fail("FORBIDDEN");
-      const groups = await this.groups(current.tenantCode, current.groupCodes);
+      const groups = await this.groups(current.tenantCode, this.currentGroupCodes(current));
       person = { userGroups: groups };
       tenant = current.tenantCode;
     } else {
@@ -665,7 +665,7 @@ module.exports = {
       )
     )
       this.fail("FORBIDDEN");
-    const role = SERVICE.DefaultEnterpriseManagementService.rolePolicy(
+    const role = await SERVICE.DefaultEnterpriseManagementService.rolePolicy(
       item.roleCode,
     );
     if (
@@ -673,6 +673,11 @@ module.exports = {
       this.digest(role.groupCodes) !== this.digest(item.groupCodes)
     )
       this.fail("FORBIDDEN");
+  },
+  /** Resolves current edited membership authority without rewriting the original invitation/registration proof. @param {Object} item Persisted assignment. @returns {string[]} Current governed groups. */
+  currentGroupCodes: function (item) {
+    if (!item.membership?.businessAccess) return item.groupCodes;
+    return SERVICE.DefaultEnterpriseBusinessAccessService.membershipGroups(item);
   },
   /** Resolves actual target groups with exact owner reads. @param {string} tenant Target. @param {string[]} codes Responsibility groups. @returns {Promise<Object[]>} Groups. */
   groups: async function (tenant, codes) {
@@ -890,7 +895,7 @@ module.exports = {
       this.authority(),
       {
         tenantCode: tenant,
-        groupCodes: { $in: codes },
+        $or: [{ groupCodes: { $in: codes } }, { "membership.businessAccess.groupCodes": { $in: codes } }],
         "membership.phase": "COMPLETE",
         status: "REGISTERED",
         active: true,
@@ -1127,7 +1132,7 @@ module.exports = {
       item.registration
     )
       this.fail("IDENTITY");
-    this.base().assertAssignment(item, item.normalizedEmail, true);
+    await this.base().assertAssignment(item, item.normalizedEmail, true);
     if (item.membership) {
       if (
         this.digest(item.membership.identity) !==
@@ -1350,7 +1355,7 @@ module.exports = {
       this.fail("ASSIGNMENT");
     if (!SERVICE.DefaultPrincipalScopeGovernanceService.isEffective(scope))
       this.fail("ASSIGNMENT");
-    const groups = await this.groups(item.tenantCode, item.groupCodes);
+    const groups = await this.groups(item.tenantCode, this.currentGroupCodes(item));
     const effective =
       await SERVICE.DefaultPrincipalScopeGovernanceService.getEffectiveScopes({
         tenant: item.tenantCode,
@@ -1503,13 +1508,13 @@ module.exports = {
       )
         continue;
       const { item, enterprise } = await this.assignment(row.code, true);
-      items.push(this.project(item, enterprise));
+      items.push(await this.project(item, enterprise));
       if (items.length > 100) this.fail("UNAVAILABLE");
     }
     return { contractVersion: 1, items };
   },
   /** Projects allowed business fields only. @param {Object} item Assignment. @param {Object} enterprise Enterprise. @returns {Object} Safe membership. */
-  project: function (item, enterprise) {
+  project: async function (item, enterprise) {
     return {
       code: item.code,
       revision: item.revision,
@@ -1519,7 +1524,7 @@ module.exports = {
           ? enterprise.name
           : enterprise.name?.en || enterprise.code,
       responsibility:
-        SERVICE.DefaultEnterpriseManagementService.rolePolicy(item.roleCode)
+        (await SERVICE.DefaultEnterpriseManagementService.rolePolicy(item.roleCode))
           .label || item.roleCode,
       status: item.status,
       accepted:

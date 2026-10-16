@@ -11,6 +11,48 @@
 "use strict";
 /** @module commsApi/src/facade/defaultCommunicationApiFacade @description Applies owner, tenant, and DTO projection boundaries to Communication API operations. @layer facade @owner commsApi @override Later facades may enrich safe DTOs without bypassing policy. */
 module.exports = {
+  /** Separately admits bounded attempt diagnostics without widening the frozen status-inspection DTO. */
+  diagnoseDelivery: async function (request) {
+    this.requirePrivateEntry(request);
+    const payload = request.payload;
+    const fields = ["sourceModule", "sourceType", "sourceCode"];
+    if (!payload || typeof payload !== "object" || Array.isArray(payload) ||
+      ![Object.prototype, null].includes(Object.getPrototypeOf(payload)) ||
+      Reflect.ownKeys(payload).length !== fields.length ||
+      fields.some(field => !Object.hasOwn(payload, field) || typeof payload[field] !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,179}$/.test(payload[field])) ||
+      Reflect.ownKeys(request.query || {}).length)
+      throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_INPUT");
+    const source = Object.fromEntries(fields.map(field => [field, payload[field]]));
+    this.authorizeSource(request, source.sourceModule);
+    const tenant = request.tenant;
+    let intent;
+    try {
+      intent = await this.authorizeIntent(request, source.sourceModule);
+    } catch (error) {
+      if (error?.code === "ERR_COMMS_INTEGRATION_CONTEXT") throw error;
+      throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_STORAGE");
+    }
+    if (fields.some(field => intent[field] !== source[field]))
+      throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_CONTEXT");
+    const operations = SERVICE.DefaultCommunicationOperationsService;
+    const inspected = operations.inspect(request, intent);
+    const snapshot = { intentCode: inspected.intentCode, status: inspected.status, revision: inspected.revision };
+    const result = await operations.diagnose(request, intent);
+    let current;
+    try { current = await this.authorizeIntent(request, source.sourceModule); }
+    catch (error) {
+      if (error?.code === "ERR_COMMS_INTEGRATION_CONTEXT") throw error;
+      throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_STORAGE");
+    }
+    if (request.tenant !== tenant || current.tenant !== tenant || current.revision !== intent.revision ||
+      current.status !== intent.status || current.attempt !== intent.attempt || current.sourceModule !== intent.sourceModule ||
+      fields.some(field => current[field] !== source[field] || request.payload[field] !== source[field]) ||
+      result?.diagnostic?.attempt !== (intent.attempt ?? 0))
+      throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_STORAGE");
+    return { ...snapshot, diagnostic: require("../service/defaultCommunicationOperationsService").diagnostic(
+      result?.diagnostic?.classification, result?.diagnostic?.attempt) };
+  },
   /** Requires admitted exact-object capture protection; caller flags never establish private entry. @param {Object} request Verified route/owner entry. @param {string} code Fixed safe refusal. @returns {void} */
   requirePrivateEntry: function (
     request,
@@ -65,11 +107,20 @@ module.exports = {
   /** Resolves only an explicitly confirmed recorded uncertainty. */ resolveDelivery:
     async function (request) {
       this.requirePrivateEntry(request);
-      await this.authorizeIntent(request);
+      const payload = request.payload || {};
+      const bound = payload.sourceModule !== undefined || payload.sourceCode !== undefined;
+      if (bound && (typeof payload.sourceModule !== "string" ||
+        !/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(payload.sourceModule) ||
+        typeof payload.sourceCode !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,179}$/.test(payload.sourceCode)))
+        throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_INPUT");
+      const intent = await this.authorizeIntent(request, bound ? payload.sourceModule : undefined);
+      if (bound && (intent.sourceModule !== payload.sourceModule || intent.sourceCode !== payload.sourceCode))
+        throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_CONTEXT");
       return SERVICE.DefaultCommunicationRuntimeService.resolveUncertain(
         request,
         request.intentCode,
-        request.payload || {},
+        payload,
       );
     },
   /** Requests a private durable intent for a trusted integration. */ requestCommunication:
@@ -129,8 +180,8 @@ module.exports = {
    * @param {Object} request Exact intent code and fresh service context.
    * @returns {Promise<Object>} Private owner record for exactly one source-authorized stored intent.
    */
-  authorizeIntent: async function (request) {
-    this.authorizeSource(request);
+  authorizeIntent: async function (request, expectedSourceModule) {
+    this.authorizeSource(request, expectedSourceModule);
     if (!/^COMM_[a-f0-9]{64}$/.test(request.intentCode || ""))
       throw new CLASSES.NodicsError("ERR_COMMS_INTEGRATION_CONTEXT");
     const rows = await SERVICE.DefaultCommunicationRuntimeService.list(
@@ -156,11 +207,31 @@ module.exports = {
       );
     return Array.isArray(value) ? value.map(one) : one(value);
   },
-  /** Lists only messages owned by the authenticated customer. */ listInbox:
+  /**
+   * Lists the canonical customer's messages after a strict Profile owner read.
+   * @param {Object} request Router-admitted customer access identity and exact HTTP bearer.
+   * @returns {Promise<Array>} Allowlisted inbox DTOs with recipient-matched source selectors.
+   * @override Later layers may enrich projections, never replace bearer admission or recipient isolation.
+   */ listInbox:
     async function (request) {
+      const auth = request.authData;
+      const authorization = request.authorization;
+      const bearer =
+        typeof authorization === "string"
+          ? authorization.match(/^Bearer[ \t]+([A-Za-z0-9._~+/-]+=*)$/i)
+          : null;
       if (
-        request.authData?.principalType !== "customer" ||
-        !request.authData.loginId
+        auth?.principalType !== "customer" ||
+        auth.tokenType !== "access" ||
+        typeof auth.loginId !== "string" ||
+        !auth.loginId.trim() ||
+        typeof request.tenant !== "string" ||
+        !request.tenant ||
+        auth.tenant !== request.tenant ||
+        !bearer ||
+        bearer[0] !== authorization ||
+        request.auth?.type !== "bearer" ||
+        request.auth.credential !== bearer[1]
       )
         throw new Error("Customer context required");
       const profileResponse = await SERVICE.DefaultModuleService.invokeModule({
@@ -172,21 +243,32 @@ module.exports = {
         tenant: request.tenant,
         request: { tenant: request.tenant },
         requestBody: {
-          query: { loginId: request.authData.loginId },
+          query: { loginId: auth.loginId },
           options: { recursive: false },
-          searchOptions: { pageSize: 1 },
+          searchOptions: { pageSize: 2, pageNumber: 1 },
         },
         header: {
-          "X-Enterprise-Code": request.authData.entCode || request.tenant,
+          Authorization: authorization,
+          "X-Enterprise-Code": auth.entCode || request.tenant,
         },
         maxAttempts: 1,
         timeoutMs: 10000,
       });
-      let profile = profileResponse;
-      for (let i = 0; i < 5 && profile && !Array.isArray(profile); i++)
-        profile = profile.result || profile.data || profile;
-      const customer = Array.isArray(profile) ? profile[0] : profile;
-      if (!customer?.code || customer.loginId !== request.authData.loginId)
+      const profile =
+        SERVICE.DefaultCommunicationRuntimeService.rows(profileResponse);
+      const customer = profile[0];
+      if (
+        profileResponse.count !== 1 ||
+        profile.length !== 1 ||
+        typeof customer?.code !== "string" ||
+        !customer.code.trim() ||
+        customer.loginId !== auth.loginId ||
+        (customer.tenant !== undefined && customer.tenant !== request.tenant) ||
+        (profileResponse.responseCode !== undefined &&
+          (!Number.isInteger(Number(profileResponse.responseCode)) ||
+            Number(profileResponse.responseCode) < 200 ||
+            Number(profileResponse.responseCode) >= 300))
+      )
         throw new Error("Customer identity unavailable");
       const result = await SERVICE.DefaultCommunicationRuntimeService.list(
         "CommsInboxMessage",

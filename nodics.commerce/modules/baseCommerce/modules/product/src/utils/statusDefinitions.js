@@ -17,6 +17,11 @@
  * @override Later Commerce modules may add Product-owned codes without changing these meanings.
  */
 module.exports = {
+    ERR_PRODUCT_AUTHORING_SCOPE: { code: '403', message: 'Authenticated enterprise Product authority is required' },
+    ERR_PRODUCT_AUTHORING_INPUT: { code: '400', message: 'Product command input is invalid' },
+    ERR_PRODUCT_AUTHORING_STORAGE: { code: '503', message: 'Qualified Product source storage is unavailable' },
+    ERR_PRODUCT_AUTHORING_CONFLICT: { code: '409', message: 'Product source changed or requires its owning lifecycle command' },
+    ERR_PRODUCT_AUTHORING_MISSING: { code: '404', message: 'Product source is unavailable in this enterprise' },
     ERR_PRODUCT_L10N_0001: { code: '400', message: 'Product locale is invalid' },
     ERR_PRODUCT_L10N_0002: { code: '400', message: 'Tenant-scoped Product localization identity is required' },
     ERR_PRODUCT_L10N_0003: { code: '422', message: 'Product locale is not supported' },

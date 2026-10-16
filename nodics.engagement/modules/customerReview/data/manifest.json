@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "customerReview",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "customerReview permissionCatalogue",
+      "description": "Explicit customerReview identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "customerReview",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/customerReviewPermissionHeader.js": "7aa2e1b9d91db70a71ab33ca633f28feef93472338fae5f421a30ee36b0de9f5",
+        "init-v001/records/identity/customerReviewPermissionData.js": "a975a02fe05f6c1ca60ac0feb62faa94baa96c2e80ac087ad5faa7735a438f4d"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

@@ -1,5 +1,19 @@
 # Pricing
 
+Individual price rows can be captured with their exact existing book version and
+approved Product reference through the existing publication API and Process
+approval. They use separate row pointers and never replace the book snapshot.
+Row delivery is disabled by default and requires actual consumed Product pins.
+See [individual row releases](llm/contracts/pricing-lifecycle-and-publication.md#individual-row-releases)
+and the fixed [exact row evidence](llm/contracts/pricing-lifecycle-and-publication.md#exact-row-evidence)
+for the employee API, consumer handoff and namespace/qualification boundaries.
+
+Internal publication mutations additionally require exact Profile-signed caller
+deployments on the existing source/target transport bindings. A read-only runtime
+module claim and shared internal permission never supply writer authority. Before
+deploying this guard, map the existing qualified publisher and authorization callback;
+missing bindings fail closed. See [writer admission](llm/contracts/pricing-lifecycle-and-publication.md#publication-writer-admission).
+
 Exact decimal arithmetic comes from the pure nCommon `exactAmount` utility.
 Pricing retains its mergeable `DefaultExactAmountService` interface and owns
 currency, rounding and pricing policy; the shared utility grants no financial

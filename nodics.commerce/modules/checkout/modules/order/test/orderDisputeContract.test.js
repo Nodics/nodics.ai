@@ -14,6 +14,7 @@ const test = require("node:test"),
   assert = require("node:assert/strict"),
   service = require("../src/service/defaultOrderDisputeService"),
   lifecycle = require("../src/service/defaultOrderLifecycleOperationService");
+const accessFixture = require("./helpers/orderBusinessAccessFixture");
 let rows, scope;
 function match(r, q) {
   return Object.entries(q).every(([k, v]) => r[k] === v);
@@ -77,6 +78,7 @@ test.beforeEach(() => {
     },
     DefaultOrderLifecycleRequestService: {
       get: async (r) => ({
+        code: "SUC_GET",
         result: [...rows.values()]
           .filter((x) => match(x, r.query))
           .map((value) => structuredClone(value)),
@@ -186,11 +188,14 @@ test("a stale outcome cannot overwrite a resolved request and generic lifecycle 
     /changed/,
   );
   SERVICE.DefaultOrderLifecycleRepositoryService = {
+    ...accessFixture.repository,
     get: async () => rows.get(first.code),
   };
+  accessFixture.install();
   await assert.rejects(
     lifecycle.action({
       tenant: "runtime",
+      authData: accessFixture.employeeAuth({ tenant: "runtime", enterpriseCode: "enterprise", actorId: "moderator" }),
       requestCode: first.code,
       actorId: "moderator",
       actionCode: "APPROVE",

@@ -32,6 +32,7 @@ module.exports = {
   fulfillmentCore: {
     enabled: true,
     itemSimulation: {
+      // Later config layers must select exact canonical environments; class alone grants nothing.
       enabled: false,
       environmentAllowlist: [],
     },

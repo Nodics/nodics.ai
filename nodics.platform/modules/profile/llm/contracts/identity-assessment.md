@@ -47,7 +47,7 @@ The existing assessment workflow has a separately default-disabled
 `ownerService` defaults to `DefaultProfileBootstrapIdentityAssessmentService`.
 This is not a login exemption list or a qualification setting. Its bounded
 `sources` select exact approved Init release codes and versions; the framework
-selector is `profile:init-v001` version `0.0.1` from `init-v001`. Later layers may select their
+selector is `profile:init-v001` version `0.0.3` from `init-v001`. Later layers may select their
 approved releases or override the comparison owner, preserving the contracts
 below. A selection is usable only when the existing nImport installation owner
 reports exactly one active CURRENT installation with the same release version,
@@ -58,6 +58,9 @@ The comparison uses nImport's existing release discovery, layered header/file
 preparation and JavaScript record merging. It does not start an import, evaluate
 a synthetic identity, claim a record, mutate credentials or install indexes.
 Only safe expected principal metadata is retained. The fresh complete inventory
+is read from `saveAll` or `ensureBootstrapAll` principal headers without invoking
+either operation. Historical receipts remain bound to their original release
+version and checksum: a `0.0.1` or `0.0.2` receipt cannot qualify the `0.0.3` source. The inventory
 must match every non-email, non-service source principal exactly, including its
 kind, code, login, active state, declared principal type and groups. Credential
 references must resolve to their exact existing login owner; this metadata check
@@ -70,8 +73,8 @@ remain present after successful comparison.
 
 Human bootstrap employees and the credential-bearing guest belong to the
 configured authority tenant (`defaultTenant`), not each newly provisioned tenant.
-The forward `profile:init-v001` version `0.0.1` separates `defaultEmployeeData`
-(humans) from `defaultServiceEmployeeData` (runtime service principal). Its human
+The forward `profile:init-v001` version `0.0.3` separates `defaultEmployeeData`
+(humans) from `preservedServiceEmployeeData` (runtime service principal). Its human
 and guest headers declare `options.tenants: [defaultTenant]`. Service employees,
 groups and supporting reference data retain their tenant-local dispatch.
 
@@ -80,7 +83,8 @@ intersects the finalized layered header selector and never broadens it. Later
 layers may replace the header's tenant array, disable a header, or customize the
 separate human/service records through an explicitly governed release. Existing
 `defaultEmployee` and `defaultCustomer` header identities remain stable; service
-customizations now belong to `defaultServiceEmployee` and its separate dataset.
+customizations now belong to `defaultServiceEmployee` and its separate
+`preservedServiceEmployeeData` dataset.
 The source-review owner uses the same selector before reading expected records.
 That selection never broadens the review comparator's authority-tenant ceiling.
 
@@ -91,11 +95,13 @@ matching header/file identities in layer order. A project still needs its
 contribution selected and checksum-covered by its own governed manifest/plan;
 unselected files are never admitted by filename matching alone. Human additions
 in a project's `defaultEmployeeData` and selectors on `defaultEmployee` continue
-to compose. Human record keys `record0`, `record2` through `record5` are retained.
+to compose when its header contribution matches the selected successor's
+`preservedUsersHeader.js` identity. Human record keys `record0`, `record2` through
+`record5` are retained.
 
 An existing service contribution under the old mixed `defaultEmployeeData`
 does require an explicit project migration: move its `record1` API-admin
-customization and any extra service records to `defaultServiceEmployeeData`,
+customization and any extra service records to `preservedServiceEmployeeData`,
 and contribute `defaultServiceEmployee` in the project's matching header, moving
 service-specific selectors/macros there. Both the header and record file must be
 covered by the project's forward manifest: header source-root ownership still
@@ -104,16 +110,15 @@ in the human file retains them under the human header's authority selector; it
 does not customize the new per-tenant service dataset. No automatic record
 classification, hidden remapping or unmanifested compatibility import occurs.
 
-Forward Init snapshots must preserve the final effective group definitions of
-all already-installed later Init releases. A retained upgrade executes the
-changed release only; later releases that remain CURRENT are not replayed.
-Compare exact final permission sets, including removed permissions, rather than
-unioning historical grants. Version `0.0.2` retains `init-v001` version `0.0.1`
-and corrects six stale group definitions in `init-v001`. This is a source release
-change, not authorization to edit customer runtime permissions directly.
+Forward Init preserves installed identities through `ensureBootstrapAll` and
+selects module-owned group data as prerequisites. Group seeds use
+`ensureReferenceAll`: existing mappings, including intentionally removed
+permissions, are not replaced or unioned with source defaults. Assessment fixtures
+read those owner records, never the historical config-generated group aggregate.
+This source release is not authorization to edit customer runtime permissions.
 
-The aggregate manifest retains the original `init-v001` bytes and checksums and
-selects `init-v001` as the newer source root of the same release identity. Startup
+The manifest selects version `0.0.3` within the `init-v001` source root of the
+same release identity; historical installation receipts are not rewritten. Startup
 accepts the explicit newer version; a changed checksum at the same installed
 version remains a refusal. No initializer removes prior records, relinks people,
 reclassifies humans as services, grants access or suppresses inventory findings.

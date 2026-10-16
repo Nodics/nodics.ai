@@ -11,7 +11,7 @@
 "use strict";
 /**
  * @module fulfillmentCore/test/fulfillmentItemSimulationContract
- * @description Exercises the real LOCAL ITEM simulator in isolation, not authenticated delivery or installed deployment qualification.
+ * @description Exercises the explicitly selected ITEM simulator in isolation, not authenticated delivery or installed deployment qualification.
  * @layer test
  * @owner fulfillmentCore
  * @override Extensions may narrow admission; simulated results never establish verified or immutable delivery truth.
@@ -32,13 +32,13 @@ test.beforeEach(() => {
   configuration = {
     environment: { class: "LOCAL" },
     fulfillmentCore: { itemSimulation: { enabled: true, environmentAllowlist: ["isolatedLocal"] } },
-    promotion: { merchantBenefits: { enabled: true, itemEvidenceMode: "LOCAL_SIMULATION",
+    promotion: { merchantBenefits: { enabled: true, itemEvidenceMode: "SIMULATION",
       itemEvidenceService: "DefaultFulfillmentItemSimulationService" } }
   };
   deployment = { name: "isolatedLocal" };
   forbidden = [];
   global.CONFIG = { get: key => {
-    assert(Object.hasOwn(configuration, key), "Only declared local simulation policy may be read");
+    assert(Object.hasOwn(configuration, key), "Only declared simulation policy may be read");
     return configuration[key];
   } };
   global.NODICS = { getSelectedEnvironmentName: () => deployment.name };
@@ -191,7 +191,7 @@ const policyCases = {
   "verified mode": () => { configuration.promotion.merchantBenefits.itemEvidenceMode = "VERIFIED"; },
   "wrong evidence owner": () => { configuration.promotion.merchantBenefits.itemEvidenceService = "DefaultFulfillmentItemDeliveryEvidenceService"; },
   "missing evidence owner": () => { delete configuration.promotion.merchantBenefits.itemEvidenceService; },
-  "missing environment classification": () => { configuration.environment = undefined; },
+  "retired local mode": () => { configuration.promotion.merchantBenefits.itemEvidenceMode = "LOCAL_SIMULATION"; },
   "unselected environment": () => { deployment.name = "otherLocal"; }
 };
 for (const [name, change] of Object.entries(policyCases)) {
@@ -200,16 +200,25 @@ for (const [name, change] of Object.entries(policyCases)) {
   });
 }
 
-test("nonlocal or heuristic environment classifications never qualify simulation", async () => {
-  for (const value of ["PRODUCTION", "STAGING", "QA", "LOCAL_SIMULATION", "local", true, null, undefined]) {
+test("explicit selected deployment admits simulation independently of environment classification", async () => {
+  for (const value of ["LOCAL", "PRODUCTION", "STAGING", "QA", undefined]) {
     configuration.environment = { class: value };
-    await assert.rejects(simulation.evaluate(context()), refused);
+    const result = await simulation.evaluate(context());
+    assert.equal(result.simulated, true);
+    assert.equal(result.verified, false);
+    assert.equal(result.immutable, false);
+    assert.equal(result.deliveredAt, undefined);
   }
+  delete configuration.environment;
+  assert.equal((await simulation.evaluate(context())).simulated, true);
+  deployment.name = "notSelected";
+  await assert.rejects(simulation.evaluate(context()), refused);
 });
 
 test("allowlist is explicit, bounded, exact and unique", async () => {
   for (const allowed of [undefined, null, [], "isolatedLocal", ["otherLocal"], ["isolatedLocal", "isolatedLocal"],
     ["isolatedLocal", " "], ["isolatedLocal", "x".repeat(129)], ["isolatedLocal", 1],
+    ["isolatedLocal", "*"], ["isolatedLocal", "."], Object.assign(Array(2), { 0: "isolatedLocal" }),
     Array.from({ length: 21 }, (_, i) => i ? "local" + i : "isolatedLocal")]) {
     configuration.fulfillmentCore.itemSimulation.environmentAllowlist = allowed;
     await assert.rejects(simulation.evaluate(context()), refused);
@@ -221,7 +230,8 @@ test("canonical selected environment wins; legacy environment getter is used onl
   await assert.rejects(simulation.evaluate(context()), refused);
   global.NODICS = { getEnvironmentName: () => "isolatedLocal" };
   assert.equal((await simulation.evaluate(context())).simulated, true);
-  for (const nodics of [undefined, {}, { getSelectedEnvironmentName: () => undefined, getEnvironmentName: () => "isolatedLocal" }]) {
+  for (const nodics of [undefined, {}, { getSelectedEnvironmentName: () => undefined, getEnvironmentName: () => "isolatedLocal" },
+    ...[null, true, {}, [], "", "foreign", " isolatedLocal"].map(value => ({ getSelectedEnvironmentName: () => value }))]) {
     global.NODICS = nodics; await assert.rejects(simulation.evaluate(context()), refused);
   }
 });

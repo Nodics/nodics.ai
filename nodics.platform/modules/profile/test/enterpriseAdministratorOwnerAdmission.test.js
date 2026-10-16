@@ -124,6 +124,7 @@ function fixture() {
     },
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseRegistrationService: registration,
     DefaultEnterpriseTeamAdministrationService: team,
     DefaultIdentityGovernanceService: {

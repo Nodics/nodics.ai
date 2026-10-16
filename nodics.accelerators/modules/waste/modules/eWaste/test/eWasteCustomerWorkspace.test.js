@@ -45,8 +45,9 @@ function matches(record, query) {
 beforeEach(() => {
  records = { wasteSubmission: [], wasteAsset: [], wasteCollectionPoint: [] }; calls = [];
  policy = structuredClone(defaults);
- global.CONFIG = { get: key => key === "eWaste" ? policy : key === "wasteMaterial" ? materialDefaults : undefined };
+ global.CONFIG = { get: key => key === 'identityGovernance' ? require('../../../../../../nodics.foundation/modules/nAuth/config/properties').identityGovernance : key === "eWaste" ? policy : key === "wasteMaterial" ? materialDefaults : undefined };
  global.SERVICE = {
+  DefaultIdentityGovernanceService: require('../../../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultIdentityGovernanceService'),
   DefaultWastePersistenceService: { ...persistence, repository: schema => ({ get: async input => {
    calls.push({ schema, ...input });
    const rows = (records[schema] || []).filter(value => matches(value, input.query));

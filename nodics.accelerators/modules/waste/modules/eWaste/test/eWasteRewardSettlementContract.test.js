@@ -14,10 +14,15 @@
 /** @module eWaste/test/eWasteRewardSettlementContract @description Verifies approval settles only immutable confirmed Rules evidence through Loyalty-owned wallet operations. @layer test @owner eWaste */
 const assert = require("node:assert/strict");
 const service = require("../src/service/defaultEWasteExperienceService");
+const rewardOwner = require("../src/service/defaultEWasteRewardAssessmentOperationService");
+const request = { tenant: "default", authData: { tenant: "default" } };
+const verificationRef = { module: "wasteVerification", schema: "wasteVerification", code: "decision-1" };
 
 const assessment = {
   code: "SUB-1_REWARD_CONFIRMED_POLICY_V1_R4",
   assetCode: "WASTE_ASSET_SUB-1",
+  submissionCode: "SUB-1",
+  sourceVerificationRef: verificationRef,
   assessmentType: "CONFIRMED",
   rewardTypeCode: "SUSTAINABILITY_REWARD",
   rewardAmount: "200.00",
@@ -34,6 +39,9 @@ const asset = {
   code: "WASTE_ASSET_SUB-1",
   revision: 2,
   ownerRef: { module: "profile", schema: "customer", code: "customer-1" },
+  originalOwnerRef: { module: "profile", schema: "customer", code: "customer-1" },
+  sourceSubmissionCode: "SUB-1",
+  verificationRef,
   metadata: {
     confirmedRewardAssessmentRef: {
       module: "wasteReward",
@@ -46,6 +54,12 @@ const asset = {
 let saved;
 const requests = [];
 const store = {
+  list: async (schema, _request, query, limit) => {
+    assert.equal(schema, "wasteSubmission");
+    assert.deepEqual(query, { code: "SUB-1" });
+    assert.equal(limit, 2);
+    return [{ code: "SUB-1", submissionStatus: "APPROVED", submitterRef: asset.originalOwnerRef, verificationRef }];
+  },
   one: async (schema, request, code) => {
     assert.equal(schema, "wasteRewardAssessment");
     assert.equal(code, assessment.code);
@@ -70,6 +84,7 @@ global.CONFIG = {
   }),
 };
 service.store = () => store;
+global.SERVICE = { DefaultWastePersistenceService: store, DefaultEWasteRewardAssessmentOperationService: rewardOwner };
 service.remote = async (request, moduleName, connectionName, apiName, methodName, body) => {
   requests.push({ moduleName, connectionName, apiName, methodName, body });
   if (apiName === "/wallets") return { code: "wallet-1" };
@@ -80,7 +95,7 @@ service.remote = async (request, moduleName, connectionName, apiName, methodName
 
 (async () => {
   const result = await service.settle(
-    { tenant: "default", correlationId: "corr-runtime" },
+    { ...request, correlationId: "corr-runtime" },
     asset,
   );
   assert.equal(requests.length, 2);
@@ -118,7 +133,7 @@ service.remote = async (request, moduleName, connectionName, apiName, methodName
   assert.equal(result.metadata.rewardSettlement.assessmentCode, assessment.code);
   assert.equal(result.rewardSettlementRefs[0].code, "rewardLedgerEntry-1");
   const replay = await service.settle(
-    { tenant: "default", correlationId: "corr-runtime" },
+    { ...request, correlationId: "corr-runtime" },
     result,
   );
   assert.equal(replay, result);
@@ -164,6 +179,7 @@ service.remote = async (request, moduleName, connectionName, apiName, methodName
     service.store = originalStore;
     service.remote = originalRemote;
     delete global.CONFIG;
+    delete global.SERVICE;
   })
   .catch((error) => {
     console.error(error);

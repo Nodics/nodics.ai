@@ -91,7 +91,7 @@ module.exports = {
         secured: true,
         authTokenTypes: ["access"],
         accessGroups: ["employeeUserGroup"],
-        permission: "commerce.promotion.manage",
+        permission: "commerce.promotion.draft.write",
         apiExposure: "commerceManagement",
         key: "/promotions/drafts",
         method: "PUT",
@@ -102,7 +102,7 @@ module.exports = {
         secured: true,
         authTokenTypes: ["access"],
         accessGroups: ["employeeUserGroup"],
-        permission: "commerce.promotion.manage",
+        permission: "commerce.promotion.draft.write",
         apiExposure: "commerceManagement",
         key: "/promotions/drafts/:promotionCode",
         method: "PATCH",
@@ -307,3 +307,18 @@ module.exports.promotion.policyPublicationTarget.applyPublicationDecision = {
   controller: "DefaultPromotionPublicationTargetController",
   operation: "applyPublicationDecision",
 };
+
+/** Fixed ordinary campaign reads and qualified owner draft commands; no generated schema grants. */
+module.exports.promotion.business = Object.fromEntries([
+  ["schemas", "GET", "/business/promotions/schemas"],
+  ["capabilities", "GET", "/business/promotions/capabilities"],
+  ["search", "POST", "/business/promotions/search"],
+  ["create", "PUT", "/business/promotions/drafts"],
+  ["update", "PATCH", "/business/promotions/drafts"],
+].map(([operation, method, key]) => ["business" + operation, {
+  secured: true, authTokenTypes: ["access"], accessGroups: ["employeeUserGroup"],
+  permission: ["create", "update"].includes(operation) ? "commerce.promotion.draft.write" : "commerce.promotion.read",
+  apiExposure: "commerceManagement", apiVersion: "v0",
+  controller: "DefaultPromotionBusinessWorkbenchController", operation, method, key,
+  cache: { enabled: false }, requestPrivacy: { sensitive: true },
+}]));

@@ -20,7 +20,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const routes = require("../src/router/routers").profile.loadDefaults;
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 const controller = require("../src/controller/enterprise/defaultEnterpriseManagementController");
 const facade = require("../src/facade/enterprise/defaultEnterpriseManagementFacade");
 const management = require("../src/service/enterprise/defaultEnterpriseManagementService");
@@ -114,6 +114,7 @@ test("administration transport retains independent default-off authority and exp
 test("workspace facade cannot dispatch caller-selected methods", async () => {
   const request = { params: { enterpriseCode: "child" } };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseAdministrationConsentService: {
       workspace: async (observed) => {
         assert.equal(observed, request);

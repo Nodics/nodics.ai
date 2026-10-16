@@ -23,6 +23,38 @@ const settings = {
   adapter: "mock",
   profile: "customerGuidance",
 };
+test("shared guidance profile is provider-neutral and supports layered replacement", () => {
+  const defaults = require("../config/properties");
+  const binding = require("../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService");
+  assert.deepEqual(defaults.copilot.providers.profiles.customerGuidance, {
+    temperature: 0.1,
+    topP: 0.9,
+    maximumOutputTokens: 500,
+    structuredOutput: true,
+  });
+  assert.equal(defaults.copilot.providers.enabled, undefined);
+  assert.equal(
+    defaults.copilot.providers.profiles.customerGuidance.adapter,
+    undefined,
+  );
+  const selected = binding.merge(defaults, {
+    copilot: {
+      providers: {
+        profiles: {
+          customerGuidance: { maximumOutputTokens: 650 },
+        },
+      },
+    },
+  });
+  assert.equal(
+    selected.copilot.providers.profiles.customerGuidance.maximumOutputTokens,
+    650,
+  );
+  assert.equal(
+    defaults.copilot.providers.profiles.customerGuidance.maximumOutputTokens,
+    500,
+  );
+});
 const request = (patch = {}) => ({
   tenant: "default",
   authData: {

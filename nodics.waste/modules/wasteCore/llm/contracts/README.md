@@ -2,6 +2,64 @@
 
 Preserve shared Waste source-reference, enum, and lifecycle policy contracts.
 
+## Scoped Business Workbench
+
+The [business read contract](business-workbench.md) fixes the Waste API discovery,
+descriptor and search boundary, canonical persistence authority, collection scope
+proofs and disclosure ceilings. Generic employee schema writes are not its fallback.
+
+## Retained Listing Completion
+
+`DefaultWasteDigitalListingOperationService.complete` preserves existing LISTED
+onboarding. A domain-qualified pending intent additionally requires a v2 retained
+key, original request revision and digest plus a domain-owned revalidation callback.
+The callback must freshly prove the same reviewed Product, individual Pricing row,
+policies and genuine DigitalCore binding before every projection/asset write.
+Only the exact asset CAS attaches the projection and advances LISTING_REQUESTED
+to LISTED. Original owner, physical custody and immutable intent stay unchanged.
+Uncertain acknowledgements recover only exact generated-owner readback; no write
+is automatically retried. Generic caller data cannot substitute for the callback.
+Legacy unknown intent is never upgraded by this operation. Source tests do not
+qualify installed CAS, grants, publications or delivery.
+
+## Legacy Request Hold
+
+`DefaultWasteDigitalListingOperationService.holdLegacyRequest` records one
+domain-qualified legacy withdrawal using the generated asset repository CAS. The
+domain owns original staff/source authorization and supplies fresh revalidation;
+Waste checks human/tenant identity, exact snapshot/revision, customer ownership,
+absence of transfer/refund locks and installed generated persistence capability.
+Supported version-two intent cannot be withdrawn through this legacy operation.
+
+The audit receipt retains the command, actor, reason, original revision/digest and
+listing references. Exact replay returns it; conflicting replay fails. Uncertain
+acknowledgement permits only exact successor readback, not another write.
+`RECONCILING` / `WITHDRAWN` describes the request, while economic effects remain
+`UNKNOWN` and relisting remains forbidden. Asset status, ownership and custody do
+not change. Listing completion rejects any reconciliation receipt.
+
+Outstanding Product/publication, Digital binding/entitlement, order/checkout,
+reservation and distributed-fence checks are requirements, not absence evidence.
+This owner neither cancels external effects nor proves a global fence. Activation
+and native acceptance remain separate; the accelerator contract documents the
+default-disabled staff route and its explicit confirmation.
+
+## Verification Presentation
+
+`waste.operations.presentation` owns generic operational labels projected by
+`DefaultWasteOperationalAccessService.describe`. `verifyExplanation`, `verifySaved`
+and `verificationRequired` must not imply an independent or different employee:
+an authorized reviewer may also approve when `requireDifferentApprover` is false.
+Keep the explicit `differentApproverRequired` label for the configured separate-
+actor gate. Verification saves facts, not an asset or reward. Presentation never
+grants approval, waives verification or changes either policy flag; the existing
+verification owner enforces permissions and decision policy on every command.
+Later layers may customize presentation without altering those gates. Run
+`test/wasteVerificationPresentationContract.test.js` for both flag combinations
+and presentation override coverage, and sibling
+`wasteVerification/test/wasteOperationalRolesContract.test.js` for enforced
+same-actor approval and explicit separate-actor denial.
+
 ## Installed Evidence Inspection
 
 `DefaultWasteInstalledDataInspectionService` provides read-only prerequisite

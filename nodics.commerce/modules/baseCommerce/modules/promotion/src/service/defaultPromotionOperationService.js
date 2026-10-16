@@ -1017,69 +1017,10 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   saveDraft: async function (request) {
-    this.validatePolicyAuthoring(request);
-    const payload = request.payload || {};
-    if (!payload.code && !request.promotionCode)
-      throw new Error("Promotion code is required for draft save");
-    const code = request.promotionCode || payload.code;
-    const now = request.now ? new Date(request.now) : new Date();
-    const existing = await this.getOne(SERVICE.DefaultPromotionService, {
-      tenant: request.tenant,
-      authData: this.serviceAuthData(request),
-      query: this.enterpriseQuery(request, { tenant: request.tenant, code }),
-      pageSize: 1,
-    });
-    const model = this.withSchemaBase(
-      Object.assign({}, existing || {}, payload, {
-        code,
-        tenant: request.tenant,
-        enterpriseCode: request.enterpriseCode || payload.enterpriseCode,
-        active:
-          payload.active !== undefined
-            ? payload.active
-            : existing && existing.active !== undefined
-              ? existing.active
-              : true,
-        created:
-          (existing && existing.created) ||
-          (payload.created && new Date(payload.created)) ||
-          now,
-        updated: now,
-        status: payload.status || (existing && existing.status) || "DRAFT",
-        priority: Number(
-          payload.priority !== undefined
-            ? payload.priority
-            : (existing && existing.priority) || 0,
-        ),
-        conditions:
-          payload.conditions || (existing && existing.conditions) || {},
-        actions: payload.actions || (existing && existing.actions) || {},
-        budget: payload.budget || (existing && existing.budget),
-        approval: Object.assign(
-          {},
-          existing && existing.approval,
-          payload.approval,
-          {
-            lastEditedBy: request.actorId,
-            lastEditedAt: now.toISOString(),
-          },
-        ),
-        revision:
-          Number((existing && existing.revision) || payload.revision || 0) +
-          (existing ? 1 : 0),
-      }),
-      request,
+    const promotion = await SERVICE.DefaultPromotionDraftService.execute(
+      request, request.promotionCode === undefined ? "create" : "update", request.payload,
     );
-    const saved =
-      (await this.updateOrSave(SERVICE.DefaultPromotionService, {
-        tenant: request.tenant,
-        authData: this.serviceAuthData(request),
-        query: existing
-          ? this.enterpriseQuery(request, { tenant: request.tenant, code })
-          : undefined,
-        model,
-      })) || model;
-    return { promotion: saved, builderState: "DRAFT_SAVED" };
+    return { promotion, builderState: "DRAFT_SAVED" };
   },
   /**
    * Executes `loadPromotion` as a loader-visible operation owned by this module.
@@ -1255,51 +1196,75 @@ module.exports = {
       },
     };
   },
+  /** Captures exact signed analytics scope before any privileged read. Presented aliases only constrain it. Human reads require existing employee/read authority; internal service callers retain their own persistence authority. @param {Object} request Authenticated caller. @returns {Object} Detached bounded read context. @override Preserve signed-scope agreement and never elevate service callers. */
+  analyticsContext: function (request) {
+    const auth = request.authData || {},
+      tenant = auth.tenant ?? auth.tenantCode,
+      enterpriseCode = auth.entCode ?? auth.enterpriseCode,
+      actorId = auth.principalId || auth.userId || auth.loginId || auth.code,
+      promotionCode = request.promotionCode ?? request.payload?.promotionCode,
+      sources = [auth, request, request.auth, request.payload, request.query,
+        request.httpRequest?.body, request.httpRequest?.query],
+      tenants = sources.flatMap(value => [value?.tenant, value?.tenantCode]),
+      enterprises = sources.flatMap(value => [value?.entCode, value?.enterpriseCode]),
+      campaigns = [request.promotionCode, request.payload?.promotionCode, request.query?.promotionCode,
+        request.httpRequest?.params?.promotionCode, request.httpRequest?.body?.promotionCode,
+        request.httpRequest?.query?.promotionCode],
+      security = SERVICE.DefaultSecuredRequestPipelineService;
+    for (const [key, value] of Object.entries(request.httpRequest?.headers || {})) {
+      if (["x-enterprise-code", "entcode", "enterprisecode"].includes(key.toLowerCase())) enterprises.push(value);
+      if (["x-tenant-code", "tenant", "tenantcode"].includes(key.toLowerCase())) tenants.push(value);
+    }
+    if ([tenant, enterpriseCode].some(value => typeof value !== "string" || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(value)) ||
+      typeof promotionCode !== "string" || !promotionCode ||
+      typeof actorId !== "string" || !actorId ||
+      tenants.some(value => value !== undefined && value !== tenant) ||
+      enterprises.some(value => value !== undefined && value !== enterpriseCode) ||
+      campaigns.some(value => value !== undefined && value !== promotionCode) ||
+      request.transactionContext !== undefined || request.internalPersistence !== undefined ||
+      (auth.runtimeScope && (auth.tokenType !== "service" || !Array.isArray(auth.modules) || !auth.modules.includes("promotion") ||
+        !security?.getGrantedPermissions || !security.isPermissionGranted ||
+        !security.isPermissionGranted("commerce.promotion.read", security.getGrantedPermissions({ tenant, authData: auth }), {}))) ||
+      (auth.principalType === "human"
+        ? auth.tokenType !== "access" || auth.isSystem === true ||
+          !security?.hasAccessGroup || !security.getGrantedPermissions || !security.isPermissionGranted ||
+          !security.hasAccessGroup({ tenant, authData: auth, router: { accessGroups: ["employeeUserGroup"] } }) ||
+          !security.isPermissionGranted("commerce.promotion.read", security.getGrantedPermissions({ tenant, authData: auth }), {})
+        : auth.principalType !== "service" || !["service", "internal"].includes(auth.tokenType)))
+      throw new CLASSES.NodicsError("ERR_PROMOTION_ANALYTICS_UNCONFIRMED");
+    return { tenant, enterpriseCode, promotionCode, actorId, authData: structuredClone(auth) };
+  },
+  /** Reads one bounded public analytics source and rejects foreign/malformed evidence instead of counting it. No completeness or atomic accounting claim. @param {Object} service Generated read owner. @param {Object} request Captured analytics context. @returns {Promise<Object[]>} Scope-confirmed public rows. @override Preserve exact row-scope checks and original service authority. */
+  analyticsRows: async function (service, request) {
+    const { tenant, enterpriseCode, promotionCode } = request;
+    if (typeof service?.get !== "function") throw new CLASSES.NodicsError("ERR_PROMOTION_ANALYTICS_UNCONFIRMED");
+    const response = await service.get({
+      tenant,
+      authData: request.authData.principalType === "human" ? this.serviceAuthData(request) : structuredClone(request.authData),
+      query: { tenant, enterpriseCode, promotionCode },
+      options: { skipItemCache: true, recursive: false },
+      searchOptions: { pageSize: 1000, pageNumber: 1, sort: { code: 1 } },
+    });
+    if (!response || typeof response.code !== "string" || !response.code.startsWith("SUC_") ||
+      response.error || response.success === false ||
+      (response.errors !== undefined && (!Array.isArray(response.errors) || response.errors.length > 0)) ||
+      !Array.isArray(response.result) || response.result.length > 1000 ||
+      !response.result.every(row => row && typeof row === "object" && !Array.isArray(row) &&
+        row.tenant === tenant && row.enterpriseCode === enterpriseCode && row.promotionCode === promotionCode))
+      throw new CLASSES.NodicsError("ERR_PROMOTION_ANALYTICS_UNCONFIRMED");
+    return structuredClone(response.result);
+  },
   /**
-   * Executes `analytics` as a loader-visible operation owned by this module.
+   * Executes bounded analytics only after capturing original authenticated enterprise scope.
    * @param {*} request Value defined by the owning module contract.
    * @returns {*} Result defined by the owning module contract.
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   analytics: async function (request) {
-    const promotionCode =
-      request.promotionCode ||
-      (request.payload && request.payload.promotionCode);
-    if (!promotionCode)
-      throw new Error("Promotion code is required for analytics");
-    const redemptions = await this.listFromService(
-      SERVICE.DefaultPromotionRedemptionService,
-      {
-        tenant: request.tenant,
-        authData: this.serviceAuthData(request),
-        query: this.enterpriseQuery(request, {
-          tenant: request.tenant,
-          promotionCode,
-        }),
-        pageSize: 1000,
-      },
-    );
-    const ledger = await this.listFromService(
-      SERVICE.DefaultPromotionBudgetLedgerService,
-      {
-        tenant: request.tenant,
-        authData: this.serviceAuthData(request),
-        query: this.enterpriseQuery(request, {
-          tenant: request.tenant,
-          promotionCode,
-        }),
-        pageSize: 1000,
-      },
-    );
-    const coupons = await this.listFromService(SERVICE.DefaultCouponService, {
-      tenant: request.tenant,
-      authData: this.serviceAuthData(request),
-      query: this.enterpriseQuery(request, {
-        tenant: request.tenant,
-        promotionCode,
-      }),
-      pageSize: 1000,
-    });
+    const context = this.analyticsContext(request), promotionCode = context.promotionCode;
+    const redemptions = await this.analyticsRows(SERVICE.DefaultPromotionRedemptionService, context);
+    const ledger = await this.analyticsRows(SERVICE.DefaultPromotionBudgetLedgerService, context);
+    const coupons = await this.analyticsRows(SERVICE.DefaultCouponService, context);
     const applied = redemptions.filter(
       (item) => item.status === "APPLIED",
     ).length;

@@ -52,16 +52,20 @@ module.exports = {
     },
 
     /**
-     * Calculates the highest access point granted by matching user groups.
+     * Calculates schema group access, including nRouter's explicit native human Platform authority.
      *
      * @param {Object} authData Authentication context from the request.
      * @param {string[]} authData.userGroups User groups resolved from token or session.
      * @param {Object} modelAccessGroups Schema access group map where values are access points.
+     * @param {Object} [request] Original generated request, including its target tenant.
      * @returns {number} Highest access point granted to the user.
      * @throws {CLASSES.NodicsError} When access groups are configured but user groups are missing.
      */
-    getAccessPoint: function (authData, modelAccessGroups) {
+    getAccessPoint: function (authData, modelAccessGroups, request) {
         try {
+            if (SERVICE.DefaultSecuredRequestPipelineService?.hasPlatformFullAccess?.({
+                authData, tenant: request?.tenant,
+            }) === true) return CONFIG.get('accessPoints').fullAccessPoint;
             if (!modelAccessGroups || UTILS.isBlank(modelAccessGroups)) {
                 return CONFIG.get('accessPoints').fullAccessPoint;
             } else if (!authData || !authData.userGroups) {

@@ -110,29 +110,42 @@ module.exports = {
   },
   /** Requires one current active Profile enterprise; referenced business identity is never inferred from a campaign name. @param {Object} r Trusted context. @param {string} code Canonical enterprise. @returns {Promise<void>} Current active owner. */
   activeEnterprise: async function (r, code) {
+    await this.activeEnterprises(r, [code]);
+  },
+  /** Reads complete fresh enterprise activity through Profile's existing bounded reference API, chunking without truncation. No approval survives this call. @param {Object} r Trusted tenant context. @param {Array<string>} codes Owner-derived enterprise identities. @returns {Promise<void>} All exact active references or refusal. */
+  activeEnterprises: async function (r, codes) {
     r = this.detached(r);
     if (typeof r.tenant !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(r.tenant) ||
-        typeof code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(code)) this.failAuthority();
-    const value = this.profileResult(await SERVICE.DefaultModuleService.invokeModule({
-      local: false,
-      moduleName: "profile",
-      connectionName: "profile",
-      targetAuthority: { runtimeRole: "PLATFORM" },
-      tenant: r.tenant,
-      request: { tenant: r.tenant },
-      apiName: "/references/read",
-      methodName: "POST",
-      requestBody: { type: "enterprise", codes: [code] },
-      timeoutMs: 10000,
-      maxAttempts: 1,
-    }));
-    const rows = Array.isArray(value) ? value : [];
-    // Profile's Enterprise.tenant is a business relationship, not the routed storage partition.
-    if (rows.length !== 1 || !rows[0] || rows[0].code !== code || rows[0].active !== true)
-      throw new CLASSES.NodicsError(
-        "ERR_PROMOTION_SELLER_UNCONFIRMED",
-        "Current active issuer and seller enterprises are required",
-      );
+        !Array.isArray(codes) || !codes.length || codes.length > 2000 ||
+        codes.some(code => typeof code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(code))) this.failAuthority();
+    const configured = CONFIG.get('profileReferenceRead')?.maximumCodes;
+    const maximum = configured === undefined ? 100 : configured;
+    if (!Number.isSafeInteger(maximum) || maximum < 1 || maximum > 100) this.failAuthority();
+    const unique = [...new Set(codes)];
+    for (let offset = 0; offset < unique.length; offset += maximum) {
+      const chunk = unique.slice(offset, offset + maximum);
+      const value = this.profileResult(await SERVICE.DefaultModuleService.invokeModule({
+        local: false,
+        moduleName: "profile",
+        connectionName: "profile",
+        targetAuthority: { runtimeRole: "PLATFORM" },
+        tenant: r.tenant,
+        request: { tenant: r.tenant },
+        apiName: "/references/read",
+        methodName: "POST",
+        requestBody: { type: "enterprise", codes: chunk },
+        timeoutMs: 10000,
+        maxAttempts: 1,
+      }));
+      const rows = Array.isArray(value) ? value : [];
+      // Profile's Enterprise.tenant is a business relationship, not the routed storage partition.
+      if (rows.length !== chunk.length || new Set(rows.map(row => row?.code)).size !== chunk.length ||
+          rows.some(row => !row || !chunk.includes(row.code) || row.active !== true))
+        throw new CLASSES.NodicsError(
+          "ERR_PROMOTION_SELLER_UNCONFIRMED",
+          "Current active issuer and seller enterprises are required",
+        );
+    }
   },
   /** Inspects bounded seller consents using current issuer authority. @param {Object} r Signed issuer request. @returns {Promise<Object>} Safe revisioned list. */
   inspect: async function (r) {
@@ -663,8 +676,11 @@ module.exports = {
         binding.issuerEnterpriseCode === context.enterpriseCode || !binding.sellerAuthorizationProof)
       throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Issuer-pinned distribution is required");
     SERVICE.DefaultPromotionOperationService.requireOperationalRuntime();
-    await this.activeEnterprise(context, binding.issuerEnterpriseCode);
-    await this.activeEnterprise(context, context.enterpriseCode);
+    if (!SERVICE.DefaultPromotionDistributionAdmissionService?.referenceReadAdmitted?.(context,
+        [binding.issuerEnterpriseCode, context.enterpriseCode])) {
+      await this.activeEnterprise(context, binding.issuerEnterpriseCode);
+      await this.activeEnterprise(context, context.enterpriseCode);
+    }
     const campaign = await this.campaign(context, binding.promotionCode);
     if (campaign.tenant !== context.tenant || this.enterprise(campaign.vendorEnterpriseRef) !== context.enterpriseCode)
       throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED", "Live seller distribution has changed");

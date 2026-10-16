@@ -22,7 +22,7 @@ const fs = require("fs");
 const path = require("path");
 
 const packageJson = require("../package.json");
-const properties = require("../config/properties");
+const properties = require("../modules/workflow/config/properties");
 const cronjobPackage = require("../modules/cronjob/package.json");
 const workflowPackage = require("../modules/workflow/package.json");
 

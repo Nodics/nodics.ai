@@ -69,6 +69,24 @@ sending. Schema vocabulary must include every persisted provider outcome.
 
 ## Safe customization and tests
 
+The explicit `test/localSmtpCapture.mjs` fixture provides restricted Local-only
+capture. Terminal refusals clear transaction and input state before closing;
+buffered/later commands cannot capture after refusal. Replacement can restore a
+privately retained binding only for its exact sender/port. The test-only
+`localSmtpRolePreload.mjs` helper isolates binding injection to one explicitly
+selected project/environment/server command; every other child is stripped.
+It provides restricted Local-only
+capture, not a provider replacement. It binds IPv4 loopback exclusively, accepts
+only a private generated AUTH PLAIN binding and exact reserved test sender and
+recipient envelope, limits one recipient per message and never opens outbound
+transport. Storage is confined to a pre-admitted private directory, using new
+owner-only files without overwrite. Bounds cover sockets, idle time, command and
+message bytes and total messages. Binding readback refuses symlinks, foreign
+ownership, permissive modes and unexpected fields. Shutdown removes only its
+own artifacts. An interrupted storage response remains unconfirmed, never an
+automatic resend. Current capture/owner evidence and explicit recipient approval
+are independent from identity, role, qualification and backend restart authority.
+
 Later layers can replace documented exported members or tighten test policy.
 A custom sender/credential resolver must preserve references, least privilege and
 redacted results. A custom transport cannot loosen tenant, expiry, recipient, TLS

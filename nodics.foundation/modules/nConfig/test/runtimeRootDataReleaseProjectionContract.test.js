@@ -128,7 +128,8 @@ for (const mode of ["live", "offline"]) {
       discovered.map((release) => release.releaseCode),
       ["cms:cmsPublicationApproval"],
     );
-    assert.equal(discovered[0].version, "1.0.0");
+    assert.equal(discovered[0].version,
+      require("../../../../nodics.wcms/modules/cms/data/manifest.json").sections.cmsPublicationApproval.version);
     assert.equal(discovered[0].destinationRole, "PROCESS");
     assert.equal(discovered[0].invalidManifest, undefined);
     policy.contributions = [];

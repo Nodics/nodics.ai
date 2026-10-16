@@ -183,10 +183,10 @@ test("missing, foreign, closed, non-sample or ambiguous wallets never open or re
     assert.equal(writes, 0); stores = original;
   }
 });
-test("independent human permission, Local class, exact source and atomic provider are mandatory", async () => {
+test("independent human permission, selected environment, exact source and atomic provider are mandatory", async () => {
   for (const alter of [() => { request.authData.permissions = []; }, () => { request.authData.permissions = ["loyalty.rewards.earn"]; },
     () => { delete request.authData.loginId; }, () => { request.authData.principalType = "service"; },
-    () => { policy.environment.class = "PRODUCTION"; }, () => { policy.loyalty.sampleCredits.enabled = false; },
+    () => { policy.loyalty.sampleCredits.enabled = false; },
     () => { policy.loyalty.sampleCredits.allowedEnvironments = []; }, () => { request.enterpriseCode = "foreign"; },
     () => { policy.loyalty.sampleCredits.approvedSources[0].checksum = "b".repeat(64); },
     () => { policy.loyalty.transactions.enabled = false; }]) {
@@ -194,6 +194,61 @@ test("independent human permission, Local class, exact source and atomic provide
     assert.equal((await owner.preflightContribution(request)).ready, false); assert.equal(writes, 0);
     policy = originalPolicy; request = originalRequest;
   }
+});
+test("explicit non-Local demo selection preserves atomic credit, original caller and replay identity", async () => {
+  policy.environment.class = "QA";
+  NODICS.getSelectedEnvironmentName = () => "sharedDemo";
+  policy.loyalty.sampleCredits.allowedEnvironments = ["sharedDemo"];
+  policy.loyalty.sampleCredits.approvedSources[0].environmentCode = "sharedDemo";
+  const before = clone(request);
+  assert.equal((await owner.preflightContribution(request)).ready, true); assert.equal(writes, 0);
+  assert.equal((await owner.installContribution(request)).data.receipts[0].action, "CREDITED");
+  const retained = clone(stores.ledger[0]);
+  assert.equal(retained.metadata.sampleCredit.localDemoOnly, true);
+  assert.equal((await owner.installContribution(request)).data.receipts[0].action, "CURRENT");
+  assert.equal(writes, 2); assert.deepEqual(stores.ledger[0], retained); assert.deepEqual(request, before);
+});
+test("non-Local class alone, request-selected environment and partial approvals grant no credit", async () => {
+  policy.environment.class = "PRODUCTION";
+  NODICS.getSelectedEnvironmentName = () => "unselectedDemo";
+  request.environment = "exampleLocal";
+  assert.equal((await owner.preflightContribution(request)).ready, false);
+  policy.loyalty.sampleCredits.allowedEnvironments = ["unselectedDemo"];
+  assert.equal((await owner.preflightContribution(request)).blocker.gate, "PINNED_APPROVAL");
+  policy.loyalty.sampleCredits.approvedSources[0].environmentCode = "unselectedDemo";
+  for (const key of ["environmentCode", "enterpriseCode", "releaseCode", "version", "checksum", "instructionCode", "approvalReference"]) {
+    const original = clone(policy.loyalty.sampleCredits.approvedSources[0]);
+    policy.loyalty.sampleCredits.approvedSources[0][key] = "different";
+    assert.equal((await owner.preflightContribution(request)).ready, false);
+    await assert.rejects(owner.installContribution(request), { code: "ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE" });
+    assert.equal(writes, 0); policy.loyalty.sampleCredits.approvedSources[0] = original;
+  }
+  policy.loyalty.sampleCredits.approvedSources.push(clone(policy.loyalty.sampleCredits.approvedSources[0]));
+  assert.equal((await owner.preflightContribution(request)).ready, false); assert.equal(writes, 0);
+});
+test("non-Local demo selection retains owner, balance, unit and transaction safeguards", async () => {
+  policy.environment.class = "QA";
+  NODICS.getSelectedEnvironmentName = () => "sharedDemo";
+  policy.loyalty.sampleCredits.allowedEnvironments = ["sharedDemo"];
+  policy.loyalty.sampleCredits.approvedSources[0].environmentCode = "sharedDemo";
+  for (const mutate of [() => { stores.wallet[0].ownerCode = "other"; },
+    () => { stores.wallet[0].metadata.sample = false; }, () => { stores.balance[0].revision++; },
+    () => { stores.reward[0].unitType = "CARBON"; }, () => { policy.loyalty.transactions.enabled = false; }]) {
+    const originalStores = clone(stores), originalPolicy = clone(policy); mutate();
+    assert.equal((await owner.preflightContribution(request)).ready, false);
+    await assert.rejects(owner.installContribution(request)); assert.equal(writes, 0);
+    stores = originalStores; policy = originalPolicy;
+  }
+  failLedger = true;
+  await assert.rejects(owner.installContribution(request), /ledger unavailable/);
+  assert.equal(stores.ledger.length, 0); assert.equal(stores.balance[0].available, "118");
+  failLedger = false; assert.equal((await owner.installContribution(request)).data.receipts[0].action, "CREDITED");
+});
+test("sample-credit defaults remain disabled without environment or source approval", async () => {
+  const defaults = require("../config/properties").loyalty.sampleCredits;
+  assert.equal(defaults.enabled, false); assert.deepEqual(defaults.allowedEnvironments, []); assert.deepEqual(defaults.approvedSources, []);
+  policy.loyalty.sampleCredits = clone(defaults); policy.environment.class = "QA";
+  assert.equal((await owner.preflightContribution(request)).ready, false); assert.equal(writes, 0);
 });
 test("balance revision drift, carbon units, ambiguous ledger and sparse identity indexes refuse", async () => {
   for (const alter of [() => { stores.balance[0].revision = 1; }, () => { stores.reward[0].unitType = "CREDIT"; },

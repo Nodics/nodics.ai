@@ -18,7 +18,7 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
 const service = require("../src/service/enterprise/defaultEnterpriseManagementService");
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 global.CONFIG = {
   get: (name) =>
     name === "enterpriseManagement"
@@ -49,6 +49,7 @@ test("an activation failure retries the same persisted enterprise without a seco
   let saves = 0;
   let activations = 0;
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseService: {
       get: async (request) => ({
         code: "SUC_DBS_00000",
@@ -110,6 +111,7 @@ test("Profile setup uses the shared metadata owner without Workbench and keeps l
   let received;
   global.NODICS = { getModule: () => ({}) };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultSchemaUtilityService: {
       buildDescriptor: () => ({ fields, operations: ["create"] }),
       getIdempotencyKey:
@@ -214,6 +216,7 @@ test("canonical enterprise create preserves trusted scope and requires the trans
     },
   });
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultSchemaUtilityService: {
       getIdempotencyKey: utility.getIdempotencyKey,
       buildDescriptor: () => ({
@@ -280,6 +283,7 @@ test("Workbench setup rejects non-human, SYSTEM and service-account claims befor
   let metadataReads = 0,
     storageReads = 0;
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultSchemaUtilityService: {
       buildDescriptor: () => {
         metadataReads++;

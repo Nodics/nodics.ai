@@ -2,10 +2,125 @@
   "contractVersion": 2,
   "module": "cms",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "cms permissionCatalogue",
+      "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cmsPermissionHeader.js": "ae8491d6d4b6ee95cfbd482ea9c69bbc504497bbd7efa7c3a840792d177ec5d5",
+        "init-v001/records/identity/cmsPermissionData.js": "ebd227c8c2fde3f988af9a3ac65615350238d0c2586b2aeb41e1bc4d0fa15219"
+      }
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.3",
+      "displayName": "cms accessGroups",
+      "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cmsUserGroupHeader.js": "fa3260d10d6e2c60901d5560d4f961a3bfc83f6b7fa1793d572c43759819fb8b",
+        "init-v001/records/identity/cmsUserGroupData.js": "ab6179250f6f142bc647c78eda57ecf69246bc06e4e172e97756470f247e7521"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "editorial",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b96be3694de6ed7b00209597ac395f01676a6a37c8b842f8b969c61fe005edff",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "publish",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a02257cb5a9ea08397b4662e2b720f4a2e0f5318421d8a01e7daa7b0e6ca9376",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "enterpriseRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "cms enterpriseRoles",
+      "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cmsEnterpriseRoleHeader.js": "05e909eeddfad03c7ddf476e39bc86e650953ebe5e680cf148e3acb60b772ac3",
+        "init-v001/records/identity/cmsEnterpriseRoleData.js": "e8cfb1006365d04fd8fe92d1a472552cf7dad56e8595029ba1dec5920ddfe625"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        }
+      ]
+    },
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "CMS Foundation",
       "description": "Content Management init data",
       "owningDomain": "cms",
@@ -20,7 +135,7 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "files": {
-        "init-v001/records/content/defaultCmsSiteData.js": "0e34852ce89ba85bda6ed3f3f49a590a314f9d29004b20e5f1f7df3830fbbfd7",
+        "init-v001/records/content/defaultCmsSiteData.js": "9fd567518f9585a68c56e513d7d6d5baa33abcaeb2613f28cff82f103503a147",
         "init-v001/records/content/defaultCmsTypeCodeData.js": "6217613834024e68f12622b15d55915c3f322231c06d5ceab6f43b12b0db63d3",
         "init-v001/records/user/defaultCmsEmployeeData.js": "3563e19ba2e01a222b9a259b8d75d38fa87c647974208944accd1eb8b5e80330",
         "init-v001/records/user/defaultCmsUserGroupsData.js": "966496a646545d0d44941b4c8c89e1e083f705f64611db0a7a9f1ec62357e602",
@@ -142,6 +257,84 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "businessAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "Content business access groups",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/cmsBusinessAccessGroupData.js": "ccd4e523b3087015d07b890cfe0e55408119f2e05605b37e0353c93fff3b7432",
+        "init-v001/headers/identity/cmsBusinessAccessGroupHeader.js": "27218387ec1592cfc8e62ebdb04f7e42de1e1920ae6f534b01b55212b48e83b9"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "businessAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "Content business access roles",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "cms",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/cmsBusinessAccessRoleData.js": "60c58211bbedae41c02abd75c9d5e47c216e96ba8d54d8b47fe4ae33468b4c50",
+        "init-v001/headers/identity/cmsBusinessAccessRoleHeader.js": "2ab56499a7962d5971a57cdaa79608e6c903f3238a8502648e527f95cfa618db"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "cms",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.2",
+          "checksum": "be5a7371aedb52a518a3a245d3db7b23375042a4acaf373b33a3e9a8394f3167"
         }
       ]
     }

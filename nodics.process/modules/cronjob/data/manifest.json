@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "cronjob",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "cronjob permissionCatalogue",
+      "description": "Explicit cronjob identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "cronjob",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cronjobPermissionHeader.js": "cb7ae67e7e9ab81838dea99c056ce25ddca1c5df356ae92994d2e2eeb9eb2cfc",
+        "init-v001/records/identity/cronjobPermissionData.js": "8d53ab7752259cbf08586a15958556c3642b7e22fd48700bbc25de626cc99842"
+      }
+    },
     "core-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "core",

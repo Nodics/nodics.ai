@@ -91,11 +91,11 @@ auth configuration until a real distributed adapter supplies atomic take.
 
 ## Identity governance
 
-`identityGovernance` defines layered administrative groups, trusted framework
-service groups, safe customer-registration defaults, and the permission-code
-catalog. Projects extend these values through normal configuration hierarchy;
-core services consume `DefaultIdentityGovernanceService` rather than embedding
-project role names.
+`identityGovernance` defines layered administrative classifications, trusted
+framework service groups and safe customer-registration defaults. Permission
+vocabulary and enterprise roles are module-owned data packs installed into
+Profile's persisted catalogue; userGroup records alone map groups to permissions.
+Projects customize through those governed owners, not configuration-derived grants.
 
 The catalog includes `ai.usage.readOwn` for the aiProviders-owned,
 authenticated-human self-service usage summary. It is distinct from the
@@ -130,8 +130,10 @@ Principal updates resolve persisted records before assigning stamps, ensuring
 tokens and cache entries use the same stable `loginId`. Group changes invalidate
 direct members and members of every descendant group in the inheritance graph.
 
-Identity migration permissions and separation-of-duties rules are layered
-under `identityGovernance`. By default, a runtime configuration requester may
+Identity migration preserves assigned groups, never infers service/admin authority
+from account names, and holds conflicting classification for separate correction.
+Migration permissions are persisted catalogue records; separation-of-duties rules
+remain layered under `identityGovernance`. By default, a runtime configuration requester may
 not decide or activate the same request, and its approver may not activate it.
 Projects may integrate a workflow engine by overriding the corresponding
 services while preserving these governance outcomes.

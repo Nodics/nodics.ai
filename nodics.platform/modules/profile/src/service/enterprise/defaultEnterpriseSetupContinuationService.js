@@ -51,7 +51,7 @@ module.exports = {
     return policy;
   },
   /** Snapshots validated creation intent; this pure helper does not admit a persistence command. */
-  createSnapshot: function (enterprise, nomination) {
+  createSnapshot: async function (enterprise, nomination) {
     const m = this.management();
     if (!enterprise || !nomination || typeof nomination.email !== "string")
       this.fail();
@@ -59,7 +59,7 @@ module.exports = {
       typeof enterprise?.tenant === "object"
         ? enterprise.tenant.code
         : enterprise?.tenant;
-    const role = m.rolePolicy(nomination?.roleCode);
+    const role = await m.rolePolicy(nomination?.roleCode);
     if (
       ![enterprise?.code, tenantCode].every(
         (code) =>
@@ -74,7 +74,7 @@ module.exports = {
       enterprise.defaultAdminAssignmentCode !== nomination.assignmentCode ||
       nomination.assignmentCode !==
         m.assignmentCode(enterprise.code, nomination.email) ||
-      nomination.roleCode !== m.setupAdministratorPolicy().roleCode ||
+      nomination.roleCode !== (await m.setupAdministratorPolicy()).roleCode ||
       role?.scopeType !== "ENTERPRISE" ||
       role.delegable !== true ||
       !Array.isArray(role.groupCodes) ||
@@ -116,7 +116,7 @@ module.exports = {
   ) {
     this.authorizeCreation(authorizationRequest);
     if (typeof execute !== "function" || creations.has(request)) this.fail();
-    const expected = this.createSnapshot(request.model, nomination);
+    const expected = await this.createSnapshot(request.model, nomination);
     if (!isDeepStrictEqual(request.model?.setupContinuation, expected))
       this.fail();
     creations.set(request, { expected, nomination: cloneDeep(nomination) });
@@ -246,7 +246,7 @@ module.exports = {
     return this.redactEnterprise(request, response);
   },
   /** Blocks generic private-field writes; serialized commands require the exact active owner patch. */
-  protectMutation: function (request) {
+  protectMutation: async function (request) {
     const teamOwner = SERVICE.DefaultEnterpriseTeamAdministrationService;
     if (
       !creations.has(request) &&
@@ -281,7 +281,7 @@ module.exports = {
           creation.expected,
         ) ||
         !isDeepStrictEqual(
-          this.createSnapshot(request.model, creation.nomination),
+          await this.createSnapshot(request.model, creation.nomination),
           creation.expected,
         )
       )
@@ -480,13 +480,13 @@ module.exports = {
     );
   },
   /** Validates current policy against retained nomination; changed policy never grants a replacement role. */
-  samePolicy: function (enterprise) {
+  samePolicy: async function (enterprise) {
     try {
       const admin = enterprise.setupContinuation.intent.administrator,
         m = this.management();
-      const role = m.rolePolicy(admin.roleCode);
+      const role = await m.rolePolicy(admin.roleCode);
       return (
-        m.setupAdministratorPolicy().roleCode === admin.roleCode &&
+        (await m.setupAdministratorPolicy()).roleCode === admin.roleCode &&
         role.scopeType === "ENTERPRISE" &&
         role.delegable === true &&
         isDeepStrictEqual(role.groupCodes, admin.groupCodes)
@@ -700,7 +700,7 @@ module.exports = {
   assess: async function (enterprise, actor) {
     if (!this.validIntent(enterprise))
       return this.project(enterprise, "HELD", ["ORIGINAL_INTENT_UNAVAILABLE"]);
-    if (!this.samePolicy(enterprise))
+    if (!(await this.samePolicy(enterprise)))
       return this.project(enterprise, "HELD", ["NOMINATION_POLICY_CHANGED"]);
     if (!(await this.namespaceReady(enterprise)))
       return this.project(enterprise, "HELD", ["TENANT_NAMESPACE_UNSAFE"]);
@@ -821,8 +821,24 @@ module.exports = {
       "ERR_PROFILE_SETUP_INSPECTION_READ",
       () => this.readEnterprise(code),
     );
-    return this.inspectionStep("ERR_PROFILE_SETUP_INSPECTION_ASSESSMENT", () =>
-      this.assess(enterprise, actor),
+    return this.inspectionStep(
+      "ERR_PROFILE_SETUP_INSPECTION_ASSESSMENT",
+      async () => {
+        const assessment = await this.assess(enterprise, actor);
+        const runtime = SERVICE.DefaultEnterpriseHandlerService;
+        if (typeof runtime?.isEnterpriseRuntimeReady !== "function")
+          this.fail();
+        const runtimeReady = runtime.isEnterpriseRuntimeReady(enterprise);
+        if (typeof runtimeReady !== "boolean") {
+          // Refuse asynchronous observations without leaking rejected owner promises.
+          Promise.resolve(runtimeReady).catch(() => {});
+          this.fail();
+        }
+        return {
+          ...assessment,
+          setup: { ...assessment.setup, runtimeReady },
+        };
+      },
     );
   },
   /** Persists one monotonic checkpoint through the existing serialized owner with transient exact-patch admission. */
@@ -981,7 +997,7 @@ module.exports = {
       await this.authorize(request);
       if (
         !(await this.namespaceReady(enterprise)) ||
-        !this.samePolicy(enterprise)
+        !(await this.samePolicy(enterprise))
       )
         this.fail();
       const admin = enterprise.setupContinuation.intent.administrator;
@@ -995,7 +1011,7 @@ module.exports = {
     if (!this.assignmentMatches(enterprise, assignment)) this.fail();
     await this.authorize(request);
     if (
-      !this.samePolicy(enterprise) ||
+      !(await this.samePolicy(enterprise)) ||
       !(await this.namespaceReady(enterprise)) ||
       !this.runtimeReady(enterprise)
     )

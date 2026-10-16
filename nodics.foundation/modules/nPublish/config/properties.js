@@ -31,6 +31,8 @@ module.exports = {
 
   publish: {
     approvalWorkflow: {
+      // Neutral bridge mechanics; deployments must select a remote connection.
+      target: { connectionName: null, connectionType: "abstract", runtimeRole: "PROCESS" },
       runtimeEnterpriseScope: { enabled: false, enterpriseCodes: [] },
     },
     setup: {

@@ -167,6 +167,22 @@ The bounded response is:
 immutable original input. No request fingerprint, digest, assignment ID, Team
 operation ID, namespace, credential, token or database endpoint is projected.
 
+Inspection additionally returns `setup.runtimeReady`, a strict Boolean from the
+current `DefaultEnterpriseHandlerService.isEnterpriseRuntimeReady` owner on the
+Enterprise freshly read for that inspection, regardless of setup stage. It is
+read-only completion observation, not an additional eligibility or qualification
+gate: `INITIAL` with `runtimeReady: false` may remain RESUMABLE with `canResume:
+true` so the original activation can run after separately qualified adoption.
+Missing readiness owners, exceptions and nonboolean results fail through the
+existing registered inspection ASSESSMENT diagnostic; they are never fabricated
+as false. Later-layer readiness owners must preserve this strict synchronous
+Boolean contract and owner-controlled completion evidence. The existing Axis
+parser tolerates this additive field; no frontend change is required for bounded
+owner inspection. Resume responses need not contain it and resume always performs
+its own fresh checks. The continuation tests cover fresh true/false observations,
+unchanged INITIAL eligibility, HELD legacy compatibility, failure privacy and zero
+effects. No observation adopts resume qualification or authorizes a command.
+
 The same descriptor is `setupContinuation` on the administrative access
 workspace. Paths come from actual prepared `NODICS.getRouters()` owner routes,
 honoring context root, module prefix, key and version customization. Only one

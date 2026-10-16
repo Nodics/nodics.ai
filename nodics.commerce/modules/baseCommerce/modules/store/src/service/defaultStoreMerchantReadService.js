@@ -96,6 +96,7 @@ module.exports = {
     },
     /** Guards before generated cache, count or query execution. Public flags/copies grant nothing. */
     providerRead: function (request, model) {
+        SERVICE.DefaultStorePlacementService?.checkPersistenceRead(request, model);
         if (model?.moduleName !== 'store' || model.schemaName !== 'store') this.fail();
         const grant = reads.get(request);
         if (!grant) {

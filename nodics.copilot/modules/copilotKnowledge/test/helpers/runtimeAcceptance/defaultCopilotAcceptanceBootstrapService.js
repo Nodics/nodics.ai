@@ -16,51 +16,111 @@
  * @layer test @owner copilotKnowledge
  */
 module.exports = {
-  /** Creates an exact runtime grant and scoped human operators in the owned disposable database. @returns {Promise<boolean>} Completed fixture provisioning. */
-  reconcile: async function () {
+  /** Refuses use outside the existing disposable acceptance database contract. */
+  fixture: function () {
     const fixture = CONFIG.get("copilotAcceptance");
     if (
       !fixture ||
       !/^nodics_erasure_test_[a-f0-9]{32}$/.test(fixture.databaseName)
     )
       throw new Error("Disposable Copilot acceptance scope required");
-    const request = {
-      tenant: "default",
-      authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
-    };
-    if (
-      !fixture.withAxis &&
-      !fixture.withEnterpriseActions &&
-      !fixture.withPriceActions &&
-      !fixture.withGovernedSchemaActions &&
-      !fixture.withCouponActions &&
-      !fixture.withRulesInspection &&
-      !fixture.withProcessInspection &&
-      !fixture.withCollectionActions
-    )
-      await this.save(SERVICE.DefaultPrincipalScopeAssignmentService, request, {
-        code: "copilot_acceptance_runtime",
+    return fixture;
+  },
+  /** Retains the exact acceptance scopes formerly inherited from nAuth; these are synthetic test inputs only. */
+  runtimePermissions: function () {
+    const fixture = this.fixture();
+    if (!fixture.withAxis && !fixture.withEnterpriseActions && !fixture.withPriceActions &&
+        !fixture.withGovernedSchemaActions && !fixture.withCouponActions &&
+        !fixture.withRulesInspection && !fixture.withProcessInspection && !fixture.withCollectionActions)
+      return ["auth.internal.token.read", "profile.enterprise.search"];
+    return [
+      "auth.internal.token.read",
+      "auth.internal.token.read.anyTenant",
+      "profile.enterprise.search",
+      "profile.customer.register",
+      "profile.address.reference.read",
+      "profile.enterprise.reference.read",
+      "location.location.read",
+      "loyalty.wallet.open",
+      "loyalty.wallet.read",
+      "media.evidence.read",
+      "media.customer.upload",
+      "media.customer.read",
+      "import.release.validate",
+      "import.core.run",
+      "publish.lifecycle.create",
+      "publish.lifecycle.view",
+      "publish.lifecycle.validate",
+      "publish.lifecycle.requestApproval",
+      ...(fixture.withEnterpriseActions ? ["profile.tenant.namespace.bind"] : []),
+      ...(fixture.withRefresh ? [
+        "process.instance.start.internal",
+        "copilot.knowledge.source.manage",
+        "copilot.knowledge.source.notify",
+        "copilot.knowledge.internal.read",
+      ] : []),
+    ];
+  },
+  /** Uses the disposable Init administrator's real password and token owners; no system flag substitutes for human authority. */
+  administratorRequest: async function () {
+    this.fixture();
+    const response = await SERVICE.DefaultAuthenticationProviderService.authenticateEmployee({
+      entCode: "default",
+      loginId: "admin",
+      password: SERVICE.DefaultAuthSecurityService.validateBootstrapIdentity(CONFIG).adminPassword,
+    });
+    if (!/^SUC_/.test(response?.code || "") || !response.result?.authToken)
+      throw new Error("Fixture administrator authentication failed");
+    try {
+      const verified = await SERVICE.DefaultAuthorizationProviderService.authorizeToken({
+        authToken: response.result.authToken,
+      });
+      if (!/^SUC_/.test(verified?.code || "") || !verified.result)
+        throw new Error("Fixture administrator authorization failed");
+      const request = { tenant: "default", authData: verified.result };
+      await SERVICE.DefaultIdentityCatalogueGovernanceService.authorize(request);
+      return request;
+    } finally {
+      if (response.result.refreshToken)
+        await SERVICE.DefaultAuthenticationProviderService.removeToken(
+          CONFIG.get("profileModuleName") || "profile", response.result.refreshToken,
+        );
+    }
+  },
+  /** Creates exact deployment assignments through Profile, preserving installed narrowing and revocation on restart. */
+  ensureRuntimeAssignments: async function (request) {
+    const fixture = this.fixture();
+    if (!Array.isArray(fixture.runtimeDeployments) || !fixture.runtimeDeployments.length)
+      throw new Error("Explicit disposable runtime deployments required");
+    const permissions = this.runtimePermissions();
+    const models = fixture.runtimeDeployments.map((scope) => {
+      const code = permissions.length === 2 ? "copilot_acceptance_runtime"
+        : SERVICE.DefaultMandatoryIdentityBootstrapService.runtimeDeploymentGrantCode(scope.environmentCode, scope.serverCode);
+      return {
+        code,
+        active: true,
         principalType: "service",
         principalCode: "apiAdmin",
         scopeType: "RUNTIME_DEPLOYMENT",
-        scopeCode: "copilot_acceptance_runtime",
+        scopeCode: code,
         inheritanceMode: "DIRECT",
         tenantCode: "default",
         enterpriseCode: "default",
         status: "ACTIVE",
         effect: "ALLOW",
-        runtimeScope: {
-          projectCode: NODICS.getEnvironmentName(),
-          environmentCode: NODICS.getSelectedEnvironmentName(),
-          serverCode: NODICS.getServerName(),
-          instanceCode: "copilot-acceptance",
-          modules: NODICS.getActiveModules(),
-          permissions: [
-            "auth.internal.token.read",
-            "profile.enterprise.search",
-          ],
-        },
-      });
+        runtimeScope: { ...scope, permissions: [...permissions] },
+      };
+    });
+    const result = await SERVICE.DefaultPrincipalScopeAssignmentService.ensureDeploymentAll({ ...request, models });
+    if (!Array.isArray(result?.result) || result.result.length !== models.length ||
+        result.result.some((row, index) => row.code !== models[index].code))
+      throw new Error("Fixture runtime assignments unacknowledged");
+  },
+  /** Creates exact runtime grants and scoped human operators in the owned disposable database. @returns {Promise<boolean>} Completed fixture provisioning. */
+  reconcile: async function () {
+    const fixture = this.fixture();
+    const request = await this.administratorRequest();
+    await this.ensureRuntimeAssignments(request);
     const permissions = [
       "axis.view",
       "axis.dashboard.view",
@@ -129,7 +189,7 @@ module.exports = {
             ]
           : []),
       ]);
-      await this.save(SERVICE.DefaultUserGroupService, request, {
+      const groupResult = await SERVICE.DefaultUserGroupService.ensureReferenceAll({ ...request, models: [{
         code,
         name: code,
         active: true,
@@ -144,7 +204,7 @@ module.exports = {
             ? ["runtimeConfigAdminUserGroup"]
             : []),
         ],
-        permissions: [
+        permissions: [...new Set([
           ...permissions.filter((permission) => !excluded.has(permission)),
           ...(fixture.withProcessTriggerActions && role === "operator"
             ? ["process.trigger.manage", "process.trigger.execute"]
@@ -295,8 +355,10 @@ module.exports = {
           ...(fixture.withActivity && ["reviewer", "foreign"].includes(role)
             ? ["copilot.activity.transcript.read"]
             : []),
-        ],
-      });
+        ])],
+      }] });
+      if (groupResult?.result?.length !== 1 || groupResult.result[0].code !== code)
+        throw new Error("Fixture group creation unacknowledged");
       const existing = await SERVICE.DefaultEmployeeService.get({
         ...request,
         query: { code },
@@ -333,7 +395,10 @@ module.exports = {
         password: { loginId: code, password: fixture.password, active: true },
       });
     }
-    if (fixture.withRetention) await this.seedExpiredConversation(request);
+    if (fixture.withRetention) await this.seedExpiredConversation({
+      ...request,
+      authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+    });
     return true;
   },
   /** Creates aged synthetic content once through generated persistence; a retained tombstone prevents resurrection on restart. */
@@ -474,14 +539,28 @@ module.exports = {
         tenant: "default",
       });
   },
-  /** Uses the owning generated save lifecycle, including credential and security-stamp hooks. @param {Object} service Profile service. @param {Object} request System fixture context. @param {Object} model Owned fixture record. @returns {Promise<void>} Acknowledged save. */
+  /** Preserves existing disposable records and creates through generated insert-only saves, including credential and security-stamp hooks. */
   save: async function (service, request, model) {
-    const response = await service.save({
+    this.fixture();
+    const existing = await service.get({
       ...request,
       query: { code: model.code },
+      options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: 2, pageNumber: 1 },
+    });
+    if (!/^SUC_/.test(existing?.code || "") || existing.success === false || existing.error ||
+        existing.errors && (!Array.isArray(existing.errors) || existing.errors.length) ||
+        !Array.isArray(existing.result) || existing.count !== existing.result.length ||
+        existing.result.length > 1 || existing.result.some((row) => row.code !== model.code))
+      throw new Error("Fixture Profile lookup failed");
+    if (existing.result.length) return;
+    const response = await service.save({
+      ...request,
+      options: { insertOnly: true },
       model,
     });
-    if (!response || !/^SUC_/.test(response.code))
+    if (!/^SUC_/.test(response?.code || "") || response.success === false || response.error ||
+        response.errors && (!Array.isArray(response.errors) || response.errors.length) || response.result?.code !== model.code)
       throw new Error("Fixture Profile save failed");
   },
 };

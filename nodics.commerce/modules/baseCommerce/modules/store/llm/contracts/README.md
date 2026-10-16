@@ -1,5 +1,77 @@
 # Store contracts
 
+## Deployment-bound Placement Reads
+
+Store master releases are operational `COMMERCE` references, not Product
+publication graph members. A Staged authoring runtime must not duplicate those
+records or assume its local generated Store service owns them.
+
+`POST /internal/stores/placement` is a fixed private Store operation, under the
+prepared Store context/version. It accepts only `{contractVersion:1,storeCode}`
+and returns `{contractVersion:1,tenant,store:{code,enterpriseCode,revision,active,status}}`.
+It never returns the full Store, Profile record, authentication proof or private
+fields, and never writes a Store or publishes a Product.
+
+The original service principal needs its signed `store` module claim and exact
+`commerce.store.read` permission. The operational Commerce receiver requires qualified private
+capture, the enabled `storePlacementRead` exposure category and
+`store.placementRead` policy.
+
+The selected runtime role code must match the policy and its publication kind
+must be `OPERATIONAL`. Store reference reads are not Product/Pricing publication:
+do not relabel the shared Commerce role `ONLINE` to enable this operation.
+
+Framework defaults are inert:
+
+```js
+placementRead: { enabled: false, runtimeRole: null, callers: [] }
+```
+
+Each caller supplies exactly `tenant`, `principalEnterpriseCode`, `serviceId`,
+`projectCode`, `environmentCode`, `serverCode`, `instanceCode`, `assignmentCode`
+and `placements`. Every placement is an exact `{storeCode,enterpriseCode}` pair.
+The signed runtime coordinates must identify exactly one caller and the selected
+Store exactly one pair. Wildcards, duplicate matches, contradictory namespace
+aliases and malformed bindings reject. Each array is bounded to 100 entries.
+The enterprise association comes from this operator policy and the real Store,
+never a caller-supplied enterprise or an inferred human membership.
+
+The admitted owner creates canonical target-local persistence authority only for
+two bounded generated reads of the selected tenant/code/ACTIVE Store. It does
+not replace the original runtime claims or expose a reusable credential.
+Store's existing provider protection checks the private request identity before
+query/count work. Copies, changed selectors and retired contexts reject.
+Generated schema access remains mandatory. Both results must be successful,
+exactly one active revisioned Store, associated with the bound enterprise and
+identical at readback. Canonical schema-owned string, code-only, long and short
+reference forms are accepted; contradictory aliases reject. Authority and
+configuration are checked again across awaits. Missing or changing evidence
+fails closed without a local fallback, import, cache or repair.
+
+This permission does not grant `system.schema.view`, `system.schema.manage`,
+Store CRUD, publication or staff access. Administrators qualify the installed
+identity, effective route and owner before enabling a binding. Business users
+continue using their existing authoring/review task; placement evidence is not
+publication approval. Partner overrides use the existing Store service and
+configuration layers and must preserve these invariants. Maintainers and AI
+tools must not resolve an unavailable read by copying the Online Store into a
+Staged database or adding a broad schema role.
+
+Run `node --test nodics.commerce/modules/baseCommerce/modules/store/test/storePlacementContract.test.js`.
+The suite compiles the real generated service and runs the pipeline, schema
+access, privacy and Mongo adapter with artificial cursor/count I/O. It covers
+successful minimal projection, inert and malformed configuration, foreign
+deployment/namespace, missing or ambiguous records, contradictory associations,
+changed policy/caller/data, concurrent independent requests and retired/copy
+refusal. This is source qualification, not native deployment acceptance.
+
+The controller supports both direct Promise callers and the existing nRouter
+callback protocol. The HTTP dispatcher does not await a controller's returned
+Promise. Success and failure must each reach exactly one callback. The suite
+therefore also invokes the actual `handleRequest` dispatcher, verifies private
+responses are not cached, and covers asynchronous refusal and synchronous owner
+exceptions. A direct Promise test alone is insufficient HTTP acceptance.
+
 `DefaultStoreContextService.resolveMerchantStore` admits exactly one active,
 tenant-consistent revisioned outlet with canonical Profile enterprise association.
 For human merchant operations it uses `DefaultStoreMerchantReadService.read`;

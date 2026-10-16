@@ -17,7 +17,7 @@ const path = require("node:path");
 const pkg = require("../package.json");
 const properties = require("../config/properties").eWaste;
 const routes = require("../src/router/routers").eWaste.experience;
-const originalPublic = new Set(["experience", "marketplace"]);
+const originalPublic = new Set(["experience", "marketplace", "catalogue", "product"]);
 assert.equal(pkg.nodics.runtime.router, true);
 assert.deepEqual(pkg.nodics.extends, [
   "nodics.waste",
@@ -29,7 +29,7 @@ assert(
   "eWaste must persist generic reward assessments through wasteReward",
 );
 assert.equal(properties.marketplace.autoPublishListings, false);
-assert.equal(properties.rewardValuationService, null);
+assert.equal(properties.rewardValuationService, undefined);
 assert.equal(properties.applicationCode, "EWASTE");
 assert(!("register" in routes));
 assert(!("contact" in routes));
@@ -55,7 +55,9 @@ for (const [name, route] of Object.entries(routes)) {
     }
     continue;
   }
-  assert.equal(route.controller, "DefaultEWasteExperienceController");
+  const journeys = new Set(["previewArrival", "arrival", "prepareSubmission", "replacePreparedPhoto", "message", "customerGuidance", "createDraft", "attachPhoto", "analyzePhoto", "estimate", "confirm"]);
+  assert.equal(route.controller, journeys.has(name) ? "DefaultEWasteJourneyController"
+    : ["catalogue", "product"].includes(name) ? "DefaultEWasteCatalogueController" : "DefaultEWasteExperienceController");
   assert.equal(route.apiExposure, "eWasteCustomer");
   if (name === "acceptanceReadiness") {
     assert.equal(route.secured, true);

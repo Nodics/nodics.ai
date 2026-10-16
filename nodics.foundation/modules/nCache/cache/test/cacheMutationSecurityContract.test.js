@@ -22,9 +22,9 @@ const repositoryRoot = path.resolve(__dirname, '../../../../../');
  */
 
 const routerDefinitions = require('../../../nRouter/src/router/routers');
-const authProperties = require('../../../nAuth/config/properties');
-const userGroupsData = require(path.join(repositoryRoot,
-    'nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
+const identityCatalogueFixture = require(path.join(repositoryRoot,
+    'nodics.platform/modules/profile/test/helpers/identityCatalogueFixture'));
+const userGroupsData = identityCatalogueFixture.records('UserGroup');
 
 const mutationRoutes = [
     routerDefinitions.common.flushCache.flushKey,
@@ -48,11 +48,12 @@ mutationRoutes.forEach(route => {
 });
 
 const cachePermissions = ['cache.flush', 'cache.configuration.router.update', 'cache.configuration.item.update'];
-cachePermissions.forEach(permission => assert(authProperties.identityGovernance.permissionCatalog.includes(permission)));
-const runtimeAdminGroup = Object.values(userGroupsData).find(group => group.code === 'runtimeConfigAdminUserGroup');
-cachePermissions.forEach(permission => assert(runtimeAdminGroup.permissions.includes(permission)));
-const migrationTarget = authProperties.identityGovernance.migration.groupTargets.runtimeConfigAdminUserGroup;
-cachePermissions.forEach(permission => assert(migrationTarget.permissions.includes(permission)));
+const permissionCodes = identityCatalogueFixture.records('Permission').filter(row => row.active === true).map(row => row.code);
+cachePermissions.forEach(permission => assert(permissionCodes.includes(permission)));
+const persistedAdminGroups = userGroupsData.filter(group => group.code === 'runtimeConfigAdminUserGroup');
+assert.strictEqual(persistedAdminGroups.length, 1);
+assert.strictEqual(persistedAdminGroups[0].active, true);
+cachePermissions.forEach(permission => assert(persistedAdminGroups[0].permissions.includes(permission)));
 
 let routeActionAuthorization = { enabled: true, strict: true, groupPermissions: {} };
 global.CONFIG = { get: key => key === 'routeActionAuthorization' ? routeActionAuthorization : key === 'nodeId' ? 'test-node' : undefined };

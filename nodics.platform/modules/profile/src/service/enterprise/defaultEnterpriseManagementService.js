@@ -242,7 +242,7 @@ module.exports = {
   },
 
   /** Reads bounded setup policy; this nominates an enterprise admin, never a platform role. */
-  setupAdministratorPolicy: function () {
+  setupAdministratorPolicy: async function () {
     const policy = (CONFIG.get("enterpriseManagement") || {}).create || {};
     const admin = policy.defaultAdministrator;
     if (
@@ -255,7 +255,7 @@ module.exports = {
     ) {
       throw this.error("Default administrator setup policy is unavailable");
     }
-    const role = this.rolePolicy(admin.roleCode);
+    const role = await this.rolePolicy(admin.roleCode);
     if (role.scopeType !== "ENTERPRISE" || role.delegable !== true) {
       throw this.error(
         "Default administrator must use a delegable enterprise responsibility",
@@ -283,7 +283,7 @@ module.exports = {
 
   /** Resolves a valid explicit nomination or one unambiguous associated email before any creation. */
   resolveSetupAdministrator: async function (request, input) {
-    const policy = this.setupAdministratorPolicy();
+    const policy = await this.setupAdministratorPolicy();
     let email;
     if (
       input.adminEmail !== undefined &&
@@ -365,7 +365,7 @@ module.exports = {
     nomination,
   ) {
     if (!nomination) return;
-    const policy = this.setupAdministratorPolicy();
+    const policy = await this.setupAdministratorPolicy();
     const tenantCode =
       enterprise && typeof enterprise.tenant === "object"
         ? enterprise.tenant.code
@@ -409,7 +409,7 @@ module.exports = {
       );
     }
     const assignment = assignments[0];
-    const role = this.rolePolicy(nomination.roleCode);
+    const role = await this.rolePolicy(nomination.roleCode);
     if (
       assignments.length !== 1 ||
       !assignment ||
@@ -665,18 +665,9 @@ module.exports = {
     return email;
   },
 
-  /** Validates one configured enterprise employee role. */
-  rolePolicy: function (roleCode) {
-    let roles = this.accessPolicy().roles || {};
-    let role = roles[String(roleCode || "").trim()];
-    if (
-      !role ||
-      !Array.isArray(role.groupCodes) ||
-      role.groupCodes.length === 0
-    ) {
-      throw this.error("Enterprise user role is not configured");
-    }
-    return role;
+  /** Resolves one fresh persisted enterprise responsibility; assignment authority stays independently enforced. */
+  rolePolicy: async function (roleCode) {
+    return SERVICE.DefaultIdentityCatalogueService.role(roleCode);
   },
 
   /** Builds an access-assignment lookup query without exposing recursive identity data. */
@@ -844,14 +835,62 @@ module.exports = {
     ]);
   },
 
-  /** Returns a backend-driven enterprise access workspace contract. */
-  getAccessWorkspace: function (request) {
+  /** Returns the authorised workspace with fresh persisted role choices. */
+  getAccessWorkspace: async function (request) {
+    if (request?.publicOnly === true) return SERVICE.DefaultEnterpriseRegistrationService.workspace();
+    this.authorize(request);
+    const workspace = this.buildAccessWorkspace(request);
+    const roles = await SERVICE.DefaultIdentityCatalogueService.roles();
+    const businessAreas = SERVICE.DefaultIdentityCatalogueService.businessAreas(roles);
+    const presentation = CONFIG.get("enterpriseManagement").businessAccessPresentation;
+    if (!presentation || ["areaLabel", "levelLabel", "scopeLabel", "employeeLabel", "noAccess", "view", "edit", "fullControl"].some(key =>
+      typeof presentation[key] !== "string" || !presentation[key].trim() || presentation[key].length > 192)) throw this.error("Business access presentation is unavailable");
+    workspace.businessAccess = { contractVersion: 1, businessAreas, presentation };
+    const apply = value => {
+      if (!value || typeof value !== "object") return;
+      if (value.name === "roleCode") {
+        value.type = "BUSINESS_ACCESS";
+        value.businessAccess = workspace.businessAccess;
+        delete value.options;
+      }
+      for (const nested of Object.values(value)) if (nested && typeof nested === "object") {
+        if (Array.isArray(nested)) nested.forEach(apply); else apply(nested);
+      }
+    };
+    workspace.tabs.forEach(tab => tab.sections.forEach(section => {
+      (section.filters || []).forEach(field => {
+        if (field.name === "roleCode") {
+          field.type = "SELECT";
+          field.options = Object.values(roles).map(role => ({ value: role.code, label: role.label || role.name }));
+        }
+      });
+      if ((section.fields || []).some(field => field.name === "roleCode")) {
+        section.fields.forEach(apply);
+        const employee = section.fields.find(field => field.name === "email"), scope = section.fields.find(field => field.name === "enterpriseCode");
+        if (employee) employee.label = presentation.employeeLabel;
+        if (scope) scope.label = presentation.scopeLabel;
+        const ordered = [employee, section.fields.find(field => field.name === "roleCode"), scope].filter(Boolean);
+        section.fields = [...ordered, ...section.fields.filter(field => !ordered.includes(field))];
+      }
+    }));
+    return workspace;
+  },
+  /** Builds static registration metadata without requiring initialized identity storage. */
+  buildAccessWorkspace: function (request) {
     if (request && request.publicOnly === true)
       return SERVICE.DefaultEnterpriseRegistrationService.workspace();
     let workspace = (CONFIG.get("enterpriseManagement") || {}).workspace;
     if (!workspace)
       throw this.error("Enterprise access workspace is not configured");
     let effective = JSON.parse(JSON.stringify(workspace));
+    const clearRoles = value => {
+      if (!value || typeof value !== "object") return;
+      if (value.name === "roleCode") { value.type = "TEXT"; delete value.options; }
+      for (const nested of Object.values(value)) if (nested && typeof nested === "object") {
+        if (Array.isArray(nested)) nested.forEach(clearRoles); else clearRoles(nested);
+      }
+    };
+    clearRoles(effective);
     const setupOwner = SERVICE.DefaultEnterpriseSetupContinuationService;
     if (
       typeof setupOwner?.workspaceDescriptor !== "function" &&
@@ -1320,7 +1359,7 @@ module.exports = {
     )
       model = await consentOwner.prepareCreation(model, request);
     if (administrator && requestKey)
-      model.setupContinuation = setupOwner.createSnapshot(model, administrator);
+      model.setupContinuation = await setupOwner.createSnapshot(model, administrator);
     await this.ensureTenant(tenantCode, request, name, {
       enterpriseCode: code,
       setupRequestKey: requestKey,
@@ -1449,7 +1488,7 @@ module.exports = {
     let policy = this.accessPolicy();
     let normalizedEmail = this.normalizeEmail(body.email);
     let roleCode = String(body.roleCode || "").trim();
-    let role = this.rolePolicy(roleCode);
+    let role = await this.rolePolicy(roleCode);
     let enterprise = await this.retrieveEnterpriseForAccess(enterpriseCode);
     let registered = await this.findRegisteredAssignment(
       normalizedEmail,

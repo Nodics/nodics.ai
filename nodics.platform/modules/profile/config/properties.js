@@ -17,7 +17,50 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-  profileRuntimeEnterpriseResolution: { enabled: false, runtimeRole: "PLATFORM", callers: [] },
+  runtimeConfigurationSchemas: {
+    telegramExternalIdentity: {
+      code: "telegramExternalIdentity",
+      ownerModule: "profile",
+      label: "Telegram external identity",
+      description:
+        "Logical bot credential for verified Telegram external identity. Schema discovery does not enable identity providers or applications.",
+      refreshBehavior: "runtime",
+      updatePermission: "runtime.config.request.create",
+      viewPermission: "runtime.config.effective.view",
+      fields: [
+        {
+          code: "botToken",
+          label: "Telegram bot token",
+          type: "string",
+          required: true,
+          sensitive: true,
+          credentialReference: "telegram.bot.identity",
+          pattern: "^\\d+:[^\\s]+$",
+          restartRequired: false,
+          unconfiguredValues: ["", "sample", "placeholder", "changeme"],
+        },
+      ],
+    },
+    runtimeRoleProfiles: {
+      PLATFORM: {
+        telegramExternalIdentity: {
+          $config: "ref",
+          path: "runtimeConfigurationSchemas.telegramExternalIdentity",
+        },
+      },
+      WCMS_STAGED: {
+        telegramExternalIdentity: {
+          $config: "ref",
+          path: "runtimeConfigurationSchemas.telegramExternalIdentity",
+        },
+      },
+    },
+  },
+  profileRuntimeEnterpriseResolution: {
+    enabled: false,
+    runtimeRole: "PLATFORM",
+    callers: [],
+  },
   authSecurity: {
     sessionContextValidation: {
       qualified: false,
@@ -44,10 +87,6 @@ module.exports = {
       },
     },
     securityStampInventory: { pageSize: 100, maximumPages: 100 },
-    permissionCatalog: [
-      "profile.address.reference.read",
-      "profile.enterprise.reference.read",
-    ],
     migration: {
       canonicalLinking: {
         enabled: false,
@@ -74,7 +113,7 @@ module.exports = {
           enabled: false,
           ownerService: "DefaultProfileBootstrapIdentityAssessmentService",
           maximumAgeMs: 300000,
-          sources: [{ releaseCode: "profile:init-v001", version: "0.0.1" }],
+          sources: [{ releaseCode: "profile:init-v001", version: "0.0.3" }],
         },
         pageSize: 100,
         maximumPages: 100,
@@ -208,7 +247,11 @@ module.exports = {
       suppressedLabel: "Suppress this notification",
     },
   },
-  profileCustomerEvidence: { enabled: false, runtimeRole: "PLATFORM", callers: [] },
+  profileCustomerEvidence: {
+    enabled: false,
+    runtimeRole: "PLATFORM",
+    callers: [],
+  },
   profileReferenceRead: {
     maximumCodes: 100,
     types: {
@@ -453,6 +496,32 @@ module.exports = {
   },
 
   enterpriseManagement: {
+    businessAccessPresentation: {
+      employeeLabel: "Employee email",
+      areaLabel: "Business area",
+      levelLabel: "Access level",
+      scopeLabel: "Enterprise scope",
+      noAccess: "No access",
+      view: "View",
+      edit: "Edit",
+      fullControl: "Full control",
+      advancedLabel: "Additional responsibilities",
+      advancedMessage:
+        "These separately assigned responsibilities are retained. No access removes only this business area's standard assignment.",
+      refreshLabel: "Refresh employees",
+      responsibilityLabel: "Business access",
+      emptyMessage: "No active employees in this enterprise.",
+      reviewTitle: "Review employee access",
+      reviewMessage:
+        "Confirm the selected business-area changes. Other responsibilities, credentials and enterprise scope will remain unchanged.",
+      confirmLabel: "Confirm change",
+      cancelLabel: "Cancel",
+      inspectLabel: "Inspect current access",
+      retryLabel: "Resume reviewed change",
+      uncertainMessage:
+        "The outcome is unconfirmed. Inspect current access before reviewing another change; do not assume it failed.",
+      successMessage: "Employee access updated.",
+    },
     setupContinuation: {
       inspectionQualified: false,
       resumeQualified: false,
@@ -471,24 +540,35 @@ module.exports = {
           administratorLabel: "Original administrator",
           statusLabel: "Setup status",
           revisionLabel: "Revision",
-          heldMessage: "Setup is held. Review the recorded reason before continuing.",
+          heldMessage:
+            "Setup is held. Review the recorded reason before continuing.",
           completeMessage: "Enterprise setup is complete.",
           unavailableMessage: "Enterprise setup inspection is unavailable.",
-          uncertainMessage: "The result is unconfirmed. Inspect setup before another action.",
+          uncertainMessage:
+            "The result is unconfirmed. Inspect setup before another action.",
           reasons: {
-            ORIGINAL_INTENT_UNAVAILABLE: "Original setup intent was not retained.",
-            NOMINATION_POLICY_CHANGED: "Administrator policy differs from the original nomination.",
-            TENANT_NAMESPACE_UNSAFE: "Enterprise storage setup needs administrator attention.",
-            ASSIGNMENT_READ_UNAVAILABLE: "The original administrator assignment could not be confirmed.",
-            NOMINATION_CHANGED: "The original administrator assignment changed or expired.",
+            ORIGINAL_INTENT_UNAVAILABLE:
+              "Original setup intent was not retained.",
+            NOMINATION_POLICY_CHANGED:
+              "Administrator policy differs from the original nomination.",
+            TENANT_NAMESPACE_UNSAFE:
+              "Enterprise storage setup needs administrator attention.",
+            ASSIGNMENT_READ_UNAVAILABLE:
+              "The original administrator assignment could not be confirmed.",
+            NOMINATION_CHANGED:
+              "The original administrator assignment changed or expired.",
             OTHER_OPERATION_PENDING: "Another enterprise operation is pending.",
-            OPERATION_EVIDENCE_INVALID: "The retained operation evidence could not be verified.",
-            ORIGINAL_OPERATOR_REQUIRED: "The original operator must continue this pending operation.",
-            STEP_OUTCOME_UNCONFIRMED: "A setup step has an unconfirmed outcome and will not be replayed.",
-            COMPLETION_UNCONFIRMED: "Current setup completion could not be confirmed."
-          }
-        }
-      }
+            OPERATION_EVIDENCE_INVALID:
+              "The retained operation evidence could not be verified.",
+            ORIGINAL_OPERATOR_REQUIRED:
+              "The original operator must continue this pending operation.",
+            STEP_OUTCOME_UNCONFIRMED:
+              "A setup step has an unconfirmed outcome and will not be replayed.",
+            COMPLETION_UNCONFIRMED:
+              "Current setup completion could not be confirmed.",
+          },
+        },
+      },
     },
     hierarchy: { maximumDepth: 32 },
     administrationConsent: {
@@ -631,94 +711,6 @@ module.exports = {
         "createdAt",
         "updatedAt",
       ],
-      roles: {
-        COMMERCE_SETUP_PUBLISHER: {
-          label: "Commerce Setup Publisher",
-          description:
-            "Submits enterprise product and promotion setup publications for independent review without approval or activation authority.",
-          groupCodes: ["commerceSetupPublisherUserGroup", "commercePublicationStarterUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-        COMMERCE_COUPON_ISSUER: {
-          label: "Commerce Coupon Issuer",
-          description:
-            "Admits enterprise campaign budgets, manages delegated seller consent and issues bounded coupon batches through qualified owners.",
-          groupCodes: ["commerceCouponIssuerUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-        COMMERCE_AXIS_REFUND_REVIEWER: {
-          label: "Commerce Axis Refund Reviewer",
-          description:
-            "Reviews enterprise purchase disputes and approved full refunds in Axis with narrowly scoped presentation access.",
-          groupCodes: ["commerceAxisRefundReviewerUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-        COMMERCE_REFUND_REVIEWER: {
-          label: "Commerce Refund Reviewer",
-          description:
-            "Reviews enterprise purchase disputes, executes approved full refunds and records governed physical return operations.",
-          groupCodes: ["commerceRefundReviewerUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-        MERCHANT_OPERATOR: {
-          label: "Merchant Operator",
-          description:
-            "Validates and confirms purchased coupon redemption in Axis for the assigned enterprise.",
-          groupCodes: ["commerceMerchantUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-        ENTERPRISE_ADMIN: {
-          label: "Enterprise Admin",
-          administrationClass: "ENTERPRISE_ADMIN",
-          description:
-            "Manages enterprise users and enterprise-scoped operations for one enterprise.",
-          groupCodes: ["adminGroup", "axisViewerUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [
-            "profile.enterprise.search",
-            "profile.enterpriseAccess.search",
-            "profile.enterpriseAccess.assign",
-          ],
-        },
-        CONTENT_MANAGER: {
-          label: "Content Manager",
-          description:
-            "Manages content and CMS tasks inside the assigned enterprise boundary.",
-          groupCodes: ["axisViewerUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-        OPERATOR: {
-          label: "Operator",
-          description:
-            "Runs day-to-day enterprise operations inside the assigned enterprise boundary.",
-          groupCodes: ["axisViewerUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-        VIEWER: {
-          label: "Viewer",
-          description:
-            "Read-oriented access inside the assigned enterprise boundary.",
-          groupCodes: ["axisViewerUserGroup"],
-          scopeType: "ENTERPRISE",
-          delegable: true,
-          assignmentPermissions: [],
-        },
-      },
     },
     workspace: {
       contractVersion: 0,
@@ -981,7 +973,7 @@ module.exports = {
 
   profileTenantProvisioning: {
     enabled: false,
-    localRuntimeRemoteModuleExtensions: [],
+    runtimeRemoteModuleExtensions: [],
     permission: "profile.tenant.namespace.bind",
     inventoryPermission: "profile.enterprise.search",
     allowInsecureLoopback: false,

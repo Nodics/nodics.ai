@@ -44,12 +44,12 @@ global.NODICS = {
 };
 
 const repoRoot = path.resolve(__dirname, '../../../../../../');
-const enterpriseHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/enterprise/defaultEnterpriseHeader'));
-const groupHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/groups/defaultUserGroupsHeader'));
-const userHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/user/defaultUsersHeader'));
+const enterpriseHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/identityBootstrap/preservedEnterpriseHeader'));
+const groupHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/identity/profileUserGroupHeader'));
+const userHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/identityBootstrap/preservedUsersHeader'));
 const enterpriseData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/enterprise/defaultEnterpriseData'));
 const tenantData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/enterprise/defaultTenantsData'));
-const groupData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
+const groupData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/identity/profileUserGroupData'));
 const userData = {
     ...require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData')),
     ...require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultServiceEmployeeData'))
@@ -61,8 +61,11 @@ assert.strictEqual(enterpriseHeader.profile.defaultEnterprise.options.enabled, t
 assert.deepStrictEqual(enterpriseHeader.profile.defaultEnterprise.options.tenants, ['default']);
 assert.strictEqual(enterpriseHeader.profile.defaultTenants.options.schemaName, 'tenant');
 assert.deepStrictEqual(enterpriseHeader.profile.defaultTenants.options.tenants, ['default']);
-assert.strictEqual(groupHeader.profile.defaultUserGroups.options.schemaName, 'userGroup');
+assert.strictEqual(groupHeader.profile.profileUserGroup.options.schemaName, 'userGroup');
+assert.strictEqual(groupHeader.profile.profileUserGroup.options.operation, 'ensureReferenceAll');
 assert.strictEqual(userHeader.profile.defaultEmployee.options.schemaName, 'employee');
+assert.strictEqual(userHeader.profile.defaultEmployee.options.operation, 'ensureBootstrapAll');
+assert.strictEqual(enterpriseHeader.profile.defaultEnterprise.options.operation, 'ensureBootstrapAll');
 assert.strictEqual(enterpriseData.record0.code, 'default');
 assert.strictEqual(tenantData.record0.code, 'default');
 assert.deepStrictEqual(

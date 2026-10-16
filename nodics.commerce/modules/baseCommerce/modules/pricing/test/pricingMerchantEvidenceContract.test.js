@@ -179,6 +179,38 @@ test("native default uses canonical membership and published prices, not stored/
     /ERR_PRICING_MERCHANT_UNCONFIRMED/,
   );
 });
+
+test('merchant row delivery consumes original Cart Product pins with unchanged private admission', async t => {
+  const f = fixture(t), pins = [{ productCode: 'product', storeCode: 'outlet', targetVersion: 'a'.repeat(64) }], reads = [];
+  const settings = { merchantEvidence: { qualified: true }, publication: { delivery: { rowReleases: true } } };
+  CONFIG.get = () => settings;
+  f.cart.locale = 'en';
+  SERVICE.DefaultPricingPublicationService.rowProductCodes = async () => ['product'];
+  SERVICE.DefaultProductDiscoveryService = { consumerReferences: async (context, items) => {
+    assert.equal(context.enterpriseCode, 'issuer'); assert.equal(context.locale, 'en');
+    assert.equal(context.storeCode, 'outlet');
+    assert.deepEqual(context.authData, f.auth);
+    assert.deepEqual(items, [{ productCode: 'product', sku: undefined, variantCode: undefined }]);
+    return structuredClone(pins);
+  } };
+  f.records[1].policy.productReference = pins[0];
+  SERVICE.DefaultPricingPublicationService.readConfigured = async context => {
+    reads.push(structuredClone(context)); return f.records;
+  };
+  assert.equal((await owner.evaluate(f.input)).subtotalAmount, '25');
+  assert.equal(reads.length, 2, 'Both fresh price reads retain the same consumed Product');
+  assert.deepEqual(reads[0].productReferences, pins);
+  assert.deepEqual(reads[1].productReferences, pins);
+  assert.deepEqual(reads[0].productCodes, ['product']);
+  SERVICE.DefaultProductDiscoveryService.consumerReferences = async () => [{ ...pins[0], targetVersion: 'b'.repeat(64) }];
+  await assert.rejects(owner.evaluate(f.input), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
+  SERVICE.DefaultProductDiscoveryService.consumerReferences = async () => { throw new Error('Product owner failure'); };
+  await assert.rejects(owner.evaluate(f.input), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
+  delete SERVICE.DefaultProductDiscoveryService;
+  await assert.rejects(owner.evaluate(f.input), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
+  SERVICE.DefaultProductDiscoveryService = { consumerReferences: async () => structuredClone(pins) };
+  assert.equal((await owner.evaluate(f.input)).subtotalAmount, '25', 'Failed reads retire private admission before recovery');
+});
 test("wrong caller, buyer, outlet and unqualified/local-shadow owners refuse", async (t) => {
   const f = fixture(t);
   f.auth.permissions = [];
@@ -534,6 +566,73 @@ function businessFixture(t) {
   return f;
 }
 
+/** Installs the actual retained Pricing reader with an original book and mutable isolated candidate fixtures. @param {Object} f Private merchant fixture. @returns {Object} Candidate installation and observations. */
+function retainedBook(f) {
+  const pricing = require('../src/service/defaultPricingPublicationService'), scope = { tenant: 'tenant', enterpriseCode: 'issuer' };
+  f.pricing.publication = { runtimeRole: 'ONLINE', maxDependencies: 10,
+    delivery: { enabled: true, rowReleases: true, storeCodes: ['outlet'], rootCodesByStore: { outlet: ['book'] } } };
+  const records = structuredClone(f.records), payload = { ...scope, rootType: 'priceBook', rootCode: 'book', records };
+  const version = pricing.fingerprint(payload), pointers = [{ ...scope, code: pricing.pointerCode(payload, scope),
+    version, revision: 1, receiptCode: 'book-receipt' }];
+  const releases = [{ ...scope, code: version, fingerprint: version, rootType: 'priceBook', rootCode: 'book', payload }];
+  const receipts = [{ ...scope, code: 'book-receipt', pointerCode: pointers[0].code, targetVersion: version,
+    expectedRevision: 0, fingerprint: version, applied: true }];
+  const generated = rows => ({ get: async ({ query }) => ({ code: 'SUC_READ',
+    result: rows.filter(row => Object.entries(query).every(([key, value]) => row[key] === value)).map(row => structuredClone(row)) }) });
+  const owner = { ...pricing, targetServices: () => ({ pointer: generated(pointers), release: generated(releases), receipt: generated(receipts) }) };
+  SERVICE.DefaultPricingPublicationService = owner;
+  return { owner, pointers,
+    addCandidate: (change = {}) => {
+      const productReference = { publicationCode: 'product-publication', productCode: 'product', storeCode: 'outlet',
+        sourceVersion: '0', targetVersion: 'a'.repeat(64) };
+      const rowPayload = { ...scope, rootType: 'priceRow', rootCode: 'price', records,
+        productReference, productEvidence: { operationKey: 'activation', revision: 1 } };
+      const code = owner.fingerprint(rowPayload);
+      releases.push({ ...scope, code, fingerprint: code, rootType: 'priceRow', rootCode: 'price', payload: rowPayload });
+      pointers.push({ ...scope, code: owner.pointerCode(rowPayload, scope), rootType: 'priceRow', rootCode: 'price',
+        priceBookCode: 'book', storeCode: 'outlet', productCode: 'product', version: code, receiptCode: 'unread-row-receipt', ...change });
+    }
+  };
+}
+
+test('global row delivery preserves Pricing-only delegated book baskets with no relevant Store/book/Product row', async t => {
+  const f = businessFixture(t), retained = retainedBook(f), original = structuredClone(f.auth);
+  SERVICE.DefaultProductDiscoveryService = { consumerReferences: () => assert.fail('Unrelated rows cannot acquire Product authority') };
+  assert.equal((await owner.evaluate(f.input)).subtotalAmount, '25');
+  for (const change of [{ storeCode: 'other-store' }, { priceBookCode: 'other-book' }, { productCode: 'other-product' }]) {
+    retained.addCandidate(change);
+    assert.equal((await owner.evaluate(f.input)).subtotalAmount, '25');
+    retained.pointers.pop();
+  }
+  assert.deepEqual(f.auth, original);
+  retained.addCandidate();
+  let attempts = 0;
+  const product = require('../../product/src/service/defaultProductDiscoveryService');
+  SERVICE.DefaultProductDiscoveryService = { ...product, consumerReferences: function (context, items) {
+    attempts++; assert.deepEqual(context.authData, original);
+    return product.consumerReferences.call(this, context, items);
+  } };
+  f.cart.locale = 'en';
+  await assert.rejects(owner.evaluate(f.input), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
+  assert.equal(attempts, 1, 'A relevant row still requires independent Product authority');
+});
+
+test('a relevant merchant row appearing after selection or before final delivery refuses old book prices', async t => {
+  for (const stage of ['after-selection', 'before-final-read']) {
+    const f = businessFixture(t), retained = retainedBook(f);
+    SERVICE.DefaultProductDiscoveryService = { consumerReferences: () => assert.fail('Empty selection must not read Product') };
+    if (stage === 'after-selection') {
+      const select = retained.owner.rowProductCodes.bind(retained.owner);
+      retained.owner.rowProductCodes = async request => { const codes = await select(request); assert.deepEqual(codes, []); retained.addCandidate(); return codes; };
+    } else {
+      const read = retained.owner.readConfigured.bind(retained.owner);
+      let reads = 0;
+      retained.owner.readConfigured = request => { if (++reads === 2) retained.addCandidate(); return read(request); };
+    }
+    await assert.rejects(owner.evaluate(f.input), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
+  }
+});
+
 test('exact group-free business admission keeps signed runtime unchanged and bounds private owner reads', async t => {
   const f = businessFixture(t), original = structuredClone(f.auth), input = structuredClone(f.input);
   const canonical = SERVICE.DefaultIdentityGovernanceService.getSystemAuthData();
@@ -575,6 +674,27 @@ test('exact group-free business admission keeps signed runtime unchanged and bou
   assert.equal(owner.admit, undefined, 'Private registration is not a generic authority helper');
   await assert.rejects(owner.readCoupon(captured, f.coupon.code), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
   await assert.rejects(owner.readCoupon({ ...captured }, f.coupon.code), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
+});
+
+test('Pricing-only business delegation cannot lend canonical persistence authority to Product row pins', async t => {
+  const f = businessFixture(t), original = structuredClone(f.auth), discovery = require('../../product/src/service/defaultProductDiscoveryService');
+  f.cart.locale = 'en';
+  f.pricing.publication = { delivery: { rowReleases: true } };
+  SERVICE.DefaultPricingPublicationService.rowProductCodes = async () => ['product'];
+  let selections = 0;
+  SERVICE.DefaultProductDiscoveryService = { ...discovery, consumerReferences: async function (context, items) {
+    selections++;
+    assert.deepEqual(context.authData, original);
+    assert.equal(context.authData.isSystem, undefined);
+    assert.equal(context.enterpriseCode, 'issuer');
+    return discovery.consumerReferences.call(this, context, items);
+  } };
+  await assert.rejects(owner.evaluate(f.input), /ERR_PRICING_MERCHANT_UNCONFIRMED/);
+  assert.equal(selections, 1);
+  assert.deepEqual(f.auth, original);
+  f.pricing.publication.delivery.rowReleases = false;
+  assert.equal((await owner.evaluate(f.input)).subtotalAmount, '25', 'Unselected delivery retains existing qualified Pricing delegation');
+  assert.equal(selections, 1);
 });
 
 test('same-enterprise body selection needs no cross-enterprise policy and preserves legacy three selectors', async t => {
@@ -694,7 +814,7 @@ test('group-free merchant admission reads actual activated Pricing pointer/recei
     pointerCode = publication.pointerCode({ rootType: 'priceBook', rootCode: 'book' }, scope);
   const records = {
     pointer: { ...scope, code: pointerCode, version, receiptCode: 'activation', revision: 1 },
-    receipt: { ...scope, code: 'activation', pointerCode, targetVersion: version, expectedRevision: 0, fingerprint: version },
+    receipt: { ...scope, code: 'activation', pointerCode, targetVersion: version, expectedRevision: 0, fingerprint: version, applied: true },
     release: { ...scope, code: version, fingerprint: version, rootType: 'priceBook', rootCode: 'book', payload },
   };
   const getOwner = require('../../../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/get/defaultModelsGetInitializerService');

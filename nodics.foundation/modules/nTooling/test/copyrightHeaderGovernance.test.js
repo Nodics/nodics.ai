@@ -70,12 +70,9 @@ const profileRoot = path.resolve(__dirname, '../../../../nodics.platform/modules
 const profileManifest = require(path.join(profileRoot, 'data/manifest.json'));
 const sealedRoleFiles = Object.values(profileManifest.sections).flatMap(section => Object.keys(section.files || {}))
     .filter(file => /commerce(?:AxisRefundReviewer|CouponIssuer|PublicationStarter|RefundReviewer|SetupPublisher)(?:Header|GroupData)\.js$/.test(file));
-assert.strictEqual(sealedRoleFiles.length, 10);
-for (const file of sealedRoleFiles) {
-    const content = fs.readFileSync(path.join(profileRoot, 'data', file), 'utf8');
-    assert(content.startsWith('/* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */'));
-    assert(copyrightHeaders.hasRequiredHeader(content), 'preserve exact sealed role attribution: ' + file);
-    assert(!copyrightHeaders.hasRequiredHeader(content + '\n'), 'changed role bytes lose compatibility: ' + file);
-}
+assert.strictEqual(sealedRoleFiles.length, 0,
+    'Retired Commerce-specific roles must not return to Profile releases');
+assert(!copyrightHeaders.hasRequiredHeader('/* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */\nmodule.exports = {};\n'),
+    'Retired role compatibility must not admit new abbreviated headers');
 
 console.log('Copyright header governance validated');

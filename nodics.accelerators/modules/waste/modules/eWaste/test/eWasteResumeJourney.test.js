@@ -19,8 +19,8 @@ const request = () => ({ tenant: 'tenant-a', authData: { tenant: 'tenant-a', pri
 const record = (code, owner = 'owner-a', application = 'APP_A', status = 'DRAFT', updated = '2026-09-09T10:00:00.000Z') => ({ code, active: true, submitterRef: { module: 'profile', schema: 'customer', code: owner }, sourceContext: { applicationCode: application }, submissionStatus: status, submittedFacts: { name: code }, metadata: { private: 'not in recovery projection' }, updated });
 beforeEach(() => {
   records = []; calls = [];
-  global.CONFIG = { get: key => key === 'eWaste' ? { applicationCode: 'APP_A' } : undefined };
-  global.SERVICE = { DefaultWastePersistenceService: persistence, DefaultWasteSubmissionService: { get: async input => {
+  global.CONFIG = { get: key => key === 'identityGovernance' ? require('../../../../../../nodics.foundation/modules/nAuth/config/properties').identityGovernance : key === 'eWaste' ? { applicationCode: 'APP_A' } : undefined };
+  global.SERVICE = { DefaultIdentityGovernanceService: require('../../../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultIdentityGovernanceService'), DefaultWastePersistenceService: persistence, DefaultWasteSubmissionService: { get: async input => {
     calls.push(input);
     const matches = records.filter(row => Object.entries(input.query).every(([key, value]) => {
       const found = key.split('.').reduce((current, part) => current?.[part], row);

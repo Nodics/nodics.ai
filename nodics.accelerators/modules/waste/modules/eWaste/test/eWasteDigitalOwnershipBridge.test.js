@@ -123,11 +123,12 @@ function fixture() {
     eWaste: { marketplace: { digitalOwnership: { enabled: true, qualified: true, allowedServicePrincipals: ["commerce-owner"],
       customerEvidenceApiName: "/internal/source-test/customer-evidence",
       targets: { commerce: { runtimeRole: "COMMERCE" }, loyalty: { runtimeRole: "LOYALTY" }, profile: { runtimeRole: "PLATFORM" } } } } } };
-  global.CONFIG = { get: key => config[key] };
+  global.CONFIG = { get: key => key === 'identityGovernance' ? require('../../../../../../nodics.foundation/modules/nAuth/config/properties').identityGovernance : config[key] };
   global.UTILS = { createModelName: name => name, normalizeString: value => String(value ?? "").trim() };
   global.NODICS = { getModels: () => Object.fromEntries(["wasteAsset", "wasteAssetOwnershipEvent"].map(name => [name,
     { primaryKey: "code", versioned: false, compareAndSetItem: () => {}, rawSchema: { managed: name === "wasteAsset" } }])) };
   global.SERVICE = {
+    DefaultIdentityGovernanceService: require('../../../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultIdentityGovernanceService'),
     DefaultWastePersistenceService: persistence, DefaultWasteAssetTransferOperationService: waste,
     DefaultDigitalCommerceCheckoutService: digital, DefaultDigitalCommerceOwnershipService: ownership,
     DefaultDigitalCommerceEntitlementService: entitlement, DefaultEWasteDigitalSaleService: domain,

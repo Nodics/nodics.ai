@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "customerFeedback",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "customerFeedback permissionCatalogue",
+      "description": "Explicit customerFeedback identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "customerFeedback",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/customerFeedbackPermissionHeader.js": "5e5d6575c522d4a1e64682ef8cbd1716824233406db142090ed829edf710136a",
+        "init-v001/records/identity/customerFeedbackPermissionData.js": "5b81036237007154429c9aeb343927a4671c84ca6b8c95e9147ee140004e257f"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

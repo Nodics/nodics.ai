@@ -288,7 +288,8 @@ module.exports = {
       SERVICE.DefaultBackofficeAvailabilityService.scheduleObservation(
         observed,
       );
-    await this.refreshRuntimeRegistrySnapshot();
+    if (request._batchRegistration !== true)
+      await this.refreshRuntimeRegistrySnapshot();
     existing ? this._metrics.renewals++ : this._metrics.registrations++;
     if (request._batchOutcomes)
       request._batchOutcomes.push(existing ? "renewed" : "registered");
@@ -354,7 +355,8 @@ module.exports = {
     }
     let functionalModuleIndex = SERVICE.DefaultFunctionalModuleCatalogueService
       .buildLeaseFunctionalModuleIndex(batch);
-    return Promise.all(
+    let snapshotRefreshed = false;
+    return Promise.allSettled(
       registrations.map((item) =>
         this.register({
           body: item,
@@ -377,12 +379,18 @@ module.exports = {
           },
         }),
       ),
-    ).then(async (results) => {
+    ).then(async (settled) => {
+      // Wait for late sibling writes before publishing even a partial batch.
+      let failure = settled.find(result => result.status === "rejected");
+      if (failure) throw failure.reason;
+      let results = settled.map(result => result.value);
       let functionalModules = await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileRuntimeBatch(batch, authData);
       let activeEntries = await this.getStore().values();
+      // Publish the captured leases before asynchronous reconciliation can interleave.
+      await this.refreshRuntimeRegistrySnapshot(activeEntries.map(entry => entry.value));
+      snapshotRefreshed = true;
       await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
         activeEntries.map(entry => entry.value), [batch.project], { authData: authData });
-      await this.refreshRuntimeRegistrySnapshot(activeEntries.map(entry => entry.value));
       return this.audit({
         eventType: "backoffice.registry.registration",
         outcome: outcomes.every((outcome) => outcome === "renewed")
@@ -410,6 +418,15 @@ module.exports = {
           },
         },
       }));
+    }).catch(async (error) => {
+      if (!snapshotRefreshed) {
+        try {
+          await this.refreshRuntimeRegistrySnapshot();
+        } catch (refreshError) {
+          throw new AggregateError([error, refreshError], "Runtime registration and snapshot refresh failed");
+        }
+      }
+      throw error;
     });
   },
 
@@ -1207,16 +1224,26 @@ module.exports = {
     };
   },
 
-  /** Supplies the same owner results to readiness without repeating navigation's profile reads. */
+  /** Settles profile reads with at most four workers per composition, preserving input-relative result/error order and request-local reuse. */
   applicationStatusReport: async function (profiles, readStatus) {
-    const report = { statuses: [], errors: [] };
-    for (const profile of profiles || []) {
-      if (!profile || !profile.code) continue;
-      try {
-        report.statuses.push(await readStatus(String(profile.code)));
-      } catch (error) {
-        report.errors.push({ profile, error });
+    const pending = (profiles || []).filter(profile => profile && profile.code);
+    const outcomes = new Array(pending.length);
+    let cursor = 0;
+    await Promise.all(Array.from({ length: Math.min(4, pending.length) }, async () => {
+      while (cursor < pending.length) {
+        const index = cursor++;
+        const profile = pending[index];
+        try {
+          outcomes[index] = { fulfilled: true, status: await readStatus(String(profile.code)) };
+        } catch (error) {
+          outcomes[index] = { fulfilled: false, profile, error };
+        }
       }
+    }));
+    const report = { statuses: [], errors: [] };
+    for (const outcome of outcomes) {
+      if (outcome.fulfilled) report.statuses.push(outcome.status);
+      else report.errors.push({ profile: outcome.profile, error: outcome.error });
     }
     return report;
   },

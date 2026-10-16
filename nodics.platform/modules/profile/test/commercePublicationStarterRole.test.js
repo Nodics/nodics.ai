@@ -18,25 +18,28 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { createHash } = require("node:crypto");
 const manifest = require("../data/manifest.json");
-const properties = require("../config/properties");
-const header = require("../data/core-v001/headers/groups/commercePublicationStarterHeader");
-const group = require("../data/core-v001/records/groups/commercePublicationStarterGroupData").commercePublicationStarter;
+const identityFixture = require("./helpers/identityCatalogueFixture");
+const properties = identityFixture.properties();
+const source = require("./helpers/domainAccessFixture")("publish");
+const header = source.header;
+const group = source.group("commercePublicationStarterUserGroup");
 const governance = require("../src/service/group/defaultUserGroupGovernanceService");
 const auth = require("../../../../nodics.foundation/modules/nAuth/config/properties");
 const security = require("../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService");
 const processRoutes = require("../../../../nodics.process/modules/workflow/src/router/routers").workflow;
 const hash = file => createHash("sha256").update(fs.readFileSync(path.join(__dirname, "../data", file))).digest("hex");
 
-test("companion has only actual Process start under ordinary employee ancestry", t => {
-  const previous = { CONFIG: global.CONFIG, UTILS: global.UTILS };
+test("companion has only actual Process start under ordinary employee ancestry", async t => {
+  const previous = { CONFIG: global.CONFIG, UTILS: global.UTILS, SERVICE: global.SERVICE };
   t.after(() => Object.assign(global, previous));
   global.CONFIG = { get: key => key === "identityGovernance" ? auth.identityGovernance : undefined };
   global.UTILS = { isObject: value => value !== null && typeof value === "object" };
+  global.SERVICE = { DefaultIdentityCatalogueService: identityFixture.catalogue(undefined, identityFixture.records("Permission").map(row => row.code)) };
   assert.equal(group.code, "commercePublicationStarterUserGroup");
   assert.equal(group.active, true);
   assert.deepEqual(group.parentGroups, ["employeeUserGroup"]);
   assert.deepEqual(group.permissions, ["process.instance.start"]);
-  governance.validatePermissions([group]);
+  await governance.validatePermissions([group]);
   governance.validateGraph([group], [{ code: "userGroup", active: true },
     { code: "employeeUserGroup", parentGroups: ["userGroup"], active: true }]);
   assert.deepEqual(properties.enterpriseManagement.accessAssignments.roles.COMMERCE_SETUP_PUBLISHER.groupCodes,
@@ -66,47 +69,47 @@ test("real Process route policies admit original bearer starts, not definition r
     assert.equal(policy.hasRoutePermission({ router: { permission }, authData: {} }), false);
 });
 
-test("new explicit v001 release selects only the companion files, not installed source, staff or credentials", () => {
-  const section = manifest.sections.commercePublicationStarterRole;
+test("publish owns the explicit companion contribution, not Profile or an application", () => {
+  const section = source.section;
   assert.equal(section.kind, "DATA_RELEASE");
-  assert.equal(section.dataType, "core");
-  assert.equal(section.version, "0.0.1");
-  assert.equal(section.sourceRoot, "core-v001");
+  assert.equal(section.dataType, "init");
+  assert.equal(section.version, "0.0.2");
+  assert.equal(section.sourceRoot, "init-v001");
   assert.equal(section.destinationRole, "PLATFORM");
   assert.equal(section.selectionPolicy, "EXPLICIT");
   assert.equal(section.lifecycle, "REFERENCE");
   assert.equal(section.publicationPolicy, "NONE");
   assert.equal(section.removalPolicy, "RETAIN");
-  assert.deepEqual(header.profile, { commercePublicationStarterGroup: {
-    options: { enabled: true, schemaName: "userGroup", operation: "saveAll",
-      dataFilePrefix: "commercePublicationStarterGroupData", userGroups: ["adminGroup"] }, query: { code: "$code" },
+  assert.deepEqual(header.profile, { publishUserGroup: {
+    options: { enabled: true, schemaName: "userGroup", operation: "ensureReferenceAll",
+      dataFilePrefix: "publishUserGroupData", userGroups: ["adminGroup"] }, query: { code: "$code" },
   } });
-  assert.deepEqual(Object.keys(section.files), ["core-v001/headers/groups/commercePublicationStarterHeader.js",
-    "core-v001/records/groups/commercePublicationStarterGroupData.js"]);
+  assert.deepEqual(Object.keys(section.files), ["init-v001/headers/identity/publishUserGroupHeader.js",
+    "init-v001/records/identity/publishUserGroupData.js"]);
   for (const [file, checksum] of Object.entries(section.files)) {
-    assert.equal(hash(file), checksum);
-    for (const [name, other] of Object.entries(manifest.sections))
-      if (name !== "commercePublicationStarterRole") assert.equal(Object.hasOwn(other.files || {}, file), false);
+    assert.equal(createHash("sha256").update(fs.readFileSync(path.join(source.data, file))).digest("hex"), checksum);
+    for (const [name, other] of Object.entries(source.manifest.sections))
+      if (name !== "accessGroups") assert.equal(Object.hasOwn(other.files || {}, file), false);
   }
   const registration = require("../../../../nodics.foundation/modules/nService/src/service/module/defaultModuleRegistrationAgentService");
   const release = require("../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
-  const owner = { name: "profile", path: path.resolve(__dirname, "..") };
-  const item = registration.buildActivationDataPackages("profile", owner)
-    .find(candidate => candidate.code === "profile:commercePublicationStarterRole");
+  const owner = { name: "publish", path: source.root };
+  const item = registration.buildActivationDataPackages("publish", owner)
+    .find(candidate => candidate.code === "publish:accessGroups");
   assert(item);
   assert.equal(item.required, false);
   assert.equal(item.trigger, "USER");
-  assert.deepEqual(release.currentReleaseFiles(owner, path.join(owner.path, "data"), "core-v001", section.files, true), section.files);
+  assert.deepEqual(release.currentReleaseFiles(owner, source.data, "init-v001", section.files, true), section.files);
 });
 
-test("original publisher and Init bytes stay pinned and v0.0.1 cannot masquerade as mutable development drift", () => {
-  const original = manifest.sections.commerceSetupPublisherRole;
-  assert.equal(original.version, "0.0.1");
-  assert.deepEqual(original.files, {
-    "core-v001/headers/groups/commerceSetupPublisherHeader.js": "4ea4c9064daffacd5364d679c1ede994cc7e13634fc9e9f9d9defb3a35fd54e6",
-    "core-v001/records/groups/commerceSetupPublisherGroupData.js": "f09ec891ac50076a0e00e59cbb1fe63d6e569074f103d4c23c34484ce376f262",
-  });
-  for (const [file, checksum] of Object.entries(original.files)) assert.equal(hash(file), checksum);
+test("canonical publisher stays pinned and existing release receipts are not silently replayed", () => {
+  const publisher = require("./helpers/domainAccessFixture")("product");
+  const original = publisher.section;
+  assert.equal(original.version, "0.0.2");
+  assert.equal(manifest.sections.commerceSetupPublisherRole, undefined);
+  assert.equal(manifest.sections.commercePublicationStarterRole, undefined);
+  for (const [file, checksum] of Object.entries(original.files))
+    assert.equal(createHash("sha256").update(fs.readFileSync(path.join(publisher.data, file))).digest("hex"), checksum);
   for (const [file, checksum] of Object.entries(manifest.sections["init-v001"].files)) assert.equal(hash(file), checksum);
   const release = require("../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
   assert.equal(release.isDevelopmentRelease("0.0.0"), true);

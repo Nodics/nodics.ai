@@ -17,6 +17,10 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  /** Preserves installed bootstrap enterprises and their tenant binding during private forward Init. */
+  ensureBootstrapAll: function (request) {
+    return SERVICE.DefaultMandatoryIdentityBootstrapService.ensureBootstrapAll(this, "enterprise", request);
+  },
   /**
    * Reads one current hierarchy dependency through its existing generated owner.
    * @param {Object} owner Enterprise or Tenant generated service.

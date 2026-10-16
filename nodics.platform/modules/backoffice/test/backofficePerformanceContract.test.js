@@ -57,7 +57,11 @@ const registry = Object.assign({}, registryDefinition, {
     _sweepTimer: null,
 });
 let discoverySchedules = 0;
+let snapshotRefreshes = 0;
 global.SERVICE = {
+    DefaultRuntimeRegistryResolverService: {
+        refreshSnapshot: () => { snapshotRefreshes++; },
+    },
     DefaultBackofficeContractService: require('../src/service/contract/defaultBackofficeContractService'),
     DefaultBackofficeAdministrativeSecurityService: { validate: () => true },
     DefaultBackofficeAuditService: { record: async () => true },
@@ -119,6 +123,8 @@ async function run() {
     let registrationMs = elapsedMs(registrationStarted);
     assert.strictEqual(registered.data.registeredModules, budget.registrationModules);
     assert.strictEqual(discoverySchedules, budget.registrationModules, 'registration must schedule discovery without awaiting it');
+    assert.strictEqual(scans, 1, 'claim-free batch registration must scan leases only once with the real resolver hook present');
+    assert.strictEqual(snapshotRefreshes, 1, 'one batch must publish one consolidated runtime snapshot');
 
     records.clear();
     let now = Date.now();

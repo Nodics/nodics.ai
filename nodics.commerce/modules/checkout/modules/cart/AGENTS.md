@@ -5,6 +5,17 @@
 
 Preserve Cart ownership, tenant security, exact evidence, idempotency, audit and generation discipline. Cart depends on the existing Store context service for explicit identifier validation.
 
+When Pricing individual-row delivery is selected, use Pricing's bounded exact
+Store/book/Product candidate gate first. Only relevant row candidates require
+consumed Product references through its activated/retained owner reader using persisted
+Cart locale/Store and entry Product/SKU. Never accept body pins, infer a version
+from Pricing, or fall back to CURRENT/latest Product. Keep private quotes and
+disabled delivery unchanged. Exercise the actual calculation engine, not only
+a Pricing port stub, with Pricing's row-publication integration regression.
+Book-only/unrelated baskets must not request Product authority. Keep the final
+independent Pricing delivery read: a newly relevant row without a pin fails
+closed, and caller pins cannot satisfy an initially empty candidate gate.
+
 Digital availability delegates to `DefaultDigitalCommerceCheckoutService.availability`
 before physical Inventory reads. Never reconstruct coupon pools from warehouse
 balances: Product owns pinned identity/classification and Promotion owns live
@@ -22,3 +33,6 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Cart owns cart.limits.maximumCartEntries. Do not restore the unused Commerce
+group operating-policy catalogue or read this limit from commerce.operations.

@@ -552,6 +552,11 @@ module.exports.pricing.priceRow.backoffice = {
   description: "Governed product price row.",
   mutationPolicy: { lifecycle: "PUBLISHABLE", publishRequired: true },
 };
+Object.assign(module.exports.pricing.pricingPolicyPointer.definition, {
+  priceBookCode: { type: 'string', required: false, description: 'Existing immutable book anchor for an independently approved row release.' },
+  productCode: { type: 'string', required: false, description: 'Exact Product identity selected by the approved row manifest.' },
+  storeCode: { type: 'string', required: false, description: 'Product Store scope selected by the approved row manifest.' },
+});
 
 /** Pricing owns private, order-bound negotiated prices. */
 module.exports.pricing.priceQuote = {

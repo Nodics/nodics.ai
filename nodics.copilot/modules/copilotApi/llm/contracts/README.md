@@ -2,10 +2,13 @@
 
 ## Permission Catalogue and Missing History
 
-Every route permission must be recognized in nAuth's canonical permission
-catalogue before Profile can assign it. The route coverage regression includes
+Every route permission must be contributed by its implementing owner's identity
+data pack and recognized in Profile's persisted active permission catalogue
+before Profile can assign it. Catalogue and group validation are asynchronous;
+configuration does not supply permission or role authority. The route coverage regression includes
 the independent configuration-administrator and enterprise/user budget owner
-grants. Catalogue registration does not grant a role or enable a feature.
+grants, inactive/unknown permission rejection and rejection of wildcard grants
+for ordinary groups. Catalogue registration does not grant a role or enable a feature.
 
 The facade translates the Conversation owner's exact not-found codes to
 `ERR_CPA_00001` / HTTP 404. Missing, foreign and unavailable conversation/turn

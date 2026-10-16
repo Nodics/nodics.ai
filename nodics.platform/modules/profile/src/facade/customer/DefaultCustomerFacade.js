@@ -17,6 +17,10 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  /** Reads the authenticated customer's minimal Profile-owned identity. */
+  currentIdentity: function (request) {
+    return SERVICE.DefaultCustomerService.currentIdentity(request);
+  },
   /** Delegates exact own consent renewal to Profile. */
   renewParticipation: function (request) {
     return SERVICE.DefaultCustomerRegistrationService.changeParticipation(

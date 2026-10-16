@@ -45,25 +45,30 @@ module.exports = {
 
   /** Resolves the linked recipient before sending; any network ambiguity is recorded for operator review. */
   deliver: async function ({ request, intent, policy }, transport = fetch) {
-    const response = await SERVICE.DefaultModuleService.invokeModule({
-      local: false,
-      moduleName: "profile",
-      connectionName: "profile",
-      apiName: "/internal/external-identity/destination",
-      methodName: "POST",
-      requestBody: {
-        linkCode: intent.recipientAddressReference,
-        recipientId: intent.recipientId,
-      },
-      tenant: request.tenant,
-      request: { tenant: request.tenant },
-      header: {
-        "X-Enterprise-Code":
-          request.authData?.entCode || request.entCode || request.tenant,
-      },
-      timeoutMs: 10000,
-      maxAttempts: 1,
-    });
+    let response;
+    try {
+      response = await SERVICE.DefaultModuleService.invokeModule({
+        local: false,
+        moduleName: "profile",
+        connectionName: "profile",
+        apiName: "/internal/external-identity/destination",
+        methodName: "POST",
+        requestBody: {
+          linkCode: intent.recipientAddressReference,
+          recipientId: intent.recipientId,
+        },
+        tenant: request.tenant,
+        request: { tenant: request.tenant },
+        header: {
+          "X-Enterprise-Code":
+            request.authData?.entCode || request.entCode || request.tenant,
+        },
+        timeoutMs: 10000,
+        maxAttempts: 1,
+      });
+    } catch (_) {
+      return { status: "RETRY_PENDING", responseCode: "DESTINATION_RESOLUTION_FAILED" };
+    }
     let target = response;
     for (let i = 0; i < 5 && target; i++) {
       if (target.result !== undefined) target = target.result;
@@ -97,6 +102,8 @@ module.exports = {
     } catch (error) {
       return { status: "UNCERTAIN", responseCode: "TELEGRAM_UNCERTAIN" };
     }
+    if (!result || typeof result !== "object" || Array.isArray(result))
+      return { status: "UNCERTAIN", responseCode: "TELEGRAM_UNCERTAIN" };
     if (result.ok === true && result.result?.message_id)
       return {
         status: "DELIVERED",

@@ -9,7 +9,7 @@
 
  */
 "use strict";
-/** @module promotion/test/promotionItemSimulationContract @description Tests the actual Promotion consumer and LOCAL simulation owner without installing providers, issuing stock or claiming real delivery. @layer test @owner promotion */
+/** @module promotion/test/promotionItemSimulationContract @description Tests the actual Promotion consumer and explicitly admitted simulation owner without installing providers, issuing stock or claiming real delivery. @layer test @owner promotion */
 const assert = require("node:assert/strict");
 const { test } = require("node:test");
 const owner = require("../src/service/defaultPromotionItemBenefitService");
@@ -21,12 +21,12 @@ function fixture(t) {
   const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES, NODICS: global.NODICS };
   t.after(() => Object.assign(global, previous));
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
-  const policy = { enabled: true, qualified: false, itemEvidenceMode: "LOCAL_SIMULATION",
+  const policy = { enabled: true, qualified: false, itemEvidenceMode: "SIMULATION",
     itemEvidenceService: "DefaultFulfillmentItemSimulationService" };
   const local = { enabled: true, environmentAllowlist: ["fixtureNative"] };
   global.NODICS = { getSelectedEnvironmentName: () => "fixtureNative" };
   global.CONFIG = { get: key => key === "promotion" ? { merchantBenefits: policy } :
-    key === "fulfillmentCore" ? { itemSimulation: local } : key === "environment" ? { class: "LOCAL" } : {} };
+    key === "fulfillmentCore" ? { itemSimulation: local } : key === "environment" ? { class: "PRODUCTION" } : {} };
   global.SERVICE = { DefaultFulfillmentItemSimulationService: simulator,
     DefaultFulfillmentItemDeliveryEvidenceService: boundary };
   const campaign = { revision: 3, actions: { benefitType: "ITEM", items: [{ sku: "MENU_TEA", quantity: 1, unit: "EACH" }] },
@@ -89,5 +89,17 @@ test("a changed or disabled simulation selection during the owner await cannot c
   SERVICE.DefaultFulfillmentItemSimulationService = { ...simulator, evaluate: async input => {
     const result = await simulator.evaluate(input); f.local.enabled = false; return result;
   } };
+  await assert.rejects(owner.validate(f.request, f.campaign, f.coupon));
+});
+
+test("unknown or retired mode and unselected deployment never inherit verified qualification", async t => {
+  const f = fixture(t);
+  f.policy.qualified = true;
+  for (const mode of ["LOCAL_SIMULATION", "local", "UNKNOWN", "", null, true, {}]) {
+    f.policy.itemEvidenceMode = mode;
+    await assert.rejects(owner.validate(f.request, f.campaign, f.coupon));
+  }
+  f.policy.itemEvidenceMode = "SIMULATION";
+  f.local.environmentAllowlist = ["otherDeployment"];
   await assert.rejects(owner.validate(f.request, f.campaign, f.coupon));
 });

@@ -92,6 +92,17 @@ module.exports = {
         expected.resolved = true;
         return expected.context;
     },
+    /** Recognizes only exact live Product batch identities after fresh Profile preflight. Copies, standalone reads, changed scope and caller flags never consolidate reference checks. @param {Object} request Exact nested Product context. @param {Array<string>} codes Receipt-derived issuer and seller. @returns {boolean} Private reference phase only, never policy or mutation authority. */
+    referenceReadAdmitted: function (request, codes) {
+        const expected = admissions.get(request);
+        if (!expected?.batch) return false;
+        this.resolveReadContext(request);
+        const batch = expected.batch;
+        if (batch.phase !== 'READ' || !isDeepStrictEqual(batch.original, batch.snapshot) ||
+            !Array.isArray(codes) || codes.length !== 2 ||
+            codes.some(code => !expected.references.has(code) || !batch.references.has(code))) this.fail();
+        return true;
+    },
     /** Restricts private admission to the original Product read, never root enumeration, coupon inspection, budget reads or mutation. Unadmitted callers retain their existing signed authority checks. @param {Object} request Exact owner request. @param {string} purpose Owner operation. @param {string} productCode Original Product for PRODUCT reads. @returns {boolean} Admission or unchanged legacy path. */
     assertReadPurpose: function (request, purpose, productCode) {
         const expected = admissions.get(request);
@@ -135,12 +146,14 @@ module.exports = {
     },
     /** Dispatches only fixed non-reserving supply work under a short-lived private identity; owner integration must actually resolve the admission. @param {Object} request Detached exact supply request. @param {Object} context Detached original-authority context. @returns {Promise<Object>} Existing internal pool summary. */
     dispatchAvailability: async function (request, context) {
+        const owner = SERVICE.DefaultPromotionOperationService;
+        if (!owner?.couponPoolAvailability || !SERVICE.DefaultPromotionSellerPolicyService?.readProduct) this.fail();
         const intent = intents.get(request);
         if (!intent || intent.context !== context || !isDeepStrictEqual(request, intent.request) ||
             !isDeepStrictEqual(context, intent.snapshot)) this.fail();
-        const owner = SERVICE.DefaultPromotionOperationService;
-        if (!owner?.couponPoolAvailability || !SERVICE.DefaultPromotionSellerPolicyService?.readProduct) this.fail();
-        const expected = { context, productCode: request.productCode, resolved: false,
+        if (intent.batch && !isDeepStrictEqual(intent.batch.original, intent.batch.snapshot)) this.fail();
+        const expected = { context, productCode: request.productCode, resolved: false, batch: intent.batch,
+            references: intent.references,
             snapshots: new WeakMap([[request, structuredClone(request)], [context, structuredClone(context)]]) };
         admissions.set(request, expected); admissions.set(context, expected);
         try {
@@ -155,16 +168,88 @@ module.exports = {
             for (const key of ['available', 'availableQuantity', 'issuedQuantity', 'inventoryStrategy', 'strategy',
                 'reservableAt', 'guaranteed', 'batchCode', 'couponBatchCode', 'promotionCode'])
                 if (Object.hasOwn(result, key)) safe[key] = structuredClone(result[key]);
+            this.resolveReadContext(request);
+            if (intent.batch && !isDeepStrictEqual(intent.batch.original, intent.batch.snapshot)) this.fail();
             return safe;
         } finally { admissions.delete(request); admissions.delete(context); }
     },
-    /** Admits anonymous catalogue visibility only for one Product and returns only a boolean/status summary. Never grants campaign, coupon, budget or purchase authority. @param {Object} request Public Product selector with untouched original auth. @returns {Promise<Object|undefined>} Customer-safe supply or inert unselected result. */
-    publicAvailability: async function (request) {
+    /** Validates original public authority independently of catalogue enterprise scope; this helper mints no admission. @param {Object} request Public Product selector. @returns {Object|undefined} Detached selected quantity-one read. */
+    publicRequest: function (request) {
         const r = this.detached(request);
         if (!this.selected(r)) return undefined;
         const auth = r.authData;
         if (auth.isSystem === true || auth.principalType !== undefined && !['human', 'customer', 'anonymous'].includes(auth.principalType) ||
             auth.tokenType !== undefined && auth.tokenType !== 'access' || r.quantity !== undefined && r.quantity !== '1' && r.quantity !== 1) this.fail();
+        return r;
+    },
+    /** Consolidates only fresh enterprise reference checks inside one bounded browsing call. Product visibility, installed guards and every receipt/policy/consent/benefit/unit check remain canonical; no caller rows or approval cache are accepted. @param {Object} request Original tenant/Store/locale and access context. @param {Array<string>} productCodes Distinct Product selectors. @returns {Promise<Map>} Customer-safe summaries, with undefined entries only for unselected delivery. */
+    publicAvailabilityBatch: async function (request, productCodes) {
+        if (!Array.isArray(productCodes) || !productCodes.length || productCodes.length > 1000 ||
+            productCodes.some(code => !this.identifier(code)) || new Set(productCodes).size !== productCodes.length) this.fail();
+        productCodes = [...productCodes];
+        const batch = { original: request, snapshot: structuredClone(request), phase: 'PREPARE', references: new Set() };
+        const entries = [], result = new Map();
+        try {
+            for (const productCode of productCodes) {
+                const r = this.publicRequest({ ...request, productCode });
+                if (!r) { result.set(productCode, undefined); continue; }
+                await this.assertInstalled(r);
+                const projection = await this.visibleProduct(r);
+                const context = { tenant: r.tenant, enterpriseCode: projection.enterpriseCode, storeCode: r.storeCode,
+                    authData: structuredClone(r.authData) };
+                const command = { ...context, productCode, quantity: '1', authData: structuredClone(r.authData) };
+                const references = new Set();
+                intents.set(command, { context, request: structuredClone(command), snapshot: structuredClone(context), batch, references });
+                const entry = { r, projection, context, command, references };
+                entries.push(entry);
+                const policy = SERVICE.DefaultPromotionSellerPolicyService;
+                if (typeof policy?.productBindings !== 'function') this.fail();
+                const intent = intents.get(command);
+                if (!intent || intent.context !== context || !isDeepStrictEqual(command, intent.request) ||
+                    !isDeepStrictEqual(context, intent.snapshot) || !isDeepStrictEqual(batch.original, batch.snapshot)) this.fail();
+                const expected = { context, productCode, resolved: false, batch, references,
+                    snapshots: new WeakMap([[command, structuredClone(command)], [context, structuredClone(context)]]) };
+                admissions.set(command, expected); admissions.set(context, expected);
+                let resolved;
+                try {
+                    resolved = await policy.productBindings(command, productCode);
+                    this.resolveReadContext(command);
+                    if (!isDeepStrictEqual(batch.original, batch.snapshot)) this.fail();
+                } finally { admissions.delete(command); admissions.delete(context); }
+                if (!resolved || resolved.context !== context || !Array.isArray(resolved.bindings) || resolved.bindings.length > 1000) this.fail();
+                for (const binding of resolved.bindings) {
+                    if (binding.tenant !== r.tenant || binding.storeCode !== r.storeCode ||
+                        binding.sellerEnterpriseCode !== context.enterpriseCode || !this.identifier(binding.issuerEnterpriseCode)) this.fail();
+                    references.add(binding.issuerEnterpriseCode); references.add(context.enterpriseCode);
+                }
+                for (const code of references) batch.references.add(code);
+            }
+            const seller = SERVICE.DefaultCouponSellerAuthorizationService;
+            if (batch.references.size) await seller.activeEnterprises(request, [...batch.references]);
+            if (!isDeepStrictEqual(request, batch.snapshot)) this.fail();
+            batch.phase = 'READ';
+            for (const entry of entries) {
+                const supply = await this.dispatchAvailability(entry.command, entry.context);
+                result.set(entry.r.productCode, { available: supply.available, status: supply.available ? 'IN_STOCK' : 'OUT_OF_STOCK' });
+            }
+            batch.phase = 'VERIFY';
+            for (const entry of entries) {
+                if (!isDeepStrictEqual(await this.visibleProduct(entry.r), entry.projection)) this.fail();
+                await this.assertInstalled(entry.r);
+            }
+            if (batch.references.size) await seller.activeEnterprises(request, [...batch.references]);
+            if (!isDeepStrictEqual(request, batch.snapshot)) this.fail();
+            return result;
+        } finally {
+            batch.phase = 'CLOSED';
+            for (const entry of entries) intents.delete(entry.command);
+        }
+    },
+    /** Admits anonymous catalogue visibility only for one Product and returns only a boolean/status summary. Never grants campaign, coupon, budget or purchase authority. @param {Object} request Public Product selector with untouched original auth. @returns {Promise<Object|undefined>} Customer-safe supply or inert unselected result. */
+    publicAvailability: async function (request) {
+        const r = this.publicRequest(request);
+        if (!r) return undefined;
+        const auth = r.authData;
         await this.assertInstalled(r);
         const projection = await this.visibleProduct(r);
         const context = { tenant: r.tenant, enterpriseCode: projection.enterpriseCode, storeCode: r.storeCode,

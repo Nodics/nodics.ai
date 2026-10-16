@@ -1798,6 +1798,12 @@ const capability = {
     ]
 };
 
+// Business employees enter the existing owner Designer, not generic schema discovery.
+for (const item of capability.navigation) {
+    if (item.workbenchTarget) item.requiredPermissions = [...new Set([...item.requiredPermissions, 'system.schema.view'])];
+    if (item.id === 'content-designer') item.featureState = 'ACTIVE';
+}
+
 module.exports = {
     /** Registers this module BackOffice capability provider. */
     init: function () {

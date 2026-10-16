@@ -3,6 +3,30 @@
   "module": "wcmsExperience",
   "packs": [],
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "wcmsExperience permissionCatalogue",
+      "description": "Explicit wcmsExperience identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "wcmsExperience",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wcmsExperiencePermissionHeader.js": "79930b77aafee870ca933d1bd369070e312c8c20faa979c1c61ef2015aca5bb6",
+        "init-v001/records/identity/wcmsExperiencePermissionData.js": "a04d15e3c926fcfadbfed5b9c517f59d276a7268137ba53b4389929eebe63573"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

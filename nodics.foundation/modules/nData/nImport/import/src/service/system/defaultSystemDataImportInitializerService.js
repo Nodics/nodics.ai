@@ -616,7 +616,7 @@ module.exports = {
             let matchedFiles = {};
             const selectedFiles = Array.isArray(request.dataReleasePlan) && request.dataReleasePlan.length > 0 ? new Set(
                 request.dataReleasePlan.filter(release => release.sourceOnly !== true).flatMap(release => {
-                    const owner = NODICS.getRawModule(release.moduleName);
+                    const owner = SERVICE.DefaultImportUtilityService.releaseSourceOwner(release);
                     return (release.declaredFiles || []).map(file => path.resolve(owner.path, 'data', file));
                 })) : undefined;
             _.each(request.data.headers, (headerObject, headerName) => {

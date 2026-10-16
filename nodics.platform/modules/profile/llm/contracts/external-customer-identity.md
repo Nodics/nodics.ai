@@ -8,6 +8,17 @@ The service-auth destination resolver returns an active eligible customer's nume
 
 Validation: `test/profileExternalIdentity.test.js` covers proof, conflicts, disabled/locked/revoked customers, auth versions and destination isolation.
 
+Missing or syntactically invalid Telegram bot credentials fail with the registered
+`ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED` public code and HTTP 503. Do not put
+a symbolic configuration string in `responseCode`, forward raw resolver errors,
+or rely on private error properties surviving HTTP serialization. Other policy,
+provider-availability and proof failures keep their existing categories. This
+diagnostic neither enables a provider nor grants a session. Profile verification
+and Communication delivery own their separately scoped credential bindings;
+remote journey orchestrators must not require a local copy. The external-identity
+regressions verify the real public error envelope without exposing the credential
+or assertion. Later provider implementations preserve this safe error contract.
+
 Authenticated link, unlink, origin and service-destination routes must declare `controller`, never the special-route `handler` field. The router dispatches special handlers before bearer authentication; `secured: true` alone does not enter the secured pipeline. Preserve access-token/customer group gates and the destination service-token/Communication permission gate. Public launch and browser bootstrap retain their explicit proof/cookie validation.
 
 

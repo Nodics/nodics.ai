@@ -12,22 +12,73 @@
 /** @module product/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner product */
 module.exports = {
   publish: {
-    setup: { permissions: { product: 'commerce.product.publish' } },
-    providers: { domainAdapters: { product: null }, versionProviders: { product: null }, workflowProviders: { product: null } },
-    approvalWorkflow: { domains: { product: { definitionCode: 'productPublicationApproval', ownerModule: 'product',
-      actionKey: 'product.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } },
+    setup: { permissions: { product: "commerce.product.publish" } },
+    providers: {
+      domainAdapters: { product: null },
+      versionProviders: { product: null },
+      workflowProviders: { product: null },
+    },
+    approvalWorkflow: {
+      domains: {
+        product: {
+          definitionCode: "productPublicationApproval",
+          ownerModule: "product",
+          actionKey: "product.applyPublicationDecision",
+          sourceRuntimeRole: "COMMERCE_STAGED",
+        },
+      },
+    },
+
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        providers: {
+          domainAdapters: {
+            product: "DefaultProductPublicationAdapterService",
+          },
+          versionProviders: {
+            product: "DefaultProductPublicationVersionProviderService",
+          },
+          workflowProviders: {
+            product: "DefaultPublicationApprovalWorkflowService",
+          },
+        },
+      },
+      COMMERCE: {
+        setup: {
+          observation: {
+            targetObservers: {
+              product: "DefaultProductPublicationVersionProviderService",
+            },
+          },
+        },
+      },
+    },
   },
-  process: { actionAdapters: { definitions: { 'product.applyPublicationDecision': {
-    moduleName: 'product', operation: 'applyPublicationDecision', remote: { target: 'product', moduleName: 'product',
-      runtimeRole: 'COMMERCE_STAGED', apiName: '/workflow/actions/applyPublicationDecision', requiresCompletedTask: true },
-  } } } },
+  process: {
+    actionAdapters: {
+      definitions: {
+        "product.applyPublicationDecision": {
+          moduleName: "product",
+          operation: "applyPublicationDecision",
+          remote: {
+            target: "product",
+            moduleName: "product",
+            runtimeRole: "COMMERCE_STAGED",
+            apiName: "/workflow/actions/applyPublicationDecision",
+            requiresCompletedTask: true,
+          },
+        },
+      },
+    },
+  },
   tooling: {
     commands: {
-      'acceptance:commerce-publication': {
+      "acceptance:commerce-publication": {
         acceptanceContract: true,
         projectHome: true,
-        handler: '@nTooling/node-script',
-        script: 'src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs',
+        handler: "@nTooling/node-script",
+        script:
+          "src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs",
       },
     },
   },
@@ -51,6 +102,32 @@ module.exports = {
 
   product: {
     enabled: true,
+    businessAuthoring: {
+      readPermission: "commerce.product.read",
+      writePermission: "commerce.product.write",
+      archivePermission: "commerce.product.archive",
+      maximumTextLength: 500,
+      maximumPageNumber: 10000,
+    },
+    marketplaceAuthoring: {
+      enabled: false,
+      catalogVersion: null,
+      locales: [],
+      intentSource: {
+        connectionName: null,
+        connectionType: "abstract",
+        timeoutMs: 15000,
+        allowInsecureLoopback: false,
+      },
+      storeSource: {
+        moduleName: "store",
+        connectionName: null,
+        connectionType: "abstract",
+        runtimeRole: "COMMERCE",
+        timeoutMs: 15000,
+        allowInsecureLoopback: false,
+      },
+    },
     localization: {
       supportedLocales: ["en", "ar"],
       defaultLocale: "en",
@@ -79,7 +156,9 @@ module.exports = {
         dimensions: {
           brands: { paths: ["brand", "localizedAttributes.brand"] },
           categories: { paths: ["categoryCodes"] },
-          collections: { paths: ["collectionCodes", "localizedAttributes.collection"] },
+          collections: {
+            paths: ["collectionCodes", "localizedAttributes.collection"],
+          },
           availability: {
             paths: ["availability.status"],
             labels: {
@@ -131,8 +210,18 @@ module.exports = {
     },
     publication: {
       targetTransportProvider: null,
-      target: { moduleName: 'product', connectionName: null, connectionType: 'abstract', runtimeRole: 'COMMERCE' },
-      source: { moduleName: 'product', connectionName: null, connectionType: 'abstract', runtimeRole: 'COMMERCE_STAGED' },
+      target: {
+        moduleName: "product",
+        connectionName: null,
+        connectionType: "abstract",
+        runtimeRole: "COMMERCE",
+      },
+      source: {
+        moduleName: "product",
+        connectionName: null,
+        connectionType: "abstract",
+        runtimeRole: "COMMERCE_STAGED",
+      },
       defaultStoreCode: "defaultStore",
       maximumBatchSize: 100,
       maximumDependencies: 1000,
@@ -160,11 +249,15 @@ module.exports = {
           searchEnrichment: {
             domains: { missingBehavior: "error" },
           },
+
+          targetTransportProvider: "DefaultProductPublicationTransportService",
         },
         discovery: {
           catalogue: {
             enabled: true,
           },
+
+          activationService: "DefaultProductPublicationTargetService",
         },
       },
       COMMERCE_STAGED: {
@@ -172,6 +265,8 @@ module.exports = {
           searchEnrichment: {
             domains: { missingBehavior: "error" },
           },
+
+          targetTransportProvider: "DefaultProductPublicationTransportService",
         },
       },
     },
@@ -210,6 +305,25 @@ module.exports = {
           },
           subjectGroups: { customerUserGroup: true },
           principalTypes: { customer: true },
+        },
+      },
+    },
+
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        product: {
+          catalogueVersioned: {
+            isVersionedEnabled: true,
+            versionedReadMode: "CURRENT",
+          },
+        },
+      },
+      COMMERCE: {
+        product: {
+          catalogueVersioned: {
+            isVersionedEnabled: true,
+            versionedReadMode: "CURRENT",
+          },
         },
       },
     },

@@ -61,11 +61,43 @@ const manifest = require("../data/manifest.json");
 const dataReleases = Object.values(manifest.sections).filter(
   (section) => section.kind === "DATA_RELEASE",
 );
-assert.deepEqual(dataReleases.map((section) => section.sourceRoot), [
-  "core-v001",
-  "sample-v001",
+const templateReleases = [
+  manifest.sections["runtime-defaults"],
+  manifest.sections["sample-templates"],
+];
+assert.deepEqual(templateReleases.map(({ kind, dataType, sourceRoot }) => ({ kind, dataType, sourceRoot })), [
+  { kind: "DATA_RELEASE", dataType: "core", sourceRoot: "core-v001" },
+  { kind: "DATA_RELEASE", dataType: "sample", sourceRoot: "sample-v001" },
 ]);
-for (const section of dataReleases) {
+test("permission catalogue is an independent Profile identity release, not a template adoption", () => {
+  const section = manifest.sections.permissionCatalogue;
+  assert.equal(section.kind, "DATA_RELEASE");
+  assert.equal(section.dataType, "init");
+  assert.equal(section.sourceRoot, "init-v001");
+  assert.equal(section.destinationRole, "PLATFORM");
+  assert.equal(section.selectionPolicy, "EXPLICIT");
+  const headerFile = "init-v001/headers/identity/commsCorePermissionHeader.js";
+  const dataFile = "init-v001/records/identity/commsCorePermissionData.js";
+  assert.deepEqual(Object.keys(section.files).sort(), [headerFile, dataFile].sort());
+  const header = require(path.join(__dirname, "../data", headerFile));
+  assert.deepEqual(Object.keys(header), ["profile"]);
+  assert.deepEqual(Object.keys(header.profile), ["commsCorePermission"]);
+  const options = header.profile.commsCorePermission.options;
+  assert.equal(options.schemaName, "permission");
+  assert.equal(options.operation, "ensureReferenceAll");
+  assert.equal(options.dataFilePrefix, "commsCorePermissionData");
+  const records = Object.values(require(path.join(__dirname, "../data", dataFile)));
+  assert.ok(records.length > 0);
+  for (const record of records) {
+    assert.equal(record.ownerModule, "commsCore");
+    assert.match(record.code, /^communication\./);
+    assert.equal(record.templateCode, undefined);
+    assert.equal(record.resourceCode, undefined);
+  }
+  for (const templateRelease of templateReleases)
+    assert.ok(Object.keys(templateRelease.files).every(file => !Object.hasOwn(section.files, file)));
+});
+for (const section of templateReleases) {
   const files = Object.keys(section.files).filter((name) =>
     name.endsWith("TemplateVersionData.js"),
   );

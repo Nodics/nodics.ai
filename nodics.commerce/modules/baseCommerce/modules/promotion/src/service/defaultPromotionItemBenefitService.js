@@ -11,17 +11,17 @@
 
 /* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
 "use strict";
-/** @module promotion/service/defaultPromotionItemBenefitService @description Validates exact retained ITEM rights against qualified delivery receipts or an explicitly isolated LOCAL simulation. @layer service @owner promotion @override Preserve exact scope and fail-closed qualification; simulated results must remain unverified and distinct from delivery. */
+/** @module promotion/service/defaultPromotionItemBenefitService @description Validates exact retained ITEM rights against qualified delivery receipts or explicitly admitted simulation. @layer service @owner promotion @override Preserve exact scope and fail-closed qualification; simulated results must remain unverified and distinct from delivery. */
 module.exports = {
   /** Refuses malformed or unavailable delivery authority. @returns {never} */
   fail: function () {
     throw new CLASSES.NodicsError("ERR_PROMOTION_BENEFIT_UNCONFIRMED", "Verified item fulfillment evidence is required");
   },
-  /** Recognizes only the explicit, independently gated LOCAL simulation owner. Unknown modes never fall back to verified delivery. @returns {boolean} Simulation selection, not delivery qualification. */
+  /** Recognizes only the explicit, independently gated simulation owner. Unknown and retired selection modes never fall back to verified delivery. @returns {boolean} Simulation selection, not delivery qualification. */
   simulationSelected: function () {
     const policy = CONFIG.get("promotion")?.merchantBenefits;
     if (policy?.itemEvidenceMode === undefined || policy.itemEvidenceMode === "VERIFIED") return false;
-    if (policy.itemEvidenceMode !== "LOCAL_SIMULATION" ||
+    if (policy.itemEvidenceMode !== "SIMULATION" ||
         policy.itemEvidenceService !== "DefaultFulfillmentItemSimulationService" ||
         typeof SERVICE.DefaultFulfillmentItemSimulationService?.assertSelected !== "function" ||
         SERVICE.DefaultFulfillmentItemSimulationService.assertSelected() !== true) this.fail();
@@ -42,7 +42,7 @@ module.exports = {
     });
     return result.sort((a, b) => a.sku < b.sku ? -1 : a.sku > b.sku ? 1 : 0);
   },
-  /** Requires a qualified delivery owner or independently gated LOCAL simulator and exact approved policy before sale. @param {Object} campaign Retained campaign. @returns {Array} Canonical purchased rights. */
+  /** Requires a qualified delivery owner or independently gated simulator and exact approved policy before sale. @param {Object} campaign Retained campaign. @returns {Array} Canonical purchased rights. */
   assertPolicy: function (campaign) {
     const policy = CONFIG.get("promotion")?.merchantBenefits;
     const action = campaign.actions || {};

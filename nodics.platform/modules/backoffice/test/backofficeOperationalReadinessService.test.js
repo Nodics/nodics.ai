@@ -357,8 +357,16 @@ async function validateDeliveryAndProductionPolicy() {
         && blocker.repair.operation === 'documentation.pack.installStaged'));
     assert(aggregateReport.sections.some(section => section.key === 'applications'
         && section.businessStatus === 'READY'
-        && section.summary.applicationCodes.includes('circa')
-        && section.summary.circaParity === 'OBSERVED'));
+        && section.summary.applicationCodes.includes('circa')));
+    const arbitraryApplication = service.applicationSection({ statuses: [{
+        profileCode: 'independent-profile', applicationCode: 'independent-reuse',
+        capability: { businessStatus: 'ONLINE' },
+    }], errors: [] }, [{ code: 'independent-profile' }]);
+    assert.deepStrictEqual(arbitraryApplication.summary.applicationCodes, ['independent-reuse']);
+    assert.strictEqual(arbitraryApplication.businessStatus, 'READY');
+    for (const key of ['nexusParity', 'agoraParity', 'circaParity']) {
+        assert.strictEqual(Object.hasOwn(arbitraryApplication.summary, key), false);
+    }
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
         && section.businessStatus === 'READY'));
     assert(aggregateReport.sections.some(section => section.key === 'repairGovernance'
@@ -471,7 +479,8 @@ async function validateDeliveryAndProductionPolicy() {
     let remoteEWasteCall = moduleInvocationCalls.find(call => call.moduleName === 'eWaste'
         && call.apiName === '/readiness/acceptance');
     assert(remoteEWasteCall);
-    assert.strictEqual(remoteEWasteCall.connectionName, 'wasteServer');
+    assert.strictEqual(remoteEWasteCall.connectionName, undefined);
+    assert.strictEqual(remoteEWasteCall.targetAuthority.server, undefined);
     assert.deepStrictEqual(remoteEWasteCall.targetAuthority.runtimeRole, { code: 'WASTE' });
     assert.strictEqual(remoteEWasteCall.header.Authorization, 'Bearer operator-token');
     global.SERVICE.DefaultModuleService = originalModuleService;

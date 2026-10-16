@@ -10,6 +10,9 @@
  */
 /** @module commsApi/config/properties @description Defines Communication API projections and callback replay policy. @layer config @owner commsApi @override Projects may narrow projections and callback providers. */
 module.exports = {
+  bodyParserHandler: {
+    telegramInboundBodyParserHandler: "DefaultTelegramInboundBodyParserHandlerService",
+  },
   communicationApi: {
     projections: {
       inbox: [
@@ -44,6 +47,7 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      communicationTelegramInbound: { enabled: false },
       communicationCustomer: {
         enabled: true,
       },

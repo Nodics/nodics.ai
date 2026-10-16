@@ -165,6 +165,7 @@ function fixture() {
       query.status === "REGISTERED" ? [structuredClone(item)] : [],
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseRegistrationService: registration,
     DefaultEnterpriseMembershipService: membership,
     DefaultEnterpriseManagementService: {

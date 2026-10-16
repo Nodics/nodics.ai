@@ -24,6 +24,9 @@ const predecessor = require('./fixtures/documentationFrozen002.json');
 const latestPredecessor = require('./fixtures/documentationFrozen003.json');
 const frozen004 = require('./fixtures/documentationFrozen004.json');
 const manifest = require('../data/manifest.json');
+const frozen005 = require('./fixtures/documentationFrozen005.json');
+function historicalRelease(section) { return { ...release(section), children: [], manifest: frozen005.sections[section] }; }
+function historicalArticle(section, code) { return contract.readReleaseRecords(historicalRelease(section), 'Component').records.find(row => row.code === code).properties; }
 
 function release(section) {
     return contract.readDocumentationRelease(root, section);
@@ -71,7 +74,7 @@ test('all frozen 0.0.2 files including assets retain their original bytes', () =
             assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
         }
     }
-    assert.deepEqual(manifest.sections.referenceDocumentation, predecessor.sections.referenceDocumentation);
+    contract.validateGeneration(predecessor.sections.referenceDocumentation, manifest.sections.referenceDocumentation);
 });
 
 test('all frozen 0.0.3 files retain their bytes before the inventory-only successor', () => {
@@ -103,7 +106,7 @@ test('all frozen 0.0.4 payloads, assets and release seals retain their bytes', (
 test('semantic successors stay in docs-v001 and never overwrite any frozen predecessor', () => {
     for (const [name, previous] of Object.entries(baseline.sections)) {
         const next = manifest.sections[name];
-        assert.equal(next.version, name === 'documentation' ? '0.0.5' : '0.0.2');
+        assert.equal(next.version, name === 'documentation' ? '0.0.6' : '0.0.3');
         assert.equal(next.contentPath, 'docs-v001');
         assert.equal(next.sourceAuthority, 'data/docs-v001/records/documentation');
         assert.equal(next.pack, previous.pack);
@@ -132,14 +135,14 @@ test('forward packs preserve canonical identities and stage exactly one selected
         const selected = release(name);
         const headers = Object.keys(selected.manifest.generatedHashes).filter(file => /\/headers\/.*Headers?\.js$/.test(file));
         assert.equal(headers.length, 1);
-        assert.ok(headers[0].includes(name === 'documentation' ? 'Release005' : 'Release002'));
+        assert.ok(headers[0].includes(name === 'documentation' ? 'Release006' : 'Release003'));
         const selectedFiles = Object.keys(selected.manifest.generatedHashes);
         const header = require(path.join(root, 'data', headers[0]));
         const oldHeaderPath = Object.keys(previous.generatedHashes).find(file => /\/headers\//.test(file));
         const oldHeader = require(path.join(root, 'data', oldHeaderPath));
         const dispatch = input => Object.entries(input).flatMap(([moduleName, entries]) => Object.values(entries).map(entry => ({
             moduleName, schemaName: entry.options.schemaName, operation: entry.options.operation,
-            prefix: entry.options.dataFilePrefix.replace(/Release00[2345]/, ''), query: entry.query
+            prefix: entry.options.dataFilePrefix.replace(/Release00[23456]/, ''), query: entry.query
         })));
         assert.deepEqual(dispatch(header), dispatch(oldHeader), 'Forward headers must retain owner dispatch order and query semantics');
         for (const entries of Object.values(header)) {
@@ -163,7 +166,7 @@ test('Circa staff guidance selects the predefined reviewed pack instead of manua
     const properties = article('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
     const body = contract.documentationText(properties.blocks);
     for (const text of ['circa.ewaste:circaCommerceStaffAssignments', 'seven existing employees',
-        'commercePublicationStarterRole', 'commerceAxisRefundReviewerRole', 'MERCHANT_OPERATOR',
+        'publish:accessGroups', 'order:accessGroups', 'MERCHANT_OPERATOR',
         'fresh session', 'seller consent', 'not manual runtime group wiring']) assert.ok(body.includes(text), text);
     assert.ok(!body.includes('These explicitly selected Profile core groups do not assign themselves to staff'));
     assert.ok(properties.sourceEvidence.some(file => file.endsWith('/circa-predefined-commerce-staff.md')));
@@ -174,8 +177,8 @@ test('Circa staff guidance selects the predefined reviewed pack instead of manua
     assert.ok(demo.references.some(reference => reference.documentId === 'accelerators.circa-source-inventory' && reference.owner === 'eWaste'));
 });
 
-test('successor inventory covers all 46 business sections and separates 98 required roots from the optional asset subset', () => {
-    const properties = article('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
+test('frozen 0.0.5 inventory covers all 46 business sections and separates 98 required roots from the optional asset subset', () => {
+    const properties = historicalArticle('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
     const table = properties.blocks.find(block => block.kind === 'table' && block.headers[0] === 'Section');
     const names = ['profile', 'location', 'waste', 'waste-policy', 'loyalty', 'content', 'commerce',
         'operations', 'customer-workspace', 'sunmarke-profile', 'sunmarke-location', 'sunmarke-waste',
@@ -226,7 +229,7 @@ test('successor inventory covers all 46 business sections and separates 98 requi
 });
 
 test('0.0.5 changes only the inventory article body and stages the entire successor without fabricated approvals', () => {
-    const selected = release('documentation');
+    const selected = historicalRelease('documentation');
     const oldFile = Object.keys(frozen004.sections.documentation.generatedHashes).find(file => file.endsWith('ComponentData.js'));
     const previous = Object.values(require(path.join(root, 'data', oldFile)));
     const current = contract.readReleaseRecords({ ...selected, children: [] }, 'Component').records;
@@ -257,8 +260,8 @@ test('0.0.5 changes only the inventory article body and stages the entire succes
     }
 });
 
-test('unused-refund inventory retains every previous block and names only exact reviewed role adoption', () => {
-    const properties = article('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
+test('frozen unused-refund inventory retains every previous block and names only exact reviewed role adoption', () => {
+    const properties = historicalArticle('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
     const previous = Object.values(require('../data/docs-v001/records/documentation/eWasteDocumentationRelease004ComponentData'))
         .find(row => row.properties.code === properties.code).properties;
     for (const [index, block] of previous.blocks.entries()) {
@@ -285,7 +288,7 @@ test('unused-refund inventory retains every previous block and names only exact 
         'llm/contracts/circa-local-unused-refund-exception.md']) {
         const evidence = properties.sourceEvidence.find(file => file.endsWith(suffix));
         assert.ok(evidence, suffix);
-        assert.ok(fs.existsSync(path.resolve(root, evidence)), evidence);
+        // Historical paths document the original adoption, not current import sources.
     }
     const selected = release('documentation');
     const oldComponent = Object.keys(frozen004.sections.documentation.generatedHashes).find(file => file.endsWith('ComponentData.js'));
@@ -302,7 +305,7 @@ test('bounded sample credit documents approved human-role source without claimin
     for (const text of ['circa.ewaste:circaLocalDemoCredit', '7645 POINTS', '118 -> 7763',
         '118 available; 118 earned; 0 reserved/spent/expired/reversed; revision 0',
         'CIRCA_LOCAL_DEMO_BUYER_POINTS', 'CIRCA_LOCAL_DEMO_POINT_CREDIT_20261009',
-        'LOYALTY_SAMPLE_CREDITS', 'loyalty.sampleCredit.apply', 'Approved bounded circaLocalDemoCreditRole',
+        'LOYALTY_SAMPLE_CREDITS', 'loyalty.sampleCredit.apply', 'Approved bounded loyaltyWallet:specialAccessGroups and import:specialAccessGroups',
         'Import NOT executed', 'one atomic instruction', 'CURRENT even after', 'already-redeemed benefit reversals remain disabled']) {
         assert.ok(body.includes(text), text);
     }
@@ -353,7 +356,7 @@ test('derived source metadata, navigation and article search targets match the c
             assert.equal(page.sourceWordCount, contract.countWords(body));
             assert.equal(page.wordCount, page.sourceWordCount);
             assert.equal(page.sourcePath, properties.source.sourcePath);
-            assert.ok(page.sourcePath.includes(name === 'documentation' ? 'Release005ComponentData.js' : 'Release002ComponentData.js'));
+            assert.ok(page.sourcePath.includes(name === 'documentation' ? 'Release006ComponentData.js' : 'Release003ComponentData.js'));
             assert.deepEqual(page.sourceEvidence, properties.sourceEvidence);
             for (const search of searches.filter(record => record.targetCode === page.code)) {
                 assert.equal(search.searchText, properties.searchText);
@@ -398,7 +401,7 @@ test('complete forward catalogues and owner-qualified references validate withou
     assert.equal(contract.validateReferenceCatalogues(root, manifest.sections.referenceDocumentation, reference), true);
 });
 
-test('reviewed deployment adoption selects the exact successor without changing the reference pack', () => {
+test('reviewed deployment adoption selects the exact current successors for both guide packs', () => {
     const configuration = require(path.join(framework, 'nodics.docs/config/properties'));
     for (const [profileCode, packCode, sectionName] of [
         ['docs-ewaste', 'eWasteDocumentation', 'documentation'],
@@ -412,10 +415,25 @@ test('reviewed deployment adoption selects the exact successor without changing 
         assert.equal(descriptor.contentPackCode, packCode);
         assert.equal(pack.source.manifestSection, sectionName);
         assert.equal(descriptor.releaseVersion, manifest.sections[sectionName].version);
-        assert.equal(descriptor.releaseVersion, sectionName === 'documentation' ? '0.0.5' : '0.0.2');
+        assert.equal(descriptor.releaseVersion, sectionName === 'documentation' ? '0.0.6' : '0.0.3');
         contract.validateGeneration(latestPredecessor.sections[sectionName], manifest.sections[sectionName]);
         assert.ok(manifest.sections[sectionName].sites.includes(descriptor.rootCode));
         assert.equal(typeof descriptor.sourceVersion, 'string');
         assert.ok(descriptor.sourceVersion.length > 0, 'Actual Staged source-version qualification remains native-owner work');
+    }
+});
+
+ test('ownership successors preserve frozen bytes and remove retired selectors from all current record families', () => {
+    for (const [name, old] of Object.entries(frozen005.sections)) {
+        for (const [file, hash] of Object.entries(old.generatedHashes)) assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
+        contract.validateGeneration(old, manifest.sections[name]);
+        const selected = release(name);
+        for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata']) {
+            const records = contract.readReleaseRecords({ ...selected, children: [] }, suffix).records;
+            assert.doesNotMatch(JSON.stringify(records), /profile:commerce[A-Za-z]+Role|commercePublicationStarterRole|commerceAxisRefundReviewerRole|circaLocal(?:DemoCredit|Opening|UnusedRefundException)Role|circaEWaste|\/nodics\/circa\.ewaste\/v0/);
+        }
+        for (const row of contract.readReleaseRecords({ ...selected, children: [] }, 'Component').records) {
+            for (const source of row.properties.sourceEvidence || []) assert.ok(fs.existsSync(path.resolve(root, source)), source);
+        }
     }
 });

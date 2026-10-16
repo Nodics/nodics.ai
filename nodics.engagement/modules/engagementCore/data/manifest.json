@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "engagementCore",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "engagementCore permissionCatalogue",
+      "description": "Explicit engagementCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "engagementCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/engagementCorePermissionHeader.js": "acefbfc066553309140ddfc48c411c15bbf8d19451bc75fa0be24c179665c639",
+        "init-v001/records/identity/engagementCorePermissionData.js": "d0061086a5f7bb3fbdd90efb25795d82205568d10353f40504f8a4e88719fc9d"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
@@ -48,6 +72,73 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "engagementCore accessGroups",
+      "description": "Explicit engagementCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "engagementCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/engagementCoreUserGroupHeader.js": "9c9a1c579587384ffb0acf2144518c672893b5f141184ee100c9ae76c182a7b8",
+        "init-v001/records/identity/engagementCoreUserGroupData.js": "3810bb1da8c5a21d9d5b17fdf627562652686997e9335cda52dd377639ac3205"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "commsCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "3381a705a2b839eb13a371a7e43a5832d0b7aaffd15c95607a2cebf238e61b9b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "customerFeedback",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b860bb789c2a345f54f15ccef0095b315dc658371647f1236adc1034e3500528",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "customerReview",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "0bf2379f6155c80c050753e4c0f5ad72128bd355327a40b47f9906d080fdfa77",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "engagementCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "1c4a300c72d8a2c6194d7fa8ac111671f7a4c718421aaada74cb05bf3ff8dc3c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "testimonial",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4c966fc3028bdc9c9899afcf01df11647e9c45e995ea410407395c464ed008a8",
+          "partition": "DEFAULT"
         }
       ]
     }

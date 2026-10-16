@@ -19,6 +19,16 @@ const _ = require("lodash");
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  /** Projects current identity through the existing facade, without browser selectors or cacheable responses. */
+  currentIdentity: function (request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+    const promise = Promise.resolve()
+      .then(() => FACADE.DefaultCustomerFacade.currentIdentity(request))
+      .then((data) => ({ code: "SUC_PRFL_00000", data }));
+    return callback
+      ? promise.then((value) => callback(null, value)).catch(callback)
+      : promise;
+  },
   /** Delegates explicit Customer browser context issuance to the shared Profile cookie owner. */
   switchParticipation: function (request, callback) {
     const promise = Promise.resolve()

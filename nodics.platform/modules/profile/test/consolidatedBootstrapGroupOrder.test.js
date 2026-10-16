@@ -17,45 +17,48 @@ const manifest = require('../data/manifest.json');
 const initializer = require('../../../../nodics.foundation/modules/nData/nImport/import/src/service/system/defaultSystemDataImportInitializerService');
 const governance = require('../src/service/group/defaultUserGroupGovernanceService');
 
-test('consolidated Init has one complete group dataset with bootstrap parents and every preserved grant', t => {
-    const previous = { NODICS: global.NODICS, CLASSES: global.CLASSES, UTILS: global.UTILS };
+test('successor Init orders module-owned group datasets after their permission and parent prerequisites', t => {
+    const previous = { NODICS: global.NODICS, CLASSES: global.CLASSES, UTILS: global.UTILS, CONFIG: global.CONFIG, SERVICE: global.SERVICE };
     t.after(() => Object.entries(previous).forEach(([key, value]) => {
         if (value === undefined) delete global[key];
         else global[key] = value;
     }));
-    global.NODICS = { isModuleActive: () => true };
+    const metadata = require('../../../../nodics.foundation/modules/nTooling/src/service/context/defaultModuleLlmContextUtilsService');
+    const modules = Object.fromEntries(metadata.scanModules(path.resolve(__dirname, '../../../..')).map(module => [module.name, module]));
+    const releases = require('../../../../nodics.foundation/modules/nData/nImport/import/test/helpers/releaseExecution')({ modules, runtimeRole: 'PLATFORM' }).service;
+    const get = CONFIG.get;
+    const authSecurity = require('../../../../nodics.foundation/modules/nAuth/config/properties').authSecurity;
+    CONFIG.get = key => key === 'bootstrapIdentity' ? { source: 'test', adminPassword: 'test-admin-password-12345',
+        servicePassword: 'test-service-password-12345', serviceApiKey: 'test-service-api-key-value-12345678901234567890' }
+        : key === 'authSecurity' ? { ...authSecurity, compatibility: { ...authSecurity.compatibility, allowLocalBootstrapIdentity: true } } : get(key);
+    global.NODICS.isModuleActive = () => true;
     global.CLASSES = { NodicsError: Error };
     global.UTILS = { isObject: value => value !== null && typeof value === 'object' };
-    const root = path.resolve(__dirname, '../data');
-    const headerFiles = {};
-    for (const relative of Object.keys(manifest.sections['init-v001'].files).sort()) {
-        if (!relative.includes('/headers/groups/')) continue;
-        headerFiles[path.basename(relative)] = [path.join(root, relative)];
-    }
-    const request = { data: { headerFiles } };
+    const initial = releases.inspectManifest(modules.profile, 'init', path.join(modules.profile.path, 'data/manifest.json'), manifest.sections['init-v001'], 'init-v001', true);
+    const ordered = releases.resolvePrerequisiteReleases([initial], 'init').releases;
     const service = Object.assign({}, initializer, { LOG: { debug() {} } });
-    let advanced = false;
-    service.buildHeaderInstances(request, {}, { nextSuccess() { advanced = true; } });
-    assert.equal(advanced, true);
-    const headers = Object.values(request.data.headers);
-    assert.equal(headers[0].options.dataFilePrefix, 'defaultBootstrapUserGroupsData');
-    assert.equal(headers.length, 1);
     const installed = new Map();
-    for (const header of headers) {
-        const records = Object.values(require(path.join(root, 'init-v001/records/groups', header.options.dataFilePrefix)));
-        governance.validateGraph(records, [...installed.values()]);
-        records.forEach(record => installed.set(record.code, record));
-    }
-    assert.equal(installed.size, 27);
-    assert(installed.get('runtimeConfigAdminUserGroup').permissions.includes('copilot.configuration.admin'));
-    assert(!installed.get('employeeUserGroup').permissions.includes('copilot.configuration.admin'));
-    for (const name of ['runtimeConfigurationUserGroupsData', 'runtimeConfigurationUpdateUserGroupsData', 'serviceAccountCircaUserGroupsData', 'backofficeCircaUserGroupsData']) {
-        for (const record of Object.values(require(path.join(root, 'init-v001/records/groups', name)))) {
-            const actual = installed.get(record.code);
-            assert.deepEqual(
-                { ...actual, permissions: [...(actual.permissions || [])].sort() },
-                { ...record, permissions: [...(record.permissions || [])].sort() }
-            );
+    for (const release of ordered.filter(row => row.sectionCode === 'accessGroups')) {
+        const root = path.join(modules[release.moduleName].path, 'data');
+        const headerFiles = Object.fromEntries(release.declaredFiles.filter(file => file.includes('/headers/')).map(file => [path.basename(file), [path.join(root, file)]]));
+        const request = { data: { headerFiles } };
+        let advanced = false;
+        service.buildHeaderInstances(request, {}, { nextSuccess() { advanced = true; } });
+        assert.equal(advanced, true);
+        for (const header of Object.values(request.data.headers)) {
+            assert.equal(header.options.schemaName, 'userGroup');
+            assert.equal(header.options.operation, 'ensureReferenceAll');
+            const file = release.declaredFiles.find(file => file.includes('/records/') && path.basename(file) === header.options.dataFilePrefix + '.js');
+            assert(file, 'Every selected group header pins its owner records');
+            const records = Object.values(require(path.join(root, file)));
+            governance.validateGraph(records, [...installed.values()]);
+            records.forEach(record => { assert(!installed.has(record.code), 'One source owner per group'); installed.set(record.code, record); });
         }
     }
+    assert.equal(installed.size, require('./helpers/identityCatalogueFixture').records('UserGroup').length);
+    assert(installed.get('runtimeConfigAdminUserGroup').permissions.includes('copilot.configuration.admin'));
+    assert(!installed.get('employeeUserGroup').permissions.includes('copilot.configuration.admin'));
+    assert.equal(initial.version, '0.0.3');
+    assert.equal(initial.sourceRoot, 'init-v001');
+    assert(!initial.declaredFiles.some(file => file.includes('/records/groups/')));
 });

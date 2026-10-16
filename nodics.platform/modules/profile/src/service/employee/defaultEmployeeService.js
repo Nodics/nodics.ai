@@ -16,7 +16,121 @@
  * @owner profile
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
+const platformAdoptionWrites = new WeakMap();
 module.exports = {
+  /** Recognizes only the held exact additive Employee command; public flags and copied requests confer no authority. */
+  ownsPlatformAdministratorAdoption: function (request) {
+    const proof = platformAdoptionWrites.get(request);
+    if (!proof || !request.model || Object.keys(request.model).some(key => !['userGroups', 'authVersion'].includes(key))) return false;
+    return proof === JSON.stringify([request.tenant, request.authData, request.query, request.options, request.model.userGroups]);
+  },
+  /**
+   * Reads a fresh native Platform employee and the installed full-access definition for review.
+   * @param {Object} request Authenticated owner request with exact target { code, loginId }.
+   * @returns {Promise<Object>} Internal snapshot and public review; no writes or credential changes.
+   */
+  platformAdministratorAdoptionState: async function (request) {
+    SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+    const fail = () => { throw new CLASSES.NodicsError("ERR_AUTH_00003", "Platform administrator adoption evidence is invalid or changed"); };
+    const target = request?.target;
+    if (!target || Object.getPrototypeOf(target) !== Object.prototype ||
+        Object.keys(target).sort().join('|') !== 'code|loginId' ||
+        [target.code, target.loginId].some(value => typeof value !== 'string' || !value || value.length > 320)) fail();
+    await SERVICE.DefaultIdentityCatalogueGovernanceService.authorize(request);
+    const read = async (service, query) => {
+      const response = await service.get({ tenant: request.tenant, authData: request.authData, query,
+        options: { recursive: false, skipItemCache: true }, searchOptions: { pageSize: 2, pageNumber: 1 } });
+      if (!/^SUC_/.test(response?.code || '') || response.success === false || response.error ||
+          response.errors && (!Array.isArray(response.errors) || response.errors.length) ||
+          response.count !== 1 || !Array.isArray(response.result) || response.result.length !== 1 || !response.result[0]._id) fail();
+      return response.result[0];
+    };
+    const person = await read(this, { $or: [{ code: target.code }, { loginId: target.loginId }] });
+    SERVICE.DefaultPrincipalGovernanceService.assertPlatformPrincipal(person, { ...request, schemaModel: { schemaName: 'employee' } });
+    if (person.code !== target.code || person.loginId !== target.loginId || person.active !== true || person.disabled || person.registrationSuspended ||
+        !person.password || typeof person.password !== 'string' && typeof person.password.toHexString !== 'function' ||
+        !Array.isArray(person.userGroups) || person.userGroups.some(code => typeof code !== 'string') ||
+        new Set(person.userGroups).size !== person.userGroups.length ||
+        person.authVersion !== undefined && (!Number.isInteger(person.authVersion) || person.authVersion < 1)) fail();
+    const group = await read(SERVICE.DefaultUserGroupService, { code: 'platformAdministratorUserGroup', active: true });
+    if (group.code !== 'platformAdministratorUserGroup' || group.active !== true ||
+        !Array.isArray(group.permissions) || !group.permissions.includes('*')) fail();
+    await SERVICE.DefaultIdentityCatalogueService.requirePermissions(['*']);
+    const enterprise = await read(SERVICE.DefaultEnterpriseService, { code: CONFIG.get('defaultEnterprise') || 'default', active: true });
+    if (enterprise.active !== true || enterprise.code !== (CONFIG.get('defaultEnterprise') || 'default') ||
+        (typeof enterprise.tenant === 'string' ? enterprise.tenant : enterprise.tenant?.code) !== request.tenant) fail();
+    const next = [...person.userGroups];
+    if (!next.includes(group.code)) next.push(group.code);
+    const reviewFingerprint = require('crypto').createHash('sha256')
+      .update(JSON.stringify({ tenant: request.tenant, person, group, enterprise })).digest('hex');
+    return { person, next, review: { code: person.code, loginId: person.loginId, tenant: request.tenant,
+      enterpriseCode: enterprise.code, userGroups: [...person.userGroups], nextUserGroups: next,
+      authVersion: person.authVersion || 1, reviewFingerprint } };
+  },
+  /** Returns a credential-free, no-write review for the exact existing-account adoption command. */
+  inspectPlatformAdministratorAdoption: async function (request) {
+    return (await this.platformAdministratorAdoptionState(request)).review;
+  },
+  /**
+   * Adds only the reviewed Platform group through generated Employee update and stamp hooks.
+   * @param {Object} request Fresh human owner request, target, confirmed:true and reviewed fingerprint.
+   * @returns {Promise<Object>} Code-only outcome. Drift, ambiguous writes or failed stamp/readback reject without retry.
+   */
+  adoptPlatformAdministrator: async function (request) {
+    const fail = () => { throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Platform administrator adoption requires fresh review or committed-write inspection'); };
+    if (request?.confirmed !== true || !/^[a-f0-9]{64}$/.test(request.reviewFingerprint || '')) fail();
+    const { person, next, review } = await this.platformAdministratorAdoptionState(request);
+    if (request.reviewFingerprint !== review.reviewFingerprint) fail();
+    if (next.length === person.userGroups.length) return { code: person.code, changed: false };
+    const retained = value => value === undefined ? { $exists: false } : value;
+    await SERVICE.DefaultIdentityCatalogueGovernanceService.authorize(request);
+    const event = { eventType: 'identity.platform_administrator.adoption', tenant: request.tenant,
+      entCode: review.enterpriseCode, principalId: String(person._id), requestId: review.reviewFingerprint,
+      reasonCode: 'PLATFORM_ADMINISTRATOR_ADOPTION', source: { owner: 'DefaultEmployeeService',
+        actorLoginId: request.authData.loginId, targetCode: person.code, targetLoginId: person.loginId } };
+    const audit = async outcome => {
+      if (typeof SERVICE.DefaultAuthAuditService?.record !== 'function' ||
+          !await SERVICE.DefaultAuthAuditService.record({ ...event, outcome })) fail();
+    };
+    await audit('REQUESTED');
+    const command = { tenant: request.tenant, authData: request.authData,
+      query: { _id: person._id, code: person.code, loginId: person.loginId, active: true,
+        principalType: 'human', password: person.password, userGroups: person.userGroups,
+        disabled: retained(person.disabled), registrationSuspended: retained(person.registrationSuspended),
+        authVersion: retained(person.authVersion), authenticationIdentity: retained(person.authenticationIdentity),
+        identityLinkRetirement: retained(person.identityLinkRetirement), registrationAssignmentCode: retained(person.registrationAssignmentCode),
+        enterpriseCode: retained(person.enterpriseCode), metadata: retained(person.metadata),
+        apiKey: retained(person.apiKey), apiKeyHash: retained(person.apiKeyHash) },
+      model: { userGroups: next }, options: { returnModified: true, explain: false, snapshot: false } };
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy(command, request);
+    platformAdoptionWrites.set(command, JSON.stringify([command.tenant, command.authData, command.query, command.options, command.model.userGroups]));
+    let result;
+    try { result = await this.update(command); }
+    finally { platformAdoptionWrites.delete(command); }
+    if (!/^SUC_/.test(result?.code || '') || result.success === false || result.error ||
+        result.errors && (!Array.isArray(result.errors) || result.errors.length) ||
+        result.result?.acknowledged !== true || result.result.matchedCount !== 1) fail();
+    const current = await this.get({ tenant: request.tenant, authData: request.authData,
+      query: { _id: person._id }, options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: 2, pageNumber: 1 } });
+    const row = current?.result?.[0];
+    if (!/^SUC_/.test(current?.code || '') || current.success === false || current.error ||
+        current.errors && (!Array.isArray(current.errors) || current.errors.length) ||
+        current.count !== 1 || !Array.isArray(current.result) || current.result.length !== 1 ||
+        String(row?._id) !== String(person._id) || row.code !== person.code || row.loginId !== person.loginId ||
+        row.active !== true || row.disabled || row.registrationSuspended || row.principalType !== 'human' || row.authenticationIdentity ||
+        row.registrationAssignmentCode || row.identityLinkRetirement ||
+        String(row.password) !== String(person.password) ||
+        JSON.stringify(row.userGroups) !== JSON.stringify(next) ||
+        JSON.stringify(row.metadata) !== JSON.stringify(person.metadata) || row.enterpriseCode !== person.enterpriseCode ||
+        !Number.isInteger(row.authVersion) || row.authVersion <= (person.authVersion || 1)) fail();
+    await audit('SUCCESS');
+    return { code: person.code, changed: true };
+  },
+  /** Preserves installed bootstrap identities; only private nImport Init may create missing records. */
+  ensureBootstrapAll: function (request) {
+    return SERVICE.DefaultMandatoryIdentityBootstrapService.ensureBootstrapAll(this, "employee", request);
+  },
   /** Adds reviewed reference-release roles to existing native employees through normal owner updates. */
   addReferenceGroupsAll: async function (request) {
     const fail = () => {
@@ -43,7 +157,7 @@ module.exports = {
     if (!key(request?.tenant) || !Array.isArray(models) || models.length > 100 ||
         !plain(request.authData) || !Array.isArray(request.authData.userGroups) ||
         !request.authData.userGroups.length) fail();
-    const roles = CONFIG.get("enterpriseManagement")?.accessAssignments?.roles;
+    const roles = await SERVICE.DefaultIdentityCatalogueService.roles();
     if (!plain(roles)) fail();
     const identities = new Set(), logins = new Set(), requiredGroups = new Set();
     const instructions = models.map((model) => {

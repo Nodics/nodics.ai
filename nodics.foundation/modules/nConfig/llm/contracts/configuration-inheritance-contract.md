@@ -1,5 +1,39 @@
 # Minimal configuration and effective inheritance
 
+## Explicit Installed Source Descriptors
+
+`UTILS.resolveInstalledSourceDescriptor(moduleName)` synchronously resolves an exact
+installed source owner that is absent from selected runtime discovery. It returns
+the existing raw descriptor shape (`name`, `path`, `index`, `metaData`, `parent`,
+`parentKey`, `canonicalIdentity`, `registryKey`, `modules`) or throws. Callers provide
+an identity, never roots, URLs or filesystem paths. The trusted framework root is
+derived from the current `NODICS.getNodicsHome()`; the current `getCustomHome()` owns
+the project root. Framework and project package metadata must identify valid roots.
+
+This opt-in lookup reuses the package collector and canonical duplicate checks with
+private records, not the runtime registry. It reads bounded package JSON only and
+traverses package children and structural `modules` directories. It excludes
+dependency directories, documentation, templates, hidden paths and unpackaged
+source/data/test trees. Limits are 256 KiB per package, 8,192 traversed directories
+per trusted root, 4,096 package records and depth 32. Nested symlinks, including
+package-file redirects, refuse discovery. Selected root aliases resolve canonically.
+Missing owners, duplicate package identities, ambiguous matches, malformed metadata,
+topology-package targets and exceeded limits fail closed.
+
+nImport may use the descriptor only for its explicit prerequisite graph. The
+descriptor does not select all owner data, authorize execution, replace frozen
+manifests or remove tenant, version, checksum and capability checks. Do not add it
+to `NODICS`, merge its configuration, load services or broaden selected runtime
+roots. Ordinary startup discovery is unchanged. A later customer module may
+customize the exported utility while retaining the same trust and nonactivation
+boundaries. Missing installed dependencies require installation through the normal
+deployment owner, not network fetching or broader startup activation from here.
+
+`test/nonRuntimePackageDiscovery.test.js` covers source-only framework/project
+resolution, unchanged registries/configuration, missing and duplicate sources,
+malformed/oversized metadata, symlink escapes and bounded traversal using disposable
+fixtures. These tests do not import data or prove live migration acceptance.
+
 ## Offline Maintenance Loading
 
 After ordinary effective configuration discovery, the existing initializer's
@@ -18,6 +52,14 @@ nConfig owns loading, not capability defaults. Defaults belong in the capability
 that consumes them; custom application definitions belong in customer modules.
 Only active modules contribute properties, in index order. External, tenant and
 persisted configuration retain their existing authorities and precedence.
+
+Apply the [mandatory default ownership gate](../../../nSetup/llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate).
+Owner-contributed runtime-role profiles carry standard publication adapters,
+observer registrations and role mechanics; customer layers supply only genuine
+selection and overrides. Registering a provider is not qualifying or enabling it.
+Do not infer publication permission from a schema flag, load an inactive domain
+to obtain its defaults, or move all domains into nConfig/nPublish. Prove selected
+and unselected role behavior through this loader after the source batch is complete.
 
 Moving a value requires evidence of active ownership and ordering. Do not infer
 precedence from a directory name, move local credentials into a default, or
@@ -346,3 +388,17 @@ project/environment/server/node contributions through the same binding and merge
 sequence. This preserves explicit replacement/keyed semantics for framework-owned
 tooling defaults; never merge defaults back into already-resolved collections.
 This projection does not activate modules or alter runtime startup authority.
+
+## Owner Role Defaults And Deployment Differences
+
+Publication domains contribute standard provider registrations, source schema
+policies and read-only Online observers using existing runtimeRoleProfiles.
+Project/server layers retain explicit role selection, connection names, signed
+caller restrictions and qualification. To override a profile leaf, place the
+intentional difference under that same role profile: projection occurs after
+layer merging. Unqualified storage may explicitly keep isVersionedEnabled false.
+No registration selects an endpoint, imports a workflow or grants permission.
+
+Consumer mechanics do not belong to nConfig: nService owns defaultContentType;
+Cronjob owns cronjob.processRetrySleepTime; EMS owns emsClient.processRetrySleepTime.
+The obsolete global processRetrySleepTime and unused illegalUsernames are removed.

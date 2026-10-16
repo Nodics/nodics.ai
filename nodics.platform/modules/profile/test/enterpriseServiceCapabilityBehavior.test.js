@@ -37,6 +37,7 @@ global.ENUMS = {
 };
 
 global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultIdentityGovernanceService: {
         getSystemAuthData: function () {
             return { isSystem: true, userGroups: ['serviceAccountUserGroup'], permissions: [] };
@@ -85,7 +86,7 @@ global.CLASSES = {
 
 const enterpriseService = require('../src/service/enterprise/defaultEnterpriseService');
 const profileSchemas = require('../src/schemas/schemas');
-const bootstrapUserGroups = require('../data/init-v001/records/groups/defaultBootstrapUserGroupsData');
+const bootstrapUserGroups = Object.fromEntries(require('./helpers/identityCatalogueFixture').records('UserGroup').map(group => [group.code, group]));
 
 (async function () {
     let getCalls = [];
@@ -167,9 +168,9 @@ const bootstrapUserGroups = require('../data/init-v001/records/groups/defaultBoo
         true,
         'Tenant must not be unique because one tenant can own multiple enterprises'
     );
-    assert(bootstrapUserGroups.record1.permissions.includes('waste.collectionCentre.search'),
+    assert(bootstrapUserGroups.adminGroup.permissions.includes('waste.collectionCentre.search'),
         'Default admin group can read Waste collection-centre search for Axis maps');
-    assert(bootstrapUserGroups.record3.permissions.includes('waste.collectionCentre.search'),
+    assert(bootstrapUserGroups.customerUserGroup.permissions.includes('waste.collectionCentre.search'),
         'Default customer group can read public Waste collection-centre search');
 
     const runtimeAuth = { tokenType: 'service', runtimeScope: { instanceCode: 'worker-1' },

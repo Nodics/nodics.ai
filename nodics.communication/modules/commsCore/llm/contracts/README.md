@@ -3,6 +3,7 @@
 Status: active Phase 1C. Communication orchestration and delivery governance. Later-loaded projects may override implementation while retaining Communication ownership, security, audit, retry, and recovery invariants.
 
 - [Durable outcome delivery](durable-outcome-delivery.md)
+- [Native Telegram inbound launch](telegram-inbound-launch.md)
 - [Layered template resources](template-resources.md)
 
 ## Provider configuration ownership

@@ -3,6 +3,12 @@
 `wasteApi` exposes secured, generic Waste capability routes for framework and
 partner integrations.
 
+The [scoped business Workbench](../wasteCore/llm/contracts/business-workbench.md)
+discovers descriptors at `GET /business/waste/schemas`, reads capabilities at
+`GET /business/waste/:schemaName/capabilities` and searches at
+`POST /business/waste/:schemaName/search`, all under the `wasteApi` connection and
+`v0` API version. These are read-only owner routes, not generated schema grants.
+
 Tenant maintainers can use the read-only
 [`installed-data/inspect` operation](../wasteCore/llm/contracts/README.md#installed-evidence-inspection)
 to qualify reference upgrades without enabling generated schema CRUD routes.

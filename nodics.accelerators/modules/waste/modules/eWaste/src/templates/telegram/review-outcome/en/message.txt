@@ -1,0 +1,3 @@
+Submission {{submissionCode}}: {{status}}.
+Reviewer comment: {{comment}}
+View complete item details: {{detailUrl}}

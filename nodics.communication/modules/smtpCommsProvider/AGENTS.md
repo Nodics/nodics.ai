@@ -22,3 +22,10 @@ contract updates, and the canonical provider runbook. Default plus later-layer
 customization evidence is mandatory. No live secret or recipient dataset belongs
 in the repository. Tests may run ephemeral loopback-only SMTP fixtures with fake
 content; that does not qualify Gmail or any production provider.
+
+The explicitly operated Local capture harness stays under `test`, not runtime
+service discovery. Require private owner-only session artifacts, authenticated
+fixed loopback binding, exact approved sender/recipients and bounded framing,
+connections, messages and idle time. Never relay, print bindings/content, create
+browser identities or turn capture success into registration qualification.
+Preserve `test/localSmtpCapture.test.js`; session shutdown removes only owned files.

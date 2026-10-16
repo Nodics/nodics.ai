@@ -23,6 +23,13 @@ security issues, tenant-context mistakes, missing validation, missing audit,
 missing rollback, generated-artifact drift, missing tests, and broken
 customization paths. Include file and line references where available.
 
+Apply contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate.
+Do not confuse changed values with correct ownership. Identify standard framework
+wiring supplied only by a customer project, split mixed objects into mechanics
+and real deployment choices, and inspect generators and source-shaped tests.
+Report static inventory separately from consumer-traced findings and effective
+configuration proof; never treat provider registration as enablement or authority.
+
 For every finding, classify:
 - owner module and layer
 - violated contract or expected behavior

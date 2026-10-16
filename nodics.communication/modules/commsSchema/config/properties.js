@@ -21,9 +21,10 @@ module.exports = {
                     "DefaultCommsSuppressionService": true,
                     "DefaultCommsTemplateService": true,
                     "DefaultCommsTemplateVersionService": true,
-                    "DefaultCommsVerificationChallengeService": true
+                    "DefaultCommsVerificationChallengeService": true,
+                    "DefaultCommsTelegramUpdateService": true
                 }
             }
         }
     },
- schemaPolicies: { commsSchema: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }, customerOwned: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'recipientId', bypassGroups: { adminGroup: true, serviceAccountUserGroup: true, employeeUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } } } } };
+ schemaPolicies: { commsSchema: { telegramInbound: { accessGroups: { serviceAccountUserGroup: 10 } }, operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }, customerOwned: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'recipientId', bypassGroups: { adminGroup: true, serviceAccountUserGroup: true, employeeUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } } } } };

@@ -48,7 +48,9 @@ default evaluator does not read ordinary Shipment or tracking rows and cannot be
 convinced by forged `verified`, `immutable`, `eligible`, `liveQualified`, provider
 codes, staff permissions, a receipt-shaped JSON object or a caller-provided hash.
 
-## Explicit Local Simulation
+<a id="explicit-local-simulation"></a>
+
+## Explicit Simulation
 
 `DefaultFulfillmentItemSimulationService` is a separate loader-visible owner for
 testing existing orchestration. It never changes the real evaluator's refusal.
@@ -58,13 +60,37 @@ Defaults are `fulfillmentCore.itemSimulation.enabled: false` and an empty
 Every simulator evaluation requires all of the following, before and after
 canonicalizing context:
 
-- nConfig's package-derived `environment.class` is exactly `LOCAL`.
 - The canonical selected environment from NODICS is in a bounded, unique explicit
   `fulfillmentCore.itemSimulation.environmentAllowlist`; no name heuristic or
   caller environment value is trusted.
 - `fulfillmentCore.itemSimulation.enabled` and Promotion merchant benefits are true.
-- Promotion selects exactly `LOCAL_SIMULATION` and
+- Promotion selects exactly `SIMULATION` and
   `DefaultFulfillmentItemSimulationService`.
+
+Existing application/environment/server/node configuration layers own these
+selections; no new registry, deployment-class gate or universal enable flag is
+introduced. The allowlist accepts 1-20 unique, nonsparse, bounded environment
+identifiers, never wildcards. Missing/malformed canonical selection refuses;
+the legacy getter is used only when the canonical getter is absent, not when it
+returns an invalid value. LOCAL, QA, STAGING and PRODUCTION classification neither
+admits nor denies an otherwise explicitly selected simulation deployment.
+
+```js
+fulfillmentCore: { itemSimulation: {
+  enabled: true, environmentAllowlist: ["selectedEnvironment"]
+} },
+promotion: { merchantBenefits: {
+  enabled: true, qualified: false, itemEvidenceMode: "SIMULATION",
+  itemEvidenceService: "DefaultFulfillmentItemSimulationService"
+} }
+```
+
+This example is inert until intentionally selected by the owning deployment.
+Defaults stay disabled/empty and Promotion stays VERIFIED with no selected ITEM
+evidence owner. Retired LOCAL_SIMULATION selection is rejected rather than
+silently enabling a deployment. Historical SIMULATED_ITEMS evidence/hash protocol
+is unchanged and never becomes verified delivery; read compatibility does not
+authorize execution under a disabled or unselected current policy.
 
 Simulation uses the real boundary's detached/frozen context grammar plus the
 positive safe integer Store revision observed by the merchant owner. References
@@ -83,19 +109,21 @@ retains its ordinary protected merchant coordination receipt and replay behavior
 
 | Scenario | Required outcome |
 | --- | --- |
-| Approved exact bundle in an opted-in LOCAL environment | Clearly simulated projection only |
-| Non-LOCAL, missing environment, wrong mode/service or absent allowlist entry | Typed refusal, no verified fallback |
+| Approved exact bundle in an explicitly selected environment of any class | Clearly simulated projection only |
+| Missing/malformed environment, wrong/retired mode/service or absent allowlist entry | Typed refusal, no verified fallback |
 | Missing/extra context, duplicate SKU, bad quantity, missing Store revision or non-SIM reference | Refuse before orchestration can acknowledge it |
 | Selection revoked during consumer evaluation | Consumer refuses; previously simulated data cannot become real proof |
 | Partner customization | May narrow exported admission through `this`; must preserve tags and cannot qualify delivery |
 
 Business evaluators can assess the merchant journey, not delivery readiness.
 Business users see simulated/unverified goods. Operators must select this only
-for disposable approved Local demonstrations; normal permissions, Store scope,
+for explicitly approved reusable demonstrations; normal permissions, Store scope,
 consent, purchase and persistence gates still apply. Partner developers and AI
 tools must never present simulated status as DELIVERED or infer stock movement.
 Framework maintainers retain the authenticated owner work below as a separate
 integration. Used-benefit reversal approval is independent and is not granted.
+Required demo records/media remain permanent data in their respective owners'
+packs; simulation does not turn them into runtime fixtures or cleanup candidates.
 
 `fulfillmentItemSimulationContract.test.js` forbids persistence/transport ports
 and checks deterministic/concurrent results, detachment, strict selectors,

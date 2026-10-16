@@ -40,38 +40,57 @@ module.exports = {
 
   /** Projects one property through the normal contribution boundaries, resolving only its dependencies. @param {Object[]} layers Authored contributions with their file directories. @param {string|string[]} property Bounded path. @param {Object} context Selected runtime binding context. @returns {*} Independent effective property. */
   resolveLayeredProperty: function (layers, property, context) {
-    const cache = new Map(), active = new Set();
+    const cache = new Map(),
+      active = new Set();
     const read = (input, index) => {
       const parts = this.propertyPath(input);
       if (index < 0) return undefined;
       const key = JSON.stringify([index, parts]);
       if (cache.has(key)) return _.cloneDeep(cache.get(key));
-      if (active.has(key) || active.size >= 64 || cache.size >= 250000) throw new Error("Configuration projection cycle or bounded limit");
+      if (active.has(key) || active.size >= 64 || cache.size >= 250000)
+        throw new Error("Configuration projection cycle or bounded limit");
       active.add(key);
       try {
         const layer = layers[index];
         for (let length = 1; length < parts.length; length++) {
           const prefix = _.get(layer.properties, parts.slice(0, length));
           if (_.isPlainObject(prefix) && prefix.$config) {
-            const value = _.get(read(parts.slice(0, length), index), parts.slice(length));
+            const value = _.get(
+              read(parts.slice(0, length), index),
+              parts.slice(length),
+            );
             cache.set(key, _.cloneDeep(value));
             return value;
           }
         }
         const earlier = read(parts, index - 1);
         const declaration = _.get(layer.properties, parts);
-        if (declaration === undefined) { cache.set(key, _.cloneDeep(earlier)); return earlier; }
-        const current = this.resolve({value:declaration}, {}, {
-          ...context, roots:{...context.roots,file:layer.directory},
-          readLayeredProperty: dependency => read(dependency, index),
-        });
-        const value = this.merge({value:earlier}, current).value;
+        if (declaration === undefined) {
+          cache.set(key, _.cloneDeep(earlier));
+          return earlier;
+        }
+        const current = this.resolve(
+          { value: declaration },
+          {},
+          {
+            ...context,
+            roots: { ...context.roots, file: layer.directory },
+            readLayeredProperty: (dependency) => read(dependency, index),
+          },
+        );
+        const value = this.merge({ value: earlier }, current).value;
         cache.set(key, _.cloneDeep(value));
         return value;
-      } finally { active.delete(key); }
+      } finally {
+        active.delete(key);
+      }
     };
     const result = read(property, layers.length - 1);
-    if (result === undefined) throw new Error("Configuration reference is unavailable: " + this.propertyPath(property).join('.'));
+    if (result === undefined)
+      throw new Error(
+        "Configuration reference is unavailable: " +
+          this.propertyPath(property).join("."),
+      );
     return _.cloneDeep(result);
   },
 
@@ -280,18 +299,35 @@ module.exports = {
       if (typeof state.context.readRuntimeProperty !== "function")
         throw new Error("Runtime binding requires a selected deployment");
       this.propertyPath(binding.path);
-      return this.projectFields(state.context.readRuntimeProperty(binding.name, binding.path, binding.node), binding.fields);
+      return this.projectFields(
+        state.context.readRuntimeProperty(
+          binding.name,
+          binding.path,
+          binding.node,
+        ),
+        binding.fields,
+      );
     }
     if (binding.$config === "context") {
       if (
-        !["projectCode", "environmentCode", "serverCode", "nodeCode", "projectVersion", "frameworkVersion"].includes(
-          binding.name,
-        )
+        ![
+          "projectCode",
+          "environmentCode",
+          "serverCode",
+          "nodeCode",
+          "projectVersion",
+          "frameworkVersion",
+        ].includes(binding.name)
       )
         throw new Error("Unknown configuration context field");
       if (["projectVersion", "frameworkVersion"].includes(binding.name)) {
-        if (typeof state.context.readPackageVersion !== "function") throw new Error("Package version requires a selected runtime context");
-        return state.context.readPackageVersion(binding.name === "projectVersion" ? "project" : "framework");
+        if (typeof state.context.readPackageVersion !== "function")
+          throw new Error(
+            "Package version requires a selected runtime context",
+          );
+        return state.context.readPackageVersion(
+          binding.name === "projectVersion" ? "project" : "framework",
+        );
       }
       return state.context[binding.name];
     }
@@ -330,8 +366,11 @@ module.exports = {
     }
     if (binding.$config === "ref") {
       if (typeof state.context.readLayeredProperty === "function") {
-        const value = state.context.readLayeredProperty(this.propertyPath(binding.path));
-        if (value === undefined) throw new Error("Configuration reference is unavailable");
+        const value = state.context.readLayeredProperty(
+          this.propertyPath(binding.path),
+        );
+        if (value === undefined)
+          throw new Error("Configuration reference is unavailable");
         return this.projectFields(value, binding.fields);
       }
       const parts = this.propertyPath(binding.path);
@@ -353,8 +392,14 @@ module.exports = {
           !current.$config &&
           _.isPlainObject(earlier)
         )
-          return this.projectFields(this.merge(earlier, resolved), binding.fields);
-        return this.projectFields(this.merge({ value: earlier }, { value: resolved }).value, binding.fields);
+          return this.projectFields(
+            this.merge(earlier, resolved),
+            binding.fields,
+          );
+        return this.projectFields(
+          this.merge({ value: earlier }, { value: resolved }).value,
+          binding.fields,
+        );
       } finally {
         state.references.pop();
       }
@@ -365,15 +410,30 @@ module.exports = {
     )
       throw new Error("Invalid configuration composition name");
     if (!state.compositions.has(binding.name)) {
-      const definitions = typeof state.context.readLayeredProperty === "function"
-        ? state.context.readLayeredProperty(["activeModules", "compositions"]) || {}
-        : this.merge(_.get(state.inherited, "activeModules.compositions", {}), _.get(state.contribution, "activeModules.compositions", {}));
+      const definitions =
+        typeof state.context.readLayeredProperty === "function"
+          ? state.context.readLayeredProperty([
+              "activeModules",
+              "compositions",
+            ]) || {}
+          : this.merge(
+              _.get(state.inherited, "activeModules.compositions", {}),
+              _.get(state.contribution, "activeModules.compositions", {}),
+            );
       const bootstrapDefinitions =
         typeof state.context.readBootstrapCompositionDefinitions === "function"
           ? state.context.readBootstrapCompositionDefinitions()
           : {};
-      const effectiveDefinitions = this.merge(bootstrapDefinitions, definitions);
-      if (!Object.prototype.hasOwnProperty.call(effectiveDefinitions, binding.name))
+      const effectiveDefinitions = this.merge(
+        bootstrapDefinitions,
+        definitions,
+      );
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          effectiveDefinitions,
+          binding.name,
+        )
+      )
         throw new Error(
           "Configuration composition is unavailable: " + binding.name,
         );
@@ -407,17 +467,34 @@ module.exports = {
   /** Projects bounded direct fields from a resolved property without creating another configuration source. @param {*} value Resolved input. @param {string[]} fields Optional selected fields. @returns {*} Independent projection. */
   projectFields: function (value, fields) {
     if (fields === undefined) return value;
-    if (!Array.isArray(fields) || !fields.length || fields.length > 64 ||
-        new Set(fields).size !== fields.length || fields.some(field =>
-          typeof field !== "string" || this.propertyPath(field).length !== 1))
-      throw new Error("Configuration projection fields must be distinct property names");
-    const pick = item => {
-      if (!_.isPlainObject(item) || fields.some(field => !Object.prototype.hasOwnProperty.call(item, field)))
+    if (
+      !Array.isArray(fields) ||
+      !fields.length ||
+      fields.length > 64 ||
+      new Set(fields).size !== fields.length ||
+      fields.some(
+        (field) =>
+          typeof field !== "string" || this.propertyPath(field).length !== 1,
+      )
+    )
+      throw new Error(
+        "Configuration projection fields must be distinct property names",
+      );
+    const pick = (item) => {
+      if (
+        !_.isPlainObject(item) ||
+        fields.some(
+          (field) => !Object.prototype.hasOwnProperty.call(item, field),
+        )
+      )
         throw new Error("Configuration projection field is unavailable");
-      return Object.fromEntries(fields.map(field => [field, _.cloneDeep(item[field])]));
+      return Object.fromEntries(
+        fields.map((field) => [field, _.cloneDeep(item[field])]),
+      );
     };
     if (Array.isArray(value)) {
-      if (value.length > 10000) throw new Error("Configuration projection exceeds bounded limits");
+      if (value.length > 10000)
+        throw new Error("Configuration projection exceeds bounded limits");
       return value.map(pick);
     }
     return pick(value);
@@ -482,14 +559,6 @@ module.exports = {
       )
     )
       throw new Error("Unsupported domain composition selection");
-    const contributors = new Set(domains);
-    for (const domain of domains)
-      for (const implied of supported[domain]
-        .impliedProductSearchContributorDomains || []) {
-        if (!Object.prototype.hasOwnProperty.call(supported, implied))
-          throw new Error("Unknown implied composition contributor");
-        contributors.add(implied);
-      }
     return {
       domains,
       frameworkGroups: domains
@@ -504,12 +573,6 @@ module.exports = {
       projectPacks: domains
         .map((domain) => supported[domain].projectPack)
         .filter(Boolean),
-      productSearchContributors: Object.fromEntries(
-        [...contributors]
-          .sort()
-          .map((domain) => [domain, supported[domain].productSearchContributor])
-          .filter(([, contributor]) => contributor),
-      ),
     };
   },
 };

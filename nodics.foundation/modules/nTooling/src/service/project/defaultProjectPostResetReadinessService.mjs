@@ -34,7 +34,7 @@ const sectionDefinitions = Object.freeze([
   ['media', 'Media objects and references'],
   ['search', 'Search index and read-source policy'],
   ['assistant', 'Assistant knowledge sources'],
-  ['applications', 'Circa, Nexus, Agora parity'],
+  ['applications', 'Customer application readiness'],
   ['browserValidation', 'Browser validation evidence'],
   ['diagnostics', 'Support-safe diagnostics export'],
 ]);
@@ -481,7 +481,7 @@ export async function buildPostResetReadinessReport(projectRoot, environmentCode
       assistantSection ? 'BackOffice returned canonical assistant knowledge readiness guidance.' : assistantReadiness ? 'BackOffice returned assistant knowledge readiness evidence.' : 'Confirm assistant knowledge source installation, publication, indexing, and authorization.',
       { route: '/assistant', reportSource: 'assistant.knowledge', readiness: assistantSection || assistantReadiness },
       'Index approved docs/knowledge sources before treating assistant answers as verified.'),
-    section('applications', 'Circa, Nexus, Agora parity', applicationSection ? operationalSectionState(applicationSection, liveBootstrap, applicationState) : applicationState,
+    section('applications', 'Customer application readiness', applicationSection ? operationalSectionState(applicationSection, liveBootstrap, applicationState) : applicationState,
       liveBootstrap.ok ? 'BackOffice application initialization profiles were inspected.' : 'Validate customer-facing app profiles through the same import/publication/runtime evidence.',
       { publicationProfiles: derivePublicationProfiles(configuration), applications, readiness: applicationSection },
       'Check each profile for Online state, media/search dependencies, and browser smoke where enabled.'),

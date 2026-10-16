@@ -3,6 +3,14 @@
 `wasteVerification` records generic operator/admin review decisions for waste
 submissions.
 
+Unusable image evidence does not establish physical-item facts. With required
+verification enabled, ordinary approval and rejection remain gated on independent
+verification. A separate evidence-only rejection lets the assigned authorized
+human reject unusable evidence without attesting physical facts. Original media
+and facts remain intact; no asset, custody, impact or reward is created.
+Changes requested is not an implemented command.
+See [evidence disposition boundaries](llm/contracts/review-workspace.md#mandatory-manual-approval-for-image-source-concerns).
+
 Axis consumes the shared review workspace as a paginated submission listing with
 read-only summaries and a governed detail dialog. Generic and accelerator views
 use the same renderer; the publishing module contributes its view identity and
@@ -32,4 +40,11 @@ available for correction while context/owner failures still hide the workspace.
 Review details require an explicit claim before any new verification or final decision. Axis shows a persistent assignment header and keeps properties/feedback read-only until the owner confirms assignment. Queue release and verification handoff restore read-only mode. Claim does not grant additional permissions or waive a separate-approver policy. See [review workspace contract](llm/contracts/review-workspace.md) for enforcement, recovery, labels and tests.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+
+Completed decision replay explicitly identifies itself without replacing the
+recorded decision. Authorized review diagnostics resolve only registered static
+messages; see [recorded recovery](llm/contracts/review-workspace.md#recorded-decision-recovery).
+
+Outcome delivery projection is allowlisted separately: nested diagnostics use
+registered static text only, and private source fields never cross the review DTO.
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

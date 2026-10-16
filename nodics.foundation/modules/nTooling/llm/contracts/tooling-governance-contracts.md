@@ -1,5 +1,90 @@
 # nTooling AI Contracts
 
+## Reference Demo Ownership
+
+`nodics.referenceDemo: true` marks an explicitly reviewed reference pack, not
+every customer application. The existing design-principle audit discovers that
+metadata and `project:validate` applies the same read-only gate to the selected
+project. The policy lives in nTooling's `tooling.referenceDemoOwnership`; there
+is no additional runtime registry, loader or project-name catalogue.
+
+Marked packs own only optional sample/docs data, assets, inert lifecycle hooks,
+fixtures and explicit demo composition. Reject runtime source, nested modules,
+startup scripts, executable configuration, capability defaults and deployment
+policy, permission/access definitions, init/core data and
+non-explicit release selection. Catalog access-group and page access-mode
+references are permitted; they do not define authority. Static local data
+assembly remains data-owned. Do not execute customer JavaScript to audit it.
+
+Demo Employee/Customer records may reference existing groups by string code;
+employee assignment records may likewise reference existing business groups.
+Import header options may carry string-code `userGroups` and `requiredRoles`.
+Explicit sample `principalScopeAssignment` headers select existing Profile
+assignment behavior, not a group/permission/role definition. These exceptions
+do not admit embedded definitions, permission lists, parent-group graphs,
+enterprise-role definitions or runtime deployment grants. All owner admission,
+scope and import validation still applies when an operator selects a release.
+
+Reviewed identity/display references use `configurationLeafPaths`, admitting
+only literal values or bounded nConfig `ref`, `env` and `replace` envelopes.
+This is not a domain behavior/permission matrix. Runtime policy remains rejected
+even when expressed as a scalar, a reference, an environment directive or an
+illustrative demo value. Reusable defaults belong to their framework owners;
+explicit deployment policy deltas belong to actual project/environment config.
+This includes structural framework/backend module identities: the implementing
+accelerator supplies those defaults. A demo may select its own application or
+frontend identity, but cannot redeclare the accelerator's capability ownership.
+Shipping policy, safety switches, limits, reward rates, publication switches,
+provider/connection policy and credential bindings do not belong in demo packs.
+Named setup/publication composition may reference owner init/core releases
+without owning or implicitly importing those releases. Never expand a policy
+allowlist or allow an entire capability namespace to make a reference pack pass.
+
+Only parsed receipt envelopes under `config/setup-observation/*.json` and its
+`history/*.json` child are inert setup evidence. JavaScript, malformed envelopes,
+unrelated configuration JSON and importing receipts into configuration remain
+rejected. Preserving historical observation bytes neither qualifies current
+runtime state nor authorizes replay, imports or receipt rewriting.
+
+This is a source-ownership regression gate, not a JavaScript sandbox, semantic
+proof of every sample record, or installed-data audit. Normal permission,
+publication, tenant and release checks remain independently required. Source
+changes never rewrite persisted receipts or certify live acceptance.
+
+Actual partner modules may customize through supported layering without this
+reference-only marker. A maintainer adding a reference selection path must review
+its owner and add positive/negative coverage; do not expand an allowlist to move
+capability defaults or access authority into demos. Framework tests use unrelated
+fixture names and are reachable from basic/full suites. Project tests pin the
+reviewed reference markers and invoke this owner check through normal CI tests.
+
+## Business Access Release Coverage
+
+The existing `tooling.testSuites` graph includes `business-access` in both basic
+and full release gates. It covers the platform administrator boundary, Profile
+assignments and installed-decision preservation, plus actual Product, Promotion,
+Order, CMS and Waste owner operations. `fullTestSuiteCoverageContract.test.js`
+guards reachability. Source fixture passes do not import access definitions,
+change installed accounts or constitute signed-in browser acceptance.
+
+## Native Local Startup Credentials
+
+Both topology and individual runtime startup use the existing credential owner's
+`mergeEnvironment`. Existing storage is read through `readExistingEnvironment`
+without writes, normalization, chmod, key additions or rotation. Retained
+nondefault passwords, signing material and compatibility keys remain unchanged.
+Deployment environment values override process inputs only; they cannot mask
+malformed or unprotected storage. Refuse invalid JSON, missing required keys,
+unsafe file permissions and symbolic links, including dangling links.
+
+Only an absent store permits first-use generation. Creation is exclusive; if
+another launcher creates the file first, validate and read it rather than
+overwrite it. An incomplete competing write fails closed and may be retried
+after the owning writer finishes. Invalid existing storage requires explicit
+operator recovery, never automatic regeneration. Purpose-key addition and JWT
+rotation retain their separate authorized owner operations. Test with disposable
+storage; verification must not restart or repair a live deployment.
+
 `DefaultProjectLocalRuntimeCredentialService.ensureSecretKey` adds one explicitly
 selected `NODICS_*_KEY` to existing qualified native-Local storage during an
 operator-owned exclusive outage. It creates a stable 32-byte hex key only when
@@ -434,6 +519,9 @@ supplied Axis/BackOffice access token and emits only redacted evidence. Keep new
 post-reset checks in framework/tooling or the owning capability module; customer
 projects should contribute only real overrides or project-specific data, not
 duplicate framework readiness logic.
+Application readiness labels and summaries are reference-neutral. Consume the
+existing BackOffice profile observations for any application identity; do not
+introduce Circa/Agora/Nexus name checks or a second application registry.
 
 The same registry still accepts its existing command names. Customer acceptance
 aliases remain opt-in `project:run` commands. Qualification/release commands retain

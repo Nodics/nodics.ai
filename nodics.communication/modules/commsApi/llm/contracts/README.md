@@ -1,5 +1,10 @@
 # commsApi contracts
 
+[Native Telegram inbound launch](../../../commsCore/llm/contracts/telegram-inbound-launch.md)
+uses an authenticated parser on the normal public-provider route, with exact
+private capture and raw JSON method replies. It does not relax service-only
+integration or verification authority, enable a deployment or prove delivery.
+
 [Private internal transport](private-internal-transport.md) requires exact admitted
 capture before sensitive input mapping and inherited verification owner context.
 
@@ -21,6 +26,42 @@ authenticated inbox owner. No template variables, recipient addresses or interna
 intent payloads are returned. This selector conveys no permission; a client must
 use the owning domain's authorized detail operation to display the referenced
 item. Existing immutable messages and delivery records are not rewritten.
+
+## Customer inbox identity
+
+`GET /customer/communications` retains its existing access-token, customer group
+and `communication.customer.read` route guards. The controller copies only the
+actual HTTP Authorization header, not a body/query/preexisting owner override.
+The facade requires a customer access-token context, nonblank login, matching
+signed/request tenant and a syntactically valid bearer matching nRouter's
+normalized `request.auth` credential. Profile validates that same bearer again.
+Caller data and privacy flags are not authentication evidence.
+
+The existing module transport invokes Profile `POST /customer` with the exact
+customer bearer, unchanged tenant and the existing signed enterprise selection
+(`authData.entCode`, otherwise tenant). It never substitutes a runtime service
+credential, fabricates schema groups, adds grants or falls back to caller code.
+The query is the authenticated login, nonrecursive, page one with at most two
+rows so duplicates are observable. The existing one-attempt timeout remains.
+
+Use `DefaultCommunicationRuntimeService.rows` for the generated success envelope
+(`code: SUC_FIND_00000`, `count`, `result`); do not unwrap arbitrary `data`/`result`
+wrappers or accept error envelopes containing plausible rows. Require count one,
+one result, a nonblank canonical string code and the exact authenticated login.
+Reject explicit conflicting row tenant and malformed/non-success HTTP status.
+Canonical Profile customers need not store tenant; absence does not invent one.
+Any context, transport, envelope or identity failure stops before inbox reads.
+Recipient-matched IN_APP intent source selectors remain independently scoped.
+
+Later controller/facade overrides may enrich allowlisted presentation but must
+preserve bearer admission, Profile ownership, strict identity parsing and
+recipient isolation. `communicationInboxSource.test.js` proves positive reads,
+missing/invalid bearer and spoof refusals, duplicate/error/malformed envelopes,
+zero inbox reads on failure, actual generated-get/JSON envelope composition,
+actual nService header preservation with injected fetch and a later projection
+override. These tests open no native service or database and do not qualify
+installed runtime/browser acceptance. An unavailable identity is a refusal,
+not an empty inbox or justification to widen a service grant.
 
 ## Internal persisted-verification transport
 

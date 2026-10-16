@@ -25,6 +25,11 @@ Servers may also explicitly select an inactive owner's bounded capability role
 profile as configuration defaults, without loading its services or widening
 runtime grants. See the [deployment selector example](llm/contracts/configuration-inheritance-contract.md#explicit-inactive-owner-configuration).
 
+For explicit data prerequisites outside selected runtime roots, nConfig can return
+one installed package descriptor without registration or activation. This is source
+resolution, not permission to import or execute the owner. See the
+[installed-source contract](llm/contracts/configuration-inheritance-contract.md#explicit-installed-source-descriptors).
+
 ## Developer Notes
 
 - Runtime encryption inputs are mandatory logger-redaction keys. Use

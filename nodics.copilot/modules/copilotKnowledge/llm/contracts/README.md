@@ -21,6 +21,12 @@ receipt; uncertain outcomes remain inspection-only. Never infer completed erasur
 from absence alone or send physical index/key identities to Axis. See the
 [operator guide](../../data/docs-v001/records/documentation/copilotKnowledgeDocumentationComponentData.js#permanently-remove-a-retired-index).
 
+Migration permission definitions live in Knowledge's identity data pack; Profile
+owns their persisted catalogue and asynchronously validates fresh active records.
+Definitions do not assign groups or enable either command. Disposable acceptance
+assignments use Profile's generated owners and create-or-preserve operations,
+never configuration permission lists or startup regrant of retained authority.
+
 - `secure-source-registry-contract.md` defines mandatory registration,
   classification, scope, immutability, and pre-retrieval behavior.
 - `secure-ingestion-and-retrieval-contract.md` defines source-provider,

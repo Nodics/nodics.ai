@@ -87,6 +87,8 @@ requireScriptIncludes('test:import', ['test:suite --suite=import']);
 requireScriptIncludes('release:check', ['release:check']);
 
 requireSuiteIncludes('basic', [
+    'nodics.foundation/modules/nTooling/test/referenceDemoOwnership.test.js',
+    'nodics.foundation/modules/nTooling/test/dataBaselineConsolidationContract.test.js',
     'suite:import',
     'suite:cronjob',
     'suite:ems'
@@ -95,6 +97,49 @@ requireSuiteIncludes('basic', [
 requireSuiteIncludes('full', [
     'basic'
 ]);
+
+// Ordinary access must reach real owner commands in release gates, not only catalogue fixtures.
+const defaultOwnershipContracts = [
+    'nodics.foundation/modules/nTooling/test/concreteDefaultOwnership.test.js',
+    'nodics.foundation/modules/nSystem/test/runtimeCredentialPathOwnership.test.js',
+    'nodics.commerce/test/publicationConfigurationOwnership.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/store/test/storePlacementContract.test.js',
+    'nodics.wcms/modules/cms/test/cmsBaselineRootOwnership.test.js',
+    'nodics.wcms/modules/media/test/mediaConfigurationOwnership.test.js',
+    'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteOutcomeTemplateOwnership.test.js',
+    'nodics.process/modules/cronjob/test/cronjobRetryConfigurationOwnership.test.js',
+    'nodics.foundation/modules/nEms/emsClient/test/emsRetryConfigurationOwnership.test.js'
+];
+defaultOwnershipContracts.forEach(requireFile);
+['basic', 'full'].forEach(suite => requireSuiteIncludes(suite, defaultOwnershipContracts));
+
+const businessAccessContracts = [
+    'nodics.foundation/modules/nRouter/test/platformAdministratorAccess.test.js',
+    'nodics.foundation/modules/nDatabase/database/test/platformAdministratorSchemaAccess.test.js',
+    'nodics.platform/modules/profile/test/platformAdministratorFullAccess.test.js',
+    'nodics.platform/modules/profile/test/businessAccessLevels.test.js',
+    'nodics.platform/modules/profile/test/enterpriseBusinessAccess.test.js',
+    'nodics.platform/modules/profile/test/enterpriseBusinessAccessMembership.test.js',
+    'nodics.platform/modules/profile/test/runtimeDeploymentConfigurationContract.test.js',
+    'nodics.platform/modules/profile/test/runtimeDeploymentSeedPreservation.test.js',
+    'nodics.platform/modules/backoffice/test/workbenchOwnerDiscoveryContract.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/product/test/productBusinessAuthoring.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/product/test/productConsumerReferences.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionAnalyticsScopeContract.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionBusinessWorkbenchContract.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionDraftContract.test.js',
+    'nodics.commerce/modules/checkout/modules/order/test/orderBusinessAccessContract.test.js',
+    'nodics.commerce/modules/checkout/modules/order/test/orderBusinessWorkbenchContract.test.js',
+    'nodics.commerce/modules/checkout/modules/order/test/specialAccessRoles.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/inventory/test/specialAccessRoles.test.js',
+    'nodics.loyalty/modules/loyaltyWallet/test/specialAccessRoles.test.js',
+    'nodics.foundation/modules/nData/nImport/import/test/specialAccessRoles.test.js',
+    'nodics.waste/modules/wasteCore/test/wasteBusinessWorkbench.test.js',
+    'nodics.wcms/modules/cms/test/cmsBusinessAuthoringAccess.test.js',
+    'nodics.wcms/modules/cms/test/cmsFreshSourceOwnership.test.js'
+];
+businessAccessContracts.forEach(requireFile);
+['basic', 'full'].forEach(suite => requireSuiteIncludes(suite, businessAccessContracts));
 
 // Late lifecycle fixtures must remain explicit, unique and reachable through full.
 const lifecycleSteps = testSuites['enterprise-lifecycle'];
@@ -150,6 +195,10 @@ lateLifecycleContracts.forEach(file => {
 
 // Owner contracts must be reachable from both release gates, not only runnable by hand.
 const requiredOwnerContracts = [
+    'nodics.platform/modules/backoffice/test/applicationTargetDefaults.test.js',
+    'nodics.copilot/modules/copilotCore/test/copilotEnvironmentConfigurationOwnership.test.js',
+    'nodics.copilot/modules/copilotWorkbench/test/copilotTargetConfigurationOwnership.test.js',
+    'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteApplicationConfigurationOwnership.test.js',
     'nodics.foundation/modules/nService/vService/test/managedMutationLayerContract.test.js',
     'nodics.foundation/modules/nTooling/test/projectLocalRuntimeCredentialService.test.js',
     'nodics.foundation/modules/nData/nImport/import/test/dataReleaseSelectionPolicy.test.js',

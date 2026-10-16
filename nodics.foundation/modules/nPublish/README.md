@@ -91,6 +91,11 @@ The source of truth must remain module definitions, schemas, services, pipelines
 
 ## Extension Path
 
+The approval bridge inherits neutral transport and Process target-role defaults
+from nPublish. Deployments retain explicit connection and provider selection;
+the default null connection fails closed. See the
+[configuration contract](llm/contracts/process-approval-bridge.md#configuration-contract).
+
 `publish.providers.workflowProviders[domain]` selects an owning approval provider.
 Domains without an override retain `workflowProvider` as the legacy fallback.
 An explicit unresolved, null or invalid override fails before approval state is

@@ -2,6 +2,16 @@
 
 ## Non-HTTP Private Delivery Entry
 
+Telegram acknowledgements that decode to null, primitives or arrays return
+`UNCERTAIN` with `TELEGRAM_UNCERTAIN`, just like an unconfirmed transport response.
+They never prove a no-send, authorize an automatic retry or supply a delivery
+reference. Later-layer provider overrides must preserve this ambiguity boundary.
+
+A thrown Profile destination invocation is caught strictly before Telegram
+transport and returns `RETRY_PENDING` / `DESTINATION_RESOLUTION_FAILED`, without
+private error text. This does not retry automatically or reinterpret earlier
+`DELIVERY_INTERRUPTED` evidence. All post-transport ambiguity remains uncertain.
+
 `deliver(request, code)` builds a detached runtime-owned tenant context and enters
 the existing Logger `runSensitiveOperation` before reading private stored intents,
 rendered content, resolving contacts or calling adapters. Only a bounded existing
@@ -29,5 +39,27 @@ Intent and delivery attempt records are the delivery authority. Revisioned lease
 Known rejected/transient failures enter bounded RETRY_PENDING with a due time and attempt ceiling. Retry is an explicit authorized operation; this binding does not install a scheduler. A timeout or expired external send lease enters UNCERTAIN and is never blindly resent. An authorized exact-revision reconciliation records evidence/reason and one of MARK_DELIVERED, AUTHORIZE_RESEND or CANCEL. Resend authorization does not itself send and cannot bypass the attempt ceiling. Manual MARK_DELIVERED is operator evidence, not a verified Telegram callback.
 
 Domain decisions and settlement remain independent of notification failure. eWaste stores only the intent/status reference and derives source channel, recipient and public reviewer comment from the persisted submission. No customer overlay owns a second ledger or inbox.
+
+## Reconciliation Acknowledgement Recovery
+
+After a resolution commits, a lost acknowledgement or failed domain-pointer save
+must not strand the original command. `resolveUncertain` recognizes the saved
+reconciliation entry for the exact original intent revision, action, trimmed
+reason and operator module/schema/code. An exact replay returns the current safe
+owner projection without another write, authorization or transport. Altered
+commands conflict, and the API still qualifies signed module/tenant/permission
+and exact stored source on every invocation. Later states, including a subsequent
+UNCERTAIN attempt, are returned honestly; replay never restores RETRY_PENDING or
+authorizes a second resend. A genuinely new decision requires its new exact
+revision and all ordinary admission and attempt limits.
+
+Domain owners may repair their stale pointer from that acknowledgement using
+their own current scope, source identity and CAS checks. They may not regress a
+newer projection or infer delivery from resolution success. Runtime tests and
+eWaste's real controller/facade composition tests cover all three decisions,
+lost owner/gateway acknowledgement, source-write failure, conflicting actor/
+reason/action, later uncertainty and zero provider effects. These are isolated
+source tests, not live reconciliation. Provider customizations retain the same
+durable owner protocol; no new configuration or permissions are required.
 
 Validation: `test/communicationRuntime.test.js` exercises replay, conflicting payloads, concurrency, retry timing, suppression, uncertain sends and explicit reconciliation. Actual Telegram client acceptance is a deployment test.

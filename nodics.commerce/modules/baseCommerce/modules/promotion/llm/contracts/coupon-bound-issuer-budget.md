@@ -234,8 +234,9 @@ request actor fallbacks cannot manufacture them. An explicitly presented token
 type other than access refuses. Legacy authenticated HTTP requests with signed
 tenant/operator but no enterprise claim and no presented enterprise selector
 remain unscoped, visibly `enterpriseCode: null`. Internal operation callers retain
-their existing trusted context contract. Other operator facade methods and
-analytics are not changed by this ledger-specific scope mapping.
+their existing trusted context contract. Other operator facade methods are not
+changed by this ledger-specific scope mapping. Analytics independently requires
+the exact-enterprise contract below; it has no legacy unscoped fallback.
 
 The response additionally returns:
 
@@ -253,9 +254,9 @@ completeness: {
 }
 ```
 
-Only this operation bypasses the legacy `listFromService` result unwrapping to
-retain the generated envelope. The service and analytics helper are otherwise
-unchanged. Pages use `searchOptions.pageSize/pageNumber`, deterministic code sort,
+This operation bypasses the legacy `listFromService` result unwrapping to
+retain the generated envelope. The global helper remains unchanged. Pages use
+`searchOptions.pageSize/pageNumber`, deterministic code sort,
 uncached and nonrecursive generated reads, and the existing protected public
 projection. Top-level `pageSize` is not consumed by the generated initializer.
 Page size defaults to 100 and is bounded to 1..1000; page number defaults to 1
@@ -307,8 +308,69 @@ asserted unchanged; fixtures do not establish cryptographic or live admission.
 
 Ownership/placement review: this completeness correction belongs to Promotion's
 existing read operation, status definitions, tests and nearest contract/guidance.
-No generated artifact, route, permission, analytics behavior, write path, runtime
+No generated artifact, route, permission, write path, runtime
 configuration, customer data or Checkout runner is changed by this owner batch.
+
+## Analytics Scope
+
+`GET /promotions/:promotionCode/analytics` keeps its existing access-token,
+employee-group, `commerce.promotion.read` and `commerceManagement` route gates.
+The facade accepts only authenticated human access context. Before the first
+aggregate read, the operation independently captures signed tenant and enterprise
+from `authData.tenant`/`tenantCode` and `authData.entCode`/`enterpriseCode`, plus an
+authenticated actor and campaign. Human employee access (including canonical
+Platform full-access eligibility) and the existing read permission are checked
+through nRouter's authority helpers, never inferred from a business-group name.
+
+As with qualified ledger scope, every present signed, root-request, normalized
+auth, header, body and query tenant/enterprise alias must agree exactly. Campaign
+selectors must also agree. Missing, malformed, null or conflicting scope refuses
+before any persistence. Unlike legacy ledger browsing, analytics never defaults
+to an unscoped enterprise. Detached authority and selectors survive changes to
+the original caller during asynchronous reads; original auth is not rewritten.
+The operation applies this check to direct internal calls as well as HTTP calls.
+
+Only the admitted human path uses the existing Promotion service-account bridge
+for its three fixed generated reads: redemption, budget ledger and coupon.
+Internal service/internal-token principals require exact signed scope and retain
+their original auth at generated schema guards; no service-account group or other
+grant is added. Runtime-scoped service tokens must already authorize Promotion
+and its read permission. These service contexts cannot enter the human facade or
+route. This does not add a service analytics endpoint or grant customer access.
+
+Every source query contains exact tenant, enterprise and campaign. Reads are
+uncached, nonrecursive and bounded to the first 1000 rows via generated
+`searchOptions`, not the ineffective top-level pageSize. Explicit successful array
+envelopes and matching tenant/enterprise/campaign on every returned row are
+required. Missing owners, failed/malformed envelopes and foreign or missing-scope
+rows refuse with `ERR_PROMOTION_ANALYTICS_UNCONFIRMED` (409); foreign rows are not
+silently filtered into apparently successful totals. Generated read rejections
+remain failures and existing protected public projections remain in force.
+These are bounded operational aggregates, not complete or atomic accounting:
+qualified ledger completeness and exact receipt evidence remain independently
+required. No broader schema read or write rights are introduced.
+
+`promotionAnalyticsScopeContract.test.js` exercises real persisted business-group
+definitions and ancestry, nRouter admission, controller/facade, generated read
+pipeline, Mongo adapter and public projection over isolated cursor storage. It
+covers View/Edit/FullControl, alias conflicts before reads, same-campaign foreign
+enterprise exclusion, malicious provider rows, failed envelopes, detached scope,
+and unchanged service authority. Existing ledger and builder/customer contract
+tests remain required. These are local source regressions, not live acceptance.
+
+Existing owner read/manage route permission distinctions remain: all three groups
+read, Edit and FullControl manage, only FullControl has ordinary seller management,
+and approval/publication remain separately governed. The draft-management smoke
+uses the existing explicit `enterpriseCode` operator context and an isolated write
+port; it is not proof that native manage scope is fixed. Separately pending:
+`saveDraft` still reads by tenant/code without enterprise when native input only
+carries signed `entCode`. Its operator scope normalization is outside this
+analytics-only correction and must not be represented as enterprise-safe.
+Generic schema grants remain absent. The two implemented campaign workbench pages
+now use the separate [read-only owner discovery/search contract](promotion-lifecycle-and-publication.md#ordinary-business-browsing).
+This does not enable generic editing, financial-state mutations, planned specialist
+pages or resolve the native manage scope issue above. Owner browsing is not
+evidence that every business command or installed screen is qualified.
 
 ## Acceptance And Customization
 

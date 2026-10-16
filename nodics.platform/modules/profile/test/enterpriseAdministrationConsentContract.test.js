@@ -68,6 +68,7 @@ function fixture() {
           : undefined,
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseMembershipService: m,
     DefaultAuthSecurityService: {
       getAuthorizationPolicyVersion: () => {
@@ -1198,25 +1199,25 @@ test("creation captures false once and refuses unapproved positive initializatio
     { code: "ERR_PROFILE_CONSENT_FORBIDDEN" },
   );
 });
-test("appointed administrators need explicit configured classification, not a business role or permission", () => {
+test("appointed administrators need explicit configured classification, not a business role or permission", async () => {
   const { owner, policy } = fixture();
   SERVICE.DefaultEnterpriseManagementService = {
     rolePolicy: () => ({ administrationClass: "ENTERPRISE_ADMIN" }),
   };
   const enterprise = { defaultAdminAssignmentCode: "designated" };
   assert.equal(
-    owner.classifiedAdministrator(enterprise, { code: "designated" }),
+    await owner.classifiedAdministrator(enterprise, { code: "designated" }),
     true,
   );
   assert.equal(
-    owner.classifiedAdministrator(enterprise, {
+    await owner.classifiedAdministrator(enterprise, {
       code: "appointed",
       roleCode: "ENTERPRISE_ADMIN",
     }),
     true,
   );
   assert.equal(
-    owner.classifiedAdministrator(enterprise, {
+    await owner.classifiedAdministrator(enterprise, {
       code: "business",
       roleCode: "PLATFORM_OWNER",
     }),
@@ -1224,7 +1225,7 @@ test("appointed administrators need explicit configured classification, not a bu
   );
   policy.administratorRoleCodes = [];
   assert.equal(
-    owner.classifiedAdministrator(enterprise, {
+    await owner.classifiedAdministrator(enterprise, {
       code: "appointed",
       roleCode: "ENTERPRISE_ADMIN",
     }),
@@ -1235,20 +1236,20 @@ test("appointed administrators need explicit configured classification, not a bu
     administrationClass: "OPERATOR",
   });
   assert.equal(
-    owner.classifiedAdministrator(enterprise, {
+    await owner.classifiedAdministrator(enterprise, {
       code: "appointed",
       roleCode: "ENTERPRISE_ADMIN",
     }),
     false,
   );
 });
-test("derived administrator assignment cannot appoint itself as an independent source administrator", () => {
+test("derived administrator assignment cannot appoint itself as an independent source administrator", async () => {
   const { owner } = fixture();
   SERVICE.DefaultEnterpriseManagementService = {
     rolePolicy: () => ({ administrationClass: "ENTERPRISE_ADMIN" }),
   };
   assert.equal(
-    owner.classifiedAdministrator(
+    await owner.classifiedAdministrator(
       {},
       {
         code: "appointed",
@@ -1259,7 +1260,7 @@ test("derived administrator assignment cannot appoint itself as an independent s
     false,
   );
 });
-test("MANAGE_ACCESS is independently qualified and super-administrator roles cannot be delegated", () => {
+test("MANAGE_ACCESS is independently qualified and super-administrator roles cannot be delegated", async () => {
   const { owner, policy } = fixture();
   SERVICE.DefaultEnterpriseManagementService = {
     rolePolicy: () => ({ delegable: true }),
@@ -1270,16 +1271,16 @@ test("MANAGE_ACCESS is independently qualified and super-administrator roles can
     actions: ["MANAGE_ACCESS"],
     recipients: ["approved@example.invalid"],
   };
-  assert.throws(() => owner.ceilings(input), {
+  await assert.rejects(() => owner.ceilings(input), {
     code: "ERR_PROFILE_CONSENT_FORBIDDEN",
   });
   policy.onwardQualified = true;
-  assert.deepEqual(owner.ceilings(input).actions, ["MANAGE_ACCESS"]);
+  assert.deepEqual((await owner.ceilings(input)).actions, ["MANAGE_ACCESS"]);
   SERVICE.DefaultEnterpriseManagementService.rolePolicy = () => ({
     delegable: true,
     administrationClass: "ENTERPRISE_ADMIN",
   });
-  assert.throws(() => owner.ceilings(input), {
+  await assert.rejects(() => owner.ceilings(input), {
     code: "ERR_PROFILE_CONSENT_FORBIDDEN",
   });
 });

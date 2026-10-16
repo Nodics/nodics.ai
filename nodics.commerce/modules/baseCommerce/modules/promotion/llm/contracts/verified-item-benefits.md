@@ -16,7 +16,7 @@ owner with `evaluate`. Selecting a name is not evidence that its implementation 
 deployed receipt source has been qualified. No alternative importer, fulfillment
 registry, financial ledger or staff-owned delivery store is introduced.
 
-An explicitly selected `LOCAL_SIMULATION` path is described below. It is not
+An explicitly selected `SIMULATION` path is described below. It is not
 verified delivery and does not set or inherit real-delivery qualification.
 
 ## Exact Purchased Promise
@@ -123,14 +123,20 @@ this qualified evidence does not gain monetary rights or automatic delivery.
 
 ## Validation And Deployment
 
-### Explicit Local Simulation
+<a id="explicit-local-simulation"></a>
 
-The separate Fulfillment [simulator admission](../../../../../fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md#explicit-local-simulation)
-requires canonical LOCAL deployment classification, the exact selected environment
+### Explicit Simulation
+
+The separate Fulfillment [simulator admission](../../../../../fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md#explicit-simulation)
+requires explicit layered enablement and the exact canonical selected environment
 allowlist, enabled simulator and matching Promotion mode/service. Promotion's
 `simulationSelected()` calls that real owner; a mode string or browser flag alone
 cannot admit it. `qualified` remains false for real delivery. `enabled` must still
 be true, with the same exact approved action, Store and purchased bundle checks.
+Environment class does not substitute for selection or prevent an explicitly
+admitted deployment. Retired LOCAL_SIMULATION configuration refuses. Historical
+simulation hashes, ITEM_SIMULATION kind and SIMULATED_ITEMS stage stay unchanged;
+read compatibility neither rewrites the evidence nor qualifies real delivery.
 
 The merchant owner supplies observed positive `storeRevision`. The simulator
 requires a `SIM:` receipt reference and returns exact context and bundle with

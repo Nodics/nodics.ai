@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "wasteVerification",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "wasteVerification permissionCatalogue",
+      "description": "Explicit wasteVerification identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "wasteVerification",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wasteVerificationPermissionHeader.js": "29fab07718a9ef781764af39e3e67d3588e4e53162505efc7e970791eb7f6abe",
+        "init-v001/records/identity/wasteVerificationPermissionData.js": "40fa3aceb5a42bd882696dd4ca32e55bf2587ef23f66744f05d975dad352f8af"
+      }
+    }
+  }
+}

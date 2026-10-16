@@ -24,19 +24,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const insecureBootstrapValues = new Set(['admin', 'adminpassword', 'password', 'changeme', 'change-me']);
-const legacyRuntimeApiKeys = Object.freeze([
-    'NODICS_RUNTIME_API_KEY',
-    'NODICS_PLATFORM_API_KEY',
-    'NODICS_LOCATION_API_KEY',
-    'NODICS_WCMS_STAGED_API_KEY',
-    'NODICS_WCMS_ONLINE_API_KEY',
-    'NODICS_PROCESS_API_KEY',
-    'NODICS_ENGAGEMENT_API_KEY',
-    'NODICS_LOYALTY_API_KEY',
-    'NODICS_WASTE_API_KEY',
-    'NODICS_COMMERCE_STAGED_API_KEY',
-    'NODICS_COMMERCE_API_KEY'
-]);
 const localBootstrapAdminPassword = 'adminPassword';
 
 module.exports = {
@@ -184,69 +171,50 @@ module.exports = {
         }
     },
 
-    /** Creates stable native-local credential values on first use. */
+    /** Creates credentials only on first use; existing storage is validated without repair or rotation. */
     ensureCredentials: function (projectRoot, environmentCode) {
+        projectRoot = fs.realpathSync(projectRoot);
+        if (!/^[A-Za-z0-9][A-Za-z0-9_-]*Local$/.test(environmentCode || '')) {
+            throw new Error('RESET_CREDENTIAL_RESOLUTION_REFUSED');
+        }
         const file = this.credentialPath(projectRoot, environmentCode);
-        fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
-        let values;
         try {
-            values = JSON.parse(fs.readFileSync(file, 'utf8'));
-        } catch {
-            values = {
+            fs.lstatSync(file);
+        } catch (error) {
+            if (error.code !== 'ENOENT') throw new Error('RESET_CREDENTIAL_RESOLUTION_REFUSED');
+            fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
+            if (fs.realpathSync(path.dirname(file)) !== path.dirname(file)) {
+                throw new Error('RESET_CREDENTIAL_RESOLUTION_REFUSED');
+            }
+            const values = {
                 NODICS_JWT_SECRET: this.randomSecret(64),
                 NODICS_API_KEY_PEPPER: this.randomSecret(64),
                 NODICS_BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword,
                 NODICS_BOOTSTRAP_SERVICE_PASSWORD: this.randomSecret(),
                 NODICS_BOOTSTRAP_SERVICE_API_KEY: this.randomSecret(),
-                NODICS_API_KEY: this.randomSecret()
+                NODICS_API_KEY: this.randomSecret(),
+                NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY: process.env.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY || this.randomSecret(32)
             };
-        }
-        let changed = false;
-        // Persist once: rotating this key would orphan encrypted runtime configuration.
-        if (!Object.prototype.hasOwnProperty.call(values, 'NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY')) {
-            values.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY =
-                process.env.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY || this.randomSecret(32);
-            changed = true;
-        }
-        if (values.NODICS_BOOTSTRAP_ADMIN_PASSWORD !== localBootstrapAdminPassword) {
-            values.NODICS_BOOTSTRAP_ADMIN_PASSWORD = process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword;
-            changed = true;
-        }
-        if (this.isWeakBootstrapSecret(values.NODICS_BOOTSTRAP_SERVICE_PASSWORD)) {
-            values.NODICS_BOOTSTRAP_SERVICE_PASSWORD = this.randomSecret();
-            changed = true;
-        }
-        if (values.NODICS_BOOTSTRAP_ADMIN_PASSWORD === values.NODICS_BOOTSTRAP_SERVICE_PASSWORD) {
-            values.NODICS_BOOTSTRAP_SERVICE_PASSWORD = this.randomSecret();
-            changed = true;
-        }
-        if (typeof values.NODICS_BOOTSTRAP_SERVICE_API_KEY !== 'string' || values.NODICS_BOOTSTRAP_SERVICE_API_KEY.length < 32) {
-            values.NODICS_BOOTSTRAP_SERVICE_API_KEY = this.randomSecret();
-            changed = true;
-        }
-        if (typeof values.NODICS_API_KEY !== 'string' || values.NODICS_API_KEY.length < 32) {
-            values.NODICS_API_KEY = typeof values.NODICS_RUNTIME_API_KEY === 'string' && values.NODICS_RUNTIME_API_KEY.length >= 32
-                ? values.NODICS_RUNTIME_API_KEY
-                : this.randomSecret();
-            changed = true;
-        }
-        for (const key of legacyRuntimeApiKeys) {
-            if (Object.prototype.hasOwnProperty.call(values, key)) {
-                delete values[key];
-                changed = true;
+            try {
+                // Never replace a store installed by another startup after the absence check.
+                fs.writeFileSync(file, JSON.stringify(values, null, 2) + '\n', { mode: 0o600, flag: 'wx' });
+            } catch (creationError) {
+                if (creationError.code !== 'EEXIST') throw new Error('RESET_CREDENTIAL_RESOLUTION_REFUSED');
             }
         }
-        if (changed || !fs.existsSync(file)) {
-            fs.writeFileSync(file, JSON.stringify(values, null, 2) + '\n', { mode: 0o600 });
-        }
-        fs.chmodSync(file, 0o600);
-        return values;
+        return this.readExistingEnvironment(projectRoot, environmentCode, {});
     },
 
-    /** Merges generated local values without overriding deployment-supplied inputs. */
+    /** Reads retained Local credentials, generating only absent storage; deployment inputs keep precedence. */
     mergeEnvironment: function (projectRoot, environmentCode, environment = process.env) {
         if (!environmentCode || !/Local$/u.test(String(environmentCode))) return Object.assign({}, environment);
-        const generated = this.ensureCredentials(projectRoot, environmentCode);
-        return Object.assign({}, generated, environment);
+        projectRoot = fs.realpathSync(projectRoot);
+        try {
+            fs.lstatSync(this.credentialPath(projectRoot, environmentCode));
+        } catch (error) {
+            if (error.code !== 'ENOENT') throw new Error('RESET_CREDENTIAL_RESOLUTION_REFUSED');
+            return Object.assign({}, this.ensureCredentials(projectRoot, environmentCode), environment);
+        }
+        return this.readExistingEnvironment(projectRoot, environmentCode, environment);
     }
 };

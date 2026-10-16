@@ -12,6 +12,8 @@
     "loadableByNodicsModuleLoader": true,
     "owns": [
       "configuration",
+      "interceptor",
+      "utility",
       "schema",
       "router",
       "controller",

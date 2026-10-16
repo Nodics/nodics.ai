@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "backoffice",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "backoffice permissionCatalogue",
+      "description": "Explicit backoffice identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "backoffice",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/backofficePermissionHeader.js": "82b4c319a6a94bd7322d9a946b7757b7575556e0a5d0e1461f3cca6bc681480b",
+        "init-v001/records/identity/backofficePermissionData.js": "ad55afef84e1164168753b9719f0ccbc3d380caa6fec76734f2b7ef21e2eced4"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

@@ -92,6 +92,22 @@ assert.deepStrictEqual(intactFailures, [], 'authored principle contracts must pa
     [partnerContract, '### Mechanism and policy extraction'],
     ['modules/nSetup/llm/contracts/nodics-principles.md', '### Lightweight customer modules and runtimes'],
     ['modules/nSetup/llm/contracts/nodics-principles.md', 'Separate a reusable mechanism from the customer'],
+    ['modules/nSetup/llm/contracts/nodics-principles.md', '### Framework defaults, customer deltas'],
+    ...[
+        '## Mandatory Default Ownership Gate',
+        'Customer configuration is an override, not a',
+        'Registration is not activation or authorization.',
+        'Do not limit ownership review to equal-value or duplicate-line detection.'
+    ].map(clause => ['modules/nSetup/llm/contracts/customer-config-classification-contract.md', clause]),
+    ...[
+        'contracts/nodics-principles.md',
+        'contracts/ai-coding-and-customization-contract.md',
+        'playbooks/change-gate-contract.md',
+        'prompts/review-prompt.md'
+    ].map(relativePath => [
+        'modules/nSetup/llm/' + relativePath,
+        'customer-config-classification-contract.md#mandatory-default-ownership-gate'
+    ]),
     [partnerContract, '## Schema Ownership And Data Contributions'],
     [partnerContract, '## Separate Contribution And Release Channel'],
     [partnerContract, 'Promotion is never an automatic partner action.'],

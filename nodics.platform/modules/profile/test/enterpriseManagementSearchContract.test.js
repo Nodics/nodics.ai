@@ -17,7 +17,7 @@
  * Fixture maintenance is authored only; behavioral execution and installed qualification remain deferred.
  */
 const assert = require("assert");
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 const routes = require("../src/router/routers").profile.loadDefaults;
 
 const policyData = {
@@ -72,6 +72,7 @@ global.CONFIG = {
         : undefined,
 };
 global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
   DefaultStatusService: {
     get: () => ({ code: 400, message: "Invalid request parameters" }),
   },
@@ -616,7 +617,7 @@ async function run() {
   });
   assert.strictEqual(registration, registrationResult);
 
-  const workspace = service.getAccessWorkspace({});
+  const workspace = await service.getAccessWorkspace(request);
   assert.strictEqual(workspace.renderer, "axis.workspace.backend-operations");
   assert(
     workspace.tabs.some(
@@ -625,7 +626,7 @@ async function run() {
         tab.sections.some((section) => section.id === "assign-user"),
     ),
   );
-  const publicWorkspace = service.getAccessWorkspace({ publicOnly: true });
+  const publicWorkspace = await service.getAccessWorkspace({ publicOnly: true });
   assert.strictEqual(publicWorkspace, registrationWorkspace);
 
   SERVICE.DefaultEnterpriseManagementService = service;
@@ -635,7 +636,7 @@ async function run() {
     (item) => item.id === "enterprises",
   );
   assert.equal(enterpriseItem.featureState, "ACTIVE");
-  assert.deepEqual(enterpriseItem.backendWorkspace, workspace);
+  assert.deepEqual(enterpriseItem.backendWorkspace, service.buildAccessWorkspace({ publicOnly: false }));
   assert(!workspace.tabs.some((tab) => tab.id === "registration"));
   const unrelatedIds = [
     "organisations-business-accounts",
@@ -756,7 +757,7 @@ async function run() {
   const bootstrapEnterprise = bootstrap.data.catalogue.profile.navigation.find(
     (item) => item.id === "enterprises",
   );
-  assert.deepEqual(bootstrapEnterprise.backendWorkspace, workspace);
+  assert.deepEqual(bootstrapEnterprise.backendWorkspace, service.buildAccessWorkspace({ publicOnly: false }));
 
   const assertPolicy = (policy) => {
     const tool = policy.record0.approvedOperations.find(

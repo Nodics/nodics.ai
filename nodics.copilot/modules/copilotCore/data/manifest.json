@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "copilotCore",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "copilotCore permissionCatalogue",
+      "description": "Explicit copilotCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "copilotCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/copilotCorePermissionHeader.js": "bd28d18792ff1c9f55e141dd95ad17c3336dd98ee2f1765e75fafbc9f9eeb4ff",
+        "init-v001/records/identity/copilotCorePermissionData.js": "3ea5b2074986a8086232be8bfe3e76ed0889cd891850253253255e83f5194681"
+      }
+    }
+  }
+}

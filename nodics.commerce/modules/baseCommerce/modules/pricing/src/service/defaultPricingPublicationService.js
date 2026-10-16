@@ -10,6 +10,9 @@
  */
 
 'use strict';
+// Only fixed admitted target execution can bind a continuation to its private context.
+const targetGuards = new WeakMap();
+const targetContext = Symbol('Pricing private target context');
 
 /**
  * @module pricing/src/service/defaultPricingPublicationService
@@ -23,6 +26,218 @@
  * and nPublish authority. Never implement a second journal or activate through restore.
  */
 module.exports = {
+    /** Executes one fixed, already source-authorized controller target operation with private original-caller continuation. */
+    executePublicationTarget: async function (operation, input, context, originalRequest) {
+        if (!['prepare', 'activate', 'reconcile'].includes(operation) || context[targetContext] || targetGuards.has(context))
+            throw new Error('Unsupported or concurrent Pricing target execution');
+        const originalGuard = this.requirePublicationCaller(originalRequest, operation);
+        const state = () => this.fingerprint({ scope: this.scope(context), authData: context.authData,
+            recovery: context.legacyCasRecoveryAuthorization });
+        const before = state();
+        const guard = () => {
+            originalGuard();
+            if (context.authData?.isSystem !== true || state() !== before)
+                throw new Error('Pricing target persistence context changed');
+        };
+        guard(); context[targetContext] = true; targetGuards.set(context, guard);
+        try {
+            if (operation === 'prepare') return await this.prepareTarget(input.release, context);
+            if (operation === 'activate') return await this.switchTarget(input, context);
+            return await this.reconcileTarget(input.publication, input.operationKey, context);
+        } finally { targetGuards.delete(context); }
+    },
+    /** Revalidates an admitted target context; internal non-HTTP provider contexts retain their existing owner contract. */
+    checkTargetContext: function (request) {
+        const guard = targetGuards.get(request);
+        if (request[targetContext] && !guard) throw new Error('Copied or retired Pricing target context');
+        guard?.();
+    },
+    /** Requires the exact signed writer/callback selected by the existing publication transport binding; read admission is not write authority. */
+    requirePublicationCaller: function (request, operation) {
+        const bindingKey = ['prepare', 'activate', 'reconcile'].includes(operation) ? 'sourceAuthority' :
+            operation === 'authorize' ? 'target' : null;
+        if (!bindingKey) throw new Error('Unsupported Pricing publication caller operation');
+        const state = () => this.fingerprint({ authData: request.authData, tenant: request.tenant, tenantCode: request.tenantCode,
+            entCode: request.entCode, enterpriseCode: request.enterpriseCode,
+            headers: Object.fromEntries(['tenant', 'x-tenant-code', 'X-Tenant-Code', 'entCode', 'x-enterprise-code', 'X-Enterprise-Code']
+                .map(key => [key, request.httpRequest?.headers?.[key]])), settings: this.publicationSettings(),
+            permission: CONFIG.get('authSecurity')?.internalToken?.routePermission,
+            enterprisePolicy: CONFIG.get('publish')?.approvalWorkflow?.runtimeEnterpriseScope });
+        const before = state(), originalAuth = request.authData;
+        const check = () => {
+            if (bindingKey === 'sourceAuthority') this.requireTarget(); else this.requireSource();
+            const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'pricing');
+            if (auth !== originalAuth || state() !== before || auth.principalType !== 'service' || auth.isSystem ||
+                [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== auth.tenant) ||
+                auth.enterpriseCode !== undefined && auth.enterpriseCode !== auth.entCode)
+                throw new Error('Pricing publication caller authority changed or unavailable');
+            const binding = this.publicationSettings()[bindingKey], callers = binding?.callers;
+            const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(value);
+            const keys = ['tenant', 'principalEnterpriseCode', 'serviceId', 'projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode'];
+            if (!identifier(binding?.moduleName) || !identifier(binding?.connectionName) || binding.connectionName === 'default' ||
+                !identifier(binding?.runtimeRole) || !Array.isArray(callers) || !callers.length || callers.length > 100 ||
+                callers.some(caller => !caller || Object.keys(caller).sort().join(',') !== [...keys].sort().join(',') ||
+                    keys.some(key => !identifier(caller[key])))) throw new Error('Exact Pricing publication caller binding is required');
+            const matches = callers.filter(caller => caller.tenant === auth.tenant && caller.principalEnterpriseCode === auth.entCode &&
+                caller.serviceId === auth.serviceId && caller.instanceCode === auth.runtimeInstanceId &&
+                ['projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode']
+                    .every(key => caller[key] === auth.runtimeScope?.[key]));
+            if (matches.length !== 1) throw new Error('Pricing publication caller is not the qualified deployment');
+        };
+        check(); return check;
+    },
+    /** Projects one exact activated row for an admitted runtime; never authors, publishes or substitutes a current Product. */
+    rowEvidence: async function (request) {
+        const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'pricing');
+        const security = SERVICE.DefaultSecuredRequestPipelineService, permission = CONFIG.get('authSecurity')?.internalToken?.routePermission;
+        const state = () => this.fingerprint({ tenant: request.tenant, tenantCode: request.tenantCode,
+            enterpriseCode: request.enterpriseCode, entCode: request.entCode, authData: request.authData,
+            payload: request.payload, body: request.httpRequest?.body, query: request.query,
+            headers: Object.fromEntries(['tenant', 'x-tenant-code', 'X-Tenant-Code', 'entCode', 'x-enterprise-code', 'X-Enterprise-Code']
+                .map(key => [key, request.httpRequest?.headers?.[key]])),
+            settings: this.publicationSettings(), enterprisePolicy: CONFIG.get('publish')?.approvalWorkflow?.runtimeEnterpriseScope });
+        const before = state(), input = structuredClone(request.payload || {});
+        const check = () => {
+            if (SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'pricing') !== auth || auth.isSystem ||
+                SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection?.(request) !== true || state() !== before ||
+                typeof permission !== 'string' || !permission || CONFIG.get('authSecurity')?.internalToken?.routePermission !== permission ||
+                !security?.isPermissionGranted?.(permission, security.getGrantedPermissions(request), {}) ||
+                request.tenant !== auth.tenant || [request.tenantCode, auth.tenantCode, request.httpRequest?.headers?.tenant,
+                    request.httpRequest?.headers?.['x-tenant-code'], request.httpRequest?.headers?.['X-Tenant-Code']]
+                    .some(value => value !== undefined && value !== auth.tenant) ||
+                [auth.enterpriseCode, request.enterpriseCode, request.entCode, request.httpRequest?.headers?.entCode,
+                    request.httpRequest?.headers?.['x-enterprise-code'], request.httpRequest?.headers?.['X-Enterprise-Code']]
+                    .some(value => value !== undefined && value !== auth.entCode)) throw new Error('Pricing row evidence authority changed or unavailable');
+            if (input.enterpriseCode !== auth.entCode) {
+                const workflow = SERVICE.DefaultPublicationApprovalWorkflowService;
+                if (!workflow?.requireRuntimeEnterprise) throw new Error('Pricing row evidence business enterprise is not qualified');
+                workflow.requireRuntimeEnterprise(auth, input.enterpriseCode);
+            }
+        };
+        check(); this.requireTarget();
+        const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(value);
+        if (Object.keys(input).sort().join(',') !== 'contractVersion,enterpriseCode,priceBookCode,priceRowCode,productReference' ||
+            input.contractVersion !== 1 || ![input.enterpriseCode, input.priceBookCode, input.priceRowCode].every(identifier) ||
+            this.publicationSettings().delivery?.rowReleases !== true) throw new Error('Exact enabled Pricing row evidence is required');
+        const reference = this.productReference(input.productReference), identity = SERVICE.DefaultIdentityGovernanceService;
+        if (!identity?.getSystemAuthData) throw new Error('Pricing row evidence persistence owner unavailable');
+        const persistenceAuth = identity.getSystemAuthData();
+        if (persistenceAuth?.isSystem !== true) throw new Error('Pricing row evidence persistence owner unavailable');
+        const context = { tenant: request.tenant, enterpriseCode: input.enterpriseCode, authData: persistenceAuth,
+            storeCode: reference.storeCode, productCode: reference.productCode, productReferences: [{ productCode: reference.productCode,
+                storeCode: reference.storeCode, targetVersion: reference.targetVersion }] };
+        if (!this.deliveryEnabled(context) || !this.deliveryRoots(context).includes(input.priceBookCode)) throw new Error('Pricing row evidence delivery is not selected');
+        const services = this.targetServices(), pointerCode = this.pointerCode({ rootType: 'priceRow', rootCode: input.priceRowCode }, context);
+        const bookBefore = await this.getTargetStatus({ rootType: 'priceBook', rootCode: input.priceBookCode }, context); check();
+        const pointer = await this.readRecord(services.pointer, pointerCode, context); check();
+        if (!pointer?.version || pointer.rootType !== 'priceRow' || pointer.rootCode !== input.priceRowCode ||
+            pointer.priceBookCode !== input.priceBookCode || pointer.productCode !== reference.productCode || pointer.storeCode !== reference.storeCode)
+            throw new Error('Exact activated Pricing row is unavailable');
+        const release = await this.retainedVersion(pointer.version, context); check();
+        const row = this.rowRelease(release.payload);
+        if (release.rootType !== 'priceRow' || release.rootCode !== input.priceRowCode || row.book.code !== input.priceBookCode ||
+            !require('node:util').isDeepStrictEqual(row.reference, reference)) throw new Error('Pricing row Product reference mismatch');
+        const records = await this.readConfigured(context); check();
+        const books = records.filter(item => item.schema === 'priceBook').map(item => item.policy),
+            rows = records.filter(item => item.schema === 'priceRow').map(item => item.policy);
+        const selected = SERVICE.DefaultPriceSelectionService.select({ ...context, currency: row.row.currency, quantity: '1', now: new Date() },
+            books, rows, SERVICE.DefaultExactAmountService);
+        if (selected.selected?.code !== input.priceRowCode || selected.conflicts.length || selected.selected.active === false ||
+            selected.selected.minQuantity !== '1' || this.fingerprint({ ...selected.selected, productReference: undefined }) !== this.fingerprint(row.row))
+            throw new Error('Exact Pricing row is not currently effective');
+        const receipt = await this.readRecord(services.receipt, pointer.receiptCode, context); check();
+        const freshPointer = await this.readRecord(services.pointer, pointerCode, context); check();
+        if (this.fingerprint(freshPointer) !== this.fingerprint(pointer) || receipt?.applied !== true || receipt.pointerCode !== pointerCode ||
+            receipt.targetVersion !== pointer.version || receipt.sourceVersion !== release.code || receipt.fingerprint !== release.code ||
+            receipt.expectedRevision + 1 !== pointer.revision || !identifier(receipt.publicationCode) ||
+            typeof receipt.operationKey !== 'string' || !receipt.operationKey || receipt.operationKey.length > 256)
+            throw new Error('Pricing row activation receipt changed or unavailable');
+        this.assertProductStatus(row.reference, row.evidence, await this.productStatus(row.reference, row.evidence, context), context); check();
+        const bookAfter = await this.getTargetStatus({ rootType: 'priceBook', rootCode: input.priceBookCode }, context); check();
+        const freshReceipt = await this.readRecord(services.receipt, pointer.receiptCode, context); check();
+        if (this.fingerprint(bookAfter) !== this.fingerprint(bookBefore) || this.fingerprint(freshReceipt) !== this.fingerprint(receipt) ||
+            SERVICE.DefaultPriceSelectionService.select({ ...context, currency: row.row.currency, quantity: '1', now: new Date() },
+                books, rows, SERVICE.DefaultExactAmountService).selected?.code !== input.priceRowCode)
+            throw new Error('Pricing row evidence changed before readback');
+        return { contractVersion: 1, tenant: request.tenant, enterpriseCode: input.enterpriseCode,
+            row: { code: row.row.code, priceBookCode: row.book.code, productCode: row.row.productCode,
+                unitAmount: row.row.unitAmount, currency: row.row.currency, minQuantity: '1', active: row.row.active !== false },
+            productReference: reference, publicationCode: receipt.publicationCode, sourceVersion: receipt.sourceVersion,
+            targetVersion: pointer.version, pointerRevision: pointer.revision, activationOperationKey: receipt.operationKey, receiptCode: receipt.code };
+    },
+    /** Validates the exact reviewed Product identity; a Product code alone is not compatibility evidence. */
+    productReference: function (reference) {
+        const keys = ['publicationCode', 'productCode', 'storeCode', 'sourceVersion', 'targetVersion'];
+        if (!reference || Object.keys(reference).sort().join(',') !== keys.sort().join(',') ||
+            ['publicationCode', 'productCode', 'storeCode'].some(key => typeof reference[key] !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(reference[key])) ||
+            typeof reference.sourceVersion !== 'string' || !/^(0|[1-9]\d*)$/.test(reference.sourceVersion) ||
+            !Number.isSafeInteger(Number(reference.sourceVersion)) || !/^[a-f0-9]{64}$/.test(reference.targetVersion || ''))
+            throw new Error('Exact approved Product reference required');
+        return structuredClone(reference);
+    },
+    /** Reads the existing Product owner pointer/receipt, never mutable Product data or caller approval flags. */
+    productStatus: function (reference, evidence, request) {
+        const scope = { tenant: request.tenant, productCode: reference.productCode, storeCode: reference.storeCode };
+        const input = { scope, operationKey: evidence.operationKey };
+        if (this.publicationSettings().runtimeRole === 'STAGED') {
+            const provider = SERVICE.DefaultProductPublicationVersionProviderService;
+            if (!provider?.transport) throw new Error('Product publication owner unavailable');
+            return provider.transport().getStatus(input, request);
+        }
+        if (!SERVICE.DefaultProductPublicationTargetService?.getStatus) throw new Error('Product target owner unavailable');
+        return SERVICE.DefaultProductPublicationTargetService.getStatus(input, request);
+    },
+    /** Rejects stale/ABA Product activation and receipts not bound to the reviewed immutable Product. */
+    assertProductStatus: function (reference, evidence, status, request) {
+        const receipt = status?.receipt;
+        if (!Number.isSafeInteger(evidence?.revision) || evidence.revision < 1 ||
+            typeof evidence.operationKey !== 'string' || !evidence.operationKey ||
+            status?.version !== reference.targetVersion || status.revision !== evidence.revision ||
+            this.fingerprint(status.scope) !== this.fingerprint({ tenant: request.tenant, productCode: reference.productCode, storeCode: reference.storeCode }) ||
+            receipt?.committed !== true || receipt.operationKey !== evidence.operationKey ||
+            receipt.publicationCode !== reference.publicationCode || receipt.sourceVersion !== reference.sourceVersion ||
+            receipt.targetVersion !== reference.targetVersion || this.fingerprint(receipt.scope) !== this.fingerprint(status.scope))
+            throw new Error('Approved Product activation changed or is unconfirmed');
+    },
+    /** Captures genuine Product approval and immutable graph proof through the existing lifecycle/provider owners. */
+    approvedProduct: async function (reference, request) {
+        reference = this.productReference(reference);
+        const auth = request.authData || {}, scope = this.scope(request);
+        if (auth.principalType !== 'human' || auth.tokenType !== 'access' || auth.isSystem || auth.tenant !== scope.tenant ||
+            (auth.entCode || auth.enterpriseCode) !== scope.enterpriseCode ||
+            [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== auth.tenant) ||
+            !(auth.principalId || auth.loginId || auth.code) ||
+            [auth.entCode, auth.enterpriseCode, request.entCode, request.enterpriseCode].some(value => value !== undefined && value !== scope.enterpriseCode))
+            throw new Error('Signed book-owner publisher is required for row capture');
+        const lifecycle = SERVICE.DefaultPublicationLifecycleService, provider = SERVICE.DefaultProductPublicationVersionProviderService;
+        if (!lifecycle?.get || !provider?.getVersion) throw new Error('Product publication evidence unavailable');
+        const publication = await lifecycle.get({ ...request, publicationCode: reference.publicationCode });
+        if (publication?.domain !== 'product' || publication.rootType !== 'product' || publication.rootCode !== reference.productCode ||
+            publication.tenantCode !== request.tenant || publication.enterpriseCode !== this.scope(request).enterpriseCode ||
+            publication.sourceVersion !== reference.sourceVersion || publication.targetVersion !== reference.targetVersion ||
+            publication.state !== 'ONLINE' || !publication.auditTrail?.some(row => row.toState === 'APPROVED') ||
+            !publication.activationOperation?.key) throw new Error('Product has no exact approved publication');
+        const manifest = await provider.getVersion(publication, request);
+        if (manifest?.version !== reference.targetVersion || manifest.root?.code !== reference.productCode ||
+            String(manifest.root.versionId) !== reference.sourceVersion || manifest.root.enterpriseCode !== this.scope(request).enterpriseCode ||
+            this.fingerprint(manifest.scope) !== this.fingerprint({ tenant: request.tenant, productCode: reference.productCode, storeCode: reference.storeCode }))
+            throw new Error('Approved Product graph mismatch');
+        const status = await this.productStatus(reference, { operationKey: publication.activationOperation.key }, request);
+        const evidence = { operationKey: publication.activationOperation.key, revision: status?.revision };
+        this.assertProductStatus(reference, evidence, status, request);
+        return evidence;
+    },
+    /** Qualifies one exact row/book anchor and its immutable Product reference without authoring writes. */
+    rowRelease: function (payload) {
+        const records = payload?.records, rows = records?.filter(item => item.schema === 'priceRow'), books = records?.filter(item => item.schema === 'priceBook');
+        if (payload?.rootType !== 'priceRow' || records?.length !== 2 || rows?.length !== 1 || books?.length !== 1 ||
+            rows[0].policy.code !== payload.rootCode || rows[0].policy.priceBookCode !== books[0].policy.code ||
+            rows[0].policy.productCode !== this.productReference(payload.productReference).productCode ||
+            rows[0].policy.currency !== books[0].policy.currency || !payload.productEvidence ||
+            Object.keys(payload.productEvidence).sort().join(',') !== 'operationKey,revision')
+            throw new Error('Row release requires one exact book, row and approved Product');
+        return { row: rows[0].policy, book: books[0].policy, reference: payload.productReference, evidence: payload.productEvidence };
+    },
     /** Captures an exact application setup intent through this domain's existing publication owner. */
     prepareSetup: function (request, item) {
         if (item.domain !== 'pricing' || item.input.rootType !== item.rootType || item.input.rootCode !== item.rootCode)
@@ -41,6 +256,8 @@ module.exports = {
             release.payload.enterpriseCode !== request.enterpriseCode || release.code !== item.sourceVersion ||
             refs.length !== release.payload.records.length || new Set(refs.map(ref => ref.schema + ':' + ref.code)).size !== refs.length ||
             refs.some(ref => !release.payload.records.some(row => row.schema === ref.schema && row.policy.code === ref.code && row.policy.versionId === ref.versionId)))
+            throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
+        if (publication.rootType === 'priceRow' && this.fingerprint(item.input.productReference) !== this.fingerprint(release.payload.productReference))
             throw new CLASSES.NodicsError('ERR_PUB_SETUP_INVALID');
         return release.code;
     },
@@ -73,10 +290,12 @@ module.exports = {
             typeof command.publicationCode !== 'string' || !command.publicationCode ||
             typeof command.operationKey !== 'string' || !command.operationKey) throw new Error('Unsupported source authorization operation');
         this.pointerCode(command, request);
+        const checkCaller = this.requirePublicationCaller(request, 'authorize');
         // Only the fixed private intent read uses canonical local system authority.
         const local = { ...request, authData: Object.assign({}, request.authData,
             SERVICE.DefaultIdentityGovernanceService.getSystemAuthData()) };
         const publication = await SERVICE.DefaultPublicationLifecycleService.getRepository().get(command.publicationCode, local);
+        checkCaller();
         if (!publication || publication.domain !== 'pricing' || publication.tenantCode !== scope.tenant ||
             publication.enterpriseCode !== scope.enterpriseCode || publication.sourceVersion !== command.sourceVersion ||
             publication.rootType !== command.rootType || publication.rootCode !== command.rootCode) throw new Error('Stored publication authority mismatch');
@@ -151,6 +370,7 @@ module.exports = {
             recordedAt: new Date().toISOString(),
             pointerCode, receiptCode, priorPointerRevision: 0, priorReceiptRevision: 0,
             priorPointerFingerprint: this.fingerprint(pointer), priorReceiptFingerprint: this.fingerprint(receipt) };
+        this.checkTargetContext(request);
         try {
             await this.targetServices().pointer.update({ tenant: request.tenant, authData: request.authData,
                 query: { ...this.scope(request), code: pointerCode, revision: 0, version: release.code, receiptCode },
@@ -198,11 +418,62 @@ module.exports = {
             new Set(delivery.rootCodes).size !== delivery.rootCodes.length) throw new Error('Activated delivery roots are required');
         return delivery.rootCodes;
     },
+    /** Reads one configured book's bounded exact Store row candidates; this is selection, never Product authority or delivery proof. */
+    rowPointers: async function (request, rootCode) {
+        this.requireTarget();
+        const maximum = this.publicationSettings().maxDependencies || 1000;
+        if (!Number.isSafeInteger(maximum) || maximum < 1 ||
+            typeof request.storeCode !== 'string' || !request.storeCode || !this.deliveryRoots(request).includes(rootCode))
+            throw new Error('Bounded exact Pricing row selection required');
+        const service = this.targetServices().pointer;
+        const query = { ...this.scope(request), rootType: 'priceRow', priceBookCode: rootCode, storeCode: request.storeCode };
+        const response = await service.get({ tenant: request.tenant, authData: this.activatedReadAuth(request, service), query,
+            options: { recursive: false, skipItemCache: true }, searchOptions: { limit: maximum + 1, pageSize: maximum + 1 } });
+        if (!response || response.error || response.success === false || response.code && !/^SUC_/.test(response.code) ||
+            !Array.isArray(response.result) || response.result.length > maximum ||
+            [response.count, response.total].some(n => n !== undefined && n !== response.result.length) ||
+            new Set(response.result.map(row => row.code)).size !== response.result.length ||
+            response.result.some(row => Object.entries(query).some(([key, value]) => row[key] !== value)))
+            throw new Error('Row publication pointers are incomplete or foreign');
+        return response.result;
+    },
+    /** Selects only basket Products with a relevant row candidate. Consumers must still use an independent fresh readConfigured delivery check. */
+    rowProductCodes: async function (request) {
+        if (this.publicationSettings().delivery?.rowReleases !== true) return [];
+        const selection = () => this.fingerprint({ tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+            entCode: request.entCode, authData: request.authData, storeCode: request.storeCode,
+            productCode: request.productCode, productCodes: request.productCodes, settings: this.publicationSettings() });
+        const before = selection(), maximum = this.publicationSettings().maxDependencies || 1000;
+        const requested = request.productCodes || (request.productCode ? [request.productCode] : []);
+        if (!Array.isArray(requested) || requested.length > maximum || requested.some(code => typeof code !== 'string' || !code))
+            throw new Error('Bounded Pricing Product selection required');
+        const needed = new Set();
+        for (const rootCode of this.deliveryRoots(request)) {
+            const pointers = await this.rowPointers(request, rootCode);
+            if (selection() !== before) throw new Error('Pricing row selection authority changed');
+            for (const pointer of pointers) {
+                if (!pointer.version && !pointer.receiptCode) continue;
+                if (!requested.length) throw new Error('Consumed Product selection required for row delivery');
+                if (requested.includes(pointer.productCode)) needed.add(pointer.productCode);
+            }
+        }
+        return [...needed];
+    },
     /** Loads each configured root once and rejects ambiguous policy membership across releases. */
     readConfigured: async function (request) {
+        const roots = [...this.deliveryRoots(request)], snapshots = new Map();
+        const rowDelivery = this.publicationSettings().delivery?.rowReleases === true;
+        const selection = () => this.fingerprint({ tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+            entCode: request.entCode, authData: request.authData, storeCode: request.storeCode,
+            productCode: request.productCode, productCodes: request.productCodes, productReferences: request.productReferences,
+            settings: this.publicationSettings() });
+        const selected = rowDelivery ? selection() : null;
+        const check = () => { if (rowDelivery && selection() !== selected) throw new Error('Pricing row delivery authority or selection changed'); };
         const result = [], identities = new Set();
-        for (const rootCode of this.deliveryRoots(request)) {
+        for (const rootCode of roots) {
+            if (rowDelivery) snapshots.set(rootCode, await this.getTargetStatus({ rootType: 'priceBook', rootCode }, request));
             const records = await this.readActivated({ rootType: 'priceBook', rootCode }, request);
+            check();
             for (const item of records) {
                 const identity = item.schema + ':' + item.policy.code;
                 if (identities.has(identity)) throw new Error('Activated policy membership conflict');
@@ -210,11 +481,78 @@ module.exports = {
                 result.push(item);
             }
         }
+        if (!rowDelivery) return result;
+        if (typeof request.storeCode !== 'string' || !request.storeCode) throw new Error('Exact Store required for individual row delivery');
+        const maximum = this.publicationSettings().maxDependencies || 1000;
+        if (!Number.isSafeInteger(maximum) || maximum < 1) throw new Error('Bounded Pricing row delivery required');
+        const proofs = [], pointers = [], replacements = new Map();
+        const requested = request.productCodes || (request.productCode ? [request.productCode] : []);
+        if (!Array.isArray(requested) || requested.length > maximum || requested.some(code => typeof code !== 'string' || !code))
+            throw new Error('Bounded Pricing Product selection required');
+        const service = this.targetServices().pointer;
+        for (const rootCode of roots) {
+            const candidates = await this.rowPointers(request, rootCode);
+            check();
+            for (const pointer of candidates) {
+                if (!pointer.version && !pointer.receiptCode) continue;
+                if (!requested.length) throw new Error('Consumed Product selection required for row delivery');
+                if (!requested.includes(pointer.productCode)) continue;
+                const release = await this.retainedVersion(pointer.version, request), row = this.rowRelease(release.payload);
+                if (release.rootType !== 'priceRow' || release.rootCode !== pointer.rootCode || pointer.code !== this.pointerCode(release, request) ||
+                    row.book.code !== rootCode || row.row.productCode !== pointer.productCode || row.reference.storeCode !== request.storeCode)
+                    throw new Error('Row publication pointer anchor mismatch');
+                const book = result.find(item => item.schema === 'priceBook' && item.policy.code === rootCode)?.policy;
+                if (this.fingerprint(book) !== this.fingerprint(row.book)) throw new Error('Row publication book version changed');
+                const pin = this.consumedProduct(request, row.reference.productCode);
+                if (pin.targetVersion !== row.reference.targetVersion) throw new Error('Consumed Product version is incompatible with price row');
+                const active = await this.readActivated({ rootType: 'priceRow', rootCode: pointer.rootCode }, request);
+                if (this.fingerprint(active) !== this.fingerprint(release.payload.records)) throw new Error('Row publication changed during read');
+                this.assertProductStatus(row.reference, row.evidence, await this.productStatus(row.reference, row.evidence, request), request);
+                check();
+                if (replacements.has(row.row.code)) throw new Error('Row publication membership conflict');
+                replacements.set(row.row.code, { schema: 'priceRow', policy: { ...row.row, productReference: pin } });
+                proofs.push(row); pointers.push(pointer);
+            }
+        }
+        if (pointers.length) {
+            for (const [rootCode, before] of snapshots) {
+                const after = await this.getTargetStatus({ rootType: 'priceBook', rootCode }, request);
+                if (this.fingerprint(before) !== this.fingerprint(after)) throw new Error('Price book activation changed during row read');
+            }
+            for (const pointer of pointers) {
+                const after = await this.readRecord(service, pointer.code, request);
+                if (this.fingerprint(after) !== this.fingerprint(pointer)) throw new Error('Price row activation changed during read');
+            }
+            for (const row of proofs)
+                this.assertProductStatus(row.reference, row.evidence, await this.productStatus(row.reference, row.evidence, request), request);
+        }
+        for (const [code, item] of replacements) {
+            const index = result.findIndex(row => row.schema === 'priceRow' && row.policy.code === code);
+            if (index < 0) result.push(item); else result[index] = item;
+        }
+        check();
         return result;
+    },
+    /** Requires the exact Product version already selected by the consuming owner, never inferred from a row or latest Product. */
+    consumedProduct: function (request, productCode) {
+        const pins = request.productReferences, maximum = this.publicationSettings().maxDependencies || 1000;
+        if (!Array.isArray(pins) || !pins.length || pins.length > maximum ||
+            new Set(pins.map(pin => pin?.productCode)).size !== pins.length || pins.some(pin => !pin ||
+                Object.keys(pin).sort().join(',') !== 'productCode,storeCode,targetVersion' ||
+                typeof pin.productCode !== 'string' || !pin.productCode || pin.storeCode !== request.storeCode ||
+                !/^[a-f0-9]{64}$/.test(pin.targetVersion || '')))
+            throw new Error('Consumed immutable Product references required');
+        const pin = pins.find(pin => pin.productCode === productCode);
+        if (!pin) throw new Error('Consumed Product reference missing');
+        return structuredClone(pin);
     },
     /** Selects prices from one activated book snapshot; never mixes pointer generations. */
     selectActivated: async function (request, rootCode) {
-        const records = await this.readActivated({ rootType: 'priceBook', rootCode }, request);
+        if (this.publicationSettings().delivery?.rowReleases === true && !this.deliveryRoots(request).includes(rootCode))
+            throw new Error('Price book is outside the selected delivery roots');
+        const records = this.publicationSettings().delivery?.rowReleases === true
+            ? (await this.readConfigured(request)).filter(item => item.schema === 'priceBook' ? item.policy.code === rootCode : item.policy.priceBookCode === rootCode)
+            : await this.readActivated({ rootType: 'priceBook', rootCode }, request);
         return SERVICE.DefaultPriceSelectionService.select(request,
             records.filter(item => item.schema === 'priceBook').map(item => item.policy),
             records.filter(item => item.schema === 'priceRow').map(item => item.policy),
@@ -298,11 +636,13 @@ targetReceiptContract: 'v1',
     },
     /** Reads at most one scoped record through generated services, rejecting malformed or ambiguous results. */
     readRecord: async function (service, code, request) {
+        this.checkTargetContext(request);
         const authData = this.publicationSettings().runtimeRole === 'ONLINE'
             ? this.activatedReadAuth(request, service) : this.sourcePersistenceAuth(request);
         const response = await service.get({ tenant: request.tenant, authData,
             query: { ...this.scope(request), code }, searchOptions: { limit: 2, pageSize: 2 },
             options: { recursive: false, skipItemCache: true } });
+        this.checkTargetContext(request);
         if (!response || !Array.isArray(response.result) || response.result.length > 1) throw new Error('Invalid publication persistence response');
         const item = response.result[0];
         if (item && (item.code !== code || item.tenant !== request.tenant || item.enterpriseCode !== this.scope(request).enterpriseCode)) throw new Error('Publication persistence scope mismatch');
@@ -321,6 +661,7 @@ targetReceiptContract: 'v1',
         const matches = item => item && Object.keys(model).filter(key => key !== 'revision').every(key => this.fingerprint(item[key]) === this.fingerprint(model[key]));
         let existing = await this.readRecord(service, model.code, request);
         if (existing) { if (!matches(existing)) throw new Error('Retained publication identity conflict'); return existing; }
+        this.checkTargetContext(request);
         try {
             await service.save({ tenant: request.tenant, authData: this.sourcePersistenceAuth(request), model: { ...model, revision: 0 } });
         } catch (error) {
@@ -361,10 +702,18 @@ targetReceiptContract: 'v1',
             records.push({ schema: ref.schema, policy: this.capturePolicy(ref.schema, response.result[0], request) });
         }
         if (!seen.has(input.rootType + ':' + input.rootCode)) throw new Error('Policy root is missing');
-        if (input.rootType !== 'priceBook' || records.filter(item => item.schema === 'priceBook').length !== 1 ||
-            !records.some(item => item.schema === 'priceRow') || records.some(item => item.schema === 'priceRow' && item.policy.priceBookCode !== input.rootCode)) throw new Error('Pricing release must bind one exact book and its selected rows');
+        if (records.filter(item => item.schema === 'priceBook').length !== 1 || !records.some(item => item.schema === 'priceRow'))
+            throw new Error('Pricing release must bind one exact book and its selected rows');
+        if (input.rootType === 'priceBook' && (input.productReference !== undefined ||
+            records.some(item => item.schema === 'priceRow' && item.policy.priceBookCode !== input.rootCode)))
+            throw new Error('Pricing release must bind one exact book and its selected rows');
         records.sort((a,b) => (a.schema + ':' + a.policy.code).localeCompare(b.schema + ':' + b.policy.code));
         const payload = { ...this.scope(request), rootType: input.rootType, rootCode: input.rootCode, records };
+        if (input.rootType === 'priceRow') {
+            payload.productReference = this.productReference(input.productReference);
+            payload.productEvidence = await this.approvedProduct(payload.productReference, request);
+            this.rowRelease(payload);
+        }
         const code = this.fingerprint(payload);
         return this.retain(this.targetServices().release, { ...this.scope(request), code, rootType: input.rootType,
             rootCode: input.rootCode, payload, fingerprint: code }, request);
@@ -384,11 +733,21 @@ targetReceiptContract: 'v1',
     },
     /** Supplies exact dependency identities without re-reading current authoring rows. */
     resolveDependencies: function (publication, release) {
-        return release.payload.records.map(item => ({ schema: item.schema, code: item.policy.code, version: String(item.policy.versionId) }));
+        const records = release.payload.records.map(item => ({ schema: item.schema, code: item.policy.code, version: String(item.policy.versionId) }));
+        if (release.rootType === 'priceRow') {
+            const { reference } = this.rowRelease(release.payload);
+            records.push({ domain: 'product', schema: 'product', code: reference.productCode, version: reference.sourceVersion,
+                publicationCode: reference.publicationCode, storeCode: reference.storeCode, targetVersion: reference.targetVersion });
+        }
+        return records;
     },
     /** Validates retained content for the existing nPublish adapter hook. */
     validate: async function (publication, release, request) {
         const retained = await this.getVersion(publication, request);
+        if (retained.rootType === 'priceRow') {
+            const row = this.rowRelease(retained.payload), evidence = await this.approvedProduct(row.reference, request);
+            if (this.fingerprint(evidence) !== this.fingerprint(row.evidence)) throw new Error('Approved Product reference drift');
+        }
         return { valid: retained.fingerprint === release.fingerprint };
     },
     /** Resolves the configured owner transport. An absent transport never falls back to local source. */
@@ -412,6 +771,11 @@ targetReceiptContract: 'v1',
         for (const item of release.payload.records) {
             if (this.fingerprint(this.capturePolicy(item.schema, item.policy, request)) !== this.fingerprint(item.policy)) throw new Error('Target policy contains non-policy fields');
         }
+        if (release.rootType === 'priceRow') {
+            const row = this.rowRelease(release.payload);
+            this.assertProductStatus(row.reference, row.evidence, await this.productStatus(row.reference, row.evidence, request), request);
+        } else if (release.payload.productReference !== undefined || release.payload.productEvidence !== undefined)
+            throw new Error('Book release cannot carry a row Product reference');
         return this.retain(this.targetServices().release, { ...this.scope(request), code: release.code,
             rootType: release.rootType, rootCode: release.rootCode, payload: release.payload, fingerprint: release.fingerprint }, request);
     },
@@ -443,12 +807,14 @@ targetReceiptContract: 'v1',
     },
     /** Finalizes only a receipt proven by the durable pointer CAS, including a lost-update response. */
     settleReceipt: async function (receipt, pointer, request) {
+        this.checkTargetContext(request);
         if (!pointer || pointer.code !== receipt.pointerCode || pointer.receiptCode !== receipt.code ||
             pointer.version !== receipt.targetVersion || pointer.revision !== receipt.expectedRevision + 1) {
             throw new Error(receipt.applied ? 'Target receipt superseded conflict' : 'Target receipt is not committed');
         }
         if (receipt.applied) return { ...receipt, previousOnlineVersion: receipt.previousOnlineVersion ?? null };
         const service = this.targetServices().receipt;
+        this.checkTargetContext(request);
         try {
             await service.update({ tenant: request.tenant, authData: request.authData,
                 query: { ...this.scope(request), code: receipt.code, revision: receipt.revision }, model: { applied: true } });
@@ -473,8 +839,12 @@ targetReceiptContract: 'v1',
         const services = this.targetServices(), pointerCode = this.pointerCode(publication, request);
         const release = await this.retainedVersion(targetVersion, request);
         if (release.rootCode !== publication.rootCode || release.rootType !== publication.rootType) throw new Error('Target release root mismatch');
+        const row = release.rootType === 'priceRow' ? this.rowRelease(release.payload) : undefined;
+        if (row) this.assertProductStatus(row.reference, row.evidence, await this.productStatus(row.reference, row.evidence, request), request);
         const receiptCode = this.fingerprint({ ...this.scope(request), pointerCode, operationKey });
         let pointer = await this.readRecord(services.pointer, pointerCode, request);
+        const anchor = row ? { priceBookCode: row.book.code, productCode: row.row.productCode, storeCode: row.reference.storeCode } : {};
+        if (pointer && Object.entries(anchor).some(([key, value]) => pointer[key] !== value)) throw new Error('Row pointer anchor conflict');
         let receipt = await this.readRecord(services.receipt, receiptCode, request);
         if (receipt && pointer && pointer.revision === 0) {
             pointer = await this.recoverLegacyPointer(command, receipt, pointer, release, request);
@@ -485,7 +855,7 @@ targetReceiptContract: 'v1',
             if (receipt.applied) return { version: targetVersion, receipt: await this.settleReceipt(receipt, pointer, request) };
         }
         if (!pointer) pointer = await this.retain(services.pointer, { ...this.scope(request), code: pointerCode,
-            rootType: publication.rootType, rootCode: publication.rootCode }, request);
+            rootType: publication.rootType, rootCode: publication.rootCode, ...anchor }, request);
         if (pointer.receiptCode) {
             const previousReceipt = await this.readRecord(services.receipt, pointer.receiptCode, request);
             if (!previousReceipt) throw new Error('Pointer receipt is missing');
@@ -499,6 +869,7 @@ targetReceiptContract: 'v1',
             targetVersion, ...(expectedVersion === null ? {} : { previousOnlineVersion: expectedVersion }), expectedRevision: pointer.revision,
             fingerprint: release.fingerprint, applied: false }, request);
         if (receipt.expectedRevision !== pointer.revision) throw new Error('Target pointer CAS conflict');
+        this.checkTargetContext(request);
         try {
             await services.pointer.update({ tenant: request.tenant, authData: request.authData,
                 query: { ...this.scope(request), code: pointerCode, revision: receipt.expectedRevision },
@@ -515,6 +886,10 @@ targetReceiptContract: 'v1',
         this.requireSource();
         if (publication.state !== 'ACTIVATING' || !publication.activationOperation) throw new Error('nPublish activation operation required');
         const release = await this.getVersion(publication, request);
+        if (release.rootType === 'priceRow') {
+            const row = this.rowRelease(release.payload);
+            this.assertProductStatus(row.reference, row.evidence, await this.productStatus(row.reference, row.evidence, request), request);
+        }
         await this.transport().prepareTarget(release, request, publication);
         return this.transport().switchTarget({ publication, operationKey: publication.activationOperation.key,
             targetVersion: release.code, expectedVersion: publication.activationOperation.previousOnlineVersion,
@@ -553,7 +928,7 @@ targetReceiptContract: 'v1',
         const pointer = await this.readRecord(services.pointer, this.pointerCode(publication, request), request);
         if (!pointer || !pointer.version) throw new Error('No activated policy');
         const receipt = await this.readRecord(services.receipt, pointer.receiptCode, request);
-        if (!receipt || receipt.pointerCode !== pointer.code || receipt.targetVersion !== pointer.version ||
+        if (!receipt || receipt.applied !== true || receipt.pointerCode !== pointer.code || receipt.targetVersion !== pointer.version ||
             receipt.expectedRevision + 1 !== pointer.revision) throw new Error('Activated policy receipt mismatch');
         const release = await this.retainedVersion(pointer.version, request);
         if (receipt.fingerprint !== release.fingerprint) throw new Error('Activated policy fingerprint mismatch');

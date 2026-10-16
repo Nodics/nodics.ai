@@ -67,6 +67,12 @@ module.exports.pricing.policyPublicationAuthoring = {
   },
 };
 module.exports.pricing.policyPublicationTarget = {
+  rowEvidence: {
+    active: true, secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+    permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'commercePublicationIngestion',
+    requestPrivacy: { sensitive: true }, cache: { enabled: false }, key: '/publication/policy/row-evidence', method: 'POST',
+    controller: 'DefaultPricingPublicationTargetController', operation: 'rowEvidence',
+  },
   prepare: {
     secured: true,
     authTokenTypes: ["service"],

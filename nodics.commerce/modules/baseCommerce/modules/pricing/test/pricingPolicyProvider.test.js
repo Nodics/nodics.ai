@@ -69,24 +69,26 @@ test('source grants legacy recovery only for the selected pinned first activatio
         publicationCode: publication.code, sourceVersion: publication.sourceVersion, rootType: publication.rootType,
         rootCode: publication.rootCode, operationKey: command.operationKey,
         reason: 'Reviewed defect', approvedBy: 'operator', approvalReference: 'review-001' };
-    global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => ({ entCode: request.enterpriseCode, tenant: request.tenant }) };
+    const caller = publicationCallerFixture(f), incoming = { ...request, authData: caller };
+    global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => caller };
     global.SERVICE.DefaultIdentityGovernanceService = { getSystemAuthData: () => ({ isSystem: true }) };
     global.SERVICE.DefaultPublicationLifecycleService = { getRepository: () => ({ get: async () => publication }) };
-    assert.equal((await f.source.authorizeTarget(command, request)).legacyCasRecovery, undefined);
-    f.source.publicationSettings = () => ({ runtimeRole: 'STAGED', sourceVersioningQualified: true,
+    assert.equal((await f.source.authorizeTarget(command, incoming)).legacyCasRecovery, undefined);
+    const sourceSettings = f.source.publicationSettings();
+    f.source.publicationSettings = () => ({ ...sourceSettings,
         legacyCasRecovery: { enabled: true, operations: [selection] } });
-    assert.deepEqual((await f.source.authorizeTarget(command, request)).legacyCasRecovery, selection);
+    assert.deepEqual((await f.source.authorizeTarget(command, incoming)).legacyCasRecovery, selection);
     for (const state of ['FAILED', 'ONLINE']) {
         publication.state = state;
-        assert.equal((await f.source.authorizeTarget(command, request)).legacyCasRecovery, undefined);
+        assert.equal((await f.source.authorizeTarget(command, incoming)).legacyCasRecovery, undefined);
     }
     publication.state = 'ACTIVATING';
     selection.enterpriseCode = 'foreign';
-    assert.equal((await f.source.authorizeTarget(command, request)).legacyCasRecovery, undefined);
+    assert.equal((await f.source.authorizeTarget(command, incoming)).legacyCasRecovery, undefined);
     selection.enterpriseCode = request.enterpriseCode;
-    await assert.rejects(f.source.authorizeTarget({ ...command, expectedRevision: 1 }, request), /precondition/);
+    await assert.rejects(f.source.authorizeTarget({ ...command, expectedRevision: 1 }, incoming), /precondition/);
     delete selection.approvalReference;
-    await assert.rejects(f.source.authorizeTarget(command, request), /Reviewed/);
+    await assert.rejects(f.source.authorizeTarget(command, incoming), /Reviewed/);
 });
 
 test('reviewed pre-fix recovery uses actual vService managed CAS and retains receipt checks', async () => {
@@ -232,11 +234,11 @@ test('owner compiled Mongo validators require absent strings while receipts expo
 });
 
 test('await-boundary caller mutations cannot replace the authorized execution snapshot', async () => {
-    for (const operation of ['prepare', 'activate', 'reconcile']) {
+    for (const drift of ['body', 'authority']) for (const operation of ['prepare', 'activate', 'reconcile']) {
         const f = setup(), publication = await f.publication();
         const release = await f.source.getVersion(publication, request);
         const controller = require('../src/controller/defaultPricingPublicationTargetController');
-        const authData = { tenant: request.tenant, entCode: request.enterpriseCode, userGroups: [], permissions: [], principalId: 'verified' };
+        const authData = publicationCallerFixture(f, { principalId: 'verified' });
         const body = { publication, release, targetVersion: release.code,
             operationKey: publication.activationOperation.key, expectedVersion: null, expectedRevision: 0 };
         const expected = structuredClone(body);
@@ -275,14 +277,20 @@ test('await-boundary caller mutations cannot replace the authorized execution sn
         body.operationKey = 'replacement-operation';
         body.expectedVersion = 'replacement-predecessor';
         body.expectedRevision = 900;
-        authData.principalId = 'unverified-after-await';
-        authData.tenant = 'foreign-after-await';
-        authData.entCode = 'foreign-after-await';
+        if (drift === 'authority') {
+            authData.principalId = 'unverified-after-await';
+            authData.tenant = 'foreign-after-await';
+            authData.entCode = 'foreign-after-await';
+        }
         resume();
-        await running;
-        assert.deepEqual(executed, operation === 'prepare' ? expected.release : operation === 'activate' ? expected :
-            { publication: expected.publication, operationKey: expected.operationKey });
-        assert.equal(authData.principalId, 'unverified-after-await');
+        if (drift === 'authority') {
+            await assert.rejects(running, /caller authority changed/);
+            assert.equal(executed, undefined);
+        } else {
+            await running;
+            assert.deepEqual(executed, operation === 'prepare' ? expected.release : operation === 'activate' ? expected :
+                { publication: expected.publication, operationKey: expected.operationKey });
+        }
     }
 });
 
@@ -290,7 +298,7 @@ test('prepare binds authorized digest root and scope before requesting local aut
     const f = setup(), publication = await f.publication();
     const release = await f.source.getVersion(publication, request);
     const controller = require('../src/controller/defaultPricingPublicationTargetController');
-    const authData = { tenant: request.tenant, entCode: request.enterpriseCode };
+    const authData = publicationCallerFixture(f);
     let elevated = 0, authorized = 0;
     global.SERVICE.DefaultPricingPublicationService = f.target;
     global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => authData };
@@ -344,7 +352,7 @@ test('prepare binds authorized digest root and scope before requesting local aut
 test('private authority is bounded in both directions and transport retains caller auth', async () => {
     const f = setup(), publication = await f.publication();
     const controller = require('../src/controller/defaultPricingPublicationTargetController');
-    const authData = { tenant: request.tenant, entCode: request.enterpriseCode, userGroups: [], permissions: ['route-permission'] };
+    const authData = publicationCallerFixture(f);
     const incoming = { ...request, authData, httpRequest: { body: { publication } } };
     const original = structuredClone(incoming);
     let elevated = 0, denied = false, principal = authData;
@@ -517,17 +525,19 @@ test('fixed callback delegates Process authority and null registrations stay dis
 test('target route rejects token-only authority before mutation', async () => {
     const f = setup(), controller = require('../src/controller/defaultPricingPublicationTargetController');
     global.SERVICE.DefaultPricingPublicationService = f.target;
-    global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => ({ entCode: request.enterpriseCode, tenant: request.tenant }) };
+    const caller = publicationCallerFixture(f);
+    global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => caller };
     global.SERVICE.DefaultPricingPublicationTransportService = { authorizeTarget: async () => ({ authorized: false }) };
     const publication = await f.publication();
-    await assert.rejects(controller.activate({ ...request, httpRequest: { body: { publication } } }), /source authority/);
+    await assert.rejects(controller.activate({ ...request, authData: caller, httpRequest: { body: { publication } } }), /source authority/);
     assert.equal(f.targetStore.pointer.rows.size, 0);
 });
 
 test('source authorization rejects forged decision and accepts only stored pinned operation', async () => {
     const f = setup(), publication = await f.publication();
     publication.tenantCode = request.tenant; publication.enterpriseCode = request.enterpriseCode;
-    global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => ({ entCode: request.enterpriseCode, tenant: request.tenant }) };
+    const caller = publicationCallerFixture(f), incoming = { ...request, authData: caller };
+    global.SERVICE.DefaultServiceTokenService = { requireRuntimePrincipal: () => caller };
     global.SERVICE.DefaultIdentityGovernanceService = { getSystemAuthData: () => ({ isSystem: true, userGroups: ['configured-system'], permissions: [] }) };
     global.SERVICE.DefaultPublicationLifecycleService = { getRepository: () => ({ get: async (code, local) => {
         assert.notEqual(local.authData, request.authData);
@@ -538,10 +548,10 @@ test('source authorization rejects forged decision and accepts only stored pinne
     const command = { operation: 'activate', publicationCode: publication.code, sourceVersion: publication.sourceVersion,
         rootType: publication.rootType, rootCode: publication.rootCode, operationKey: publication.activationOperation.key,
         targetVersion: publication.sourceVersion, expectedVersion: null, expectedRevision: 0 };
-    assert.equal((await f.source.authorizeTarget(command, request)).authorized, true);
-    await assert.rejects(f.source.authorizeTarget({ ...command, operationKey: 'forged' }, request), /authority/);
+    assert.equal((await f.source.authorizeTarget(command, incoming)).authorized, true);
+    await assert.rejects(f.source.authorizeTarget({ ...command, operationKey: 'forged' }, incoming), /authority/);
     publication.state = 'PENDING_APPROVAL';
-    await assert.rejects(f.source.authorizeTarget(command, request), /authority/);
+    await assert.rejects(f.source.authorizeTarget(command, incoming), /authority/);
 });
 
 test('ordinary customer price summary uses configured activated receipt and not source rows', async () => {
@@ -726,7 +736,35 @@ test('service observation retains original default-enterprise identity and exact
 });
 
 const request = { tenant: 'tenant-a', enterpriseCode: 'enterprise-a', authData: { principalId: 'publisher' } };
-require('../../../../../test/helpers/policyRuntimeEnterprise')({ domain: 'pricing', setup, request });
+
+/** Selects one artificial signed publisher/callback on both isolated receiver bindings, never exempts caller checks. */
+function publicationCallerFixture(f, extra = {}) {
+    const auth = { tenant: request.tenant, entCode: request.enterpriseCode, principalType: 'service', tokenType: 'service',
+        serviceId: 'publication-runtime', runtimeInstanceId: 'publication-instance', modules: ['pricing'],
+        permissions: ['auth.internal.token.read'], runtimeScope: { projectCode: 'project', environmentCode: 'testLocal',
+            serverCode: 'publication', instanceCode: 'publication-instance', assignmentCode: 'publication-assignment' }, ...extra };
+    const caller = { tenant: auth.tenant, principalEnterpriseCode: auth.entCode, serviceId: auth.serviceId, ...auth.runtimeScope };
+    for (const [service, key] of [[f.source, 'target'], [f.target, 'sourceAuthority']]) {
+        const settings = service.publicationSettings();
+        service.publicationSettings = () => ({ ...settings, [key]: { moduleName: 'pricing', connectionName: 'publication-peer',
+            runtimeRole: 'PUBLICATION_PEER', callers: [structuredClone(caller)] } });
+    }
+    global.CONFIG = { get: key => key === 'authSecurity' ? { internalToken: { routePermission: 'auth.internal.token.read' } } : undefined };
+    return auth;
+}
+require('../../../../../test/helpers/policyRuntimeEnterprise')({ domain: 'pricing', setup: () => {
+    const f = setup();
+    const caller = { tenant: request.tenant, principalEnterpriseCode: 'default', serviceId: 'isolated-deployment-principal',
+        projectCode: 'isolated-project', environmentCode: 'isolated-environment', serverCode: 'isolated-server',
+        instanceCode: 'isolated-instance', assignmentCode: 'isolated-assignment' };
+    for (const [service, key, connection, role] of [[f.source, 'target', 'reviewed-online', 'COMMERCE'],
+        [f.target, 'sourceAuthority', 'reviewed-staged', 'COMMERCE_STAGED']]) {
+        const settings = service.publicationSettings();
+        service.publicationSettings = () => ({ ...settings, [key]: { moduleName: 'pricing', connectionName: connection,
+            runtimeRole: role, callers: [structuredClone(caller)] } });
+    }
+    return f;
+}, request });
 require('../../../../../test/helpers/policyActivatedReadAdmission')({ domain: 'pricing', setup, request });
 
 /** Models insert-only managed saves and revision-checked atomic updates, with response-loss injection. */

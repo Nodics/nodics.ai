@@ -207,36 +207,15 @@ module.exports = {
     await registration.assertSessionEligible({ person, enterprise });
   },
 
-  /** Returns effective group codes from persisted principal groups and framework governance defaults. */
+  /** Resolves only persisted group ancestry; configuration cannot restore revoked session membership. */
   resolveSessionUserGroups: function (person) {
-    const directGroups =
-      person && person.userGroupCodes
-        ? person.userGroupCodes
-        : UTILS.getUserGroupCodes(person && person.userGroups);
-    const identityGovernance = CONFIG.get("identityGovernance") || {};
-    const groupTargets =
-      identityGovernance.migration && identityGovernance.migration.groupTargets
-        ? identityGovernance.migration.groupTargets
-        : {};
-    const resolved = [];
-    const visited = {};
-    const visit = (group) => {
-      const code = typeof group === "string" ? group : group && group.code;
-      if (!code || visited[code]) return;
-      visited[code] = true;
-      resolved.push(code);
-      const modelParents =
-        group && typeof group === "object" && Array.isArray(group.parentGroups)
-          ? group.parentGroups
-          : [];
-      const targetParents =
-        groupTargets[code] && Array.isArray(groupTargets[code].parentGroups)
-          ? groupTargets[code].parentGroups
-          : [];
-      modelParents.concat(targetParents).forEach((parent) => visit(parent));
-    };
-    (directGroups || []).forEach((group) => visit(group));
-    return resolved;
+    if (person && Array.isArray(person.userGroups)) {
+      return UTILS.getUserGroupCodes(person.userGroups);
+    }
+    return Array.from(new Set(
+      (Array.isArray(person?.userGroupCodes) ? person.userGroupCodes : [])
+        .filter(code => typeof code === "string" && code.length > 0),
+    ));
   },
 
   /**
@@ -783,6 +762,11 @@ module.exports = {
   createRefreshToken: function (options, callback) {
     return new Promise((resolve, reject) => {
       try {
+        if ((options.permissions || []).includes('*') ||
+            (options.userGroups || []).includes('platformAdministratorUserGroup')) {
+          if (!SERVICE.DefaultSecuredRequestPipelineService.hasPlatformFullAccessContext({ ...options, tokenType: 'access' }))
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Platform full access requires a native human Platform session');
+        }
         SERVICE.DefaultAuthSecurityService.validateAuthorizationPolicy(options);
         const authorizationPolicyVersion =
           SERVICE.DefaultAuthSecurityService.getAuthorizationPolicyVersion();

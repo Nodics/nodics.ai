@@ -26,24 +26,24 @@ module.exports = {
   /** Emits only the fixed owner failure, never private provenance/provider diagnostics. */
   fail: function () { throw new CLASSES.NodicsError("ERR_PROFILE_TENANT_PROVISIONING_HELD"); },
 
-  /** Projects only the original enterprise binding for native Local runtime authentication after protected namespace admission; never persists/copies a key or replaces explicit tenant configuration. @param {Object} tenant Fresh admitted canonical tenant. @returns {Object} Private runtime configuration view. */
+  /** Projects only the original enterprise binding for explicitly selected runtime authentication after protected namespace admission; never persists/copies a key or replaces explicit tenant configuration. @param {Object} tenant Fresh admitted canonical tenant. @returns {Object} Private runtime configuration view. */
   runtimeBootstrapView: function (tenant) {
     const properties = tenant.properties || {};
     const bootstrap = SERVICE.DefaultMandatoryIdentityBootstrapService;
     if (Object.hasOwn(properties, "defaultAuthDetail") ||
-        bootstrap?.isLocalRuntimeCredentialBootstrapEnabled?.() !== true ||
+        bootstrap?.isRuntimeDeploymentBootstrapEnabled?.() !== true ||
         CONFIG.get("profileTenantProvisioning")?.enabled !== true) return tenant;
     const enterpriseCode = properties.enterpriseProvisioning?.enterpriseCode;
     if (typeof enterpriseCode !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(enterpriseCode)) this.fail();
     return { ...tenant, properties: { ...properties, defaultAuthDetail: { entCode: enterpriseCode } } };
   },
 
-  /** Admits native Local target grant preparation through original scope/pin evidence and current authenticated default-principal grants; declarations alone grant nothing. @param {string} tenantCode Target realm. @param {Object} scope Existing native runtime scope. @returns {Promise<string>} Fresh canonical target enterprise. */
-  authorizeLocalRuntimeBootstrapScope: async function (tenantCode, scope) {
+  /** Admits explicitly selected target grant preparation through original scope/pin evidence and current authenticated default-principal grants; declarations alone grant nothing. @param {string} tenantCode Target realm. @param {Object} scope Existing signed runtime scope. @returns {Promise<string>} Fresh canonical target enterprise. */
+  authorizeRuntimeBootstrapScope: async function (tenantCode, scope) {
     try {
       const defaultTenant = CONFIG.get("defaultTenant") || "default";
       if (tenantCode === defaultTenant || CONFIG.get("profileTenantProvisioning")?.enabled !== true ||
-          SERVICE.DefaultMandatoryIdentityBootstrapService?.isLocalRuntimeCredentialBootstrapEnabled?.() !== true) this.fail();
+          SERVICE.DefaultMandatoryIdentityBootstrapService?.isRuntimeDeploymentBootstrapEnabled?.() !== true) this.fail();
       const tenants = await this.rows("DefaultTenantService", { code: tenantCode });
       if (tenants.length !== 1 || tenants[0].active !== true) this.fail();
       const tenant = tenants[0], provenance = tenant.properties?.enterpriseProvisioning;
@@ -59,7 +59,7 @@ module.exports = {
       const original = provenance.deploymentScopes?.[scopeKey];
       if (!original || !isDeepStrictEqual(original.scope, stable) || !Array.isArray(original.modules) ||
           !Array.isArray(scope.modules)) this.fail();
-      this.assertLocalRemoteModuleExtensions(scope, original.modules);
+      this.assertRuntimeRemoteModuleExtensions(scope, original.modules);
       // This runtime's namespace is pinned before target identity preparation.
       SERVICE.DefaultDatabaseConfigurationService.assertTenantNamespaceBinding(tenantCode);
       const credentials = CONFIG.get("defaultAuthDetail", defaultTenant) || {};
@@ -81,12 +81,15 @@ module.exports = {
     } catch { this.fail(); }
   },
 
-  /** Validates explicitly adopted remote-only extensions for an original Local deployment; never changes namespace snapshots or admits active modules. @param {Object} scope Current runtime scope. @param {string[]} originalModules Immutable creation ceiling. @returns {void} Throws when any extension lacks deployment-owned adoption. */
-  assertLocalRemoteModuleExtensions: function (scope, originalModules) {
+  /** Validates explicitly adopted remote-only extensions for an original deployment; never changes namespace snapshots or admits active modules. @param {Object} scope Current runtime scope. @param {string[]} originalModules Immutable creation ceiling. @returns {void} Throws when any extension lacks deployment-owned adoption. */
+  assertRuntimeRemoteModuleExtensions: function (scope, originalModules) {
+    const valid = values => Array.isArray(values) && values.length <= 512 && new Set(values).size === values.length && Array.from(values).every(value =>
+      typeof value === "string" && /^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(value));
+    if (!valid(scope.modules) || !valid(originalModules)) this.fail();
     const additions = scope.modules.filter(module => !originalModules.includes(module));
     if (additions.length === 0) return;
     const bootstrap = SERVICE.DefaultMandatoryIdentityBootstrapService;
-    if (bootstrap?.isLocalRuntimeCredentialBootstrapEnabled?.() !== true ||
+    if (bootstrap?.isRuntimeDeploymentBootstrapEnabled?.() !== true ||
         scope.projectCode !== NODICS.getEnvironmentName() ||
         scope.environmentCode !== NODICS.getSelectedEnvironmentName()) this.fail();
     const resolved = bootstrap.readResolvedRuntimeDeployment({
@@ -94,10 +97,9 @@ module.exports = {
       serverCode: scope.serverCode,
     });
     const identity = resolved.properties?.runtimeIdentity;
-    const allowed = resolved.properties?.profileTenantProvisioning?.localRuntimeRemoteModuleExtensions;
-    const valid = values => Array.isArray(values) && values.length <= 512 && values.every(value =>
-      typeof value === "string" && /^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(value));
+    const allowed = resolved.properties?.profileTenantProvisioning?.runtimeRemoteModuleExtensions;
     if (!valid(allowed) || !valid(identity?.remoteModules) || !valid(resolved.modules) ||
+        resolved.properties?.identityGovernance?.migration?.runtimeDeploymentBootstrapEnabled !== true ||
         identity.instanceCode !== scope.instanceCode ||
         additions.some(module => !allowed.includes(module) || !identity.remoteModules.includes(module) ||
           resolved.modules.includes(module))) this.fail();

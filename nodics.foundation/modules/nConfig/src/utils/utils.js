@@ -204,12 +204,85 @@ module.exports = {
         }
     },
 
-    /** Recursively discovers runtime packages without collapsing duplicate topology-local names. */
-    collectModuleRecords: function (folder, records, parentRecord) {
+    /**
+     * Resolves one explicit installed-source owner without registering or activating it.
+     * @param {string} moduleName Exact package identity, never a path or wildcard.
+     * @returns {Object} Duplicate-checked raw descriptor from the current trusted installation.
+     * @throws Missing, ambiguous, invalid or escaping installed source.
+     */
+    resolveInstalledSourceDescriptor: function (moduleName) {
+        if (typeof moduleName !== 'string' || !/^[A-Za-z][A-Za-z0-9_.-]{0,191}$/.test(moduleName) ||
+            typeof NODICS === 'undefined' || typeof NODICS.getNodicsHome !== 'function' ||
+            typeof NODICS.getCustomHome !== 'function') {
+            throw new Error('Invalid installed source owner selection');
+        }
+        const foundation = fs.realpathSync(NODICS.getNodicsHome());
+        const framework = path.dirname(foundation);
+        const project = fs.realpathSync(NODICS.getCustomHome());
+        const records = [];
+        const modules = Object.create(null);
+        const roots = [...new Set([framework, project])];
+        for (const root of roots) {
+            const discovery = { root, visited: new Set(), directories: 0, depth: 0 };
+            const metadata = this.readInstalledSourceMetadata(root, discovery);
+            if (!metadata || (root === framework ? this.getModuleKind(metadata) !== 'framework' :
+                !['application', 'group'].includes(this.getModuleKind(metadata)))) {
+                throw new Error('Invalid installed source root metadata');
+            }
+            this.collectModuleRecords(root, records, null, discovery);
+        }
+        this.indexModuleRecords(records, modules);
+        if (records.filter(item => item.name === moduleName).length > 1) {
+            throw new Error('Ambiguous installed source owner: ' + moduleName);
+        }
+        const matches = Object.values(modules).filter(item => item.name === moduleName);
+        if (matches.length !== 1) {
+            throw new Error(matches.length ? 'Ambiguous installed source owner: ' + moduleName :
+                'Missing installed source owner: ' + moduleName);
+        }
+        if (!['application', 'capability', 'group', 'publish', 'template'].includes(this.getModuleKind(matches[0].metaData))) {
+            throw new Error('Installed source owner must not be a topology package: ' + moduleName);
+        }
+        return matches[0];
+    },
+
+    /** Reads bounded package JSON only; nested links cannot redirect installed-source discovery. */
+    readInstalledSourceMetadata: function (folder, discovery) {
+        const canonical = fs.realpathSync(folder);
+        if (canonical !== folder || (canonical !== discovery.root && !canonical.startsWith(discovery.root + path.sep))) {
+            throw new Error('Installed source path escapes its trusted root');
+        }
+        const file = path.join(folder, 'package.json');
+        let stat;
+        try { stat = fs.lstatSync(file); } catch (error) {
+            if (error.code === 'ENOENT') return null;
+            throw error;
+        }
+        if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 262144) {
+            throw new Error('Invalid installed source package metadata');
+        }
+        const metadata = JSON.parse(fs.readFileSync(file, 'utf8'));
+        if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata) ||
+            typeof metadata.name !== 'string' || !/^[A-Za-z][A-Za-z0-9_.-]{0,191}$/.test(metadata.name)) {
+            throw new Error('Invalid installed source package identity');
+        }
+        return metadata;
+    },
+
+    /** Recursively discovers packages; optional source-only discovery retains no runtime/global state. */
+    collectModuleRecords: function (folder, records, parentRecord, sourceDiscovery) {
+        if (sourceDiscovery) {
+            if (++sourceDiscovery.directories > 8192 || sourceDiscovery.depth > 32 ||
+                records.length >= 4096 || sourceDiscovery.visited.has(folder)) {
+                throw new Error('Installed source discovery bound exceeded');
+            }
+            sourceDiscovery.visited.add(folder);
+        }
         let record = null;
         let metaDataPath = path.join(folder, 'package.json');
-        if (fs.existsSync(metaDataPath)) {
-            let metaData = require(metaDataPath);
+        const sourceMetadata = sourceDiscovery ? this.readInstalledSourceMetadata(folder, sourceDiscovery) : undefined;
+        if (sourceDiscovery ? sourceMetadata : fs.existsSync(metaDataPath)) {
+            let metaData = sourceDiscovery ? sourceMetadata : require(metaDataPath);
             if (this.isRuntimeModule(metaData)) {
                 record = { name: metaData.name, path: folder, index: metaData.index, metaData: metaData,
                     physicalParent: parentRecord, children: [] };
@@ -218,13 +291,28 @@ module.exports = {
                 parentRecord = record;
             }
         }
-        for (let subFolder of this.subFolders(folder)) this.collectModuleRecords(subFolder, records, parentRecord);
+        let children;
+        if (sourceDiscovery) {
+            // Installed module structure only: never search source, data, generated output or test fixtures.
+            children = fs.readdirSync(folder, { withFileTypes: true })
+                .filter(entry => entry.name[0] !== '.' && !['node_modules', 'templates', 'docs'].includes(entry.name))
+                .filter(entry => entry.isDirectory() || entry.isSymbolicLink())
+                .map(entry => path.join(folder, entry.name))
+                .filter(child => path.basename(child) === 'modules' || fs.existsSync(path.join(child, 'package.json')));
+        } else {
+            children = this.subFolders(folder);
+        }
+        for (let subFolder of children) {
+            if (sourceDiscovery) sourceDiscovery.depth++;
+            try { this.collectModuleRecords(subFolder, records, parentRecord, sourceDiscovery); }
+            finally { if (sourceDiscovery) sourceDiscovery.depth--; }
+        }
         return record;
     },
 
     /** Builds canonical runtime identities and the compatibility registry after duplicate-safe discovery. */
     indexModuleRecords: function (records, modulesList) {
-        let counts = {};
+        let counts = Object.create(null);
         records.forEach(record => { counts[record.name] = Number(counts[record.name] || 0) + 1; });
         let canonical = record => {
             if (!record.canonicalIdentity) record.canonicalIdentity = record.physicalParent ?

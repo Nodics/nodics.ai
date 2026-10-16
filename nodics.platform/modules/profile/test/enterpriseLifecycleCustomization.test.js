@@ -131,6 +131,7 @@ test("layered lifecycle enums preserve wire keys and adding a key grants no comm
 test("registration store uses later clock and cache-key helpers without renewing lifetime", async () => {
   const calls = [];
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultAuthenticationProviderService: {
       addToken: async (...args) => {
         calls.push(args);
@@ -152,6 +153,7 @@ test("registration store uses later clock and cache-key helpers without renewing
 test("recovery delegates shared storage with the effective recovery receiver", async () => {
   const calls = [];
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseRegistrationService: registration,
     DefaultAuthenticationProviderService: {
       addToken: async (...args) => {
@@ -185,6 +187,7 @@ test("customized recovery storage still rejects expired continuations before wri
   };
   let writes = 0;
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseRegistrationService: registration,
     DefaultAuthenticationProviderService: {
       addToken: async () => {

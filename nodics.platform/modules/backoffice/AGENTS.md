@@ -23,6 +23,13 @@ granular route/domain permissions; do not grant normal CMS bootstrap by group ad
 
 ## Capability Boundary
 
+- Remaining bootstrap application-status reads use at most four workers per
+  composition through the existing exact-request reader. Settle every item and
+  preserve input-relative success/error order, successful undefined values and
+  duplicate outcome positions. Never share readers across actors/compositions or
+  defer readiness/admission. Documentation-phase concurrency is unchanged; this
+  is not a global limit or latency guarantee. See [bounded readiness composition](llm/contracts/capability-registry-contract.md#bounded-readiness-composition).
+
 - Generic tab workspace `setupContinuation` is an explicit versioned inert
   transport contract, not an unknown-field exception. Keep schema and executable
   validation aligned: unavailable may omit actions, available requires both,
@@ -66,6 +73,10 @@ granular route/domain permissions; do not grant normal CMS bootstrap by group ad
   from employee/customer username-password authentication and preserve tenant,
   environment, module-identity, replay, idempotency, audit, and secret-redaction
   boundaries.
+- Batch registration defers only per-item resolver refresh through its existing
+  private wrapper flag. Settle every item before refreshing partial persisted
+  leases on failure; retain authority checks and independent standalone refresh.
+  Follow [bounded batch snapshots](llm/contracts/backoffice-governance-contracts.md#batched-lease-snapshot-work).
 - Return only client-safe public connection metadata. Never return internal
   tokens, credentials, private keys, secret references, or unapproved internal
   endpoints to the frontend.
@@ -162,6 +173,9 @@ granular route/domain permissions; do not grant normal CMS bootstrap by group ad
 - Operational readiness may aggregate only stable low-disclosure diagnostics
   from owning services. Environment layers decide whether distributed storage
   is mandatory and own real alert thresholds, provider secrets, and load gates.
+  Application observations remain profile-based, without reference-brand parity
+  fields. Use existing module connections and semantic runtime-role targets for
+  owner reads, not fixed customer server names.
 - Production mode must fail closed on weak storage, endpoint, host-allowlist,
   human-administration, audit-delivery, or alert-delivery policy. Publisher
   adapters remain environment-owned and must acknowledge sanitized delivery.

@@ -17,24 +17,26 @@
  * @override Project modules may provide later property contributions for CMS rendering, data, and integration settings.
  */
 module.exports = {
-    tooling: {
-        commands: {
-            'acceptance:guided-initialization': {
-                projectHome: true,
-                description: 'Verify governed initialization, idempotency, normal Process approval and Online delivery.',
-                acceptanceContract: true,
-                handler: '@nTooling/node-script',
-                script: 'src/service/acceptance/defaultGuidedInitializationAcceptanceService.mjs'
-            }
+  tooling: {
+    commands: {
+      "acceptance:guided-initialization": {
+        projectHome: true,
+        description:
+          "Verify governed initialization, idempotency, normal Process approval and Online delivery.",
+        acceptanceContract: true,
+        handler: "@nTooling/node-script",
+        script:
+          "src/service/acceptance/defaultGuidedInitializationAcceptanceService.mjs",
+      },
+    },
+    acceptance: {
+      guidedInitialization: {
+        runtime: {
+          role: "WCMS_STAGED",
         },
-        acceptance: {
-            "guidedInitialization": {
-                "runtime": {
-                    "role": "WCMS_STAGED"
-                },
-                "profileTemplate": "foundation"
-            }
-        },
+        profileTemplate: "foundation",
+      },
+    },
   },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
@@ -206,6 +208,22 @@ module.exports = {
           schema: "cmsSite",
           service: "DefaultCmsSiteService",
           bundle: true,
+        },
+      },
+    },
+
+    runtimeRoleProfiles: {
+      WCMS_STAGED: {
+        publication: {
+          runtimeRole: "STAGED",
+          targetTransportProvider:
+            "DefaultCmsPublicationModuleTransportService",
+        },
+      },
+      WCMS_ONLINE: {
+        publication: {
+          runtimeRole: "ONLINE",
+          targetTransportProvider: null,
         },
       },
     },

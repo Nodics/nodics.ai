@@ -31,7 +31,16 @@ module.exports = {
   order: {
     enabled: true,
     disputes: { enabled: false, orderCodePrefixes: [], storeCodes: {} },
-    refunds: { enabled: false, orderCodePrefixes: [], storeCodes: {}, ownerByStore: {}, ownerPorts: {},
+    refunds: { enabled: false, orderCodePrefixes: [], storeCodes: {}, ownerByStore: {}, ownerPorts: {
+  "eWaste": {
+    "moduleName": "eWaste",
+    "connectionName": "waste",
+    "targetAuthority": {
+      "runtimeRole": "WASTE"
+    },
+    "apiPrefix": "/internal/order-reversals"
+  }
+},
       policyExceptions: { enabled: false, environmentNames: [], approvals: [] } },
     compatibility: {
       legacyAliasesEnabled: true,

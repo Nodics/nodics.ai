@@ -121,6 +121,7 @@ test.beforeEach(() => {
     },
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseManagementService: { ...service },
     DefaultEnterpriseAdministrationConsentService: { ...consent },
     DefaultEnterpriseRegistrationService: { ...registration },

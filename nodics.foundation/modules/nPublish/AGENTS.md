@@ -24,6 +24,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+Keep approval bridge transport type and required Process target-role defaults in
+nPublish properties. Keep actual connection names and provider opt-ins explicit
+in deployment configuration; never turn the default null connection into an
+inferred target. Preserve the service's source-role, scope and permission guards.
+
 Approval is permission-based, including for the original requesting user.
 Shared deployment callbacks retain signed deployment identity; separately bind
 the exact claimed business enterprise to the stored publication. Cross-enterprise
@@ -72,3 +77,8 @@ authoritative lifecycle/repository services retain internal updates. Never let
 generic CRUD manufacture approval, Online state or transition evidence. Verify
 the existing authority test and lifecycle/atomicity suites when changing this
 boundary; a domain retry must read or reuse the existing publication authority.
+
+Implementing domains register their standard adapter, version provider and this
+module's DefaultPublicationApprovalWorkflowService in Staged role profiles.
+Online observer registrations are read-only and owner-scoped. Registration never
+enables observation, qualifies schemas, selects peers or grants publication.

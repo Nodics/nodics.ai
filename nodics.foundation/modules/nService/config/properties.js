@@ -11,12 +11,13 @@
 
 /**
  * @module nService/config/properties
- * @description Reserved nService property contribution for shared service runtime defaults.
+ * @description Owns shared service transport defaults, including the default content type.
  * @layer config
  * @owner nService
  * @override Project modules may provide later property contributions for service behavior and diagnostics.
  */
 module.exports = {
+    defaultContentType: 'application/json',
     enterpriseResolution: { runtimeLookup: { enabled: false } },
     serviceCommunication: {
         timeoutMs: 5000,

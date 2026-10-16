@@ -10,6 +10,8 @@
  */
 
 /** @module media/service/DefaultMediaBackofficeCapabilityService @description Publishes the concrete media-owned BackOffice capability projection. @layer service @owner media */
+const mergeWith = require('lodash/mergeWith');
+const libraryDefaults = require('../../data/backoffice/mediaLibraryWorkspaceData');
 const capability = {
     "enabled": true,
     "capabilityId": "media-management",
@@ -600,7 +602,8 @@ module.exports = {
         let result = JSON.parse(JSON.stringify(capability));
         result.navigation = (result.navigation || []).map(entry => Object.assign({ help: defaultMediaHelp }, entry));
         const media = CONFIG.get('media') || {};
-        const library = media.library || {};
+        const library = mergeWith({}, libraryDefaults, media.library || {},
+            (current, override) => Array.isArray(override) ? override : undefined);
         for (const entry of result.navigation) {
             if (['media-library', 'media'].includes(entry.id)) {
                 entry.featureState = 'ACTIVE';

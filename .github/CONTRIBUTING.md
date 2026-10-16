@@ -27,8 +27,11 @@ Every change must answer:
 ## Coding expectations
 
 - Keep exports customizable where practical.
-- Prefer framework defaults in framework modules and light overrides at project,
-  environment, server, or node level.
+- Require reusable property definitions, defaults and standard implementation
+  wiring in their implementing framework modules. Customer layers contain only
+  actual choices and overrides. Apply the nSetup
+  [mandatory default ownership gate](../nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate),
+  including source fallbacks, generators and mixed mechanism/selection objects.
 - Do not put status definitions, error codes, APIs, schemas, docs, or runtime
   properties in the wrong folder merely because it is convenient.
 - Keep the root `package.json` focused on repository-level commands.

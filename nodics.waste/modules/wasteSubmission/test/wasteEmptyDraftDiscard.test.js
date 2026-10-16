@@ -13,12 +13,14 @@
 const { test, beforeEach, afterEach } = require("node:test"), assert = require("node:assert/strict");
 const operations = require("../src/service/defaultWasteSubmissionOperationService");
 const persistence = require("../../wasteCore/src/service/defaultWastePersistenceService");
-let draft, removed, linked;
+let draft, removed, linked, previousConfig;
 const request = () => ({ code:"EMPTY", expectedRevision:2, tenant:"test", authData:{principalType:"customer",code:"owner",loginId:"owner@example.test"} });
 beforeEach(() => {
+  previousConfig = global.CONFIG;
+  global.CONFIG = { get: key => key === 'identityGovernance' ? require('../../../../nodics.foundation/modules/nAuth/config/properties').identityGovernance : undefined };
   removed = 0; linked = false;
   draft = {code:"EMPTY",revision:2,submissionStatus:"DRAFT",submitterRef:{module:"profile",schema:"customer",code:"owner"},submittedFacts:{},evidenceRefs:[],metadata:{}};
-  global.SERVICE = {DefaultWastePersistenceService:{...persistence,
+  global.SERVICE = { DefaultIdentityGovernanceService: require('../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultIdentityGovernanceService'), DefaultWastePersistenceService:{...persistence,
     one: async()=>draft,
     list: async()=>linked?[{code:"evidence"}]:[],
     repository:()=>({remove:async input=>{
@@ -28,7 +30,7 @@ beforeEach(() => {
     }}),
   }};
 });
-afterEach(()=>delete global.SERVICE);
+afterEach(()=>{ delete global.SERVICE; if (previousConfig === undefined) delete global.CONFIG; else global.CONFIG = previousConfig; });
 test("only a truly empty owned draft is removed through generated persistence",async()=>{
   assert.equal((await operations.discardEmptyDraft(request())).discarded,true);assert.equal(removed,1);
 });

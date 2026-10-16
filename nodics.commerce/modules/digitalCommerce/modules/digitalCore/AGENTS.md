@@ -5,10 +5,12 @@ admitted object returned by `pricedAuthority`. Preserve that private identity
 when attaching checked entitlement/merchant/marker data; a spread/clone or direct
 Operation validation call loses the exact delegated issuer evidence handoff.
 
-Explicit LOCAL ITEM simulation retains the same staff, Store, consent, private
+Explicit deployment-selected ITEM simulation retains the same staff, Store, consent, private
 phase and receipt checks. Preserve SIMULATED_ITEMS evidence and public
-`simulated: true`, `deliveryVerified: false`, `evidenceMode: LOCAL_SIMULATION`
-on confirmation, queue and original receipt inspection. A successful local
+`simulated: true`, `deliveryVerified: false`, `evidenceMode: SIMULATION`
+on confirmation, queue and original receipt inspection. Historical LOCAL_SIMULATION
+evidence remains unverified and read-only compatible, never current selection
+authority or real delivery. A successful simulated
 redemption is not verified goods delivery; monetary fields are not ITEM rights.
 Already-redeemed benefit inverses remain unsupported. See the merchant contract.
 
@@ -88,7 +90,7 @@ commit is independent of messaging; original frozen-intent retry cannot supply
 new content. Inspect only original source-scoped durable Communication intents;
 absent/denied reads stay unconfirmed, never inferred from financial completion.
 
-Order's separately audited Local missing-policy exception never changes retained
+Order's separately audited deployment-selected missing-policy exception never changes retained
 terms. Require its exact private phase-bound request plus fresh adjudication,
 original capture and complete single unused unit evidence before bypassing only
 the absent refund-policy gate. A role, body flag, cloned request, explicit policy

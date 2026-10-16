@@ -1,5 +1,232 @@
 # eWaste domain contract
 
+## Application Metadata Ownership
+
+`eWaste.application.frameworkModuleName` and `backendModuleName` default to
+`nodics.waste` and `eWaste` in this owner. Reference projects inherit these
+neutral implementing identities instead of repeating them. Customer application
+code, name, frontend/project identity, visuals and optional scenario-module
+selection remain customer composition. Defaults alone neither select
+`wasteRecycling` nor grant identity, simulation, delivery or publication access.
+Later customization remains supported through nConfig and the existing journey
+contract; `test/eWasteApplicationConfigurationOwnership.test.js` verifies the
+default projection and unrelated customer compositions without persistence.
+
+## Evidence-only Rejection
+
+Notification resolution recovers partial commits through Communication's exact
+recorded-decision replay, never by inventing a replacement intent or sending again.
+`DefaultEWasteOutcomeCommunicationService.resolve` derives source/operator from
+the authorized submission and human, qualifies the owner acknowledgement against
+the original intent, rereads current scope and CAS-updates only the unchanged
+pointer. A newer owner projection is never regressed. If Communication committed
+but its acknowledgement or the Waste pointer save failed, repeat the same original
+action/reason/delivery revision; Communication returns current state read-only.
+Changed actor/action/reason conflicts. `eWasteOutcomeRecovery.test.js` exercises
+the actual private controller/facade/runtime with isolated CAS stores, all three
+resolution actions, lost acknowledgement/source-write failures and zero sends.
+No configuration/grant changes, current-provider assumptions or native acceptance
+are implied. Later-layer transport customization must preserve these bindings.
+
+Authorized human review-detail reads also compose a static Communication
+diagnostic for persisted UNCERTAIN notifications. Waste requires current
+`waste.review.queue.read` and exact record scope; eWaste derives intent and source
+binding from the unchanged persisted submission, then uses its existing runtime
+transport to Communication's private `/internal/communications/:intentCode/diagnostic`.
+The binding is exactly eWaste / wasteSubmission / this submission code and is
+checked by Communication against its stored intent. Browser fields cannot select
+the intent/source or provide a service identity. No new grants are introduced.
+Current submission revision/scope are checked again after the owner read.
+Only classification, bounded fixed message, attempt and actual intent status
+are projected in `notificationDiagnostic`. Owner failure or conflicting evidence
+is DIAGNOSTIC_UNAVAILABLE, never delivery proof or resend authority. This read
+does not update the notification pointer or contact a delivery provider.
+Axis renders the fresh owner sidecar; it never calls the private service route.
+`test/eWasteOutcomeDiagnostic.test.js` covers actual controller composition,
+forged selectors, scope denial, stale evidence, malformed replies and no-effects.
+
+The secured employee/admin `POST /review-workspace/:code/evidence-rejection`
+route requires existing `waste.review.approve`. The controller preserves trusted
+identity and maps the HTTP body to the canonical Waste Verification command.
+Only `reason`, `expectedRevision`, `confirmed` and `idempotencyKey` are accepted;
+conflicting header/body command keys, replacement evidence, physical facts and
+caller identity controls reject before persistence. Assignment, Profile scope,
+exact revision, bounded absence of assets/earlier verification and audit/replay
+admission belong to `DefaultWasteEvidenceRejectionService`, not this accelerator.
+See the [canonical review contract](../../../../../../../nodics.waste/modules/wasteVerification/llm/contracts/review-workspace.md).
+
+`rejectEvidence` and EVIDENCE_ONLY `reviewRecovery` use notification-only outcome
+handling. They never call `finishReview`, assess Rules, settle rewards, create an
+asset or change custody. The owner retains original media/customer facts and
+advisory `metadata.estimate`; a physical `impactRef` remains ineligible. The saved
+REJECTED decision has a public reason and EVIDENCE_ONLY audit basis. Notification
+failure leaves the decision intact and pending delivery, never invented delivery
+success or a reward retry. Rejection does not authorize deleting evidence.
+
+Axis consumes fresh owner availability and existing reviewWorkspace copy. A
+human must review the reason and confirm; the normal approval/verification
+actions retain every existing guard. Projects may customize copy through the
+normal configuration hierarchy, not relax verified-evidence exclusions.
+`test/eWasteEvidenceRejection.test.js` exercises actual HTTP-shaped controller,
+mapper and canonical rejection success/denial, plus notification-only recovery
+and outage behavior. Native UI/customer notification acceptance is separate.
+
+## Protected Draft-Media Retention
+
+`DefaultEWasteDraftMediaRetentionService` owns read-only candidate eligibility
+inspection. Media owns all metadata/physical cleanup; Waste owns submissions,
+evidence and promotion lifecycles; Cron owns scheduling. This source capability
+does not enable deletion, persist cleanup candidates, provision jobs or change
+the existing accepted-evidence retention contract.
+
+READ-12 remains blocked on policy and permanent-demo preservation, not missing
+demo data. All demo-required media and sample records are permanent owner data
+under their respective `/data` manifest contracts. Never replace them with job
+output/runtime fixtures or include them in retention deletion. This is not
+retention-duration approval. Only proven user-created abandoned drafts may be
+considered under a future approved policy; rejection alone is never permission.
+
+The scoped Waste evidence/submission contracts do not expose authoritative
+Media data-pack provenance. Media has retained transfer-manifest/version
+protection, but no safe pack-membership lookup in this inspection contract.
+Do not invent a `manifestCode`, infer provenance from `sample` labels or code
+prefixes, or maintain a parallel pack registry. Every observation therefore has
+`originStatus:UNCONFIRMED_PROTECTED`, `userCreatedDraftConfirmed:false` and
+`futurePolicyCandidate:false`, with the explicit permanent-pack-origin protection
+reason. Draft classification is `UNSUBMITTED_DRAFT_OBSERVATION`, not proof of
+abandonment or user creation. A future authoritative Media pack join must return
+a permanently protected pack category before any cleanup can be qualified.
+
+The private `POST /nodics/eWaste/v0/internal/draft-media/retention/inspect` route
+requires a router-verified eWaste runtime service principal, exact matching
+tenant/enterprise, the literal `waste.audit.read` grant, canonical nRouter
+permission admission and private request capture protection. Configuration and
+body fields do not create those grants. Access/customer/system principals reject.
+The controller preserves the original signed request and returns `no-store`.
+Unknown selectors, query parameters and explicit `dryRun:false` reject. The only
+body fields are optional `dryRun:true`, bounded integer `limit` and `cursor`.
+
+The service first resolves the signed enterprise's collection points through
+generated Waste reads and then uses `DefaultWasteOperationalAccessService`
+point precedence to constrain submissions before paging. Effective
+`eWaste.applicationCode` further narrows selection. No body-selected application,
+tenant, customer, enterprise, schema, time, duration or database predicate is
+accepted. Generated reads use the existing `DefaultWastePersistenceService`
+context/repository boundary, strict positive acknowledgements and cache skipping.
+Wrong-scope, failed, malformed, ambiguous or incomplete page responses reject.
+The service rechecks the original authority/policy after awaits, rereads each
+submission and rechecks point ownership before returning a report.
+
+Coverage is explicitly limited to application submissions at that enterprise's
+collection points. Drafts without a selected centre, deleted/missing submissions
+and uploads that never reached Waste are not discovered. They require an exact
+Media-owned owner/source discovery contract; a tenant-wide Media scan or guessed
+customer relationship is prohibited. Inactive/historical evidence remains in
+inspection, and related evidence overflow is explicitly marked incomplete.
+No absence observed here is proof that no other module references the bytes.
+
+| Observation | Age policy | Mandatory protection |
+| --- | --- | --- |
+| Unsubmitted editable draft | Last persisted `updated` plus reviewed `abandonedDraftMs` | Inactivity is only an abandoned-draft candidate; all current references remain protected |
+| Rejected submission | Persisted `metadata.reviewedAt` plus reviewed `rejectedSubmissionMs` | Rejection is not reference release, legal-hold release or deletion approval |
+| Replaced draft photo | Reviewed `replacedDraftMediaMs`, but no replacement-time anchor is currently available | Never substitute capture time or the draft's latest update for replacement time |
+| Accepted/promoted evidence or other workflow state | No draft cleanup eligibility | Always retain; an old timestamp, inactive row or later configuration cannot release it |
+
+The configuration subtree is
+`eWaste.acceptanceReadiness.draftMedia.cleanup`. Its defaults are `enabled:false`,
+`executionEnabled:false`, `deletionEnabled:false`, bounded scan limits and null
+retention durations. No day values are supplied. `enabled:true` permits only
+inspection after runtime admission. Retention durations are positive safe integer
+milliseconds supplied only after the business owner decides them; invalid/null
+values never expire. Duration equality is inclusive. Future/missing timestamps
+remain ineligible. `ageEligible` reports policy age only; `cleanupEligible:false`
+and `protected:true` are unconditional. Media hold, reference, version and
+retained-publication proof remains unconfirmed, never inferred from Waste state.
+Readiness reports these gaps instead of treating a policy-status label as READY.
+It distinguishes implemented owner inspection from unavailable owner cleanup,
+configured duration fields from unestablished retention approval, and scheduler
+activation as `UNKNOWN_NOT_PROVISIONED_BY_EWASTE`. An age observation is not
+approval or evidence of user-created origin, even when a later layer configures
+durations. Execution and deletion remain disabled regardless of those flags.
+
+The shared Media `DefaultMediaReadinessService` currently projects cleanup
+provider availability and policy-review labels but can return READY without
+proving retention/scheduler activation. Parent/Media review must qualify that
+shared projection separately. This eWaste batch does not alter it or claim that
+generic Media READY closes READ-12.
+
+### Scheduler, Replay And Recovery
+
+Deployments may select this existing Cron internal target:
+
+```js
+jobDetail: {
+  internal: {
+    module: "eWaste",
+    method: "POST",
+    uri: "/internal/draft-media/retention/inspect",
+    body: { dryRun: true },
+  },
+}
+```
+
+Cadence, node placement, internal credentials, runtime capability grants,
+business activation and schedule provisioning remain with the existing Cron and
+deployment owners. This batch contributes no active job, schedule expression,
+node identity, new scheduler or import release. No live schedule was created.
+The Cron handler's normal operational admission and target authorization still
+apply. Configure content-free logging for these private results; do not export
+photo identifiers into public scheduler logs.
+
+Each call processes one bounded page. For a longer inspection, an authorized
+caller passes `nextCursor` as the next request's `cursor`; a failed request has
+no successful checkpoint, so retry the same cursor. The cursor carries only the
+last code and a scope/policy/principal digest. It is navigation, not a signed
+cleanup command or authorization receipt. Scope and policy are recomputed on
+every call, so changed enterprise point ownership, application or policy rejects
+old cursors. No process-local ledger is needed: restart/replay repeats fresh
+reads and cannot repeat a side effect. Keyset paging is an eventual observation,
+not a frozen database snapshot; a later full scan observes newly inserted or
+changed records behind an earlier cursor.
+
+### Exact Execution Blocker
+
+The existing Media `scanCandidates` selects generic removable/expired records,
+uses its own passive retention defaults and cannot express an exact eWaste
+owner-approved selection with Waste revision/reference fences. `markPassive`
+can retire Media metadata and therefore is not an inspection fallback.
+`runRetentionCleanup` selects a generic status/time batch and has no exact owner
+command, cross-owner reference fence or durable per-artifact retry receipt;
+`deleteExpired` likewise cannot protect a concurrent Waste confirmation/promotion.
+Media's `assertPhysicalCleanup` correctly blocks versioned/retained cleanup, and
+ordinary local deletion rejects retained storage keys. Do not weaken those gates.
+
+Resumable mutation requires Media-owned exact identity/checksum/version admission,
+fresh legal-hold/reference/publication protection, a qualified Waste reference
+release/fence preventing concurrent confirmation or promotion, and durable
+per-candidate claim/result receipts with uncertain/partial-provider recovery.
+Separate owner-approved abandoned/rejected/replaced policies and authoritative
+replacement/orphan provenance are also required. These contracts are not safely
+expressible by existing APIs in this scope. Enabling either execution flag does
+not bypass the block, and no Media cleanup API is called. There is no claimed
+cleanup completion, installed acceptance, provider qualification or production
+evidence.
+
+Developers may override mergeable `settings`, `category`, `eligibility`, `now`
+and projection/inspection members through later module services to narrow
+policy, test a clock or supply reviewed durations. Preserve the independent
+runtime admission and unconditional mutation refusal. The focused retention
+test composes actual nAuth/nRouter admission and the canonical Waste adapter
+with inert generated repositories. It covers isolation, age boundaries, accepted
+and historical references, failed/changed reads, replay, pagination, restart-like
+stateless retry and later-layer customization. Internal-route registration and
+Cron request construction are separately tested without sockets or services.
+
+This blocked source implementation is described here and in owner README/AGENTS.
+No optional CMS pack, immutable predecessor, manifest, import receipt or Online
+publication is changed. Any later CMS capability article must be a forward
+manifest-governed documentation release, retaining the currently frozen packs.
+
 ## Persisted Digital Asset Sale
 
 The optional Checkout bridge follows the
@@ -21,7 +248,9 @@ the trusted request mapper and existing permission/owner checks.
 Its `settings()` reads `CONFIG.eWaste.journey`. Effective configuration must
 provide positive numeric `arrivalRadiusMetres`, `maximumPositionAgeMs` and
 `captureTimeoutMs`, plus integer `nearestCentreCount >= 3`; missing/invalid
-policy fails closed with `ERR_EWASTE_JOURNEY_UNAVAILABLE`. Optional
+policy fails closed with `ERR_EWASTE_JOURNEY_UNAVAILABLE`. The framework owns the
+50-metre arrival default; native Kickoff selects 200 metres in its deployment
+layer, not in the reference demo module. Optional
 `reviewAssignment.queueCode/label` and `depositInstruction` control the
 confirmation handoff. The instruction may contain `{centreName}`.
 Configuration defaults are supplied by the owning properties layer, never
@@ -247,19 +476,46 @@ caller-field isolation and owner error propagation.
 ## Circa acceptance readiness
 
 `DefaultEWasteAcceptanceReadinessService` owns Circa/eWaste prerequisite
-readiness. It reports channel policy, Profile external-identity mapping, masked
-Telegram credential presence, OpenAI/environmental assessment profile readiness,
+readiness. It reports channel policy, Profile owner inspection status, masked
+local Telegram credential presence, OpenAI/environmental assessment profile readiness,
 manual image-analysis fallback, draft media lifecycle status and accept/reject
 scenario dependencies. The provider must not call Telegram, OpenAI, Media intake
 or customer workflow APIs while building readiness; it checks owner configuration
-and local service availability only.
+and local service availability only. When Profile is remote, it must not inspect
+Waste-local Profile configuration or require a bot credential in Waste. Report
+`profileOwnerReadinessStatus` and `telegramCredentialReadinessStatus` as
+`REMOTE_OWNER_NOT_INSPECTED`, with an owner-inspection blocker. Remote mapping
+and reference booleans are unknown (`null`), and account-link readiness remains
+false. A configured module connection or a successful source test is not remote
+owner readiness evidence. `telegramChannelPolicyConfigured` reports the independent
+local channel-policy check; it does not qualify Profile or Communication.
+That check mirrors channel admission's existing boolean `seamlessSignIn`
+requirement: both `true` and `false` are valid modes; missing or non-boolean
+values produce `EWASTE_TELEGRAM_CHANNEL_POLICY_INVALID`, never a configured
+projection. This is a readiness correction, not a new sign-in policy.
+
+For co-located Profile, select the configured provider service and reuse its pure
+`configuredCredential(application, policy)` resolver. Never call verification,
+prepare a handoff, send a message or duplicate credential-store precedence in
+readiness. An absent/throwing resolver is `LOCAL_INSPECTION_UNAVAILABLE`, not a
+missing credential. Later provider services may override that same inspection
+member; exceptions and secret values never enter the readiness DTO.
 
 BackOffice may aggregate this report for Axis as `eWasteAcceptance`, but the
 rules stay in eWaste. Custom projects should supply only later-layer deltas such
 as application code, credential references, bot/openAI secret values and media
 cleanup policy. Missing secrets are reported as masked blockers with recovery
-guidance, never as displayed values. Live browser/customer execution remains the
+guidance, never as displayed values. Profile verification and Communication
+delivery retain their separately scoped credentials; do not copy them into
+Waste to clear a readiness warning. Live browser/customer execution remains the
 separate acceptance-evidence contract.
+
+Profile's registered `ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED` maps only to
+`ERR_EWASTE_CHANNEL_CONFIGURATION_REQUIRED` (HTTP 503). Preserve this stable
+public code, not arbitrary upstream fields or messages. Other owner outages,
+transport failures, proof failures and link conflicts retain their existing
+categories. The channel/readiness regressions cover canonical public error
+serialization, split-runtime isolation, provider overrides and private failures.
 
 ## Photo recognition taxonomy fallback
 
@@ -309,6 +565,55 @@ The concrete eWaste BackOffice provider publishes `ewaste-operations` below `was
 The BackOffice capability source lives under `data/backoffice/`, declared as `SOURCE_CONTRIBUTION` in the module manifest. It is projected by the existing capability provider and is not part of an executable core import.
 
 ## Customer listing and detail contract
+
+### Saved listing publication boundary
+
+`DefaultEWasteListingService.list` retains one revision-fenced v2 customer intent,
+not a service-authored Product. The intent contains original customer/source,
+command key, asking price, current canonical Store placement, authoring context,
+exact supported Waste policy hashes and seller-approved Product presentation.
+Configured presentation never falls back to a private submission-photo URL.
+Target selection is fingerprinted without credentials. Every await rechecks
+caller/input/policy; changed scope, ownership, revision or lifecycle stops writes.
+A different key cannot replace pending intent. Lost acknowledgements require
+explicit same-command recovery with the fresh asset revision, never automatic
+write retry, source authoring or compensation.
+
+This is source preparation, **not automatic publication**. The old Pricing and
+Inventory `operational/restore` and Product projection search/restore calls are
+removed. Their immutable-owner qualification and restoration refusals remain
+unchanged. No balance, warehouse, price book, approval, pointer, binding, grant
+or financial mutation is synthesized. A successful Staged Product response or
+public catalogue card cannot move the asset to LISTED. The stable HTTP 409
+`ERR_EWASTE_LISTING_PUBLICATION_REQUIRED` leaves it LISTING_REQUESTED and states
+that owner publication review is required; it is not a transient retry promise.
+
+Legacy pending commands without supported v2 intent fail with HTTP 409
+`ERR_EWASTE_LISTING_RECONCILIATION_REQUIRED` before any remote call or Waste write.
+Never backfill original policy from current configuration, replace their key,
+delete partial owner records or infer absence of effects from the old error.
+
+The disabled [retained handoff](listing-handoff.md) supplies a versioned queue,
+detail and least-privilege private proof. Store publisher scope is independent
+of collection-centre review scope. Product must independently reread Waste proof
+before human source authoring. Existing nPublish/Process approval remains human;
+Pricing must independently prove the exact individually approved row without
+replacing a shared book or assuming delivery selection. Inventory creates no
+quantity-one balances for digital ownership. Pending plan/complete requires
+original intent, unchanged policy hashes, exact reviewed Product and Pricing
+pins plus a genuine DigitalCore binding retaining the domain-plan digest.
+Fresh domain owner revalidation precedes each Waste write; only qualified CAS
+transitions to LISTED. Existing already-LISTED onboarding remains compatible.
+Missing owner endpoints, deployment grants, explicit configuration, human
+publication or delivery are real blockers, not readiness inferred from source.
+
+Later-layer presentation customization can override the mergeable `intent`
+member and delegate to the base member, changing only its Product presentation.
+It must preserve scope/key/price/policy and all refusal/approval invariants.
+`test/eWasteListingPublication.test.js` exercises real Waste persistence with
+isolated generated CAS and transport ports, including partial-write recovery,
+legacy preservation, negative authority, policy drift and this override. It
+does not qualify native JWTs, database persistence, publication or trading.
 
 Photo-first preparation uses `POST /submissions/prepare` with bounded `photo`
 content (`mimeType`, `contentBase64`, `originalFileName`), collection context and
@@ -470,6 +775,159 @@ input-only assessments with explicit limitations. Mandatory assessment is not a
 claim of numerical carbon coverage for these seven types. Every mapped property
 must have a finite supported value or an explicit reason/requirements. Source
 and type-specific methods are required before expanding numerical coverage.
+
+## Saved Review Recovery Diagnostics
+
+A saved approval remains authoritative if reward assessment or settlement fails.
+`metadata.reviewDiagnostic` contains only a registered static code, stage, message
+and explicit settlement retry eligibility. Authorized Waste review projection
+resolves its message from the status owner, never from a dependency error body.
+Missing, conflicting or unconfirmed assessment evidence blocks settlement.
+Settlement-only retry may restore a missing reference to one genuine saved
+assessment as described below; it cannot evaluate today's Rules.
+Completed review replay is marked by the Waste decision owner and must reuse the
+original immutable confirmed assessment; it cannot silently bind a new policy.
+An absent historical assessment needs an explicit owner recovery decision, not
+automatic recalculation. Existing Loyalty settlement keys and references remain
+unchanged; no new credit or review lifecycle is introduced.
+
+Settlement retry resolves its saved asset through Waste Verification's
+`approvedAsset` helper after existing employee scope, confirmation and revision
+checks. It never concatenates a submission ID with an asset prefix or consults
+current creation policy. The unique source-linked asset and its exact saved
+approved verification must match the authenticated tenant before assessment or
+settlement can start. `eWasteApprovedAssetRecovery.test.js` covers punctuation,
+policy-prefix and requested identities through both real entry points, plus
+ambiguous/mismatched evidence and tenant drift with no writes. Passing these
+source checks does not establish native settlement success.
+
+### Missing Confirmed-Assessment Reference
+
+`DefaultEWasteRewardAssessmentOperationService.savedConfirmed` is a read-only
+owner-qualified lookup, not a policy evaluator or a generic inspection API.
+It requires current human approval permission, original submission scope and
+revision, matching tenant, the canonical approved asset and verification, and
+unchanged original customer ownership. A bounded generated-owner query selects
+at most two CONFIRMED records for the exact submission and asset; zero is
+`ERR_EWASTE_REWARD_RECOVERY_NOT_FOUND`, and ambiguity is a conflict. Estimated or
+recalculated evidence is never promoted. No record is created or corrected.
+
+Asset creation's `rewardSettlementIntent` is a request placeholder, not a ledger
+receipt. Recovery may retain exactly one unchanged canonical `REQUESTED` intent
+only after matching the creation owner's builder and a unique persisted original
+`CREATE` ownership event in the same tenant. The asset/source idempotency key,
+original owner, correlation, creation policy, event revision zero, trigger and
+exact intent must agree. This check runs again before pointer restoration; it
+does not empty references or modify the creation event. Missing/ambiguous events,
+changed intents, receipt fields, dispatch uncertainty, recovery audit and any
+`metadata.rewardSettlement` remain blocked, including error-only metadata without
+proof that dispatch was impossible. Static `SOURCE_SETTLEMENT_INTENT`,
+`SOURCE_CREATION_READ` and `SOURCE_CREATION_BINDING` checks distinguish these
+refusals without exposing record values. No current creation policy is resolved.
+
+Qualification preserves the original command digest/key/actor, exact verification
+and impact references, immutable assessment revision zero, source revision,
+`inputSnapshot.metadata` identity/revision/type, approved verification property,
+saved reviewed facts, deterministic assessment code and calculation timestamp.
+It reconstructs the evaluation hash using Rules' existing `sourceHashEvidence`
+serializer and saved calculation groups, never `evaluate` or current policy
+resolution. The hash covers evaluation evidence, not all normalized inputs;
+source identity, relevant fact properties and verification are checked separately.
+Incompatible or incomplete older evidence remains blocked rather than guessed.
+Positive outcomes must also pin their original Loyalty programme and scale;
+current deployment defaults cannot fill missing historical settlement terms.
+
+New assessment creation captures `metadata.settlementTerms` with contract version
+1, programme and scale from the exact outcome first, then the effective layered
+`eWaste.rewardRules` defaults. This extension metadata is separate from
+`rewardOutcome`: Rules' exact outcome and `sourceHash` stay unchanged. Settlement
+and orphan-reference recovery prefer this saved snapshot and reject conflicting
+or malformed snapshots. A historical outcome without either a snapshot or its
+own complete terms remains blocked for every positive settlement path, including
+ordinary retry with an existing assessment reference;
+no migration or replay fills it using today's defaults. Existing assessments are
+returned without modifying their original terms when source-hash replay matches.
+
+Before any positive wallet dispatch, `settlementBeneficiary` qualifies one original
+APPROVED submission through bounded tenant-owned persistence. Its submitter must
+match the asset's original customer owner, and submission/asset/assessment identity
+and verification references must agree. Current asset ownership never determines
+the approval beneficiary: an already-bound assessment may settle to the original
+submitter after a transfer, without modifying ownership. Missing, ambiguous,
+inactive or mismatched source/beneficiary evidence refuses before opening a wallet.
+Completed settlements remain no-effect replays and zero outcomes make no wallet
+calls. Current reward configuration is read only for prospective assessment
+creation, never to fill historical settlement terms or change earning identity.
+
+The generated single-save pipeline normally returns one record under `result`,
+while bulk save returns a result array. `savedAssessment` reuses Waste's canonical
+record-envelope normalization and requires exactly one matching code, source hash,
+stage, submission, asset and captured terms. Missing, multiple, failed or
+mismatched acknowledgements cannot be mistaken for successful evidence. The
+`eWasteRewardPersistenceContract` tests execute the real save response builders;
+the Rules contract covers both record and array acknowledgements through `assess`.
+This supports compatible owner envelopes without claiming an array was the cause
+of any particular historical native failure.
+
+Opening the existing eWaste review detail can perform this inspection without
+writing a diagnostic. For authorized approvers, `savedRewardRecovery` exposes
+only `available`, safe static `message` and a registered failure `diagnostic`.
+The action is available only after the original proof qualifies. Axis keeps its
+ordinary approval permission and confirmation controls; this field does not
+confer authority and never advertises successful settlement. Read-only staff
+receive no additional recovery authority or private assessment snapshot.
+Inspection is driven by APPROVED source state, PENDING asset settlement and an
+absent assessment reference, independently of any prior diagnostic code. An absent,
+UNCONFIRMED, NOT_FOUND or CONFLICT diagnostic cannot suppress fresh read-only
+qualification. Existing or malformed references and completed settlements are
+not advertised as missing-reference recovery candidates.
+
+Read-only failure diagnosis additionally exposes `diagnostic.qualificationStage`
+and `diagnostic.qualificationCheck` from the fixed `reviewDiagnostics.recoveryChecks`
+registry. The existing error `code`, broad `stage` and refusal semantics remain
+unchanged. Static explanatory text is appended to the displayed message so an
+operator can distinguish source admission (before any assessment lookup), absent
+or multiple assessments, approval binding, assessment binding, input snapshot,
+original facts, evaluation hash and original settlement terms. Only the first
+failed invariant is reported; no source values, counts, records, error messages,
+stack traces or credentials are copied. Unknown check markers are omitted.
+This projection belongs only to the already-authorized detail read, not generic
+database inspection, additional grants or automatic retry. Diagnosis never
+repairs evidence or converts a failed invariant into recovery eligibility.
+
+Explicit existing settlement retry rechecks proof and submission/asset revisions,
+then uses the existing asset compare-and-set update to persist the pointer,
+unchanged reward summary and `metadata.confirmedRewardRecovery` audit (original
+source hash/revision, current source/asset revision, verification, acting employee,
+timestamp and assessment-derived restore key). Only after readback confirms the
+binding does normal settlement run with `<assessment-code>:wallet-settlement`.
+If Loyalty acknowledgement is uncertain, repeat recovery uses the restored
+pointer and the same earning identity; the restore audit is not rewritten.
+For missing-reference restoration, existing malformed/conflicting pointers, prior
+partial settlement or recovery audit, transferred owners and evidence races fail
+closed without replacement.
+
+For business users, this recovers an interrupted linkage, not a new reward or
+approval. Administrators inspect the safe detail diagnosis first; a genuinely
+absent original assessment needs a separately governed owner decision and cannot
+be closed by this operation. Partner extensions override documented service
+members while preserving these invariants; no environment-specific enablement,
+extra grants or customer identity is added. Maintainer regression evidence is
+`eWasteSavedRewardRecovery.test.js`, including read-only absence, ambiguity,
+tenant/source/hash corruption, revision races, idempotent retry, immutable
+evidence and member customization. Native UI acceptance remains a separate gate.
+
+Notification `PENDING` without an intent pointer is an eWaste uncertainty
+projection, not a Communication intent status or proof of queued delivery.
+Failed initial dispatch stores only a registered static stage diagnostic
+(admission, command, owner storage, dispatch, acknowledgement or trusted link
+configuration). It never stores raw causes, credentials, provider responses or
+private messages. Existing acknowledged intent pointers survive failed/stale
+retries and keep their original idempotency identity. Recovery remains explicit
+and independently scope-authorized; no diagnostic grants access or retries a
+command. `eWasteReviewRecoveryDiagnostics.test.js` exercises actual Rules/status,
+Waste projection, private logger/controller/facade and durable Communication
+owners using synthetic IN_APP storage, not native/provider acceptance.
 
 ## Reusable Catalogue
 

@@ -1,7 +1,38 @@
 # Product
 
+Ordinary Product access now has owner-scoped root reads, Staged create/update
+and a separate Full control archive command. The existing Workbench consumes
+Product's scoped descriptor and routes; generic schema ACLs remain unchanged.
+Archive creates a source successor and does not remove an existing Online
+publication. See [the root-only command contract](llm/contracts/ordinary-product-authoring.md).
+
+Selected public coupon browsing uses Promotion's bounded availability batch,
+preserving original caller authority and independent canonical Product checks.
+Only duplicate Profile activity references are consolidated, freshly before and
+after each batch. Physical Inventory and scoped customer/Cart behavior stay
+unchanged. See [browsing delivery](llm/contracts/README.md#public-coupon-browsing).
+
 Opt-in native create receipts retain original command identity without changing
 Product authoring authority. See [original results and continuation](data/docs-v001/records/documentation/productDocumentationComponentData.js).
+
+Private listing authoring preserves original source/owner/terms across partial
+recovery. Ordinary storage uses insert-only; qualified versioned storage uses
+canonical immutable version-zero creation, never ordinary upsert. Explicit
+digital ownership attributes survive localized projection without implying
+available supply or a qualified binding. See [admitted listing persistence](llm/contracts/product-lifecycle-and-publication.md#admitted-listing-persistence).
+
+Human listing authoring accepts retained-intent selectors only and independently
+reads the source owner's proof with its own runtime identity. The signed human
+must already publish in the exact Store enterprise. Fixed Store/source evidence
+reads do not write, repair or approve. The bounded proof carries Product identity,
+authoring terms and an opaque original-intent digest, not pricing or settlement
+policies. Those remain validated by the originating owner, so another source
+domain does not need e-waste settlement semantics. The transport is inert by default; see
+[retained listing handoff](llm/contracts/product-lifecycle-and-publication.md#retained-listing-handoff).
+Store placement uses the separately configured operational Store owner through
+`marketplaceAuthoring.storeSource`, never a Staged-local Store fallback. Both
+remote reads use this runtime's own credential, not the human bearer or enterprise
+headers; existing owner deployment/permission admission remains mandatory.
 
 ## Governed Catalogue Publication
 

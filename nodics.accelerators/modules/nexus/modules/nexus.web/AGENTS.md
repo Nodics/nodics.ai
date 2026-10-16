@@ -5,6 +5,11 @@
   media policy deltas, deterministic generation, and acceptance evidence.
 - Reuse Catalog, CMS, WCMS, Media, Localization, Profile, and Publishing
   schemas and services. Never redefine them here.
+- This optional content pack is not an authority for permissions, roles,
+  standard identities or reusable business services. Access definitions belong
+  to the implementing capabilities and Profile; any sample account assignments
+  reference them. Keep application values and content separate from reusable
+  behavior, as for Circa and Agora reference packs.
 - Corporate content belongs to `nexusCorporateSite` and
   `nexusContentCatalog`. Do not add demo-commerce data until the corporate
   local qualification gate is complete and the demo phase is authorized.

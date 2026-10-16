@@ -248,12 +248,12 @@ async function fixture() {
 test("forward Init authority receives human/guest identities while dynamic tenants receive only service identities and groups", async () => {
   const f = await fixture();
   const manifest = require("../data/manifest.json");
-  assert.equal(manifest.sections["init-v001"].version, "0.0.1");
+  assert.equal(manifest.sections["init-v001"].version, "0.0.3");
   assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v001");
   assert.equal(manifest.retainedRoots, undefined);
   releases.validateRetainedRoots(path.resolve(__dirname, "../data"), manifest);
   const headerPath =
-    require.resolve("../data/init-v001/headers/user/defaultUsersHeader");
+    require.resolve("../data/init-v001/headers/identityBootstrap/preservedUsersHeader");
   delete require.cache[headerPath];
   const headers = require(headerPath).profile;
   const selector = SERVICE.DefaultFileDataImportProcessService;
@@ -262,7 +262,7 @@ test("forward Init authority receives human/guest identities while dynamic tenan
     require("../data/init-v001/records/user/defaultEmployeeData"),
   );
   const services = Object.values(
-    require("../data/init-v001/records/user/defaultServiceEmployeeData"),
+    require("../data/init-v001/records/identityBootstrap/preservedServiceEmployeeData"),
   );
   const guests = Object.values(
     require("../data/init-v001/records/user/defaultCutomerData"),
@@ -283,8 +283,8 @@ test("forward Init authority receives human/guest identities while dynamic tenan
     );
   }
   const groups =
-    require("../data/init-v001/headers/groups/defaultUserGroupsHeader").profile
-      .defaultUserGroups;
+    require("../data/init-v001/headers/identity/profileUserGroupHeader").profile
+      .profileUserGroup;
   for (const header of [headers.defaultServiceEmployee, groups]) {
     assert.deepEqual(
       selector.resolveTargetTenants({ tenant: "default" }, header),
@@ -318,26 +318,35 @@ test("forward Init authority receives human/guest identities while dynamic tenan
   }
 });
 
-test("forward Init group snapshot preserves the final permissions of already-current later releases", () => {
-  const baseline = require("../data/init-v001/records/groups/defaultBootstrapUserGroupsData");
-  const forward = require("../data/init-v001/records/groups/defaultBootstrapUserGroupsData");
-  const historical = [
-    require("../data/init-v001/records/groups/runtimeConfigurationUserGroupsData"),
-    require("../data/init-v001/records/groups/runtimeConfigurationUpdateUserGroupsData"),
-    require("../data/init-v001/records/groups/serviceAccountCircaUserGroupsData"),
-    require("../data/init-v001/records/groups/backofficeCircaUserGroupsData"),
-  ];
+test("owner group seeds preserve installed narrowing and administrative decisions", async () => {
+  await fixture();
+  const forward = require("./helpers/identityCatalogueFixture").records("UserGroup");
+  assert(forward.length > 0);
+  assert.equal(new Set(forward.map(group => group.code)).size, forward.length);
   const installed = new Map(
-    Object.values(baseline).map((group) => [group.code, group]),
+    forward.map((group) => [group.code, structuredClone(group)]),
   );
-  for (const release of historical) {
-    for (const group of Object.values(release))
-      installed.set(group.code, group);
-  }
-  const upgraded = new Map(installed);
-  for (const group of Object.values(forward)) upgraded.set(group.code, group);
+  const viewer = installed.get("runtimeConfigViewerUserGroup");
+  viewer.permissions = viewer.permissions.filter(code => code !== "backoffice.registry.view");
+  viewer.name = "Reviewed installed viewer";
+  const administrator = installed.get("adminGroup");
+  administrator.permissions = [...new Set([...administrator.permissions, "backoffice.functionalModule.activate"])];
+  const upgraded = new Map([...installed].map(([code, group]) => [code, { ...structuredClone(group), _id: code }]));
+  const groups = {
+    ...require("../src/service/group/defaultUserGroupService"),
+    get: async request => ({ code: "SUC_READ", count: 1, result: [structuredClone(upgraded.get(request.query.code))] }),
+    save: () => assert.fail("Retained groups must not be rewritten"),
+  };
+  SERVICE.DefaultUserGroupService = groups;
+  SERVICE.DefaultIdentityCatalogueService = { ...require("../src/service/identity/defaultIdentityCatalogueService") };
+  SERVICE.DefaultIdentityCatalogueGovernanceService = {
+    authorizeSeed: async () => {},
+    read: (service, request) => service.get(request),
+    createReference: () => assert.fail("Retained groups must not be recreated"),
+  };
+  await groups.ensureReferenceAll({ tenant: "default", authData: { userGroups: ["adminGroup"] }, models: forward });
   for (const [code, expected] of installed) {
-    const actual = upgraded.get(code);
+    const { _id, ...actual } = upgraded.get(code);
     assert.deepEqual(
       { ...actual, permissions: [...(actual.permissions || [])].sort() },
       { ...expected, permissions: [...(expected.permissions || [])].sort() },
@@ -364,7 +373,7 @@ test("actual layered Init header preparation respects replacement tenant selecto
   const directory = fs.mkdtempSync(
     path.join(os.tmpdir(), "profile-init-selector-"),
   );
-  const customPath = path.join(directory, "defaultUsersHeader.js");
+  const customPath = path.join(directory, "preservedUsersHeader.js");
   try {
     fs.writeFileSync(
       customPath,
@@ -374,7 +383,7 @@ test("actual layered Init header preparation respects replacement tenant selecto
       data: {
         headerFiles: {
           users: [
-            require.resolve("../data/init-v001/headers/user/defaultUsersHeader"),
+            require.resolve("../data/init-v001/headers/identityBootstrap/preservedUsersHeader"),
             customPath,
           ],
         },
@@ -440,11 +449,11 @@ test("project logical init-v001 contributions still merge with forward framework
   );
   try {
     const files = {
-      "init-v001/headers/user/defaultUsersHeader.js":
+      "init-v001/headers/identityBootstrap/preservedUsersHeader.js":
         "module.exports = {profile:{defaultEmployee:{options:{tenants:['custom-approved']}},defaultServiceEmployee:{options:{enabled:true}}}};",
       "init-v001/records/user/defaultEmployeeData.js":
         "module.exports = {record6:{code:'customHuman',loginId:'customHuman',active:false,principalType:'human',userGroups:['customerUserGroup']}};",
-      "init-v001/records/user/defaultServiceEmployeeData.js":
+      "init-v001/records/identityBootstrap/preservedServiceEmployeeData.js":
         "module.exports = {customService:{code:'customService',loginId:'customService',active:true,principalType:'service',userGroups:['serviceAccountUserGroup']}};",
     };
     for (const [name, bytes] of Object.entries(files)) {
@@ -565,7 +574,7 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.equal(
     f.configuration.identityGovernance.migration.assessment.bootstrapReview
       .sources[0].version,
-    "0.0.1",
+    "0.0.3",
   );
   const reviewSource =
     f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0];
@@ -613,6 +622,58 @@ test("real layered Init owners produce six expected source principals without co
   assert.equal(f.report.reviewRequired, true);
   for (const row of f.expected.expected)
     assert.equal(JSON.stringify(challenge).includes(row.loginId), false);
+});
+
+test("source inspection admits only historical saveAll and successor ensureBootstrapAll without executing either", async () => {
+  const f = await fixture();
+  const prepare = SERVICE.DefaultSystemDataImportInitializerService.buildHeaderInstances;
+  const operations = [];
+  SERVICE.DefaultSystemDataImportInitializerService.buildHeaderInstances = function (...args) {
+    prepare.apply(this, args);
+    for (const header of Object.values(args[0].data.headers)) {
+      if (["employee", "customer"].includes(header.options.schemaName)) {
+        operations.push(header.options.operation);
+      }
+    }
+  };
+  for (const name of ["DefaultEmployeeService", "DefaultCustomerService"]) {
+    SERVICE[name] = {
+      saveAll: () => assert.fail("Source review must not import historical identities"),
+      ensureBootstrapAll: () => assert.fail("Source review must not seed identities"),
+    };
+  }
+  assert.deepEqual((await f.owner.sources("default")).expected, f.expected.expected);
+  assert(operations.length > 0);
+  assert(operations.every(operation => operation === "ensureBootstrapAll"));
+  for (const operation of ["saveAll", "updateAll", "deleteAll", undefined]) {
+    SERVICE.DefaultSystemDataImportInitializerService.buildHeaderInstances = function (...args) {
+      prepare.apply(this, args);
+      for (const header of Object.values(args[0].data.headers)) {
+        if (["employee", "customer"].includes(header.options.schemaName)) header.options.operation = operation;
+      }
+    };
+    if (operation === "saveAll") assert.deepEqual((await f.owner.sources("default")).expected, f.expected.expected);
+    else await assert.rejects(f.owner.sources("default"));
+  }
+});
+
+test("historical installation receipts remain exact evidence and cannot qualify successor sources", async () => {
+  const f = await fixture();
+  const release = SERVICE.DefaultDataReleaseService.discoverReleases("init").find(row => row.releaseCode === "profile:init-v001");
+  const row = f.installations.values().next().value;
+  const original = structuredClone(row);
+  for (const version of ["0.0.1", "0.0.2"]) {
+    row.version = version;
+    row.checksum = "b".repeat(64);
+    const historical = structuredClone(row);
+    assert.deepEqual(await f.owner.installation("default", { ...release, version: row.version, checksum: row.checksum }), historical);
+    await assert.rejects(f.owner.sources("default"));
+    assert.deepEqual(row, historical);
+  }
+  row.version = release.version;
+  await assert.rejects(f.owner.sources("default"));
+  Object.assign(row, original);
+  assert.deepEqual((await f.owner.sources("default")).expected, f.expected.expected);
 });
 
 test("inventory/source/installation drift and wrong original operator reject review", async () => {

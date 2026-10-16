@@ -26,7 +26,7 @@ const statuses = require('../src/utils/statusDefinitions');
 function fixture() {
     const policy = { ...properties.identityGovernance.migration.assessment, enabled: true, pageSize: 2 };
     global.CONFIG = { get: key => ({ defaultTenant: 'root', defaultEnterprise: 'platform',
-        identityGovernance: { migration: { assessment: policy, serviceGroup: 'serviceAccountUserGroup', servicePrincipalCodes: [] } },
+        identityGovernance: { migration: { assessment: policy } },
         enterpriseManagement: {} }[key]) };
     global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
     global.ENUMS = { ProfileRegistrationPhase: { COMPLETE: { key: 'COMPLETE' } },

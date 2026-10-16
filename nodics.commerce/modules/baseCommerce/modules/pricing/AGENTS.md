@@ -1,5 +1,30 @@
 # Pricing Agent Contract
 
+Individual row releases reuse existing Pricing retention/pointers/receipts,
+nPublish and Process. Capture exactly one immutable row plus its exact existing
+book and independently proven approved Product; never publish a replacement
+single-row book. Preserve the original signed human book-owner enterprise and
+separate source authoring from approval. No runtime namespace delegation, header
+rewrite, token conversion or service self-approval is contributed. Delivery is
+default-disabled, retains configured book roots and requires actual consumed
+Product version pins plus fresh owner proof and pointer/receipt checks. Preserve
+the real managed-writer regressions and [row release contract](llm/contracts/pricing-lifecycle-and-publication.md#individual-row-releases).
+
+Cart/merchant Product pin reads must first use the shared bounded configured
+book/Store candidate gate and select only matching basket Products. Global row
+delivery cannot acquire Product authority for unrelated/book-only baskets.
+Keep final delivery's independent fresh enumeration: a relevant row appearing
+after an empty gate must refuse without a pin, never return its old book price.
+Pricing-only cross-namespace delegation remains sufficient for unrelated book
+prices, not relevant Product pins. Preserve compatibility and race regressions.
+
+`/publication/policy/row-evidence` is a fixed read, not publication or a proxy.
+Preserve original private runtime, existing internal route permission and existing
+runtime-enterprise admission. Exact row/book/Product pins, selected delivery,
+effective price, fresh book/row pointers and receipts are mandatory. Only those
+fixed local reads use canonical persistence; no caller groups/claims change.
+Never return old rows, infer Product versions, read mutable sources or mutate.
+
 Online retained policy reads are not Staged capture. Preserve the separate
 `activatedReadAuth` admission: signed human/customer scope must agree, and
 only a human with `commerce.product.publish` plus the effective domain setup
@@ -22,6 +47,20 @@ selected business scope plus exact stored source authorization. Never forward a
 human enterprise header or caller token to the target. Follow
 [cross-enterprise handoff](llm/contracts/pricing-lifecycle-and-publication.md#cross-enterprise-runtime-handoff)
 and preserve the real-owner admission/transport regressions in the same suite.
+The shared internal route permission and module claim are not writer authority.
+Online mutation callers must match exactly one `publication.sourceAuthority.callers`
+binding; Staged source-authorization callbacks must match `publication.target.callers`.
+Match original signed tenant, principal enterprise, service and all five deployment
+coordinates. Missing/ambiguous bindings deny, even for genuine stored operations.
+Retire original authority or binding drift before private persistence/proof return.
+Fixed controller target execution carries a private exact-context continuation
+through owner reads and every managed save/update, including CAS, receipt completion
+and reviewed legacy recovery. No body callback/flag may register it. Copied or retired
+contexts refuse; cleanup always retires the continuation. Preserve target-read drift
+regressions proving zero subsequent writes, not only transport-boundary checks.
+Keep row/status reads independent; no role blacklist, discovery-lease authority,
+wildcard, compatibility bypass or grant migration. Qualify existing publisher and
+callback mappings before deploying the guard; preserve the existing enterprise policy.
 
 Native merchant pricing preserves the business issuer for Cart, Store and activated
 prices without rewriting signed runtime auth. Same-enterprise requests remain strict;
@@ -59,3 +98,10 @@ See [publication qualification](llm/contracts/README.md#publication-qualificatio
 policy capture is a projection, not immutable storage proof. Mutable restoration
 is disabled; provider registration and activation require owner migration,
 retained target policy, durable receipts, pointer CAS and no-source-fallback reads.
+
+This capability owns its publication providers, standard transport and source
+schema role profile. COMMERCE contributes its read-only target observer;
+COMMERCE_STAGED contributes approval/version wiring. Keep installed qualification,
+connections, signed caller scopes and explicit deployment differences separate.
+Use publicationConfigurationOwnership.test.js in the Commerce group for the
+shared role-isolation matrix, alongside this owner's behavioral regressions.

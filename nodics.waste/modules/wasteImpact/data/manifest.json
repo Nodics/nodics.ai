@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "wasteImpact",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "wasteImpact permissionCatalogue",
+      "description": "Explicit wasteImpact identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "wasteImpact",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wasteImpactPermissionHeader.js": "ec921082144db58f4bcf180e6277d3b46af2c1855fdccd3ec7fd5c67cd2542f1",
+        "init-v001/records/identity/wasteImpactPermissionData.js": "62ddbbac41af4f3dcf46fc285c3b465f043b34bd225bfdeee4b14c933892ace2"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

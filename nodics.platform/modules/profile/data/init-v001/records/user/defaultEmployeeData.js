@@ -52,7 +52,7 @@ module.exports = {
       active: true,
     },
     principalType: "human",
-    userGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+    userGroups: ["adminGroup", "runtimeConfigAdminUserGroup", "platformAdministratorUserGroup"],
     addresses: ["defaultEmployeeAddress"],
     contacts: ["defaultEmployeeContact"],
   },

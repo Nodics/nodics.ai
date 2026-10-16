@@ -1,8 +1,18 @@
 # nTooling
 
+Project validation and the design-principle audit enforce
+[reference demo ownership](llm/contracts/tooling-governance-contracts.md#reference-demo-ownership)
+for explicitly marked packages without evaluating their JavaScript.
+
 nTooling owns reusable project command execution, generation, topology and qualification tooling. Projects supply only their deployment selections and intentional overrides.
 
 Commands and imports remain inert until explicitly executed. Preserve owner-contributed canonical acceptance gates, isolated runtime cleanup and the separation between static evidence and deployment qualification.
+
+The design-principle audit also protects the nSetup
+[default ownership gate](../nSetup/llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate)
+and its coding/review discovery links. This checks contract integrity, not the
+semantic ownership of every property; consumer review and effective-configuration
+regressions remain mandatory before closing a refactor.
 
 Documentation `referenceCatalogues` validates explicit canonical cross-pack links
 without importing the targets. `includes` alone selects import composition.

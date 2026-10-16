@@ -259,16 +259,16 @@ test('signed issuer staff completes exact vendor unit through existing claim, du
     assert(profileHeaders.length > 5);
     assert(profileHeaders.every(value => value.Authorization === 'Bearer original-staff-token' && value['X-Enterprise-Code'] === 'issuer'));
 });
-test('explicit LOCAL ITEM simulation preserves private issuer admission, original encrypted stock and unverified receipt labels through actual merchant redemption', async () => {
+test('explicit portable ITEM simulation preserves private issuer admission, original encrypted stock and unverified receipt labels through actual merchant redemption', async () => {
     const previousNodics = global.NODICS;
     try {
         actualMerchantLifecycle();
         global.NODICS = { getSelectedEnvironmentName: () => 'fixtureNative' };
         const get = CONFIG.get;
-        CONFIG.get = key => key === 'environment' ? { class: 'LOCAL' } : key === 'fulfillmentCore' ?
+        CONFIG.get = key => key === 'environment' ? { class: 'PRODUCTION' } : key === 'fulfillmentCore' ?
             { itemSimulation: { enabled: true, environmentAllowlist: ['fixtureNative'] } } :
             key === 'promotion' ? { ...get(key), merchantBenefits: { enabled: true, qualified: false,
-                itemEvidenceMode: 'LOCAL_SIMULATION', itemEvidenceService: 'DefaultFulfillmentItemSimulationService' } } :
+                itemEvidenceMode: 'SIMULATION', itemEvidenceService: 'DefaultFulfillmentItemSimulationService' } } :
             key === 'digitalCore' ? { merchantRedemption: { enabled: true, storeScope: { enabled: true, qualified: true } } } : get(key);
         SERVICE.DefaultPromotionItemBenefitService = require('../src/service/defaultPromotionItemBenefitService');
         SERVICE.DefaultFulfillmentItemSimulationService = require('../../../../fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService');
@@ -296,6 +296,7 @@ test('explicit LOCAL ITEM simulation preserves private issuer admission, origina
         assert.equal(result.claimStatus, 'REDEEMED');
         assert.equal(result.simulated, true);
         assert.equal(result.deliveryVerified, false);
+        assert.equal(result.evidenceMode, 'SIMULATION');
         assert.equal(result.merchantReceiptReference, 'SIM:original@outlet');
         assert.equal(coupon.enterpriseCode, 'vendor');
         assert.equal(command.enterpriseCode, 'issuer');
@@ -305,8 +306,12 @@ test('explicit LOCAL ITEM simulation preserves private issuer admission, origina
         const count = writes;
         assert.equal((await merchant.confirm(command)).simulated, true);
         assert.equal(writes, count);
-        assert.equal((await merchant.inspectReceipt(command)).deliveryVerified, false);
-        assert.equal((await merchant.queue(command)).redemptions[0].simulated, true);
+        const inspection = await merchant.inspectReceipt(command);
+        assert.equal(inspection.deliveryVerified, false);
+        assert.equal(inspection.evidenceMode, 'SIMULATION');
+        const queued = (await merchant.queue(command)).redemptions[0];
+        assert.equal(queued.simulated, true);
+        assert.equal(queued.evidenceMode, 'SIMULATION');
         assert(profileHeaders.every(value => value.Authorization === 'Bearer original-staff-token' && value['X-Enterprise-Code'] === 'issuer'));
         assert.doesNotMatch(JSON.stringify(result), /protectedToken|tokenHash|buyer@example/);
     } finally { global.NODICS = previousNodics; }

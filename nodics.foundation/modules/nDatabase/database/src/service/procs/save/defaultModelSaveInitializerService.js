@@ -106,6 +106,7 @@ module.exports = {
             SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(
                 request.authData,
                 rawSchema.accessGroups,
+                request,
             ) >= CONFIG.get('accessPoints').writeAccessPoint
         ) {
             SERVICE.DefaultRecordOwnershipPolicyService.enforce(
@@ -453,6 +454,7 @@ module.exports = {
      * @param {Object} process Pipeline process controller.
      * @returns {undefined}
      * @sideEffects Writes `response.success`.
+     * @privacy Sensitive failures log only a fixed status; original errors remain with the existing pipeline/error owner.
      */
     saveModel: function (request, response, process) {
         this.LOG.debug('Saving model ');
@@ -464,7 +466,11 @@ module.exports = {
             };
             process.nextSuccess(request, response);
         }).catch((error) => {
-            console.log('model error: ', error);
+            this.LOG.error(
+                SERVICE.DefaultLoggerService?.isSensitiveRequest?.(request)
+                    ? 'ERR_SAVE_00000'
+                    : error,
+            );
             process.error(request, response, error);
         });
     },

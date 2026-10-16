@@ -364,7 +364,7 @@ module.exports = {
             _self.LOG.info('Server is not started yet, hence waiting to register consumers');
             setTimeout(() => {
                 _self.registerConsumers();
-            }, CONFIG.get('processRetrySleepTime') || 2000);
+            }, CONFIG.get('emsClient').processRetrySleepTime);
         }
     },
 

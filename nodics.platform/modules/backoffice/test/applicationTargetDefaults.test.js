@@ -13,6 +13,39 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const service = require('../src/service/defaultBackofficeApplicationInitializationService');
 const defaults = require('../config/properties').backofficeApplicationInitialization;
+test('Platform project-context defaults resolve through nConfig for unrelated projects and preserve later overrides', t => {
+    const path = require('node:path');
+    const foundation = '../../../../nodics.foundation/modules/nConfig/src/service/';
+    const binding = require(foundation + 'defaultConfigurationBindingService');
+    const loader = require(foundation + 'DefaultFrameworkInitializerService');
+    const before = global.CONFIG;
+    t.after(() => { global.CONFIG = before; });
+    for (const projectCode of ['example.catalogue', 'example.recovery']) {
+        const root = path.resolve('/workspace', projectCode);
+        const context = { projectCode, roots: { project: root }, environmentVariables: {} };
+        const resolved = binding.resolve({ backofficeApplicationInitialization: defaults }, {}, context);
+        const project = loader.deriveRuntimeRoleCapabilityProfiles({ ...resolved, runtimeRole: { code: 'PLATFORM' } });
+        global.CONFIG = { get: () => project.backofficeApplicationInitialization };
+        assert.equal(service.projectCode({}), projectCode);
+        assert.equal(service.projectRoot(), root);
+        assert.deepEqual(project.backofficeApplicationInitialization.profiles, {});
+        assert.equal(project.backofficeApplicationInitialization.target.connectionName, undefined);
+        const unrelated = loader.deriveRuntimeRoleCapabilityProfiles({ ...resolved, runtimeRole: { code: 'OTHER' } });
+        assert.equal(unrelated.backofficeApplicationInitialization.projectCode, undefined);
+        assert.equal(unrelated.backofficeApplicationInitialization.projectRoot, undefined);
+        const bound = binding.resolve({ backofficeApplicationInitialization: defaults }, {}, {
+            ...context, environmentVariables: { NODICS_PROJECT_CODE: 'deployment.override' },
+        });
+        assert.equal(loader.deriveRuntimeRoleCapabilityProfiles({ ...bound, runtimeRole: { code: 'PLATFORM' } })
+            .backofficeApplicationInitialization.projectCode, 'deployment.override');
+        const later = binding.merge(project, { backofficeApplicationInitialization: { projectCode: 'customer.override', projectRoot: '/workspace/other' } });
+        assert.equal(later.backofficeApplicationInitialization.projectCode, 'customer.override');
+        assert.equal(later.backofficeApplicationInitialization.projectRoot, '/workspace/other');
+    }
+    assert.throws(() => binding.resolve({ backofficeApplicationInitialization: defaults }, {}, { environmentVariables: {} }),
+        /trusted absolute base/);
+});
+
 test('profile targets resolve through current deployment defaults and explicit profile differences', () => {
     let settings = {
         ...defaults,

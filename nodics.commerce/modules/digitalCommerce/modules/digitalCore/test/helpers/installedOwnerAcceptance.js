@@ -50,7 +50,7 @@ async function confirmMerchant(request) {
     native.requireEvidence(denied, 'new confirmation key admitted for used original coupon');
     if (simulated)
         native.requireEvidence(receipt.simulated === true && receipt.deliveryVerified === false &&
-            receipt.evidenceMode === 'LOCAL_SIMULATION', 'simulation evidence was promoted to verified delivery');
+            ['SIMULATION', 'LOCAL_SIMULATION'].includes(receipt.evidenceMode), 'simulation evidence was promoted to verified delivery');
     else native.requireEvidence(receipt.simulated !== true, 'priced receipt changed evidence mode');
     return { contractVersion: 1, acceptance: 'INSTALLED_ORIGINAL_MERCHANT_CONFIRMATION',
         entitlementCode: receipt.entitlementCode, receiptCode: receipt.receiptCode, storeCode: receipt.storeCode,

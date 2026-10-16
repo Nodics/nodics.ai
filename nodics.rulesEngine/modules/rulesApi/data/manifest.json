@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "rulesApi",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "rulesApi permissionCatalogue",
+      "description": "Explicit rulesApi identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "rulesApi",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/rulesApiPermissionHeader.js": "00d1a999a2284073a066c4f4d5fa4a77a50c42967329b32d6f2b322b2651092f",
+        "init-v001/records/identity/rulesApiPermissionData.js": "6603677ef24a048dfd51f20709597cee9bd192b41b65d48bc52a30b0a8b1f353"
+      }
+    },
     "rulesPolicyApproval": {
       "kind": "DATA_RELEASE",
       "dataType": "init",

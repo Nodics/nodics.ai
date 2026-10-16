@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "inventory",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "inventory permissionCatalogue",
+      "description": "Explicit inventory identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "inventory",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/inventoryPermissionHeader.js": "38b3d4e6e7a9271b4f0a88ba0760aea2f2a15e15c91e7af3e97b945d893ebf7c",
+        "init-v001/records/identity/inventoryPermissionData.js": "350ed36fc9abdf64d2c5f433220d9cb1b1b7a9c626e3715ed3244a18f9ff4389"
+      }
+    },
     "inventoryPublicationWorkflow": {
       "kind": "DATA_RELEASE",
       "selectionPolicy": "EXPLICIT",
@@ -72,6 +96,77 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "specialAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Opening Inventory Group",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "inventory",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/inventorySpecialAccessGroupHeader.js": "57e789f747cad25c0c8cd83cb934b4e6cf21212ba2f7258e6c3dc4c742f0261b",
+        "init-v001/records/identity/inventorySpecialAccessGroupData.js": "5892a88bca32e6d8a15fb50b0518d8c58dd6829358c22b54de262fd1c6246ec4"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "inventory",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "39a027106d9be809e1a809c0290808dc283faac29f6f7dbcb316ef2092a16baf",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "specialAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Opening Inventory Role",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "inventory",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/inventorySpecialAccessRoleHeader.js": "62e6280d3eb973315d5f56a6a89e3df2a60b7788880a11581a2e7085b87d45cb",
+        "init-v001/records/identity/inventorySpecialAccessRoleData.js": "373d9f14bdb79195dd8a107da3fd07489eaaf3ca6b9614e1f52efb6b5f969af2"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "inventory",
+          "sectionCode": "specialAccessGroups",
+          "version": "0.0.1",
+          "checksum": "bb6fc0f202e26c470e1dd8f6bf520a581d7d510127c0465881a3d9d7332f4c1b"
         }
       ]
     }

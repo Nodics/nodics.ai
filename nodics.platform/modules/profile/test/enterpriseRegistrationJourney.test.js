@@ -124,6 +124,7 @@ test.beforeEach(() => {
   const verification = { ...verifierSource, now: () => new Date(time) };
   const privateEntries = new WeakSet();
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultCommunicationRuntimeService: require('../../../../nodics.communication/modules/commsCore/src/service/defaultCommunicationRuntimeService'),
     // This isolated journey fixture selects legacy credential mode explicitly.
     DefaultPasswordSaveInterceptorService: { mutationQuery: () => undefined },

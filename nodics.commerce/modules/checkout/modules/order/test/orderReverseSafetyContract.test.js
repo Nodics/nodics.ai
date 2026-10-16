@@ -16,6 +16,7 @@ const service = require('../src/service/defaultOrderLifecycleOperationService');
 const repository = require('../src/service/defaultOrderLifecycleRepositoryService');
 const lifecycle = require('../src/service/defaultOrderLifecycleService');
 const recovery = require('../src/service/defaultOrderRefundRecoveryService');
+const accessFixture = require('./helpers/orderBusinessAccessFixture');
 
 test('refund customer projections preserve trusted offline classification without private provider receipts', () => {
     for (const status of ['COMPLETED', 'RECONCILIATION_REQUIRED']) {
@@ -37,6 +38,7 @@ function fixture(type, evidence = {}) {
     const calls = [];
     global.SERVICE = {
         DefaultOrderLifecycleRepositoryService: {
+            confirmedResult: repository.confirmedResult, unwrap: repository.unwrap,
             get: async () => structuredClone(row), list: async () => [structuredClone(row)],
             update: async (_tenant, _row, patch) => { calls.push('update'); row = { ...row, ...structuredClone(patch) }; return structuredClone(row); }
         },
@@ -44,7 +46,14 @@ function fixture(type, evidence = {}) {
         DefaultPaymentRefundExecutionService: { executeRefund: async () => { calls.push('payment'); } },
         DefaultFulfillmentReturnExecutionService: { recordReceipt: async () => { calls.push('receipt'); }, recordInspection: async () => { calls.push('inspection'); } }
     };
-    return { calls, row: () => row, request: { tenant: 't', enterpriseCode: 'e', actorId: 'staff', requestCode: 'case', actionCode: 'APPROVE', payload: {}, authData: {} } };
+    accessFixture.install();
+    SERVICE.DefaultOrderLifecycleRequestService = { get: async request => {
+        assert.deepEqual(request.query, { code: 'case', tenant: 't', enterpriseCode: 'e' });
+        assert.deepEqual(request.authData, accessFixture.identity.getSystemAuthData());
+        return { code: 'SUC_GET', result: [structuredClone(row)] };
+    } };
+    return { calls, row: () => row, request: { tenant: 't', enterpriseCode: 'e', actorId: 'staff', requestCode: 'case', actionCode: 'APPROVE', payload: {},
+        authData: accessFixture.employeeAuth({ tenant: 't', enterpriseCode: 'e', actorId: 'staff' }) } };
 }
 
 for (const type of ['CANCELLATION', 'RETURN', 'REFUND']) {
@@ -104,7 +113,7 @@ test('submission replay binds the original order type reason and selected quanti
 
 /** Models the generated owner's acknowledged write and independent persisted readback. */
 function repositoryFixture() {
-    const record = { tenant: 't', code: 'case', enterpriseCode: 'e', ownerId: 'buyer', revision: 0, status: 'SUBMITTED' };
+    const record = { tenant: 't', code: 'case', enterpriseCode: 'e', ownerId: 'buyer', orderCode: 'order', revision: 0, status: 'SUBMITTED' };
     const patch = { revision: 1, status: 'SUBMITTED', evidence: { execution: { status: 'BLOCKED' } } };
     const calls = { writes: [], reads: [] };
     const fixture = { record, patch, calls, acknowledgement: { code: 'SUC_UPDATE', result: { acknowledged: true, matchedCount: 1, modifiedCount: 1 } },
@@ -119,7 +128,8 @@ function repositoryFixture() {
 test('lifecycle writes return confirmed scoped records rather than database acknowledgments', async () => {
     const f = repositoryFixture(), auth = { principalId: 'staff' };
     assert.deepEqual(await repository.update('t', f.record, f.patch, auth), f.readback.result[0]);
-    assert.deepEqual(f.calls.writes[0].query, { tenant: 't', code: 'case', revision: 0 });
+    assert.deepEqual(f.calls.writes[0].query, { tenant: 't', code: 'case', enterpriseCode: 'e', ownerId: 'buyer', orderCode: 'order', revision: 0 });
+    assert.deepEqual(f.calls.reads[0].query, { tenant: 't', code: 'case', enterpriseCode: 'e', ownerId: 'buyer', orderCode: 'order', revision: 1 });
     assert.equal(f.calls.reads[0].options.skipItemCache, true);
     assert.equal(f.calls.reads[0].authData, auth);
 });
@@ -141,7 +151,7 @@ test('unconfirmed and stale lifecycle writes never return success or read a newe
 });
 
 test('lifecycle write confirmation rejects failed foreign ambiguous or divergent readback', async () => {
-    for (const change of ['error', 'missing', 'ambiguous', 'tenant', 'code', 'ownerId', 'enterpriseCode', 'revision', 'evidence']) {
+    for (const change of ['error', 'missing', 'ambiguous', 'tenant', 'code', 'ownerId', 'enterpriseCode', 'orderCode', 'revision', 'evidence']) {
         const f = repositoryFixture();
         if (change === 'error') f.readback.code = 'ERR_GET';
         else if (change === 'missing') f.readback.result = [];

@@ -2,11 +2,414 @@
   "contractVersion": 2,
   "module": "profile",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "profile permissionCatalogue",
+      "description": "Explicit profile identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "profile",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/profilePermissionHeader.js": "08aaa79c69c1db6372432418b07c84d15b737777dd68ebc7928cbdbc7cffb254",
+        "init-v001/records/identity/profilePermissionData.js": "8084f020a82aa42c059f4831930b682966078dd7994da8a12fd7a775bcde0945"
+      }
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "profile accessGroups",
+      "description": "Explicit profile identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "profile",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/profileUserGroupHeader.js": "79dc8789427e928ca117b5888ee2b4d367be337e05b1d7d96e7e8e350c97c41d",
+        "init-v001/records/identity/profileUserGroupData.js": "74d99fbcbeb5f291483da38f7fb88338c5be8982097828f7f4062c0e6bb7b457"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "auth",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "06ad5ee344b908ee4749d2126146813c9ebfe0a906b20d20590624d279923a68",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "axis",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "6f411a90fd89c1894fa7a92a1de5d35796dec3481514073a2aa38e0247c44b1c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "backoffice",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "8ad193e9316013aa5a65de9c57d2b3a09cd8855b46d218173353793b448eefba",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "bidding",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "51aaaa1db53964a57a5d8e9f47d903743eae12c0c2cc2ffa25c17e5a90248fc8",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cart",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "22e57e29550e28cfe59b12556a8c015c74b99e2ebe8a0f3cfef1172630a7ff10",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "catalog",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "85aa1657fb6ce92d185d96053cdbd8a012a2f7f3a8d2381b85457b0809cea5f1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "checkoutCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "cbde0dbbc1d48eb02f78e504ca89c2615f09d0207a67be9bfecd2913cbf77b49",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "commerceSearchCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "20944c16c4d799ddec4050c66fc104fc6e3ba40a1606fc390ada240335bfea99",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "commsCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "3381a705a2b839eb13a371a7e43a5832d0b7aaffd15c95607a2cebf238e61b9b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "copilotCapability",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "64f1dac8c318dd919ffe04a72cde3511d316d163fd21b4b687c9b3514bfcbd3d",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "copilotConversation",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "ad9f0b084372c0952e69859cc493422e49cd6b9fe09fd7960c3bc876be2cd25f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "copilotKnowledge",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "dd36db1ba809193dae71ea5d51dfc3d2897fdf8ab80d0b67bd39300bfd4446b4",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "customerFeedback",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b860bb789c2a345f54f15ccef0095b315dc658371647f1236adc1034e3500528",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "customerReview",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "0bf2379f6155c80c050753e4c0f5ad72128bd355327a40b47f9906d080fdfa77",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "ab53220ee38bb003b43e3f1ed0723afe8499523a31429abd96ddcc3c328b152a",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "discoveryConfig",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "2b8b05f5ca1c5dc1e38df3319261db2e7ab613d84e5349053a36bd82eafa0038",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "editorial",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b96be3694de6ed7b00209597ac395f01676a6a37c8b842f8b969c61fe005edff",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "engagementCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "1c4a300c72d8a2c6194d7fa8ac111671f7a4c718421aaada74cb05bf3ff8dc3c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "fulfillmentCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "d43b69913c35c3d2fafe0f4f34a6df6f8c5aada28883cf634bfb27705704c39b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "import",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b2eb5d1d7c50f2f4f885f407144dcf613634ffc2f441cd8b1f0c91e05425c7a1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "inventory",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "39a027106d9be809e1a809c0290808dc283faac29f6f7dbcb316ef2092a16baf",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "locationCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "faed9d5f2d98d45899bd30cbbbe6fb66c4bf0973a92fcb132b8353a9f39b0c77",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyLedger",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "92693c21835259c9176252b6e69e0337ea6651f46190f3296e72c756b0a6ca93",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyReservation",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "be1d1ffe0e01f410a82687f64839f0a53e329aa2ba3b151bd312ec456cdeb2a8",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "838336cb02e48538bb992bd7d2140b0b784b8ffa582451a18bef88399ed1499f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "media",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "10b6487eedd8bc49a00db63d16c3ab0f2901c4aeb223558b2652f679c85b47ef",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7b8cfbcac58a8f106aa3e066bd200a0ea32e3b23fc22619602ea85a5e241c421",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "paymentCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "dfd04d385707064e2593fc6bb275bc9d1a87c11d389d6e7ab401cc7c2aef659f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "pricing",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "66a39f80bced4791582594168c4b9097455bd1d37481e0491665bc095a4fd721",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "publish",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a02257cb5a9ea08397b4662e2b720f4a2e0f5318421d8a01e7daa7b0e6ca9376",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "shoppingList",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "15e3d0d0541dab1e8c850ca7650c8127d0cef53df891931bcb5f76b5f6dccd1b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "store",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a4989b176f5eb13747bbca9d31972e4e6525e04269d25246f40c756c549b60d3",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "system",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a763a22b9a3282bb86673b57e2dc05eda58ad8b867363a0fb159344fb338730",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "tax",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "076049ab3ff8f4854907d197ca630e89afcb32f25b2fcb8901529e9538bbeb8a",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "testimonial",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4c966fc3028bdc9c9899afcf01df11647e9c45e995ea410407395c464ed008a8",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCollection",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "5921d07d1a077f2a960398ac337eef23c9f3f0a149458d078fb090c96e110939",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "d4233f3cbf14b39e3d302127e985874f92894d05a4076e17f3724d268bfe2fc4",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteImpact",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "104c8c6884265790252eece90ec5ebca4472bb0583a7f8ffca55d49a7a3ce9a5",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteSubmission",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "63cc2e525754b34523b39ff3af722db0ede1c13b57c0a484bb7975aec09a1b63",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteVerification",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "1c10620eebfc5c713eebc6332e49b1f50c80c6c011d191a39e5f817e39d707cc",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "enterpriseRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "profile enterpriseRoles",
+      "description": "Explicit profile identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "profile",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/profileEnterpriseRoleHeader.js": "9724cf5492bd6f53edce5933bd7eb043ef40f79df8d856886a589816d4c9a120",
+        "init-v001/records/identity/profileEnterpriseRoleData.js": "3271a56a6671e83a863baf3e2adab364ff3b57d13480b9e5b22eba8a4c4e6214"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
-      "description": "Profile and Identity init data",
+      "version": "0.0.3",
+      "description": "Profile first-install identities; preserves existing records and requires module-owned authority definitions.",
       "owningDomain": "profile",
       "lifecycle": "REFERENCE",
       "destinationRole": "PLATFORM",
@@ -19,29 +422,595 @@
       "initialPublicationPolicy": "NONE",
       "removalPolicy": "RETAIN",
       "files": {
-        "init-v001/headers/address/defaultAddressesHeader.js": "4ed06921a980aaf32c9f87c969c3aef6b107da9db56750aa23a507f28626b33b",
-        "init-v001/headers/address/defaultContactsHeader.js": "7e811060eeb1e685c039df892e02bb2f061c70e18d38a66597ed487eb948a53a",
-        "init-v001/headers/enterprise/defaultEnterpriseHeader.js": "d709cc3141675a46e91b871632eef328bab647ce9fd6b8859ee3bfd6c088fb14",
-        "init-v001/headers/enterprise/defaultTenantsHeader.js": "755d4697206ec16e96e2790235dc40512c1740e662dd83b8fd07b7b27b11684b",
-        "init-v001/headers/groups/defaultUserGroupsHeader.js": "be55304ca13a0fa06dec9b1f6a3c19d88d62677bdc29d49d78f6f6ebb8eeeb98",
-        "init-v001/headers/user/defaultUsersHeader.js": "84f9e8357bf2705c4e0ce6d571f7dbb893efebd1e1189c4ee6cdc3cc959ee95d",
         "init-v001/records/address/defaultAddressesData.js": "0a84a7eaa1b09e914c9077d6d50afc0e3a726bd375a8223bcfdfe1fd9869781d",
         "init-v001/records/address/defaultContactsData.js": "880747b6197fc237628df472bcc6b4697aeabb23d0760fd48d59385129e8a919",
         "init-v001/records/address/defaultTenantAddressesData.js": "da25272fbee9bd568fec80cd960853771aa7abdbb461aa970854f0a5468b5639",
         "init-v001/records/address/defaultTenantContactsData.js": "8dcdddd7f4dba846d9ffb8624149c0e1e0d13af96a44d029d653a606b5078af1",
         "init-v001/records/enterprise/defaultEnterpriseData.js": "ceb009374e45c6f84b9ca911ac3d55dcb03b24c16186832ad1677085e5909973",
         "init-v001/records/enterprise/defaultTenantsData.js": "99f546346edb4851bf6a2e5bc32852978b93958d9952a91d88f8edee6421ad7b",
-        "init-v001/records/groups/defaultBootstrapUserGroupsData.js": "aa2016ccd872c38abaad1c7c70233b99e39d4d8361ebb246658927b1d88419ac",
-        "init-v001/records/groups/defaultWasteOperationalUserGroupsData.js": "569002073de0e1eb2e0fe7aa6191d78c545193a6eca3be03ced6fa9b9f39bc2c",
         "init-v001/records/user/defaultCutomerData.js": "fdbcd52c7188c370aabe614477e06d67fe1b94972325d5dfdda67679556adb21",
-        "init-v001/records/user/defaultEmployeeData.js": "6e8816e4443049dad921810ca50ef2851c7e7ba5a64c891a3b228ea493d0aa74",
-        "init-v001/records/user/defaultServiceEmployeeData.js": "3b664f03fa305b2c96fd0e9e4a2ac5b08af82450cda7b6dffeed279e70fc4209",
-        "init-v001/records/groups/runtimeConfigurationUserGroupsData.js": "823b5f80e0fb103120ca010faf9cd24c6526e5212a06c43f8e332b3546386682",
-        "init-v001/records/groups/runtimeConfigurationUpdateUserGroupsData.js": "5f99219196eed1ed4e1c934786449a6e5938555597f8ed3cf359af89b7c4ab3a",
-        "init-v001/records/groups/serviceAccountCircaUserGroupsData.js": "905afb129ae490278ae46f99adf6281bb6d628ab0e2b3a07eb5f55a031bd82c5",
-        "init-v001/records/groups/backofficeCircaUserGroupsData.js": "ada012dc274ee0ec4cb07b541146a8a634e8a8468763350b4d90b3bc4e2e3b41"
+        "init-v001/records/user/defaultEmployeeData.js": "c6650704f6bace377bae1285cb0a172a5c339f2df797690a503ee19ad0cf4f18",
+        "init-v001/records/identityBootstrap/preservedServiceEmployeeData.js": "5a82f9faac2b10a66e87c5ba070992b734174beb34fd60089e2979a0dd53eca2",
+        "init-v001/headers/identityBootstrap/preservedAddressesHeader.js": "c84823ba03a625f849e1985fcff056b8ee02d2452c96dae91a6e204cbb301441",
+        "init-v001/headers/identityBootstrap/preservedContactsHeader.js": "38dfe9c25f4ae8563615447a22ab7fd1ef459e77cc0d3e80bb38d77bbc35e110",
+        "init-v001/headers/identityBootstrap/preservedEnterpriseHeader.js": "abf6db0106238d0e24e4dee89d221badbbf0349337603e151f4da5ffdaffffa9",
+        "init-v001/headers/identityBootstrap/preservedTenantsHeader.js": "18d4f6dcf9c2a45509c3a0ba745923aa5e93d1d42ae9fb9f55c8c3867bb23a42",
+        "init-v001/headers/identityBootstrap/preservedUsersHeader.js": "d9fb26825c36cf605c7034e785872bf2c7563b5f3305f92a33a1dd09ce1323b3"
       },
-      "sourceRoot": "init-v001"
+      "sourceRoot": "init-v001",
+      "prerequisites": [
+        {
+          "moduleName": "auth",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "06ad5ee344b908ee4749d2126146813c9ebfe0a906b20d20590624d279923a68",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "axis",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "6f411a90fd89c1894fa7a92a1de5d35796dec3481514073a2aa38e0247c44b1c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "backoffice",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "8ad193e9316013aa5a65de9c57d2b3a09cd8855b46d218173353793b448eefba",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "bidding",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "51aaaa1db53964a57a5d8e9f47d903743eae12c0c2cc2ffa25c17e5a90248fc8",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cache",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "8b8d77f652bee079c130885ce21b648dc86bee9ffb75ca65d714f452c1465e82",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cart",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "22e57e29550e28cfe59b12556a8c015c74b99e2ebe8a0f3cfef1172630a7ff10",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "catalog",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "85aa1657fb6ce92d185d96053cdbd8a012a2f7f3a8d2381b85457b0809cea5f1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "checkoutCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "cbde0dbbc1d48eb02f78e504ca89c2615f09d0207a67be9bfecd2913cbf77b49",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "b06a574b081e08312cf7a0f76009daa918b545c34152b6c4ab19dae03428121c"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.2",
+          "checksum": "a0fb7ed91748596460616c8488217085da03c0c8225c06ae5df9fb5df81b35e6",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "ef0ae0b518de51b906ff36e9c8459c8da923133f3fa056cb83698a17142b3d73",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "commerceSearchCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "20944c16c4d799ddec4050c66fc104fc6e3ba40a1606fc390ada240335bfea99",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "commsCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "3381a705a2b839eb13a371a7e43a5832d0b7aaffd15c95607a2cebf238e61b9b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "config",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "343dd6465e9efce9a0d95d46169967af6e2a460d0e04ab55273b10fdebf54146"
+        },
+        {
+          "moduleName": "config",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "0848e22b77a57d81d5896b33a1e9933e53c82ca9c146c18ac5ef4e31ba12affe",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "contactSubmission",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "f84fb798ac0708ca44767fc454361bfd9b8fb84bc0fa2c14f3543c9acf96e09d",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "copilotCapability",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "64f1dac8c318dd919ffe04a72cde3511d316d163fd21b4b687c9b3514bfcbd3d",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "copilotConversation",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "ad9f0b084372c0952e69859cc493422e49cd6b9fe09fd7960c3bc876be2cd25f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "copilotCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "c4d459186950e05493a5348233674a61f4c5cddf5b444a61eaabdb6b3dd40ed1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "copilotKnowledge",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "dd36db1ba809193dae71ea5d51dfc3d2897fdf8ab80d0b67bd39300bfd4446b4",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cronjob",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a02154fa5d564a54613fa70aa4105a227e2d96d29f493281c3208add16d30e7",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "customerFeedback",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b860bb789c2a345f54f15ccef0095b315dc658371647f1236adc1034e3500528",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "customerReview",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "0bf2379f6155c80c050753e4c0f5ad72128bd355327a40b47f9906d080fdfa77",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "ae98ad2389c579aab430fe7cee607e1f6df0b3600173f4ef20598134c0a70800"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.2",
+          "checksum": "abe1dca69d78a6c6e92ba299d1fcf9549639f427d0dc94dee4043a189a3eca5c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "ab53220ee38bb003b43e3f1ed0723afe8499523a31429abd96ddcc3c328b152a",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "discoveryConfig",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "2b8b05f5ca1c5dc1e38df3319261db2e7ab613d84e5349053a36bd82eafa0038",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "dynamo",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a3edaee6d4ecb18f8c303b17e2cc7d82b8edd8992289dbbfecb356c11465aad9",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "editorial",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b96be3694de6ed7b00209597ac395f01676a6a37c8b842f8b969c61fe005edff",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "engagementCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "b38d6e58065dc3016a747dad9f49efef45ca1503d6a51757eb9f2ed2d0b61495"
+        },
+        {
+          "moduleName": "engagementCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "1c4a300c72d8a2c6194d7fa8ac111671f7a4c718421aaada74cb05bf3ff8dc3c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "eWaste",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "0925394823ef40d6d1ed6968e448e86beb87214735c04756e0586c3c0c294485",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "export",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a9e32731b17797817e5bb11ec4b3862671fd8940ff5022590d6087082ace9074",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "fulfillmentCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "d43b69913c35c3d2fafe0f4f34a6df6f8c5aada28883cf634bfb27705704c39b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "import",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b2eb5d1d7c50f2f4f885f407144dcf613634ffc2f441cd8b1f0c91e05425c7a1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "inventory",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "39a027106d9be809e1a809c0290808dc283faac29f6f7dbcb316ef2092a16baf",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "locationCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "faed9d5f2d98d45899bd30cbbbe6fb66c4bf0973a92fcb132b8353a9f39b0c77",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyLedger",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "92693c21835259c9176252b6e69e0337ea6651f46190f3296e72c756b0a6ca93",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyReservation",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "be1d1ffe0e01f410a82687f64839f0a53e329aa2ba3b151bd312ec456cdeb2a8",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "838336cb02e48538bb992bd7d2140b0b784b8ffa582451a18bef88399ed1499f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "media",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "10b6487eedd8bc49a00db63d16c3ab0f2901c4aeb223558b2652f679c85b47ef",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "9956f02f29ce9431e523ca594a7d4ab50603176a2d025e4ee01942c7b70d5aef"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.2",
+          "checksum": "2b0db5176923a3e8cae1eaaa1e431d2e1c7f2d70eeb47042d8e1415956e1b4c1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7b8cfbcac58a8f106aa3e066bd200a0ea32e3b23fc22619602ea85a5e241c421",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "paymentCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "dfd04d385707064e2593fc6bb275bc9d1a87c11d389d6e7ab401cc7c2aef659f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "pricing",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "66a39f80bced4791582594168c4b9097455bd1d37481e0491665bc095a4fd721",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "6476e85ce43cd1b70c206b45af8c8516fac8140f7904c057f15d7e5c8e6550ce"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.2",
+          "checksum": "dd8e0fb6db7cafff94e82a42e1afad786f516c66fa9eeae6b499e24bb5900f34",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.2",
+          "checksum": "947ddae96e20a852e812b9380296fdcbfb212a0a3c7ce3bba14ce6ed6de337fb",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "5cb91f339856a26c4d864eed4918c318318d50061792a357c045737c8c26ee4c"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.2",
+          "checksum": "33ccd410d1fad74c72302d1d60aff3b4e2e11fa3920923bda91babbcef703451",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "publish",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "cfa73ab9a7aa7e54922b1858e8976ad196818899841dcf6596c09b9290a6e937"
+        },
+        {
+          "moduleName": "publish",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a02257cb5a9ea08397b4662e2b720f4a2e0f5318421d8a01e7daa7b0e6ca9376",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "rulesApi",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "625207a9f8fa737db46265bc2f622b3b317299b597eb0f985460608af623e945",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "shoppingList",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "15e3d0d0541dab1e8c850ca7650c8127d0cef53df891931bcb5f76b5f6dccd1b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "store",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "29f243305204d5f07de2550c1615a549c76892784043cef5891e38bec45e9150"
+        },
+        {
+          "moduleName": "store",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a4989b176f5eb13747bbca9d31972e4e6525e04269d25246f40c756c549b60d3",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "system",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a763a22b9a3282bb86673b57e2dc05eda58ad8b867363a0fb159344fb338730",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "tax",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "076049ab3ff8f4854907d197ca630e89afcb32f25b2fcb8901529e9538bbeb8a",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "testimonial",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4c966fc3028bdc9c9899afcf01df11647e9c45e995ea410407395c464ed008a8",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCollection",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "5921d07d1a077f2a960398ac337eef23c9f3f0a149458d078fb090c96e110939",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "1156bde7100b70b330c0bde1654a290967f88a1f0b09f9e020b75216b4db6e3a"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "enterpriseRoles",
+          "version": "0.0.2",
+          "checksum": "7af5888ec69ee6c121b6d98428c344b19d0237ccc9d2d733f33f4fe7e19ef3e2",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "d4233f3cbf14b39e3d302127e985874f92894d05a4076e17f3724d268bfe2fc4",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteImpact",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "104c8c6884265790252eece90ec5ebca4472bb0583a7f8ffca55d49a7a3ce9a5",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteSubmission",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "63cc2e525754b34523b39ff3af722db0ede1c13b57c0a484bb7975aec09a1b63",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteVerification",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "1c10620eebfc5c713eebc6332e49b1f50c80c6c011d191a39e5f817e39d707cc",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wcmsExperience",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "aa47c1a6b1d1031406ddb62a8bea39d94e55c7ad89499eda8b4e7b9fc27c320a",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "workflow",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9566b57a2b8b6230534305adaef173c7e1ecf28d5493c7193e9dd79c54d3a35e",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.2",
+          "checksum": "be5a7371aedb52a518a3a245d3db7b23375042a4acaf373b33a3e9a8394f3167"
+        },
+        {
+          "moduleName": "cms",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.2",
+          "checksum": "022fa72a04c15924a00a5845fbbd4736e9fcd4e7c48cd1926c786e03fcd58332",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.1",
+          "checksum": "55e6337ba3e2e8cc27a5f358f5102dbf5953e0f249880a8d4840b3e77d8111af"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.1",
+          "checksum": "c8c9d94a67ab830f51d4ed2d4ac2a626e7eed0ddde7f029d5b55c689d422ac7d",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.1",
+          "checksum": "e2e534f79f0bcebf82f68466e661be46839c18846c2ffd61463c37d569e154b7"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.1",
+          "checksum": "796aa6513ed9ce15aa90bd98d79b2870feaa67e03236cc9c930b3141221c67e4",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.1",
+          "checksum": "66a5e6ee1a6ab25e076c1bfe6beecb6c9b318fcf451a775ad051f42ad086e7a0"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.1",
+          "checksum": "dd2d3a56ca9b395246f36a7e791abc004cfe250c2e2269e278f2693b633c0e23",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.1",
+          "checksum": "583ee5ba002ab291a8c0d7590eebf5af0df9c0655839ba945dac2b72163d388e"
+        },
+        {
+          "moduleName": "wasteCore",
+          "sectionCode": "businessAccessRoles",
+          "version": "0.0.1",
+          "checksum": "7d52290bae3bc7c32cec6656c6a9ef0b9cac916634444971ecda90ae9692e0cc",
+          "partition": "DEFAULT"
+        }
+      ]
     },
     "sample-v001": {
       "kind": "DATA_RELEASE",
@@ -71,116 +1040,6 @@
         "sample-v001/tenant/README.md": "34781a5e35fb0b16eed6a9377972d345fa44dccc75b619cc4794cf3e045e879e"
       },
       "sourceRoot": "sample-v001"
-    },
-    "commerceRefundReviewerRole": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
-      "version": "0.0.1",
-      "displayName": "Commerce Refund Reviewer Role",
-      "description": "Explicit least-privilege enterprise refund reviewer group; no employee or administrator assignment.",
-      "owningDomain": "profile",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "PLATFORM",
-      "environmentScope": ["ALL"],
-      "sensitivity": "RESTRICTED",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "core-v001",
-      "files": {
-        "core-v001/headers/groups/commerceRefundReviewerHeader.js": "15e74adf1344e0f39e3da5adebd8e4cedd4644cb5d0336d0a4d1038a20bac0b7",
-        "core-v001/records/groups/commerceRefundReviewerGroupData.js": "863f9867ecc68114f6c07e423335ebe5788660f94cf7ca776a0f14054c81a168"
-      }
-    },
-    "commerceAxisRefundReviewerRole": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
-      "version": "0.0.1",
-      "displayName": "Commerce Axis Refund Reviewer Role",
-      "description": "Explicit enterprise refund reviewer with narrow Axis presentation access; no existing assignment changes.",
-      "owningDomain": "profile",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "PLATFORM",
-      "environmentScope": ["ALL"],
-      "sensitivity": "RESTRICTED",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "core-v001",
-      "files": {
-        "core-v001/headers/groups/commerceAxisRefundReviewerHeader.js": "16692dbc7afd337233df2771a9116b2cc6fa20fbe365db96c6e8ba4ad5f2b59c",
-        "core-v001/records/groups/commerceAxisRefundReviewerGroupData.js": "549d0dd998f0a16ca5682f15c98a46be1e6401a378f9f903ac86c8f875fc209a"
-      }
-    },
-    "commerceSetupPublisherRole": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
-      "version": "0.0.1",
-      "displayName": "Commerce Setup Publisher Role",
-      "description": "Explicit enterprise setup publication submitter with narrow Axis visibility; no approval, activation or employee assignment.",
-      "owningDomain": "profile",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "PLATFORM",
-      "environmentScope": ["ALL"],
-      "sensitivity": "RESTRICTED",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "core-v001",
-      "files": {
-        "core-v001/headers/groups/commerceSetupPublisherHeader.js": "4ea4c9064daffacd5364d679c1ede994cc7e13634fc9e9f9d9defb3a35fd54e6",
-        "core-v001/records/groups/commerceSetupPublisherGroupData.js": "f09ec891ac50076a0e00e59cbb1fe63d6e569074f103d4c23c34484ce376f262"
-      }
-    },
-    "commercePublicationStarterRole": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
-      "version": "0.0.1",
-      "displayName": "Commerce Publication Process Starter",
-      "description": "Explicit forward companion group for original-human Process start only; no definition reads, approval, management or employee assignment.",
-      "owningDomain": "profile",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "PLATFORM",
-      "environmentScope": ["ALL"],
-      "sensitivity": "RESTRICTED",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "core-v001",
-      "files": {
-        "core-v001/headers/groups/commercePublicationStarterHeader.js": "9b1de22130042356ca0fec1b218be72632e0dea6871cb045e136fbb282d5282f",
-        "core-v001/records/groups/commercePublicationStarterGroupData.js": "5b8d0285ef00805d625e7599a28e73df51dd915fd46684af131b9aab050b0d7c"
-      }
-    },
-    "commerceCouponIssuerRole": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
-      "version": "0.0.1",
-      "displayName": "Commerce Coupon Issuer Role",
-      "description": "Explicit enterprise campaign budget, seller consent and secure coupon issuer group; no employee assignment or qualification enablement.",
-      "owningDomain": "profile",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "PLATFORM",
-      "environmentScope": ["ALL"],
-      "sensitivity": "RESTRICTED",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "selectionPolicy": "EXPLICIT",
-      "sourceRoot": "core-v001",
-      "files": {
-        "core-v001/headers/groups/commerceCouponIssuerHeader.js": "5b71be8c0d5444a3c68b493c6bf41abeab496889d7e1545f257284d70cc5817f",
-        "core-v001/records/groups/commerceCouponIssuerGroupData.js": "8ae719b1881be1612402939f82307b8e4b450668cfb6f51ea2f033cbaca41b60"
-      }
     },
     "employeeApplicationReview": {
       "kind": "DATA_RELEASE",

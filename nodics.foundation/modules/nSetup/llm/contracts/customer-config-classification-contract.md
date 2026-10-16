@@ -2,6 +2,22 @@
 
 ## Principle: inherit defaults; declare intentional differences
 
+Apply ownership to lifecycle hooks, data helpers and documentation as well as
+property leaves. Reusable startup dispatch belongs to the capability lifecycle;
+customer hooks must not be required to run a standard optional capability.
+Activation, qualified sources, exact destinations and failure policy remain
+independent configuration/governance selections. A default profile or protocol
+role mapping does not authorize or activate a feature.
+
+Generic composition metadata selects modules and project packs. Domain owners
+register their own adapters/enrichment through the normal configuration merge;
+do not add a domain-specific mirror catalogue to nConfig or a customer project.
+Pure builders for optional fictional sample records may remain with those packs,
+but must not implement service behavior, make calls or supply framework access
+definitions. Preserve sealed historical bytes; corrected documentation uses a
+forward selected release with stable references and shared assets, not rewritten
+receipts or an implied publication. Source review is not executed qualification.
+
 A customer must not maintain a copy of Nodics configuration to use Nodics.
 Every configurable value has one authoritative owner. Environment, server and
 node `config/properties.js` files contain only deployment choices, composition,
@@ -13,6 +29,64 @@ satisfy it. Do not optimize line count by hiding values, adding a parallel
 loader, or weakening validation. A small file is an outcome of correct ownership.
 
 Every configurable property's reusable default belongs to its owning framework capability (or its established reusable domain owner). Customer projects extend those values only when a partner intentionally changes behavior or supplies application identity/selection. Derive structural facts from the existing module metadata and validated file/manifest contracts instead of making each partner repeat them. Preserve explicit activation, authorization and publication choices; folder presence never grants execution authority.
+
+## Mandatory Default Ownership Gate
+
+Every reusable property definition, validation contract and default has an
+implementing framework owner. Customer configuration is an override, not a
+required copy of framework setup. A customer-only declaration is a defect when
+it supplies standard framework mechanics, even if no matching default exists
+yet. Do not limit ownership review to equal-value or duplicate-line detection.
+
+For every declaration, record the property path, source location, actual
+consumer, implementing owner, inherited baseline, reason for the override and
+activation/merge boundary. Classify each leaf of mixed objects separately:
+
+- Standard adapters, version providers, observer services, protocol paths and
+  schema/versioning mechanics belong to their implementing modules. nConfig
+  merges contributions; it must not become their default catalogue. nPublish
+  owns shared orchestration, not a hardcoded inventory of every business domain.
+- A property requiring deployment input still has an owner-defined contract
+  and a safe unconfigured state, such as null, empty selection or disabled.
+  Required inputs must fail clearly at the owner boundary; never invent a
+  customer identity or destination to make a default executable.
+- The project selects composition, business references, public origins,
+  endpoints, credentials references and deliberate behavior differences.
+  Standard role behavior belongs to owner-contributed runtime-role profiles;
+  explicit deployment capability enablement remains a deployment choice.
+- Business records, permission/role assignments, approval definitions and
+  demo offers remain governed owner data. Moving a sample setting into a
+  framework default does not make its ownership correct.
+
+Registration is not activation or authorization. Selecting a publishable schema
+declares eligibility, not approval, destination authority, source qualification,
+asset release or import permission. Standard provider registration may be
+framework-owned while capability enablement and owner checks remain explicit.
+Retain selected/unselected role isolation and all simulation safeguards. Never
+replace an absent adapter with a guessed provider or a workflow bypass.
+
+Publication review must cover domain adapters, version/workflow providers,
+transport defaults, setup observers and role-dependent schema policies together.
+Retain deployment connections, exact release/root selections and approval
+decisions with their existing authorities. Derive repeated manifest metadata
+only from the explicitly selected immutable release; never substitute latest
+for an approved version or rewrite installed receipts. Same-release assets
+remain part of the coordinated operation with CMS and Media owner approvals.
+
+The gate fails when an ordinary customer must name standard implementation
+classes, duplicate role mechanics, copy schema definitions, or maintain technical
+inventories merely to use a selected framework capability. An advanced provider
+replacement is allowed only as an intentional override of an owner-defined
+contract. Equal-value safety pins require a specific reason and review trigger;
+an entire object cannot be exempted as a deployment choice.
+
+Apply the gate to source fallbacks, templates, generators, frontend consumers,
+tests and documentation as well as properties files. Frontends retain their own
+presentation/deployment settings; they do not own backend business authority.
+Record uncertain findings separately from confirmed violations. Static scanning
+is inventory evidence, not effective-inheritance proof. When testing is explicitly
+on hold, author the regression changes but leave validation and refactor closure
+pending until the complete batch can be checked.
 
 ## Strict boundary across every framework layer
 
@@ -44,7 +118,7 @@ domain defaults remain with their existing owners.
 | Customer/application policy | Owning customer module `config/properties.js`, or its established contribution contract | Chosen application profiles, customer store identity, project data-package selections |
 | Shared project administration policy | Explicitly selected customer administration module | Cross-application installation descriptors consumed by the administrative runtime |
 | Environment difference | `envs/<environment>/config/properties.js` | Deployment endpoints, shared CORS policy, secret references, environment logging |
-| Server difference | `envs/<environment>/<server>/config/properties.js` | Active modules, listening ports, isolated database names, peer targets, runtime authority |
+| Server difference | `envs/<environment>/<server>/config/properties.js` | Active modules, listening ports, isolated database names, peer targets, runtime identity coordinates |
 | Node difference | Selected node `config/properties.js` | Instance port or operational difference; inherit the server's functionality |
 | Runtime state | Existing tenant/persisted configuration authority or generated runtime directories | Governed runtime changes, logs, temporary output; never copied into authored defaults |
 
@@ -82,6 +156,18 @@ Configuration presence does not grant authority, install data, activate a
 functional module, or enable reset. Those decisions retain their existing
 contracts and explicit gates.
 
+Permission vocabulary, assignable business roles, group-permission mappings,
+API-key scopes and runtime deployment grants are Profile-governed data, seeded
+from the implementing module's pinned data releases. Axis manages subsequent
+changes through Profile's authorised owners and invalidation hooks. They are
+not properties overrides. Startup validates persisted authority; it must not
+restore removed scopes, deleted assignments, passwords or lockouts. Identity
+coordinates, transport topology and independent capability enablement remain
+configuration, while required route permissions remain enforcement contracts.
+Fresh initialization imports pinned prerequisite definitions before dependent
+groups and identities. Existing installations require explicit migration;
+restart and import retry never substitute for a business access decision.
+
 ## Foundation tooling and parameterization
 
 Use Foundation's existing non-runtime nTooling boundary for reusable project
@@ -104,8 +190,9 @@ when generic tooling resolves or validates them.
    owner and review trigger.
 2. Put shared environment differences at the environment boundary. Put shared
    customer policy at its customer module boundary, selected where needed.
-3. Keep activation lists, deployment targets, secrets and runtime authority in
-   the appropriate composition/deployment layer. Do not hoist local opt-ins,
+3. Keep activation lists, deployment targets and credential references in
+   the appropriate composition/deployment layer; grants remain Profile-owned data.
+   Do not hoist local opt-ins,
    reset allowlists or model inventories into globally enabled defaults.
 4. Keep application data descriptors with their existing application or
    contribution owner. Cross-application administrative composition may own a
@@ -148,8 +235,10 @@ when generic tooling resolves or validates them.
   mechanics, dimensions and strict Product enrichment defaults belong to the
   Commerce framework modules. Application market choices such as default
   currency, jurisdiction, shipping and return methods belong to the owning
-  application module, for example Circa for Circa sample-market behavior. Root
-  customer-project config should carry only true project overrides or composition
+  genuine customer application module. For data-only Circa/Agora references,
+  sample-market records remain demo data, reusable policy belongs to the domain
+  owner, and explicit deployment selections remain in the environment/runtime
+  layer. Root customer-project config should carry only true project overrides or composition
   choices. Runtime server files may still select Commerce modules, authority
   contexts, isolated databases and endpoints.
 - Remove unchanged general capability defaults. Retained equal authentication,
@@ -358,11 +447,13 @@ customer, environment, server and node configuration, including generators.
   packages need a target runtime's deployment fact, use bounded nConfig
   `runtime` projection instead of an early `ref` that freezes a framework
   default before the target server override is applied.
-- External identity application bindings and runtime configuration schemas belong
-  to their owning framework provider or application/channel module, not server
-  config. Profile owns provider mechanics and assertion policy; applications
-  such as Circa own their Telegram application enrollment, credential reference
-  and runtime-update schema. Reusing provider field definitions requires proof
+- External identity mechanics and runtime configuration schemas belong to their
+  implementing framework provider or reusable accelerator/channel module.
+  Profile owns provider mechanics and assertion policy; eWaste owns its reusable
+  channel behavior. Actual application enrollment, credential references and
+  channel enablement are explicit deployment selections, not reference-demo
+  behavior or universal framework defaults. Circa/Agora demo modules must not own
+  runtime-update schemas. Reusing provider field definitions requires proof
   that the schema consumer can resolve the owner on its actual runtime; do not
   activate unrelated providers or add an unused template registry just to shorten
   application configuration. Resolve reusable enterprise scope through
@@ -419,7 +510,10 @@ Only reference content explicitly owned by an accelerator belongs in that owner;
 customer applications remain customer-owned even when described as reference apps.
 Nodics authorship, data-only packaging and reuse of an accelerator do not change
 ownership. Apply the application mapping in customer-project-mode-contract.md;
-Agora and Circa application profiles and data stay in Kickoff. Moving an immutable pack
+Agora and Circa demo data and inert composition selections stay in Kickoff;
+their reusable defaults, behavior and access definitions belong to implementing
+framework owners. Deployment bindings remain in the existing environment/server
+hierarchy, not the demo pack. Moving an immutable pack
 preserves its module/release identities, versions, payloads and checksums, and
 updates explicit source consumers without keeping a second copy or adding another
 importer. A framework group must never acquire a dependency on an accelerator.
@@ -452,3 +546,33 @@ connections, credential references, channel selection and approval decisions
 remain explicit later-layer policy. Preserve installed contribution provenance
 and immutable release receipts; use a supported migration or a new release when
 ownership/content changes cannot be represented safely by a source-only move.
+
+## Concrete Ownership Resolutions
+
+- Standard domain publication adapters, version/workflow providers, transports,
+  target observers and schema policy profiles are declared by the implementing
+  capability. Select a semantic runtime role; do not copy implementation names
+  into every deployment. Qualification, endpoint selection, signed callers and
+  Process decisions remain independent. Later differences use the same role
+  profile so projection cannot restore an inherited default over the override.
+- Optional cross-owner integrations use the existing explicit
+  runtimeConfigurationContributions selector. The integration owner defines
+  its module/API identity; the generic consumer defines transport bounds and
+  stays disabled/unqualified without a selected endpoint and approved admission.
+  Do not shadow selected owner identity with null placeholders in a later
+  generic consumer. Discovery/selection never activates the remote owner.
+- Functional groups retain composition only. Remove dead properties instead of
+  relocating them; concrete consumers own retry, validation and operation limits.
+- UI workspace data is module-owned declarative data. Properties carry sparse
+  presentation differences, never a mandatory copy of the workspace definition.
+- Runtime credential fields select one logical credentialReference. nSystem
+  derives its wrapped value path; identity and delivery selections stay separate.
+- CMS may derive a missing site root only from a single-site, qualified, exact
+  pinned content-pack release. Versions and source versions remain explicit;
+  multi-root packs require explicit selection. No latest-version inference.
+- Destructive residual-model lists and required-service assertions are deployment
+  scope, not duplicate owner inventories. Preserve them unless an exact scope
+  comparison proves redundancy. Never expand reset from automatic discovery.
+- Installer backend setup delegates to framework tooling, using a transient
+  framework-root bootstrap input when needed. It writes no backend .env or
+  frontend-root catalogue. Frontend environment files remain frontend-owned.

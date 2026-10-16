@@ -12,6 +12,8 @@
     "loadableByNodicsModuleLoader": true,
     "owns": [
       "configuration",
+      "router",
+      "controller",
       "schema",
       "service",
       "llm",

@@ -30,6 +30,8 @@ assert.deepStrictEqual(utility.filterDeclaredReleaseFiles(files, undefined, 'dat
     'legacy non-release import callers retain established behavior');
 assert.deepStrictEqual(utility.modulesForImport(['owner'], [{ moduleName: 'owner' }]).map(item => item.name), ['owner'],
     'a manifest-qualified inactive owner remains importable without runtime activation');
-assert.deepStrictEqual(utility.modulesForImport(['missing'], [{ moduleName: 'missing' }]), [],
+assert.throws(() => utility.modulesForImport(['missing'], [{ moduleName: 'missing' }]), /source owner is unavailable/,
     'an unavailable contribution owner must fail closed');
+assert.throws(() => utility.filterDeclaredReleaseFiles(files, [{ moduleName: 'missing', declaredFiles: [] }], 'data'),
+    /source owner is unavailable/, 'file filtering must not silently erase an unavailable selected source');
 console.log('Data release execution file allowlist validated');

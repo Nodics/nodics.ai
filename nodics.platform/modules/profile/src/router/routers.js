@@ -18,6 +18,20 @@
  */
 module.exports = {
   profile: {
+    customerIdentity: {
+      current: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["customerUserGroup"],
+        apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/customer/identity",
+        method: "GET",
+        controller: "DefaultCustomerController",
+        operation: "currentIdentity",
+      },
+    },
     tenantNamespaceBindings: {
       inventory: {
         secured: true,
@@ -823,16 +837,9 @@ module.exports = {
                   email: { type: "string", maxLength: 320 },
                   roleCode: {
                     type: "string",
-                    enum: [
-                      "ENTERPRISE_ADMIN",
-                      "CONTENT_MANAGER",
-                      "COMMERCE_REFUND_REVIEWER",
-                      "COMMERCE_AXIS_REFUND_REVIEWER",
-                      "COMMERCE_SETUP_PUBLISHER",
-                      "COMMERCE_COUPON_ISSUER",
-                      "OPERATOR",
-                      "VIEWER",
-                    ],
+                    minLength: 1,
+                    maxLength: 192,
+                    description: "Active persisted enterpriseRole code; Profile validates current assignment authority",
                   },
                   message: { type: "string", maxLength: 1000 },
                   expiresAt: { type: "string", format: "date-time" },
@@ -1408,6 +1415,71 @@ module.exports = {
       },
     },
     identityMigration: {
+      platformAdministratorPreview: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.preview",
+        key: "/identity/migration/platform-administrator/preview",
+        method: "POST",
+        controller: "DefaultIdentityGovernanceController",
+        operation: "previewPlatformAdministrator",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object", additionalProperties: false, required: ["target"],
+                properties: {
+                  target: {
+                    type: "object", additionalProperties: false, required: ["code", "loginId"],
+                    properties: {
+                      code: { type: "string", minLength: 1, maxLength: 192 },
+                      loginId: { type: "string", minLength: 1, maxLength: 320 },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      platformAdministratorApply: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.apply",
+        key: "/identity/migration/platform-administrator/apply",
+        method: "POST",
+        controller: "DefaultIdentityGovernanceController",
+        operation: "applyPlatformAdministrator",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object", additionalProperties: false,
+                required: ["target", "confirmed", "reviewFingerprint"],
+                properties: {
+                  target: {
+                    type: "object", additionalProperties: false, required: ["code", "loginId"],
+                    properties: {
+                      code: { type: "string", minLength: 1, maxLength: 192 },
+                      loginId: { type: "string", minLength: 1, maxLength: 320 },
+                    },
+                  },
+                  confirmed: { type: "boolean", enum: [true] },
+                  reviewFingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+                },
+              },
+            },
+          },
+        },
+      },
       assessment: {
         secured: true,
         accessGroups: ["runtimeConfigAdminUserGroup"],
@@ -2336,6 +2408,29 @@ module.exports.profile.loadDefaults.enterpriseTeamWorkspace = {
   controller: "DefaultEnterpriseManagementController",
   operation: "enterpriseTeamWorkspace",
   summary: "Read the bounded team task for the current authorized enterprise",
+};
+module.exports.profile.loadDefaults.enterpriseBusinessAccessWorkspace = {
+  secured: true, authTokenTypes: ["access"], accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permission: "profile.enterpriseAccess.assign", apiExposure: "profileManagement",
+  key: "/enterprise-team/business-access", method: "GET", cache: { enabled: false },
+  controller: "DefaultEnterpriseManagementController", operation: "businessAccessWorkspace",
+  summary: "Read current enterprise employees and explicit business-area access choices",
+};
+module.exports.profile.loadDefaults.changeEnterpriseBusinessAccess = {
+  secured: true, authTokenTypes: ["access"], accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permission: "profile.enterpriseAccess.assign", apiExposure: "profileManagement",
+  key: "/enterprise-team/business-access", method: "POST", cache: { enabled: false },
+  controller: "DefaultEnterpriseManagementController", operation: "changeBusinessAccess",
+  summary: "Apply a reviewed scoped business-area change without replacing unrelated assignments",
+  requestBody: { required: true, content: { "application/json": { schema: {
+    type: "object", additionalProperties: false, required: ["employeeCode", "reviewFingerprint", "operationId", "changes"],
+    properties: { employeeCode: { type: "string", minLength: 1, maxLength: 192 },
+      reviewFingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+      operationId: { type: "string", pattern: "^[A-Za-z0-9_-]{16,128}$" },
+      changes: { type: "array", minItems: 1, maxItems: 100, items: { type: "object", additionalProperties: false,
+        required: ["businessArea", "accessLevel"], properties: { businessArea: { type: "string", minLength: 1, maxLength: 192 },
+          accessLevel: { type: "string", enum: ["noAccess", "view", "edit", "fullControl"] } } } } },
+  } } } },
 };
 module.exports.profile.loadDefaults.listOwnMemberships = {
   secured: true,

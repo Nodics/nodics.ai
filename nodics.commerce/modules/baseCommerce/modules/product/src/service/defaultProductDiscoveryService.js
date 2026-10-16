@@ -222,6 +222,41 @@ module.exports = {
       price: summaries.prices[row.productCode], availability: summaries.availability[row.productCode] } }));
   },
 
+  /** Resolves bounded transaction Product pins through activated search and retained identity, never CURRENT/latest fallback. @param {Object} request Original owner scope. @param {Array} items Product and optional SKU/variant selectors. @returns {Promise<Array>} Exact consumed Product references. */
+  consumerReferences: async function (request, items) {
+    const fail = () => { throw new Error('Consumed Product publication is unavailable'); };
+    const snapshot = structuredClone(request), selected = structuredClone(items);
+    const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@|\-]{0,255}$/.test(value);
+    const auth = snapshot.authData || {};
+    if (!['tenant', 'enterpriseCode', 'storeCode', 'locale'].every(key => identifier(snapshot[key])) || auth.isSystem === true ||
+        [auth.tenant, auth.tenantCode].some(value => value !== undefined && value !== snapshot.tenant) ||
+        [snapshot.entCode, auth.entCode, auth.enterpriseCode].some(value => value !== undefined && value !== snapshot.enterpriseCode) ||
+        !Array.isArray(selected) || !selected.length || selected.length > 100 ||
+        selected.some(item => !item || !identifier(item.productCode) ||
+          ['sku', 'variantCode'].some(key => item[key] !== undefined && !identifier(item[key])))) fail();
+    const references = [];
+    for (const productCode of [...new Set(selected.map(item => item.productCode))]) {
+      const scope = { ...snapshot, query: {}, productCode };
+      if (await this.activeSelection(scope) === undefined) fail();
+      const indexed = await this.searchPinned(scope, this.query(scope), { pageSize: 2, limit: 2, pageNumber: 1 });
+      const owner = SERVICE.DefaultProductSearchEnrichmentService;
+      if (typeof owner?.retainedProjections !== 'function') fail();
+      const rows = await owner.retainedProjections(scope, indexed), row = rows?.[0];
+      if (!Array.isArray(rows) || rows.length !== 1 || row.status !== 'STALE' ||
+          !/^[a-f0-9]{64}$/.test(row.publicationVersion || '') ||
+          ['tenant', 'enterpriseCode', 'storeCode', 'locale', 'productCode'].some(key => row[key] !== scope[key])) fail();
+      const payload = row.payload || {}, map = payload.variantSkuMap || {};
+      if (selected.filter(item => item.productCode === productCode).some(item =>
+          item.variantCode !== undefined ? !(payload.variantCodes || []).includes(item.variantCode) ||
+            !Object.hasOwn(map, item.variantCode) || (item.sku !== undefined && map[item.variantCode] !== item.sku)
+            : item.sku !== undefined && !Object.values(map).includes(item.sku))) fail();
+      references.push({ productCode, storeCode: row.storeCode, targetVersion: row.publicationVersion });
+    }
+    const same = require('node:util').isDeepStrictEqual;
+    if (!same(request, snapshot) || !same(items, selected)) fail();
+    return references;
+  },
+
   /** Resolves internal variant identity through the same pinned owner reader as public delivery. */
   resolveVariantSku: async function (request) {
     if (!request.tenant || !request.storeCode || !request.locale || !request.productCode || (!request.variantCode && !request.sku)) return undefined;

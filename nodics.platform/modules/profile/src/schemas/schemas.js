@@ -18,6 +18,47 @@
  */
 module.exports = {
   profile: {
+    permission: {
+      super: "base",
+      model: true,
+      schemaPolicies: ["administrative"],
+      service: { enabled: true },
+      router: { enabled: true },
+      cache: { enabled: false },
+      backoffice: { enabled: true, label: "Permissions", displayProperty: "name", displayProperties: ["code", "name", "ownerModule", "active"] },
+      indexes: { individual: { permissionCode: { name: "code", enabled: true, options: { unique: true } } } },
+      definition: {
+        name: { type: "string", required: true, description: "Permission display name; membership in this catalogue never grants access" },
+        ownerModule: { type: "string", required: true, description: "Implementing module that owns this permission contract" },
+      },
+    },
+    enterpriseRole: {
+      super: "base",
+      model: true,
+      schemaPolicies: ["administrative"],
+      service: { enabled: true },
+      router: { enabled: true },
+      cache: { enabled: false },
+      backoffice: { enabled: true, label: "Enterprise Roles", displayProperty: "name", displayProperties: ["code", "name", "scopeType", "delegable", "active"] },
+      indexes: { individual: { enterpriseRoleCode: { name: "code", enabled: true, options: { unique: true } } } },
+      refSchema: {
+        groupCodes: { enabled: true, schemaName: "userGroup", type: "many", propertyName: "code" },
+        assignmentPermissions: { enabled: true, schemaName: "permission", type: "many", propertyName: "code" },
+      },
+      definition: {
+        name: { type: "string", required: true, description: "Role display name" },
+        label: { type: "string", required: false, description: "Role selection label" },
+        ownerModule: { type: "string", required: false, description: "Implementing module owning the explicit business access mapping" },
+        businessArea: { type: "string", required: false, description: "Stable business area presented by the simplified employee access editor" },
+        businessAreaLabel: { type: "string", required: false, description: "Business area presentation label" },
+        accessLevel: { type: "string", required: false, description: "Explicit view, edit or fullControl mapping; never inferred from permission verbs" },
+        groupCodes: { type: "array", required: true, description: "Existing User Groups assigned by this responsibility; groups own permission mappings" },
+        scopeType: { type: "string", required: true, description: "Governed assignment scope" },
+        delegable: { type: "bool", required: true, default: false, description: "Whether this role may be delegated within independently authorised ceilings" },
+        assignmentPermissions: { type: "array", required: true, description: "Additional permissions required to assign this role; not permissions granted by the role" },
+        administrationClass: { type: "string", required: false, description: "Explicit administrator classification; not inferred from a role name" },
+      },
+    },
     profileCommandReceipt: { super: 'commandReceipt', model: true, service: { enabled: true } },
     tenant: {
       super: "super",

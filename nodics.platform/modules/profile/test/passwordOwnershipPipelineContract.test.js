@@ -23,7 +23,6 @@ const authentication = require("../src/service/authentication/defaultAuthenticat
 const historical = require("../src/service/identity/defaultCanonicalHistoricalIdentityLinkService");
 const membership = require("../src/service/enterprise/defaultEnterpriseMembershipService");
 const inventory = require("../src/service/identity/defaultPrincipalSecurityStampGovernanceService");
-const bootstrap = require("../src/service/identity/defaultMandatoryIdentityBootstrapService");
 const concurrency = require(
   foundation +
     "nDatabase/database/src/service/schema/defaultModelConcurrencyService",
@@ -399,7 +398,7 @@ async function importStartupGuest(f, execute, tenant = "default") {
   return releases.installStartupReleases({ tenant, modules: ["profile"] });
 }
 
-/** Builds an actual import dispatch from the immutable forward Customer source; no generated password is printed or delivered. */
+/** Exercises the retained historical saveAll Customer header; successor ensureBootstrapAll coverage is separate below. */
 function guestImport(f, record) {
   const header = require("../data/init-v001/headers/user/defaultUsersHeader")
     .profile.defaultCustomer;
@@ -477,7 +476,7 @@ function useGuestMongoAdapter(
   }
 }
 
-/** Sends an Employee record through the actual forward header and generated import pipeline. */
+/** Sends an Employee record through the retained historical saveAll header and generated import pipeline. */
 function employeeImport(f, record, tenant = "default") {
   const headers =
     require("../data/init-v001/headers/user/defaultUsersHeader").profile;
@@ -498,7 +497,88 @@ function employeeImport(f, record, tenant = "default") {
   );
 }
 
-test("actual forward Init retains human and tenant-local service Employee credentials without hashing", async () => {
+/** Uses the successor header and fixed owner while retaining real credential/save pipelines. */
+function preservedIdentityImport(f, schemaName, record, admitted) {
+  const bootstrap = require("../src/service/identity/defaultMandatoryIdentityBootstrapService");
+  const name = schemaName[0].toUpperCase() + schemaName.slice(1);
+  SERVICE.DefaultMandatoryIdentityBootstrapService = bootstrap;
+  SERVICE["Default" + name + "Service"].ensureBootstrapAll =
+    require("../src/service/" + schemaName + "/default" + name + "Service").ensureBootstrapAll;
+  const headers = require("../data/init-v001/headers/identityBootstrap/preservedUsersHeader").profile;
+  const header = schemaName === "customer" ? headers.defaultCustomer : headers.defaultEmployee;
+  return importWriter.insertLocalSchemaModel({ tenant: "default", importRun: admitted.importRun, header: {
+    ...header, options: { ...header.options, ...admitted.header.options },
+    rawSchema: f.models[name + "Model"].rawSchema,
+  } }, [record]);
+}
+
+test("successor Init preserves inactive identities, credentials, groups and locks with zero generated writes", async () => {
+  for (const schemaName of ["employee", "customer"]) {
+    const f = fixture();
+    useGuestMongoAdapter(f);
+    const rows = schemaName === "employee" ? f.state.employees : f.state.customers;
+    rows.length = 0;
+    rows.push({ _id: "retained", code: "retained", loginId: "retained-login",
+      principalType: schemaName === "employee" ? "human" : "customer", active: false,
+      password: "password-admin", userGroups: [], apiKeyScopes: [], locked: true, attempts: 7 });
+    const before = structuredClone(f.state);
+    await require("./helpers/bootstrapReleaseExecution")(schemaName, "default", admitted => preservedIdentityImport(f, schemaName, {
+      code: "retained", loginId: "retained-login", principalType: rows[0].principalType,
+      active: true, userGroups: ["adminGroup"], password: { loginId: "retained-login", password: "unused" },
+    }, admitted), { importDispatch: true });
+    assert.deepEqual(f.state, before);
+  }
+});
+
+test("successor Init first installation uses generated credential hashing and insert-only identity persistence", async () => {
+  for (const schemaName of ["employee", "customer"]) {
+    const f = fixture();
+    useGuestMongoAdapter(f);
+    SERVICE.DefaultModelSaveInitializerService.insertModel = async function(request) {
+      assert.equal(typeof request.schemaModel.compareAndSetItem, "function");
+      assert.notEqual(request.options.recursive, true);
+      assert.equal(lodash.isPlainObject(request.model), true);
+      assert.equal(lodash.isPlainObject(request.query || {}), true);
+      assert.equal(Boolean(concurrency.getField(request.schemaModel.rawSchema)), false);
+      for (const [key, value] of Object.entries(request.query || {}))
+        assert.deepEqual(value, request.model[key], "generated insert query must match " + key);
+      return single.insertModel.call(this, request);
+    };
+    const record = { code: "first-install", loginId: "first-install-login",
+      principalType: schemaName === "employee" ? "human" : "customer", active: true,
+      userGroups: [], password: { loginId: "first-install-login", password: "fixture-first-install" } };
+    await require("./helpers/bootstrapReleaseExecution")(schemaName, "default", admitted => preservedIdentityImport(f, schemaName, record, admitted), { importDispatch: true, startup: true });
+    const rows = schemaName === "employee" ? f.state.employees : f.state.customers;
+    const created = rows.find(row => row.code === record.code);
+    assert(created);
+    assert.equal(f.state.hashes, 1);
+    const credential = f.state.credentials.find(row => row._id === created.password);
+    assert(credential);
+    assert.equal(credential.password, "fixture-hash:fixture-first-install");
+    assert(f.state.mutations.some(mutation => mutation.name === (schemaName === "employee" ? "Employee" : "Customer") && mutation.insert));
+    const before = structuredClone(f.state);
+    await require("./helpers/bootstrapReleaseExecution")(schemaName, "default", admitted => preservedIdentityImport(f, schemaName, record, admitted), { importDispatch: true });
+    assert.deepEqual(f.state, before);
+  }
+});
+
+test("atomic insertion retains historical-evidence refusal without borrowing an update-only fence", async () => {
+  const f = fixture();
+  const request = { tenant: "default", schemaModel: f.models.EmployeeModel,
+    model: { code: "new", loginId: "new-login", principalType: "human" },
+    query: {}, options: { insertOnly: true } };
+  await historical.protectMutation(request);
+  assert.deepEqual(request.query, {});
+  await assert.rejects(historical.protectMutation({ ...request,
+    model: { ...request.model, identityLinkRetirement: {} } }));
+  f.state.employees.push({ _id: "retired", ...request.model, identityLinkRetirement: {} });
+  await assert.rejects(historical.protectMutation({ ...request, query: { code: "new" } }));
+  const updateRequest = { ...request, model: { code: "unrelated" }, query: { code: "unrelated" }, options: {} };
+  await historical.protectMutation(updateRequest);
+  assert.deepEqual(updateRequest.query, { $and: [{ code: "unrelated" }, { identityLinkRetirement: { $exists: false } }] });
+});
+
+test("historical saveAll Init retains human and tenant-local service Employee credentials without hashing", async () => {
   for (const [principalType, tenant] of [
     ["human", "default"],
     ["service", "default"],
@@ -530,7 +610,7 @@ test("actual forward Init retains human and tenant-local service Employee creden
   }
 });
 
-test("actual forward Init Employee writer refuses concurrent ownership drift and removal", async () => {
+test("historical saveAll Init Employee writer refuses concurrent ownership drift and removal", async () => {
   for (const variant of [
     "password",
     "authVersion",
@@ -616,7 +696,7 @@ test("private startup Employee preservation refuses public flags, type changes a
   }
 });
 
-test("actual forward Init still creates a new Employee with its own credential", async () => {
+test("historical saveAll Init creates a new Employee with its own credential", async () => {
   const f = fixture();
   useGuestMongoAdapter(f);
   const record = {
@@ -632,7 +712,7 @@ test("actual forward Init still creates a new Employee with its own credential",
   assert.equal(f.state.credentials[0].password, "original-admin-hash");
 });
 
-test("actual forward Init import preserves retained guest credential and authVersion without hashing or Password writes", async () => {
+test("historical saveAll Init import preserves retained guest credential and authVersion without hashing or Password writes", async () => {
   const f = fixture();
   f.state.credentials.push({
     _id: "password-guest",
@@ -670,7 +750,7 @@ test("actual forward Init import preserves retained guest credential and authVer
   );
 });
 
-test("actual forward Init import still initializes a new guest through nested credential ownership", async () => {
+test("historical saveAll Init import initializes a new guest through nested credential ownership", async () => {
   const f = fixture();
   useGuestMongoAdapter(f);
   const record = structuredClone(
@@ -685,7 +765,7 @@ test("actual forward Init import still initializes a new guest through nested cr
   assert.equal(f.state.credentials[0].password, "original-admin-hash");
 });
 
-test("actual forward Init writer refuses concurrent Customer credential/version drift or removal without upsert/resurrection", async () => {
+test("historical saveAll Init writer refuses concurrent Customer credential/version drift or removal without upsert/resurrection", async () => {
   for (const variant of ["password", "authVersion", "removed"]) {
     const f = fixture();
     f.state.credentials.push({
@@ -1178,116 +1258,6 @@ test("committed generated Password update reports stamp failure without replayin
     f.state.mutations.filter((entry) => entry.name === "Password").length,
     1,
   );
-});
-
-test("bootstrap uses fresh original legacy ownership through actual generated update hooks, never cached aliases or relinks", async () => {
-  for (const matching of [true, false]) {
-    const f = fixture();
-    f.state.employees[0].active = true;
-    delete f.state.credentials[0].code;
-    f.state.credentials[0].password = matching
-      ? "fixture-hash:approved-local-proof"
-      : "original-admin-hash";
-    UTILS.compareHash = async (proof, hash) => hash === "fixture-hash:" + proof;
-    const reads = [];
-    for (const name of ["Employee", "Customer", "Password"]) {
-      const service = SERVICE["Default" + name + "Service"],
-        get = service.get;
-      service.get = async (request) => {
-        reads.push(request);
-        if (
-          !request.options?.skipItemCache ||
-          request.options.recursive !== false
-        )
-          return {
-            code: "SUC_GET",
-            count: 1,
-            result: [
-              {
-                _id: "stale-cache-id",
-                loginId: "admin",
-                password: { _id: "wrong-old-id", password: "old-cache-hash" },
-              },
-            ],
-          };
-        return get(request);
-      };
-    }
-    const owner = {
-      ...bootstrap,
-      getLocalBootstrapAdminPassword: () => "approved-local-proof",
-    };
-    assert.deepEqual(
-      await owner.reconcileLocalAdministratorCredential(
-        { tenant: "original" },
-        { administratorCodes: ["admin"] },
-      ),
-      matching ? [] : ["admin"],
-    );
-    assert(reads.length >= 4);
-    assert(
-      reads.every(
-        (request) =>
-          request.options.skipItemCache && request.options.recursive === false,
-      ),
-    );
-    assert.equal(f.state.credentials.length, 1);
-    assert.equal(f.state.employees[0].password, "password-admin");
-    assert.equal(f.state.credentials[0].code, undefined);
-    assert.equal(f.state.hashes, matching ? 0 : 1);
-    assert.equal(f.state.mutations.length, matching ? 0 : 1);
-    if (!matching) {
-      const write = f.state.mutations[0];
-      assert.equal(write.name, "Password");
-      assert.equal(write.query._id, "password-admin");
-      assert.equal(write.query.password, "original-admin-hash");
-      assert.equal(write.options.upsert, false);
-      assert.equal(write.matches, 1);
-    }
-  }
-});
-
-test("bootstrap rejects missing, shared, wrong-owner, retired and unacknowledged originals without a natural-code replacement", async () => {
-  for (const variant of [
-    "missing",
-    "shared",
-    "wrong-owner",
-    "retired",
-    "unacknowledged",
-  ]) {
-    const f = fixture();
-    f.state.employees[0].active = true;
-    UTILS.compareHash = async () => false;
-    if (variant === "missing") f.state.credentials.length = 0;
-    if (variant === "shared")
-      f.state.customers.push({
-        _id: "other",
-        loginId: "admin",
-        password: "password-admin",
-      });
-    if (variant === "wrong-owner") f.state.credentials[0].loginId = "different";
-    if (variant === "retired")
-      f.state.credentials[0].identityLinkRetirement = {};
-    if (variant === "unacknowledged")
-      f.models.PasswordModel.updateItems = async () => ({
-        acknowledged: true,
-        matchedCount: 0,
-        modifiedCount: 0,
-      });
-    const owner = {
-      ...bootstrap,
-      getLocalBootstrapAdminPassword: () => "approved-local-proof",
-    };
-    await assert.rejects(
-      owner.reconcileLocalAdministratorCredential(
-        { tenant: "original" },
-        { administratorCodes: ["admin"] },
-      ),
-      /ERR_PROFILE_CREDENTIAL_OWNERSHIP/,
-    );
-    assert.equal(f.state.mutations.length, 0);
-    assert.equal(f.state.employees[0].password, "password-admin");
-  }
 });
 
 test("actual native principal finders bypass stale cached principals and resolve current groups; linked projections retain canonical anchor ownership", async () => {

@@ -1,5 +1,11 @@
 # Waste Core
 
+[Scoped business Workbench](llm/contracts/business-workbench.md) provides read-only
+descriptors and safe search for collection-linked records through `wasteApi`.
+View/Edit/Full control never imply generic schema writes. Existing owner commands
+retain their permission and lifecycle gates. Policy/reference pages without a
+qualified ownership link remain outside this business read projection.
+
 The existing reversal owner also handles [original digital-sale refund locks](llm/contracts/README.md#original-digital-sale-refund),
 using inspected generated CAS and linked events. Financial approvals and ledger
 effects remain with Order, eWaste, Payment and Loyalty.
@@ -12,6 +18,11 @@ customer policy and transaction privacy; nImport retains release/install authori
 `wasteCore` defines shared Waste contracts used by all Waste child modules:
 source reference shape, common lifecycle vocabulary, safe defaults, and utility
 helpers.
+
+The [retained listing completion](llm/contracts/README.md#retained-listing-completion)
+extension permits pending intent only with domain-owned fresh proof revalidation
+before every write. Existing LISTED onboarding, owner/custody isolation and exact
+generated CAS recovery remain unchanged; no grants or owner publications are created.
 
 Common Waste reference data belongs here. `wasteCore` contributes
 `NODICS_WASTE_MANAGEMENT_CO` into Profile's `enterprise` schema as the shared

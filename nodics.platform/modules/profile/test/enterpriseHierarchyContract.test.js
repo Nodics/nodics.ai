@@ -89,6 +89,7 @@ function fixture() {
   };
   const owner = { ...source, get: reader("enterprise", enterprises) };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseService: owner,
     DefaultTenantService: { get: reader("tenant", tenants) },
     DefaultIdentityGovernanceService: {

@@ -47,6 +47,7 @@ function setup() {
   global.CONFIG = { get: () => undefined };
   global.UTILS = { getUserGroupPermissions: () => [] };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultAuthSecurityService: {
       ...require("../../../../nodics.foundation/modules/nAuth/src/service/security/defaultAuthSecurityService"),
     },

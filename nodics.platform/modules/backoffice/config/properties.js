@@ -60,6 +60,15 @@ module.exports = {
   },
 
   backofficeApplicationInitialization: {
+    runtimeRoleProfiles: {
+      PLATFORM: {
+        projectCode: {
+          $config: "env", name: "NODICS_PROJECT_CODE",
+          fallback: { $config: "context", name: "projectCode" },
+        },
+        projectRoot: { $config: "path", base: "project", relative: "" },
+      },
+    },
     dataReleaseTimeoutMs: 120000,
     planPresentation: {
       capabilities: { title: "Business capabilities", summary: "Required capabilities are shared with other applications that use them." },

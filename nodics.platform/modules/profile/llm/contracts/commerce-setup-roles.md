@@ -1,6 +1,7 @@
 # Enterprise Commerce Setup Roles
 
-Profile owns the reusable invitation responsibilities and their permission groups.
+Profile owns assignment, catalogue persistence and authorization mechanics.
+The implementing domain owns its reusable responsibilities and permission groups.
 nPublish owns publication requests, Process owns independent review, and Commerce
 owns publication source validation, campaign budgets, seller consent and issuance.
 A role makes an authenticated human eligible for an owner command; it does not
@@ -8,61 +9,37 @@ qualify a deployment, change a campaign policy, approve a request or activate da
 
 ## Explicit Installation And Assignment
 
-Select the relevant core `0.0.1` releases explicitly through nImport on Platform:
+Select the relevant Init `0.0.1` contributions through nImport on Platform:
 
 | Release | Invitation role | New group |
 | --- | --- | --- |
-| `profile:commerceSetupPublisherRole` | `COMMERCE_SETUP_PUBLISHER` | `commerceSetupPublisherUserGroup` |
-| `profile:commercePublicationStarterRole` | Companion to `COMMERCE_SETUP_PUBLISHER`, not a new invitation role | `commercePublicationStarterUserGroup` |
-| `profile:commerceCouponIssuerRole` | `COMMERCE_COUPON_ISSUER` | `commerceCouponIssuerUserGroup` |
+| `product:accessGroups` | `COMMERCE_SETUP_PUBLISHER` | `commerceSetupPublisherUserGroup` |
+| `publish:accessGroups` | Companion to `COMMERCE_SETUP_PUBLISHER`, not a new invitation role | `commercePublicationStarterUserGroup` |
+| `promotion:accessGroups` | `COMMERCE_COUPON_ISSUER` | `commerceCouponIssuerUserGroup` |
 
-Each section pins only its own header and group record under `core-v001`. The
-header targets `profile.userGroup`, uses `saveAll` and the exact `code` lookup.
-Generated `saveAll` is an upsert, not an insert-only primitive. Before first
-installation, inspect any existing group with the proposed code and refuse
-conflicting grants or ancestry; do not use release import to repair it. Installed
-receipt/checksum policy governs replay, not a claimed intrinsic insertion fence.
-No section
-includes Employee, Password, scope, onboarding, documentation or existing Init
-records. Never rewrite an installed group or release receipt to introduce these
-responsibilities. Installation assigns nobody, including existing administrators.
+Each section pins its domain-owned header and group records under `init-v001`.
+The header targets `profile.userGroup` through `ensureReferenceAll`: missing
+records are inserted through the governed owner; retained records, including
+narrowing and deactivation, are preserved. Definitions do not assign employees,
+change credentials, create scopes or enable onboarding. Profile's former duplicate
+Core packs have been removed, with no compatibility aliases. Installed receipts
+remain historical evidence, not permission to overwrite current authority.
 
-### Forward Process Starter Adoption
+### Publication Starter Assignment
 
 `COMMERCE_SETUP_PUBLISHER.groupCodes` composes
 `commerceSetupPublisherUserGroup` and `commercePublicationStarterUserGroup`.
 The companion is an ordinary Employee-derived permission group, not another
 invitation role, administrator, approval registry or runtime identity.
-Its separately selected `profile:commercePublicationStarterRole` pack contains
-only its new header and group record. The original publisher section, version,
-payload bytes and hashes stay unchanged. Fresh deployments explicitly install
-both packs before inviting a publisher. A missing companion group must refuse
-assignment; source role composition creates no installed group or staff grants.
-
-For the already installed LOCAL publisher role:
-
-1. Verify the original publisher pack is CURRENT at its original checksum and
-   inspect the companion group code. Require absence for first installation or
-   the exact previously installed companion; reject conflicting ancestry/grants.
-2. As the existing authorized Platform operator, explicitly validate/install
-   `profile:commercePublicationStarterRole` core `0.0.1` through nImport. Require
-   its new receipt and exact group readback. `saveAll` is not insert-only; the
-   preceding identity check remains necessary and does not promise atomic absence.
-3. Predefined application demo staff use their separately reviewed explicit
-   reference-role release through `addReferenceGroupsAll`, described below.
-   Custom existing employees without such release instructions may use the
-   authorized Employee PATCH procedure. Both preserve current groups; neither
-   replaces the publisher group, changes scopes or supplies stamp values.
-4. Require one matched acknowledgement, fresh exact group readback and a new
-   normal employee session. Then retry the original pending publication through
-   nPublish's canonical recovery path, not a replacement Process start or a
-   service principal. Process retains its own runtime/definition guards.
-
-nImport's `isDevelopmentRelease` accepts exactly `0.0.0`, **not `0.0.1`**.
-Same-version `0.0.1` checksum drift is invalid, even before customer release.
-This new release identity avoids that drift; never patch installation receipts,
-replay an edited original pack or claim an administrative live group patch was
-installed source adoption. Existing receipt history remains truthful.
+Its owner contribution is `publish:accessGroups`. Fresh deployments resolve
+the explicit domain dependencies before inviting a publisher. A missing group
+refuses assignment; source composition creates no installed staff grants.
+Predefined demo staff use their reviewed reference instructions through
+`addReferenceGroupsAll`. Other employees use governed Profile/Axis commands.
+Both retain independent scopes and normal stamp invalidation. Inspect current
+installed records before adoption, reauthenticate afterwards, and recover an
+existing publication through its original nPublish intent. Never rewrite a receipt,
+repeat a Process start or substitute a service identity to complete a review.
 
 New employees use Profile's existing enterprise access-assignment invitation and
 proof-bound registration after its independent onboarding prerequisites are
@@ -83,8 +60,8 @@ authority/group array rejects. It never manufactures system auth.
 
 Each instruction has exactly `code`, `loginId`, `enterpriseCode`, `roleCodes` and
 `groupCodes`; at most 100 instructions, unique codes/logins and bounded distinct
-role/group arrays. Resolve current configured delegable ENTERPRISE roles with no
-administrationClass and require the exact configured group union, including the
+role/group arrays. Resolve current persisted delegable ENTERPRISE roles with no
+administrationClass and require the exact persisted group union, including the
 publisher's separately installed PublicationStarter companion. Administrative,
 runtime-admin and service groups cannot be newly added. Role definitions are
 dependencies, not permission strings accepted from a file.
@@ -115,8 +92,8 @@ claim automatic recovery of a failed stamp provider or publication. Obtain fresh
 normal sessions after a successful membership change.
 
 Circa owns `circa.ewaste:circaCommerceStaffAssignments` sample-v001/0.0.1, not
-Profile's role-definition packs. Its explicit dependency order includes Profile
-publisher, PublicationStarter, coupon issuer and Axis refund-reviewer definitions,
+framework role-definition packs. Its explicit dependency order includes Product,
+Publication, Promotion and Order definitions,
 original operations identities/Enterprise masters and separate exact outlet scopes.
 Only its marketplace administrator receives the Axis refund-reviewer role;
 customer and staff remain distinct. No runtime manual role wiring is required for
@@ -305,12 +282,12 @@ the merchant permission or qualify redemption, and uncertain writes need readbac
 
 ## Extension And Verification
 
-Later layers narrow availability in
-`enterpriseManagement.accessAssignments.roles.<ROLE>` and, if necessary, provide
-a distinct reviewed group release. Keep owner authorization in its capability;
+Authorized administrators narrow persisted roles and groups through Profile/Axis
+and, when needed, explicitly install a distinct module-owned group contribution.
+Configuration does not supply role or permission authority. Keep owner authorization in its capability;
 never add project-specific enterprise lists to Profile or modify a shared group
-to make a local setup succeed. The existing role resolver reads layered policy,
-while the ordinary invitation transport enum declares these two supported roles.
+to make a demo setup succeed. The existing role resolver reads fresh persisted
+definitions; invitation choices are delivered by the backend, not a static enum.
 
 Run `node --test nodics.platform/modules/profile/test/commerceSetupRoles.test.js`
 with the existing refund-role, scope and security-stamp suites. Tests exercise

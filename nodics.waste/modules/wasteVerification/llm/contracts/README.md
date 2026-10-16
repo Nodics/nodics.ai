@@ -3,6 +3,12 @@
 Waste Verification owns reviewer decisions and verified facts. It must not
 overwrite submitted facts.
 
+The distinct evidence-only rejection command records unusable-evidence decisions
+without physical verification or downstream effects. It retains the existing
+approval grant, scoped assignment, exact command identity and bounded absence
+proofs. This exception is a separate command, not a relaxation of ordinary review
+requirements. See [admission and recovery](review-workspace.md#evidence-only-rejection).
+
 
 Permission-based verification uses a durable `wasteVerification` record and preserves submitted facts. With `waste.operations.requireVerification`, decisions require prior verification; review and approval are independent grants. A reviewer with approval permission, including an administrator, may approve the same submission. The default `requireDifferentApprover: false` preserves this behavior. The optional `requireDifferentApprover: true` restriction applies only when a project explicitly requires separate actors. Approvers cannot alter verified facts. Verification requires confirmation, revision and idempotency; it does not earn rewards. Approval/rejection and audit retain actor and settlement references. Run `test/wasteOperationalRolesContract.test.js` for success, role/scope denial, stale facts, combined-role approval and explicitly configured separation coverage.
 

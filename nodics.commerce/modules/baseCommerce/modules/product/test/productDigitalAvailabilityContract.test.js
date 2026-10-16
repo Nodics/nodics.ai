@@ -73,6 +73,18 @@ function fixture() {
     return { request, row, rows, coupons, calls, config, reader };
 }
 
+test('consumer prices receive the actual retained Product version, ignoring caller pins', async () => {
+    const f = fixture();
+    f.request.productReferences = [{ productCode: 'offer', storeCode: 's', targetVersion: 'f'.repeat(64) }];
+    await enrichment.consumerSummaries(f.request, f.rows);
+    assert.deepEqual(f.calls.prices[0].productReferences,
+        [{ productCode: 'offer', storeCode: 's', targetVersion: 'a'.repeat(64) }]);
+    assert.deepEqual(f.calls.prices[0].productCodes, ['offer']);
+    f.rows.push({ ...structuredClone(f.row), code: 'conflicting', publicationVersion: 'b'.repeat(64) });
+    await assert.rejects(enrichment.consumerSummaries(f.request, f.rows), /Conflicting retained Product version/);
+    assert.equal(f.calls.prices.length, 1);
+});
+
 test('search cards and PDP replace indexed Not available with live Promotion coupon supply', async () => {
     const f = fixture(), before = structuredClone(f.rows);
     const rows = await f.reader.search(f.request, f.reader.query(f.request), {});
@@ -98,6 +110,73 @@ test('mixed results retain one physical Inventory batch and one pool read per di
     assert.equal(f.calls.batches.length, 1);
     assert.equal(f.calls.prices.length, 1);
     assert.deepEqual(f.calls.prices[0].productCodes, ['offer', 'physical']);
+});
+
+test('selected public coupons use one exact original-authority Promotion batch and retain one physical Inventory batch', async () => {
+    const f = fixture(), calls = [];
+    f.request.authData = { principalType: 'anonymous', tenant: 't' };
+    f.rows.push({ ...structuredClone(f.row), code: 'other-projection', productCode: 'other' }, f.row,
+        { ...structuredClone(f.row), code: 'physical-projection', productCode: 'physical', payload: { variantSkuMap: { a: 'PHYSICAL' } } });
+    SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => true, publicAvailability: () => assert.fail('No per-item public call'),
+        publicAvailabilityBatch: async (request, codes) => {
+            calls.push({ request: structuredClone(request), codes: [...codes] });
+            assert.equal(request.projection, undefined);
+            assert.equal(request.quantity, '1');
+            assert.deepEqual(request.authData, f.request.authData);
+            return new Map(codes.map(code => [code, { available: true, status: 'IN_STOCK' }]));
+        } };
+    const before = structuredClone(f.request), result = await enrichment.consumerSummaries(f.request, f.rows);
+    assert.equal(calls.length, 1); assert.deepEqual(calls[0].codes, ['offer', 'other']);
+    assert.equal(f.calls.inventory.length, 1); assert.equal(f.calls.pool.length, 0);
+    assert.equal(result.availability.offer.available, true); assert.equal(result.availability.other.available, true);
+    assert.deepEqual(f.request, before);
+});
+
+test('selected public batch absence, incomplete output and owner failure reject without per-item or Digital fallback', async () => {
+    for (const implementation of [undefined, async () => new Map(), async () => ({ offer: { available: true } }),
+        async () => { throw new Error('isolated batch failure'); }]) {
+        const f = fixture();
+        SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => true, publicAvailabilityBatch: implementation };
+        await assert.rejects(enrichment.consumerSummaries(f.request, f.rows));
+        assert.equal(f.calls.pool.length, 0);
+    }
+});
+
+test('selected batch values must be exact safe summaries and never fall through to Digital, even if selection becomes inert', async () => {
+    const values = [undefined, null, {}, [], true, { available: true }, { status: 'IN_STOCK' },
+        { available: 'true', status: 'IN_STOCK' }, { available: true, status: 'OUT_OF_STOCK' },
+        { available: false, status: 'IN_STOCK' }, { available: true, status: 'UNKNOWN' },
+        { available: true, status: 'IN_STOCK', batchCode: 'private' },
+        { available: true, status: 'IN_STOCK', error: 'failed' },
+        { available: true, status: 'IN_STOCK', success: false },
+        Object.assign(Object.create({ inherited: true }), { available: true, status: 'IN_STOCK' }),
+        { get available() { return true; }, status: 'IN_STOCK' },
+        { available: true, get status() { return 'IN_STOCK'; } },
+        { available: true, status: 'IN_STOCK', [Symbol('private')]: 'private' }];
+    for (const value of values) {
+        const f = fixture();
+        let digitalCalls = 0, selected = true;
+        SERVICE.DefaultDigitalCommerceCheckoutService = { availabilityFromProjection: async () => {
+            digitalCalls++; return { available: true };
+        } };
+        SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => selected,
+            publicAvailabilityBatch: async () => { selected = false; return new Map([['offer', value]]); } };
+        await assert.rejects(enrichment.consumerSummaries(f.request, f.rows), /batch summary is invalid/);
+        assert.equal(digitalCalls, 0);
+    }
+});
+
+test('selected out-of-stock batch summaries stay unavailable without Digital fallback', async () => {
+    const f = fixture();
+    let digitalCalls = 0;
+    SERVICE.DefaultDigitalCommerceCheckoutService = { availabilityFromProjection: async () => {
+        digitalCalls++; return { available: true };
+    } };
+    SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => true,
+        publicAvailabilityBatch: async () => new Map([['offer', { available: false, status: 'OUT_OF_STOCK' }]]) };
+    assert.deepEqual((await enrichment.consumerSummaries(f.request, f.rows)).availability.offer,
+        { available: false, status: 'OUT_OF_STOCK' });
+    assert.equal(digitalCalls, 0);
 });
 
 test('sold or reserved pools replace stale available snapshots with unavailable summaries', async () => {

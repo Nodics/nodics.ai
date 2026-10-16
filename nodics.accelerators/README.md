@@ -14,6 +14,15 @@ or Waste. Import, permissions, readiness, and publication remain owner-governed.
 Read `AGENTS.md`, then
 the selected domain and capability guidance before implementation.
 
+Circa and Agora reference modules in Kickoff contain optional demo data, assets
+and inert composition. They must not implement reusable accelerator behavior,
+define access rights, or repair grants at startup. Each implementing capability
+owns its permission vocabulary and standard business access mappings in explicit
+data packs administered through Profile and Axis. Demo identities and assignments
+reference those definitions without copying them. The same separation applies
+to every accelerator; genuine partner projects may still implement their own
+customer-specific extensions.
+
 The umbrella extends Foundation only. It must not force Commerce or Discovery
 into every accelerator runtime. Apparel/Electronics (and Telco through
 Electronics) retain Commerce inheritance; Waste scenarios retain Waste

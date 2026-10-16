@@ -14,9 +14,15 @@ This generated capability boundary must preserve Nodics structure, layering, con
 
 Location Core owns physical-place runtime validation and delegates storage to the generated `DefaultLocationService`. Keep the behavior layer in `DefaultLocationOperationService`; do not place validation directly in controllers or generated persistence services.
 
-Keep secured route permissions assignable through Profile's canonical catalogue
-in nAuth. Catalogue membership is not a default group grant or enabled exposure.
-Run `test/locationPermissionCatalog.test.js` when route grants change.
+Location owns its four route permission definitions in the explicit
+`permissionCatalogue` data section. Its `locationCorePermissionData.js` records
+and Profile `permission` import header live under `data/init-v001`; Profile Init
+pins that owner pack as a prerequisite. Profile's persisted catalogue validates
+vocabulary asynchronously, without an nAuth properties fallback. Catalogue
+membership grants neither group/principal access nor `locationInternal` exposure.
+Keep assignments behind Profile governance and preserve existing narrowing on
+insert-only replay. See the [route contract](llm/contracts/README.md#route-contract)
+and maintain `test/locationPermissionCatalog.test.js` when these definitions change.
 
 Reject direct `tenant` or `tenantCode` fields in Location business payloads. Use runtime tenant only as request/storage context, and use enterprise association fields when ownership or operator meaning is required.
 

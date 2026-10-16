@@ -22,7 +22,10 @@ module.exports = {
         baselineCode: "nexus",
         presentation: {
           title: "Nexus Corporate",
-          visual: require("../data/backoffice/applicationVisualData"),
+          visual: {
+            mediaCode: "nodicsMicroservicesHero",
+            alt: "Nexus microservices home page artwork",
+          },
           kind: "PROJECT",
           category: "accelerator",
           order: 100,

@@ -55,15 +55,49 @@ flattenRoutes(routerConfig).forEach(route => {
         assert.strictEqual(route.permission, cronJobLifecyclePermission, 'CronJob lifecycle mutation routes must declare governed permission');
     }
 });
-const authProperties = require('../../../../nodics.foundation/modules/nAuth/config/properties');
-assert(
-    authProperties.identityGovernance.permissionCatalog.includes(cronJobLifecyclePermission),
-    'CronJob lifecycle permission must be present in the identity catalog',
-);
-assert(
-    authProperties.identityGovernance.migration.groupTargets.runtimeConfigAdminUserGroup.permissions.includes(cronJobLifecyclePermission),
-    'Runtime configuration admins must be allowed to operate Cron lifecycle in the reference setup',
-);
+const permissionRecords = Object.values(require('../data/init-v001/records/identity/cronjobPermissionData'));
+const permissionHeader = require('../data/init-v001/headers/identity/cronjobPermissionHeader');
+const permissionPack = require('../data/manifest.json').sections.permissionCatalogue;
+const configGroups = Object.values(require('../../../../nodics.foundation/modules/nConfig/data/init-v001/records/identity/configUserGroupData'));
+const configGroupHeader = require('../../../../nodics.foundation/modules/nConfig/data/init-v001/headers/identity/configUserGroupHeader');
+const configGroupPack = require('../../../../nodics.foundation/modules/nConfig/data/manifest.json').sections.accessGroups;
+const profileInit = require('../../../../nodics.platform/modules/profile/data/manifest.json').sections['init-v001'];
+assert.deepStrictEqual(permissionRecords.map(row => row.code).sort(), ['cronjob.backoffice.view', cronJobLifecyclePermission].sort());
+permissionRecords.forEach(row => {
+    assert.strictEqual(row.ownerModule, 'cronjob');
+    assert.strictEqual(row.active, true);
+    assert.deepStrictEqual(Object.keys(row).sort(), ['active', 'code', 'name', 'ownerModule'],
+        'Cron vocabulary defines permissions, not assignments');
+});
+assert.strictEqual(permissionPack.owningDomain, 'cronjob');
+assert.strictEqual(permissionPack.selectionPolicy, 'EXPLICIT');
+assert.strictEqual(permissionPack.destinationRole, 'PLATFORM');
+assert(Object.hasOwn(permissionPack.files, 'init-v001/records/identity/cronjobPermissionData.js'));
+assert(Object.hasOwn(permissionPack.files, 'init-v001/headers/identity/cronjobPermissionHeader.js'));
+assert.deepStrictEqual(Object.keys(permissionHeader), ['profile']);
+assert.strictEqual(permissionHeader.profile.cronjobPermission.options.schemaName, 'permission');
+assert.strictEqual(permissionHeader.profile.cronjobPermission.options.operation, 'ensureReferenceAll');
+const runtimeAdmins = configGroups.filter(group => group.code === 'runtimeConfigAdminUserGroup');
+assert.strictEqual(runtimeAdmins.length, 1, 'Runtime administrator definition has one canonical owner');
+assert.strictEqual(runtimeAdmins[0].active, true);
+assert(runtimeAdmins[0].permissions.includes(cronJobLifecyclePermission),
+    'The explicit nConfig group definition retains its Cron lifecycle permission');
+for (const group of configGroups.filter(group => group.code !== 'runtimeConfigAdminUserGroup')) {
+    assert(!(group.permissions || []).includes(cronJobLifecyclePermission), 'Vocabulary import must not broaden sibling groups');
+}
+assert.strictEqual(configGroupPack.owningDomain, 'config');
+assert.strictEqual(configGroupPack.selectionPolicy, 'EXPLICIT');
+assert.strictEqual(configGroupPack.destinationRole, 'PLATFORM');
+assert(Object.hasOwn(configGroupPack.files, 'init-v001/records/identity/configUserGroupData.js'));
+assert(Object.hasOwn(configGroupPack.files, 'init-v001/headers/identity/configUserGroupHeader.js'));
+assert.deepStrictEqual(Object.keys(configGroupHeader), ['profile']);
+assert.strictEqual(configGroupHeader.profile.configUserGroup.options.schemaName, 'userGroup');
+assert.strictEqual(configGroupHeader.profile.configUserGroup.options.operation, 'ensureReferenceAll');
+assert(configGroupPack.prerequisites.some(ref => ref.moduleName === 'cronjob' &&
+    ref.sectionCode === 'permissionCatalogue' && ref.partition === 'DEFAULT'));
+assert(profileInit.prerequisites.some(ref => ref.moduleName === 'config' && ref.sectionCode === 'accessGroups'));
+assert(profileInit.prerequisites.some(ref => ref.moduleName === 'cronjob' &&
+    ref.sectionCode === 'permissionCatalogue' && ref.partition === 'DEFAULT'));
 const capability = capabilityService.getCapability();
 assert.strictEqual(capability.displayName, 'Cron Jobs');
 assert.deepStrictEqual(

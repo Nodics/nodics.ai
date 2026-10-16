@@ -49,22 +49,6 @@ module.exports = {
   systemId: 0,
 
   /*
-        These values are used as system values, so they cannot be used as variable or class names.
-    */
-  illegalUsernames: [
-    "nodics",
-    "administrator",
-    "password",
-    "admin",
-    "user",
-    "unknown",
-    "anonymous",
-    "null",
-    "undefined",
-    "api",
-  ],
-
-  /*
         - Use this when some properties need to be loaded from outside the config directory.
         - The system looks for this file from the root of Nodics HOME.
         - In this case, the path will be NODICS_HOME/externalProps.js.
@@ -86,7 +70,6 @@ module.exports = {
   // databaseUserURI = mongodb://hostA:27501,hostB:27501
   // databaseUserURI = mongodb://nonexistent.domain:27000
   dynamoEnabled: false,
-  defaultContentType: "application/json",
   defaultTenant: "default",
   defaultEnterprise: "default",
   profileModuleName: "profile",
@@ -94,7 +77,6 @@ module.exports = {
   dynamoModuleName: "dynamo",
   systemModuleName: "system",
   workflowModuleName: "workflow",
-  processRetrySleepTime: 2000,
   defaultAuthDetail: {
     entCode: "default",
     tenant: "default",

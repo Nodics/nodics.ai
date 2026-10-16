@@ -1,5 +1,12 @@
 # copilotKnowledge Agents
 
+Knowledge owns its startup dispatch: postInit registers the supported Discovery
+providers, then awaits ingestOnStart. Do not require application/server hooks or
+duplicate the trigger. Both ingestion gates default off; preserve source policy,
+bounded authority and error propagation. Deployment selections remain layered
+properties, not copied ingestion code. Cover lifecycle ordering and disabled
+gates in copilotKnowledgeStartupContract and registration fixtures.
+
 Read [runtime knowledge configuration](llm/contracts/runtime-knowledge-configuration-contract.md).
 Keep source defaults empty and discover candidates through nConfig's active graph.
 Do not add application source catalogs or parallel persistence. Selecting a parent
@@ -18,12 +25,16 @@ after any failure and permit inspection with write gates off.
 Run `test/copilotKnowledgeMigration.test.js` with the existing generation tests.
 Migration refusals use their own bounded `ERR_CPK_00025` status, not the pending
 refresh recovery status. Preserve private details and inspection-first guidance.
-Migration permissions must be declared in nAuth's canonical
-`identityGovernance.permissionCatalog` so Profile can validate scoped operator
-groups. A catalogue entry does not grant permission to any default role or enable
-commands. Run `test/copilotMigrationPermissionCatalog.test.js` through the real
-nConfig merge and Profile group validator; do not bypass group governance in
-acceptance fixtures. The opt-in `test/copilotErasureRuntime.live.test.js` composes
+Migration permissions belong to Knowledge's implementing-owner identity data
+pack and Profile's persisted permission catalogue. Profile validates scoped
+operator groups asynchronously against fresh active records; configuration is
+not permission authority. A catalogue entry does not grant a default role or
+enable commands. Keep `test/copilotMigrationPermissionCatalog.test.js` on owner
+records and the real Profile catalogue/group validator, including inactive and
+unknown permission rejection. Disposable acceptance fixtures must use generated
+Profile owners, preserve existing narrowed or revoked grants, and never bypass
+group governance or synthesize wildcard authority. The opt-in
+`test/copilotErasureRuntime.live.test.js` composes
 a disposable real backend through nTooling and provider-owned test helpers.
 
 Recorded manual refresh follows `llm/examples/recorded-manual-refresh.md`. Reuse

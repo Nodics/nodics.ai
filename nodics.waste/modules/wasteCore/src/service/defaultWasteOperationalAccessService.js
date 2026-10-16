@@ -60,8 +60,8 @@ module.exports = {
       await this.deny(request, permission);
   },
   /** Reads only this authenticated employee's scopes from Profile and keeps them request-local. */
-  context: async function (request) {
-    if (!this.settings().requireScopes)
+  context: async function (request, requireScopes = false) {
+    if (!requireScopes && !this.settings().requireScopes)
       return { scopes: [], deniedScopes: [], unscoped: true };
     if (contexts.has(request)) return contexts.get(request);
     const promise = (async () => {
@@ -309,7 +309,9 @@ module.exports = {
       canAssign:
         this.granted(request, "waste.verification.record") ||
         this.granted(request, "waste.review.approve"),
-      reviewWorkspace: (CONFIG.get("waste") || {}).reviewWorkspace || {},
+      reviewWorkspace: SERVICE.DefaultWasteReviewWorkspaceService?.presentation
+        ? SERVICE.DefaultWasteReviewWorkspaceService.presentation()
+        : (CONFIG.get("waste") || {}).reviewWorkspace || {},
       requireVerification: this.settings().requireVerification === true,
       requireDifferentApprover:
         this.settings().requireDifferentApprover === true,

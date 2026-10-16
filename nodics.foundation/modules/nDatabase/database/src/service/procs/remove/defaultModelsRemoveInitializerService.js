@@ -100,6 +100,7 @@ module.exports = {
       SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(
         request.authData,
         rawSchema.accessGroups,
+        request,
       ) >= CONFIG.get("accessPoints").removeAccessPoint
     ) {
       SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, "remove")

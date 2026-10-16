@@ -2,6 +2,115 @@
   "contractVersion": 2,
   "module": "digitalCore",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "digitalCore permissionCatalogue",
+      "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/digitalCorePermissionHeader.js": "0651a0f19a442c4052e40d13358e51b6123a6d5bb33ade62ea874e8df5b49852",
+        "init-v001/records/identity/digitalCorePermissionData.js": "705e848b0a1eef2103b4627b0e82dd144e17b75c6e70aacbbc12fd60293dfe5e"
+      }
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "digitalCore accessGroups",
+      "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/digitalCoreUserGroupHeader.js": "d56d8f6161c106b2c650ffef671baef3f670370e87326ab4e9000e874aef7855",
+        "init-v001/records/identity/digitalCoreUserGroupData.js": "53ce2b277514871beb8d8edcc6da33043b3655bfb8d52cb39a6eeba24a3ae210"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "ab53220ee38bb003b43e3f1ed0723afe8499523a31429abd96ddcc3c328b152a",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "store",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a4989b176f5eb13747bbca9d31972e4e6525e04269d25246f40c756c549b60d3",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "enterpriseRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "digitalCore enterpriseRoles",
+      "description": "Explicit digitalCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "digitalCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/digitalCoreEnterpriseRoleHeader.js": "624ae95ec65821e72bf357fca455bb789a688add1b723eb279b5398dc928979e",
+        "init-v001/records/identity/digitalCoreEnterpriseRoleData.js": "e1a5c18a29dc09126f4baf9b686d616d4c5c33d0881815f073a8abbc1f772673"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "digitalCore",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "ae98ad2389c579aab430fe7cee607e1f6df0b3600173f4ef20598134c0a70800"
+        }
+      ]
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

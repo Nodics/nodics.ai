@@ -118,7 +118,7 @@ authority. Validate the full bounded unique selection before reads; reject mixed
 operation fields and require complete ordered non-repaired/non-deleted evidence.
 Never relax router rate limits or cache READY to mask request amplification.
 
-Retained publication is gated, not registered. Read
+Retained publication uses owner role registrations but remains qualification-gated. Read
 `llm/contracts/README.md#retained-publication` before modifying capture, target
 preparation, delivery or rollback. Reuse transfer manifests, placements,
 publication receipts, provider storage and nDatabase transactions. Never route

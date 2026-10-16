@@ -74,3 +74,15 @@ See [publication qualification](llm/contracts/README.md#publication-qualificatio
 policy capture is a projection, not immutable storage proof. Mutable restoration
 is disabled; provider registration and activation require owner migration,
 retained target policy, durable receipts, pointer CAS and no-source-fallback reads.
+
+Advanced `specialAccessGroups` and `specialAccessRoles` definitions are owner data.
+Keep them separate from ordinary business access levels. Assignments and exact
+approval/source/deployment pins stay with the consuming project; these roles
+never waive owner admission or activate operations.
+
+This capability owns its publication providers, standard transport and source
+schema role profile. COMMERCE contributes its read-only target observer;
+COMMERCE_STAGED contributes approval/version wiring. Keep installed qualification,
+connections, signed caller scopes and explicit deployment differences separate.
+Use publicationConfigurationOwnership.test.js in the Commerce group for the
+shared role-isolation matrix, alongside this owner's behavioral regressions.

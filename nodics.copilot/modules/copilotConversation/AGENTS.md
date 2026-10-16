@@ -1,5 +1,9 @@
 # copilotConversation Agents
 
+Conversation owns the provider-neutral customerGuidance generation profile.
+It selects no adapter/model or credentials and does not enable a provider.
+Domains select the profile; deployments may override it through normal layers.
+
 Shared customer guidance is domain-neutral. The domain adapter supplies an
 owner-authorized minimized `settings.context`; do not trust request-body facts or
 hardcode accelerator fields, stages, source lists or customer instructions here.

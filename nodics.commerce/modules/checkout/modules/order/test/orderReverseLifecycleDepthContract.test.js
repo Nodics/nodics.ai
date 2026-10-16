@@ -24,6 +24,7 @@ const test = require('node:test');
 const service = require('../src/service/defaultOrderLifecycleOperationService');
 const facade = require('../src/facade/defaultOrderLifecycleFacade');
 const backofficeCapability = require('../src/service/defaultOrderBackofficeCapabilityService');
+const accessFixture = require('./helpers/orderBusinessAccessFixture');
 
 let saved;
 let auths;
@@ -37,6 +38,8 @@ test.beforeEach(() => {
     lifecycleUpdates = [];
     global.SERVICE = {
         DefaultOrderLifecycleRepositoryService: {
+            confirmedResult: accessFixture.repository.confirmedResult,
+            unwrap: accessFixture.repository.unwrap,
             list: async (_tenant, _query, authData) => {
                 auths.push(authData);
                 return storedLifecycle;
@@ -54,6 +57,14 @@ test.beforeEach(() => {
             }
         }
     };
+    accessFixture.install();
+    SERVICE.DefaultOrderLifecycleRequestService = { get: async request => {
+        assert.equal(request.query.tenant, 'default');
+        assert.equal(request.query.enterpriseCode, 'enterpriseX');
+        assert.deepEqual(request.authData, accessFixture.identity.getSystemAuthData());
+        return { code: 'SUC_GET', result: structuredClone(storedLifecycle.filter(row =>
+            Object.entries(request.query).every(([key, value]) => row[key] === value))) };
+    } };
 });
 
 test('reverse lifecycle preview exposes cancellation return and refund customer policy depth', async () => {
@@ -191,6 +202,7 @@ test('reverse lifecycle facade resolves customer ownership from authenticated lo
 test('reverse lifecycle facade keeps operator action actor separate from customer owner', async () => {
     let captured;
     global.SERVICE = {
+        ...global.SERVICE,
         DefaultOrderLifecycleOperationService: {
             action: async request => {
                 captured = request;
@@ -201,7 +213,7 @@ test('reverse lifecycle facade keeps operator action actor separate from custome
 
     const result = await facade.action({
         tenant: 'default',
-        authData: { tenant: 'default', loginId: 'operator@example.com' },
+        authData: accessFixture.employeeAuth({ actorId: 'operator@example.com' }),
         ownerId: 'customer@example.com',
         requestCode: 'order-1:cancellation:1',
         actionCode: 'APPROVE',
@@ -218,6 +230,7 @@ test('generic refund approval refuses unqualified financial execution', async ()
     storedLifecycle = [{
         code: 'order-1:refund:1',
         tenant: 'default',
+        enterpriseCode: 'enterpriseX',
         ownerId: 'customer-1',
         orderCode: 'order-1',
         requestType: 'REFUND',
@@ -238,7 +251,7 @@ test('generic refund approval refuses unqualified financial execution', async ()
         requestCode: 'order-1:refund:1',
         actionCode: 'APPROVE',
         payload: {},
-        authData: { groups: ['employeeUserGroup'] },
+        authData: accessFixture.employeeAuth(),
         correlationId: 'corr-approve-refund'
     });
 
@@ -281,7 +294,7 @@ test('generic cancellation approval refuses before digital or financial side eff
         requestCode: 'order-1:cancellation:1',
         actionCode: 'APPROVE',
         payload: { refundAmount: '5.00', currency: 'USD' },
-        authData: { groups: ['employeeUserGroup'] },
+        authData: accessFixture.employeeAuth(),
         correlationId: 'corr-cancellation-approve'
     });
 
@@ -321,7 +334,7 @@ test('generic refund approval cannot bypass guarded digital reversal', async () 
         requestCode: 'order-1:refund-digital:1',
         actionCode: 'APPROVE',
         payload: {},
-        authData: { groups: ['employeeUserGroup'] },
+        authData: accessFixture.employeeAuth(),
         correlationId: 'corr-approve-digital-refund'
     });
 
@@ -334,6 +347,7 @@ test('generic return actions refuse before unqualified receipt inspection or dis
     storedLifecycle = [{
         code: 'order-1:return:1',
         tenant: 'default',
+        enterpriseCode: 'enterpriseX',
         ownerId: 'customer-1',
         orderCode: 'order-1',
         requestType: 'RETURN',
@@ -352,8 +366,8 @@ test('generic return actions refuse before unqualified receipt inspection or dis
         }
     };
 
-    await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'MARK_RECEIVED', payload: {}, authData: {}, correlationId: 'corr-receipt' });
-    const inspected = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'DISPOSITION', payload: { disposition: 'RESTOCK' }, authData: {}, correlationId: 'corr-inspection' });
+    await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'MARK_RECEIVED', payload: {}, authData: accessFixture.employeeAuth(), correlationId: 'corr-receipt' });
+    const inspected = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'DISPOSITION', payload: { disposition: 'RESTOCK' }, authData: accessFixture.employeeAuth(), correlationId: 'corr-inspection' });
 
     assert.deepEqual(calls, []);
     assert.equal(inspected.status, 'SUBMITTED');
@@ -365,6 +379,7 @@ test('reverse lifecycle operator exchange approval calls Inventory and Fulfillme
     storedLifecycle = [{
         code: 'order-1:exchange:1',
         tenant: 'default',
+        enterpriseCode: 'enterpriseX',
         ownerId: 'customer-1',
         orderCode: 'order-1',
         requestType: 'EXCHANGE',
@@ -385,7 +400,7 @@ test('reverse lifecycle operator exchange approval calls Inventory and Fulfillme
         }
     };
 
-    const result = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:exchange:1', actionCode: 'APPROVE', payload: {}, authData: {}, correlationId: 'corr-exchange-approve' });
+    const result = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:exchange:1', actionCode: 'APPROVE', payload: {}, authData: accessFixture.employeeAuth(), correlationId: 'corr-exchange-approve' });
 
     assert.deepEqual(calls.map(call => call.operation), ['inventory', 'fulfillment']);
     assert.equal(calls[0].request.payload.replacementProductCode, 'agoraCashmereCardigan');
@@ -399,6 +414,7 @@ test('reverse lifecycle operator appeal approval calls Workflow SLA owner hook',
     storedLifecycle = [{
         code: 'order-1:appeal:1',
         tenant: 'default',
+        enterpriseCode: 'enterpriseX',
         ownerId: 'customer-1',
         orderCode: 'order-1',
         requestType: 'APPEAL',
@@ -413,7 +429,7 @@ test('reverse lifecycle operator appeal approval calls Workflow SLA owner hook',
         }
     };
 
-    const result = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:appeal:1', actionCode: 'APPROVE', payload: {}, authData: {}, correlationId: 'corr-appeal-approve' });
+    const result = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:appeal:1', actionCode: 'APPROVE', payload: {}, authData: accessFixture.employeeAuth(), correlationId: 'corr-appeal-approve' });
 
     assert.equal(workflowRequest.payload.appealReferenceCode, 'order-1:return:1');
     assert.equal(workflowRequest.idempotencyKey, 'order-1:appeal:1:APPROVE:appealSla');

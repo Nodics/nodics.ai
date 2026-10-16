@@ -66,3 +66,26 @@ module.exports.commsSchema.commsVerificationChallenge.definition.status.enum.pus
 // Runtime/provider configuration failures are persisted outcomes, not successful delivery.
 module.exports.commsSchema.commsIntent.definition.status.enum.push('UNCONFIGURED');
 module.exports.commsSchema.commsDeliveryAttempt.definition.status.enum.push('UNCONFIGURED');
+
+// Private transport receipt: tenant is an isolation key, never business ownership.
+module.exports.commsSchema.commsTelegramUpdate = {
+    super: 'base', model: true, schemaPolicies: ['telegramInbound'],
+    service: { enabled: true }, router: { enabled: false, groups: { schemaOperations: false } },
+    backoffice: { enabled: false }, cache: { enabled: false },
+    event: { enabled: false }, search: { enabled: false },
+    indexes: { composite: {
+        tenant: { enabled: true, name: 'tenant', options: { unique: true } },
+        applicationSubject: { enabled: true, name: 'applicationSubject', options: { unique: true } },
+        updateId: { enabled: true, name: 'updateId', options: { unique: true } }
+    } },
+    definition: {
+        code: { type: 'string', primary: true, required: true, description: 'Stable digest of tenant, bot subject and Telegram update id; insert-only replay key.' },
+        tenant: { type: 'string', required: true, description: 'Trusted runtime partition for durable transport deduplication, not enterprise ownership.' },
+        applicationSubject: { type: 'string', required: true, description: 'Configured stable bot id, independent of secret and receiver-path rotation.' },
+        updateId: { type: 'int', required: true, description: 'Telegram update_id bound to exactly one canonical payload digest.' },
+        payloadHash: { type: 'string', required: true, description: 'Digest of the complete bounded canonical update; no raw message storage.' },
+        claimId: { type: 'string', required: true, description: 'Private random insertion marker proving the one acknowledged response claimant.' },
+        disposition: { type: 'string', required: true, enum: ['LAUNCH_REPLY_RESERVED', 'IGNORED'], description: 'Transport reservation only, never sent, delivered, linked or logged-in proof.' },
+        receivedAt: { type: 'date', required: true, description: 'Owner receipt creation time; receipts have no automatic replay expiry.' }
+    }
+};

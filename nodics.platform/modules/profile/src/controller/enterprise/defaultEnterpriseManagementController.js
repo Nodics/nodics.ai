@@ -196,6 +196,14 @@ module.exports = {
       ? promise.then((value) => callback(null, value)).catch(callback)
       : promise;
   },
+  /** Reads current enterprise employee access without exposing private identity or registration evidence. @param {Object} request Signed request. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Safe workspace. */
+  businessAccessWorkspace: function (request, callback) {
+    return this.membershipAction(request, callback, "BUSINESS_ACCESS_WORKSPACE");
+  },
+  /** Applies one exact reviewed business-area assignment change. @param {Object} request Signed command. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Safe outcome. */
+  changeBusinessAccess: function (request, callback) {
+    return this.membershipAction(request, callback, "BUSINESS_ACCESS_CHANGE");
+  },
   /** Reads only memberships belonging to the fresh authenticated canonical actor. @param {Object} request Request. @param {Function} callback Callback. @returns {Promise<Object>|void} Safe list. */
   listOwnMemberships: function (request, callback) {
     return this.membershipAction(request, callback, "LIST");

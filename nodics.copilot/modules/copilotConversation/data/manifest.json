@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "copilotConversation",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "copilotConversation permissionCatalogue",
+      "description": "Explicit copilotConversation identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "copilotConversation",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/copilotConversationPermissionHeader.js": "4feb6df57acbbe20a9ce8125618dd07517dad63f5c9495e3f38563d2ab494c92",
+        "init-v001/records/identity/copilotConversationPermissionData.js": "b7cc35cce561ca1b2e8ef39d87ac4dca464a1da79b3e8a79c8c4dd9b7e8b0799"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

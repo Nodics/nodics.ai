@@ -53,6 +53,7 @@ module.exports = {
         priceQuoteCode: entry.priceQuoteCode,
         productCode: entry.productCode,
         variantCode: entry.variantCode,
+        sku: entry.sku,
         quantity: entry.quantity,
         currency: cart.currency,
       });

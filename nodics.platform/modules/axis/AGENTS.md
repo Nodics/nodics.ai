@@ -49,8 +49,9 @@
 ## Verification
 
 Axis owns the inert BackOffice documentation setup descriptors, including the
-Framework Documentation entry. The framework documentation content remains in
-nodics.docs. Both documentation entries default disabled; projects explicitly
+Framework Documentation entry. Capability documentation remains with its
+implementing module; nodics.docs owns shared scaffolding and cross-framework
+guides. Both documentation entries default disabled; projects explicitly
 select them through their Platform profiles.
 
 Axis owns only its own documentation acceptance pack descriptor under

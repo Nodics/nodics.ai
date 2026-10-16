@@ -1,5 +1,167 @@
 # Promotion contracts
 
+## Ordinary Business Browsing
+
+The existing `/commerce/catalog/promotions` and `/commerce/promotions` pages
+publish `presentation.schemaDiscovery` with
+`{path:'/business/promotions/schemas',apiVersion:'v0'}`. The standard contribution
+mapper sends it as `workbenchPresentation.schemaDiscovery`; no frontend or
+parallel registry is added. `GET /business/promotions/schemas` returns
+`{data:{schemas:[descriptor]}}`, with only module/schema `promotion`.
+`GET /business/promotions/capabilities` returns `{data:descriptor}` and
+`POST /business/promotions/search` returns `{data:{records,totalCount,pageNumber,pageSize,sort}}`.
+Prepared runtime routes supply descriptor API operations via the shared utility.
+Missing, disabled or ambiguous owner routes refuse, with no generic endpoint fallback.
+
+All routes retain `commerceManagement` exposure, human access-token employee
+admission and `commerce.promotion.read`. View, Edit and FullControl all hold that
+ordinary permission; this creates no permission or schema ACL grant. Before
+canonical local persistence authority is requested, the owner independently
+checks the original signed actor, tenant and enterprise aliases, employee access
+and effective read permission through nRouter. Header, normalized-auth, root,
+HTTP/body/query and nested search-envelope scope values may constrain but never
+replace signed scope. Service/system/customer and unscoped human requests refuse.
+After each generated read, original authority (including session/security claims)
+must still match. This checks in-flight drift, not a new session-validation cache
+or replacement for nRouter's credential/session owner.
+
+`DefaultSchemaUtilityService` supplies effective field/query metadata.
+`DefaultSchemaSafeQueryService` supplies bounded text, sort, filter and page
+parsing. Generated `DefaultPromotionService.get` receives only the fixed owner
+scope conjunct `{tenant,enterpriseCode}` plus the parsed query, an inclusive
+projection, no recursive relationships and no item-cache reuse. Caller filters
+cannot overwrite scope. Pages are bounded to 100 rows; unsupported fields,
+private/scope filters, oversized paging and unsafe offsets refuse before reads.
+Explicit successful envelopes, nonnegative safe query counts, unique nonempty
+record identities and exact tenant/enterprise on every row are required. Foreign,
+missing-scope, oversized, malformed or drifted results never become successful
+empty pages. `ERR_PROMOTION_WORKBENCH_UNCONFIRMED` identifies unconfirmed owner
+evidence; shared parser and generated guard failures remain failures.
+
+The public projection is only `code`, `name`, `status`, `priority`, `validFrom`,
+`validTo`, `revision` and effective `versionId`. Only fields present in the shared
+descriptor are returned. Nested values in these scalar fields refuse even if a
+provider ignores projection. Budgets/counters/admission receipts, conditions,
+actions, approvals, seller consent, coupon/token/customer fields and enterprise
+references never appear in records, query capabilities or relationships.
+View and unqualified deployments remain READ_ONLY with no form or mutation
+transport. Qualified Edit/FullControl receive the bounded draft editor below,
+never aggregate writes, bulk operations or generated schema grants. Browsing
+does not qualify complete ledger accounting or an atomic financial snapshot.
+
+The eight existing planned pages (Discount Rules, Coupons and Promotion Codes,
+Eligibility and Qualification, Priority/Combination/Stacking, Schedules and
+Budgets, Promotion Evaluation, Promotion Governance and Promotion Insights)
+remain DISABLED. No coupon, couponBatch, redemption, discount-decision, immutable
+publication or budget-ledger schema is advertised by this discovery endpoint.
+Their own existing APIs, protected projection and independent authority remain
+unchanged; immutable/ledger records gain no generic editor. Existing campaign
+lifecycle actions remain separately permission/owner governed, not generic CRUD.
+The native `saveDraft` now delegates to the same qualified draft owner below.
+
+`promotionBusinessWorkbenchContract.test.js` exercises actual persisted business
+groups and ancestry, route guards, shared descriptor/query builders, contribution
+mapping and generated read pipeline/Mongo adapter over isolated cursors. It covers
+success, explicit empty/later pages, maximum-page boundaries, denial before reads,
+foreign or malformed provider evidence, authority drift, unavailable owners,
+privacy and later-layer field narrowing. The helper's optional isolated query
+matcher does not replace production parsing or persistence. Existing analytics,
+ledger and merchant projection regressions must remain green. Axis's current
+wire parser is independently checked against serialized owner output, without
+adding a backend dependency on the frontend repository. No local test proves
+installed schema, signed-in browser, native deployment or live acceptance.
+
+Later modules may narrow the exported projection or replace descriptor/read
+members through normal loader merging, retaining original scope checks, shared
+query parsing, fixed ownership, privacy and independent draft admission. Administrators
+must refresh existing module discovery after deployment; they must not repair a
+missing view by assigning schema administration. On refusal, restore the owning
+route/schema/provider or renew legitimate authentication and retry the read;
+there is no read-side repair, import, migration or live-data mutation.
+
+## Ordinary Draft Commands
+
+`commerce.promotion.draft.write` is the sole ordinary draft mutation permission.
+Persisted Promotion Edit and FullControl definitions contain it instead of
+`commerce.promotion.manage`; View retains read only. FullControl additionally
+retains `commerce.coupon.seller.manage` with its existing independent fresh issuer
+and consent checks. No ordinary level gains approval, legacy submit/schedule/
+suspend/archive, batch issuance/reservation, budget admission or publication.
+Do not infer these rights from a UI access level or grant generated schema ACLs.
+
+`DefaultPromotionDraftService` accepts original signed human access-token employee
+authority with both read and draft permissions. Tenant/enterprise aliases from
+the signed claims, request, body/query and headers must agree; selectors never
+grant scope. Private in-flight admission pins original authority, effective
+schema, deployment qualification and generated/model ports across every await.
+Canonical IdentityGovernance persistence authority is created only after this
+admission. Service principals, copied flags and legacy manage alone cannot enter.
+Existing builder `applyOperatorContext` also derives signed enterprise and rejects
+conflicts; the ledger-only legacy unscoped read contract remains independent.
+
+The effective runtime must already be STAGED, with Promotion publication source
+versioning qualified, a CURRENT versioned `code` model and the real generated
+save/update/read selectors resolving to the version-aware methods. Existing
+publication, policy, budget-admission and seller-consent interceptors still run.
+This change does not enable versioning, migrate legacy rows, or authorize Online
+authoring. Missing qualification produces browse-only discovery and write refusal.
+
+Workbench `apiOperations.create/update` target PUT/PATCH
+`/business/promotions/drafts`. They use the existing editor wire format:
+
+```json
+{"code":"campaign-a","name":"Campaign A","priority":10}
+```
+
+```json
+{"query":{"code":"campaign-a","versionId":0},"model":{"name":"Revised campaign"},"options":{"recursive":false,"returnModified":true}}
+```
+
+The existing native PUT `/promotions/drafts` accepts the create model. PATCH
+`/promotions/drafts/:promotionCode` accepts the update envelope above; route code
+must equal query code. Both require the new permission and delegate to the same
+owner. The old hidden-code-only Save Draft lifecycle action is removed; the
+descriptor supplies a real bounded form and managed version concurrency. The
+existing `GENERATED_CRUD` editor shape is transport only: `savePath` is
+`PROMOTION_DRAFT_OWNER_COMMAND`, delete/bulk are inactive, and no raw CRUD is granted.
+
+Writable fields are code/name, nonnegative bounded integer priority, and ISO draft
+validFrom/validTo timestamps with a positive window. Code cannot change on update.
+Creation fixes DRAFT, inactive, empty conditions/actions, revision/version zero
+and signed actor audit. It cannot create an executable policy. Update accepts
+only existing DRAFT roots with exact scope, version and revision, refuses budget
+admission/seller-consent roots, and appends one version. Status, active, approval,
+conditions/actions, budgets/counters, consent, scope, publication/identity/audit
+fields are never caller-writable. Existing protected values must survive readback.
+Advanced policy authoring and publication remain separate responsibilities.
+
+Every read requires exact successful generated envelopes, count and row scope.
+Create requires an actual saved row; update requires acknowledged:true and exactly
+one version insert, followed by exact CURRENT readback. Explicit failure markers,
+including acknowledged:false alongside success codes, missing/foreign/malicious
+rows, stale versions, duplicate creates, provider failures and authority drift
+refuse. No local-model fallback, automatic retry, partial update or upsert exists.
+An unconfirmed response may follow a committed write: reconcile by refreshing
+current owner state, never blindly retrying or declaring success from the input.
+
+`test/promotionDraftContract.test.js` supplies regression code using actual groups,
+route admission, generated schema ACL checks, base/vService selectors, Promotion
+interceptors and vMongodb with isolated driver I/O. It includes native saveDraft,
+readback failures, cross-enterprise adoption, protected fields, replay and source
+qualification, plus optional Axis parser coverage via `AXIS_WORKBENCH_CONTRACTS`.
+Test code is not installed/E2E evidence. The standard business-access release
+suite includes this contract alongside existing workbench and analytics coverage;
+ledger, customer, merchant and publication regressions remain required.
+
+Integration must refresh module discovery/generated contracts and import headers
+once after owner source freeze. Existing preserve-on-import group records need an
+explicit governed reconciliation removing legacy manage from ordinary Edit/Full
+while adding draft.write, without stripping separately assigned advanced roles.
+Existing sessions must renew through the authentication owner. Qualify effective
+Staged versioned storage and existing immutable identity indexes before exposing
+editing; keep unqualified deployments read-only. No live/data/demo changes are
+part of this source batch. The eight disabled specialist pages stay unsupported.
+
 ## Scoped Publisher Persistence
 
 Online activated reads use a separate read-only admission, never the Staged

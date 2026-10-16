@@ -63,11 +63,12 @@ function fixture(t, kind = "LISTING") {
   const request = { tenant: "t", entCode: "default", authData: auth, httpRequest: { headers: { "x-enterprise-code": "default" } } };
   const input = { tenant: "t", enterpriseCode: "business", authData: auth, privateRequest: request, payload };
   const calls = [], hooks = {};
-  global.CONFIG = { get: key => key === "eWaste" ? { marketplace: { digitalOwnership: settings } } : undefined };
+  global.CONFIG = { get: key => key === 'identityGovernance' ? require('../../../../../../nodics.foundation/modules/nAuth/config/properties').identityGovernance : key === "eWaste" ? { marketplace: { digitalOwnership: settings } } : undefined };
   global.NODICS = { getSelectedEnvironmentName: () => "local" };
   global.CLASSES = { NodicsError: class extends Error {} };
   const store = { ...persistence };
   global.SERVICE = { DefaultWastePersistenceService: store, DefaultWasteAssetTransferOperationService: waste,
+    DefaultIdentityGovernanceService: require('../../../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultIdentityGovernanceService'),
     DefaultServiceTokenService: runtime, DefaultLoggerService: { hasPrivateCaptureProtection: () => true },
     DefaultSecuredRequestPipelineService: { getGrantedPermissions: r => r.authData.permissions, isPermissionGranted: (p, granted) => granted.includes(p) },
     DefaultEWasteDigitalSaleService: { ...sale,
@@ -101,10 +102,46 @@ for (const kind of ["LISTING", "PURCHASE", "REFUND"]) test(kind + " projects ver
   if (result.reversal) assert.equal(result.pins.reversal, inspection.checksum(f.rows.wasteAssetOwnershipEvent[1]));
   assert.deepEqual(f.rows, before); assert.deepEqual(f.auth, auth);
   for (const { request } of f.calls) {
-    assert.equal(request.tenant, "t"); assert.equal(request.authData.tenant, "t");
+    assert.equal(request.tenant, "t");
+    assert.deepEqual(request.authData, SERVICE.DefaultIdentityGovernanceService.getSystemAuthData());
     assert.deepEqual(request.searchOptions, { pageSize: 2, pageNumber: 1 });
     assert.deepEqual(request.options, { recursive: false, skipItemCache: true });
   }
+});
+
+test("generated owner selection uses the admitted request partition with canonical tenant-less authority", async t => {
+  const f = fixture(t, "REFUND"), selections = [], models = {}, readers = {};
+  const fs = require("node:fs"), Module = require("node:module");
+  const filename = require.resolve("../../../../../../nodics.foundation/modules/nService/src/service/common");
+  const template = fs.readFileSync(filename, "utf8");
+  for (const schema of Object.keys(f.rows)) {
+    const title = schema[0].toUpperCase() + schema.slice(1), serviceName = "Default" + title + "Service";
+    readers[schema] = SERVICE[serviceName].get;
+    models[title + "Model"] = { schemaName: schema };
+    let source = template;
+    for (const [key, value] of Object.entries({ schmanm: schema, mdulnm: "wasteCore", mdlnm: title + "Model",
+      srvcName: serviceName, dsdName: "Default" + title + "Facade" })) source = source.replaceAll(key, value);
+    const compiled = new Module(filename, module); compiled.paths = module.paths; compiled._compile(source, filename);
+    SERVICE[serviceName] = compiled.exports;
+  }
+  NODICS.getModels = (moduleName, tenant) => {
+    selections.push({ moduleName, tenant });
+    assert.equal(moduleName, "wasteCore");
+    assert.equal(tenant, "t", "A foreign partition must never be selected");
+    return models;
+  };
+  SERVICE.DefaultPipelineService = { start: async (pipeline, request) => {
+    assert.equal(pipeline, "modelsGetInitializerPipeline");
+    assert.equal(request.authData.tenant, undefined);
+    assert.deepEqual(request.authData, SERVICE.DefaultIdentityGovernanceService.getSystemAuthData());
+    return readers[request.schemaModel.schemaName](request);
+  } };
+  const before = structuredClone(f.rows), auth = structuredClone(f.auth);
+  const result = await evidence.read(f.input);
+  assert.equal(result.reversal.tenant, "t");
+  assert(selections.length >= 7);
+  assert.deepEqual(f.rows, before);
+  assert.deepEqual(f.auth, auth);
 });
 
 test("effective pure helper overrides retain projections, fingerprints and private failure ownership", async t => {
@@ -172,11 +209,23 @@ test("verified storage partition and generated response refuse drift, ambiguity 
 });
 
 test("wrong generated persistence context refuses without projecting a tenant", async t => {
-  for (const change of [r => { r.tenant = "foreign"; }, r => { r.authData.tenant = "foreign"; }]) {
+  for (const change of [r => { r.tenant = "foreign"; }, r => { r.authData.tenant = "foreign"; },
+    r => { r.authData.isSystem = false; }, r => { r.authData.userGroups.push("inventedAuthority"); },
+    r => { r.authData.permissions.push("waste.asset.sale.transfer"); }]) {
     const f = fixture(t), inherited = f.store.context;
     f.store.context = r => { const stored = inherited.call(f.store, r); change(stored); return stored; };
     await assert.rejects(evidence.read(f.input));
   }
+});
+
+test("deployment caller bindings cannot grant a missing signed permission", async t => {
+  const f = fixture(t);
+  assert(f.settings.businessCallers[0].permissions.includes("waste.asset.sale.transfer"));
+  f.auth.permissions = [];
+  const original = structuredClone(f.auth);
+  await assert.rejects(evidence.read(f.input));
+  assert.deepEqual(f.calls, [], "Permission refusal precedes generated owner reads");
+  assert.deepEqual(f.auth, original, "Deployment configuration must not restore signed permissions");
 });
 
 test("original request, delegated business policy and private capture remain unchanged across awaits", async t => {

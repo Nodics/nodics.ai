@@ -19,6 +19,32 @@
 const reviewedMigrationPlans = new WeakMap();
 const crypto = require("node:crypto");
 module.exports = {
+  /** Validates one fixed adoption HTTP command without accepting tenant, auth or generated-write selectors from its body. */
+  platformAdministratorCommand: function (request, applying) {
+    SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+    const input = request.identityMigration;
+    const expected = applying ? 'confirmed|reviewFingerprint|target' : 'target';
+    if (!input || Object.getPrototypeOf(input) !== Object.prototype ||
+        Object.keys(input).sort().join('|') !== expected ||
+        Object.keys(request.query || {}).length || Object.keys(request.httpRequest?.query || {}).length)
+      throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Exact Platform administrator adoption command required');
+    SERVICE.DefaultEnterpriseMembershipService.permission(request,
+      applying ? 'identity.migration.apply' : 'identity.migration.preview');
+    const command = { tenant: request.tenant, authData: request.authData, target: input.target,
+      ...(applying ? { confirmed: input.confirmed, reviewFingerprint: input.reviewFingerprint } : {}) };
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy(command, request);
+    return command;
+  },
+  /** Returns an exact-account review through Employee; existing Platform admin permissions are sufficient. */
+  previewPlatformAdministrator: async function (request) {
+    const command = this.platformAdministratorCommand(request, false);
+    return { code: 'SUC_SYS_00000', data: await SERVICE.DefaultEmployeeService.inspectPlatformAdministratorAdoption(command) };
+  },
+  /** Applies the confirmed review through Employee governance, private Team admission, audit and stamp owners. */
+  applyPlatformAdministrator: async function (request) {
+    const command = this.platformAdministratorCommand(request, true);
+    return { code: 'SUC_SYS_00000', data: await SERVICE.DefaultEmployeeService.adoptPlatformAdministrator(command) };
+  },
   /** Reads one reviewed structural audit under current original PASSWORD platform authority. @param {Object} request Exact auditCode/fingerprint/confirmed command. @returns {Promise<Object>} Stored immutable plan. */
   recoveryAudit: async function (request) {
     return this.readReviewedStructuralAudit(request, false);
@@ -796,13 +822,9 @@ module.exports = {
           if (linked && targetKey !== self && credential)
             add("PROJECTION_CREDENTIAL_COPY", [ref]);
           if (credential) group(used, credential, ref);
-          const policy = this.getPolicy();
           const service =
             kind === "employees" &&
-            (row.principalType === "service" ||
-              (Array.isArray(row.userGroups) &&
-                row.userGroups.includes(policy.serviceGroup)) ||
-              (policy.servicePrincipalCodes || []).includes(row.code));
+            row.principalType === "service";
           if (service) {
             counts.servicePrincipals++;
             continue;
@@ -1017,7 +1039,7 @@ module.exports = {
   },
   /** Resolves the authenticated governance actor. */
   getActor: function (request) {
-    let authData = request.authData || request.autData || {};
+    let authData = request.authData || {};
     return (
       authData.loginId ||
       authData.serviceId ||
@@ -1105,44 +1127,22 @@ module.exports = {
       })),
     };
   },
-  /** Computes a safe target without downgrading custom service principals. */
+  /** Migrates credential structure without inferring authority from names or assigning groups. */
   targetPrincipal: function (principal, type) {
-    let policy = this.getPolicy();
-    let configuredService =
-      type === "employee" &&
-      (policy.servicePrincipalCodes || []).includes(principal.code);
-    let isService =
-      type === "employee" &&
-      (configuredService ||
-        principal.principalType === "service" ||
-        (principal.userGroups || []).includes(policy.serviceGroup));
-    let isAdmin =
-      type === "employee" &&
-      (policy.administratorCodes || []).includes(principal.code);
-    let serviceGroups = configuredService
-      ? [policy.serviceGroup]
-      : Array.from(
-          new Set(
-            []
-              .concat(principal.userGroups || [], policy.serviceGroup)
-              .filter(Boolean),
-          ),
-        );
+    const policy = this.getPolicy();
+    const groups = principal.userGroups === undefined ? [] : principal.userGroups;
+    const serviceGroup = CONFIG.get("identityGovernance").principalPolicy.serviceGroup;
+    const isService = type === "employee" && principal.principalType === "service";
+    if (!["employee", "customer"].includes(type) || !Array.isArray(groups) ||
+        groups.some(group => typeof group !== "string" || !group) ||
+        principal.principalType !== undefined &&
+          !(type === "customer" ? ["customer"] : ["human", "service"]).includes(principal.principalType) ||
+        groups.includes(serviceGroup) !== isService)
+      throw new CLASSES.NodicsError("ERR_AUTH_00003", "Principal classification and assigned groups require separate reviewed correction");
     return {
       principalType:
         type === "customer" ? "customer" : isService ? "service" : "human",
-      userGroups:
-        type === "customer"
-          ? [policy.customerGroup]
-          : isService
-            ? serviceGroups
-            : isAdmin
-              ? policy.administratorGroups
-              : principal.userGroups && principal.userGroups.length
-                ? principal.userGroups.filter(
-                    (group) => group !== policy.serviceGroup,
-                  )
-                : [policy.humanDefaultGroup],
+      userGroups: groups.slice(),
       revokeAPIKey: !isService && Boolean(principal.apiKey),
       rotationRequired:
         isService &&
@@ -1220,30 +1220,7 @@ module.exports = {
   buildPreview: function (state) {
     let changes = [],
       serviceKeyRotationsRequired = [];
-    let groupTargets = this.getPolicy().groupTargets || {};
-    state.groups.forEach((group) => {
-      let target = groupTargets[group.code];
-      if (!target) return;
-      let parentsChanged =
-        JSON.stringify(group.parentGroups || []) !==
-        JSON.stringify(target.parentGroups || []);
-      let permissionsChanged =
-        target.permissions &&
-        JSON.stringify(group.permissions || []) !==
-          JSON.stringify(target.permissions);
-      if (parentsChanged || permissionsChanged)
-        changes.push({
-          schema: "userGroup",
-          code: group.code,
-          from: {
-            _id: group._id,
-            code: group.code,
-            parentGroups: [].concat(group.parentGroups || []),
-            permissions: [].concat(group.permissions || []),
-          },
-          to: target,
-        });
-    });
+    // Persisted groups are governed authority, not migration targets derived from configuration.
     changes = changes.concat(this.buildOwnedResourceChanges(state));
     state.employees.forEach((principal) => {
       if (principal.authenticationIdentity) return;
@@ -1788,6 +1765,7 @@ module.exports = {
   },
   /** Activates a client-generated replacement key for a verified service principal. */
   rotateServiceKey: function (request) {
+    const policy = this.getPolicy();
     let payload = request.identityMigration || {};
     if (
       !payload.principalCode ||
@@ -1804,13 +1782,12 @@ module.exports = {
       this.systemRequest(request, {
         query: { code: payload.principalCode },
       }),
-    ).then((result) => {
+    ).then(async (result) => {
       let principal = result.result && result.result[0];
-      let policy = this.getPolicy();
       if (
         !principal ||
-        (principal.principalType !== "service" &&
-          !(principal.userGroups || []).includes(policy.serviceGroup))
+        principal.principalType !== "service" ||
+        !(principal.userGroups || []).includes(CONFIG.get("identityGovernance").principalPolicy.serviceGroup)
       )
         throw new CLASSES.NodicsError(
           "ERR_AUTH_00003",
@@ -1820,32 +1797,18 @@ module.exports = {
       let credential = SERVICE.DefaultAPIKeyCredentialService.prepare(
         payload.newApiKey,
       );
-      let configuredScopes =
-        (policy.servicePrincipalScopes &&
-          policy.servicePrincipalScopes[principal.code]) ||
-        [];
       let scopes = Array.from(
         new Set(
           []
             .concat(
               payload.apiKeyScopes ||
                 principal.apiKeyScopes ||
-                configuredScopes,
+                [],
             )
             .filter(Boolean),
         ),
       );
-      let permissionCatalog =
-        CONFIG.get("identityGovernance").permissionCatalog || [];
-      let invalidScopes = scopes.filter(
-        (scope) => !permissionCatalog.includes(scope),
-      );
-      if (invalidScopes.length > 0)
-        throw new CLASSES.NodicsError(
-          "ERR_AUTH_00003",
-          "API-key scopes are not present in the identity permission catalog: " +
-            invalidScopes.join(", "),
-        );
+      await SERVICE.DefaultIdentityCatalogueService.requirePermissions(scopes);
       if (keyPolicy.requireScopes === true && scopes.length === 0)
         throw new CLASSES.NodicsError(
           "ERR_AUTH_00003",

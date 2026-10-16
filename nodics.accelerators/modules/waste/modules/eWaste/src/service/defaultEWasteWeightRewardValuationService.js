@@ -13,7 +13,7 @@
 /** @module eWaste/service/defaultEWasteWeightRewardValuationService @description Applies trusted weight reward policy to original approval evidence; rewards remain separate from sourced impact and credit issuance. @owner eWaste @layer service @override Later project policy may choose different reward rules without rewriting historical settlements. */
 module.exports = {
   /** Values original approval evidence using trusted policy and error bindings. No persistence or ledger writes; unavailable carbon contributes zero. */
-  assess: function (request, policy, errors = {}) {
+  assess: function (request, policy = (CONFIG.get("eWaste") || {}).rewardValuation, errors = {}) {
     if (
       !policy ||
       !Number.isFinite(policy.pointsPerKg) ||

@@ -77,5 +77,21 @@ module.exports = {
       },
       summary: "Review electronic waste awaiting a decision.",
     },
+    {
+      id: "ewaste-operations-listing-requests",
+      parentId: "ewaste-operations",
+      label: "Listing requests",
+      route: "/waste/assets/electronics/listing-requests",
+      permission: "waste.marketplace.moderate",
+      order: 40,
+      backendWorkspace: {
+        contractVersion: 1,
+        renderer: "axis.workspace.native",
+        workspaceCode: "waste.listing",
+        viewCode: "ewaste.listingRequests",
+        title: "Electronics listing requests",
+      },
+      summary: "Inspect retained seller listing requests and owner publication status.",
+    },
   ],
 };

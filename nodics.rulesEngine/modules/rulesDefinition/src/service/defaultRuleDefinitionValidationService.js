@@ -16,11 +16,7 @@ module.exports = {
     /** Implements limits as an overrideable service operation. */
     limits: function () {
         let config = typeof CONFIG !== 'undefined' && CONFIG.get ? CONFIG.get('rulesEngine') : {};
-        return (config && config.limits) || {
-            maximumRuleGroupsPerSet: 250,
-            maximumConditionsPerGroup: 50,
-            maximumGroupDepth: 5
-        };
+        return Object.assign({}, require('../../config/properties').rulesEngine.limits, config && config.limits);
     },
 
     /** Implements providerRegistry as an overrideable service operation. */

@@ -95,3 +95,6 @@ A registry lease endpoint already names its canonical module API path and is pre
 Inherit authentication policy and bind deployment credentials through the existing
 nAuth/nService contract. Keep provisioning proof separate from retained runtime
 proof; preserve strict shared auth state and Profile grants. See the local contract.
+
+nService owns defaultContentType for module transport; nConfig only loads it.
+Do not restore HTTP content defaults in the configuration loader.

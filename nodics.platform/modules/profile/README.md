@@ -1,12 +1,18 @@
 # profile
 
-Enterprise Commerce setup uses separately selected
-`profile:commerceSetupPublisherRole` and `profile:commerceCouponIssuerRole`
-core `0.0.1` packs. They create narrow Employee-derived groups only, without
-assigning staff or enabling qualification. See [setup roles and existing-employee adoption](llm/contracts/commerce-setup-roles.md).
-The publisher now composes the separately selected forward
-`profile:commercePublicationStarterRole` pack for original-human Process start
-only. Its original installed publisher pack remains unchanged.
+Permission vocabulary and enterprise role definitions are persisted Profile
+`permission` and `enterpriseRole` records in the default-tenant authority store.
+Owner packs seed them insert-only; authorized Platform administrators manage them
+through generated Axis schema workspaces. `userGroup` remains the permission
+mapping owner, and installing definitions assigns nobody. See
+[persisted identity definitions](llm/contracts/identity-access-lifecycle.md#persisted-identity-definitions)
+for ordered initialization, retirement semantics and fresh-read safeguards.
+
+Enterprise Commerce setup uses domain-owned `product:accessGroups`,
+`promotion:accessGroups` and `publish:accessGroups` Init contributions.
+They create missing Employee-derived definitions without assigning staff or
+enabling qualification. Profile's duplicate Core packs are removed.
+See [setup roles and existing-employee adoption](llm/contracts/commerce-setup-roles.md).
 
 Predefined application demo responsibilities may be separate explicitly selected
 reference-release instructions through `DefaultEmployeeService.addReferenceGroupsAll`.
@@ -15,25 +21,34 @@ updates and normal security-stamp hooks, and returns code-only results. Installi
 role definitions alone still assigns nobody. See
 [release-backed reference adoption](llm/contracts/commerce-setup-roles.md#release-backed-reference-adoption).
 
-The unreleased consolidated Init `0.0.1` baseline gives the existing runtime
-administrator current Copilot knowledge, settings, provider-check and usage
-grants. See [bootstrap Copilot setup](llm/contracts/bootstrap-copilot-administration.md).
-Its single group dataset includes bootstrap parents and all preserved
-authorization updates, without separately importing redundant child-only data.
+The Profile Init successor is version `0.0.2` under `data/init-v001`. Its explicit
+prerequisites select module-owned permission, group and role records before
+create-or-preserve identity seeding. Historical packs and installed receipts are
+retained. Existing installations require an operator-selected migration; source
+changes do not prove it ran or restore existing grants. See
+[identity migration](llm/contracts/identity-access-lifecycle.md#operator-migration)
+and [bootstrap Copilot setup](llm/contracts/bootstrap-copilot-administration.md).
 
-Enterprise refund reviewers use the separately selected
-`profile:commerceRefundReviewerRole` core `0.0.1` pack and configured
-`COMMERCE_REFUND_REVIEWER` invitation role. No existing employee or administrator
-is assigned automatically. See [the reviewer contract](llm/contracts/commerce-refund-reviewer.md).
-Approved Axis use selects the separate `profile:commerceAxisRefundReviewerRole`
-pack and `COMMERCE_AXIS_REFUND_REVIEWER` invitation role, adding only shell,
-dashboard and bootstrap visibility. The API-only role remains unchanged.
+Enterprise refund reviewers use `order:accessGroups` and its persisted
+`COMMERCE_REFUND_REVIEWER` or `COMMERCE_AXIS_REFUND_REVIEWER` definitions.
+The Axis variant adds shell, dashboard and bootstrap visibility; neither
+assigns employees automatically. See [the reviewer contract](llm/contracts/commerce-refund-reviewer.md).
 
 Opt-in original enterprise-create and invitation receipts preserve Profile's
 native authority. See [the original-result guide](data/docs-v001/records/documentation/profileDocumentationComponentData.js)
 for configuration, private persistence, inspection and uncertain-outcome limits.
 
 Profile owns enterprise, employee and customer identity, registration, access assignments and session-context decisions.
+
+Deployment bootstrap is explicitly selected through default-false
+`identityGovernance.migration.runtimeDeploymentBootstrapEnabled`; remote-only
+namespace adoption uses `profileTenantProvisioning.runtimeRemoteModuleExtensions`.
+These are provisioning selectors, not authority. Grants and roles are governed
+data. Startup validates retained assignments without restoring permissions,
+group ancestry, credentials or lockouts in any environment. First install uses
+the existing nImport Init owner; subsequent changes use governed Profile/Axis
+commands. See [identity startup](llm/contracts/identity-access-lifecycle.md#runtime-deployment-grants)
+and `test/mandatoryIdentityBootstrapService.test.js`.
 
 Ordinary customer signup does not require employee or paid membership. Optional
 customer eligibility uses the existing Profile enablement switch; active placement

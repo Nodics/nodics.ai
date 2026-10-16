@@ -1,5 +1,11 @@
 # Store
 
+Online Store master data can be read by an explicitly bound runtime through the
+private placement operation. This supports Staged authoring without duplicating
+Store records, adding generic schema grants or changing the caller's identity.
+Defaults are disabled; operators must qualify the exact deployment and allowed
+Store/enterprise pairs. See [Deployment-bound placement reads](llm/contracts/README.md#deployment-bound-placement-reads).
+
 Store, Sales Channel and Point of Service delegate technical `revision` counters
 to generated nDatabase CRUD. Core data files omit the counter. Edits retain the
 original read token; no-op saves leave it unchanged. This does not change domain

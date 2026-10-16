@@ -1,5 +1,13 @@
 # nTooling AI Examples
 
+A maintainer-reviewed optional reference pack declares `nodics.referenceDemo: true`
+in its existing package metadata and `selectionPolicy: EXPLICIT` in sample release
+sections. `project:validate` rejects a new `src/service` implementation or permission
+header there. Put reusable behavior/access in its existing owner; keep fictional
+records and explicit setup selection in the reference. Ordinary partner modules
+remain customizable without this reference-only marker. The independent fixtures
+in `test/referenceDemoOwnership.test.js` demonstrate accepted and rejected shapes.
+
 ## Optional Native Local Search Reset
 
 For a disposable `acmeLocal` deployment whose complete authored search scope is

@@ -11,7 +11,7 @@
 
 /**
  * @module nodics.commerce/config/properties
- * @description Publishes only cross-capability Commerce runtime operating defaults.
+ * @description Composes cross-runtime Commerce publication workflow releases.
  * @layer config
  * @owner nodics.commerce
  * @override Project, environment, server, node, and tenant layers may override
@@ -20,63 +20,25 @@
  */
 
 module.exports = {
-    data: {
-        dataReleases: {
-            runtimeRoleProfiles: {
-                PROCESS: {
-                    contributions: [
-                        { moduleName: 'product', sections: ['productPublicationWorkflow'] },
-                        { moduleName: 'pricing', sections: ['pricingPublicationWorkflow'] },
-                        { moduleName: 'promotion', sections: ['promotionPublicationWorkflow'] },
-                        { moduleName: 'inventory', sections: ['inventoryPublicationWorkflow'] },
-                        { moduleName: 'tax', sections: ['taxPublicationWorkflow'] }
-                    ]
-                }
-            }
-        }
+  data: {
+    dataReleases: {
+      runtimeRoleProfiles: {
+        PROCESS: {
+          contributions: [
+            { moduleName: "product", sections: ["productPublicationWorkflow"] },
+            { moduleName: "pricing", sections: ["pricingPublicationWorkflow"] },
+            {
+              moduleName: "promotion",
+              sections: ["promotionPublicationWorkflow"],
+            },
+            {
+              moduleName: "inventory",
+              sections: ["inventoryPublicationWorkflow"],
+            },
+            { moduleName: "tax", sections: ["taxPublicationWorkflow"] },
+          ],
+        },
+      },
     },
-    commerce: {
-        capabilities: {
-            baseCommerce: true,
-            cart: true,
-            order: true,
-            payment: true,
-            fulfillment: true,
-            reverseLifecycle: true
-        },
-        operations: {
-            budgetVersion: '1',
-            limits: {
-                maximumPageSize: 100,
-                maximumCartEntries: 500,
-                maximumBatchSize: 100,
-                maximumConcurrentProviderRequests: 25
-            },
-            retries: {
-                maximumAttempts: 5,
-                baseDelayMs: 250,
-                maximumDelayMs: 30000
-            },
-            referenceObjectives: {
-                cartCalculationP95Ms: 250,
-                checkoutPlacementP95Ms: 1500,
-                operatorReadP95Ms: 500,
-                recoveryPointMinutes: 15,
-                recoveryTimeMinutes: 60
-            },
-            deploymentApprovalRequired: true,
-            note: 'Reference objectives require environment-specific load, soak, provider, backup, restore, failover, and owner acceptance evidence.'
-        },
-        compatibility: {
-            aliasWindow: '2_MINOR_RELEASES_OR_180_DAYS',
-            rejectUnknownMajor: true
-        },
-        migration: {
-            defaultStrategy: 'DRY_RUN',
-            requireTenantCounts: true,
-            requireSourceHashes: true,
-            quarantineFailures: true,
-            rollbackRequired: true
-        }
-    }
+  },
 };

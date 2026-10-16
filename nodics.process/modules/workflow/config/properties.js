@@ -103,6 +103,17 @@ module.exports = {
           },
         },
       },
+
+      enabled: true,
+      allowUnregisteredActions: false,
+      allowedActions: [
+        {
+          moduleName: "nodics.process",
+          operation: "noop",
+          description:
+            "Safe no-op adapter for framework smoke tests and beginner demos",
+        },
+      ],
     },
     remoteActions: {
       maximumExecutionAgeMs: 30000,
@@ -118,6 +129,16 @@ module.exports = {
         maxAttempts: 2,
       },
     },
+
+    designer: {
+      enabled: false,
+      provider: "NODICS_NATIVE_GRAPH",
+      persistDrafts: false,
+      allowBpmnImport: false,
+      allowBpmnExport: false,
+      maximumNodesPerDefinition: 250,
+      maximumTransitionsPerDefinition: 500,
+    },
   },
   apiExposure: {
     categories: {
@@ -126,6 +147,18 @@ module.exports = {
       },
       processManagement: {
         enabled: true,
+      },
+    },
+  },
+
+  data: {
+    dataReleases: {
+      runtimeRoleProfiles: {
+        PROCESS: {
+          installers: {
+            PROCESS_DEFINITION: "DefaultProcessDefinitionContributionService",
+          },
+        },
       },
     },
   },

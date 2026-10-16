@@ -52,7 +52,7 @@ function fixture(t) {
   return admitted;
 }
 test("actual internal routes declare sensitive/no-cache without changing provider callback", () => {
-  assert.equal(Object.keys(routes.internal).length, 5);
+  assert.equal(Object.keys(routes.internal).length, 6);
   for (const route of Object.values(routes.internal)) {
     assert.deepEqual(route.requestPrivacy, { sensitive: true });
     assert.equal(route.cache.enabled, false);
@@ -66,6 +66,7 @@ test("unprotected entries and caller flags refuse before controller reads secret
     "executeVerification",
     "requestCommunication",
     "inspectDelivery",
+    "diagnoseDelivery",
     "retryDelivery",
     "resolveDelivery",
   ]) {
@@ -193,6 +194,7 @@ test("direct facade and verification adapter reject caller privacy flags before 
     "executeVerification",
     "requestCommunication",
     "inspectDelivery",
+    "diagnoseDelivery",
     "retryDelivery",
     "resolveDelivery",
   ])

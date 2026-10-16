@@ -28,23 +28,31 @@ export async function runRuntimeDeploymentGrantAcceptance(options = {}) {
   const headers = { ...await authenticate(), tenant: environment.AXIS_TENANT || 'default' };
   const evidence = [];
   for (const runtime of runtimes) {
-    const code = bootstrap.localRuntimeGrantCode(configuration.environment, runtime.server);
+    const code = bootstrap.runtimeDeploymentGrantCode(configuration.environment, runtime.server);
     const result = await request('PLATFORM', '/nodics/profile/v0/principalscopeassignment/code/' + encodeURIComponent(code), { headers });
     const matches = Array.isArray(result) ? result : result ? [result] : [];
     if (matches.length !== 1) throw new Error('Missing or ambiguous governed runtime grant: ' + code);
     const grant = matches[0];
     const scope = grant.runtimeScope;
-    const requiredModules = [...new Set([...(runtime.properties.activeModules?.modules || []), ...(runtime.properties.runtimeIdentity.remoteModules || [])])];
-    if (!requiredModules.length) throw new Error('Effective runtime module declarations are missing: ' + runtime.server);
+    const validCodes = values => Array.isArray(values) && values.length > 0 && values.length <= 512 &&
+      new Set(values).size === values.length && Array.from(values).every(value =>
+        typeof value === 'string' && /^[A-Za-z][A-Za-z0-9_.:-]{0,191}$/.test(value));
     if (grant.code !== code || grant.scopeType !== 'RUNTIME_DEPLOYMENT' || grant.principalType !== 'service' ||
-        grant.principalCode !== 'apiAdmin' || grant.active !== true || grant.effect !== 'ALLOW' || grant.status !== 'ACTIVE' ||
+        !validCodes([grant.principalCode]) || grant.active !== true || grant.effect !== 'ALLOW' || grant.status !== 'ACTIVE' ||
+        grant.inheritanceMode !== 'DIRECT' || grant.groupCode || grant.scopeCode !== code ||
         grant.tenantCode !== headers.tenant || grant.enterpriseCode !== (environment.NODICS_ENTERPRISE_CODE || environment.AXIS_ENTERPRISE || 'default') ||
         scope?.projectCode !== configuration.projectCode || scope?.environmentCode !== configuration.environment ||
         scope?.serverCode !== runtime.server || scope?.instanceCode !== runtime.properties.runtimeIdentity.instanceCode ||
-        !Array.isArray(scope.modules) || !requiredModules.every(module => scope.modules.includes(module))) throw new Error('Governed runtime grant does not match its effective deployment: ' + code);
-    const permissions = bootstrap.runtimeGrantPermissions(runtime.properties.identityGovernance?.migration || {});
-    if (!permissions.length || !Array.isArray(scope.permissions) || !permissions.every(permission => scope.permissions.includes(permission)))
-      throw new Error('Runtime grant is missing configured owner permissions: ' + code);
+        !validCodes(scope.modules)) throw new Error('Governed runtime grant does not match its effective deployment: ' + code);
+    if (!validCodes(scope.permissions))
+      throw new Error('Governed runtime grant permissions are malformed: ' + code);
+    const now = Date.now();
+    for (const key of ['effectiveFrom', 'effectiveTo']) {
+      if (grant[key] === undefined || grant[key] === null) continue;
+      const instant = new Date(grant[key]).getTime();
+      if (!Number.isFinite(instant) || (key === 'effectiveFrom' ? instant > now : instant <= now))
+        throw new Error('Governed runtime grant is outside its effective period: ' + code);
+    }
     evidence.push({ code, server: runtime.server, state: 'VERIFIED' });
   }
   return evidence;

@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "editorial",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "editorial permissionCatalogue",
+      "description": "Explicit editorial identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "editorial",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/editorialPermissionHeader.js": "4a0c8df6f574fd248067e17d31a526775d723447e00e90ea8cc82b37faa0a2b5",
+        "init-v001/records/identity/editorialPermissionData.js": "045f48a4c87eef256420d4802c069de9db5c30cbd536a87e653b25d875462fd1"
+      }
+    },
     "editorialWorkflows": {
       "kind": "DATA_RELEASE",
       "selectionPolicy": "EXPLICIT",

@@ -222,7 +222,7 @@ module.exports = {
       if (
         options.moduleName !== "profile" ||
         options.enabled !== true ||
-        options.operation !== "saveAll" ||
+        !["saveAll", "ensureBootstrapAll"].includes(options.operation) ||
         !options.dataFilePrefix ||
         (options.tenant && options.tenant !== tenant)
       )

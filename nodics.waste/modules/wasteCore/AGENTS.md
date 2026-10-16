@@ -1,5 +1,19 @@
 # wasteCore Agents
 
+Follow [scoped business Workbench](llm/contracts/business-workbench.md) for ordinary
+business reads. Keep Waste Core's employee schema ACL at zero; admit owner commands
+before canonical identity persistence. Discovery and reads use `wasteApi`, current
+Profile collection scopes and persisted enterprise links, not generic schema grants.
+Do not treat sibling modules' independent schema policies as fixed by this ACL.
+
+The module owns explicit ordinary business access definitions in
+`data/manifest.json` sections `businessAccessGroups` and `businessAccessRoles`.
+Keep mappings on persisted Profile roles and user groups; never infer grants from
+verbs or add approval, financial, simulation, or platform bypass authority.
+Source packs alone never change an employee's assignments. Existing employee
+level changes and scoped No access use Profile's reviewed business-access command,
+preserving other areas, advanced responsibilities, scope and registration proof.
+
 Follow the parent contract: `../../AGENTS.md`.
 Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
@@ -20,9 +34,24 @@ locks. See the refunded-reservation contract and eWaste real-owner bridge tests.
 No new routes, permissions or activation defaults are needed.
 
 `wasteCore` owns shared Waste enum, status, source-reference, and policy defaults.
+Retained pending listing completion requires the domain-owned revalidation
+callback and original intent key/revision/digest before every write. Preserve
+existing LISTED onboarding and exact generated CAS recovery; never accept client
+proof objects as approval or binding authority. See the retained listing contract.
 Common Waste reference data belongs here when it serves the whole Waste
 functional module. Do not place material records, submissions, receipts, impact
 results, movement, or partner policy here.
+
+`holdLegacyRequest` owns only the managed asset audit receipt for a domain-qualified
+legacy request. Require original human/tenant identity, fresh domain revalidation,
+revision/snapshot admission and exact successor recovery. Preserve status,
+ownership, custody and listing evidence. A receipt blocks listing completion but
+does not establish external absence or a distributed writer fence.
+
+Keep generic verification presentation policy-neutral: verification does not
+imply a different approver. Preserve the explicit `differentApproverRequired`
+label for the owner-enforced separate-actor gate. Presentation never changes
+permissions or decision policy. See [the presentation contract](llm/contracts/README.md#verification-presentation).
 
 Waste Core owns only the generic Waste Management dashboard anchor and its All submissions and Review queue links. Accelerator subgroups and family-specific view properties belong to their accelerator. Apply `../../../nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md`; never add placeholders for future accelerators.
 

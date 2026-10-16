@@ -218,9 +218,12 @@ function installGlobals() {
                 return { result: request.model };
             },
             get: async (request) => ({
+                code: 'SUC_READ',
                 result: redemptions.filter(
                     (item) =>
                         item.tenant === request.query.tenant &&
+                        (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode) &&
+                        (!request.query.promotionCode || item.promotionCode === request.query.promotionCode) &&
                         (!request.query.code ||
                             item.code === request.query.code),
                 ),
@@ -489,7 +492,7 @@ test('Promotion customer routes expose secured preview and apply permissions', (
     );
     assert.equal(
         routers.promotion.backoffice.saveDraft.permission,
-        'commerce.promotion.manage',
+        'commerce.promotion.draft.write',
     );
     assert.equal(
         routers.promotion.backoffice.approve.permission,
@@ -558,6 +561,8 @@ test('Promotion publication transport rejects without changing rules coupons or 
                 tenant: 'default',
                 enterpriseCode: 'enterprise-a',
                 principalId: 'operator-1',
+                principalType: 'human',
+                tokenType: 'access',
             },
             httpRequest: {
                 body: {
@@ -602,14 +607,10 @@ test('Promotion BackOffice capability exposes builder lifecycle coupon budget an
         builder.lifecycleActions.find((item) => item.handlerAction === code);
 
     assert.equal(builder.route, '/commerce/promotions');
-    assert.equal(builder.permission, 'commerce.promotion.manage');
+    assert.equal(builder.permission, 'commerce.promotion.read');
     assert.equal(builder.moduleName, 'promotion');
     assert.equal(builder.schemaName, 'promotion');
-    assert.equal(
-        action('saveDraft').operationRoute,
-        '/promotions/drafts/:promotionCode',
-    );
-    assert.equal(action('saveDraft').httpMethod, 'PATCH');
+    assert.equal(action('saveDraft'), undefined, 'Draft edits use the owner descriptor create/update transport');
     assert.equal(
         action('approvePromotion').permission,
         'commerce.promotion.approve',
@@ -1270,26 +1271,15 @@ test('Promotion coupon pool reservation is scoped by enterpriseCode inside a sha
     );
 });
 
-test('Promotion Builder operator workflow saves approves schedules coupons and analytics', async () => {
-    promotions = [];
-    const draft = await controller.saveDraft({
-        authData: { tenant: 'default', principalId: 'maker-1' },
-        httpRequest: {
-            body: {
-                code: 'builder10',
-                name: 'Builder 10',
-                priority: 30,
-                conditions: {
-                    minimumSubtotal: '100.00',
-                    productCodes: ['agoraLinenWrapDress'],
-                },
-                actions: { discountAmount: '10.00', reasonCode: 'BUILDER10' },
-                budget: { limit: '100.00', spent: '0.00' },
-            },
-        },
-    });
+test('Advanced Promotion Builder workflow approves schedules coupons and analytics independently of ordinary drafts', async () => {
+    // Advanced policy is a fixture, not authority granted by the ordinary metadata draft command.
+    promotions = [{ code: 'builder10', tenant: 'default', enterpriseCode: 'issuer', name: 'Builder 10', status: 'DRAFT',
+        priority: 30, revision: 0, active: true, conditions: { minimumSubtotal: '100.00', productCodes: ['agoraLinenWrapDress'] },
+        actions: { discountAmount: '10.00', reasonCode: 'BUILDER10' }, budget: { limit: '100.00', spent: '0.00' } }];
+    SERVICE.DefaultSecuredRequestPipelineService = require('../../../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService');
+    const operator = principalId => ({ tenant: 'default', entCode: 'issuer', principalId, principalType: 'human', tokenType: 'access' });
     const submitted = await controller.submitPromotion({
-        authData: { tenant: 'default', principalId: 'maker-1' },
+        authData: operator('maker-1'),
         httpRequest: {
             params: { promotionCode: 'builder10' },
             body: { conflictCheck: 'PASSED' },
@@ -1298,7 +1288,7 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
     await assert.rejects(
         () =>
             controller.approvePromotion({
-                authData: { tenant: 'default', principalId: 'maker-1' },
+                authData: operator('maker-1'),
                 httpRequest: {
                     params: { promotionCode: 'builder10' },
                     body: {},
@@ -1307,14 +1297,14 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
         /Maker-checker separation/,
     );
     const approved = await controller.approvePromotion({
-        authData: { tenant: 'default', principalId: 'checker-1' },
+        authData: operator('checker-1'),
         httpRequest: {
             params: { promotionCode: 'builder10' },
             body: { checklist: ['eligibility reviewed', 'budget reviewed'] },
         },
     });
     const scheduled = await controller.schedulePromotion({
-        authData: { tenant: 'default', principalId: 'checker-1' },
+        authData: operator('checker-1'),
         httpRequest: {
             params: { promotionCode: 'builder10' },
             body: {
@@ -1324,7 +1314,8 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
         },
     });
     const batch = await controller.createCouponBatch({
-        authData: { tenant: 'default', principalId: 'operator-1' },
+        enterpriseCode: 'issuer',
+        authData: operator('operator-1'),
         httpRequest: {
             params: { promotionCode: 'builder10' },
             body: {
@@ -1334,7 +1325,7 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
         },
     });
     const reserved = await controller.reserveCouponBatch({
-        authData: { tenant: 'default', principalId: 'operator-1' },
+        authData: operator('operator-1'),
         httpRequest: {
             params: { batchCode: 'builder10-batch' },
             body: { reservedFor: 'launch-window' },
@@ -1344,6 +1335,7 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
         {
             code: 'builder10-commit',
             tenant: 'default',
+            enterpriseCode: 'issuer',
             promotionCode: 'builder10',
             mutationType: 'COMMIT',
             amount: '10.00',
@@ -1351,25 +1343,26 @@ test('Promotion Builder operator workflow saves approves schedules coupons and a
         {
             code: 'builder10-release',
             tenant: 'default',
+            enterpriseCode: 'issuer',
             promotionCode: 'builder10',
             mutationType: 'RELEASE',
             amount: '2.00',
         },
     ];
     redemptions = [
-        { tenant: 'default', promotionCode: 'builder10', status: 'APPLIED' },
-        { tenant: 'default', promotionCode: 'builder10', status: 'REVERSED' },
+        { tenant: 'default', enterpriseCode: 'issuer', promotionCode: 'builder10', status: 'APPLIED' },
+        { tenant: 'default', enterpriseCode: 'issuer', promotionCode: 'builder10', status: 'REVERSED' },
     ];
     const ledger = await controller.budgetLedger({
         authData: { tenant: 'default', principalId: 'operator-1' },
         httpRequest: { params: { promotionCode: 'builder10' }, query: {} },
     });
     const analytics = await controller.analytics({
-        authData: { tenant: 'default', principalId: 'operator-1' },
+        authData: { tenant: 'default', entCode: 'issuer', principalId: 'operator-1', principalType: 'human',
+            tokenType: 'access', userGroups: ['employeeUserGroup'], permissions: ['commerce.promotion.read'] },
         httpRequest: { params: { promotionCode: 'builder10' }, query: {} },
     });
 
-    assert.equal(draft.data.promotion.status, 'DRAFT');
     assert.equal(submitted.data.promotion.status, 'SUBMITTED');
     assert.equal(submitted.data.promotion.approval.submittedBy, 'maker-1');
     assert.equal(approved.data.promotion.status, 'APPROVED');

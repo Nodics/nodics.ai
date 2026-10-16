@@ -17,6 +17,63 @@
  * @override Identity providers may supply authenticated service principals; deployment grants remain governed Profile assignments and cannot be inferred from caller declarations.
  */
 module.exports = {
+    /** Imports explicitly bound deployment assignments without restoring revoked or narrowed authority. */
+    ensureDeploymentAll: async function (service, request) {
+        const fail = () => { throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Explicit deployment assignment import is invalid'); };
+        if (service !== SERVICE.DefaultPrincipalScopeAssignmentService || !request?.authData ||
+            !Array.isArray(request.models) || !request.models.length || request.models.length > 1000) fail();
+        await SERVICE.DefaultIdentityCatalogueGovernanceService.authorizeSeed(request, service);
+        const models = structuredClone(request.models), codes = new Set(), placements = new Set();
+        const read = async model => {
+            const response = await service.get({ tenant: request.tenant, authData: request.authData,
+                query: { $or: [{ code: model.code }, { principalType: 'service', principalCode: model.principalCode,
+                    scopeType: 'RUNTIME_DEPLOYMENT', tenantCode: model.tenantCode, enterpriseCode: model.enterpriseCode,
+                    ...Object.fromEntries(['projectCode', 'environmentCode', 'serverCode', 'instanceCode'].map(key =>
+                        ['runtimeScope.' + key, model.runtimeScope[key]])) }] },
+                options: { recursive: false, skipItemCache: true },
+                searchOptions: { pageSize: 2, pageNumber: 1 } });
+            if (!/^SUC_/.test(response?.code || '') ||
+                response.success !== undefined && response.success !== true ||
+                response.acknowledged !== undefined && response.acknowledged !== true || response.error ||
+                response.errors && (!Array.isArray(response.errors) || response.errors.length) ||
+                !Array.isArray(response.result) || response.count !== response.result.length || response.result.length > 1) fail();
+            const original = response.result[0];
+            if (original && (!original._id || ['code', 'principalType', 'principalCode', 'scopeType', 'scopeCode',
+                'tenantCode', 'enterpriseCode', 'inheritanceMode'].some(key => original[key] !== model[key]) ||
+                ['projectCode', 'environmentCode', 'serverCode', 'instanceCode'].some(key => original.runtimeScope?.[key] !== model.runtimeScope[key]))) fail();
+            return original;
+        };
+        for (const model of models) {
+            if (!model || Object.getPrototypeOf(model) !== Object.prototype || model._id ||
+                Object.keys(model).some(key => key.startsWith('$') || key.includes('.')) ||
+                model.scopeType !== 'RUNTIME_DEPLOYMENT' || model.scopeCode !== model.code ||
+                model.tenantCode !== request.tenant || model.status !== 'ACTIVE' || model.active !== true ||
+                model.effect !== 'ALLOW' || codes.has(model.code)) fail();
+            this.assertCode(model.code, 'assignment code');
+            this.validateAssignment(model);
+            const placement = JSON.stringify([model.tenantCode, model.enterpriseCode, model.principalCode,
+                ...['projectCode', 'environmentCode', 'serverCode', 'instanceCode'].map(key => model.runtimeScope[key])]);
+            if (placements.has(placement)) fail();
+            placements.add(placement); codes.add(model.code);
+        }
+        const originals = [];
+        for (const model of models) originals.push(await read(model));
+        for (let index = 0; index < models.length; index++) {
+            if (!originals[index]) await SERVICE.DefaultIdentityCatalogueService.requirePermissions(models[index].runtimeScope.permissions);
+        }
+        for (let index = 0; index < models.length; index++) {
+            if (originals[index]) continue;
+            await SERVICE.DefaultIdentityCatalogueGovernanceService.authorizeSeed(request, service);
+            const saved = await service.save({ tenant: request.tenant, authData: request.authData,
+                model: structuredClone(models[index]), options: { insertOnly: true } });
+            if (!/^SUC_/.test(saved?.code || '') ||
+                saved.success !== undefined && saved.success !== true ||
+                saved.acknowledged !== undefined && saved.acknowledged !== true ||
+                saved.result?.acknowledged !== undefined && saved.result.acknowledged !== true || saved.error ||
+                saved.errors && (!Array.isArray(saved.errors) || saved.errors.length) || !await read(models[index])) fail();
+        }
+        return { result: models.map(model => ({ code: model.code })) };
+    },
     /** Rejects malformed or unbounded identifiers without reflecting credential values. */
     assertCode: function (value, label) {
         if (typeof value !== 'string' || !/^[A-Za-z][A-Za-z0-9_.:-]{0,191}$/.test(value)) {

@@ -251,6 +251,7 @@ test('post-reset readiness report parses authenticated BackOffice bootstrap evid
     assert.equal(report.sections.find(section => section.id === 'imports').state, 'NOT_READY');
     assert.equal(report.sections.find(section => section.id === 'imports').evidence.readiness.source, 'NIMPORT_RELEASE_READINESS');
     assert.equal(report.sections.find(section => section.id === 'applications').evidence.applications.total, 1);
+    assert.equal(report.sections.find(section => section.id === 'applications').title, 'Customer application readiness');
     assert.equal(report.sections.find(section => section.id === 'documentation').evidence.documentation.total, 1);
     assert.doesNotMatch(JSON.stringify(report), /local-secret-token/);
   } finally {

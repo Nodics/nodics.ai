@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "store",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "store permissionCatalogue",
+      "description": "Explicit store identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "store",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/storePermissionHeader.js": "1ac640cb43361ca3d98d7d97088113dcd9ab0230edb73fea0d07d7f5676e73a5",
+        "init-v001/records/identity/storePermissionData.js": "67a760ea131a145f069cc8e293791a1b49926f7f0949945b4487debc4a00b180"
+      }
+    },
     "core-reference": {
       "kind": "DATA_RELEASE",
       "dataType": "core",
@@ -26,6 +50,122 @@
         "core-v001/headers/store/baseCommerceCoreReferenceHeader.js": "c8476162e75bcd13546dcf4030528bdf0f0d9ef0e558aa652bdaf3ee2aad056f"
       },
       "sourceRoot": "core-v001"
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "store accessGroups",
+      "description": "Explicit store identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "store",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/storeUserGroupHeader.js": "e8c65de0258a9f3ccd42e232975591b13cfe41f7364beb1f0d716f6560768e77",
+        "init-v001/records/identity/storeUserGroupData.js": "3dc8b90198cd690b92b0836d3dd7d56134cb3b77cd5f97b6eee83340d1ffec60"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "cart",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "22e57e29550e28cfe59b12556a8c015c74b99e2ebe8a0f3cfef1172630a7ff10",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "catalog",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "85aa1657fb6ce92d185d96053cdbd8a012a2f7f3a8d2381b85457b0809cea5f1",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "commerceSearchCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "20944c16c4d799ddec4050c66fc104fc6e3ba40a1606fc390ada240335bfea99",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "fulfillmentCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "d43b69913c35c3d2fafe0f4f34a6df6f8c5aada28883cf634bfb27705704c39b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "inventory",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "39a027106d9be809e1a809c0290808dc283faac29f6f7dbcb316ef2092a16baf",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7b8cfbcac58a8f106aa3e066bd200a0ea32e3b23fc22619602ea85a5e241c421",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "paymentCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "dfd04d385707064e2593fc6bb275bc9d1a87c11d389d6e7ab401cc7c2aef659f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "pricing",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "66a39f80bced4791582594168c4b9097455bd1d37481e0491665bc095a4fd721",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "store",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a4989b176f5eb13747bbca9d31972e4e6525e04269d25246f40c756c549b60d3",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "tax",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "076049ab3ff8f4854907d197ca630e89afcb32f25b2fcb8901529e9538bbeb8a",
+          "partition": "DEFAULT"
+        }
+      ]
     }
   }
 }

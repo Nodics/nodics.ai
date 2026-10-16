@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "shoppingList",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "shoppingList permissionCatalogue",
+      "description": "Explicit shoppingList identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "shoppingList",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/shoppingListPermissionHeader.js": "f6e3004f3d170de7bfe33acda0b147202678e6600d93644a2e85fc31f99a7537",
+        "init-v001/records/identity/shoppingListPermissionData.js": "e5b8ac92c38b85c60ff55d63e2f98957f3b39c73bc58a0896c252beee7a0aabe"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

@@ -17,7 +17,7 @@ const locationDistance = require("../../../../../../../nodics.location/modules/l
 module.exports = {
   /** Delegates context help without changing the journey stage. */
   message: function (request) {
-    return SERVICE.DefaultEWasteConversationService.message(request);
+    return SERVICE.DefaultEWasteGuidanceService.message(request);
   },
   /** Resolves the current project policy. */
   settings: function () {

@@ -98,7 +98,7 @@ module.exports = {
         let quantity = request.quantity || policy.defaultQuantity || '1';
         let books, rows;
         if (activated) {
-            const records = await SERVICE.DefaultPricingPublicationService.readConfigured(request);
+            const records = await SERVICE.DefaultPricingPublicationService.readConfigured({ ...request, productCodes });
             books = records.filter(item => item.schema === 'priceBook').map(item => item.policy);
             rows = records.filter(item => item.schema === 'priceRow').map(item => item.policy);
         } else {

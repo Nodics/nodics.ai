@@ -17,93 +17,454 @@
  * @override Later route additions must remain secured and exposure-gated.
  */
 
-const assert = require('assert');
-const path = require('path');
-const coreRoot = path.dirname(require.resolve('nodics.foundation/package.json'));
-const { assertRouteContracts } = require(path.join(coreRoot, 'modules/nRouter/test/routerContractTestUtils'));
-const authProperties = require(path.join(coreRoot, 'modules/nAuth/config/properties'));
-const mediaCapabilityService = require('../src/service/defaultMediaBackofficeCapabilityService');
-const mediaProperties = require('../config/properties');
-const routerConfig = require('../src/router/routers');
+const assert = require("assert");
+const path = require("path");
+const coreRoot = path.dirname(
+  require.resolve("nodics.foundation/package.json"),
+);
+const { assertRouteContracts } = require(
+  path.join(coreRoot, "modules/nRouter/test/routerContractTestUtils"),
+);
+const permissionRecords = Object.values(
+  require("../data/init-v001/records/identity/mediaPermissionData"),
+);
+const permissionCatalog = new Set(permissionRecords.map((row) => row.code));
+const publicationPermissions = Object.values(
+  require(
+    path.join(
+      coreRoot,
+      "modules/nPublish/data/init-v001/records/identity/publishPermissionData",
+    ),
+  ),
+);
+const publicationCatalog = new Set(
+  publicationPermissions.map((row) => row.code),
+);
+const permissionHeader = require("../data/init-v001/headers/identity/mediaPermissionHeader");
+const permissionPack = require("../data/manifest.json").sections
+  .permissionCatalogue;
+const profileInit = require(
+  path.join(coreRoot, "../nodics.platform/modules/profile/data/manifest.json"),
+).sections["init-v001"];
+const mediaCapabilityService = require("../src/service/defaultMediaBackofficeCapabilityService");
+const mediaProperties = require("../config/properties");
+const routerConfig = require("../src/router/routers");
+
+assert.strictEqual(
+  permissionCatalog.size,
+  permissionRecords.length,
+  "Media permission definitions must be unique",
+);
+permissionRecords.forEach((row) => {
+  assert.strictEqual(row.ownerModule, "media");
+  assert.strictEqual(row.active, true);
+  assert.deepStrictEqual(
+    Object.keys(row).sort(),
+    ["active", "code", "name", "ownerModule"],
+    "Media vocabulary must not contain group or principal assignments",
+  );
+});
+assert.strictEqual(permissionPack.owningDomain, "media");
+assert.strictEqual(permissionPack.selectionPolicy, "EXPLICIT");
+assert.strictEqual(permissionPack.destinationRole, "PLATFORM");
+assert(
+  Object.hasOwn(
+    permissionPack.files,
+    "init-v001/records/identity/mediaPermissionData.js",
+  ),
+);
+assert(
+  Object.hasOwn(
+    permissionPack.files,
+    "init-v001/headers/identity/mediaPermissionHeader.js",
+  ),
+);
+assert.deepStrictEqual(Object.keys(permissionHeader), ["profile"]);
+assert.strictEqual(
+  permissionHeader.profile.mediaPermission.options.schemaName,
+  "permission",
+);
+assert.strictEqual(
+  permissionHeader.profile.mediaPermission.options.operation,
+  "ensureReferenceAll",
+);
+assert(
+  profileInit.prerequisites.some(
+    (ref) =>
+      ref.moduleName === "media" &&
+      ref.sectionCode === "permissionCatalogue" &&
+      ref.partition === "DEFAULT",
+  ),
+);
 
 const expectedRoutes = [
-    { key: '/contexts', method: 'GET', controller: 'DefaultMediaStorageController', operation: 'listMediaContexts', secured: true, permission: 'media.context.view' },
-    { key: '/storage/providers/summary', method: 'GET', controller: 'DefaultMediaStorageController', operation: 'summarizeStorageProviders', secured: true, permission: 'media.storage.policy.view' },
-    { key: '/storage/policy', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'resolveStoragePolicy', secured: true, permission: 'media.storage.policy.view' },
-    { key: '/folders/policy', method: 'PUT', controller: 'DefaultMediaStorageController', operation: 'createFolderPolicy', secured: true, permission: 'media.folder.policy.manage' },
-    { key: '/folders/policy/:folderCode', method: 'PATCH', controller: 'DefaultMediaStorageController', operation: 'saveFolderPolicy', secured: true, permission: 'media.folder.policy.manage' },
-    { key: '/folders/policy/:folderCode/activate', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'activateFolderPolicy', secured: true, permission: 'media.folder.policy.manage' },
-    { key: '/folders/policy/:folderCode/deactivate', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'deactivateFolderPolicy', secured: true, permission: 'media.folder.policy.manage' },
-    { key: '/formats/policy', method: 'PUT', controller: 'DefaultMediaStorageController', operation: 'createFormatPolicy', secured: true, permission: 'media.format.policy.manage' },
-    { key: '/formats/policy/:formatCode', method: 'PATCH', controller: 'DefaultMediaStorageController', operation: 'saveFormatPolicy', secured: true, permission: 'media.format.policy.manage' },
-    { key: '/formats/policy/:formatCode/activate', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'activateFormatPolicy', secured: true, permission: 'media.format.policy.manage' },
-    { key: '/formats/policy/:formatCode/deactivate', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'deactivateFormatPolicy', secured: true, permission: 'media.format.policy.manage' },
-    { key: '/sets/:mediaSetCode/entries', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'addMediaSetEntry', secured: true, permission: 'media.set.manage' },
-    { key: '/sets/:mediaSetCode/entries/:entryCode', method: 'PATCH', controller: 'DefaultMediaStorageController', operation: 'updateMediaSetEntry', secured: true, permission: 'media.set.manage' },
-    { key: '/sets/:mediaSetCode/entries/:entryCode', method: 'DELETE', controller: 'DefaultMediaStorageController', operation: 'removeMediaSetEntry', secured: true, permission: 'media.set.manage' },
-    { key: '/sets/:mediaSetCode/entries/reorder', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'reorderMediaSetEntries', secured: true, permission: 'media.set.manage' },
-    { key: '/sets/:mediaSetCode/entries/:entryCode/primary', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'setPrimaryMediaSetEntry', secured: true, permission: 'media.set.manage' },
-    { key: '/references/:referenceCode/approve', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'approveMediaReference', secured: true, permission: 'media.reference.lifecycle.manage' },
-    { key: '/references/:referenceCode/activate', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'activateMediaReference', secured: true, permission: 'media.reference.lifecycle.manage' },
-    { key: '/references/:referenceCode/deactivate', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'deactivateMediaReference', secured: true, permission: 'media.reference.lifecycle.manage' },
-    { key: '/storage/location', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'resolveStorageLocation', secured: true, permission: 'media.storage.location.resolve' },
-    { key: '/storage/upload', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'uploadMedia', secured: true, permission: 'media.upload.create' },
-    { key: '/publication/target/assets/import', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'importPublishedMediaAssets', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
-    { key: '/publication/artifacts/manifest', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'buildArtifactTransferManifest', secured: true, permission: 'media.publication.artifact.manage' },
-    { key: '/publication/artifacts/receipt', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'recordArtifactPublicationReceipt', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
-    { key: '/publication/topology/prod-dr/switch-roles', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'switchProdDrMediaRoles', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
-    { key: '/cleanup/candidates/preview', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'previewCleanupCandidates', secured: true, permission: 'media.cleanup.view' },
-    { key: '/cleanup/candidates/scan', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'scanCleanupCandidates', secured: true, permission: 'media.cleanup.manage' },
-    { key: '/cleanup/candidates/:candidateCode/mark-passive', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'markCleanupCandidatePassive', secured: true, permission: 'media.cleanup.manage' },
-    { key: '/cleanup/retention/run', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'runPassiveRetentionCleanup', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
-    { key: '/download/:mediaCode', method: 'GET', controller: 'DefaultMediaStorageController', operation: 'downloadMediaContent', secured: true, permission: 'media.content.download' },
-    { key: '/references/media/validate', method: 'POST', controller: 'DefaultMediaReferenceLookupController', operation: 'validate', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' }
+  {
+    key: "/contexts",
+    method: "GET",
+    controller: "DefaultMediaStorageController",
+    operation: "listMediaContexts",
+    secured: true,
+    permission: "media.context.view",
+  },
+  {
+    key: "/storage/providers/summary",
+    method: "GET",
+    controller: "DefaultMediaStorageController",
+    operation: "summarizeStorageProviders",
+    secured: true,
+    permission: "media.storage.policy.view",
+  },
+  {
+    key: "/storage/policy",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "resolveStoragePolicy",
+    secured: true,
+    permission: "media.storage.policy.view",
+  },
+  {
+    key: "/folders/policy",
+    method: "PUT",
+    controller: "DefaultMediaStorageController",
+    operation: "createFolderPolicy",
+    secured: true,
+    permission: "media.folder.policy.manage",
+  },
+  {
+    key: "/folders/policy/:folderCode",
+    method: "PATCH",
+    controller: "DefaultMediaStorageController",
+    operation: "saveFolderPolicy",
+    secured: true,
+    permission: "media.folder.policy.manage",
+  },
+  {
+    key: "/folders/policy/:folderCode/activate",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "activateFolderPolicy",
+    secured: true,
+    permission: "media.folder.policy.manage",
+  },
+  {
+    key: "/folders/policy/:folderCode/deactivate",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "deactivateFolderPolicy",
+    secured: true,
+    permission: "media.folder.policy.manage",
+  },
+  {
+    key: "/formats/policy",
+    method: "PUT",
+    controller: "DefaultMediaStorageController",
+    operation: "createFormatPolicy",
+    secured: true,
+    permission: "media.format.policy.manage",
+  },
+  {
+    key: "/formats/policy/:formatCode",
+    method: "PATCH",
+    controller: "DefaultMediaStorageController",
+    operation: "saveFormatPolicy",
+    secured: true,
+    permission: "media.format.policy.manage",
+  },
+  {
+    key: "/formats/policy/:formatCode/activate",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "activateFormatPolicy",
+    secured: true,
+    permission: "media.format.policy.manage",
+  },
+  {
+    key: "/formats/policy/:formatCode/deactivate",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "deactivateFormatPolicy",
+    secured: true,
+    permission: "media.format.policy.manage",
+  },
+  {
+    key: "/sets/:mediaSetCode/entries",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "addMediaSetEntry",
+    secured: true,
+    permission: "media.set.manage",
+  },
+  {
+    key: "/sets/:mediaSetCode/entries/:entryCode",
+    method: "PATCH",
+    controller: "DefaultMediaStorageController",
+    operation: "updateMediaSetEntry",
+    secured: true,
+    permission: "media.set.manage",
+  },
+  {
+    key: "/sets/:mediaSetCode/entries/:entryCode",
+    method: "DELETE",
+    controller: "DefaultMediaStorageController",
+    operation: "removeMediaSetEntry",
+    secured: true,
+    permission: "media.set.manage",
+  },
+  {
+    key: "/sets/:mediaSetCode/entries/reorder",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "reorderMediaSetEntries",
+    secured: true,
+    permission: "media.set.manage",
+  },
+  {
+    key: "/sets/:mediaSetCode/entries/:entryCode/primary",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "setPrimaryMediaSetEntry",
+    secured: true,
+    permission: "media.set.manage",
+  },
+  {
+    key: "/references/:referenceCode/approve",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "approveMediaReference",
+    secured: true,
+    permission: "media.reference.lifecycle.manage",
+  },
+  {
+    key: "/references/:referenceCode/activate",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "activateMediaReference",
+    secured: true,
+    permission: "media.reference.lifecycle.manage",
+  },
+  {
+    key: "/references/:referenceCode/deactivate",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "deactivateMediaReference",
+    secured: true,
+    permission: "media.reference.lifecycle.manage",
+  },
+  {
+    key: "/storage/location",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "resolveStorageLocation",
+    secured: true,
+    permission: "media.storage.location.resolve",
+  },
+  {
+    key: "/storage/upload",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "uploadMedia",
+    secured: true,
+    permission: "media.upload.create",
+  },
+  {
+    key: "/publication/target/assets/import",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "importPublishedMediaAssets",
+    secured: true,
+    permissionConfig: "authSecurity.internalToken.routePermission",
+  },
+  {
+    key: "/publication/artifacts/manifest",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "buildArtifactTransferManifest",
+    secured: true,
+    permission: "media.publication.artifact.manage",
+  },
+  {
+    key: "/publication/artifacts/receipt",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "recordArtifactPublicationReceipt",
+    secured: true,
+    permissionConfig: "authSecurity.internalToken.routePermission",
+  },
+  {
+    key: "/publication/topology/prod-dr/switch-roles",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "switchProdDrMediaRoles",
+    secured: true,
+    permissionConfig: "authSecurity.internalToken.routePermission",
+  },
+  {
+    key: "/cleanup/candidates/preview",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "previewCleanupCandidates",
+    secured: true,
+    permission: "media.cleanup.view",
+  },
+  {
+    key: "/cleanup/candidates/scan",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "scanCleanupCandidates",
+    secured: true,
+    permission: "media.cleanup.manage",
+  },
+  {
+    key: "/cleanup/candidates/:candidateCode/mark-passive",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "markCleanupCandidatePassive",
+    secured: true,
+    permission: "media.cleanup.manage",
+  },
+  {
+    key: "/cleanup/retention/run",
+    method: "POST",
+    controller: "DefaultMediaStorageController",
+    operation: "runPassiveRetentionCleanup",
+    secured: true,
+    permissionConfig: "authSecurity.internalToken.routePermission",
+  },
+  {
+    key: "/download/:mediaCode",
+    method: "GET",
+    controller: "DefaultMediaStorageController",
+    operation: "downloadMediaContent",
+    secured: true,
+    permission: "media.content.download",
+  },
+  {
+    key: "/references/media/validate",
+    method: "POST",
+    controller: "DefaultMediaReferenceLookupController",
+    operation: "validate",
+    secured: true,
+    permissionConfig: "authSecurity.internalToken.routePermission",
+  },
 ];
 
 const routes = assertRouteContracts(routerConfig, expectedRoutes);
-const contentRoute = routes.find(route => route.key === '/content/:mediaCode');
-const downloadRoute = routes.find(route => route.key === '/download/:mediaCode');
-assert(contentRoute, 'media content route must be registered');
-assert(downloadRoute, 'media download route must be registered');
-assert.strictEqual(contentRoute.responseHandler, 'mediaContentResponseHandler', 'inline media content must remain on media content handler');
-assert.strictEqual(contentRoute.secured, true, 'inline content route must still pass through governed media delivery');
-assert.strictEqual(contentRoute.permission, 'media.content.read', 'inline content route must use governed media read permission');
-assert.strictEqual(contentRoute.publicAccess, true, 'inline content route must be browser-readable for PUBLIC media');
-assert.strictEqual(contentRoute.apiExposure, 'mediaDelivery', 'inline content route must not depend on media management exposure');
-assert.strictEqual(downloadRoute.responseHandler, 'fileDownloadResponseHandler', 'download media content must reuse nRouter file-download response handler');
-const cleanupRetentionRoute = routes.find(route => route.key === '/cleanup/retention/run');
-assert(cleanupRetentionRoute, 'media cleanup retention job route must be registered');
-assert.strictEqual(cleanupRetentionRoute.apiExposure, 'moduleInternal', 'media cleanup retention job must remain internal only');
-assert.deepStrictEqual(cleanupRetentionRoute.authTokenTypes, ['service'], 'media cleanup retention job must require service token authentication');
-const publicationImportRoute = routes.find(route => route.key === '/publication/target/assets/import');
-assert(publicationImportRoute, 'media publication import route must be registered');
-assert.strictEqual(publicationImportRoute.apiExposure, 'moduleInternal', 'media publication import must remain internal only');
-assert.deepStrictEqual(publicationImportRoute.authTokenTypes, ['service'], 'media publication import must require service token authentication');
-assert.strictEqual(publicationImportRoute.bodyParserHandler, 'mediaPublicationBodyParserHandler', 'media publication import must use bounded publication body parsing');
+const contentRoute = routes.find(
+  (route) => route.key === "/content/:mediaCode",
+);
+const downloadRoute = routes.find(
+  (route) => route.key === "/download/:mediaCode",
+);
+assert(contentRoute, "media content route must be registered");
+assert(downloadRoute, "media download route must be registered");
+assert.strictEqual(
+  contentRoute.responseHandler,
+  "mediaContentResponseHandler",
+  "inline media content must remain on media content handler",
+);
+assert.strictEqual(
+  contentRoute.secured,
+  true,
+  "inline content route must still pass through governed media delivery",
+);
+assert.strictEqual(
+  contentRoute.permission,
+  "media.content.read",
+  "inline content route must use governed media read permission",
+);
+assert.strictEqual(
+  contentRoute.publicAccess,
+  true,
+  "inline content route must be browser-readable for PUBLIC media",
+);
+assert.strictEqual(
+  contentRoute.apiExposure,
+  "mediaDelivery",
+  "inline content route must not depend on media management exposure",
+);
+assert.strictEqual(
+  downloadRoute.responseHandler,
+  "fileDownloadResponseHandler",
+  "download media content must reuse nRouter file-download response handler",
+);
+const cleanupRetentionRoute = routes.find(
+  (route) => route.key === "/cleanup/retention/run",
+);
+assert(
+  cleanupRetentionRoute,
+  "media cleanup retention job route must be registered",
+);
+assert.strictEqual(
+  cleanupRetentionRoute.apiExposure,
+  "moduleInternal",
+  "media cleanup retention job must remain internal only",
+);
+assert.deepStrictEqual(
+  cleanupRetentionRoute.authTokenTypes,
+  ["service"],
+  "media cleanup retention job must require service token authentication",
+);
+const publicationImportRoute = routes.find(
+  (route) => route.key === "/publication/target/assets/import",
+);
+assert(
+  publicationImportRoute,
+  "media publication import route must be registered",
+);
+assert.strictEqual(
+  publicationImportRoute.apiExposure,
+  "moduleInternal",
+  "media publication import must remain internal only",
+);
+assert.deepStrictEqual(
+  publicationImportRoute.authTokenTypes,
+  ["service"],
+  "media publication import must require service token authentication",
+);
+assert.strictEqual(
+  publicationImportRoute.bodyParserHandler,
+  "mediaPublicationBodyParserHandler",
+  "media publication import must use bounded publication body parsing",
+);
 const previousConfig = global.CONFIG;
 let capability;
 try {
-    global.CONFIG = { get: key => mediaProperties[key] };
-    capability = mediaCapabilityService.getCapability();
+  global.CONFIG = { get: (key) => mediaProperties[key] };
+  capability = mediaCapabilityService.getCapability();
 } finally {
-    if (previousConfig === undefined) delete global.CONFIG;
-    else global.CONFIG = previousConfig;
+  if (previousConfig === undefined) delete global.CONFIG;
+  else global.CONFIG = previousConfig;
 }
 assert.strictEqual(
-    capability.discovery.openApiPath,
-    '/nodics/system/v0/contract/openapi/internal',
-    'media BackOffice discovery must use the central System OpenAPI contract endpoint'
+  capability.discovery.openApiPath,
+  "/nodics/system/v0/contract/openapi/internal",
+  "media BackOffice discovery must use the central System OpenAPI contract endpoint",
 );
-routes.forEach(route => {
-    assert(['mediaManagement', 'mediaDelivery', 'moduleInternal'].includes(route.apiExposure), route.key + ' must be intentionally exposure-gated');
-    if (route.key !== '/content/:mediaCode') {
-        assert.notStrictEqual(route.publicAccess, true, route.key + ' must not be public');
-    }
-    if (route.permission) {
-        assert(
-            authProperties.identityGovernance.permissionCatalog.includes(route.permission),
-            route.key + ' permission must be registered in the governed permission catalog'
-        );
-    }
+routes.forEach((route) => {
+  assert(
+    ["mediaManagement", "mediaDelivery", "moduleInternal"].includes(
+      route.apiExposure,
+    ),
+    route.key + " must be intentionally exposure-gated",
+  );
+  if (route.key !== "/content/:mediaCode") {
+    assert.notStrictEqual(
+      route.publicAccess,
+      true,
+      route.key + " must not be public",
+    );
+  }
+  if (route.permission) {
+    assert(
+      permissionCatalog.has(route.permission) ||
+        (["/library/publications", "/publication/requests"].includes(
+          route.key,
+        ) &&
+          route.permission === "publish.lifecycle.create" &&
+          publicationCatalog.has(route.permission)),
+      route.key +
+        " permission must be registered in the governed permission catalog",
+    );
+  }
 });
 console.log(`media route contract validated: ${expectedRoutes.length} routes`);

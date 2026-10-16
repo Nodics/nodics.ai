@@ -69,6 +69,7 @@ function repository(rows) {
 function request(owner, payload = {}, extra = {}) {
   return {
     tenant: "runtime",
+    authorization: "Bearer test-" + owner,
     authData: {
       principalType: "customer",
       loginId: owner + "@test.local",
@@ -153,14 +154,20 @@ test.beforeEach(() => {
   };
   global.SERVICE = {
     DefaultModuleService: {
-      invokeModule: async (r) => ({
-        data: [
-          {
-            code: r.requestBody.query.loginId.split("@")[0],
-            loginId: r.requestBody.query.loginId,
+      invokeModule: async (r) => {
+        assert.equal(r.apiName, "/customer/identity");
+        assert.equal(r.methodName, "GET");
+        assert.equal(r.requestBody, undefined);
+        const code = r.header.Authorization.replace("Bearer test-", "");
+        return {
+          data: {
+            contractVersion: 1,
+            tenant: r.tenant,
+            enterpriseCode: r.header["X-Enterprise-Code"],
+            customer: { code, loginId: code + "@test.local" },
           },
-        ],
-      }),
+        };
+      },
     },
     DefaultBiddingService: negotiations,
     DefaultBiddingIdentityService: identities,

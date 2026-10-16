@@ -1,5 +1,17 @@
 # nTooling Agent Contract
 
+Reference packs explicitly marked `nodics.referenceDemo: true` are demo-only.
+Keep their static ownership check in the existing design-principle audit and
+project validation, with negative fixtures in `test/referenceDemoOwnership.test.js`.
+Ordinary partner modules retain customization. See the reference-demo section
+of `llm/contracts/tooling-governance-contracts.md`; do not hardcode project names.
+Distinguish demo principal/header references from reusable access definitions.
+Admit only data composition, identity references and presentation, not runtime
+policy or credential bindings. Reusable defaults belong to capability owners;
+explicit deployment deltas belong to actual project/environment configuration.
+Do not encode a domain behavior/permission allowlist in Tooling to pass a demo.
+Setup-observation JSON is inert evidence, never authority.
+
 Offline fresh-reset planning uses the existing registered
 `project:local-reset-maintenance` entry. Preserve its exact scope, dry-run
 default, secret-free evidence, explicit operator exclusivity/writer attestations
@@ -61,16 +73,27 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Partner governance
 
+Protect the canonical mandatory default ownership gate and its principle,
+coding, change-gate and review discovery links in `auditPrincipleContracts`.
+Negative fixtures must detect lost clauses and links. These are documentation
+integrity checks, not proof of property ownership or effective inheritance.
+Do not add a parallel defaults registry or reject legitimate advanced overrides
+by matching standard service names. Semantic review and owner regression tests
+remain required for standard wiring, role defaults and source fallbacks.
+
 Preserve the `ai:principle-audit` checks for the nSetup customer project contract.
 Project extensions may strengthen checks while preserving the canonical partner
 write boundary and the separate Nodics contribution and release process.
 
 ## Module Work Rules
 
-- Native Local credential provisioning includes a stable runtime-configuration
-  encryption key in the existing private generated credential file. Add it only
-  when absent; never rotate existing encryption material during startup. External
-  environment inputs retain precedence. Provider tokens remain governed runtime
+- Native Local startup reads an existing protected credential store through
+  `readExistingEnvironment`; it must not normalize, chmod, add keys or rotate
+  credentials. Invalid existing storage fails closed even with environment
+  overrides. Only an absent store permits exclusive first-use generation,
+  including the runtime-configuration encryption key. Explicit rotation and
+  purpose-key additions remain separate owner operations. External inputs keep
+  precedence without modifying storage. Provider tokens remain governed runtime
   configuration, not generated defaults or committed application source.
 
 - Content-pack packages may retain dot-separated identifier segments so moving

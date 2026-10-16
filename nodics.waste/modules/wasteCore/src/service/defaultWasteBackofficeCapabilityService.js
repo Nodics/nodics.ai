@@ -32,7 +32,13 @@ module.exports = {
     },
     /** Builds the Waste capability from module-owned data. */
     buildCapability: function (data) {
-        return this.capabilityDataService().capability(data);
+        const owner = typeof SERVICE !== 'undefined' && SERVICE.DefaultWasteBusinessWorkbenchService || require('./defaultWasteBusinessWorkbenchService');
+        const projected = { ...data, navigation: data.navigation.map(entry => owner.supports(entry.schemaName) ? {
+            ...entry, moduleName: 'wasteApi', presentation: { ...entry.presentation,
+                defaultColumns: (entry.presentation?.defaultColumns || []).filter(field => owner.readFields(entry.schemaName).includes(field)),
+                schemaDiscovery: { path: '/business/waste/schemas', apiVersion: 'v0' }, editableFields: [] },
+        } : entry) };
+        return this.capabilityDataService().capability(projected);
     },
     /** Returns the Waste BackOffice capability contract. */
     getCapability: function () {

@@ -25,6 +25,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const repositoryRoot = path.resolve(__dirname, '../../../..');
+const ownerPermissionCodes = Object.values(require('../../../../nodics.foundation/modules/nAuth/data/init-v001/records/identity/authPermissionData'))
+    .filter(record => record.active === true).map(record => record.code);
 const integrationConfiguration = require(
     path.join(
         repositoryRoot,
@@ -51,10 +53,6 @@ global.CONFIG = {
                 }
             },
             identityGovernance: {
-                permissionCatalog: [
-                    'auth.internal.token.read',
-                    'auth.internal.token.read.anyTenant'
-                ],
                 principalPolicy: {
                     allowedTypes: ['human', 'service', 'customer'],
                     serviceType: 'service',
@@ -62,30 +60,7 @@ global.CONFIG = {
                     minimumServiceApiKeyLength: 32
                 },
                 migration: {
-                    version: 2,
-                    servicePrincipalCodes: ['apiAdmin'],
-                    servicePrincipalScopes: {
-                        apiAdmin: [
-                            'auth.internal.token.read',
-                            'auth.internal.token.read.anyTenant'
-                        ]
-                    },
-                    administratorCodes: ['admin'],
-                    serviceGroup: 'serviceAccountUserGroup',
-                    administratorGroups: [
-                        'adminGroup',
-                        'runtimeConfigAdminUserGroup'
-                    ],
-                    humanDefaultGroup: 'employeeUserGroup',
-                    customerGroup: 'customerUserGroup',
-                    groupTargets: {
-                        userGroup: { parentGroups: [] },
-                        adminGroup: { parentGroups: ['userGroup'] },
-                        serviceAccountUserGroup: {
-                            parentGroups: ['userGroup'],
-                            permissions: ['auth.internal.token.read']
-                        }
-                    }
+                    version: 2
                 }
             }
         })[key]
@@ -224,7 +199,8 @@ function fixture() {
                 code: 'apiAdmin',
                 loginId: 'apiAdmin',
                 active: true,
-                userGroups: ['adminGroup'],
+                principalType: 'service',
+                userGroups: ['serviceAccountUserGroup'],
                 apiKey: 'legacy-service-secret'
             }
         ],
@@ -247,6 +223,7 @@ function fixture() {
 
 function wire(repository) {
     global.SERVICE = {
+        DefaultIdentityCatalogueService: require('./helpers/identityCatalogueFixture').catalogue(undefined, ownerPermissionCodes),
         DefaultPrincipalSecurityStampGovernanceService: require('../src/service/identity/defaultPrincipalSecurityStampGovernanceService'),
         DefaultEnterpriseRegistrationService: require('../src/service/enterprise/defaultEnterpriseRegistrationService'),
         DefaultIdentityGovernanceService: {

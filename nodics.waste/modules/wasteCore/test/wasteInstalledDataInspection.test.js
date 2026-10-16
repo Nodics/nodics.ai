@@ -34,6 +34,7 @@ test('installed inspection remains read-only and fails closed', async (t) => {
     global.SERVICE = {
         DefaultWasteInstalledDataInspectionService: inspection,
         DefaultWastePersistenceService: persistence,
+        DefaultIdentityGovernanceService: require('../../../../nodics.foundation/modules/nAuth/src/service/identity/defaultIdentityGovernanceService'),
         DefaultSecuredRequestPipelineService: router,
         DefaultWasteAssetCreationPolicyService: repository,
         DefaultWasteSubmissionService: repository
@@ -49,6 +50,7 @@ test('installed inspection remains read-only and fails closed', async (t) => {
         assert.equal(route.secured, true);
         const value = await controller.inspectInstalledData({ authData, tenant: 'wrong', httpRequest: { body: { resource: 'wasteAssetCreationPolicy' } } });
         assert.equal(reads.at(-1).tenant, 'tenant-a');
+        assert.deepEqual(reads.at(-1).authData, SERVICE.DefaultIdentityGovernanceService.getSystemAuthData());
         assert.deepEqual(reads.at(-1).query, {});
         assert.equal(reads.at(-1).options.skipItemCache, true);
         assert.deepEqual(reads.at(-1).searchOptions, { pageSize: 100, pageNumber: 1, sort: { code: 1 } });

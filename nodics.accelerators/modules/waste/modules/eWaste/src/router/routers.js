@@ -14,7 +14,117 @@
 /** @module eWaste/router/routers @description Exposes reusable e-waste journeys with existing domain permissions and authenticated owner checks. @layer router @owner eWaste */
 module.exports = {
   eWaste: {
+    listingHandoff: {
+      listingWorkspace: {
+        key: "/listing-workspace", method: "GET", secured: true, authTokenTypes: ["access"],
+        accessGroups: ["employeeUserGroup", "adminGroup"], permission: "waste.marketplace.moderate", apiExposure: "eWasteCustomer",
+        controller: "DefaultEWasteListingHandoffController", operation: "describe", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+      listingRequestQueue: {
+        key: "/listing-requests", method: "GET", secured: true, authTokenTypes: ["access"],
+        accessGroups: ["employeeUserGroup", "adminGroup"], permission: "waste.marketplace.moderate", apiExposure: "eWasteCustomer",
+        controller: "DefaultEWasteListingHandoffController", operation: "queue", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+      listingRequestDetail: {
+        key: "/listing-requests/:assetCode", method: "GET", secured: true, authTokenTypes: ["access"],
+        accessGroups: ["employeeUserGroup", "adminGroup"], permission: "waste.marketplace.moderate", apiExposure: "eWasteCustomer",
+        controller: "DefaultEWasteListingHandoffController", operation: "detail", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+      listingRequestProof: {
+        key: "/internal/listing-requests/proof", method: "POST", secured: true, authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"], permission: "waste.asset.listing.intent.read", apiExposure: "wasteInternal",
+        controller: "DefaultEWasteListingHandoffController", operation: "proof", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+      listingReconciliation: {
+        key: "/listing-requests/:assetCode/reconciliation", method: "GET", secured: true, authTokenTypes: ["access"],
+        accessGroups: ["employeeUserGroup", "adminGroup"], permission: "waste.marketplace.moderate", apiExposure: "eWasteCustomer",
+        controller: "DefaultEWasteListingHandoffController", operation: "reconciliation", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+      reconcileListingRequest: {
+        key: "/listing-requests/:assetCode/reconciliation", method: "POST", secured: true, authTokenTypes: ["access"],
+        accessGroups: ["employeeUserGroup", "adminGroup"], permission: "waste.marketplace.moderate", apiExposure: "eWasteCustomer",
+        controller: "DefaultEWasteListingHandoffController", operation: "reconcile", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+      },
+    },
     experience: {
+      previewArrival: {
+        "key": "/journey/arrival",
+        "method": "POST",
+        "secured": true,
+        "controller": "DefaultEWasteJourneyController",
+        "operation": "previewArrival",
+        "apiExposure": "eWasteCustomer",
+        "authTokenTypes": [
+          "access"
+        ],
+        "accessGroups": [
+          "customerUserGroup"
+        ],
+        "permissionConfig": "eWaste.preparation.permission",
+        "cache": {
+          "enabled": false
+        }
+      },
+      arrival: {
+        "key": "/submissions/:code/arrival",
+        "method": "POST",
+        "secured": true,
+        "controller": "DefaultEWasteJourneyController",
+        "operation": "arrival",
+        "apiExposure": "eWasteCustomer",
+        "authTokenTypes": [
+          "access"
+        ],
+        "accessGroups": [
+          "customerUserGroup"
+        ],
+        "permission": "waste.submission.create",
+        "cache": {
+          "enabled": false
+        }
+      },
+      catalogue: {
+        "key": "/catalogue",
+        "method": "GET",
+        "secured": false,
+        "publicAccess": true,
+        "accessGroups": [
+          "userGroup"
+        ],
+        "apiExposure": "eWasteCustomer",
+        "controller": "DefaultEWasteCatalogueController",
+        "operation": "catalogue"
+      },
+      product: {
+        "key": "/catalogue/:code",
+        "method": "GET",
+        "secured": false,
+        "publicAccess": true,
+        "accessGroups": [
+          "userGroup"
+        ],
+        "apiExposure": "eWasteCustomer",
+        "controller": "DefaultEWasteCatalogueController",
+        "operation": "product"
+      },
+      customerGuidance: {
+        "key": "/customer/guidance",
+        "method": "POST",
+        "secured": true,
+        "accessGroups": [
+          "customerUserGroup"
+        ],
+        "authTokenTypes": [
+          "access"
+        ],
+        "permission": "waste.submission.create",
+        "controller": "DefaultEWasteJourneyController",
+        "operation": "message",
+        "apiExposure": "eWasteCustomer",
+        "cache": {
+          "enabled": false
+        }
+      },
       discardEmptyDraft: {
         key: "/submissions/:code/empty-draft", method: "DELETE", secured: true,
         controller: "DefaultEWasteExperienceController", operation: "discardEmptyDraft", apiExposure: "eWasteCustomer",
@@ -22,13 +132,13 @@ module.exports = {
       },
       prepareSubmission: {
         key: "/submissions/prepare", method: "POST", secured: true,
-        controller: "DefaultEWasteExperienceController", operation: "prepareSubmission",
+        controller: "DefaultEWasteJourneyController", operation: "prepareSubmission",
         apiExposure: "eWasteCustomer", authTokenTypes: ["access"], accessGroups: ["customerUserGroup"],
         permissionConfig: "eWaste.preparation.permission", jsonBodyLimit: "8mb", cache: { enabled: false },
       },
       replacePreparedPhoto: {
         key: "/submissions/:code/prepare", method: "POST", secured: true,
-        controller: "DefaultEWasteExperienceController", operation: "prepareSubmission",
+        controller: "DefaultEWasteJourneyController", operation: "prepareSubmission",
         apiExposure: "eWasteCustomer", authTokenTypes: ["access"], accessGroups: ["customerUserGroup"],
         permissionConfig: "eWaste.preparation.permission", jsonBodyLimit: "8mb", cache: { enabled: false },
       },
@@ -236,7 +346,7 @@ module.exports = {
         key: "/submissions/:code/messages",
         method: "POST",
         secured: true,
-        controller: "DefaultEWasteExperienceController",
+        controller: "DefaultEWasteJourneyController",
         operation: "message",
         apiExposure: "eWasteCustomer",
         authTokenTypes: ["access"],
@@ -247,7 +357,7 @@ module.exports = {
         key: "/submissions/:code/analyze",
         method: "POST",
         secured: true,
-        controller: "DefaultEWasteExperienceController",
+        controller: "DefaultEWasteJourneyController",
         operation: "analyzePhoto",
         apiExposure: "eWasteCustomer",
         authTokenTypes: ["access"],
@@ -293,7 +403,7 @@ module.exports = {
         key: "/submissions",
         method: "POST",
         secured: true,
-        controller: "DefaultEWasteExperienceController",
+        controller: "DefaultEWasteJourneyController",
         operation: "createDraft",
         apiExposure: "eWasteCustomer",
         help: {
@@ -338,7 +448,7 @@ module.exports = {
         key: "/submissions/:code/photo",
         method: "POST",
         secured: true,
-        controller: "DefaultEWasteExperienceController",
+        controller: "DefaultEWasteJourneyController",
         operation: "attachPhoto",
         apiExposure: "eWasteCustomer",
         help: {
@@ -353,7 +463,7 @@ module.exports = {
         key: "/submissions/:code/estimate",
         method: "POST",
         secured: true,
-        controller: "DefaultEWasteExperienceController",
+        controller: "DefaultEWasteJourneyController",
         operation: "estimate",
         apiExposure: "eWasteCustomer",
         help: {
@@ -368,7 +478,7 @@ module.exports = {
         key: "/submissions/:code/confirm",
         method: "POST",
         secured: true,
-        controller: "DefaultEWasteExperienceController",
+        controller: "DefaultEWasteJourneyController",
         operation: "confirm",
         apiExposure: "eWasteCustomer",
         help: {
@@ -545,6 +655,16 @@ module.exports.eWaste.internalDigitalListing = {
   },
 };
 
+/** Cron invokes this owner endpoint; it neither provisions a schedule nor grants cleanup authority. */
+module.exports.eWaste.draftMediaRetention = {
+  inspectDraftMediaRetention: {
+    secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+    permission: "waste.audit.read", apiExposure: "wasteInternal", cache: { enabled: false }, requestPrivacy: { sensitive: true },
+    key: "/internal/draft-media/retention/inspect", method: "POST",
+    controller: "DefaultEWasteDraftMediaRetentionController", operation: "inspect",
+  },
+};
+
 /** Paginated review operations retain Waste permission and ownership authority. */
 module.exports.eWaste.reviewWorkspace = {
   resolveOutcome: {
@@ -594,6 +714,18 @@ module.exports.eWaste.reviewWorkspace = {
     method: "POST",
     controller: "DefaultEWasteExperienceController",
     operation: "retrySettlement",
+  },
+  evidenceRejection: {
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["employeeUserGroup", "adminGroup"],
+    permission: "waste.review.approve",
+    apiExposure: "eWasteCustomer",
+    cache: { enabled: false },
+    key: "/review-workspace/:code/evidence-rejection",
+    method: "POST",
+    controller: "DefaultEWasteExperienceController",
+    operation: "rejectEvidence",
   },
   search: {
     secured: true,

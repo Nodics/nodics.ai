@@ -47,15 +47,19 @@ test('actual Profile forward baseline is discovered before dependent group delta
         } : key === 'authSecurity' ? { ...require('../../../../nAuth/config/properties').authSecurity, compatibility: { ...require('../../../../nAuth/config/properties').authSecurity.compatibility, allowLocalBootstrapIdentity: true } } : undefined };
         global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
         const found = releases.discoverReleases('init');
-        assert.deepEqual(found.map(release => release.releaseCode), [
+        assert.deepEqual(found.filter(release => release.selectionPolicy !== 'EXPLICIT').map(release => release.releaseCode), [
             'profile:init-v001',
             'profile:employeeApplicationReview',
         ]);
         const manifest = JSON.parse(fs.readFileSync(path.join(owner.path, 'data/manifest.json'), 'utf8'));
-        assert.equal(found[0].sourceRoot, manifest.sections['init-v001'].sourceRoot);
-        assert.equal(found[0].sourceRoot, 'init-v001', 'the unreleased baseline contains the combined current authorization data');
-        assert(found[0].declaredFiles.some(file => file.endsWith('runtimeConfigurationUpdateUserGroupsData.js')));
-        assert(found[0].declaredFiles.some(file => file.endsWith('backofficeCircaUserGroupsData.js')));
+        const baseline = found.find(release => release.releaseCode === 'profile:init-v001');
+        assert.equal(baseline.sourceRoot, manifest.sections['init-v001'].sourceRoot);
+        assert.equal(baseline.sourceRoot, 'init-v001', 'the successor keeps its source root without rewriting historical files');
+        assert.equal(baseline.version, '0.0.3');
+        assert(baseline.prerequisites.length > 0, 'authority data is pinned through owner packs');
+        assert(!baseline.declaredFiles.some(file => file.endsWith('runtimeConfigurationUpdateUserGroupsData.js')));
+        assert(!baseline.declaredFiles.some(file => file.endsWith('backofficeCircaUserGroupsData.js')));
+        assert(baseline.declaredFiles.some(file => file.includes('/identityBootstrap/')));
         assert(found.every(release => !release.invalidManifest), 'all current immutable release manifests remain valid');
     } finally {
         Object.assign(global, previous);

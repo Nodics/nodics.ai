@@ -53,6 +53,7 @@ module.exports = {
                     summary: 'Review promotion campaigns, discount rules, coupons, eligibility, stacking, schedules, budgets, evaluation, governance, and insights.',
                     group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
                     presentation: {
+                        schemaDiscovery: { path: '/business/promotions/schemas', apiVersion: 'v0' },
                         defaultColumns: ['code', 'name', 'status', 'priority', 'validFrom', 'validTo', 'revision'],
                         hiddenFields: ['conditions', 'actions']
                     }
@@ -64,15 +65,15 @@ module.exports = {
                     moduleName: 'promotion',
                     schemaName: 'promotion',
                     order: 1310,
-                    permission: 'commerce.promotion.manage',
+                    permission: 'commerce.promotion.read',
                     summary: 'Compose, approve, schedule, coupon-budget and audit automatic, code-based, product, cart, order, shipping, and customer promotions.',
                     group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
                     presentation: {
+                        schemaDiscovery: { path: '/business/promotions/schemas', apiVersion: 'v0' },
                         defaultColumns: ['code', 'name', 'status', 'priority', 'validFrom', 'validTo', 'revision'],
                         hiddenFields: ['conditions', 'actions', 'budget', 'approval', 'analytics']
                     },
                     lifecycleActions: [
-                        { id: 'promotion-save-draft', label: 'Save draft', intent: 'UPDATE', permission: 'commerce.promotion.manage', ownerModule: 'promotion', handlerAction: 'saveDraft', operationRoute: '/promotions/drafts/:promotionCode', httpMethod: 'PATCH', inputFields: [promotionCodeInput], featureState: 'ACTIVE', order: 10 },
                         { id: 'promotion-submit', label: 'Submit promotion', intent: 'SUBMIT', permission: 'commerce.promotion.manage', ownerModule: 'promotion', handlerAction: 'submitPromotion', operationRoute: '/promotions/:promotionCode/submit', httpMethod: 'POST', inputFields: [promotionCodeInput, { name: 'conflictCheck', label: 'Conflict check', type: 'SELECT', required: true, options: ['PASSED', 'NOT_RUN', 'FAILED'], defaultValue: 'PASSED', maximumLength: 32 }], targetStatuses: ['DRAFT'], featureState: 'ACTIVE', order: 20 },
                         { id: 'promotion-approve', label: 'Approve promotion', intent: 'APPROVE', permission: 'commerce.promotion.approve', ownerModule: 'promotion', handlerAction: 'approvePromotion', operationRoute: '/promotions/:promotionCode/approve', httpMethod: 'POST', inputFields: [promotionCodeInput, { name: 'checklist', label: 'Approval checklist JSON', type: 'JSON', required: false, defaultValue: '["eligibility reviewed","budget reviewed","coupon policy reviewed"]', maximumLength: 1000 }], targetStatuses: ['SUBMITTED'], featureState: 'ACTIVE', order: 30 },
                         { id: 'promotion-schedule', label: 'Schedule promotion', intent: 'ACTIVATE', permission: 'commerce.promotion.manage', ownerModule: 'promotion', handlerAction: 'schedulePromotion', operationRoute: '/promotions/:promotionCode/schedule', httpMethod: 'POST', inputFields: [promotionCodeInput, { name: 'validFrom', label: 'Valid from', type: 'TEXT', required: true, valueFromRecord: 'validFrom', maximumLength: 40 }, { name: 'validTo', label: 'Valid to', type: 'TEXT', required: true, valueFromRecord: 'validTo', maximumLength: 40 }], targetStatuses: ['APPROVED'], featureState: 'ACTIVE', order: 40 },

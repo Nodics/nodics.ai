@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "commsCore",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "commsCore permissionCatalogue",
+      "description": "Explicit commsCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "commsCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/commsCorePermissionHeader.js": "c1151e43569f303e942baa013eaa72f823634408eb1525d7f5677050254e66b7",
+        "init-v001/records/identity/commsCorePermissionData.js": "5cd3d20220d8a7143abfd85ebe90317843b64794be5aafa162af04d97ab39c1c"
+      }
+    },
     "runtime-defaults": {
       "kind": "DATA_RELEASE",
       "dataType": "core",

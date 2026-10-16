@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "media",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "media permissionCatalogue",
+      "description": "Explicit media identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "media",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/mediaPermissionHeader.js": "0050d092d5d1883036f981e34939b6213364daf7a0fcc23480ab9bffff7adaa3",
+        "init-v001/records/identity/mediaPermissionData.js": "09c5bf444e6f33da2cad955682913fc3872d702b3de93f9d1d693535c6d42844"
+      }
+    },
     "mediaPublicationWorkflow": {
       "kind": "DATA_RELEASE",
       "selectionPolicy": "EXPLICIT",

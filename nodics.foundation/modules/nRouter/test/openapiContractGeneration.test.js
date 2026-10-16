@@ -75,9 +75,10 @@ assert.strictEqual(defaultOptions.defaultServer, undefined);
 const selectedOptions = generator.createOptions(['--environment=local', '--server=platformServer']);
 assert.strictEqual(selectedOptions.defaultEnvironment, 'local');
 assert.strictEqual(selectedOptions.defaultServer, 'platformServer');
-const authProperties = require('../../nAuth/config/properties');
-assert(authProperties.identityGovernance.permissionCatalog.includes('system.contract.openapi.view'));
-assert(authProperties.identityGovernance.permissionCatalog.includes('system.contract.swagger.view'));
+const identityCatalogueFixture = require('../../../../nodics.platform/modules/profile/test/helpers/identityCatalogueFixture');
+const permissions = identityCatalogueFixture.records('Permission').filter(row => row.active === true).map(row => row.code);
+assert(permissions.includes('system.contract.openapi.view'));
+assert(permissions.includes('system.contract.swagger.view'));
 
 const defaultRoutes = {
     default: {

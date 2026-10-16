@@ -47,13 +47,14 @@ async function prepared(t) {
             scopes: [{ tenantCode: f.request.tenant, scopeType: 'ENTERPRISE', scopeCode: 'issuerA' }] };
         assert.equal(request.apiName, '/references/read');
         assert.equal(request.methodName, 'POST');
-        const code = request.requestBody?.codes?.[0];
-        assert.ok(['issuerA', 'sellerB'].includes(code));
-        assert.deepEqual(request.requestBody, { type: 'enterprise', codes: [code] });
+        const codes = request.requestBody?.codes;
+        assert.ok(Array.isArray(codes) && codes.length > 0 && codes.length <= 100);
+        assert.ok(codes.every(code => ['issuerA', 'sellerB'].includes(code)));
+        assert.deepEqual(request.requestBody, { type: 'enterprise', codes });
         assert.equal(request.tenant, f.request.tenant);
         assert.deepEqual(request.request, { tenant: f.request.tenant });
         assert.equal(request.header, undefined);
-        return [{ code, active: code !== f.state.inactive }];
+        return codes.map(code => ({ code, active: code !== f.state.inactive }));
     } };
     const update = SERVICE.DefaultPromotionService.update;
     SERVICE.DefaultPromotionService.update = async command => {
@@ -151,7 +152,7 @@ function distributionOwners(f) {
     return { row, state, request: { tenant: 'tenantA', storeCode: 'storeA', locale: 'en', productCode: 'offerA' } };
 }
 
-/** Issues additional isolated stock through the actual issuer review and encrypted issuance owners, without publishing unrelated roots. @param {Object} f Fixture. @param {number} index Unique suffix. @returns {Promise<void>} Retained owner stock. */
+/** Issues additional isolated stock through the actual issuer review and encrypted issuance owners, without publishing unrelated roots. @param {Object} f Fixture. @param {number} index Unique suffix. @returns {Promise<Object>} Original issued policy. */
 async function addProductStock(f, index) {
     const policy = { ...structuredClone(f.policy), code: 'campaign' + index, conditions: { sourceProductCode: 'offer' + index } };
     const campaign = { ...f.campaign, promotionCode: policy.code, rootCode: policy.code,
@@ -168,7 +169,185 @@ async function addProductStock(f, index) {
             commandReference: 'owner-review-' + index, expiresAt: '2099-01-01T00:00:00.000Z' } });
         await secure.issue(f.request, intent, campaign);
     } finally { SERVICE.DefaultPromotionPublicationService = previous; }
+    return policy;
 }
+
+test('38 real Product coupon summaries consolidate 152 Profile references to two fresh batches without changing stock or policy checks', async t => {
+    const f = await prepared(t), policies = [f.policy];
+    for (let index = 1; index < 38; index++) policies.push(await addProductStock(f, index));
+    const d = distributionOwners(f), projections = policies.map((policy, index) => ({ ...structuredClone(d.row),
+        code: 'projection' + index, productCode: policy.conditions.sourceProductCode }));
+    const tables = { release: [], pointer: [], receipt: [] }, owner = { tenant: f.request.tenant, enterpriseCode: 'issuerA' };
+    for (const policy of policies) {
+        const root = { rootType: 'promotion', rootCode: policy.code };
+        const payload = { ...owner, ...root, records: [{ schema: 'promotion', policy: structuredClone(policy) }] };
+        const code = publication.fingerprint(payload), pointerCode = publication.pointerCode(root, owner), operationKey = 'original-activation';
+        const receiptCode = publication.fingerprint({ ...owner, pointerCode, operationKey });
+        tables.release.push({ ...owner, ...root, code, fingerprint: code, payload });
+        tables.pointer.push({ ...owner, ...root, code: pointerCode, revision: 1, version: code, receiptCode });
+        tables.receipt.push({ ...owner, code: receiptCode, pointerCode, operationKey, targetVersion: code, sourceVersion: code,
+            expectedRevision: 0, fingerprint: code, applied: true, publicationCode: 'publicationA' });
+    }
+    for (const [kind, name] of [['release', 'DefaultPromotionPolicyReleaseService'],
+        ['pointer', 'DefaultPromotionPolicyPointerService'], ['receipt', 'DefaultPromotionPolicyReceiptService']]) {
+        SERVICE[name].get = async request => {
+            assert.equal(request.authData.isSystem, true);
+            assert.equal(request.options.skipItemCache, true);
+            f.reads.push({ kind });
+            return { code: 'SUC_TEST', result: structuredClone(tables[kind].filter(row => f.matches(row, request.query))) };
+        };
+    }
+    const matches = (row, query) => Object.entries(query).every(([key, value]) =>
+        Array.isArray(value) ? value.includes(row[key]) :
+            value?.$in ? value.$in.includes(row[key]) : row[key] === value);
+    SERVICE.DefaultProductSearchProjectionService.doSearch = async request => ({ code: 'SUC_TEST',
+        result: structuredClone(projections.filter(row => matches(row, request.query))) });
+    SERVICE.DefaultProductSearchProjectionService.get = async request => ({ code: 'SUC_TEST',
+        result: structuredClone(projections.filter(row => matches(row, request.query))) });
+    const profiles = [], before = structuredClone(f.rows), writes = f.state.writes;
+    f.state.onProfile = request => { profiles.push(structuredClone(request)); };
+    let consents = 0;
+    SERVICE.DefaultCouponSellerAuthorizationService = { ...seller, authorizePolicyRead: async function (...args) {
+        consents++; return seller.authorizePolicyRead.apply(this, args);
+    } };
+    const result = await productEnrichment.consumerSummaries(d.request, projections);
+    assert.equal(Object.keys(result.availability).length, 38);
+    assert.ok(Object.values(result.availability).every(value => value.available === true && Object.keys(value).length === 2));
+    assert.equal(profiles.length, 2);
+    for (const request of profiles) assert.deepEqual(request.requestBody, { type: 'enterprise', codes: ['issuerA', 'sellerB'] });
+    assert.equal(consents, 76, 'Every Product keeps both fresh receipt-bound consent checks');
+    assert.equal(f.reads.length, 456, 'Every Product retains all twelve canonical publication proof/readback reads');
+    assert.equal(d.state.selections, 76, 'Independent canonical activation reads before and after every Product');
+    assert.equal(d.state.ownerRequests.length, 38);
+    assert.equal(f.state.writes, writes); assert.deepEqual(f.rows, before);
+    for (const command of d.state.ownerRequests) {
+        assert.equal(distribution.resolveReadContext(command), undefined);
+        assert.equal(distribution.referenceReadAdmitted(command, ['issuerA', 'sellerB']), false);
+    }
+});
+
+test('batch reference admission is exact, temporary and cannot authorize copies, other Products or purchase reads', async t => {
+    const f = await prepared(t), d = distributionOwners(f), profiles = [];
+    f.state.onProfile = request => { profiles.push(request); };
+    let context;
+    d.state.afterProduct = async command => {
+        context = SERVICE.DefaultPromotionSellerPolicyService.context(command);
+        assert.equal(distribution.referenceReadAdmitted(context, ['issuerA', 'sellerB']), true);
+        assert.equal(distribution.referenceReadAdmitted(structuredClone(context), ['issuerA', 'sellerB']), false);
+        assert.equal(distribution.referenceReadAdmitted({ ...context, batchAdmitted: true }, ['issuerA', 'sellerB']), false);
+        assert.throws(() => distribution.referenceReadAdmitted(context, ['foreign', 'sellerB']));
+        assert.throws(() => distribution.assertReadPurpose(context, 'PRODUCT', 'other'));
+        await assert.rejects(operation.couponPurchaseCampaign(context, f.rows.coupon[0]));
+    };
+    const batch = await distribution.publicAvailabilityBatch(d.request, ['offerA']);
+    assert.deepEqual(batch.get('offerA'), { available: true, status: 'IN_STOCK' });
+    assert.equal(profiles.length, 2);
+    assert.equal(distribution.referenceReadAdmitted(context, ['issuerA', 'sellerB']), false);
+    await assert.rejects(distribution.dispatchAvailability(d.state.ownerRequests[0], context));
+    delete d.state.afterProduct;
+    profiles.length = 0;
+    await distribution.publicAvailability(d.request);
+    assert.equal(profiles.length, 4, 'Standalone browsing retains original per-policy reference checks');
+    profiles.length = 0;
+    await operation.couponPurchaseCampaign(f.customer, f.rows.coupon[0]);
+    assert.equal(profiles.length, 4, 'Purchase selection never reuses browsing approval');
+});
+
+test('batch failures reject reference, receipt, consent, visibility, capture and original-request drift and erase every identity', async t => {
+    for (const kind of ['inactive-before', 'inactive-after', 'receipt', 'consent', 'visibility', 'capture', 'scope', 'retained-failure']) {
+        await t.test(kind, async t => {
+            const f = await prepared(t), d = distributionOwners(f);
+            let profiles = 0;
+            f.state.onProfile = () => {
+                profiles++;
+                if (kind === 'inactive-before' || kind === 'inactive-after' && profiles === 2) f.state.inactive = 'issuerA';
+                if (kind === 'scope') d.request.storeCode = 'foreign';
+            };
+            f.state.onRead = () => {
+                if (kind === 'receipt') f.rows.couponBatch[0].secureIssuance.units[0].tokenHash = 'f'.repeat(64);
+                if (kind === 'consent') f.rows.promotion[0].sellerAuthorizations[0].status = 'REVOKED';
+                if (kind === 'retained-failure') throw new Error('isolated retained failure');
+            };
+            d.state.afterProduct = () => {
+                if (kind === 'visibility') d.row.sourceHash = 'e'.repeat(64);
+                if (kind === 'capture') f.settings.log.requestPrivacy.qualified = false;
+            };
+            await assert.rejects(distribution.publicAvailabilityBatch(d.request, ['offerA']));
+            if (kind === 'inactive-before' || kind === 'scope') assert.equal(d.state.ownerRequests.length, 0);
+            if (kind === 'inactive-after') assert.equal(profiles, 2);
+            for (const command of d.state.ownerRequests) {
+                assert.equal(distribution.resolveReadContext(command), undefined);
+                assert.equal(distribution.referenceReadAdmitted(command, ['issuerA', 'sellerB']), false);
+            }
+        });
+    }
+});
+
+test('concurrent browsing calls keep original request identity and failure cleanup independent', async t => {
+    const f = await prepared(t), d = distributionOwners(f);
+    const original = { ...d.request, authData: { principalType: 'anonymous', principalId: 'first' } };
+    const other = { ...d.request, authData: { principalType: 'anonymous', principalId: 'second' } };
+    const before = structuredClone(other);
+    let arrived = 0, release;
+    const ready = new Promise(resolve => { release = resolve; });
+    d.state.afterProduct = async command => {
+        if (++arrived === 2) release();
+        await ready;
+        if (command.authData.principalId === 'first') original.authData.principalId = 'changed';
+    };
+    const results = await Promise.allSettled([distribution.publicAvailabilityBatch(original, ['offerA']),
+        distribution.publicAvailabilityBatch(other, ['offerA'])]);
+    assert.equal(results[0].status, 'rejected'); assert.equal(results[1].status, 'fulfilled');
+    assert.deepEqual(other, before);
+    for (const command of d.state.ownerRequests) assert.equal(distribution.resolveReadContext(command), undefined);
+});
+
+test('fresh Profile reference chunks cover every code and reject incomplete, duplicated, foreign or failed replies', async t => {
+    const f = await prepared(t), calls = [];
+    SERVICE.DefaultModuleService.invokeModule = async request => {
+        calls.push(structuredClone(request));
+        return { code: 'SUC_TEST', result: request.requestBody.codes.map(code => ({ code, active: true })) };
+    };
+    const codes = Array.from({ length: 205 }, (_, index) => 'enterprise' + index);
+    await seller.activeEnterprises(f.customer, codes);
+    assert.deepEqual(calls.map(request => request.requestBody.codes.length), [100, 100, 5]);
+    assert.deepEqual(calls.flatMap(request => request.requestBody.codes), codes);
+    f.settings.profileReferenceRead = { maximumCodes: 1 }; calls.length = 0;
+    await seller.activeEnterprises(f.customer, codes.slice(0, 3));
+    assert.deepEqual(calls.map(request => request.requestBody.codes.length), [1, 1, 1]);
+    delete f.settings.profileReferenceRead;
+    for (const result of [[], [{ code: 'issuerA', active: true }, { code: 'issuerA', active: true }],
+        [{ code: 'issuerA', active: true }, { code: 'foreign', active: true }],
+        [{ code: 'issuerA', active: true }, { code: 'sellerB', active: false }],
+        { code: 'ERR_FAILED', result: [{ code: 'issuerA', active: true }, { code: 'sellerB', active: true }] }]) {
+        SERVICE.DefaultModuleService.invokeModule = async () => result;
+        await assert.rejects(seller.activeEnterprises(f.customer, ['issuerA', 'sellerB']));
+    }
+});
+
+test('batch bounds, unselected delivery and effective owner narrowing cannot create public authority', async t => {
+    const f = await prepared(t), d = distributionOwners(f);
+    for (const codes of [[], ['offerA', 'offerA'], ['bad code'], Array.from({ length: 1001 }, (_, index) => 'offer' + index)])
+        await assert.rejects(distribution.publicAvailabilityBatch(d.request, codes));
+    for (const scope of [{ tenant: 'foreign' }, { storeCode: 'foreign' }]) {
+        const [outcome] = await Promise.allSettled([
+            distribution.publicAvailabilityBatch({ ...d.request, ...scope, batchAdmitted: true }, ['offerA'])]);
+        if (outcome.status === 'fulfilled') assert.deepEqual(outcome.value, new Map([['offerA', undefined]]));
+        else assert.match(outcome.reason.code || outcome.reason.message, /ERR_PROMOTION_SELLER_UNCONFIRMED/);
+        assert.equal(d.state.ownerRequests.length, 0, 'Foreign scope grants no Product supply work, including unselected Stores');
+    }
+    for (const scope of [{ locale: 'bad locale' },
+        { authData: { tenant: 'foreign' } }, { authData: { enterpriseCode: 'foreign' } },
+        { authData: { principalType: 'service' } }, { authData: { isSystem: true } }, { quantity: '2' }])
+        await assert.rejects(distribution.publicAvailabilityBatch({ ...d.request, ...scope, batchAdmitted: true }, ['offerA']));
+    const narrowed = { ...distribution, visibleProduct: async function (request) {
+        await distribution.visibleProduct.call(this, request); this.fail();
+    } };
+    await assert.rejects(narrowed.publicAvailabilityBatch(d.request, ['offerA']));
+    assert.equal(d.state.ownerRequests.length, 0);
+    f.settings.promotion.publication.delivery.enabled = false;
+    assert.deepEqual(await distribution.publicAvailabilityBatch(d.request, ['offerA']), new Map([['offerA', undefined]]));
+});
 
 test('exact issuer receipt and live grant read issuer policy/consumption without changing signed seller or any state', async t => {
     const f = await prepared(t), original = structuredClone(f.rows), caller = structuredClone(f.customer), writes = f.state.writes;

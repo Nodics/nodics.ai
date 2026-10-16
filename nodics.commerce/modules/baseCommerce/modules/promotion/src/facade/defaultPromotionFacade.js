@@ -88,11 +88,11 @@ module.exports = {
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
     applyOperatorContext: function (request) {
-        const authData = request.authData || {};
-        const tenant = authData.tenant || request.tenant;
-        const actorId = authData.principalId || authData.userId || authData.loginId || authData.code || request.actorId;
-        if (!tenant || !actorId) throw new Error('Authenticated tenant and operator are required for promotion builder APIs');
-        return Object.assign({}, request, { tenant, actorId, authData });
+        const context = this.applyBudgetLedgerContext(request), auth = request.authData || {};
+        if (auth.principalType !== 'human' || auth.tokenType !== 'access' || auth.isSystem || auth.runtimeScope ||
+            !context.enterpriseCode || request.actorId !== undefined && request.actorId !== context.actorId)
+            throw new Error('Original signed human enterprise scope is required for promotion builder APIs');
+        return context;
     },
     /**
      * Executes `saveDraft` as a loader-visible operation owned by this module.
@@ -100,7 +100,7 @@ module.exports = {
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    saveDraft: function (request) { return SERVICE.DefaultPromotionOperationService.saveDraft(this.applyOperatorContext(request)); },
+    saveDraft: function (request) { return SERVICE.DefaultPromotionOperationService.saveDraft(request); },
     /**
      * Executes `submitPromotion` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
@@ -183,6 +183,10 @@ module.exports = {
             if (['x-enterprise-code', 'entcode', 'enterprisecode'].includes(key.toLowerCase())) enterprises.push(value);
             if (['x-tenant-code', 'tenant', 'tenantcode'].includes(key.toLowerCase())) tenants.push(value);
         }
+        for (const source of [payload.query, query.query, request.httpRequest?.body, request.httpRequest?.body?.query, request.httpRequest?.query]) {
+            tenants.push(source?.tenant, source?.tenantCode);
+            enterprises.push(source?.entCode, source?.enterpriseCode);
+        }
         if (
             typeof tenant !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(tenant) ||
             typeof actorId !== 'string' || !actorId ||
@@ -192,7 +196,7 @@ module.exports = {
             tenants.some(value => value !== undefined && value !== tenant) ||
             enterprises.some(value => value !== undefined && (enterpriseCode === undefined || value !== enterpriseCode))
         ) throw new CLASSES.NodicsError('ERR_PROMOTION_BUDGET_LEDGER_UNCONFIRMED');
-        return { ...this.applyOperatorContext(request), tenant, enterpriseCode, actorId };
+        return { ...request, tenant, enterpriseCode, actorId, authData: auth };
     },
     /**
      * Executes `budgetLedger` using its independently validated original signed issuer scope.
@@ -202,10 +206,14 @@ module.exports = {
      */
     budgetLedger: function (request) { return SERVICE.DefaultPromotionOperationService.budgetLedger(this.applyBudgetLedgerContext(request)); },
     /**
-     * Executes `analytics` as a loader-visible operation owned by this module.
+     * Keeps analytics HTTP admission human-only; the operation validates original signed scope before owner reads.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    analytics: function (request) { return SERVICE.DefaultPromotionOperationService.analytics(this.applyOperatorContext(request)); }
+    analytics: function (request) {
+        if (request.authData?.principalType !== 'human' || request.authData.tokenType !== 'access')
+            throw new CLASSES.NodicsError('ERR_PROMOTION_ANALYTICS_UNCONFIRMED');
+        return SERVICE.DefaultPromotionOperationService.analytics(request);
+    }
 };

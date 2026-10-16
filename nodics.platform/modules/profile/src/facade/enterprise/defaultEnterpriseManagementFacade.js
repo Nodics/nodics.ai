@@ -52,6 +52,10 @@ module.exports = {
   },
   /** Delegates fixed membership/team commands to their existing Profile owners. @param {Object} request Authenticated request. @param {string} operation Controller-owned action. @returns {Promise<Object>} Safe owner outcome. */
   membershipAction: function (request, operation) {
+    if (operation === "BUSINESS_ACCESS_WORKSPACE")
+      return SERVICE.DefaultEnterpriseBusinessAccessService.workspace(request);
+    if (operation === "BUSINESS_ACCESS_CHANGE")
+      return SERVICE.DefaultEnterpriseBusinessAccessService.change(request);
     if (operation === "RECOVERY_WORKSPACE")
       return SERVICE.DefaultEnterpriseTeamAdministrationService.recoveryWorkspace(
         request,

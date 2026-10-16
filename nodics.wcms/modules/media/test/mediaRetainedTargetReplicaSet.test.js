@@ -214,11 +214,16 @@ test('real local replica set: hidden preparation, atomic receipts, CAS, lost res
             const upload = require('../src/service/storage/defaultMediaUploadService');
             SERVICE.DefaultMediaStoragePolicyService = require('../src/service/storage/defaultMediaStoragePolicyService');
             const versionedModel = require(foundation + 'mongodb/vMongodb/src/schemas/model').default;
-            const versionedReads = require('../../../../nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService');
+            const versionedReads = {
+                ...require(foundation + 'database/src/service/procs/get/defaultModelsGetInitializerService'),
+                ...require('../../../../nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService')
+            };
             const collection = database.collection('fixtureVersionedMedia');
             await collection.createIndex({ code: 1, versionId: 1 }, { unique: true });
             const model = { ...mongoModel, ...versionedModel, primaryKey: 'code', versioned: true, dataBase: wrapper,
                 rawSchema: { ...schemas.media, versionedReadMode: 'CURRENT' } };
+            assert.throws(() => versionedReads.resolveReadMethod({ schemaModel: model,
+                internalPersistence: 'DURABLE_JOURNAL' }), /Qualified durable journal read required/);
             for (const method of ['find', 'countDocuments', 'insertOne', 'insertMany', 'aggregate']) model[method] = collection[method].bind(collection);
             global.UTILS = { createModelName: () => 'mediaModel', isBlank: value => !value || Object.keys(value).length === 0 };
             global.NODICS = { getModels: () => ({ mediaModel: model }) };

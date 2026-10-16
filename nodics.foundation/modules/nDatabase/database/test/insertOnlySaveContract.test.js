@@ -42,7 +42,7 @@ global.SERVICE = {
         validateDataType: async () => {},
     },
 };
-save.LOG = query.LOG = { debug() {} };
+save.LOG = query.LOG = { debug() {}, error() {} };
 
 function step(owner, method, request) {
     return new Promise((resolve, reject) =>

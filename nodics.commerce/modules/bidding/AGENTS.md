@@ -1,5 +1,10 @@
 # Bidding agent contract
 
+Customer identity uses Profile's self-only `/customer/identity` read with the
+original access token, not generic Customer schema reads or runtime service
+grants. Require matching version, tenant, enterprise and login plus a bounded
+customer code. Preserve explicit owner failures; do not fall back to login-as-code.
+
 - Follow `../../../AGENTS.md`, `../../AGENTS.md` and `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Read this README, contracts, examples and generated context before edits.
 

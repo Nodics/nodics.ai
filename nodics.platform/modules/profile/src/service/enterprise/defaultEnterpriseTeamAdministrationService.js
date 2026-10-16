@@ -609,8 +609,7 @@ module.exports = {
    * @returns {Promise<Set<string>>} Bounded protected group closure, including inherited parents.
    */
   genericAdministratorGroups: async function (tenant, policy) {
-    const roles =
-      (CONFIG.get("enterpriseManagement") || {}).accessAssignments?.roles || {};
+    const roles = await SERVICE.DefaultIdentityCatalogueService.roles();
     const pending = [...policy.nativeSuperAdministratorGroupCodes];
     for (const code of policy.superAdministratorRoleCodes) {
       const groups = roles[code]?.groupCodes;
@@ -658,6 +657,10 @@ module.exports = {
    * @returns {Promise<boolean>} Unrelated changes pass; authority changes require the governed team lifecycle.
    */
   protectAdministratorEmployee: async function (request, operation) {
+    if (operation === "update" && SERVICE.DefaultEnterpriseBusinessAccessService?.ownsEmployeeWrite?.(request) === true)
+      return true;
+    if (operation === "update" && SERVICE.DefaultEmployeeService?.ownsPlatformAdministratorAdoption?.(request) === true)
+      return true;
     if (
       (CONFIG.get("enterpriseManagement") || {}).teamAdministration
         ?.genericMutationGuard?.enabled !== true
@@ -1191,8 +1194,19 @@ module.exports = {
                   : []),
               ]
             : [];
+      const role = item.roleCode ? await SERVICE.DefaultIdentityCatalogueService.role(item.roleCode) : null;
+      const businessArea = role && SERVICE.DefaultIdentityCatalogueService.businessMetadata(role);
+      if (businessArea && (item.scopeType !== businessArea.scopeType || item.scopeCode !== code)) this.fail("CONFLICT");
       items.push({
-        ...m.project(item, current),
+        ...(await m.project(item, current)),
+        ...(businessArea && !item.membership?.businessAccess ? { businessAccess: {
+          businessArea: businessArea.code,
+          businessAreaLabel: businessArea.label,
+          accessLevel: role.accessLevel,
+          accessLevelLabel: CONFIG.get("enterpriseManagement").businessAccessPresentation[role.accessLevel],
+          scopeType: item.scopeType,
+          scopeCode: item.scopeCode,
+        } } : {}),
         email: item.normalizedEmail,
         designated,
         actions,
@@ -1423,6 +1437,18 @@ module.exports = {
     const operation = enterprise.teamOperation;
     const input = operation?.input;
     const handover = operation?.operation === "HANDOVER";
+    if (operation?.operation === "BUSINESS_ACCESS") {
+      try {
+        SERVICE.DefaultEnterpriseBusinessAccessService.input({ employeeCode: input?.employeeCode,
+          changes: input?.changes, operationId: input?.operationId, reviewFingerprint: input?.reviewFingerprint });
+        return Object.keys(input).sort().join(",") === "assignmentCode,changes,employeeCode,nextGroupCodes,operationId,reviewFingerprint,revision" &&
+          typeof input.assignmentCode === "string" && input.assignmentCode.length > 0 && input.assignmentCode.length <= 128 &&
+          Number.isSafeInteger(input.revision) && input.revision > 0 && Array.isArray(input.nextGroupCodes) &&
+          input.nextGroupCodes.length > 0 && input.nextGroupCodes.length <= 100 && input.nextGroupCodes.every(code => typeof code === "string" && code) &&
+          new Set(input.nextGroupCodes).size === input.nextGroupCodes.length && input.operationId === operation.id && Boolean(operation.actor) &&
+          operation.hash === this.memberships().digest({ operation: operation.operation, input, identity: operation.actor, enterpriseCode: enterprise.code });
+      } catch { return false; }
+    }
     return Boolean(
       ["SUSPEND", "REVOKE", "RESUME", "WITHDRAW", "HANDOVER"].includes(
         operation?.operation,
@@ -1468,6 +1494,10 @@ module.exports = {
       item.revision !== operation.input.revision + 1
     )
       return false;
+    if (operation.operation === "BUSINESS_ACCESS") return Boolean(item.status === "REGISTERED" && item.active === true &&
+      item.membership?.phase === "COMPLETE" && item.membership.lastTeamOperation === operation.id &&
+      item.membership.businessAccess?.version === 1 && item.membership.businessAccess.operationId === operation.id &&
+      this.memberships().digest(item.membership.businessAccess.groupCodes) === this.memberships().digest(operation.input.nextGroupCodes));
     if (operation.operation === "WITHDRAW") {
       return Boolean(
         item.status === "REVOKED" &&
@@ -1616,7 +1646,7 @@ module.exports = {
           },
         },
       },
-      m.project(verified.item, verified.enterprise),
+      await m.project(verified.item, verified.enterprise),
     );
   },
   /** Inspects one explicit enterprise operation for qualified platform recovery without disclosing identity/hash/input. @param {Object} request Fresh platform operator and exact enterprise code. @returns {Promise<Object>} Inert current evidence/recovery eligibility. */
@@ -1809,8 +1839,7 @@ module.exports = {
         person.registrationSuspended === true
       )
         this.fail("UNAVAILABLE");
-      const requiredGroups =
-        management.accessAssignments?.roles?.[item.roleCode]?.groupCodes;
+      const requiredGroups = (await SERVICE.DefaultIdentityCatalogueService.role(item.roleCode)).groupCodes;
       const actualGroups = (person.userGroups || []).map((group) =>
         typeof group === "string" ? group : group?.code,
       );
@@ -1902,7 +1931,7 @@ module.exports = {
         lease,
         item,
       );
-      return this.finish(lease, m.project(verified.item, verified.enterprise));
+      return this.finish(lease, await m.project(verified.item, verified.enterprise));
     }
     try {
       if (
@@ -1936,7 +1965,7 @@ module.exports = {
         lastTeamOperation: input.operationId,
       },
     });
-    return this.finish(lease, m.project(item, enterprise));
+    return this.finish(lease, await m.project(item, enterprise));
   },
   /** Withdraws only an unused invitation under the same serialized owner; same-command replay relies on committed assignment evidence. @param {Object} request Fresh administrator and reviewed revision. @returns {Promise<Object>} Safe terminal invitation outcome. */
   withdrawInvitation: async function (request) {
@@ -1975,7 +2004,7 @@ module.exports = {
         lease,
         item,
       );
-      return this.finish(lease, m.project(verified.item, verified.enterprise));
+      return this.finish(lease, await m.project(verified.item, verified.enterprise));
     }
     try {
       if (
@@ -2003,7 +2032,7 @@ module.exports = {
         withdrawnAt: new Date().toISOString(),
       },
     });
-    return this.finish(lease, m.project(item, enterprise));
+    return this.finish(lease, await m.project(item, enterprise));
   },
   /** Transfers designation only to a current administrator; neither passwords nor existing access are changed. @param {Object} request Human command. @returns {Promise<Object>} Safe designation. */
   handover: async function (request) {

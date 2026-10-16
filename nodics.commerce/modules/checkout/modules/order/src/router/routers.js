@@ -163,3 +163,16 @@ module.exports.order.disputes.refundException = {
   key: "/disputes/:code/refund-exception",
   operation: "refundException",
 };
+
+/** Ordinary employee reads use fixed Order projections, not schema administration. */
+module.exports.order.business = Object.fromEntries([
+  ["schemas", "GET", "/business/orders/schemas", ["commerce.order.read", "commerce.lifecycle.read"]],
+  ["orderCapabilities", "GET", "/business/orders/capabilities", "commerce.order.read"],
+  ["orderSearch", "POST", "/business/orders/search", "commerce.order.read"],
+  ["lifecycleCapabilities", "GET", "/business/order-lifecycle/capabilities", "commerce.lifecycle.read"],
+  ["lifecycleSearch", "POST", "/business/order-lifecycle/search", "commerce.lifecycle.read"],
+].map(([operation, method, key, permission]) => ["business" + operation, {
+  secured: true, authTokenTypes: ["access"], accessGroups: ["employeeUserGroup"],
+  apiExposure: "commerceManagement", controller: "DefaultOrderBusinessWorkbenchController",
+  cache: { enabled: false }, operation, method, key, permission,
+}]));

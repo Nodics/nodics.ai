@@ -1,5 +1,229 @@
 # Pricing contracts
 
+## Publication Writer Admission
+
+The existing shared internal route permission and signed `pricing` module claim
+admit transport, not publication writes. Online `prepare`, `activate` and
+`reconcile` require exactly one caller in `pricing.publication.sourceAuthority.callers`.
+Staged `authorize` independently requires exactly one caller in
+`pricing.publication.target.callers`. These extend the existing explicitly selected
+transport bindings; they are not a new credential, publication lifecycle or registry.
+The binding must retain explicit module, non-default connection and runtime role.
+Each caller has exactly these fields, supplied only by a reviewed deployment layer:
+
+```json
+{
+  "tenant": "reviewedTenant",
+  "principalEnterpriseCode": "deploymentEnterprise",
+  "serviceId": "existingServicePrincipal",
+  "projectCode": "reviewedProject",
+  "environmentCode": "reviewedEnvironment",
+  "serverCode": "reviewedServer",
+  "instanceCode": "reviewedInstance",
+  "assignmentCode": "existingProfileDeploymentAssignment"
+}
+```
+
+All fields match the original router-verified Profile runtime principal; instance
+also matches `runtimeInstanceId`. Caller arrays contain at most 100 exact entries.
+Absent, empty, malformed, wildcard or ambiguous matches deny. No body flag, header,
+discovered lease, role name or a genuine stored operation can substitute for this
+deployment binding. Existing route groups/permissions and module checks still apply.
+The configured four-or-other explicit enterprise selection is not expanded by a
+caller match. Original claims and effective binding/enterprise policy are rechecked
+after asynchronous source authorization and before private persistence/proof return.
+Fixed controller dispatch binds that continuation privately to the exact target
+context for the entire operation. Owner reads recheck before and after awaits;
+retention, pointer CAS, receipt completion and reviewed legacy-recovery updates
+recheck immediately before invoking their generated write ports. A target-side
+Product proof/read cannot outlive the original caller or binding. The private
+continuation is not a body flag or caller-supplied callback, and copied/retired
+contexts refuse. It is retired in `finally`, including failure paths. Internal
+non-HTTP provider contexts keep their existing trusted owner contract; this does
+not contribute a generic persistence grant or a public registration factory.
+Independent stored publication, version, original operation and CAS preconditions
+remain mandatory. Claims are never rewritten to obtain writer admission.
+
+`row-evidence` and `status` remain independent fixed reads under their existing
+permissions, scope and owner-proof checks. Legacy operational restore stays disabled.
+Process callbacks retain their separate claimed-execution admission and cannot
+self-approve through these bindings.
+
+Migration is explicit and bounded: before deploying the guard, Online maps its
+already qualified Staged publisher on `sourceAuthority.callers`; Staged maps its
+already qualified Online authorization callback on `target.callers`. Preserve their
+actual Profile deployment assignments, tenant and principal enterprise. Later
+configuration may use the existing `$config: replace` array contract. Missing mappings
+fail closed, with no permissive compatibility mode or automatic grant migration.
+Read-only evidence callers receive neither mapping. The framework defaults contain
+empty caller arrays and no project-specific identities. No restart, grant, installed
+tenant extension or runtime enablement is implied by these source changes.
+
+`pricingRowPublicationContract.test.js` exercises actual source/target controllers,
+runtime/group/permission checks and managed writers for book and row publication.
+It proves a read caller with a genuine stored activation is denied before source
+reads/target writes, bound publishers and callbacks work, exact replay is preserved,
+row reads remain write-free, and caller/config drift retires authority. The provider
+suite supplies explicit isolated caller mappings rather than bypassing the guard.
+Target-read drift probes cover Product proof, retention lookup, release, pointer and
+receipt reads plus unfinished-receipt reconciliation, with zero subsequent managed
+writes. Copied/retired continuation and fresh-request recovery are permanent regressions.
+
+## Individual Row Releases
+
+The existing employee-authenticated `POST /nodics/pricing/v0/publication/policy`
+also accepts `rootType: priceRow`. The effective runtime prefix/version still
+comes from nRouter. Existing route groups, permissions, source versioning,
+Staged qualification, nPublish lifecycle and Process approval are unchanged.
+The caller must be a signed human publisher in the book/Product enterprise.
+Runtime service claims, a body enterprise, a changed header or a self-approval
+flag cannot substitute for that identity. No runtime business delegation is
+contributed by this capability.
+
+```json
+{
+  "publicationCode": "reviewed-row-release",
+  "rootType": "priceRow",
+  "rootCode": "reviewed-row",
+  "references": [
+    {"schema": "priceBook", "code": "existing-book", "versionId": 0},
+    {"schema": "priceRow", "code": "reviewed-row", "versionId": 0}
+  ],
+  "productReference": {
+    "publicationCode": "approved-product-release",
+    "productCode": "reviewed-product",
+    "storeCode": "reviewed-store",
+    "sourceVersion": "1",
+    "targetVersion": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}
+```
+
+This captures exactly one row and its existing exact book version, never a
+replacement single-row book or an implicit latest reference. The Product
+reference distinguishes the sealed scalar source version from the approved
+manifest digest. Pricing independently reads the existing nPublish request,
+immutable Product graph and Product owner target pointer/receipt. It derives
+the original activation key/revision; caller-supplied evidence is not used.
+The Pricing release digest binds those coordinates and includes the exact
+Product dependency in nPublish validation. Capture returns an ordinary STAGED
+Pricing publication, not an approval, Online outcome or automatic activation.
+
+Axis continues with the existing `POST /nodics/publish/v0/publications/:code/validate`
+and `/request-approval`, each using the latest `expectedRevision` and the real
+employee credentials. Existing Process task claiming/completion and its fixed
+Pricing callback own approval/activation. Do not call internal target methods,
+mint a runtime token, change groups or replay unrelated prices from the UI.
+
+A row has its own existing Pricing pointer/receipt and immutable book/Product/
+Store anchor. Target preparation is hidden; managed CAS, lost-response recovery,
+superseded-operation rejection and rollback remain the same lifecycle. A later
+row publication cannot move that row identity to another book/Product/Store.
+It does not change the book pointer, source rows or unrelated rows. Product
+activation revision changes, including ABA back to the same digest, fail closed.
+
+Delivery remains inert in `pricing.publication.delivery.rowReleases: false`.
+After installed qualification, `true` extends the existing `rootCodes` or exact
+`rootCodesByStore` book selection; it does not replace either selector or create
+a second registry. The existing private pointer schema has optional
+`priceBookCode`, `productCode`, `storeCode` selectors derived only from an approved
+row release. Qualify generated schemas/installed validators before deployment.
+Delivery reads at most the existing dependency bound plus one row pointer per
+selected book/Store and rejects overflow, incomplete pages or foreign results.
+It verifies the current row receipt and exact immutable book anchor before
+overlaying only the row identity on the selected book snapshot. No operational
+price/source fallback or read-side repair is permitted.
+
+Every selected consumer must provide its actual retained Product pins through
+the internal owner request:
+`productReferences: [{productCode, storeCode, targetVersion}]`, plus `productCode`
+or bounded `productCodes`. The target version comes from retained Product
+projection `publicationVersion`, never request-body classification or Pricing's
+own reference. Pricing compares the consumed pin and fresh Product owner proof
+before/after delivery, and rechecks book/row pointers and caller selection.
+Missing, malformed or drifted pins refuse rather than return an older row.
+Product discovery now forwards its already retained result versions. Cart and
+native merchant evidence resolve transaction identities through Product's
+`consumerReferences`, which uses activated search plus exact retained readback,
+checks scope and optional SKU/variant membership, and refuses inert activation.
+They first call Pricing's `rowProductCodes`: it reuses `rowPointers` and the
+existing bounded configured-book/exact-Store query to select only requested
+Products with relevant row candidates. A global row-delivery flag alone must
+not request Product authority for book-only or unrelated baskets. Empty selection
+preserves their original prices and existing Pricing-only delegation. Candidate
+enumeration errors or authority/configuration drift refuse, not an empty result.
+The gate conveys neither a Product version nor delivery proof. `readConfigured`
+independently enumerates current candidates again; a relevant row appearing after
+the gate requires its missing Product pin and fails closed. Merchant's second
+fresh delivery read retains this check before returning priced evidence.
+They overwrite caller pins; they never derive pins from Pricing or CURRENT/latest
+Product records. Cart forwards its persisted locale and entry SKU. Merchant
+evidence carries the same pins across both fresh Pricing reads and retains its
+private exact-request admission and original signed runtime. Caller pins alone
+grant no authority. Deployment enablement still requires installed Product and
+Pricing owner transport/schema qualification and native acceptance.
+
+Delegated merchant Pricing persistence auth is never forwarded to Product.
+Product receives only the original signed auth and refuses foreign enterprise
+aliases/system persistence claims. An existing Pricing business-caller grant
+does not supply Product delegation; consuming a relevant cross-namespace merchant
+row remains blocked without an independently qualified Product-owned admission. No such
+grant or admission is added here.
+
+The existing capture route requires an access token,
+`runtimeConfigAdminUserGroup` and `publish.lifecycle.create`; owner admission also
+requires `commerce.product.publish` and the effective
+`publish.setup.permissions.pricing`. Signed tenant/enterprise aliases must agree
+with the book/Store owner. Waste administrator/read permissions do not imply
+these grants. Select an already authorized Profile member in the legitimate
+Store enterprise; never add membership, rewrite a token or substitute a header.
+
+Human row source authoring remains the existing Staged generated PriceRow API
+under its schema, property and signed enterprise rules. A runtime cannot author
+into a foreign Store/book enterprise by selecting it in a body or header.
+Any separate reviewed-intent authoring operation must independently resolve the
+source owner's original terms and namespace; no such delegation or runtime
+authoring route is enabled here. Source authoring, publication, digital binding,
+asset ownership, settlement and physical custody remain separate authorities.
+
+`test/pricingRowPublicationContract.test.js` uses actual managed base/vService
+save/update persistence with isolated atomic driver ports. It covers exact
+capture, original employee HTTP mapping, namespace/service refusals, hidden
+preparation, pointer/receipt CAS, concurrent activation, replay/lost response,
+unrelated-price isolation, consumed pins, Product/book/authority drift, ABA and
+bounded read failures, and actual Product-summary/Cart-calculation consumer
+wiring. `pricingMerchantEvidenceContract.test.js` preserves the merchant private
+admission and checks exact pins, mismatch and owner-failure refusal. These tests
+are not installed/native acceptance.
+
+## Exact Row Evidence
+
+`POST /publication/policy/row-evidence` accepts exactly
+`{contractVersion:1,enterpriseCode,priceRowCode,priceBookCode,productReference}`.
+The Product reference is the five-key independently resolved immutable reference,
+not latest lookup or classification. Admission requires the original private
+`requireRuntimePrincipal(pricing)`, existing `authSecurity.internalToken.routePermission`,
+signed tenant/namespace consistency and, for a distinct business namespace, the
+existing `publish.approvalWorkflow.runtimeEnterpriseScope` admission. No new
+runtime/business grant or namespace conversion is contributed.
+
+The owner requires Online role, selected individual-row delivery/Store/book,
+exact row pointer/release/book/Product anchor, effective quantity-one price without
+conflicts and genuine current activation receipt. It reuses configured delivery's
+fresh Product proof and stable pointers, then rechecks Product/book/receipt and
+original authority before returning. Missing permissions, disabled delivery,
+incompatible/ABA Product state, stale pointers, owner failures or mutable fallback
+refuse; the method performs no authoring, repair, approval or financial mutation.
+
+The standard `{code:"SUC_SYS_00000",result:...}` response contains
+`{contractVersion:1,tenant,enterpriseCode,row,productReference,publicationCode,sourceVersion,targetVersion,pointerRevision,activationOperationKey,receiptCode}`.
+`row` is `{code,priceBookCode,productCode,unitAmount,currency,minQuantity:"1",active}`.
+Source/target versions and operation/receipt fields come from retained activation
+evidence. Waste must independently match original intent terms and recheck this
+read before completion; the DTO itself is not a grant or sale/binding outcome.
+The row contract suite exercises actual managed persistence, the real runtime
+principal validator and controller, original private identity, denial and drift.
+
 ## Scoped Publisher Persistence
 
 Online activated reads use a separate read-only admission, never the Staged

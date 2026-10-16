@@ -4,8 +4,17 @@ nAuth owns bounded authentication and authorization contracts for people, servic
 
 Keep credential types distinct, preserve strict distributed security state and never use local fallback to bypass revocation or missing authority.
 
+The default-false `identityGovernance.migration.runtimeDeploymentBootstrapEnabled`
+selects provisioning admission only. Runtime permissions come from persisted,
+approved Profile deployment assignments, never migration properties. Module-owned
+Init definitions use insert-only admission; installed credentials, group removals,
+lockouts and narrowed grants survive replay and restart in every environment.
+Changes require separate governed commands; see Profile's tenant provisioning contract.
+
 Recognized permission names are not default grants. Location create/update are
 independently assignable through Profile; native route policy remains unchanged.
+Waste's `waste.asset.listing.intent.read` is likewise recognition-only and cannot
+admit listing completion, publication, approval or asset mutations.
 The existing Promotion permission `commerce.coupon.seller.manage` is likewise
 recognized without granting seller-consent administration to default roles.
 See [catalogue versus grants](llm/contracts/README.md#permission-catalogue-versus-grants).

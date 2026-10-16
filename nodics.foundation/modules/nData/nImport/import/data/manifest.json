@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "import",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "import permissionCatalogue",
+      "description": "Explicit import identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "import",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/importPermissionHeader.js": "0c438779ca3ca2f0521f4116a4b14132ab6c30c79a3c8ffa5de2539287b09e98",
+        "init-v001/records/identity/importPermissionData.js": "b62691e1fc1d096babc4d059ebe48f8d402420504b987665e22d0a0c91da3a15"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
@@ -48,6 +72,77 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "specialAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Sample Import Operator Group",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "import",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/importSpecialAccessGroupHeader.js": "2e55ec22d10a27f2a1f52b14ed37a70e1f6daf7af5a82f8f37f1ed79f801cb6c",
+        "init-v001/records/identity/importSpecialAccessGroupData.js": "22b0bfc18d5962e88a508714fa4c3ddbc822681c2866bbe92726b662b3f99909"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "import",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "b2eb5d1d7c50f2f4f885f407144dcf613634ffc2f441cd8b1f0c91e05425c7a1",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "specialAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Sample Import Operator Role",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "import",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/importSpecialAccessRoleHeader.js": "b4e09d912447f97fd0509edc652be6485e1c5741bf6aa896b89e6a02cbc88dfb",
+        "init-v001/records/identity/importSpecialAccessRoleData.js": "97b31a1aa3573a94bee7928bfe5337c907d7790bcf7f7aa9aa6adc3ff2eaef87"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "import",
+          "sectionCode": "specialAccessGroups",
+          "version": "0.0.1",
+          "checksum": "9c002b89a00ae22411d18e8a545f750e8daf52ef452580ed0549cca5bae6c054"
         }
       ]
     }

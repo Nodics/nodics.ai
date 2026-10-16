@@ -100,3 +100,60 @@ test("delegated ITEM validation failures propagate without a direct owner or mon
   await assert.rejects(provider.confirm({}, f.marker), /original delivery unavailable/);
   assert.equal(f.state.directReads, 0);
 });
+
+test("portable simulator selection remains unverified through the actual ITEM provider and refuses revocation", async t => {
+  const f = fixture(t), previousNodics = global.NODICS;
+  t.after(() => { global.NODICS = previousNodics; });
+  const selection = { enabled: true, environmentAllowlist: ["selectedDemo"] };
+  const benefits = { enabled: true, qualified: false, itemEvidenceMode: "SIMULATION",
+    itemEvidenceService: "DefaultFulfillmentItemSimulationService" };
+  CONFIG.get = key => key === "promotion" ? { merchantBenefits: benefits } :
+    key === "fulfillmentCore" ? { itemSimulation: selection } : { class: "STAGING" };
+  global.NODICS = { getSelectedEnvironmentName: () => "selectedDemo" };
+  SERVICE.DefaultPromotionItemBenefitService = require("../../../../baseCommerce/modules/promotion/src/service/defaultPromotionItemBenefitService");
+  SERVICE.DefaultFulfillmentItemSimulationService = require("../../../../fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService");
+  Object.assign(f.benefit, { sourceStage: "SIMULATED_ITEMS", sourceType: "ITEM_SIMULATION", simulated: true, verified: false });
+  delete f.benefit.deliveredAt;
+  f.marker.pricedBinding = SERVICE.DefaultDigitalCommerceMerchantService.pricedBinding(f.benefit, f.marker.merchantReceiptReference);
+  const result = await provider.confirm({}, f.marker);
+  assert.equal(result.evidenceMode, "SIMULATION");
+  assert.equal(result.simulated, true);
+  assert.equal(result.verified, false);
+  assert.equal(result.pricedBenefit.deliveredAt, undefined);
+  const reads = f.state.delegatedReads;
+  selection.environmentAllowlist = ["otherDemo"];
+  await assert.rejects(provider.confirm({}, f.marker));
+  assert.equal(f.state.delegatedReads, reads);
+  assert.equal(f.state.directReads, 0);
+});
+
+test("Digital ITEM selection never treats unknown or retired simulation modes as verified qualification", t => {
+  fixture(t);
+  const benefits = { enabled: true, qualified: true, itemEvidenceMode: "SIMULATION", itemEvidenceService: "SelectedEvidenceOwner" };
+  CONFIG.get = () => ({ merchantBenefits: benefits });
+  SERVICE.SelectedEvidenceOwner = { evaluate: async () => assert.fail("Selection does not execute an owner") };
+  SERVICE.DefaultPromotionItemBenefitService = { simulationSelected: () => false };
+  for (const mode of ["SIMULATION", "LOCAL_SIMULATION", "UNKNOWN", "", null, true, {}]) {
+    benefits.itemEvidenceMode = mode;
+    assert.equal(merchant.itemEvidenceSelected(), false);
+  }
+  benefits.itemEvidenceMode = "VERIFIED";
+  assert.equal(merchant.itemEvidenceSelected(), true);
+});
+
+test("historical Local simulation markers remain readable as unverified evidence without activating execution", t => {
+  const f = fixture(t);
+  f.item.claimStatus = "REDEEMED";
+  Object.assign(f.benefit, { sourceStage: "SIMULATED_ITEMS", simulated: true, verified: false });
+  delete f.benefit.deliveredAt;
+  f.marker.evidenceMode = "LOCAL_SIMULATION";
+  const original = structuredClone(f.marker);
+  const result = merchant.summary(f.item, f.outlet);
+  assert.equal(result.simulated, true);
+  assert.equal(result.deliveryVerified, false);
+  assert.equal(result.evidenceMode, "SIMULATION");
+  assert.deepEqual(f.marker, original);
+  assert.equal(merchant.itemEvidenceSelected(), false);
+  assert.equal(f.state.delegatedReads, 0);
+  assert.equal(f.state.directReads, 0);
+});

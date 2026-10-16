@@ -322,10 +322,29 @@ test("missing Telegram credential reports unconfigured without process environme
         policy,
       }),
     (error) =>
-      error.code === "ERR_PROFILE_EXTERNAL_UNAVAILABLE" &&
-      error.runtimeConfigurationStatus === "UNCONFIGURED" &&
-      error.responseCode === "TELEGRAM_CONFIGURATION_REQUIRED",
+      error.code === "ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED" &&
+      error.runtimeConfigurationStatus === "UNCONFIGURED",
   );
+});
+
+test("invalid Telegram credential uses a registered public configuration code without leaking its value", () => {
+  const definitions = require("../src/utils/statusDefinitions");
+  const response = require("../../../../nodics.foundation/modules/nRouter/src/service/handlers/response/defaultJsonResponseHandlerService");
+  const NodicsError = require("../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError");
+  const previousGet = CONFIG.get;
+  CONFIG.get = key => key === "credentials" ? { "telegram.bot.a": { value: "private-invalid-token" } } :
+    key === "defaultErrorCodes" ? { NodicsError: "ERR_SYS_00000" } : previousGet(key);
+  SERVICE.DefaultStatusService = { get: code => definitions[code] || { code: "500", message: "Error" } };
+  CLASSES.NodicsError = NodicsError;
+  assert.throws(() => telegram.verify({ proof: "private-proof", application: { credentialReference: "telegram.bot.a" }, policy }), error => {
+    assert.equal(error.code, "ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED");
+    assert.equal(error.responseCode, "503");
+    const envelope = response.publicError(error);
+    assert.equal(envelope.code, "ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED");
+    assert.equal(JSON.stringify(envelope).includes("private-invalid-token"), false);
+    assert.equal(JSON.stringify(envelope).includes("private-proof"), false);
+    return true;
+  });
 });
 test("unconfigured applications, invalid policy and unavailable verification remain closed", async () => {
   await assert.rejects(

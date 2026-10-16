@@ -33,10 +33,27 @@ project-specific or tool-specific instruction authorities.
 
 ## nSetup Rules
 
+- Enforce the [mandatory default ownership gate](llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate).
+  Standard property definitions/defaults and provider wiring remain with the
+  implementing framework owner. Classify each customer declaration by consumer
+  and intentional delta; missing framework defaults are not customer obligations.
+  Keep registration separate from activation, qualification and authorization.
+
 - Enforce [existing layers and project independence](llm/contracts/nodics-principles.md#existing-layers-and-project-independence).
   Extend established authorities; never introduce an architectural layer or
   duplicate consumer API. No framework or accelerator layer may embed
   project-specific configuration, including tooling and templates.
+
+- Keep Circa/Agora reference extensions demo data/composition ONLY while preserving
+  genuine partner customization. Reusable behavior/access definitions belong to
+  implementing owners. Profile owns standard bootstrap users/access mechanics and
+  runtime assignments; modules contribute permissions. Axis uses business area +
+  No access / View / Edit / Full control + Scope, never an approval, ledger,
+  simulation or tenant bypass. Demo accounts/assignments are optional Kickoff data.
+  The authorized refactor has no backwards compatibility. Preserve historical
+  evidence, keep documentation/business releases separate, and do not introduce
+  a catch-all or parallel authority. Replace contradictory standing instructions;
+  do not append exceptions that leave both rules active.
 
 - Apply [corrective change and recurrence prevention](llm/contracts/ai-coding-and-customization-contract.md#corrective-changes-and-recurrence-prevention)
   in every correction batch. Strengthen existing authorities and their discovery

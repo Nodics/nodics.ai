@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "dynamo",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "dynamo permissionCatalogue",
+      "description": "Explicit dynamo identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "dynamo",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/dynamoPermissionHeader.js": "3c35f5cdc483645518c60beca2b6278c78581cbd83de73be811e0cc3a663a024",
+        "init-v001/records/identity/dynamoPermissionData.js": "a3455de164c47f9ed5e486a0db3c7a83637a8bf0593b9890537810243d3441fb"
+      }
+    }
+  }
+}

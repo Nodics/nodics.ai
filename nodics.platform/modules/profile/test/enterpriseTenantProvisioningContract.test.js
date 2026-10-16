@@ -43,6 +43,7 @@ function fixture() {
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
   global.NODICS = { getInternalAuthTokens: () => ({}), getModels: () => ({ TenantModel: { rawSchema: {} } }) };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultTenantProvisioningGuardService: guard,
     DefaultLoggerService: { runSensitiveOperation: async (request, work) => work() },
     DefaultModelSaveInitializerService: { applyDefaultValues: (request, response, process) => process.nextSuccess(request, response) },
@@ -72,10 +73,10 @@ function fixture() {
   return { state, enterprise, owner: { ...source } };
 }
 
-test("admitted Local runtime view derives only enterprise binding and preserves explicit or nonlocal credential ownership", () => {
+test("admitted runtime view derives only enterprise binding and preserves explicit or unselected credential ownership", () => {
   const f = fixture(), original = CONFIG.get;
   CONFIG.get = name => name === "profileTenantProvisioning" ? { enabled: true } : original(name);
-  SERVICE.DefaultMandatoryIdentityBootstrapService = { isLocalRuntimeCredentialBootstrapEnabled: () => true };
+  SERVICE.DefaultMandatoryIdentityBootstrapService = { isRuntimeDeploymentBootstrapEnabled: () => true };
   const tenant = { code: "enterprise-a", properties: { enterpriseProvisioning: { enterpriseCode: "enterprise-a" } } };
   const view = f.owner.runtimeBootstrapView(tenant);
   assert.deepEqual(view.properties.defaultAuthDetail, { entCode: "enterprise-a" });
@@ -85,9 +86,9 @@ test("admitted Local runtime view derives only enterprise binding and preserves 
     const configured = { ...tenant, properties: { ...tenant.properties, defaultAuthDetail: explicit } };
     assert.equal(f.owner.runtimeBootstrapView(configured), configured);
   }
-  SERVICE.DefaultMandatoryIdentityBootstrapService.isLocalRuntimeCredentialBootstrapEnabled = () => false;
+  SERVICE.DefaultMandatoryIdentityBootstrapService.isRuntimeDeploymentBootstrapEnabled = () => false;
   assert.equal(f.owner.runtimeBootstrapView(tenant), tenant);
-  SERVICE.DefaultMandatoryIdentityBootstrapService.isLocalRuntimeCredentialBootstrapEnabled = () => true;
+  SERVICE.DefaultMandatoryIdentityBootstrapService.isRuntimeDeploymentBootstrapEnabled = () => true;
   CONFIG.get = original;
   assert.equal(f.owner.runtimeBootstrapView(tenant), tenant);
   assert.equal(f.state.writes, 0);

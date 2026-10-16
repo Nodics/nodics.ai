@@ -1,5 +1,13 @@
 # Promotion Agent Contract
 
+The module owns explicit ordinary business access definitions in
+`data/manifest.json` sections `businessAccessGroups` and `businessAccessRoles`.
+Keep mappings on persisted Profile roles and user groups; never infer grants from
+verbs or add approval, financial, simulation, or platform bypass authority.
+Source packs alone never change an employee's assignments. Existing employee
+level changes and scoped No access use Profile's reviewed business-access command,
+preserving other areas, advanced responsibilities, scope and registration proof.
+
 Large setup contributions may use trusted `promotion.setupPacing` delays of
 0..10000ms before each preflight and issuance batch. Wait outside transactions,
 then run every fresh authority, consent and persistence check. HTTP/payload
@@ -36,8 +44,19 @@ Keep private request identity Product-bound and short-lived; root/coupon/budget
 reads and mutations receive no public grant. Preserve original signed authority,
 use Product's pinned retained visibility rather than caller projections, and
 check installed consent/private persistence owners rather than configuration alone.
+Keep admission registration and cleanup inside the fixed exported owner operations;
+do not introduce a top-level behavioral helper or export a callback-taking capability
+factory to satisfy source-style governance. Private WeakMaps remain unexported.
 When the exact in-flight Product distribution read has no eligible receipt-bound
 policy, return unavailable before signed/root enumeration or coupon-unit reads.
+Public catalogue batches consolidate only enterprise activity references through
+Profile's existing bounded `codes[]` read, freshly before and after the entire
+batch. Bind consolidation to exact private Product contexts, original request
+snapshots and owner-derived issuer/seller codes; copies/flags confer nothing.
+Keep per-Product canonical visibility, installed guards and every fresh receipt,
+policy, consent, benefit and coupon-unit check. Chunk excess references, reject
+incomplete/foreign/duplicate results and expire identities on all exits. No
+cross-request approvals, authentication caches or purchase/mutation reuse.
 Do not populate public auth from retained enterprise scope. Preserve errors from
 corrupt receipts, consent, installed guards and retained publication; this branch
 does not qualify supply or enable own-issuer anonymous fallback.
@@ -88,8 +107,10 @@ the exact code and active flag; preserve original signed runtime authority and
 the separate human issuer/scope checks.
 For exact ITEM promises, follow [verified item benefits](llm/contracts/verified-item-benefits.md).
 Item descriptions and staff confirmation never establish delivered goods.
-The separate `LOCAL_SIMULATION` mode requires the actual Fulfillment simulator's
-LOCAL/selected-environment admission, never `qualified: true`. Keep exact ITEM
+The separate `SIMULATION` mode requires the actual Fulfillment simulator's
+explicit selected-environment admission, never `qualified: true` or LOCAL class.
+Retired LOCAL_SIMULATION selection refuses; historical simulated evidence stays
+unverified/readable without rewriting its original hash or binding. Keep exact ITEM
 rights and store revisions, distinct SIMULATED_ITEMS tags, unverified status and
 no deliveredAt or monetary fallback. Default VERIFIED behavior stays unqualified
 until its real owner integration exists.
@@ -132,6 +153,37 @@ header, body and query namespace aliases before persistence; headers never grant
 scope or rewrite auth. Legacy HTTP unscoped reads require a signed tenant/operator
 with no enterprise claim or presented enterprise selector. Preserve the
 controller/facade/generated-read regression, including complete empty issuer pages.
+
+Analytics has a stricter exact-enterprise contract than legacy ledger browsing:
+validate original signed tenant/enterprise aliases and existing human employee/read
+authority before any privileged aggregate read. Never inherit an enterprise from
+headers, body or query, and never accept foreign or missing-scope provider rows.
+Internal service callers keep their original generated-read authority, not the
+human owner bridge. Preserve actual View/Edit/FullControl group regressions;
+ordinary workbench reads use the separate fixed owner projection below, never
+widened schema ACLs.
+See [analytics scope](llm/contracts/coupon-bound-issuer-budget.md#analytics-scope).
+
+The two implemented Promotion workbench pages discover a bounded campaign
+projection through `/business/promotions/schemas`, capabilities and safe search.
+Reuse `DefaultSchemaUtilityService` and `DefaultSchemaSafeQueryService`; preserve
+original signed employee enterprise, fixed generated owner, bounded conjunction,
+post-read authority/scope checks and scalar-only results. Never expose budget,
+consent, coupon secrets, relationships or generic schema authority through this
+descriptor. Ordinary Edit/FullControl use `commerce.promotion.draft.write`, never
+legacy `commerce.promotion.manage`. The editor's create/update transport must
+dispatch only to `DefaultPromotionDraftService`, with original signed employee
+enterprise, qualified Staged CURRENT versioned storage, exact version/revision
+and DRAFT status predicates, canonical persistence after private admission, and
+explicit generated acknowledgement plus current readback. Protect status, active,
+policy, financial, consent and identity fields; no `updateOrSave || model`, retry,
+upsert or publication authority. The native saveDraft adapter uses this same owner.
+Unqualified discovery remains browse-only. Keep the eight planned specialist
+pages disabled; advanced commands and FullControl seller management retain their
+independent permissions and qualifications. Reconcile installed ordinary groups
+through governed adoption; source imports that preserve records are not migration.
+See [ordinary business browsing](llm/contracts/promotion-lifecycle-and-publication.md#ordinary-business-browsing)
+and `test/promotionBusinessWorkbenchContract.test.js`.
 
 Coupon-specific delegated benefit accounting has a separate private receiver:
 read [coupon-bound issuer budget](llm/contracts/coupon-bound-issuer-budget.md).
@@ -196,3 +248,10 @@ See [publication qualification](llm/contracts/README.md#publication-qualificatio
 policy capture is a projection, not immutable storage proof. Mutable restoration
 is disabled; provider registration and activation require owner migration,
 retained target policy, durable receipts, pointer CAS and no-source-fallback reads.
+
+This capability owns its publication providers, standard transport and source
+schema role profile. COMMERCE contributes its read-only target observer;
+COMMERCE_STAGED contributes approval/version wiring. Keep installed qualification,
+connections, signed caller scopes and explicit deployment differences separate.
+Use publicationConfigurationOwnership.test.js in the Commerce group for the
+shared role-isolation matrix, alongside this owner's behavioral regressions.

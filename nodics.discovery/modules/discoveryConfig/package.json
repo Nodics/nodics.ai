@@ -1,26 +1,27 @@
 {
-    "name": "discoveryConfig",
-    "version": "0.0.0",
-    "index": "75.10",
-    "private": true,
-    "main": "nodics.js",
-    "description": "Discovery configuration capability.",
-    "nodics": {
-        "kind": "capability",
-        "displayName": "Discovery Config",
-        "runtimeModule": true,
-        "loadableByNodicsModuleLoader": true,
-        "owns": [
-            "configuration",
-            "schema",
-            "service",
-            "test",
-            "llm"
-        ],
-        "runtime": {
-            "router": false,
-            "publish": false,
-            "web": false
-        }
+  "name": "discoveryConfig",
+  "version": "0.0.0",
+  "index": "75.10",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Discovery configuration capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Discovery Config",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "data",
+      "schema",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
     }
+  }
 }

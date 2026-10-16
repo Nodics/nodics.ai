@@ -15,6 +15,12 @@
 module.exports = {
     /** Enriches an operation with trusted principal context. @param {string} operation Operation. @param {Object} request Request. @returns {Promise<Object>} Result. */
     invoke: function (operation, request) {
+        if (['list', 'action'].includes(operation)) {
+            const permission = operation === 'list' ? 'commerce.lifecycle.read' : 'commerce.lifecycle.act';
+            const scope = SERVICE.DefaultOrderBusinessAccessService.context(request, permission);
+            return SERVICE.DefaultOrderLifecycleOperationService[operation]({ ...request,
+                enterpriseCode: scope.enterpriseCode, actorId: scope.actorId });
+        }
         const auth = request.authData || {}; request.tenant = auth.tenant || request.tenant;
         request.enterpriseCode = request.enterpriseCode || request.entCode || auth.enterpriseCode || auth.entCode;
         const principalId = auth.principalId || auth.code || auth.loginId;

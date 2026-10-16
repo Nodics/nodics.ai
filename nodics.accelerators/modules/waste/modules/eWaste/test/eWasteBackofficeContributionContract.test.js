@@ -68,7 +68,7 @@ test("Waste core owns only generic operational links; eWaste registers its own E
   );
   assert.deepEqual(
     electronics.navigation.map((item) => item.label),
-    ["Electronics", "Submissions", "Review queue"],
+    ["Electronics", "Submissions", "Review queue", "Listing requests"],
   );
   assert.equal(
     core.navigation.find((item) => item.id === "waste-operations")
@@ -95,7 +95,7 @@ test("active contributions attach without copying parent group data", () => {
     eWaste: [{ backoffice: electronics }],
   });
   assert.equal(data.defaults.group, undefined);
-  assert.equal(result.eWaste.navigation.length, 3);
+  assert.equal(result.eWaste.navigation.length, 4);
   assert.equal(
     result.eWaste.navigation[2].group.id,
     "sustainability-operations",
@@ -149,7 +149,7 @@ test("future accelerator fixture can attach through the same contract without a 
     eWaste: [{ backoffice: electronics }],
     apparelWaste: [{ backoffice: future }],
   });
-  assert.equal(result.apparelWaste.navigation.length, 3);
+  assert.equal(result.apparelWaste.navigation.length, 4);
   assert.equal(result.apparelWaste.navigation[0].label, "Clothing & Textiles");
 });
 test("disabled or denied accelerator contribution leaves the generic Waste workspace usable", () => {

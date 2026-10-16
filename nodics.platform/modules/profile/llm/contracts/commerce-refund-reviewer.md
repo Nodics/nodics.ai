@@ -1,12 +1,14 @@
 # Enterprise Commerce Refund Reviewer
 
-Profile owns the configured `COMMERCE_REFUND_REVIEWER` invitation role and its
-permission group. Order, Fulfillment, Inventory and Payment retain all operational
+Order owns the persisted `COMMERCE_REFUND_REVIEWER` definition and its
+permission group; Profile owns catalogue and assignment mechanics.
+Order, Fulfillment, Inventory and Payment retain all operational
 and financial authority. Role availability is not an approval or owner qualification.
 
-Explicitly select `profile:commerceRefundReviewerRole`, core version `0.0.1`,
-through nImport on Platform. This insert-only pack contains one new group, inherits
-only ordinary Employee access and does not change installed Init, passwords,
+Explicitly select `order:accessGroups`, Init version `0.0.1`,
+through nImport on Platform. Its `ensureReferenceAll` header inserts missing
+definitions and preserves retained records. The groups inherit ordinary Employee
+access; definition installation does not change passwords,
 bootstrap administrators, existing employees or documentation packs. Never repair
 the installation receipt or broaden an existing group's grants to run acceptance.
 
@@ -23,13 +25,13 @@ Employee authentication must not be interpreted as Axis admission. Browser
 acceptance needs separately reviewed, explicitly installed presentation access;
 do not attach the broad existing Axis Viewer group merely to complete a test.
 
-For approved Axis use, explicitly install the separate
-`profile:commerceAxisRefundReviewerRole` core `0.0.1` pack and invite
+For approved Axis use, select the same Order-owned contribution and invite
 `COMMERCE_AXIS_REFUND_REVIEWER`. Its self-contained group inherits ordinary
 Employee access and adds exactly `axis.view`, `axis.dashboard.view` and
 `backoffice.bootstrap.view` to the seven operational permissions above. It has
 no Viewer ancestry, access-assignment rights or additional business authority.
-The API-only pack, installed Init and existing identities remain unchanged.
+The API-only definition and existing identities remain independent.
+Profile's former duplicate Core packs are removed without compatibility aliases.
 Installation alone assigns nobody. Fresh normal registration and sign-in are
 mandatory, and the browser still renders only current authorized owner navigation.
 

@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "loyaltyLedger",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "loyaltyLedger permissionCatalogue",
+      "description": "Explicit loyaltyLedger identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "loyaltyLedger",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/loyaltyLedgerPermissionHeader.js": "034998bc74af1fcf67f97f33f341297eafecee2c6fc4e8adf37bf9b4facc7b5a",
+        "init-v001/records/identity/loyaltyLedgerPermissionData.js": "c8edb2ea96b526e5ecee404e15789c513bd4edfe4f86f5d86304b069088d0cb3"
+      }
+    },
     "sample-lifecycle": {
       "kind": "DATA_RELEASE",
       "dataType": "sample",

@@ -5,7 +5,10 @@ Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enable
 
 Own wallet and per-reward balance contracts. Wallet owner identity must remain `ownerType` plus `ownerCode`; do not add tenant or enterprise fields as ordinary wallet data.
 
-Reviewed Local sample credits retain exact source/intent, human permission and
+Reviewed sample credits use the actual selected environment allowlist and exact
+deployment approval pins, not a hardcoded Local class. Defaults stay inert;
+explicit non-Local demo selection never grants real funding authority. Preserve
+the historical `localDemoOnly` replay metadata. Retain exact source/intent, human permission and
 original-balance guards. Qualify real identical schema database wrappers before
 record reads; fix inherited registration in nDatabase, never weaken transaction
 identity in Loyalty. Diagnostic blockers allow only fixed gates and the three
@@ -20,3 +23,8 @@ without creating records. See `llm/contracts/README.md` and loyaltyApi evidence 
 
 This capability contributes an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.
+
+Advanced `specialAccessGroups` and `specialAccessRoles` definitions are owner data.
+Keep them separate from ordinary business access levels. Assignments and exact
+approval/source/deployment pins stay with the consuming project; these roles
+never waive owner admission or activate operations.

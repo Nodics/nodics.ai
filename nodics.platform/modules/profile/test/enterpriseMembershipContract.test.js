@@ -35,6 +35,7 @@ function fixture() {
     global.CONFIG = { get: () => undefined };
     global.NODICS = { getModels: () => ({ PasswordModel: { dataBase: {} } }) };
     global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
         DefaultProfileService: { getProfileModuleName: () => 'profile' },
         DefaultDatabaseConfigurationService: { toObjectId: (_model, value) => value },
         DefaultEnterpriseRegistrationService: registration,

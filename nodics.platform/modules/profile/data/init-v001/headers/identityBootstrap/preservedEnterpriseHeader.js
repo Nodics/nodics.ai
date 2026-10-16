@@ -1,0 +1,93 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.platform/modules/profile/data/init-v001/headers/enterprise/defaultEnterpriseHeader
+ * @description Seeds only missing Profile identities and references; later imports preserve installed authority.
+ * @layer data
+ * @owner profile
+ * @override Projects may override or extend this initializer data through layered import data rather than editing out-of-the-box framework records.
+ */
+module.exports = {
+    profile: {
+        defaultTenants: {
+            options: {
+                enabled: true,
+                schemaName: 'tenant', //put type name, if want to push data into search
+                operation: 'ensureBootstrapAll', // First-install only; existing records remain authoritative., put doSave, if data needs to be pushed into serach
+                tenants: ['default'],
+                dataFilePrefix: 'defaultTenantsData',
+                userGroups: ['adminGroup']
+            },
+            query: {
+                //addresses.code: '$code'
+                code: '$code',
+                /*jobDetail.name: '$name'
+                name: 'Himkar Dwivedi'*/
+            }
+        },
+        defaultEnterprise: {
+            options: {
+                enabled: true,
+                schemaName: 'enterprise',
+                operation: 'ensureBootstrapAll', // First-install only; existing records remain authoritative.
+                tenants: ['default'],
+                dataFilePrefix: 'defaultEnterpriseData',
+                userGroups: ['adminGroup']
+            },
+            query: {
+                code: '$code'
+            },
+            macros: {
+                tenant: {
+                    options: {
+                        model: 'tenant',
+                        returnProperty: 'code'
+                    },
+                    rule: {
+                        code: {
+                            type: 'string',
+                            index: 0,
+                        },
+                        active: {
+                            type: 'bool',
+                            index: 1
+                        }
+                    }
+                },
+                addresses: {
+                    options: {
+                        model: 'address',
+                        returnProperty: 'code'
+                    },
+                    rule: {
+                        code: {
+                            type: 'string',
+                            index: 0
+                        }
+                    }
+                },
+                contacts: {
+                    options: {
+                        model: 'contact',
+                        returnProperty: 'code'
+                    },
+                    rule: {
+                        code: {
+                            type: 'string',
+                            index: 0
+                        }
+                    }
+                }
+            }
+        }
+    }
+};

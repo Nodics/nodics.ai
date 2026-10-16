@@ -33,6 +33,7 @@ function fixture(t, definitions = routes) {
     DefaultEWasteDigitalSaleController: require("../src/controller/defaultEWasteDigitalSaleController"),
     DefaultEWasteDigitalListingController: require("../src/controller/defaultEWasteDigitalListingController"),
     DefaultEWasteOrderReversalController: require("../src/controller/defaultEWasteOrderReversalController"),
+    DefaultEWasteDraftMediaRetentionController: require("../src/controller/defaultEWasteDraftMediaRetentionController"),
   };
   const observe = (owner, phase) => async input => { calls.push({ owner, phase, input }); return { owner, phase }; };
   global.SERVICE = {
@@ -41,6 +42,7 @@ function fixture(t, definitions = routes) {
     DefaultEWasteDigitalSaleService: { invoke: (input, phase) => observe("sale", phase)(input) },
     DefaultEWasteDigitalListingService: { plan: observe("listing", "plan") },
     DefaultEWasteOrderReversalService: { preview: observe("reversal", "preview") },
+    DefaultEWasteDraftMediaRetentionService: { run: observe("retention", "inspect") },
   };
   // Capture real prepared routes without binding sockets or replacing registry behavior.
   for (const verb of ["get", "post", "put", "delete", "patch", "head", "options"])
@@ -95,4 +97,21 @@ test("reusing invoke across groups reproduces the overwritten sale controller an
   assert.equal(sale.controller, "DefaultEWasteDigitalSaleController");
   assert.equal(f.registry.get(sale.routerName).controller, "DefaultEWasteDigitalListingController");
   assert.equal(f.registry.get(sale.routerName).permission, "waste.asset.marketplace.project");
+});
+
+test("private retention inspection survives real route registration and dispatch with its original signed request", async t => {
+  const f = fixture(t);
+  const captured = f.bound.find(value => value.key === "/internal/draft-media/retention/inspect");
+  assert.equal(captured.routerName, "ewaste_inspectdraftmediaretention");
+  assert.equal(f.registry.get(captured.routerName), captured);
+  assert.equal(captured.controller, "DefaultEWasteDraftMediaRetentionController");
+  assert.equal(captured.operation, "inspect"); assert.equal(captured.permission, "waste.audit.read");
+  assert.deepEqual(captured.authTokenTypes, ["service"]); assert.equal(captured.requestPrivacy.sensitive, true);
+  assert.equal(captured.cache.enabled, false);
+  const input = { tenant: "test", authData: { tenant: "test", tokenType: "service" }, router: captured,
+    httpRequest: { body: { dryRun: true, limit: 1 } } };
+  const result = await new Promise((resolve, reject) => dispatch.handleRequest.call({ LOG: { debug() {} } }, input, {},
+    { error: (_r, _s, error) => reject(error), nextSuccess: (_r, value) => resolve(value.success) }));
+  assert.deepEqual(result, { data: { owner: "retention", phase: "inspect" } });
+  assert.equal(f.calls[0].input, input);
 });

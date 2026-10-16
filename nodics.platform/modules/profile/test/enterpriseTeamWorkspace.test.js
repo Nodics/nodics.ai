@@ -71,6 +71,7 @@ function fixture(rows) {
     }),
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseManagementService: {
       retrieveEnterpriseForAccess: async (code) => {
         assert.equal(code, admitted);
@@ -158,4 +159,19 @@ test("last active administrator cannot be offered restriction even without desig
     row("last", "REGISTERED", { admin: true }),
   ]).workspace({ authData: { entCode: "business" } });
   assert.deepEqual(value.items[0].actions, ["HANDOVER"]);
+});
+
+test("Team projects current business labels and refuses a mismatched area scope", async () => {
+  const records = [row("reader", "REGISTERED", { roleCode: "PRODUCT_VIEW", scopeType: "ENTERPRISE", scopeCode: "business" })];
+  const service = fixture(records);
+  CONFIG.get = () => ({
+    teamAdministration: { presentation: { title: "Team" } },
+    businessAccessPresentation: { view: "View" },
+  });
+  const value = await service.workspace({ authData: { entCode: "business" } });
+  assert.deepEqual(value.items[0].businessAccess, {
+    businessArea: "products", businessAreaLabel: "Products", accessLevel: "view", accessLevelLabel: "View", scopeType: "ENTERPRISE", scopeCode: "business",
+  });
+  records[0].scopeCode = "another-enterprise";
+  await assert.rejects(service.workspace({ authData: { entCode: "business" } }), /CONFLICT/);
 });

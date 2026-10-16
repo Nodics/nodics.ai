@@ -327,7 +327,7 @@ module.exports = {
    */
   resolve: function (command, policy) {
     if (
-      !["EMAIL", "SMS"].includes(command.channel) ||
+      !["EMAIL", "SMS", "TELEGRAM", "IN_APP"].includes(command.channel) ||
       policy.templateResources?.enabled !== true
     )
       return undefined;
@@ -348,7 +348,9 @@ module.exports = {
     const names =
       command.channel === "EMAIL"
         ? ["subject.txt", "email.txt", "email.html"]
-        : ["message.txt"];
+        : command.channel === "SMS"
+          ? ["message.txt"]
+          : ["subject.txt", "message.txt"];
     for (const file of names) {
       for (const locale of [
         ...new Set([manifest.defaultLocale, command.locale]),

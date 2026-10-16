@@ -1297,3 +1297,17 @@ for (const name of ['cmsTypeCode', 'cmsTypeCode2Renderer', 'cmsComponentTypeGrou
 for (const name of ['cmsPublicationManifest', 'cmsOnlinePublicationPointer', 'cmsPublicationDeploymentReceipt', 'cmsPublicationEventOutbox']) {
     module.exports.cms[name].backoffice = { mutationMode: 'READ_ONLY', operations: ['search', 'read'] };
 }
+
+// Human authoring belongs to scoped CMS commands, never legacy generated /all writes.
+for (const schema of Object.values(module.exports.cms)) {
+    if (schema.model !== true) continue;
+    schema.router = Object.assign({}, schema.router, { groups: { schemaOperations: true } });
+    schema.accessGroups = { userGroup: 1, adminGroup: 10, serviceAccountUserGroup: 10 };
+    schema.backoffice = Object.assign({}, schema.backoffice, {
+        mutationMode: 'READ_ONLY', operations: ['search', 'read'],
+    });
+    schema.definition.authoringScope = { type: 'object', required: false,
+        description: 'CMS-owner-pinned enterprise/Catalog identity; Site is additionally bound for pages, routes and page placements. Never client authority.' };
+}
+module.exports.cms.cmsSite.definition.enterpriseCode = { type: 'string', required: false,
+    description: 'Governed enterprise owner of this Site. Unbound or foreign-owned shared Catalog Sites are unavailable to business authoring.' };

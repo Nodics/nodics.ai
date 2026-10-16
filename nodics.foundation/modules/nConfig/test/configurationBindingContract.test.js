@@ -23,7 +23,6 @@ const composition = {
       code: "warehouse",
       frameworkGroup: "warehouse",
       projectPack: "customer.warehouse",
-      productSearchContributor: { required: true },
     },
     {
       code: "shipping",
@@ -59,7 +58,14 @@ test("the existing nConfig load sequence resolves references and preserves later
     connection: { $config: "ref", path: ["connectionValues", "local"] },
     sourceRoot: { $config: "path", base: "project", relative: "docs/customer" },
     project: { $config: "context", name: "projectCode" },
-    setup: { profiles: { independent: { target: { timeoutMs: 1000 }, dataPackages: ["owner:core"] } } },
+    setup: {
+      profiles: {
+        independent: {
+          target: { timeoutMs: 1000 },
+          dataPackages: ["owner:core"],
+        },
+      },
+    },
     activeModules: {
       modules: [
         "jobs",
@@ -101,7 +107,9 @@ test("the existing nConfig load sequence resolves references and preserves later
   ]);
   assert.equal(actual.log.level, "debug");
   assert.equal(actual.setup.profiles.independent.target.timeoutMs, 9876);
-  assert.deepEqual(actual.setup.profiles.independent.dataPackages, ["owner:core"]);
+  assert.deepEqual(actual.setup.profiles.independent.dataPackages, [
+    "owner:core",
+  ]);
   let loaded = {};
   global.CONFIG = {
     getProperties: () => loaded,
@@ -126,10 +134,15 @@ test("the existing nConfig load sequence resolves references and preserves later
   delete require.cache[require.resolve(environmentFile)];
   instance.loadConfiguration(environmentFile);
   assert.deepEqual(loaded.browserEndpoints, [{ code: "store", port: 4321 }]);
-  const next = instance.readPropertyContribution(path.join(serverRoot, "config/properties.js"), loaded);
+  const next = instance.readPropertyContribution(
+    path.join(serverRoot, "config/properties.js"),
+    loaded,
+  );
   assert.deepEqual(next.browserEndpoints, [{ code: "store", port: 4422 }]);
-  assert.equal(fs.existsSync(path.join(envRoot, "nodics.environment.json")), false);
-
+  assert.equal(
+    fs.existsSync(path.join(envRoot, "nodics.environment.json")),
+    false,
+  );
 });
 test("environment values, explicit empty selections and conditional contributions remain declarative", () => {
   const definition = {
@@ -391,10 +404,21 @@ test("collection declarations reject ambiguity before changing effective configu
 test("tenant endpoint overrides preserve sibling fields and isolate other tenants", () => {
   const Config = require("../bin/config");
   const config = new Config();
-  const baseline = { servers: { identity: { endpoint: { httpHost: "identity.example", httpPort: 5400 } } } };
-  for (const tenant of ["default", "alpha", "beta"]) config.setProperties(structuredClone(baseline), tenant);
-  config.changeTenantProperties({ servers: { identity: { endpoint: { httpPort: 54322 } } } }, "alpha");
-  assert.deepEqual(config.get("servers", "alpha").identity.endpoint, { httpHost: "identity.example", httpPort: 54322 });
+  const baseline = {
+    servers: {
+      identity: { endpoint: { httpHost: "identity.example", httpPort: 5400 } },
+    },
+  };
+  for (const tenant of ["default", "alpha", "beta"])
+    config.setProperties(structuredClone(baseline), tenant);
+  config.changeTenantProperties(
+    { servers: { identity: { endpoint: { httpPort: 54322 } } } },
+    "alpha",
+  );
+  assert.deepEqual(config.get("servers", "alpha").identity.endpoint, {
+    httpHost: "identity.example",
+    httpPort: 54322,
+  });
   assert.deepEqual(config.get("servers", "beta"), baseline.servers);
   assert.deepEqual(config.get("servers"), baseline.servers);
 });
@@ -456,8 +480,11 @@ test("property projections are independent, bounded and reject missing or unsafe
   };
   const context = {};
   const read = (binding) =>
-    resolver.resolve({ value: { $config: "ref", ...binding } }, profile, context)
-      .value;
+    resolver.resolve(
+      { value: { $config: "ref", ...binding } },
+      profile,
+      context,
+    ).value;
   assert.deepEqual(read({ path: "urls", fields: ["editor"] }), {
     editor: "https://editor.example",
   });
@@ -490,9 +517,15 @@ test("property projections are independent, bounded and reject missing or unsafe
     () => resolver.resolve({ value: { $config: "ref", path: "urls" } }),
     /unavailable/,
   );
-  assert.throws(() => resolver.resolve({ value: { $config: "profile", path: "urls" } }), /declaration/);
+  assert.throws(
+    () => resolver.resolve({ value: { $config: "profile", path: "urls" } }),
+    /declaration/,
+  );
   profile.unsafe = JSON.parse('{"__proto__":{"polluted":true}}');
-  assert.throws(() => read({ path: "unsafe" }), /Unsafe configuration property key/);
+  assert.throws(
+    () => read({ path: "unsafe" }),
+    /Unsafe configuration property key/,
+  );
   profile.deep = {};
   let cursor = profile.deep;
   for (let i = 0; i < 70; i++) {

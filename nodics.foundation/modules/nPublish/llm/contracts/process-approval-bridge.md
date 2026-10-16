@@ -23,9 +23,14 @@ No definition is installed implicitly by either bridge service.
 
 ## Configuration Contract
 
-The owning integration declares inert defaults in nPublish properties and
-contributes domain entries from the appropriate domain modules. The service
-requires this shape; missing entries reject rather than selecting CMS:
+nPublish owns the neutral target defaults: `connectionName: null`,
+`connectionType: 'abstract'` and `runtimeRole: 'PROCESS'`. The latter is the
+bridge's required target authority, not the current deployment's runtime role.
+Domain modules contribute domain policies; deployments select the actual remote
+connection and explicitly opt into the provider. Inheriting these defaults does
+not select a provider, install a graph, grant access or enable publication.
+Later configuration may override transport settings; an absent/default connection
+or a non-Process target role still rejects. The resolved service contract is:
 
 ```js
 publish: {

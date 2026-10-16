@@ -28,7 +28,7 @@ const runtime = require("../../commsCore/src/service/defaultCommunicationRuntime
 const route = require("../src/router/routers").commsApi.internal
   .inspectCommunication;
 const code = "COMM_" + "a".repeat(64);
-let rows, reads, previous;
+let rows, reads, previous, attempts, attemptReads;
 
 /** Supplies a signed service fixture, not deployment authority. */
 function request() {
@@ -58,6 +58,8 @@ test.beforeEach(() => {
     ]),
   );
   reads = 0;
+  attemptReads = 0;
+  attempts = [];
   rows = [
     {
       code,
@@ -102,6 +104,16 @@ test.beforeEach(() => {
           skipItemCache: true,
         });
         return { code: "SUC_TEST", result: structuredClone(rows) };
+      },
+    },
+    DefaultCommsDeliveryAttemptService: {
+      get: async input => {
+        attemptReads++;
+        assert.equal(input.tenant, "inspection-test");
+        assert.deepEqual(input.query, { code: code + "_1", intentCode: code, attempt: 1, tenant: "inspection-test" });
+        assert.deepEqual(input.searchOptions, { pageSize: 2, pageNumber: 1 });
+        assert.deepEqual(input.options, { recursive: false, skipItemCache: true });
+        return { code: "SUC_TEST", result: structuredClone(attempts) };
       },
     },
   };
@@ -290,4 +302,118 @@ test("route remains service-only, exact empty body, uncached and fixed DTO", () 
     ),
     ["intentCode", "status", "revision"],
   );
+});
+
+function uncertainAttempt() {
+  Object.assign(rows[0], { sourceType: "wasteSubmission", sourceCode: "WST_TEST", attempt: 1, channel: "TELEGRAM", status: "UNCERTAIN" });
+  attempts = [{ code: code + "_1", intentCode: code, tenant: "inspection-test", channel: "TELEGRAM", attempt: 1,
+    status: "UNCERTAIN", responseCode: "TELEGRAM_UNCERTAIN", providerReference: "PRIVATE", body: "PRIVATE", error: "PRIVATE" }];
+}
+function diagnosticRequest() {
+  return { ...request(), payload: { sourceModule: "digitalCore", sourceType: "wasteSubmission", sourceCode: "WST_TEST" } };
+}
+
+test("separate HTTP diagnostic reads only the exact attempt and returns static copy without exposing private fields or changing inspection", async () => {
+  uncertainAttempt();
+  const r = diagnosticRequest(); r.httpRequest = { params: { intentCode: code }, body: r.payload };
+  const result = await controller.diagnoseDelivery(r);
+  assert.deepEqual(Object.keys(result.data), ["intentCode", "status", "revision", "diagnostic"]);
+  assert.equal(result.data.diagnostic.classification, "TRANSPORT_ACK_UNCONFIRMED");
+  assert.equal(result.data.diagnostic.attempt, 1);
+  assert.equal(JSON.stringify(result).includes("PRIVATE"), false);
+  assert.equal(reads, 2); assert.equal(attemptReads, 1);
+  assert.deepEqual(await facade.inspectDelivery(request()), { intentCode: code, status: "UNCERTAIN", revision: 1 });
+});
+
+for (const [responseCode, classification] of [
+  ["DELIVERY_INTERRUPTED", "DELIVERY_INTERRUPTED"], ["INVALID_PROVIDER_OUTCOME", "INVALID_PROVIDER_OUTCOME"],
+  ["PRIVATE raw provider error", "ATTEMPT_UNCLASSIFIED"], ["TELEGRAM_ACCEPTED", "ATTEMPT_UNCLASSIFIED"],
+]) test("bounded uncertainty classifies " + classification + " without raw provider text", async () => {
+  uncertainAttempt(); attempts[0].responseCode = responseCode;
+  const result = await facade.diagnoseDelivery(diagnosticRequest());
+  assert.equal(result.diagnostic.classification, classification);
+  assert.equal(JSON.stringify(result).includes("PRIVATE"), false);
+});
+
+test("pre-send destination failure has fixed owner diagnosis without rewriting historical uncertainty", async () => {
+  uncertainAttempt();
+  rows[0].status = "RETRY_PENDING";
+  attempts[0].status = "RETRY_PENDING";
+  attempts[0].responseCode = "DESTINATION_RESOLUTION_FAILED";
+  const result = await facade.diagnoseDelivery(diagnosticRequest());
+  assert.equal(result.diagnostic.classification, "DESTINATION_UNAVAILABLE");
+  assert.equal(JSON.stringify(result).includes("PRIVATE"), false);
+  uncertainAttempt();
+  attempts[0].responseCode = "DELIVERY_INTERRUPTED";
+  const original = await facade.diagnoseDelivery(diagnosticRequest());
+  assert.equal(original.status, "UNCERTAIN");
+  assert.equal(original.diagnostic.classification, "DELIVERY_INTERRUPTED");
+});
+
+test("missing attempt and differing current intent state remain explicit unknowns, never delivery proof", async () => {
+  uncertainAttempt(); attempts = [];
+  assert.equal((await facade.diagnoseDelivery(diagnosticRequest())).diagnostic.classification, "ATTEMPT_NOT_RECORDED");
+  uncertainAttempt(); rows[0].status = "DELIVERED";
+  assert.equal((await facade.diagnoseDelivery(diagnosticRequest())).diagnostic.classification, "ATTEMPT_STATUS_DIFFERS");
+});
+
+test("diagnostic rejects private-entry, human, extra-body and foreign-source access without attempt reads", async () => {
+  uncertainAttempt();
+  const r = diagnosticRequest(); r.authData.tokenType = "access";
+  await assert.rejects(controller.diagnoseDelivery(r), /INTEGRATION_CONTEXT/);
+  for (const body of [undefined, null, [], { raw: true }, { retry: true }, { sourceModule: "profile" }]) {
+    const r = request(); r.httpRequest = { params: { intentCode: code }, body };
+    await assert.rejects(controller.diagnoseDelivery(r), /INTEGRATION_INPUT/);
+  }
+  SERVICE.DefaultLoggerService.hasPrivateCaptureProtection = () => false;
+  await assert.rejects(controller.diagnoseDelivery(diagnosticRequest()), /INTEGRATION_CONTEXT/);
+  SERVICE.DefaultLoggerService.hasPrivateCaptureProtection = () => true;
+  rows[0].sourceModule = "profile";
+  await assert.rejects(controller.diagnoseDelivery(diagnosticRequest()), /INTEGRATION_CONTEXT/);
+  assert.equal(attemptReads, 0);
+});
+
+for (const patch of [{ tenant: "other" }, { intentCode: "other" }, { attempt: 2 }, { channel: "EMAIL" }, { active: false }, { status: "PRIVATE" }])
+  test("diagnostic rejects mismatched attempt " + Object.keys(patch)[0], async () => {
+    uncertainAttempt(); Object.assign(attempts[0], patch);
+    await assert.rejects(controller.diagnoseDelivery(diagnosticRequest()), /INTEGRATION_STORAGE/);
+  });
+
+test("duplicate, failed, and concurrently changed attempt reads are safe refusals", async () => {
+  uncertainAttempt(); attempts.push({ ...attempts[0] });
+  await assert.rejects(controller.diagnoseDelivery(diagnosticRequest()), /INTEGRATION_STORAGE/);
+  SERVICE.DefaultCommsDeliveryAttemptService.get = async () => { throw Error("PRIVATE raw failure"); };
+  await assert.rejects(controller.diagnoseDelivery(diagnosticRequest()), error => error.code === "ERR_COMMS_INTEGRATION_STORAGE" && !error.message.includes("PRIVATE"));
+  uncertainAttempt();
+  SERVICE.DefaultCommsDeliveryAttemptService.get = async () => { rows[0].revision++; return { code: "SUC_TEST", result: attempts }; };
+  await assert.rejects(controller.diagnoseDelivery(diagnosticRequest()), /INTEGRATION_STORAGE/);
+});
+
+test("effective operation diagnostics cannot inject copy or expand the DTO", async () => {
+  uncertainAttempt();
+  SERVICE.DefaultCommunicationOperationsService.diagnose = async () => ({ diagnostic: {
+    classification: "TRANSPORT_ACK_UNCONFIRMED", attempt: 1, message: "PRIVATE", body: "PRIVATE" }, recipient: "PRIVATE" });
+  const result = await controller.diagnoseDelivery(diagnosticRequest());
+  assert.equal(JSON.stringify(result).includes("PRIVATE"), false);
+  SERVICE.DefaultCommunicationOperationsService.diagnose = async () => ({ diagnostic: { classification: "PRIVATE", attempt: 1 } });
+  await assert.rejects(controller.diagnoseDelivery(diagnosticRequest()), /INTEGRATION_STORAGE/);
+});
+
+test("diagnostic route is separately secured, private, uncached and exact-source bound", () => {
+  const diagnostic = require("../src/router/routers").commsApi.internal.diagnoseCommunication;
+  assert.equal(diagnostic.key, "/internal/communications/:intentCode/diagnostic");
+  assert.equal(diagnostic.method, "POST"); assert.equal(diagnostic.secured, true);
+  assert.deepEqual(diagnostic.authTokenTypes, ["service"]);
+  assert.equal(diagnostic.permission, "communication.request");
+  assert.equal(diagnostic.cache.enabled, false); assert.equal(diagnostic.requestPrivacy.sensitive, true);
+  assert.deepEqual(diagnostic.requestBody.content["application/json"].schema.required, ["sourceModule", "sourceType", "sourceCode"]);
+});
+
+test("same-module wrong submission, source type and empty binding refuse before attempt reads", async () => {
+  uncertainAttempt();
+  for (const payload of [{}, { ...diagnosticRequest().payload, sourceCode: "WST_OTHER" }, { ...diagnosticRequest().payload, sourceType: "other" }]) {
+    const r = diagnosticRequest(); r.payload = payload;
+    await assert.rejects(controller.diagnoseDelivery(r), /INTEGRATION_(INPUT|CONTEXT)/);
+  }
+  assert.equal(attemptReads, 0);
 });

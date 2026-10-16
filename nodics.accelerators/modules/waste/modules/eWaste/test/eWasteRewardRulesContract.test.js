@@ -138,9 +138,10 @@ const fallback = provider.resolveFallback({
 assert.strictEqual(fallback.source, 'IMAGE_AI', 'fallback must skip candidates below the configured quality floor');
 
 const saved = [];
+const runtimeTerms = { loyaltyProgramCode:'original-program', rewardScale:2 };
 global.CONFIG = {
     get: name => name === 'eWaste'
-        ? { rewardRules: { propertyProviderCode:'eWaste.reward', policyType:'REWARD_SCORING', defaultPlatformScopeCode:'DEFAULT', domainScopeCode:'ELECTRONICS' } }
+        ? { rewardRules: { propertyProviderCode:'eWaste.reward', policyType:'REWARD_SCORING', defaultPlatformScopeCode:'DEFAULT', domainScopeCode:'ELECTRONICS', ...runtimeTerms } }
         : {}
 };
 SERVICE.DefaultRulePolicyResolutionService = {
@@ -167,8 +168,9 @@ SERVICE.DefaultScoreBandSetVersionService = {
 };
 SERVICE.DefaultWasteRewardAssessmentService = {
     get: async request => ({ result:saved.filter(row => row.code === request.query.code) }),
-    save: async request => { saved.push(request.model); return { result:request.model }; }
+    save: async request => { saved.push(request.model); return { result:request.model.assessmentType === 'CONFIRMED' ? [request.model] : request.model }; }
 };
+SERVICE.DefaultWastePersistenceService = require('../../../../../../nodics.waste/modules/wasteCore/src/service/defaultWastePersistenceService');
 
 (async () => {
     const estimated = await assessmentService.assessEstimated({
@@ -198,7 +200,13 @@ SERVICE.DefaultWasteRewardAssessmentService = {
     assert.strictEqual(assessment.policyVersion, 1);
     assert.strictEqual(assessment.bandSetVersion, 1);
     assert.strictEqual(saved.length, 2);
+    assert.deepStrictEqual(assessment.metadata.settlementTerms, { contractVersion:1, programCode:'original-program', scale:2 });
+    assert.strictEqual(assessment.rewardOutcome.programCode, undefined, 'settlement defaults must not rewrite the Rules outcome');
+    assert.strictEqual(assessment.rewardOutcome.scale, undefined, 'settlement scale must not rewrite the Rules outcome');
     assert.notStrictEqual(estimated.code, assessment.code, 'estimated and confirmed assessments must remain separate evidence');
+
+    runtimeTerms.loyaltyProgramCode = 'changed-program';
+    runtimeTerms.rewardScale = 4;
 
     const replay = await assessmentService.assessConfirmed({
         tenant:'default',
@@ -210,6 +218,7 @@ SERVICE.DefaultWasteRewardAssessmentService = {
     });
     assert.strictEqual(replay.code, assessment.code);
     assert.strictEqual(replay.sourceHash, assessment.sourceHash);
+    assert.deepStrictEqual(replay.metadata.settlementTerms, assessment.metadata.settlementTerms, 'current configuration must not rewrite an existing assessment');
     assert.strictEqual(saved.length, 2, 'assessment replay must be idempotent across request correlation ids');
 
     await assert.rejects(() => assessmentService.assessConfirmed({

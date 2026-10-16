@@ -17,6 +17,18 @@
  * @override Later project modules may replace request mapping while preserving operation names and credential redaction.
  */
 module.exports = {
+    /** Maps a private, uncached full-access adoption review through the existing migration owner. */
+    previewPlatformAdministrator: function (request, callback) {
+        SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+        request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+        return this.invoke("previewPlatformAdministrator", request, callback);
+    },
+    /** Maps only the reviewed exact-account adoption command; no client authority fields are accepted. */
+    applyPlatformAdministrator: function (request, callback) {
+        SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+        request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+        return this.invoke("applyPlatformAdministrator", request, callback);
+    },
     /**
      * Maps the empty assessment command to the read-only migration owner.
      * @param {Object} request Authenticated Profile request.

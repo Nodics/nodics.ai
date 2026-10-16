@@ -33,6 +33,8 @@ module.exports = {
       defaultJurisdiction: "US",
       defaultCurrency: "USD",
     },
+
+    limits: { maximumCartEntries: 500 },
   },
   schemaPolicies: {
     cart: {

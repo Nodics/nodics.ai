@@ -11,23 +11,62 @@
 
 /** @module store/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner store */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "store": {
-                "serviceNames": {
-                    "DefaultPointOfServiceService": true,
-                    "DefaultSalesChannelService": true,
-                    "DefaultStoreService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      store: {
+        serviceNames: {
+          DefaultPointOfServiceService: true,
+          DefaultSalesChannelService: true,
+          DefaultStoreService: true,
+        },
+      },
     },
+  },
 
-    store: { enabled: true },
-    schemaPolicies: { store: {
-        operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        customerOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'ownerId', bypassGroups: { adminGroup: true, commerceOperatorUserGroup: true, serviceAccountUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } }
-    } }
+  store: {
+    enabled: true,
+    placementRead: { enabled: false, runtimeRole: null, callers: [] },
+    runtimeRoleProfiles: {
+      COMMERCE: { placementRead: { runtimeRole: "COMMERCE" } },
+    },
+  },
+  apiExposure: { categories: { storePlacementRead: { enabled: false } } },
+  schemaPolicies: {
+    store: {
+      operational: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      tenantOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      customerOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+          customerUserGroup: 10,
+        },
+        ownership: {
+          enabled: true,
+          ownerProperty: "ownerId",
+          bypassGroups: {
+            adminGroup: true,
+            commerceOperatorUserGroup: true,
+            serviceAccountUserGroup: true,
+          },
+          subjectGroups: { customerUserGroup: true },
+          principalTypes: { customer: true },
+        },
+      },
+    },
+  },
 };

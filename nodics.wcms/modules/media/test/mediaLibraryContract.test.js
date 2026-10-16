@@ -792,8 +792,8 @@ test('actual Media capability and generic workspaces satisfy strict BackOffice c
         f.config.publishEnabled = true;
         const metadata = capability.getCapability();
         for (const workspace of [
-            f.config.media.library.workspace,
-            f.config.media.library.publicationWorkspace
+            metadata.navigation.find(entry => entry.id === 'media-library').backendWorkspace,
+            metadata.navigation.find(entry => entry.id === 'media-publication-requests').backendWorkspace
         ]) {
             assert.deepEqual(workspace.ownerSelector, {
                 runtimeRoleCode: 'WCMS_STAGED',
@@ -928,9 +928,9 @@ test('real owner descriptors bind row navigation to fresh exact-version inspecti
     qualify(f);
     const metadata = capability.getCapability();
     assert.equal(contract.validateBackofficeMetadata(metadata), true);
-    const listing = f.config.media.library.workspace.tabs[0].sections[0];
+    const listing = metadata.navigation.find(entry => entry.id === 'media-library').backendWorkspace.tabs[0].sections[0];
     const form =
-        f.config.media.library.publicationWorkspace.tabs[0].sections[0];
+        metadata.navigation.find(entry => entry.id === 'media-publication-requests').backendWorkspace.tabs[0].sections[0];
     assert.deepEqual(listing.rowNavigation, {
         label: 'Inspect publication',
         route: '/media/publication',

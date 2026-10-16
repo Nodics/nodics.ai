@@ -1,5 +1,16 @@
 # copilotWorkbench contracts
 
+## Logical Target Defaults
+
+The PLATFORM role inherits `workbench.target.productModule: product` and
+`pricingModule: pricing` from this owner. Projects select the connection and
+target runtime authority; these logical module names neither choose a deployment
+nor enable commands, providers, API access or employee permissions. Other roles
+do not inherit this target profile. Later customer/node overrides remain valid
+through nConfig. Missing connection/authority stays unavailable, not a local-call
+fallback. `test/copilotTargetConfigurationOwnership.test.js` covers default,
+unrelated-role and explicit target customization without dispatching a write.
+
 Collection-centre plans use canonical Location/Profile references, current
 enterprise and complete nested field review. Waste retains validation and create
 authority. Execution acknowledgements reject error envelopes even when they also

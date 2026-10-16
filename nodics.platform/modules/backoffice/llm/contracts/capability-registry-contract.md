@@ -29,6 +29,19 @@ used after that composition, or replaced with caller-supplied status. Each new
 request rechecks the owners. A failed read stays unavailable; reuse does not grant
 permission, retry a command or certify Online readiness.
 
+The remaining application-status report uses at most four local workers per
+composition. It calls the same captured reader, settles every profile despite
+synchronous throws or rejections, and assembles successes and errors in their
+respective input-relative order. Successful `undefined` remains a success; no
+outcome grants readiness. Duplicate profiles retain their output positions while
+the reader reuses their exact result or rejection. A new composition rechecks
+owners, including after failure, and simultaneous actors never share a reader.
+This fixed implementation ceiling is not a caller-selected policy, global queue
+or authentication cache. Later service overrides must preserve these invariants.
+Documentation-navigation concurrency and all readiness/admission gates remain
+unchanged. Nested owner work and concurrent requests can exceed four total
+operations; the pool does not guarantee latency or replace owner transport limits.
+
 Routine `MEDIA_ASSET_MANIFEST` status uses one Media-owned persisted CURRENT
 metadata aggregate per manifest (1–100 unique assets), not a byte-inspection
 request per asset. Desired checksums and descriptors still come from confined
@@ -51,7 +64,11 @@ Regression evidence: `test/backofficeStatusReadFanoutContract.test.js` composes
 the real bootstrap/readiness methods and Media controller/facade/read service
 with inert owner mocks. It proves 37 assets use one transport/read, cross-request
 and cross-principal isolation, unchanged descriptor checks, and fail-closed
-partial/stale evidence. `test/backofficeApplicationMediaRetryContract.test.js`
+partial/stale evidence. Deferred-owner regressions cover the four-worker ceiling
+through 66 profiles, out-of-order mixed results, synchronous failures, duplicate
+positions, inert undefined successes, simultaneous actors/request copies, fresh
+recovery and bootstrap waiting for full readiness and admission.
+`test/backofficeApplicationMediaRetryContract.test.js`
 retains explicit byte-inspection/CAS coverage. These are source tests, not live
 database, transport or browser qualification.
 

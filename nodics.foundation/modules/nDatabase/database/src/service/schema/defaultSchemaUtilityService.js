@@ -470,7 +470,7 @@ module.exports = {
         if (!this.getAuthoringAuthority(schema).authoringAllowed) {
             requested = requested.filter(operation => ['read', 'search'].includes(operation));
         }
-        let accessPoint = SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(request.authData, schema.accessGroups);
+        let accessPoint = SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(request.authData, schema.accessGroups, request);
         let points = CONFIG.get('accessPoints');
         let allowed = [];
         if (accessPoint >= points.readAccessPoint) {

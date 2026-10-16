@@ -449,6 +449,9 @@ async function start({
         apiKey: bootstrapIdentity.serviceApiKey,
         entCode: "default",
       },
+      identityGovernance: {
+        migration: { runtimeDeploymentBootstrapEnabled: true },
+      },
       authSecurity: {
         apiKey: { pepper: secret() },
         jwt: { secret: secret() },
@@ -733,20 +736,6 @@ async function start({
         categories: { profileTenantProvisioning: { enabled: true } },
       };
       props.commandReceipts = { enabled: true, owners: { profile: true } };
-      props.identityGovernance = {
-        migration: {
-          localRuntimeDeploymentGrantPermissions: [
-            ...require(
-              path.join(
-                root,
-                "nodics.foundation/modules/nAuth/config/properties",
-              ),
-            ).identityGovernance.migration
-              .localRuntimeDeploymentGrantPermissions,
-            "profile.tenant.namespace.bind",
-          ],
-        },
-      };
       props.copilot.workbench = {
         enterpriseTarget: {
           enabled: true,
@@ -908,24 +897,6 @@ async function start({
         categories: {
           ...props.apiExposure?.categories,
           moduleInternal: { enabled: true },
-        },
-      };
-      props.identityGovernance = {
-        migration: {
-          localRuntimeDeploymentGrantPermissions: [
-            ...require(
-              path.join(
-                root,
-                "nodics.foundation/modules/nAuth/config/properties",
-              ),
-            ).identityGovernance.migration
-              .localRuntimeDeploymentGrantPermissions,
-            "process.instance.start.internal",
-            "copilot.knowledge.source.manage",
-            "copilot.knowledge.source.notify",
-            "copilot.knowledge.internal.read",
-            ...(withEnterpriseActions ? ["profile.tenant.namespace.bind"] : []),
-          ],
         },
       };
       props.copilot.knowledge.workflowRefresh = {
@@ -1113,6 +1084,10 @@ async function start({
         path.join(__dirname, "defaultCopilotAcceptanceBootstrapService.js"),
         "utf8",
       ),
+    );
+    composition.writeFile(
+      path.join(c.root, "src/service/defaultEmployeeService.js"),
+      fs.readFileSync(path.join(__dirname, "defaultEmployeeService.js"), "utf8"),
     );
     if (withDatabase || withRefresh || withSchemaActions)
       composition.writeFile(
@@ -1702,7 +1677,7 @@ async function start({
       }
     }
     composition.writeFile(selection, c);
-    if (withAxis) {
+    {
       const projection = require(
         path.join(
           root,
@@ -1720,6 +1695,18 @@ async function start({
             environment: c.environmentName,
             server: selected.serverName,
             inheritEnvironment: true,
+          });
+          const runtimeIdentity = projected.properties.runtimeIdentity;
+          props.copilotAcceptance.runtimeDeployments ||= [];
+          props.copilotAcceptance.runtimeDeployments.push({
+            projectCode: "nodics.repository-build",
+            environmentCode: c.environmentName,
+            serverCode: selected.serverName,
+            instanceCode: runtimeIdentity.instanceCode,
+            modules: [...new Set([
+              ...projected.modules,
+              ...(runtimeIdentity.remoteModules || []),
+            ])],
           });
           if (
             selected.serverName.startsWith("acceptanceWcms") &&
@@ -1746,6 +1733,10 @@ async function start({
         }
       }
     }
+    composition.writeFile(
+      propertiesPath,
+      "module.exports=" + JSON.stringify(props) + ";\n",
+    );
     await launch("build");
     runtime = await launch("start");
     for (const item of axisRuntimes) {

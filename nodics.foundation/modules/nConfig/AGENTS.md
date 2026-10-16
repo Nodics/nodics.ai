@@ -1,5 +1,10 @@
 # nConfig Agent Contract
 
+Composition selects framework groups, shared modules and project packs only.
+Implementing owners contribute domain adapters through ordinary properties;
+do not restore a Product search-contributor mirror or another domain registry
+inside this loader. Activation and contribution ownership remain distinct.
+
 Apply the [sensitive request capture contract](../nRouter/llm/contracts/request-capture-privacy-contract.md)
 to logger or request-context changes. Preserve synchronous pre-buffer suppression,
 exact-object admission, disabled-capture qualification and bounded redaction.
@@ -50,6 +55,14 @@ existing discovery/merge boundary, never arbitrary paths or module activation.
 Resolve only the selected role and preserve later collection replacement. Keep
 offline projection independent of global runtime state. See
 [the selector contract](llm/contracts/configuration-inheritance-contract.md#explicit-inactive-owner-configuration).
+
+Explicit prerequisite source lookup uses `UTILS.resolveInstalledSourceDescriptor`
+only when an exact owner is absent from selected runtime discovery. It reuses
+package descriptor and duplicate checks under the current trusted framework and
+project roots. Never register the result, activate its modules, load its properties,
+or widen `MODULE_ROOTS`. nImport retains manifest, version, checksum, execution
+capability and tenant admission. Missing, ambiguous or escaping sources fail
+closed; do not fall back to working-directory, network or arbitrary path discovery.
 
 Apply [server build and lifecycle ownership](../nConfig/llm/contracts/configuration-inheritance-contract.md#server-build-and-lifecycle-ownership).
 Keep generation, loading, cleanup and test discovery on the same selected server;

@@ -27,6 +27,18 @@ module.exports = {
     code: "409",
     message: "Promotion budget ledger read evidence could not be confirmed",
   },
+  ERR_PROMOTION_ANALYTICS_UNCONFIRMED: {
+    code: "409",
+    message: "Promotion analytics scope or read evidence could not be confirmed",
+  },
+  ERR_PROMOTION_WORKBENCH_UNCONFIRMED: {
+    code: "409",
+    message: "Promotion business read scope or evidence could not be confirmed",
+  },
+  ERR_PROMOTION_DRAFT_UNCONFIRMED: {
+    code: "409",
+    message: "Promotion draft authority, version or persistence could not be confirmed",
+  },
   ERR_PROMOTION_BUDGET_ADMISSION_FORBIDDEN: {
     code: "403",
     message: "Authenticated promotion budget management authority is required",

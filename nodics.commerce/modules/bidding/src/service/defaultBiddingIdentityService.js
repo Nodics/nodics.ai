@@ -15,6 +15,13 @@ module.exports = {
   unwrap: function (response) {
     let value = response;
     for (let n = 0; n < 7 && value && !Array.isArray(value); n++) {
+      if (
+        value.success === false ||
+        value.error ||
+        /^ERR_/.test(value.code || "") ||
+        (value.errors && (!Array.isArray(value.errors) || value.errors.length))
+      )
+        SERVICE.DefaultBiddingService.fail("Profile identity is unavailable");
       if (value.data !== undefined) value = value.data;
       else if (value.result !== undefined) value = value.result;
       else break;
@@ -32,31 +39,43 @@ module.exports = {
       !auth.loginId ||
       !input.tenant ||
       !enterpriseCode ||
+      (auth.enterpriseCode !== undefined &&
+        auth.entCode !== undefined &&
+        auth.enterpriseCode !== auth.entCode) ||
       !ownerId
     )
       fail("Authenticated Commerce participant context is required");
     const request = { ...input, ownerId, enterpriseCode };
     if (auth.principalType === "customer") {
+      if (!request.authorization)
+        fail("Authenticated customer identity is unavailable");
       const response = await SERVICE.DefaultModuleService.invokeModule({
         local: false,
         moduleName: "profile",
         connectionName: "profile",
         targetAuthority: { runtimeRole: "PLATFORM" },
-        apiName: "/customer",
-        methodName: "POST",
+        apiName: "/customer/identity",
+        methodName: "GET",
         tenant: request.tenant,
         request: { tenant: request.tenant },
-        requestBody: {
-          query: { loginId: auth.loginId },
-          options: { recursive: false },
-          searchOptions: { pageSize: 1 },
+        header: {
+          Authorization: request.authorization,
+          "X-Enterprise-Code": enterpriseCode,
         },
         timeoutMs: 10000,
         maxAttempts: 1,
       });
       const result = this.unwrap(response),
-        customer = Array.isArray(result) ? result[0] : result;
-      if (!customer?.code || customer.loginId !== auth.loginId)
+        customer = result?.customer;
+      if (
+        result?.contractVersion !== 1 ||
+        result.tenant !== request.tenant ||
+        result.enterpriseCode !== enterpriseCode ||
+        typeof customer?.code !== "string" ||
+        !customer.code.trim() ||
+        customer.code.length > 191 ||
+        customer.loginId !== auth.loginId
+      )
         fail("Customer identity is unavailable");
       request.customerCode = customer.code;
     }

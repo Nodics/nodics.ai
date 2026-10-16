@@ -176,6 +176,15 @@ Waste operational schemas do not require a stored `tenant` field. Evidence
 projects the admitted tenant into its asset, projection, policy, original-sale
 and reversal DTOs only after a bounded uncached generated reread verifies the
 actual persistence request partition and unchanged original admitted request.
+`DefaultWastePersistenceService` obtains local persistence authority only from
+`DefaultIdentityGovernanceService.getSystemAuthData()`. This canonical system
+identity has no tenant claim: generated services select the storage model using
+`NODICS.getModels(moduleName, request.tenant)`. Require the admitted request
+partition, `isSystem: true` and exact canonical authority before the reread, then
+reject changes to the captured request/auth across the provider call. Never add
+a tenant claim or invent service groups to make evidence validation pass. Tests
+exercise generated model selection with tenant-less authority and reject injected
+groups, permissions and conflicting tenant claims; they do not prove live storage.
 An absent row tenant is valid; an explicitly conflicting, null or blank tenant
 refuses. Generated request/auth/query/limit/cache drift, failed or ambiguous
 envelopes, inconsistent counts and changed records refuse. Original signed

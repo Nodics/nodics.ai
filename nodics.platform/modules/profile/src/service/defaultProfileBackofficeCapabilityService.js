@@ -490,11 +490,11 @@ module.exports = {
       const owner =
         typeof SERVICE !== "undefined" &&
         SERVICE.DefaultEnterpriseManagementService;
-      if (typeof owner?.getAccessWorkspace !== "function")
+      if (typeof owner?.buildAccessWorkspace !== "function")
         throw new Error(
           "Profile authenticated enterprise workspace owner unavailable",
         );
-      workspace = owner.getAccessWorkspace({ publicOnly: false });
+      workspace = owner.buildAccessWorkspace({ publicOnly: false });
     }
     if (
       workspace &&

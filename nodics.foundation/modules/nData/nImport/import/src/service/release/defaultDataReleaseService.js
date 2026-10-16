@@ -12,11 +12,16 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { isDeepStrictEqual } = require("node:util");
 const { AsyncLocalStorage } = require("node:async_hooks");
 const startupReleaseExecution = new AsyncLocalStorage();
+const identityReleaseExecution = new AsyncLocalStorage();
+const identityAuthorityExecution = new AsyncLocalStorage();
+const identityRequests = new WeakMap();
 const placementRequests = new WeakMap();
 const placementRuns = new WeakMap();
 const zeroWorkRecoveryPlans = new WeakMap();
+const releaseSourceOwners = new WeakMap();
 
 /**
  * @module import/service/release/DefaultDataReleaseService
@@ -435,6 +440,7 @@ module.exports = {
         tenant: plan.tenant,
         releases: operationReleases,
         validation: validation,
+        referenceReleases: this.publicReferenceReleases(plan),
         dryRun: dryRun,
         contributionPlans: contributionPlans,
       },
@@ -541,7 +547,9 @@ module.exports = {
             !name.startsWith(current.sourceRoot + "/") || !after.files.has(name)) throw fail();
         return name + ":" + crypto.createHash("sha256").update(after.files.get(name)).digest("hex");
       });
-      if (crypto.createHash("sha256").update(hashes.join("|")).digest("hex") !== current.checksum) throw fail();
+      if (crypto.createHash("sha256").update(hashes.join("|"))
+        .update(current.prerequisites?.length ? "|prerequisites:" + JSON.stringify(current.prerequisites) : "")
+        .digest("hex") !== current.checksum) throw fail();
       const bytes = after.files.get(payload);
       const limit = this.configuration().maximumContributionPayloadBytes ?? 1024 * 1024;
       if (bytes.length > limit) throw fail();
@@ -791,6 +799,7 @@ module.exports = {
     });
     const plan = await this.preparePlan(operation);
     const states = await this.operationReleases(plan, "AVAILABLE");
+    await this.validateStartupPrerequisites(plan, states);
     if (
       states.some(
         (release) =>
@@ -822,8 +831,36 @@ module.exports = {
     return context?.active === true && context.tenant === tenant;
   },
 
+  /** Reports only the exact awaited Profile seed operation, not general startup or a caller-supplied system marker. */
+  isIdentityAuthorityReleaseExecution: function (tenant, schemaName, operation) {
+    const context = identityAuthorityExecution.getStore();
+    return context?.active === true && context.release.active === true && context.tenant === tenant &&
+      (!schemaName || context.schemaName === schemaName) && (!operation || context.operation === operation);
+  },
+
+  /** Executes an existing schema operation with bounded authority only for its privately bound, immutable Init header. */
+  executeIdentityAuthorityOperation: async function (request, operationRequest, schemaService) {
+    const release = identityReleaseExecution.getStore();
+    const options = request?.header?.options;
+    const operation = options?.operation;
+    const target = release?.active === true && release.run && release.run === request.importRun &&
+      release.tenant === request.tenant && operationRequest.tenant === request.tenant &&
+      release.targets.find(item => item.moduleName === options.moduleName && item.schemaName === options.schemaName &&
+        item.operation === operation && item.dataFilePrefix === options.dataFilePrefix &&
+        (!item.tenants || item.tenants.includes(request.tenant)));
+    const serviceName = target && "Default" + target.schemaName[0].toUpperCase() + target.schemaName.slice(1) + "Service";
+    const context = target && schemaService === SERVICE[serviceName] ? {
+      active: true, release, tenant: request.tenant, schemaName: target.schemaName, operation,
+    } : undefined;
+    return identityAuthorityExecution.run(context, async () => {
+      try { return await schemaService[operation](operationRequest); }
+      finally { if (context) context.active = false; }
+    });
+  },
+
   /** Applies a trusted validated plan while preserving version ordering and installation receipts. */
   executePreparedPlan: async function (request, plan) {
+    await this.preflightPrerequisitePlan(request, plan);
     for (const release of plan.releases)
       await this.validateReleaseTargets(release, plan.tenant);
     const operationReleases = await this.operationReleases(plan, "AVAILABLE");
@@ -865,6 +902,7 @@ module.exports = {
     zeroWorkRecoveryPlans.set(plan, recoveries);
     try {
       for (let release of plan.releases) {
+        await this.assertPrerequisiteReceipts(plan, release);
         await this.recordInstallation(plan, release, undefined, "RUNNING");
         claimedRelease = release;
         let releasePlan = Object.assign({}, plan, {
@@ -875,7 +913,16 @@ module.exports = {
           releasePlan,
           false,
         );
-        let result = await this.invokeImport(importRequest, plan.dataType);
+        const identity = { active: true, tenant: plan.tenant, request: importRequest,
+          targets: identityRequests.get(importRequest) || [] };
+        let result;
+        try {
+          result = await identityReleaseExecution.run(identity, () => this.invokeImport(importRequest, plan.dataType));
+        } finally {
+          identity.active = false;
+          identityRequests.delete(importRequest);
+        }
+        this.assertPrerequisiteImportOutcome(plan, release, importRequest.importRun);
         if (importRequest.importRun?.status === "NO_DATA" ||
             importRequest.importRun?.summary?.recordsSucceeded === 0)
           throw this.error("ERR_IMP_00003", "A zero-work import cannot qualify a data release installation");
@@ -904,6 +951,7 @@ module.exports = {
           tenant: plan.tenant,
           releases: operationReleases,
           importRun: importRuns[importRuns.length - 1],
+          referenceReleases: this.publicReferenceReleases(plan),
           importRuns: importRuns,
           result: { releases: results },
         },
@@ -995,6 +1043,12 @@ module.exports = {
         "Requested data release manifest is invalid; repair manifest before installation",
       );
     }
+    const selectedCodes = new Set(releases.map((release) => release.releaseCode));
+    releases = available.filter((release) => selectedCodes.has(release.releaseCode));
+    let tenant = this.resolveTenant(request);
+    const resolved = this.resolvePrerequisiteReleases(releases, dataType, tenant);
+    releases = resolved.releases;
+    available = [...new Map(available.concat(releases).map((release) => [release.releaseCode, release])).values()];
     let expected = body.expectedReleases || {};
     releases.forEach((release) => {
       if (
@@ -1008,7 +1062,7 @@ module.exports = {
         );
       }
     });
-    let tenant = this.resolveTenant(request);
+    await this.assertReferenceReceipts(resolved.referenceReleases);
     releases.forEach((release) => this.validateDestination(release));
     for (const release of releases)
       await this.validateReleaseTargets(release, tenant);
@@ -1022,18 +1076,228 @@ module.exports = {
         installedByCode[this.installationCode(tenant, release)],
       ),
     );
-    const requestedSet = new Set(
-      releases.map((release) => release.releaseCode),
-    );
-    releases = available.filter((release) =>
-      requestedSet.has(release.releaseCode),
-    );
     return {
       dataType: dataType,
       tenant: tenant,
       releases: releases,
       sourceReleases: available,
+      prerequisiteReferences: resolved.references,
+      referenceReleases: resolved.referenceReleases,
     };
+  },
+
+  /** Validates exact manifest-owned dependency identities; callers cannot supply paths or widen data types. */
+  validatePrerequisites: function (value) {
+    if (value === undefined) return [];
+    const fail = () => { throw this.error("ERR_IMP_00003", "Data release prerequisites must be unique exact module, section, version and checksum references"); };
+    if (!Array.isArray(value) || value.length > Number(this.configuration().maximumModulesPerRun || 256)) fail();
+    const codes = new Set();
+    return value.map((reference) => {
+      if (!reference || typeof reference !== "object" || Array.isArray(reference) ||
+          !["checksum,moduleName,sectionCode,version", "checksum,moduleName,partition,sectionCode,version"].includes(Object.keys(reference).sort().join(",")) ||
+          (Object.hasOwn(reference, "partition") && reference.partition !== "DEFAULT") ||
+          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(reference.moduleName || "") ||
+          !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(reference.sectionCode || "") ||
+          !/^\d+\.\d+\.\d+$/.test(reference.version || "") ||
+          reference.version === "0.0.0" || !/^[a-f0-9]{64}$/.test(reference.checksum || "")) fail();
+      const code = reference.moduleName + ":" + reference.sectionCode + ":" + (reference.partition || "INHERIT");
+      if (codes.has(code)) fail();
+      codes.add(code);
+      return { moduleName: reference.moduleName, sectionCode: reference.sectionCode,
+        version: reference.version, checksum: reference.checksum,
+        ...(reference.partition ? { partition: reference.partition } : {}) };
+    });
+  },
+
+  /** Only manifest-owned DEFAULT references may resolve outside the inherited partition. */
+  prerequisiteTenant: function (reference, tenant) {
+    if (reference.partition !== "DEFAULT") return tenant;
+    const defaultTenant = CONFIG.get("defaultTenant");
+    if (typeof defaultTenant !== "string" || !defaultTenant.trim())
+      throw this.error("ERR_IMP_00003", "Default prerequisite partition is unavailable");
+    return defaultTenant;
+  },
+
+  /** Resolves one explicit raw owner through the existing aggregate inspector without activating optional code. */
+  discoverPrerequisite: function (reference, dataType) {
+    const rawOwner = NODICS.getRawModule(reference.moduleName);
+    const owner = rawOwner ||
+      (typeof UTILS !== "undefined" && UTILS.resolveInstalledSourceDescriptor?.(reference.moduleName));
+    if (!owner?.path || owner.name !== reference.moduleName)
+      throw this.error("ERR_IMP_00004", "Data release prerequisite owner is unavailable: " + reference.moduleName);
+    const manifestPath = path.join(owner.path, "data", "manifest.json");
+    const aggregate = this.readAggregateManifest(owner, manifestPath);
+    const section = aggregate?.sections?.[reference.sectionCode];
+    if (!section || section.kind !== "DATA_RELEASE" || section.dataType !== dataType)
+      throw this.error("ERR_IMP_00003", "Data release prerequisite is missing or has a different data type: " + reference.moduleName + ":" + reference.sectionCode);
+    const release = this.inspectManifest(owner, dataType, manifestPath, section, reference.sectionCode,
+      true, aggregate.retainedRoots?.[section.sourceRoot]);
+    if (!rawOwner && release.version === reference.version && release.checksum === reference.checksum) releaseSourceOwners.set(release, {
+      owner: structuredClone({ name: owner.name, path: owner.path, index: owner.index,
+        canonicalIdentity: owner.canonicalIdentity, parent: owner.parent }),
+      reference: structuredClone(reference), dataType,
+      source: structuredClone({ ...this.publicRelease(release), declaredFiles: release.declaredFiles }),
+    });
+    return release;
+  },
+
+  /** Resolves only a privately pinned installed-source descriptor; this grants no activation or import authority. Rechecks identity and bytes before source use. @param {Object} release Exact internal release or dispatch DTO. @returns {Object} Canonical source owner. */
+  releaseSourceOwner: function (release) {
+    const binding = releaseSourceOwners.get(release);
+    if (!binding) {
+      const owner = NODICS.getRawModule(release.moduleName);
+      if (!owner?.path) throw this.error("ERR_IMP_00004", "Data release source owner is unavailable: " + release.moduleName);
+      return owner;
+    }
+    if (!isDeepStrictEqual({ ...this.publicRelease(release), declaredFiles: release.declaredFiles }, binding.source))
+      throw this.error("ERR_IMP_00003", "Data release source descriptor changed: " + release.releaseCode);
+    const current = this.discoverPrerequisite(binding.reference, binding.dataType);
+    const fresh = releaseSourceOwners.get(current);
+    if (!fresh || !isDeepStrictEqual(fresh.owner, binding.owner) || !isDeepStrictEqual(fresh.source, binding.source))
+      throw this.error("ERR_IMP_00003", "Data release source owner changed: " + release.releaseCode);
+    return fresh.owner;
+  },
+
+  /** Builds a bounded, stable topological plan and pins every edge before any receipt or row write. */
+  resolvePrerequisiteReleases: function (roots, dataType, tenant = CONFIG.get("defaultTenant")) {
+    const key = (partition, code) => JSON.stringify([partition, code]);
+    const known = new Map(roots.map((release) => {
+      const scoped = { ...release, tenant };
+      if (releaseSourceOwners.has(release)) releaseSourceOwners.set(scoped, releaseSourceOwners.get(release));
+      return [key(tenant, release.releaseCode), scoped];
+    }));
+    const visiting = new Set(), visited = new Set(), ordered = [], references = new Map();
+    const visit = (release) => {
+      const identity = key(release.tenant, release.releaseCode);
+      if (visiting.has(identity)) throw this.error("ERR_IMP_00003", "Data release prerequisite cycle: " + release.releaseCode);
+      if (visited.has(identity)) return;
+      if (known.size > Number(this.configuration().maximumModulesPerRun || 256))
+        throw this.error("ERR_IMP_00003", "Data release prerequisite plan exceeds the release limit");
+      visiting.add(identity);
+      for (const reference of this.validatePrerequisites(release.prerequisites)) {
+        const code = reference.moduleName + ":" + reference.sectionCode;
+        const dependencyTenant = this.prerequisiteTenant(reference, release.tenant);
+        const dependencyKey = key(dependencyTenant, code);
+        const previous = references.get(dependencyKey);
+        if (previous && (previous.version !== reference.version || previous.checksum !== reference.checksum))
+          throw this.error("ERR_IMP_00003", "Conflicting data release prerequisite pins: " + code);
+        references.set(dependencyKey, reference);
+        let dependency = known.get(dependencyKey);
+        if (!dependency) {
+          dependency = this.discoverPrerequisite(reference, dataType);
+          dependency.tenant = dependencyTenant;
+        }
+        known.set(dependencyKey, dependency);
+        visit(dependency);
+        if (dependency.invalidManifest || dependency.version !== reference.version || dependency.checksum !== reference.checksum)
+          throw this.error("ERR_IMP_00003", "Data release prerequisite changed after selection: " + code);
+      }
+      visiting.delete(identity);
+      visited.add(identity);
+      ordered.push(release);
+    };
+    roots.forEach(release => visit(known.get(key(tenant, release.releaseCode))));
+    // Complete each dependency frontier before its dependents. This keeps all
+    // independent catalogues ahead of groups even when root edges are interleaved.
+    const completed = new Set(), releases = [];
+    let pending = ordered;
+    while (pending.length) {
+      const ready = pending.filter((release) => (release.prerequisites || []).every(
+        (reference) => completed.has(key(this.prerequisiteTenant(reference, release.tenant), reference.moduleName + ":" + reference.sectionCode)),
+      ));
+      if (!ready.length) throw this.error("ERR_IMP_00003", "Data release prerequisite graph cannot be ordered");
+      for (const release of ready) {
+        completed.add(key(release.tenant, release.releaseCode));
+        releases.push(release);
+      }
+      pending = pending.filter((release) => !completed.has(key(release.tenant, release.releaseCode)));
+    }
+    return { releases: releases.filter(release => release.tenant === tenant),
+      referenceReleases: releases.filter(release => release.tenant !== tenant),
+      references: [...references.values()] };
+  },
+
+  /** Foreign dependencies are receipt-only: never install, repair, or copy their receipts. */
+  assertReferenceReceipts: async function (releases = []) {
+    const partitions = new Map();
+    for (const release of releases) {
+      if (release.tenant !== this.prerequisiteTenant({ partition: "DEFAULT" }))
+        throw this.error("ERR_IMP_00003", "Default prerequisite partition changed after planning");
+      if (!partitions.has(release.tenant)) partitions.set(release.tenant, await this.getInstallations(release.tenant));
+      const receipt = partitions.get(release.tenant).find(item => item.code === this.installationCode(release.tenant, release));
+      if (!receipt || receipt.status !== "CURRENT" || receipt.version !== release.version || receipt.checksum !== release.checksum)
+        throw this.error("ERR_IMP_00003", "Referenced partition prerequisite is not current: " + release.releaseCode);
+    }
+  },
+
+  /** Distinguishes verified foreign receipts from releases selected for installation. */
+  publicReferenceReleases: function (plan) {
+    return (plan.referenceReleases || []).map(release => ({
+      ...this.publicRelease(release), tenant: release.tenant, referenceOnly: true, status: "CURRENT",
+    }));
+  },
+
+  /** Existing installations require operator selection for new bootstrap graphs; startup never repairs deleted authority. */
+  validateStartupPrerequisites: async function (plan, states) {
+    if (!plan.prerequisiteReferences?.length) return;
+    const installations = await this.getInstallations(plan.tenant);
+    const stateByCode = new Map(states.map((release) => [release.releaseCode, release]));
+    for (const release of plan.releases.filter((item) => item.prerequisites?.length)) {
+      const state = stateByCode.get(release.releaseCode);
+      const existingOwner = installations.some((receipt) => receipt.dataType === "init" &&
+        receipt.moduleName === release.moduleName && receipt.environment === NODICS.getSelectedEnvironmentName());
+      const unmet = release.prerequisites.some((reference) =>
+        this.prerequisiteTenant(reference, plan.tenant) === plan.tenant &&
+        stateByCode.get(reference.moduleName + ":" + reference.sectionCode)?.status !== "CURRENT");
+      if (existingOwner && (state?.status !== "CURRENT" || unmet))
+        throw this.error("ERR_IMP_00003", "Existing Init installation requires an operator-selected prerequisite migration: " + release.releaseCode);
+    }
+  },
+
+  /** Requalifies the entire dependency graph and all source composition before the first write. */
+  preflightPrerequisitePlan: async function (request, plan) {
+    if (!plan.prerequisiteReferences?.length) return;
+    const canonical = new Map(this.discoverReleases(plan.dataType).map((release) => [release.releaseCode, release]));
+    for (const reference of plan.prerequisiteReferences) {
+      const release = this.discoverPrerequisite(reference, plan.dataType);
+      canonical.set(release.releaseCode, release);
+    }
+    await this.assertReferenceReceipts(plan.referenceReleases);
+    for (const release of [...plan.releases, ...(plan.referenceReleases || [])]) {
+      const current = canonical.get(release.releaseCode);
+      if (!current || current.invalidManifest || current.version !== release.version || current.checksum !== release.checksum ||
+          JSON.stringify(current.prerequisites) !== JSON.stringify(release.prerequisites))
+        throw this.error("ERR_IMP_00003", "Data release prerequisite plan changed before execution: " + release.releaseCode);
+      if (!release.tenant || release.tenant === plan.tenant) {
+        this.validateDestination(current);
+        await this.resolveCompositionSources(plan, release, true);
+      }
+    }
+    const contributions = await this.preflightContributions(request, plan);
+    if (contributions.some((item) => item.ready !== true))
+      throw this.error("ERR_IMP_00003", "Data release prerequisite contribution is not ready");
+  },
+
+  /** A prerequisite must have a current exact tenant/environment receipt before its dependent is claimed. */
+  assertPrerequisiteReceipts: async function (plan, release) {
+    await this.assertReferenceReceipts(plan.referenceReleases);
+    if (!release.prerequisites?.length) return;
+    const receipts = await this.getInstallations(plan.tenant);
+    for (const reference of release.prerequisites) {
+      if (this.prerequisiteTenant(reference, plan.tenant) !== plan.tenant) continue;
+      const dependency = { releaseCode: reference.moduleName + ":" + reference.sectionCode, dataType: plan.dataType };
+      const receipt = receipts.find((item) => item.code === this.installationCode(plan.tenant, dependency));
+      if (!receipt || receipt.status !== "CURRENT" || receipt.version !== reference.version || receipt.checksum !== reference.checksum)
+        throw this.error("ERR_IMP_00003", "Data release prerequisite is not current: " + dependency.releaseCode);
+    }
+  },
+
+  /** Partial or unacknowledged standard imports cannot establish a dependency for later writes. */
+  assertPrerequisiteImportOutcome: function (plan, release, run) {
+    if (!plan.prerequisiteReferences?.length || release.installer) return;
+    if (run?.status !== "COMPLETED" || !Number.isSafeInteger(run.summary?.recordsSucceeded) || run.summary.recordsSucceeded <= 0 ||
+        run.summary.recordsFailed !== 0 || run.failures?.length || run.validationErrors?.length)
+      throw this.error("ERR_IMP_00003", "Data release prerequisite plan import did not complete successfully: " + release.releaseCode);
   },
 
   /**
@@ -1107,14 +1371,16 @@ module.exports = {
             candidate.releaseCode,
         );
       }
-      sources.push(Object.assign({}, candidate, { sourceOnly: true }));
+      const source = Object.assign({}, candidate, { sourceOnly: true });
+      if (releaseSourceOwners.has(candidate)) releaseSourceOwners.set(source, releaseSourceOwners.get(candidate));
+      sources.push(source);
     }
     return sources.concat([release]);
   },
 
   /** Returns explicit header target identities without creating a second data identity store. */
   releaseDatasetTargets: function (release) {
-    const owner = NODICS.getRawModule(release.moduleName);
+    const owner = this.releaseSourceOwner(release);
     const targets = [];
     if (!owner || !owner.path) return targets;
     for (const file of release.declaredFiles || []) {
@@ -1163,7 +1429,7 @@ module.exports = {
     )
       return true;
     const validators = this.configuration().targetValidators || {};
-    const owner = NODICS.getRawModule(release.moduleName);
+    const owner = this.releaseSourceOwner(release);
     if (!owner || !owner.path)
       throw this.error(
         "ERR_IMP_00003",
@@ -1346,6 +1612,8 @@ module.exports = {
               release.status,
             ) ||
             (forceCurrent === true &&
+              !(plan.prerequisiteReferences || []).some((reference) =>
+                reference.moduleName + ":" + reference.sectionCode === release.releaseCode) &&
               release.status === "CURRENT" &&
               (this.isDevelopmentRelease(release.version) || zeroWorkCodes.has(release.releaseCode))),
         )
@@ -2046,13 +2314,16 @@ module.exports = {
     ) {
       throw this.error("ERR_IMP_00003", "Data release file count is invalid");
     }
+    const prerequisites = this.validatePrerequisites(manifest.prerequisites);
     let checksum = crypto
       .createHash("sha256")
       .update(fileNames.map((file) => file + ":" + files[file]).join("|"))
+      .update(prerequisites.length ? "|prerequisites:" + JSON.stringify(prerequisites) : "")
       .digest("hex");
     return {
       releaseCode: rawModule.name + ":" + sectionCode,
       selectionPolicy: manifest.selectionPolicy || "DEFAULT",
+      prerequisites: prerequisites,
       sectionCode: sectionCode,
       moduleName: rawModule.name,
       displayName:
@@ -2652,16 +2923,23 @@ module.exports = {
       options: Object.assign({}, request && request.options, {
         validateOnly: validationOnly,
       }),
-      dataReleasePlan: plan.releases.map((release) =>
-        Object.assign(this.publicRelease(release), {
+      dataReleasePlan: plan.releases.map((release) => {
+        const selected = Object.assign(this.publicRelease(release), {
           sourceRoot: release.sourceRoot,
           declaredFiles: release.declaredFiles.slice(),
           sourceOnly: release.sourceOnly === true,
-        }),
-      ),
+        });
+        if (releaseSourceOwners.has(release)) releaseSourceOwners.set(selected, releaseSourceOwners.get(release));
+        return selected;
+      }),
     });
     const placements = [];
-    const canonicalReleases = this.discoverReleases(plan.dataType);
+    const identityTargets = [];
+    const canonicalReleases = this.discoverReleases(plan.dataType).concat(
+      (plan.prerequisiteReferences || []).filter((reference) => plan.releases.some(
+        (release) => release.releaseCode === reference.moduleName + ":" + reference.sectionCode,
+      )).map((reference) => this.discoverPrerequisite(reference, plan.dataType)),
+    ).filter((release, index, list) => list.findIndex((item) => item.releaseCode === release.releaseCode) === index);
     for (const release of plan.releases) {
       if (release.sourceOnly || release.installer) continue;
       const canonical = canonicalReleases.filter(
@@ -2675,9 +2953,12 @@ module.exports = {
           JSON.stringify(item.declaredFiles) ===
             JSON.stringify(release.declaredFiles),
       );
-      if (canonical.length !== 1) continue;
-      const owner = NODICS.getRawModule(release.moduleName);
-      if (!owner?.path) continue;
+      if (canonical.length !== 1) {
+        if (plan.prerequisiteReferences?.length)
+          throw this.error("ERR_IMP_00003", "Data release prerequisite source changed before dispatch: " + release.releaseCode);
+        continue;
+      }
+      const owner = this.releaseSourceOwner(release);
       for (const file of release.declaredFiles || []) {
         if (!/(?:^|\/)headers\/.+\.js$/.test(file)) continue;
         const headers = this.requireReleaseFile(
@@ -2686,6 +2967,20 @@ module.exports = {
         for (const [moduleName, definitions] of Object.entries(headers || {})) {
           for (const [name, header] of Object.entries(definitions || {})) {
             const options = header?.options || {};
+            if (plan.dataType === "init" && (options.moduleName || moduleName) === "profile" &&
+                options.enabled !== false && options.enabled !== "false" && !options.indexName) {
+              const reference = options.operation === "ensureReferenceAll" &&
+                ["permission", "userGroup", "enterpriseRole"].includes(options.schemaName);
+              const bootstrap = options.operation === "ensureBootstrapAll" &&
+                ["employee", "customer", "address", "contact", "enterprise", "tenant"].includes(options.schemaName);
+              const authorityPartition = plan.tenant === (CONFIG.get("defaultTenant") || "default");
+              if ((reference || bootstrap) &&
+                  (authorityPartition || !["permission", "enterpriseRole"].includes(options.schemaName))) {
+                identityTargets.push(Object.freeze({ moduleName: "profile", schemaName: options.schemaName,
+                  operation: options.operation, dataFilePrefix: options.dataFilePrefix || name,
+                  tenants: Array.isArray(options.tenants) ? Object.freeze(options.tenants.slice()) : undefined }));
+              }
+            }
             if (
               options.enterpriseCode === undefined ||
               options.enabled === false ||
@@ -2735,11 +3030,18 @@ module.exports = {
       delete next.importRun;
       placementRequests.set(next, { placements: Object.freeze(placements) });
     }
+    if (identityTargets.length) {
+      delete next.importRun;
+      identityRequests.set(next, Object.freeze(identityTargets));
+    }
     return next;
   },
 
   /** Binds only an exact release-created request to its in-memory run; serialized markers never qualify. @param {Object} request Existing system initializer request. @returns {boolean} Whether private provenance was bound. */
   bindOperationMetadataRun: function (request) {
+    const identity = identityReleaseExecution.getStore();
+    if (identity?.active === true && identity.request === request && !identity.run &&
+        request.importRun && typeof request.importRun === "object") identity.run = request.importRun;
     const admission = placementRequests.get(request);
     if (
       !admission ||
@@ -3300,6 +3602,7 @@ module.exports = {
     return {
       releaseCode: release.releaseCode,
       selectionPolicy: release.selectionPolicy || "DEFAULT",
+      prerequisites: release.prerequisites || [],
       sectionCode: release.sectionCode,
       moduleName: release.moduleName,
       displayName: release.displayName,

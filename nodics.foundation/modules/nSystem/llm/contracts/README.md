@@ -174,3 +174,13 @@ source root, record revision or database provenance. Do not infer whether a
 live value came from a fixture, persisted record or source override from a mask.
 Use an authorized content-free owner diagnostic when that provenance is required;
 do not inspect raw credentials or access a database to fill that evidence gap.
+
+## Logical Credential Field Paths
+
+A runtime schema field with credentialReference derives the path
+["credentials", reference, "value"] through resolveFieldPath for masked reads,
+operator metadata and persisted-patch restoration alike. The logical reference
+is one key, including dots. Authored path may be omitted; a conflicting path is
+rejected, not silently written. Invalid/prototype selectors reject without
+including values. This does not copy credentials, merge identity and delivery
+authority, change encryption, authorize updates or enable a provider.

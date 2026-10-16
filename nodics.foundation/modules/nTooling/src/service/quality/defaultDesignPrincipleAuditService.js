@@ -294,6 +294,8 @@ module.exports = exportedService = {
         });
         (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/nodics-principles.md'), [
             'capabilities are sacred, implementations are negotiable',
+            '### Framework defaults, customer deltas',
+            'customer-config-classification-contract.md#mandatory-default-ownership-gate',
             'Framework, Accelerator And Partner Ownership',
             '### Lightweight customer modules and runtimes',
             'Separate a reusable mechanism from the customer',
@@ -305,6 +307,22 @@ module.exports = exportedService = {
             'root `package.json` is the only npm dependency installation authority',
             'Security, access control, validation, audit, rollback, diagnostics, and test'
         ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures,
+            (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/customer-config-classification-contract.md'), [
+                '## Mandatory Default Ownership Gate',
+                'Customer configuration is an override, not a',
+                'Registration is not activation or authorization.',
+                'Do not limit ownership review to equal-value or duplicate-line detection.'
+            ]);
+        [
+            'contracts/ai-coding-and-customization-contract.md',
+            'playbooks/change-gate-contract.md',
+            'prompts/review-prompt.md'
+        ].forEach(relativePath => {
+            (this.requireClauses || exportedService.requireClauses).call(this, failures,
+                (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/' + relativePath),
+                ['customer-config-classification-contract.md#mandatory-default-ownership-gate']);
+        });
         (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/customer-project-mode-contract.md'), [
             '## Partner Write Boundary',
             'Partners write only to their customer-owned backend and frontend repositories.',
@@ -577,6 +595,262 @@ module.exports = exportedService = {
         walk(directory);
     },
 
+    /**
+     * Statically reads a reference demo configuration. Only literal composition,
+     * local constants and sample JSON references are admitted; nothing is executed.
+     * @param {Object} node Parsed expression.
+     * @param {Map} declarations File-local constants.
+     * @param {string} file Absolute configuration path.
+     * @param {Set} seen Circular-reference guard.
+     * @returns {*} Declarative value; throws for executable or unresolved source.
+     */
+    readReferenceDemoValue: function (node, declarations, file, seen = new Set()) {
+        if (!node) throw new Error('missing declarative value');
+        if (node.type === 'Literal') return node.value;
+        if (node.type === 'Identifier' && declarations.has(node.name) && !seen.has(node.name))
+            return this.readReferenceDemoValue(declarations.get(node.name), declarations, file, new Set([...seen, node.name]));
+        if (node.type === 'ArrayExpression') return node.elements.map(value => this.readReferenceDemoValue(value, declarations, file, seen));
+        if (node.type === 'ObjectExpression') {
+            const entries = node.properties.map(property => {
+                if (property.type !== 'Property' || property.computed || property.method || property.kind !== 'init')
+                    throw new Error('dynamic composition is not demo data');
+                return [property.key.name ?? property.key.value, this.readReferenceDemoValue(property.value, declarations, file, seen)];
+            });
+            if (new Set(entries.map(([key]) => key)).size !== entries.length) throw new Error('duplicate composition key');
+            return Object.fromEntries(entries);
+        }
+        if (node.type === 'CallExpression' && node.callee.name === 'require' && node.arguments.length === 1 &&
+            node.arguments[0].type === 'Literal' && typeof node.arguments[0].value === 'string') {
+            const target = path.resolve(path.dirname(file), node.arguments[0].value);
+            const dataRoot = path.resolve(path.dirname(file), '../data');
+            const relative = path.relative(dataRoot, target).split(path.sep).join('/');
+            if (!/^sample-v\d+\/.+\.json$/.test(relative) ||
+                !fs.realpathSync(target).startsWith(fs.realpathSync(dataRoot) + path.sep))
+                throw new Error('composition may require only its own sample JSON');
+            return JSON.parse(fs.readFileSync(target, 'utf8'));
+        }
+        throw new Error('executable or unresolved composition');
+    },
+
+    /** Accepts identity/display values and bounded nConfig envelopes, not nested definitions. */
+    isReferenceDemoSelection: function (value) {
+        const scalar = item => ['string', 'number', 'boolean'].includes(typeof item);
+        const literal = item => scalar(item) || Array.isArray(item) && item.every(scalar);
+        if (literal(value)) return true;
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+        const only = keys => Object.keys(value).every(key => keys.includes(key));
+        if (value.$config === 'replace') return only(['$config', 'value']) && literal(value.value);
+        if (value.$config === 'ref') return only(['$config', 'path']) && typeof value.path === 'string';
+        return value.$config === 'env' && only(['$config', 'name', 'type', 'fallback']) &&
+            typeof value.name === 'string' && ['string', 'number', 'boolean'].includes(value.type) &&
+            (value.fallback === undefined || scalar(value.fallback));
+    },
+
+    /**
+     * Rejects capability policy and access in marked demo properties.
+     * @param {Object} value Declarative configuration.
+     * @param {Object} policy Canonical nTooling ownership policy.
+     * @param {string[]} failures Findings without source values.
+     * @param {string} file Diagnostic path.
+     * @param {string[]} keys Current property path.
+     * @returns {void} Appends findings; does not load configuration.
+     */
+    auditReferenceDemoConfiguration: function (value, policy, failures, file, keys = []) {
+        if (!value || typeof value !== 'object') return;
+        for (const [key, child] of Object.entries(value)) {
+            const current = keys.concat(key);
+            const matchesPath = pattern => {
+                const parts = pattern.split('.');
+                return current.length <= parts.length && current.every((part, index) => parts[index] === '*' || parts[index] === part);
+            };
+            const leaves = (policy.configurationLeafPaths || []).filter(matchesPath);
+            if (!policy.accessKeys.includes(key) && leaves.some(pattern => pattern.split('.').length === current.length)) {
+                if (!this.isReferenceDemoSelection(child))
+                    failures.push(file + ': reference demo requires a literal selection: ' + current.join('.'));
+                continue;
+            }
+            let selected = false;
+            const matches = leaves.length > 0 || policy.configurationPaths.some(pattern => {
+                const parts = pattern.split('.');
+                const match = current.slice(0, parts.length).every((part, index) => parts[index] === '*' || parts[index] === part);
+                if (match && current.length >= parts.length) selected = true;
+                return match;
+            });
+            if (!matches || policy.accessKeys.includes(key) || (!selected && (!child || typeof child !== 'object' || Array.isArray(child))))
+                failures.push(file + ': reference demo cannot own capability/access configuration: ' + current.join('.'));
+            else this.auditReferenceDemoConfiguration(child, policy, failures, file, current);
+        }
+    },
+
+    /**
+     * Checks one explicitly marked reference module using existing package discovery.
+     * Runtime source and access definitions stay with capability owners; sample
+     * records, assets and inert composition stay selectable. Partner modules are
+     * not implicitly marked. Parses files without requiring customer JavaScript.
+     * @param {string[]} failures Mutable diagnostics.
+     * @param {string} directory Repository/project root.
+     * @returns {void} Read-only source audit; no runtime/import operations.
+     */
+    auditReferenceDemoModules: function (failures, directory = rootPath) {
+        directory = path.resolve(directory);
+        const policy = require('../../../config/properties').tooling.referenceDemoOwnership;
+        const ignored = new Set(['node_modules', '.git', 'generated', 'gen', 'test', 'tests', 'llm', 'dist', 'coverage']);
+        const inspectModule = (moduleRoot, metadata) => {
+            const report = (file, reason) => failures.push(path.relative(directory, file) + ': reference demo ' + reason);
+            const allowedOwners = new Set(['composition', 'configuration', 'data', 'test', 'documentation', 'llm']);
+            if (metadata.nodics.kind !== 'content-pack' || (metadata.nodics.owns || []).some(owner => !allowedOwners.has(owner)) ||
+                Object.values(metadata.nodics.runtime || {}).some(value => value === true) || Object.keys(metadata.scripts || {}).length)
+                report(path.join(moduleRoot, 'package.json'), 'must own only inert data/composition');
+            if (!fs.existsSync(path.join(moduleRoot, 'data/manifest.json')))
+                report(path.join(moduleRoot, 'data/manifest.json'), 'requires a governed optional data manifest');
+            const inspect = folder => {
+                for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
+                    if (ignored.has(entry.name) || entry.name.startsWith('.')) continue;
+                    const file = path.join(folder, entry.name);
+                    const relative = path.relative(moduleRoot, file).split(path.sep).join('/');
+                    if (entry.isSymbolicLink()) { report(file, 'cannot link to capability source'); continue; }
+                    if (relative === 'src' || relative === 'modules') { report(file, 'cannot own runtime source or nested modules'); continue; }
+                    if (entry.isDirectory()) {
+                        if (/^data\/[^/]+$/.test(relative) && !/^data\/(sample|docs)-v\d+$/.test(relative))
+                            report(file, 'data must be optional sample or documentation');
+                        inspect(file); continue;
+                    }
+                    if (relative === 'package.json') continue;
+                    if (relative === 'data/manifest.json') {
+                        try {
+                            const manifest = JSON.parse(fs.readFileSync(file, 'utf8'));
+                            for (const section of Object.values(manifest.sections || {})) {
+                                const sample = section.kind === 'DATA_RELEASE' && section.dataType === 'sample' && section.selectionPolicy === 'EXPLICIT';
+                                const documentation = section.kind === 'CONTENT_PACK' && /^docs-v\d+$/.test(section.contentPath || '') &&
+                                    section.installationPolicy === 'OPTIONAL_AXIS_INITIATED';
+                                if (!sample && !documentation)
+                                    report(file, 'releases must be explicitly selected sample/docs data');
+                            }
+                        } catch (error) { report(file, 'manifest must be readable JSON'); }
+                        continue;
+                    }
+                    if (!/\.(?:js|cjs|mjs|ts|json)$/.test(entry.name)) continue;
+                    try {
+                        const source = fs.readFileSync(file, 'utf8');
+                        if (/^config\/setup-observation\/(?:history\/)?[^/]+\.json$/.test(relative)) {
+                            const observation = JSON.parse(source);
+                            if (!observation || observation.contractVersion !== 1 || typeof observation.code !== 'string' ||
+                                !Number.isSafeInteger(observation.revision) || observation.revision < 1 ||
+                                !['tenant', 'profileCode', 'baselineCode', 'profileDigest'].every(key => typeof observation[key] === 'string') ||
+                                !Array.isArray(observation.stages) || !observation.baseline || typeof observation.baseline !== 'object' ||
+                                Array.isArray(observation.baseline) || Object.keys(observation).some(key =>
+                                    !['contractVersion', 'code', 'revision', 'tenant', 'profileCode', 'baselineCode', 'profileDigest', 'stages', 'baseline'].includes(key)))
+                                throw new Error('setup observation must be an inert receipt envelope');
+                            continue;
+                        }
+                        if (relative.startsWith('data/')) {
+                            const json = entry.name.endsWith('.json');
+                            const tree = json ? JSON.parse(source) : acorn.parse(source, { ecmaVersion: 'latest' });
+                            const references = new Set();
+                            const inspectData = node => {
+                                if (!node || typeof node !== 'object' || references.has(node)) return;
+                                if (!json && node.type === 'Identifier' && ['SERVICE', 'DAO', 'CONFIG', 'process', 'global', 'globalThis'].includes(node.name))
+                                    throw new Error('sample data cannot execute runtime capability code');
+                                if (node.type === 'CallExpression' && node.callee?.name === 'require') {
+                                    const target = node.arguments[0]?.value;
+                                    if (typeof target !== 'string' || !target.startsWith('.') ||
+                                        !path.resolve(path.dirname(file), target).startsWith(path.join(moduleRoot, 'data') + path.sep))
+                                        throw new Error('sample data cannot import capability code');
+                                }
+                                if (node.type === 'ImportExpression' || node.type === 'ImportDeclaration')
+                                    throw new Error('sample data cannot import executable modules');
+                                if (!json && node.type === 'Literal' && policy.accessSchemas.includes(node.value) &&
+                                    !(relative.includes('/headers/') && node.value === 'principalScopeAssignment'))
+                                    throw new Error('access definitions belong to capability owners');
+                                if (json || node.type === 'ObjectExpression') {
+                                    const properties = json ? node : Object.fromEntries(node.properties.filter(item => item.type === 'Property')
+                                        .map(item => [item.key.name ?? item.key.value, item.value]));
+                                    const read = key => {
+                                        if (json) return properties[key];
+                                        try { return this.readReferenceDemoValue(properties[key], new Map(), file); }
+                                        catch { return undefined; }
+                                    };
+                                    const header = relative.includes('/headers/') && typeof read('schemaName') === 'string' &&
+                                        typeof read('operation') === 'string' && typeof read('dataFilePrefix') === 'string';
+                                    const identity = relative.includes('/records/') && typeof read('loginId') === 'string';
+                                    if (policy.accessSchemas.includes(read('schemaName')) && !(header && read('schemaName') === 'principalScopeAssignment'))
+                                        throw new Error('access definitions belong to capability owners');
+                                    if (header && read('schemaName') === 'principalScopeAssignment') references.add(properties.schemaName);
+                                    for (const key of Object.keys(properties)) {
+                                        const reference = (key === 'userGroups' && (header || identity)) ||
+                                            (key === 'groupCodes' && identity) || (key === 'requiredRoles' && header);
+                                        if (policy.accessKeys.includes(key) || key === 'requiredRoles') {
+                                            const codes = read(key);
+                                            if (!reference || !Array.isArray(codes) || codes.some(code => typeof code !== 'string' || !code))
+                                                throw new Error('access definitions belong to capability owners');
+                                            references.add(properties[key]);
+                                        }
+                                    }
+                                }
+                                for (const child of Object.values(node)) {
+                                    if (Array.isArray(child)) child.forEach(inspectData);
+                                    else inspectData(child);
+                                }
+                            };
+                            inspectData(tree); continue;
+                        }
+                        if (!['nodics.js', 'config/properties.js', 'config/prescripts.js', 'config/postscripts.js'].includes(relative))
+                            throw new Error('executable files belong to capability owners');
+                        const tree = acorn.parse(source, { ecmaVersion: 'latest' });
+                        const declarations = new Map();
+                        let exports = 0;
+                        for (const statement of tree.body) {
+                            if (statement.directive) continue;
+                            if (statement.type === 'VariableDeclaration' && statement.kind === 'const') {
+                                for (const item of statement.declarations) {
+                                    if (item.id.type !== 'Identifier') throw new Error('composition constants must be named');
+                                    declarations.set(item.id.name, item.init);
+                                    this.readReferenceDemoValue(item.init, declarations, file);
+                                }
+                                continue;
+                            }
+                            const expression = statement.expression;
+                            if (expression?.type !== 'AssignmentExpression' || expression.operator !== '=' ||
+                                expression.left.type !== 'MemberExpression' || expression.left.computed ||
+                                expression.left.object.name !== 'module' || expression.left.property.name !== 'exports' || ++exports !== 1)
+                                throw new Error('only declarative module.exports is permitted');
+                            if (relative === 'nodics.js') {
+                                const members = expression.right;
+                                if (members.type !== 'ObjectExpression') throw new Error('lifecycle must be inert');
+                                for (const member of members.properties) {
+                                    const body = member.value?.body?.body;
+                                    const returned = body?.[0]?.argument;
+                                    if (member.type !== 'Property' || member.computed || !['init', 'postInit'].includes(member.key.name ?? member.key.value) ||
+                                        member.value.type !== 'FunctionExpression' || body?.length !== 1 || body[0].type !== 'ReturnStatement' ||
+                                        returned?.type !== 'CallExpression' || returned.callee.type !== 'MemberExpression' || returned.callee.computed ||
+                                        returned.callee.object.name !== 'Promise' || returned.callee.property.name !== 'resolve' ||
+                                        returned.arguments.length !== 1 || returned.arguments[0].value !== true ||
+                                        member.value.params.some(param => param.type !== 'Identifier'))
+                                        throw new Error('lifecycle hooks must remain inert');
+                                }
+                            } else {
+                                const value = this.readReferenceDemoValue(expression.right, declarations, file);
+                                if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('composition must export an object');
+                                if (relative !== 'config/properties.js' && Object.keys(value).length) throw new Error('startup scripts belong to capability owners');
+                                this.auditReferenceDemoConfiguration(value, policy, failures, path.relative(directory, file));
+                            }
+                        }
+                        if (exports !== 1) throw new Error('composition requires one export');
+                    } catch (error) { report(file, error.message); }
+                }
+            };
+            inspect(moduleRoot);
+        };
+        try {
+            const catalogue = require('../applicationBuilder/defaultApplicationBuilderCatalogueService');
+            for (const item of catalogue.collectPackages(directory, directory, [])) {
+                if (item.nodics.referenceDemo !== true) continue;
+                const moduleRoot = path.resolve(directory, item.moduleRoot);
+                inspectModule(moduleRoot, JSON.parse(fs.readFileSync(path.join(moduleRoot, 'package.json'), 'utf8')));
+            }
+        } catch (error) { failures.push('Reference ownership discovery requires readable package metadata'); }
+    },
+
     /** Implements audit as an overrideable service operation. */
     audit: function () {
         const failures = [];
@@ -587,6 +861,7 @@ module.exports = exportedService = {
         (this.auditGeneratedContextEntrypoints || exportedService.auditGeneratedContextEntrypoints).call(this, failures);
         (this.auditServiceExportStyle || exportedService.auditServiceExportStyle).call(this, failures);
         (this.auditConfigurationSources || exportedService.auditConfigurationSources).call(this, failures);
+        (this.auditReferenceDemoModules || exportedService.auditReferenceDemoModules).call(this, failures);
         return failures;
     },
 

@@ -961,21 +961,6 @@ module.exports = {
         providerErrorCount: errors.length,
         applicationCodes: applicationCodes,
         applicationStatusCounts: applicationStatusCounts,
-        nexusParity:
-          applicationCodes.includes("nexus") ||
-          applicationCodes.some((code) => /nexus/i.test(code))
-            ? "OBSERVED"
-            : "NOT_OBSERVED",
-        agoraParity:
-          applicationCodes.includes("agora") ||
-          applicationCodes.some((code) => /agora/i.test(code))
-            ? "OBSERVED"
-            : "NOT_OBSERVED",
-        circaParity:
-          applicationCodes.includes("circa") ||
-          applicationCodes.some((code) => /circa/i.test(code))
-            ? "OBSERVED"
-            : "NOT_OBSERVED",
         operatorCommands: [
           "Open Setup & Accelerators",
           "Refresh application profile status",
@@ -2238,7 +2223,7 @@ module.exports = {
           : "Configure application/media preparation profiles before validating media readiness.",
     };
   },
-  /** Reads Circa/eWaste owner readiness locally or from the registered eWaste runtime. */
+  /** Reads eWaste owner readiness locally or through its configured module connection. */
   eWasteAcceptanceReadiness: async function (request, context) {
     let service = SERVICE.DefaultEWasteAcceptanceReadinessService;
     if (service && typeof service.readiness === "function")
@@ -2252,10 +2237,8 @@ module.exports = {
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "eWaste",
       local: false,
-      connectionName: "wasteServer",
       connectionType: "abstract",
       targetAuthority: {
-        server: "wasteServer",
         runtimeRole: { code: "WASTE" },
       },
       methodName: "GET",
@@ -2267,7 +2250,7 @@ module.exports = {
         response && (response.data || response.result || response),
     });
   },
-  /** Includes Circa/eWaste owner readiness when the eWaste accelerator is present in the active runtime. */
+  /** Includes eWaste owner readiness when the accelerator is available. */
   eWasteAcceptanceSection: async function (request, context) {
     context = context || {};
     let hasEWasteConfig = !!CONFIG.get("eWaste");
@@ -2288,7 +2271,7 @@ module.exports = {
           suggestedAction:
             "Inspect eWaste startup/configuration and refresh readiness.",
           businessImpact:
-            "Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.",
+            "Axis cannot confirm eWaste channel, AI, media, accept or reject scenario readiness.",
           recoveryHint:
             "Repair the owning eWaste provider error, restart if needed, and refresh readiness.",
         },
@@ -2298,7 +2281,7 @@ module.exports = {
       );
       return {
         key: "eWasteAcceptance",
-        title: "Circa/eWaste acceptance readiness",
+        title: "eWaste acceptance readiness",
         businessStatus: "NEEDS_ATTENTION",
         ownerModule: "eWaste",
         source: "EWASTE_ACCEPTANCE_READINESS",
@@ -2324,14 +2307,14 @@ module.exports = {
           suggestedAction:
             "Activate the eWaste accelerator runtime and refresh operational readiness.",
           businessImpact:
-            "Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.",
+            "Axis cannot confirm eWaste channel, AI, media, accept or reject scenario readiness.",
           recoveryHint:
             "Start the owning eWaste runtime and refresh Axis readiness.",
         },
       );
       return {
         key: "eWasteAcceptance",
-        title: "Circa/eWaste acceptance readiness",
+        title: "eWaste acceptance readiness",
         businessStatus: "NEEDS_ATTENTION",
         ownerModule: "eWaste",
         source: "EWASTE_ACCEPTANCE_READINESS",
@@ -2350,7 +2333,7 @@ module.exports = {
         "EWASTE_ACCEPTANCE",
         item.source || "EWASTE_ACCEPTANCE_READINESS",
         item.action || "Open eWaste readiness",
-        item.message || "Circa/eWaste acceptance readiness needs attention.",
+        item.message || "eWaste acceptance readiness needs attention.",
         {
           repairAvailable: item.repair && item.repair.available === true,
           repairOperation: item.repair && item.repair.operation,
@@ -2362,7 +2345,7 @@ module.exports = {
             item.suggestedAction || item.action || "Open eWaste readiness",
           businessImpact:
             item.businessImpact ||
-            "Circa/eWaste acceptance can be blocked until the owner readiness item is resolved.",
+            "eWaste acceptance can be blocked until the owner readiness item is resolved.",
           recoveryHint:
             item.recoveryHint ||
             item.suggestedAction ||
@@ -2373,7 +2356,7 @@ module.exports = {
     });
     return {
       key: "eWasteAcceptance",
-      title: "Circa/eWaste acceptance readiness",
+      title: "eWaste acceptance readiness",
       businessStatus: blockers.length
         ? "NEEDS_ATTENTION"
         : String((report || {}).businessStatus || "NOT_CONFIGURED"),
@@ -2389,7 +2372,7 @@ module.exports = {
       nextAction: blockers.length
         ? "Open eWaste readiness and resolve Telegram, AI, media or scenario blockers."
         : (report || {}).nextAction ||
-          "Circa/eWaste acceptance readiness is clear.",
+          "eWaste acceptance readiness is clear.",
     };
   },
   /** Summarizes nSearch/read-source configuration without requiring custom-project runtime settings. */

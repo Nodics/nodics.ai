@@ -121,10 +121,11 @@ the existing default installation behavior. Non-publishable releases still use
 installation selection.
 
 An EXPLICIT release remains discoverable and its selection policy is included
-in the catalogue. It is excluded from startup Init plans, implicit initialization
+in the catalogue. It is excluded from startup root selection, implicit initialization
 profile steps, unqualified plans and legacy module-wide selection. Operators must
 name its exact `releaseCodes` entry, directly or in a selected initialization
-profile. That selection still requires the existing role, environment, tenant,
+profile, unless a selected release pins it as a prerequisite below.
+That selection still requires the existing role, environment, tenant,
 permission, checksum, version and lifecycle checks. Discovery or selection does
 not confer contribution migration authority.
 
@@ -134,6 +135,191 @@ metadata does not reroute an optional package to another runtime: use the
 destination owner's explicit nImport selection. `test/dataReleaseSelectionPolicy.test.js`
 covers these contracts using isolated persistence ports and the actual discovery,
 plan, startup and profile builders. It performs no installed-data mutation.
+
+## Exact release prerequisites
+
+The existing `DefaultDataReleaseService` owns dependency planning and execution;
+there is no identity loader, startup script, direct persistence adapter or second
+receipt journal. An aggregate DATA_RELEASE section may declare `prerequisites`:
+
+```json
+{
+  "prerequisites": [{
+    "moduleName": "exampleCapability",
+    "sectionCode": "permissionCatalogue",
+    "version": "0.0.1",
+    "checksum": "<exact 64-character lowercase SHA-256 from release discovery>"
+  }]
+}
+```
+
+Each edge has these four required fields and optionally `partition: "DEFAULT"`.
+No arbitrary partition identifier is accepted. Stable versions (not `0.0.0`) and exact
+checksums are mandatory. Missing owners/sections, malformed references, duplicate
+edges, conflicting pins, cycles, changed sources, incompatible destinations and
+graphs exceeding `maximumModulesPerRun` reject before any receipt or row write.
+Dependencies must have the same data type as the parent. Thus Init can never
+pull Core, Sample or documentation into startup. HTTP bodies cannot declare
+dependencies. Existing route permissions and owner-side row authorization apply.
+
+An exact reference resolves the installed module descriptor through
+`NODICS.getRawModule`, falling back when absent to nConfig's synchronous
+`UTILS.resolveInstalledSourceDescriptor(moduleName)`, then the existing aggregate
+manifest inspector. The fallback applies only to explicit prerequisite edges,
+not catalogue-wide discovery or caller-provided paths. It supports restricted
+runtime roots without expanding the active or raw module registries. Missing,
+ambiguous or malformed installed metadata fails closed through nConfig.
+
+An absent owner's exact version/checksum-qualified release receives a private
+source binding. nImport preserves that binding through planned releases,
+source-only composition and import request projections, rechecking canonical
+metadata and bytes before target validation, headers, file filtering and dispatch.
+Copies or serialized descriptors cannot recover source authority, and unavailable
+governed sources fail rather than silently dropping files. This binding is not
+installation authority: existing destination, partition, receipt, target admission
+and row-operation checks still apply. Lower source-only composition supplies
+inherited fields but only selected delta keys reach persistence. No caller path,
+configuration or schema activation is accepted by this resolution path.
+
+Only the named section is selected. Runtime code is not activated and sibling
+sections are not selected. Inactive custom installers
+retain their existing explicit contribution qualification; dependencies do not
+grant custom installer authority. Standard headers may target the active
+authority owner, such as Profile, while their data remains capability-owned.
+
+The prerequisite list is normalized in field order `moduleName`, `sectionCode`,
+`version`, `checksum`, and `partition` last when present, preserving list order. Nonempty lists extend the existing
+file-map checksum input with `|prerequisites:` plus that canonical JSON. Releases
+without dependencies retain their original checksum algorithm and receipt keys.
+Manifest generation must resolve leaves before parents; do not hand-edit hashes
+or change installed release bytes. Changed dependency graphs need successors.
+
+Planning topologically orders dependencies before dependents, deduplicating shared
+dependencies by resolved partition plus release identity. Preflight validates the full graph, header target admission and
+source composition without calling row import operations. In particular, Profile
+permission/group/role reference validation belongs to its row operations, after
+the prerequisite rows have persisted, not to a preflight fallback that permits
+unknown permissions. An identity graph should encode catalogue dependencies,
+then base/parent groups, then domain groups and enterprise roles explicitly.
+
+An omitted partition inherits the dependent node's partition. `DEFAULT` resolves
+only through the effective framework `defaultTenant`. When this is the requested
+tenant, ordinary ordered installation remains unchanged. Otherwise the dependency
+and its transitive closure are read-only references: every node requires an exact
+CURRENT receipt in its resolved partition and the current environment. No foreign
+import, receipt claim, copied receipt, zero-work success or repair is permitted.
+Its unqualified group dependencies therefore reference default-partition groups;
+the same group release may independently execute for the business tenant through
+an inherited edge. Both nodes count toward the bounded graph limit.
+
+Preflight and every subsequent dependent claim check the entire foreign receipt
+closure. Missing, RUNNING, FAILED, version-drifted or checksum-drifted receipts
+stop execution. An operator must separately complete the default-partition graph;
+`forceCurrent` cannot execute a reference. Existing default receipts remain
+unchanged. Canonical source/pin validation covers both executable and reference
+nodes, while target admission and import composition apply only to executable
+nodes. Responses expose foreign nodes separately as `referenceReleases` with
+`tenant`, `referenceOnly: true` and `status: "CURRENT"`; these are not installations
+performed by the operation. Public request fields cannot select partitions or
+declare dependencies. Adding partition metadata changes the parent's checksum
+and must follow existing immutable successor rules.
+
+Startup's existing awaited `installStartupReleases` path selects default Init
+roots and resolves their exact dependencies. Only a fresh owner installation may
+bootstrap a new graph automatically. An existing Init receipt for a dependent
+owner with a changed parent or unmet dependency fails closed for operator-selected
+migration. It does not rewrite old receipts, infer that deleted authority needs
+repair, or recreate missing assignments. A CURRENT graph skips execution. A new
+parent does not force replay of CURRENT dependencies, even with `forceCurrent`.
+
+### Existing-installation maintenance sequence
+
+An existing installation stays held at startup until the operator-selected
+successor migration completes (for the Profile authority transition, select
+`profile:init-v001` version `0.0.2`). To load the new owner code for that migration,
+use the existing configuration hierarchy to make the bounded maintenance selection
+`data.dataReleases.types.init.startupExecution = false`. Keep
+`data.dataReleases.types.init.enabled = true`; disabling the type also disables
+manual preflight/execution and is not this maintenance procedure. Record the
+previous effective startup selection and limit the override to the affected
+deployment and maintenance interval. Do not introduce a new mode or loader.
+
+1. Start the affected runtime with automatic Init execution suppressed. This
+   suppresses all startup Init imports in that scope, not owner validation,
+   authentication, authorization or readiness safeguards. It is not evidence
+   that the deployment is ready for business traffic.
+2. Through the existing authorized operator route, explicitly select and preflight
+   the exact successor graph in the configured authority default partition first.
+   Review versions, pins and existing receipts; retain the existing
+   `operatorExecution` policy and route permissions. Execute only the reviewed
+   graph through the same release owner and confirm its CURRENT receipts.
+3. Preflight and execute each intended tenant migration separately. Its global
+   dependencies must already have exact CURRENT default-partition receipts;
+   tenant-local groups and Init records execute only in that tenant. Do not
+   replay or reconstruct deleted authority or alter historical payloads/receipts.
+4. After the selected migrations succeed, remove the temporary override or
+   restore the previous effective startup setting. For normally enabled startup,
+   confirm the resulting CURRENT graphs skip imports on subsequent startup.
+
+If preflight or execution fails, retain the bounded maintenance hold while the
+owning operator resolves the failure. Do not use `forceCurrent`, a permission
+bypass, a fabricated receipt or a direct row write to escape it. Existing receipt
+fencing, failed-attempt handling and owner create-or-preserve semantics still
+apply. The offline maintenance regression proves no startup import and governed
+manual admission/denial, authority-first ordering and restoration; it does not
+qualify actual native bootstrap, signed-in Axis UI or deployment readiness.
+
+### Execution and recovery
+
+Execution requalifies the complete graph before its first write, then uses the
+existing durable, fenced receipt claims and import pipeline sequentially. Each
+dependent rechecks exact CURRENT prerequisite receipts in the resolved partition and
+environment before its own claim. Standard imports within a dependency plan must
+report a completed run with positive successful records and no failed records or
+diagnostics; missing acknowledgement, partial failure and zero work fail the
+claimed attempt and never unlock dependents. Successful predecessor receipts are
+retained after failure. No automatic rollback, running-attempt takeover or
+unstarted-release failure receipt is introduced. Owners retain create-or-preserve
+semantics and governed retirement; nImport never interprets missing business rows
+as permission to reconstruct them.
+
+Partners extend this contract through owner data/manifests and existing later-layer
+destination and size policies, not environment-name branches. Axis receives
+`prerequisites` in release projections and the expanded ordered plan from the
+existing validation endpoint. Administrators review and select successor releases
+through that same governed workflow. Tests in `dataReleasePrerequisites.test.js`
+cover 54 inactive permission owners, multi-level groups/roles, failure isolation,
+immutable pins, tenant/environment separation, current receipts and migration
+holds using offline ports. These checks are not live bootstrap acceptance.
+
+### Private identity seed execution
+
+`isIdentityAuthorityReleaseExecution(tenant, schemaName?, operation?)` is a
+read-only check of private, awaited operation provenance. It is not the broad
+startup context. The existing release executor creates the enclosing scope only
+after a successful fenced installation claim. The system initializer binds the
+exact import-run object; the existing model dispatcher then admits only the
+matching source-qualified Profile header and registered schema service while
+awaiting that operation. Both explicit operator Init migrations and startup use
+this path. Validation-only calls, direct system calls, forged request flags,
+copied runs, wrong tenants/services, unrelated imports and Core/Sample imports
+cannot mint authority. Row completion, rejection and release completion revoke
+it, including for detached asynchronous continuations.
+
+Eligible immutable Init headers are Profile `permission`, `userGroup` and
+`enterpriseRole` with `ensureReferenceAll`, or `employee`, `customer`, `address`,
+`contact`, `enterprise` and `tenant` with `ensureBootstrapAll`. No update/delete
+or generic save operation is admitted. Permission and enterprise-role operations
+are restricted to `CONFIG.get("defaultTenant")`; tenant-local user groups can
+use their exact requested partition. Header tenant restrictions still apply.
+This context never routes another partition's rows or imports shared catalogues
+into tenant databases: Profile and its owner packs retain partition/read ownership.
+
+Profile's seed guards consume this check (prefer the exact schema and operation
+arguments) in addition to their insert-only, reference, identity and partition
+validation. A startup boolean or `authData.isSystem` is not a substitute.
+`identityAuthorityReleaseExecution.test.js` covers operator/startup execution,
+nondefault group admission, shared-catalogue denial and private lifetime bounds.
 
 ## Offline execution test ownership
 

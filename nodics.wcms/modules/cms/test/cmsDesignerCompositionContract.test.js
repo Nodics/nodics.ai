@@ -24,8 +24,11 @@ const routers = require(path.join(root, 'modules/cms/src/router/routers')).cms.c
 const statusDefinitions = require(path.join(root, 'modules/cms/src/utils/statusDefinitions'));
 const service = require(path.join(root, 'modules/cms/src/service/designer/defaultCmsDesignerCompositionService'));
 const wcmsProperties = require(path.join(root, 'config/properties'));
-const authProperties = require(path.join(root, '../nodics.foundation/modules/nAuth/config/properties'));
-const profileGroups = require(path.join(root, '../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
+const permissions = Object.values(require('../data/init-v001/records/identity/cmsPermissionData')).map(row => row.code);
+const groups = Object.fromEntries([
+    ...Object.values(require('../data/init-v001/records/identity/cmsUserGroupData')),
+    ...Object.values(require(path.join(root, '../nodics.platform/modules/profile/data/init-v001/records/identity/profileUserGroupData')))
+].map(row => [row.code, row]));
 
 assert.strictEqual(require('../config/properties').apiExposure.categories.cmsAuthoring.enabled, true,
     'CMS must own its cmsAuthoring route default so server config only carries intentional deltas');
@@ -34,14 +37,14 @@ assert.strictEqual(wcmsProperties.cms, undefined, 'WCMS group must not select a 
 const cmsProperties = require('../config/properties');
 assert.deepStrictEqual(cmsProperties.cms.designerAuthoring.draftDefaults, {});
 assert.deepStrictEqual(cmsProperties.cms.designerAuthoring.componentKinds, []);
-assert(authProperties.identityGovernance.permissionCatalog.includes('cms.backoffice.manage'),
+assert(permissions.includes('cms.backoffice.manage'),
     'cms.backoffice.manage must be in the governed permission catalog');
-assert(authProperties.identityGovernance.permissionCatalog.includes('cms.publication.emergencyOverride'),
+assert(permissions.includes('cms.publication.emergencyOverride'),
     'cms.publication.emergencyOverride must be in the governed permission catalog');
-assert(profileGroups.record4.permissions.includes('cms.backoffice.manage'),
-    'content authors must receive explicit CMS authoring permission through profile data');
-assert(profileGroups.record1.permissions.includes('cms.publication.emergencyOverride'),
-    'admin operators must receive explicit CMS publication emergency override permission through profile data');
+assert(groups.contentUserGroup.permissions.includes('cms.backoffice.manage'),
+    'content authors must receive explicit CMS authoring permission through CMS-owned data');
+assert(groups.adminGroup.permissions.includes('cms.publication.emergencyOverride'),
+    'admin operators retain explicit CMS publication emergency override permission through Profile-managed data');
 
 [
     ['getAuthoringModel', 'GET', '/designer/composition/model', 'cms.backoffice.view'],
@@ -69,7 +72,8 @@ assert(profileGroups.record1.permissions.includes('cms.publication.emergencyOver
     assert.strictEqual(routers[operation].key, key, operation + ' key is incorrect');
     assert.strictEqual(routers[operation].controller, 'DefaultCmsDesignerCompositionController');
     assert.strictEqual(routers[operation].operation, operation);
-    assert.strictEqual(routers[operation].permission, permission);
+    assert.strictEqual(routers[operation].permission, operation === 'getAuthoringModel' ? permission :
+        ['deleteSection', 'deleteComponent', 'detachMedia'].includes(operation) ? 'cms.authoring.delete' : 'cms.authoring.write');
 });
 
 ['ERR_CMS_00100', 'ERR_CMS_00101', 'ERR_CMS_00102', 'ERR_CMS_00103',
@@ -79,7 +83,7 @@ assert(profileGroups.record1.permissions.includes('cms.publication.emergencyOver
 
 const records = {
     catalogs: [{ code: 'nexusContentCatalog', name: 'Nexus Content', catalogType: 'CONTENT', active: true }],
-    sites: [{ code: 'nexusCorporateSite', name: 'Nexus Corporate', catalog: 'nexusContentCatalog', active: true }],
+    sites: [{ code: 'nexusCorporateSite', name: 'Nexus Corporate', catalog: 'nexusContentCatalog', enterpriseCode: 'enterprise-a', active: true }],
     templates: [{ code: 'nexusCorporatePageTemplate', name: 'Nexus Corporate Page', renderer: 'nexus.template.corporate', active: true }],
     slots: [
         { code: 'nexusCorporateMainSlot', template: 'nexusCorporatePageTemplate', name: 'main', minItems: 1, maxItems: 20,
@@ -99,7 +103,8 @@ const records = {
     groups: [{ code: 'nexusCorporateSectionGroup', componentTypeCodes: ['nexusPageHeroType', 'nexusContentSectionType'], active: true }],
     mediaFolders: [{ code: 'cmsAssets', name: 'CMS Assets', status: 'ACTIVE', access: 'PUBLIC', businessPurpose: 'cms-asset', reusable: true }],
     mediaFormats: [{ code: 'original', name: 'Original', status: 'ACTIVE' }],
-    navigationNodes: [{ code: 'nexusCorporateRoot', name: 'Nexus Corporate', title: 'Nexus Corporate', site: 'nexusCorporateSite', nodeType: 'CONTAINER', status: 'ACTIVE' }],
+    navigationNodes: [{ code: 'nexusCorporateRoot', name: 'Nexus Corporate', title: 'Nexus Corporate', site: 'nexusCorporateSite', nodeType: 'CONTAINER', status: 'ACTIVE',
+        authoringScope: { enterpriseCode: 'enterprise-a', siteCode: 'nexusCorporateSite', catalogCode: 'nexusContentCatalog' } }],
     routes: []
 };
 const saved = [];
@@ -108,17 +113,26 @@ const publicationCalls = [];
 const matches = (model, query) => Object.keys(query).every(key => {
     if (key === 'active' && model[key] === undefined) return true;
     let expected = query[key];
-    return expected && expected.$in ? expected.$in.includes(model[key]) : model[key] === expected;
+    const actual = key.split('.').reduce((value, part) => value?.[part], model);
+    return expected && expected.$in ? expected.$in.includes(actual) : actual === expected;
 });
 const generatedService = list => ({
-    get: request => Promise.resolve({ result: list.filter(item => matches(item, request.query || {})) }),
+    get: request => {
+        request.schemaModel = { tenant: request.tenant };
+        const result = list.filter(item => matches(item, request.query || {})).map(item => Object.assign({ active: true }, item));
+        return Promise.resolve({ code: 'SUC_FIND_00000', query: request.query, count: result.length, result });
+    },
     save: request => { saved.push(request.model); list.push(request.model); return Promise.resolve({ result: [request.model] }); },
     remove: request => { removed.push(request.query); return Promise.resolve({ result: request.query }); }
 });
 
 global.CLASSES = { NodicsError: class NodicsError extends Error { constructor(code, message) { super(message); this.code = code; } } };
-global.CONFIG = { get: key => key === 'cms' ? { designerAuthoring: { maximumReferenceLookupItems: 25 } } : undefined };
+global.CONFIG = { get: key => key === 'cms' ? { designerAuthoring: { maximumReferenceLookupItems: 25 } } :
+    key === 'runtimeRole' ? { publication: 'STAGED' } : undefined };
 global.SERVICE = {
+    DefaultCmsDesignerAccessService: require('../src/service/designer/defaultCmsDesignerAccessService'),
+    DefaultSecuredRequestPipelineService: require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService'),
+    DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ userGroups: ['serviceAccountUserGroup'], principalType: 'service' }) },
     DefaultCatalogService: generatedService(records.catalogs),
     DefaultCmsSiteService: generatedService(records.sites),
     DefaultCmsPageTemplateService: generatedService(records.templates),
@@ -171,8 +185,13 @@ const draft = {
     route: { path: '/docs/getting-started', accessMode: 'AUTHENTICATED' }
 };
 
+const context = { tenant: 'tenant-a', authorization: 'Bearer cms-author-token', authData: { tenant: 'tenant-a', enterpriseCode: 'enterprise-a',
+    principalType: 'human', tokenType: 'access', loginId: 'author', userGroups: ['employeeUserGroup'],
+    permissions: ['cms.backoffice.view', 'cms.authoring.write', 'cms.authoring.delete'] } };
+const scope = { enterpriseCode: 'enterprise-a', siteCode: draft.siteCode, catalogCode: draft.catalogCode };
+
 (async () => {
-    let model = await service.getAuthoringModel({});
+    let model = await service.getAuthoringModel(context);
     assert.strictEqual(model.result.hierarchy[0], 'Content Catalog');
     assert.strictEqual(model.result.rules.arbitrarySlots, true);
     assert.strictEqual(model.result.rules.frontendPersistence, false);
@@ -212,17 +231,17 @@ const draft = {
             return Promise.reject(error);
         }
     };
-    model = await service.getAuthoringModel({});
+    model = await service.getAuthoringModel(context);
     assert(model.result.metadata.contentCatalogs.some(catalog => catalog.code === 'nexusContentCatalog'),
         'WCMS Designer must derive catalog references from CMS sites when catalog metadata is remote');
     global.SERVICE.DefaultCatalogService = catalogService;
 
-    let validation = await service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
+    let validation = await service.validateDraftComposition({ ...context, body: draft });
     assert.strictEqual(validation.result.status, 'VALID_DRAFT');
     assert.deepStrictEqual(validation.result.template.slots, ['main']);
     assert.strictEqual(validation.result.componentCount, 1);
 
-    let save = await service.saveDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
+    let save = await service.saveDraftComposition({ ...context, body: draft });
     assert.strictEqual(save.result.status, 'DRAFT_SAVED');
     assert(saved.some(item => item.code === 'gettingStartedPage'), 'draft page must be saved through cmsPage');
     assert(saved.some(item => item.source === 'gettingStartedPage' && item.slot === 'main'),
@@ -232,29 +251,30 @@ const draft = {
 
     records.routes.push({ code: 'existingRoute', site: 'nexusCorporateSite', path: '/docs/getting-started',
         locale: 'default', channel: 'web', active: true });
-    await assert.rejects(service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft }),
+    await assert.rejects(service.validateDraftComposition({ ...context, body: draft }),
         error => error.code === 'ERR_CMS_00105');
     records.routes.length = 0;
 
     let invalidSlot = JSON.parse(JSON.stringify(draft));
     invalidSlot.sections[0].slot = 'fixedMain';
-    await assert.rejects(service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: invalidSlot }),
+    await assert.rejects(service.validateDraftComposition({ ...context, body: invalidSlot }),
         error => error.code === 'ERR_CMS_00104');
 
     let invalidComponent = JSON.parse(JSON.stringify(draft));
     invalidComponent.sections[0].components[0].typeCode = 'richTextComponentType';
-    await assert.rejects(service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: invalidComponent }),
+    await assert.rejects(service.validateDraftComposition({ ...context, body: invalidComponent }),
         error => error.code === 'ERR_CMS_00104');
 
-    await service.deleteSection({ body: { code: 'gettingStartedPage-navigation-gettingStartedNav' } });
-    assert.deepStrictEqual(removed.pop(), { code: 'gettingStartedPage-navigation-gettingStartedNav' });
+    await service.deleteSection({ ...context, body: { ...scope, code: 'gettingStartedPage-main-gettingStartedHero' } });
+    assert.equal(removed.length, 0, 'Delete retains historical versions instead of hard removal');
+    assert.equal(saved.at(-1).active, false);
 
-    let publishReady = await service.validatePublishReadiness({ tenant: 'tenant-a', authData: {}, body: draft });
+    let publishReady = await service.validatePublishReadiness({ ...context, body: draft });
     assert.strictEqual(publishReady.result.status, 'READY_TO_PUBLISH');
     records.routes.push({ code: 'nexusCorporateSite-gettingStartedPage-route', site: 'nexusCorporateSite',
         path: '/docs/getting-started', locale: 'default', channel: 'web', active: true, page: 'gettingStartedPage',
-        versionId: 7 });
-    let publication = await service.submitForPublication({ tenant: 'tenant-a', authData: {}, body: draft });
+        versionId: 7, authoringScope: scope });
+    let publication = await service.submitForPublication({ ...context, body: draft });
     assert.strictEqual(publication.result.status, 'PENDING_APPROVAL');
     assert.strictEqual(publicationCalls[0][1].rootType, 'pageRoute');
     assert.strictEqual(publicationCalls[0][1].rootCode, 'nexusCorporateSite-gettingStartedPage-route');
@@ -263,7 +283,7 @@ const draft = {
     records.routes.length = 0;
     let noRoute = JSON.parse(JSON.stringify(draft));
     delete noRoute.route;
-    await assert.rejects(service.validatePublishReadiness({ tenant: 'tenant-a', authData: {}, body: noRoute }),
+    await assert.rejects(service.validatePublishReadiness({ ...context, body: noRoute }),
         error => error.code === 'ERR_CMS_00106');
 
     console.log('CMS designer composition contract validated');

@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "system",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "system permissionCatalogue",
+      "description": "Explicit system identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "system",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/systemPermissionHeader.js": "2fb6036766c4a18e54f626700d298eff23bb8b02169f5a419f4e1f764ee1417e",
+        "init-v001/records/identity/systemPermissionData.js": "29a6e7735b9838c7c9c8571a27fea159086353436447fe3d16feb87dc5791810"
+      }
+    }
+  }
+}

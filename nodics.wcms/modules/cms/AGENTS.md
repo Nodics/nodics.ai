@@ -1,5 +1,13 @@
 # cms Agent Contract
 
+The module owns explicit ordinary business access definitions in
+`data/manifest.json` sections `businessAccessGroups` and `businessAccessRoles`.
+Keep mappings on persisted Profile roles and user groups; never infer grants from
+verbs or add approval, financial, simulation, or platform bypass authority.
+Source packs alone never change an employee's assignments. Existing employee
+level changes and scoped No access use Profile's reviewed business-access command,
+preserving other areas, advanced responsibilities, scope and registration proof.
+
 Documentation discovery reads canonical CMS product records through existing
 authorized APIs. See [the discovery contract](llm/contracts/README.md#documentation-product-discovery).
 Never duplicate product identities in properties or read tenant content during

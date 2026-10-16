@@ -46,6 +46,9 @@ module.exports = {
         }
         try {
             if (metadata) admittedOperationMetadata.set(operationRequest, metadata);
+            const releases = SERVICE.DefaultDataReleaseService;
+            if (typeof releases?.executeIdentityAuthorityOperation === 'function')
+                return await releases.executeIdentityAuthorityOperation(request, operationRequest, schemaService);
             return await schemaService[operation](operationRequest);
         } finally {
             admittedOperationMetadata.delete(operationRequest);

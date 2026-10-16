@@ -19,6 +19,20 @@ balances, excludes unactivated warehouses and uses retained sourcing priority.
 Balances and coupon-code pools remain live operational data, not release content.
 Private negotiated prices keep the existing Negotiated Pricing authority.
 
+If Pricing's existing `publication.delivery.rowReleases` is selected, the price
+port first uses Pricing's bounded configured-book/exact-Store candidate gate.
+Only matching row Products require exact references through Product's activated and
+retained reader, with persisted Cart locale/Store and the engine's entry SKU.
+Supplied references are overwritten. Missing Product activation or mismatched
+scope/SKU refuses before the Pricing read; CURRENT/latest Product and mutable
+price fallback are forbidden. Pricing rechecks approved reference compatibility
+and fresh owner proof. Disabled row delivery and private quote branches do not
+add Product reads. No permission, source authoring or publication is implied.
+Book-only and unrelated Store/book/Product baskets keep their original prices
+without new Product admission, even when the global row flag is enabled. Final
+Pricing delivery independently enumerates again; a newly relevant row after an
+empty gate refuses without the missing pin instead of returning an old book price.
+
 Digital Core is consulted before physical Inventory policy/balance reads. It
 resolves the entry's pinned Product/SKU and approved digital classification, then
 delegates supply to Promotion. Coupon pools are never Inventory balances or

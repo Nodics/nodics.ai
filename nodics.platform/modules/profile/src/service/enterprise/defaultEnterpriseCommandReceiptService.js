@@ -67,7 +67,7 @@ module.exports = {
           request.body.email,
         );
       else owner.authorizeEnterpriseAccess(request, enterprise);
-      owner.rolePolicy(String(request.body.roleCode || "").trim());
+      await owner.rolePolicy(String(request.body.roleCode || "").trim());
     } else SERVICE.DefaultModelCommandReceiptService.fail();
   },
   /** Builds exact private native receipt evidence. @param {Object} request Trusted request. @param {string} kind Fixed native operation. @param {string} key Original key. @returns {Object} Declaration. */

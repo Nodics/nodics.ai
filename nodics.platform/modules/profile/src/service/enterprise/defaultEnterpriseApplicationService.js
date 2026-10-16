@@ -341,7 +341,7 @@ module.exports = {
    * @param {Object} enterprise Authoritative enterprise and explicit application policy.
    * @returns {Object|undefined} Explicit admissible role policy and digest, or no eligible policy.
    */
-  enterprisePolicy: function (enterprise) {
+  enterprisePolicy: async function (enterprise) {
     const policy = enterprise && enterprise.employeeApplicationPolicy;
     if (
       !enterprise ||
@@ -352,7 +352,7 @@ module.exports = {
       !this.policy().allowedRoleCodes.includes(policy.roleCode)
     )
       return undefined;
-    const role = SERVICE.DefaultEnterpriseManagementService.rolePolicy(
+    const role = await SERVICE.DefaultEnterpriseManagementService.rolePolicy(
       policy.roleCode,
     );
     if (
@@ -434,7 +434,7 @@ module.exports = {
     );
     const choices = [];
     for (const enterprise of enterprises) {
-      const policy = this.enterprisePolicy(enterprise);
+      const policy = await this.enterprisePolicy(enterprise);
       if (
         !policy ||
         submitted
@@ -448,7 +448,7 @@ module.exports = {
         );
       if (
         resolved.enterprise.active !== true ||
-        !this.enterprisePolicy(resolved.enterprise)
+        !(await this.enterprisePolicy(resolved.enterprise))
       )
         continue;
       choices.push({
@@ -654,7 +654,7 @@ module.exports = {
     const target = await management.retrieveEnterpriseForAccess(
       input.enterpriseCode,
     );
-    const policy = this.enterprisePolicy(target.enterprise);
+    const policy = await this.enterprisePolicy(target.enterprise);
     if (!policy) this.fail("ASSIGNMENT");
     if ((await this.base().identities(context, session.email)).length)
       this.fail("EXISTING");
@@ -867,7 +867,7 @@ module.exports = {
         record.enterpriseCode,
       );
     if (
-      this.enterprisePolicy(target.enterprise)?.digest !==
+      (await this.enterprisePolicy(target.enterprise))?.digest !==
         record.application.policyDigest ||
       target.tenantCode !== record.tenantCode
     )

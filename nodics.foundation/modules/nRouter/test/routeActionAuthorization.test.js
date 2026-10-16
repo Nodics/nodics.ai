@@ -152,7 +152,7 @@ let groupGranted = executeCheckAccess(createRequest({
     permission: 'runtime.config.request.approve',
     permissions: []
 }));
-assert.strictEqual(groupGranted.success, true, 'Group-derived permission should allow matching route action');
+assert.strictEqual(groupGranted.success, false, 'Router configuration cannot grant permissions absent from persisted claims');
 
 routeActionAuthorization = {
     enabled: true,
@@ -179,8 +179,8 @@ let governedGroupPermissionGranted = executeCheckAccess(createRequest({
     permission: 'media.content.download',
     permissions: []
 }));
-assert.strictEqual(governedGroupPermissionGranted.success, true,
-    'Identity-governed group permission should authorize a matching route action without router-local duplication');
+assert.strictEqual(governedGroupPermissionGranted.success, false,
+    'Configuration group targets cannot restore a revoked permission');
 
 let tokenUserGroupPermissionGranted = executeCheckAccess({
     authData: {
@@ -203,8 +203,8 @@ let governedParentGroupPermissionGranted = executeCheckAccess(createRequest({
     permission: 'system.health.readiness.view',
     permissions: []
 }));
-assert.strictEqual(governedParentGroupPermissionGranted.success, true,
-    'Identity-governed parent group permission should authorize inherited route actions');
+assert.strictEqual(governedParentGroupPermissionGranted.success, false,
+    'Configuration parent groups cannot restore inherited permissions');
 
 let governedParentAccessGroupGranted = executeCheckAccess(createRequest({
     userGroups: ['runtimeConfigAdminUserGroup'],
@@ -212,8 +212,8 @@ let governedParentAccessGroupGranted = executeCheckAccess(createRequest({
     permission: 'system.health.readiness.view',
     permissions: []
 }));
-assert.strictEqual(governedParentAccessGroupGranted.success, true,
-    'Identity-governed parent groups should satisfy inherited route access groups');
+assert.strictEqual(governedParentAccessGroupGranted.success, false,
+    'Configuration parent groups cannot satisfy route access groups');
 
 let unownedGovernedPermissionDenied = executeCheckAccess(createRequest({
     userGroups: ['runtimeConfigAdminUserGroup'],
@@ -326,5 +326,31 @@ let accessGroupDenied = executeCheckAccess(createRequest({
 }));
 assert.strictEqual(accessGroupDenied.success, false, 'Access group mismatch should deny before permission check');
 assert.strictEqual(accessGroupDenied.error.code, 'ERR_AUTH_00003');
+
+// Profile hydrates persisted ancestry before session issuance; router consumes it without config supplementation.
+const persistedParent = { code: 'runtimeConfigOperatorUserGroup', active: true,
+    permissions: ['system.health.readiness.view'], parentGroups: [] };
+const persistedChild = { code: 'runtimeConfigAdminUserGroup', active: true,
+    permissions: [], parentGroups: [persistedParent] };
+const persistedRequest = createRequest({
+    userGroups: [persistedChild], accessGroups: ['runtimeConfigOperatorUserGroup'],
+    permission: 'system.health.readiness.view', permissions: ['system.health.readiness.view']
+});
+assert.strictEqual(executeCheckAccess(persistedRequest).success, true);
+persistedChild.parentGroups = [];
+assert.strictEqual(executeCheckAccess(persistedRequest).success, false,
+    'Removing the persisted parent survives even while configuration retains that parent');
+persistedChild.parentGroups = [persistedParent];
+persistedParent.active = false;
+assert.strictEqual(executeCheckAccess(persistedRequest).success, false,
+    'Inactive hydrated parents cannot satisfy route access groups');
+
+const systemRequest = createRequest({ permissions: ['*'], permission: 'system.health.readiness.view' });
+systemRequest.authData.isSystem = true;
+assert.strictEqual(executeCheckAccess(systemRequest).success, true,
+    'Trusted system claims retain their existing explicit wildcard authority');
+systemRequest.authData.permissions = [];
+assert.strictEqual(executeCheckAccess(systemRequest).success, false,
+    'A system marker is not an implicit permission grant');
 
 console.log('Route action authorization validated');

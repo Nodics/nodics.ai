@@ -2,6 +2,68 @@
   "contractVersion": 2,
   "module": "product",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "product permissionCatalogue",
+      "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "product",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/productPermissionHeader.js": "40020bcf30b59523b333238705ff1642224b539f4b02a5dd08f19b5425205129",
+        "init-v001/records/identity/productPermissionData.js": "9db40ca249e080ec5f0db758f627b757f323cafbe1e36f7561fc559a9c6121e2"
+      }
+    },
+    "enterpriseRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "product enterpriseRoles",
+      "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "product",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/productEnterpriseRoleHeader.js": "df25e6ede911c800d8a2808888d015c9dbd97321ef093d19bd490b88eb10b805",
+        "init-v001/records/identity/productEnterpriseRoleData.js": "c07179645586bebb58e1c2965882d5cafc6d9b7a5d3cec74954d1fed70a9e70a"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "product",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "6476e85ce43cd1b70c206b45af8c8516fac8140f7904c057f15d7e5c8e6550ce"
+        },
+        {
+          "moduleName": "publish",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "cfa73ab9a7aa7e54922b1858e8976ad196818899841dcf6596c09b9290a6e937"
+        }
+      ]
+    },
     "productPublicationWorkflow": {
       "kind": "DATA_RELEASE",
       "selectionPolicy": "EXPLICIT",
@@ -101,6 +163,158 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "product accessGroups",
+      "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "product",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/productUserGroupHeader.js": "37c5a71ec266bab935132300e9968c17d79a847d18601bd76cd2cebd31b950f6",
+        "init-v001/records/identity/productUserGroupData.js": "e702568a18f90f8f7a20e75434f8a6a0415e18e221b975afc3b58b2e7dd98a01"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "6f411a90fd89c1894fa7a92a1de5d35796dec3481514073a2aa38e0247c44b1c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "backoffice",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "8ad193e9316013aa5a65de9c57d2b3a09cd8855b46d218173353793b448eefba",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "promotion",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "publish",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "a02257cb5a9ea08397b4662e2b720f4a2e0f5318421d8a01e7daa7b0e6ca9376",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "businessAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Products business access groups",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "product",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/productBusinessAccessGroupData.js": "d3e33f46cf1cda6483a7a65332428de29473cf9d382d0e1470ce54821600770e",
+        "init-v001/headers/identity/productBusinessAccessGroupHeader.js": "58ebdf5ef6a16074bc99f3c5303d83748e657b6f1daad5565fbd76f79df738d9"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "product",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "businessAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Products business access roles",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "product",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/productBusinessAccessRoleData.js": "7743dc1fa9c8130dec2755cad9fafe6a48a20f92d4379fa15871109219609b2b",
+        "init-v001/headers/identity/productBusinessAccessRoleHeader.js": "db8fab6cda043a89ead159e9f946fbf48beec541792275442bf9a200b99f17b0"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "product",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.1",
+          "checksum": "e2e534f79f0bcebf82f68466e661be46839c18846c2ffd61463c37d569e154b7"
         }
       ]
     }

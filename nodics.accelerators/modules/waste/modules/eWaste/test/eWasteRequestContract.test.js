@@ -58,10 +58,12 @@ test("settlement consumes persisted confirmed Rules evidence and missing evidenc
   const assessment = {
     code: "reward-assessment",
     assetCode: "asset",
+    submissionCode: "submission",
+    sourceVerificationRef: { module: "wasteVerification", schema: "wasteVerification", code: "decision" },
     assessmentType: "CONFIRMED",
     rewardTypeCode: "points",
     rewardAmount: "12.00",
-    rewardOutcome: {},
+    rewardOutcome: { programCode: "original", scale: 2 },
     policyCode: "EWASTE_REWARD",
     policyVersion: 2,
     bandSetCode: "EWASTE_BANDS",
@@ -73,7 +75,11 @@ test("settlement consumes persisted confirmed Rules evidence and missing evidenc
     get: () => ({ rewardRules: { loyaltyProgramCode: "default", rewardScale: 2 } }),
   };
   global.SERVICE = {
+    DefaultEWasteRewardAssessmentOperationService: require("../src/service/defaultEWasteRewardAssessmentOperationService"),
     DefaultWastePersistenceService: {
+      list: async () => [{ code: "submission", submissionStatus: "APPROVED",
+        verificationRef: assessment.sourceVerificationRef,
+        submitterRef: { module: "profile", schema: "customer", code: "owner" } }],
       one: async () => assessment,
       fail: (code) => {
         throw Error(code);
@@ -91,9 +97,12 @@ test("settlement consumes persisted confirmed Rules evidence and missing evidenc
     },
   });
   const result = await scoped.settle(
-    {},
+    { tenant: "tenant-a", authData: { tenant: "tenant-a" } },
     {
       code: "asset",
+      sourceSubmissionCode: "submission",
+      verificationRef: assessment.sourceVerificationRef,
+      originalOwnerRef: { module: "profile", schema: "customer", code: "owner" },
       ownerRef: { code: "owner" },
       metadata: {
         confirmedRewardAssessmentRef: { code: assessment.code },

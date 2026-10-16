@@ -1,5 +1,22 @@
 # Governed Application Setup
 
+## Project Context Ownership
+
+BackOffice supplies PLATFORM-scoped project-context mechanics through its
+`backofficeApplicationInitialization.runtimeRoleProfiles.PLATFORM` defaults:
+`projectCode` resolves the explicit `NODICS_PROJECT_CODE` override or nConfig's
+trusted project-code context, and `projectRoot` resolves nConfig's trusted project
+root. No sample identity, local directory or environment name is embedded.
+Unrelated roles receive neither binding. Missing trusted path context fails
+configuration resolution; do not invent a customer path to bypass that failure.
+
+Customers retain application/documentation profiles, data-package selections,
+connection names and deployment authority. These defaults install nothing and
+do not activate a capability, enable reset, grant access or publish a release.
+Later project/server/node overrides retain normal nConfig precedence. The owner
+`test/applicationTargetDefaults.test.js` covers independent project contexts,
+explicit overrides and missing context without live operations.
+
 Authenticated bootstrap exposes `axisInitializationAdmission` only to employees
 without detailed Axis initialization inspection rights. It reads the existing
 initialization status owner with the original human request and returns only

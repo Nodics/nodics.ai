@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "auth",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "auth permissionCatalogue",
+      "description": "Explicit auth identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "auth",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/authPermissionHeader.js": "ca43986a5ae41f17515acb7920ab3ed644f1e255c17a9aa60e1a429aa671e088",
+        "init-v001/records/identity/authPermissionData.js": "9d36ce5b8b5221a2098cafb10b5d98a884557d8ac8acf2f22f28b57fab0aac7c"
+      }
+    },
     "core-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "core",

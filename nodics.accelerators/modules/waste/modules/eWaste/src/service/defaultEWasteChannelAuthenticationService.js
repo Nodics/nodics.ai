@@ -67,7 +67,9 @@ module.exports = {
       maxAttempts: 1,
     }).catch((error) => {
       const code =
-        error.code === "ERR_PROFILE_EXTERNAL_CONFLICT"
+        error.code === "ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED"
+          ? "ERR_EWASTE_CHANNEL_CONFIGURATION_REQUIRED"
+          : error.code === "ERR_PROFILE_EXTERNAL_CONFLICT"
           ? "ERR_EWASTE_CHANNEL_LINK_CONFLICT"
           : ["ERR_PROFILE_EXTERNAL_ASSERTION", "ERR_AUTH_00001"].includes(
                 error.code,

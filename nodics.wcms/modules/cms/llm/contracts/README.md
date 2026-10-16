@@ -202,3 +202,55 @@ Retained Media readiness is separate from CMS `ONLINE`. Follow
   publication not created, validation pending, approval not requested, approval
   pending/rejected, failed, rolled back, withdrawn, Online receipt missing,
   Online pointer stale and Online.
+# Business Designer Authority
+
+CMS business commands require an explicitly enterprise-bound `cmsSite`, not an
+inferred Catalog owner or a broad operator group. Unbound or foreign-owned shared
+Catalog Sites fail closed; completed demo content is not migrated. Fresh optional
+source packs may declare known owners explicitly without adopting installed records.
+Source ownership does not authorize rewriting sealed content or reusing an installed
+release version with different bytes. Preserve historical documentation payloads,
+headers, assets, checksums and receipts; an editable documentation release requires
+an explicitly selected forward source file/section through the existing release
+owner. Historical-header importer checks prove retention, not current authoring
+admission. Whole-model JavaScript headers preserve declared ownership fields, but
+mapping checks do not qualify installation or reconcile existing versions. Resolve
+whether a changed baseline is genuinely unreleased before resealing it; otherwise
+use governed forward release/adoption without replaying completed demo data.
+`authoringScope` is owner-stamped: pages/routes/page placements retain Site binding;
+components, locale/Media records and component-owned nested placements retain
+Catalog/enterprise ownership and may be reused across same-owner Sites. Every command retains
+signed tenant and enterprise context; focused commands also include `siteCode`
+and `catalogCode`. Read metadata is restricted to bound Sites and their Catalogs.
+
+`cms.authoring.write` admits ordinary Designer authoring only in Staged.
+`cms.authoring.delete` additionally admits retirement of owned sections, components
+and Media associations through generated saves, preserving history. Neither grants
+publication approval, Online authoring, generic schema management, or foreign scope.
+Legacy generated CRUD routes are excluded and generic HTTP mutations are read-only.
+Owner paths must check original human authority before using internal persistence
+credentials. Do not replace these checks with synthetic human schema ACL grants.
+
+Generated reads require `SUC_FIND_00000`, an exact query, complete integer `count`
+of at most 100 rows, and the selected generated model's original tenant partition.
+Do not invent required tenant fields on CMS records. Reject contradictory tenant
+aliases, malformed/error envelopes, partial counts and identity/authority/scope
+changes across awaits. Recheck the admitted principal immediately before writes.
+Generated write outcomes require exactly one scoped persisted record; reject
+conflicting acknowledgement flags, error codes/collections and multi-record or
+count-only results. Rejection does not prove rollback and must never trigger replay.
+Project Designer operations after awaited metadata and final identity admission.
+Business navigation selects the existing active Designer; Workbench links retain
+their independent schema-read permission. No generic permission is added to groups.
+Axis selects the declared WCMS authoring role, not server-name aliases, and consumes
+only owner result envelopes. HTTP success alone never confers operation authority.
+The existing Designer screen exposes the owner retirement commands with inert owner
+copy, exact record-code/Site/Catalog review and explicit confirmation. Presenting an
+action never authorizes it: intersect with fresh `operations` and recheck on submit.
+Retire placements separately from their shared components and Media associations
+separately from Media assets. Review must disclose Catalog sharing, retained history,
+non-cascading references and independent publication. Success requires matching
+inactive version evidence and invalidates prior draft readiness. Unknown outcomes
+retain the reviewed target; inspection acknowledgement and a fresh review precede
+any separate submission. Do not add generic CRUD fallback, impact claims, lifecycle,
+revision locking or transactions that these existing owner commands do not provide.

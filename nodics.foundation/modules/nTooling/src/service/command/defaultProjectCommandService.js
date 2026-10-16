@@ -111,6 +111,7 @@ module.exports = {
         this.validateProjectDirectoryBoundaries(projectRoot);
         const configurationFailures = [];
         require('../quality/defaultDesignPrincipleAuditService').auditConfigurationSources(configurationFailures, projectRoot, { customerProject: true });
+        require('../quality/defaultDesignPrincipleAuditService').auditReferenceDemoModules(configurationFailures, projectRoot);
         if (configurationFailures.length) throw new Error('Configuration coding restrictions failed: ' + configurationFailures.join('; '));
     },
 

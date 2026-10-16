@@ -49,9 +49,8 @@ module.exports = {
     verify: function ({ proof, application, policy }) {
         const { token } = this.configuredCredential(application, policy || {});
         if (!token || !/^\d+:[^\s]+$/.test(token)) {
-            let error = new CLASSES.NodicsError('ERR_PROFILE_EXTERNAL_UNAVAILABLE');
+            let error = new CLASSES.NodicsError('ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED');
             error.runtimeConfigurationStatus = 'UNCONFIGURED';
-            error.responseCode = 'TELEGRAM_CONFIGURATION_REQUIRED';
             throw error;
         }
         if (typeof proof !== 'string' || !proof || proof.length > policy.maximumAssertionCharacters) return this.invalid();

@@ -16,6 +16,27 @@ const workspace = require("../src/service/defaultWasteReviewWorkspaceService");
 const verification = require("../src/service/defaultWasteVerificationOperationService");
 const accessBase = require("../../wasteCore/src/service/defaultWasteOperationalAccessService");
 const defaults = require("../config/properties").waste.reviewWorkspace;
+test("review presentation projects the canonical vocabulary without configuration imports or shared mutation", () => {
+  const vocabulary = require("../../wasteMaterial/src/utils/descriptorDefinitions");
+  assert.equal(defaults.descriptorOptions, undefined);
+  const presentation = workspace.presentation();
+  assert.deepEqual(presentation.descriptorOptions, vocabulary);
+  presentation.descriptorOptions.sizeClasses.push("MUTATED");
+  assert.deepEqual(workspace.presentation().descriptorOptions, vocabulary);
+  const previous = global.CONFIG;
+  try {
+    global.CONFIG = {
+      get: () => ({
+        reviewWorkspace: { descriptorOptions: { sizeClasses: ["SMALL"] } },
+      }),
+    };
+    assert.deepEqual(workspace.presentation().descriptorOptions, {
+      sizeClasses: ["SMALL"],
+    });
+  } finally {
+    global.CONFIG = previous;
+  }
+});
 let records, points, scopes, denied, access, writes;
 function value(record, path) {
   return path.split(".").reduce((v, key) => v?.[key], record);
@@ -37,7 +58,11 @@ function matches(record, query) {
               ? new RegExp(wanted, condition.$options || "").test(
                   String(item ?? ""),
                 )
-              : operator === "$gte" ? item >= wanted : operator === "$lt" ? item < wanted : operator === "$options",
+              : operator === "$gte"
+                ? item >= wanted
+                : operator === "$lt"
+                  ? item < wanted
+                  : operator === "$options",
       );
     return item === condition;
   });
@@ -140,6 +165,135 @@ beforeEach(() => {
     },
   };
 });
+test("historical completed reviews never imply pending notification or retry authority", () => {
+  for (const status of ["APPROVED", "REJECTED"]) {
+    const record = row("historical", "allowed", status),
+      original = structuredClone(record);
+    const result = workspace.project(record);
+    assert.equal(result.submissionStatus, status);
+    assert.equal(result.revision, 1);
+    assert.deepEqual(result.outcomeNotification, {
+      status: "NOT_ESTABLISHED",
+      retryAllowed: false,
+      message: defaults.labels.outcomeReviewAuthorityMissing,
+    });
+    assert.equal(result.metadata.outcomeDelivery, undefined);
+    assert.equal(result.reviewPending, undefined);
+    assert.deepEqual(record, original);
+  }
+  assert.deepEqual(writes, []);
+});
+
+test("notification presentation uses owner copy without exposing keys or accepting source presentation flags", () => {
+  const record = row("historical", "allowed", "REJECTED");
+  record.metadata.outcomeDelivery = {
+    status: "PENDING",
+    message: "PRIVATE",
+    retryAllowed: true,
+  };
+  const originalGet = CONFIG.get;
+  CONFIG.get = (key) =>
+    key === "waste"
+      ? {
+          reviewWorkspace: {
+            ...defaults,
+            labels: {
+              ...defaults.labels,
+              outcomeReviewAuthorityMissing:
+                "Owner reconciliation is required.",
+            },
+          },
+        }
+      : originalGet(key);
+  assert.deepEqual(workspace.project(record).outcomeNotification, {
+    status: "NOT_ESTABLISHED",
+    retryAllowed: false,
+    message: "Owner reconciliation is required.",
+  });
+  for (const key of [null, "", 12, {}, "short", "PRIVATE KEY WITH SPACES"]) {
+    record.metadata.reviewKey = key;
+    assert.equal(
+      workspace.project(record).outcomeNotification.retryAllowed,
+      false,
+    );
+  }
+  assert(
+    !JSON.stringify(workspace.project(record).outcomeNotification).includes(
+      "PRIVATE",
+    ),
+  );
+});
+
+test("recorded notification evidence preserves status while source command controls retry and uncertainty never resends", () => {
+  const record = row("recorded", "allowed", "REJECTED");
+  record.metadata.reviewKey = "original-review-command";
+  assert.deepEqual(workspace.project(record).outcomeNotification, {
+    status: "NOT_ESTABLISHED",
+    retryAllowed: true,
+    message: defaults.labels.outcomeNotEstablished,
+  });
+  for (const status of ["PENDING", "ACCEPTED", "RETRY_PENDING", "DELIVERING"]) {
+    record.metadata.outcomeDelivery = { status, intentCode: "COMM_original" };
+    assert.deepEqual(workspace.project(record).outcomeNotification, {
+      status,
+      retryAllowed: true,
+    });
+  }
+  for (const status of [
+    "DELIVERED",
+    "SUPPRESSED",
+    "FAILED",
+    "CANCELLED",
+    "DEAD_LETTER",
+    "UNCERTAIN",
+    "UNCONFIGURED",
+  ]) {
+    record.metadata.outcomeDelivery = { status, intentCode: "COMM_original" };
+    assert.equal(workspace.project(record).outcomeNotification.status, status);
+    assert.equal(
+      workspace.project(record).outcomeNotification.retryAllowed,
+      false,
+    );
+    assert.equal(
+      workspace.project(record).metadata.outcomeDelivery.intentCode,
+      "COMM_original",
+    );
+    assert.equal(
+      workspace.project(record).metadata.outcomeDelivery.status,
+      status,
+    );
+  }
+  delete record.metadata.reviewKey;
+  assert.equal(
+    workspace.project(record).outcomeNotification.status,
+    "UNCONFIGURED",
+  );
+  assert.equal(
+    workspace.project(record).outcomeNotification.retryAllowed,
+    false,
+  );
+  record.metadata.reviewKey = "original-review-command";
+  record.metadata.outcomeDelivery = {
+    status: "UNKNOWN",
+    intentCode: "COMM_original",
+  };
+  assert.equal(
+    workspace.project(record).outcomeNotification.status,
+    "NOT_ESTABLISHED",
+  );
+  assert.equal(
+    workspace.project(record).outcomeNotification.retryAllowed,
+    false,
+  );
+  assert(
+    !JSON.stringify(workspace.project(record).outcomeNotification).includes(
+      "original-review-command",
+    ),
+  );
+  record.submissionStatus = "UNDER_REVIEW";
+  assert.equal(workspace.project(record).outcomeNotification, undefined);
+});
+
 test("scope applies before pagination and counts beyond the previous 500-record cap", async () => {
   records = [
     ...Array.from({ length: 650 }, (_, i) => row("hidden-" + i, "hidden")),
@@ -282,12 +436,25 @@ test("release and stale assignment use the generated revision boundary", async (
 });
 
 test("unclaimed verification and approval are rejected before any record is written", async () => {
-  for (const assignment of [undefined, { type: "QUEUE", queueCode: "REVIEW" }]) {
+  for (const assignment of [
+    undefined,
+    { type: "QUEUE", queueCode: "REVIEW" },
+  ]) {
     records = [row("one")];
     records[0].metadata.reviewAssignment = assignment;
-    const command = request({ code: "one", confirmed: true, expectedRevision: 1, idempotencyKey: "unclaimed-review", payload: { decision: "REJECTED", reason: "Test review" } });
-    await assert.rejects(verification.verify(command), { code: "ERR_WASTE_ASSIGNMENT_REQUIRED" });
-    await assert.rejects(verification.review(command), { code: "ERR_WASTE_ASSIGNMENT_REQUIRED" });
+    const command = request({
+      code: "one",
+      confirmed: true,
+      expectedRevision: 1,
+      idempotencyKey: "unclaimed-review",
+      payload: { decision: "REJECTED", reason: "Test review" },
+    });
+    await assert.rejects(verification.verify(command), {
+      code: "ERR_WASTE_ASSIGNMENT_REQUIRED",
+    });
+    await assert.rejects(verification.review(command), {
+      code: "ERR_WASTE_ASSIGNMENT_REQUIRED",
+    });
     assert.equal(records[0].submissionStatus, "SUBMITTED");
     assert.equal(writes.length, 0);
   }
@@ -295,31 +462,74 @@ test("unclaimed verification and approval are rejected before any record is writ
 
 test("only the claimed reviewer may record facts; verification hands the record back to the queue", async () => {
   records = [row("one")];
-  const command = request({ code: "one", confirmed: true, expectedRevision: 1, idempotencyKey: "claim-for-verification", payload: { action: "CLAIM" } });
+  const command = request({
+    code: "one",
+    confirmed: true,
+    expectedRevision: 1,
+    idempotencyKey: "claim-for-verification",
+    payload: { action: "CLAIM" },
+  });
   await workspace.assign(command);
-  const confirm = { ...command, expectedRevision: 2, idempotencyKey: "confirm-verification", payload: { verifiedFacts: { name: "Checked item" } } };
-  await assert.rejects(verification.verify({ ...confirm, authData: { ...confirm.authData, loginId: "other" } }), { code: "ERR_WASTE_ASSIGNMENT_CONFLICT" });
+  const confirm = {
+    ...command,
+    expectedRevision: 2,
+    idempotencyKey: "confirm-verification",
+    payload: { verifiedFacts: { name: "Checked item" } },
+  };
+  await assert.rejects(
+    verification.verify({
+      ...confirm,
+      authData: { ...confirm.authData, loginId: "other" },
+    }),
+    { code: "ERR_WASTE_ASSIGNMENT_CONFLICT" },
+  );
   assert.equal(writes.length, 1);
   SERVICE.DefaultWasteSubmissionOperationService = { facts: (facts) => facts };
-  const service = { ...verification, validateCorrections: async () => {}, assessVerifiedFacts: async () => ({ calculationStatus: "PENDING" }), once: async (schema, req, model) => model };
+  const service = {
+    ...verification,
+    validateCorrections: async () => {},
+    assessVerifiedFacts: async () => ({ calculationStatus: "PENDING" }),
+    once: async (schema, req, model) => model,
+  };
   const result = await service.verify(confirm);
   assert.equal(result.submission.metadata.verifiedFacts.name, "Checked item");
   assert.equal(result.submission.metadata.reviewAssignment.type, "QUEUE");
   assert.equal(result.submission.submissionStatus, "UNDER_REVIEW");
   await service.verify(confirm);
-  assert.equal(writes.length, 2);
-  await assert.rejects(service.review({ ...confirm, expectedRevision: 3, payload: { decision: "REJECTED", reason: "Review decision" } }), { code: "ERR_WASTE_ASSIGNMENT_REQUIRED" });
-  assert.equal(writes.length, 2);
+  assert.equal(writes.length, 3);
+  await assert.rejects(
+    service.review({
+      ...confirm,
+      expectedRevision: 3,
+      payload: { decision: "REJECTED", reason: "Review decision" },
+    }),
+    { code: "ERR_WASTE_ASSIGNMENT_REQUIRED" },
+  );
+  assert.equal(writes.length, 3);
 });
 
 test("release returns to read-only and duplicate release does not write again", async () => {
   records = [row("one")];
-  const command = request({ code: "one", confirmed: true, expectedRevision: 1, idempotencyKey: "claim-release-guard", payload: { action: "CLAIM" } });
+  const command = request({
+    code: "one",
+    confirmed: true,
+    expectedRevision: 1,
+    idempotencyKey: "claim-release-guard",
+    payload: { action: "CLAIM" },
+  });
   await workspace.assign(command);
-  const release = { ...command, expectedRevision: 2, idempotencyKey: "release-guard", payload: { action: "RELEASE" } };
+  const release = {
+    ...command,
+    expectedRevision: 2,
+    idempotencyKey: "release-guard",
+    payload: { action: "RELEASE" },
+  };
   await workspace.assign(release);
   await workspace.assign(release);
-  await assert.rejects(verification.verify({ ...command, expectedRevision: 3 }), { code: "ERR_WASTE_ASSIGNMENT_REQUIRED" });
+  await assert.rejects(
+    verification.verify({ ...command, expectedRevision: 3 }),
+    { code: "ERR_WASTE_ASSIGNMENT_REQUIRED" },
+  );
   assert.equal(writes.length, 2);
 });
 test("customer and out-of-scope detail calls are denied", async () => {
@@ -336,38 +546,167 @@ test("customer and out-of-scope detail calls are denied", async () => {
 });
 
 test("date, family, area and channel filters constrain exact counts before paging", async () => {
-  const make=(code,point,at,channel,category)=>({...row(code,point),confirmedFacts:{name:code,categoryCode:category},metadata:{submittedAt:at,origin:{channel}}});
-  records=[...Array.from({length:620},(_,i)=>make('in-'+i,'allowed','2026-09-10T10:00:00.000Z','TELEGRAM','CLOTHING')),make('earlier','allowed','2026-09-09T23:59:59.000Z','TELEGRAM','CLOTHING'),make('wrong-channel','allowed','2026-09-10T10:00:00.000Z','WEB','CLOTHING'),make('wrong-family','allowed','2026-09-10T10:00:00.000Z','TELEGRAM','DEVICES'),make('hidden','hidden','2026-09-10T10:00:00.000Z','TELEGRAM','CLOTHING')];
-  const scoped={...workspace,choices:async()=>({centres:[{code:'allowed',city:'Dubai'}],unavailableSources:[]})};
-  SERVICE.DefaultWasteItemDescriptorService={...SERVICE.DefaultWasteItemDescriptorService,catalogue:async()=>({categories:[{code:'CLOTHING',familyCode:'TEXTILES'}]})};
-  const result=await scoped.search(request({query:{dateFrom:'2026-09-10',dateTo:'2026-09-10',channel:'TELEGRAM',familyCode:'TEXTILES',area:'Dubai',page:2,limit:25}}));
-  assert.equal(result.total,620);assert.equal(result.counts.ALL,620);assert.equal(result.items.length,25);assert.equal(result.items[0].code,'in-25');
+  const make = (code, point, at, channel, category) => ({
+    ...row(code, point),
+    confirmedFacts: { name: code, categoryCode: category },
+    metadata: { submittedAt: at, origin: { channel } },
+  });
+  records = [
+    ...Array.from({ length: 620 }, (_, i) =>
+      make(
+        "in-" + i,
+        "allowed",
+        "2026-09-10T10:00:00.000Z",
+        "TELEGRAM",
+        "CLOTHING",
+      ),
+    ),
+    make(
+      "earlier",
+      "allowed",
+      "2026-09-09T23:59:59.000Z",
+      "TELEGRAM",
+      "CLOTHING",
+    ),
+    make(
+      "wrong-channel",
+      "allowed",
+      "2026-09-10T10:00:00.000Z",
+      "WEB",
+      "CLOTHING",
+    ),
+    make(
+      "wrong-family",
+      "allowed",
+      "2026-09-10T10:00:00.000Z",
+      "TELEGRAM",
+      "DEVICES",
+    ),
+    make(
+      "hidden",
+      "hidden",
+      "2026-09-10T10:00:00.000Z",
+      "TELEGRAM",
+      "CLOTHING",
+    ),
+  ];
+  const scoped = {
+    ...workspace,
+    choices: async () => ({
+      centres: [{ code: "allowed", city: "Dubai" }],
+      unavailableSources: [],
+    }),
+  };
+  SERVICE.DefaultWasteItemDescriptorService = {
+    ...SERVICE.DefaultWasteItemDescriptorService,
+    catalogue: async () => ({
+      categories: [{ code: "CLOTHING", familyCode: "TEXTILES" }],
+    }),
+  };
+  const result = await scoped.search(
+    request({
+      query: {
+        dateFrom: "2026-09-10",
+        dateTo: "2026-09-10",
+        channel: "TELEGRAM",
+        familyCode: "TEXTILES",
+        area: "Dubai",
+        page: 2,
+        limit: 25,
+      },
+    }),
+  );
+  assert.equal(result.total, 620);
+  assert.equal(result.counts.ALL, 620);
+  assert.equal(result.items.length, 25);
+  assert.equal(result.items[0].code, "in-25");
 });
-test("reviewed classification takes precedence over stale confirmed and submitted copies",async()=>{
-  records=[{...row('reclassified'),confirmedFacts:{categoryCode:'CLOTHING'},metadata:{reviewedFacts:{categoryCode:'DEVICES'}}}];
-  const result=await workspace.search(request({query:{categoryCode:'CLOTHING'}}));assert.equal(result.total,0);
+test("reviewed classification takes precedence over stale confirmed and submitted copies", async () => {
+  records = [
+    {
+      ...row("reclassified"),
+      confirmedFacts: { categoryCode: "CLOTHING" },
+      metadata: { reviewedFacts: { categoryCode: "DEVICES" } },
+    },
+  ];
+  const result = await workspace.search(
+    request({ query: { categoryCode: "CLOTHING" } }),
+  );
+  assert.equal(result.total, 0);
 });
-test("invalid calendar dates, reversed ranges, nested filters and unknown channels fail closed",()=>{
-  for(const query of [{dateFrom:'2026-02-30'},{dateFrom:'2026-10-01',dateTo:'2026-09-01'},{familyCode:{$ne:null}},{channel:'SMS'},{dashboard:'anything'}]) assert.throws(()=>workspace.filters(query),{code:'ERR_WASTE_REVIEW_QUERY'});
+test("invalid calendar dates, reversed ranges, nested filters and unknown channels fail closed", () => {
+  for (const query of [
+    { dateFrom: "2026-02-30" },
+    { dateFrom: "2026-10-01", dateTo: "2026-09-01" },
+    { familyCode: { $ne: null } },
+    { channel: "SMS" },
+    { dashboard: "anything" },
+  ])
+    assert.throws(() => workspace.filters(query), {
+      code: "ERR_WASTE_REVIEW_QUERY",
+    });
 });
-test("trend buckets count the exact scoped population without a capped client scan",async()=>{
-  records=[...Array.from({length:701},(_,i)=>({...row('visible-'+i),metadata:{submittedAt:'2026-09-10T12:00:00.000Z'}})),{...row('hidden','hidden'),metadata:{submittedAt:'2026-09-10T12:00:00.000Z'}}];
-  const scope=await access.scopeQuery(request(),'waste.review.queue.read');
-  const trend=await workspace.trend(request(),[scope],{dateFrom:'2026-09-10',dateTo:'2026-09-10',status:'ALL'});
-  assert.equal(trend.length,6);assert.equal(trend.reduce((sum,bucket)=>sum+bucket.count,0),701);
+test("trend buckets count the exact scoped population without a capped client scan", async () => {
+  records = [
+    ...Array.from({ length: 701 }, (_, i) => ({
+      ...row("visible-" + i),
+      metadata: { submittedAt: "2026-09-10T12:00:00.000Z" },
+    })),
+    {
+      ...row("hidden", "hidden"),
+      metadata: { submittedAt: "2026-09-10T12:00:00.000Z" },
+    },
+  ];
+  const scope = await access.scopeQuery(request(), "waste.review.queue.read");
+  const trend = await workspace.trend(request(), [scope], {
+    dateFrom: "2026-09-10",
+    dateTo: "2026-09-10",
+    status: "ALL",
+  });
+  assert.equal(trend.length, 6);
+  assert.equal(
+    trend.reduce((sum, bucket) => sum + bucket.count, 0),
+    701,
+  );
 });
 
-
-test('module-owned view keys bind family and queue semantics without route inference', () => {
-  const settings={...defaults,views:{
-    ...require('../../wasteCore/config/properties').waste.reviewWorkspace.views,
-    'sample.overview':{ownerModule:'sampleWaste',mode:'OVERVIEW',familyCode:'SAMPLE'},
-    'sample.queue':{ownerModule:'sampleWaste',mode:'REVIEW_QUEUE',familyCode:'SAMPLE'}
-  }};
-  const target={...workspace,settings:()=>settings};
-  assert.equal(target.filters({viewCode:'waste.submissions'}).status,'ALL');
-  assert.equal(target.filters({viewCode:'sample.overview'}).familyCode,'SAMPLE');
-  assert.equal(target.filters({viewCode:'sample.queue'}).status,'OPEN');
-  for(const query of [{viewCode:'missing'},{viewCode:'constructor'},{viewCode:'sample.queue',status:'APPROVED'},{viewCode:'sample.queue',familyCode:'OTHER'}]) assert.throws(()=>target.filters(query),error=>error.code==='ERR_WASTE_REVIEW_QUERY');
-  assert.equal(JSON.stringify(require('../config/properties')).includes('Electronics'),false);
+test("module-owned view keys bind family and queue semantics without route inference", () => {
+  const settings = {
+    ...defaults,
+    views: {
+      ...require("../../wasteCore/config/properties").waste.reviewWorkspace
+        .views,
+      "sample.overview": {
+        ownerModule: "sampleWaste",
+        mode: "OVERVIEW",
+        familyCode: "SAMPLE",
+      },
+      "sample.queue": {
+        ownerModule: "sampleWaste",
+        mode: "REVIEW_QUEUE",
+        familyCode: "SAMPLE",
+      },
+    },
+  };
+  const target = { ...workspace, settings: () => settings };
+  assert.equal(target.filters({ viewCode: "waste.submissions" }).status, "ALL");
+  assert.equal(
+    target.filters({ viewCode: "sample.overview" }).familyCode,
+    "SAMPLE",
+  );
+  assert.equal(target.filters({ viewCode: "sample.queue" }).status, "OPEN");
+  for (const query of [
+    { viewCode: "missing" },
+    { viewCode: "constructor" },
+    { viewCode: "sample.queue", status: "APPROVED" },
+    { viewCode: "sample.queue", familyCode: "OTHER" },
+  ])
+    assert.throws(
+      () => target.filters(query),
+      (error) => error.code === "ERR_WASTE_REVIEW_QUERY",
+    );
+  assert.equal(
+    JSON.stringify(require("../config/properties")).includes("Electronics"),
+    false,
+  );
 });

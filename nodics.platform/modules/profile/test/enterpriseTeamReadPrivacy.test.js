@@ -76,6 +76,7 @@ function fixture() {
     searchOptions: { pageSize: 2, pageNumber: 1 },
   });
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseTeamAdministrationService: team,
     DefaultEnterpriseMembershipService: memberships,
     DefaultEnterpriseRegistrationService: base,

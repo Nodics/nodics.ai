@@ -25,7 +25,7 @@ const service = require('../src/service/project/defaultProjectLocalRuntimeCreden
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-local-runtime-credentials-'));
 fs.mkdirSync(path.join(root, 'envs', 'kickoffLocal'), { recursive: true });
 
-const first = service.ensureCredentials(root, 'kickoffLocal');
+const first = service.mergeEnvironment(root, 'kickoffLocal', {});
 const second = service.ensureCredentials(root, 'kickoffLocal');
 const file = service.credentialPath(root, 'kickoffLocal');
 
@@ -84,22 +84,73 @@ fs.writeFileSync(migratedFile, JSON.stringify({
     NODICS_BOOTSTRAP_ADMIN_PASSWORD: 'administrator-password-for-migration',
     NODICS_BOOTSTRAP_SERVICE_PASSWORD: 'service-password-for-migration',
     NODICS_BOOTSTRAP_SERVICE_API_KEY: 's'.repeat(48),
+    NODICS_API_KEY: 'a'.repeat(48),
     NODICS_RUNTIME_API_KEY: 'r'.repeat(48),
     NODICS_WASTE_API_KEY: 'w'.repeat(48)
-}, null, 2));
-const migrated = service.ensureCredentials(migratedRoot, 'kickoffLocal');
-assert.strictEqual(migrated.NODICS_BOOTSTRAP_ADMIN_PASSWORD, 'adminPassword',
-    'legacy local administrator passwords must normalize to the documented local default');
-assert.strictEqual(migrated.NODICS_API_KEY, 'r'.repeat(48),
-    'legacy retained runtime proof must migrate to the server-local runtime proof');
-assert.strictEqual(migrated.NODICS_RUNTIME_API_KEY, undefined);
-assert.strictEqual(migrated.NODICS_WASTE_API_KEY, undefined);
-assert(migrated.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY,
-    'existing local storage must gain the missing runtime encryption key');
+}, null, 2), { mode: 0o600 });
+const retainedBytes = fs.readFileSync(migratedFile);
+const retainedStat = fs.statSync(migratedFile);
+const noGeneration = { ...service, ensureCredentials: () => { throw new Error('Existing startup must not generate credentials'); } };
+const migrated = noGeneration.mergeEnvironment(migratedRoot, 'kickoffLocal', {});
+assert.strictEqual(migrated.NODICS_BOOTSTRAP_ADMIN_PASSWORD, 'administrator-password-for-migration',
+    'existing nondefault administrator password must survive startup');
+assert.strictEqual(migrated.NODICS_API_KEY, 'a'.repeat(48));
+assert.strictEqual(migrated.NODICS_RUNTIME_API_KEY, 'r'.repeat(48));
+assert.strictEqual(migrated.NODICS_WASTE_API_KEY, 'w'.repeat(48));
+assert.strictEqual(migrated.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY, undefined,
+    'adding a missing purpose key requires an explicit owner operation, not startup');
 assert.strictEqual(migrated.NODICS_JWT_SECRET, 'j'.repeat(64));
 assert.strictEqual(migrated.NODICS_API_KEY_PEPPER, 'p'.repeat(64));
-assert.strictEqual(service.ensureCredentials(migratedRoot, 'kickoffLocal').NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY,
-    migrated.NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY);
+assert.deepStrictEqual(service.ensureCredentials(migratedRoot, 'kickoffLocal'), migrated);
+assert.deepStrictEqual(fs.readFileSync(migratedFile), retainedBytes);
+for (const field of ['ino', 'mode', 'mtimeMs', 'ctimeMs']) {
+    assert.strictEqual(fs.statSync(migratedFile)[field], retainedStat[field], 'startup must not write or chmod retained storage');
+}
+for (const invalid of ['{}', '{broken', JSON.stringify({ ...migrated, NODICS_API_KEY: 'weak' })]) {
+    fs.writeFileSync(migratedFile, invalid);
+    const before = fs.statSync(migratedFile);
+    for (const method of ['mergeEnvironment', 'ensureCredentials']) {
+        assert.throws(() => service[method](migratedRoot, 'kickoffLocal', {
+            NODICS_API_KEY: 'external-key-must-not-mask-invalid-storage'
+        }), /RESOLUTION_REFUSED/);
+    }
+    assert.strictEqual(fs.readFileSync(migratedFile, 'utf8'), invalid);
+    assert.strictEqual(fs.statSync(migratedFile).ctimeMs, before.ctimeMs);
+}
+fs.writeFileSync(migratedFile, retainedBytes);
+fs.chmodSync(migratedFile, 0o644);
+assert.throws(() => service.mergeEnvironment(migratedRoot, 'kickoffLocal', {}), /RESOLUTION_REFUSED/);
+assert.strictEqual(fs.statSync(migratedFile).mode & 0o777, 0o644, 'startup must not repair unsafe permissions');
+fs.chmodSync(migratedFile, 0o600);
+const retainedTarget = path.join(migratedRoot, 'retained.json');
+fs.renameSync(migratedFile, retainedTarget);
+fs.symlinkSync(retainedTarget, migratedFile);
+assert.throws(() => service.mergeEnvironment(migratedRoot, 'kickoffLocal', {}), /RESOLUTION_REFUSED/);
+assert.deepStrictEqual(fs.readFileSync(retainedTarget), retainedBytes);
+fs.unlinkSync(migratedFile);
+fs.symlinkSync(path.join(migratedRoot, 'absent.json'), migratedFile);
+assert.throws(() => service.mergeEnvironment(migratedRoot, 'kickoffLocal', {}), /RESOLUTION_REFUSED/);
+assert.strictEqual(fs.existsSync(path.join(migratedRoot, 'absent.json')), false);
+fs.unlinkSync(migratedFile);
+fs.renameSync(retainedTarget, migratedFile);
+
+// A competing first launch can create storage after absence detection, but cannot be overwritten.
+const racingRoot = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-credential-first-use-')));
+const racingFile = service.credentialPath(racingRoot, 'fixtureLocal');
+let installed = false;
+const racing = { ...service, randomSecret: bytes => {
+    if (!installed) {
+        fs.writeFileSync(racingFile, retainedBytes, { mode: 0o600, flag: 'wx' });
+        installed = true;
+    }
+    return service.randomSecret(bytes);
+} };
+try {
+    assert.deepStrictEqual(racing.mergeEnvironment(racingRoot, 'fixtureLocal', {}), migrated);
+    assert.deepStrictEqual(fs.readFileSync(racingFile), retainedBytes);
+} finally {
+    fs.rmSync(racingRoot, { recursive: true, force: true });
+}
 
 // Rotation uses only the existing file, even if compatibility normalization would otherwise change its contents.
 const jwt = require('jsonwebtoken');

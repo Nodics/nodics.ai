@@ -13,17 +13,44 @@
 
 /**
  * @module nodics.process/test/processPermissionCatalogContract
- * @description Ensures every secured Process route permission is present in the identity governance permission catalog.
+ * @description Ensures every secured Process route permission is defined by Workflow's Profile-managed permission pack.
  * @layer test
  * @owner nodics.process
- * @override Later Process routes may add permissions only when the identity catalog and bootstrap groups are updated in the same change.
+ * @override Later Process routes must extend owner permission data; group and principal grants remain separate governed decisions.
  */
 const assert = require('assert');
 
-const authProperties = require('../../nodics.foundation/modules/nAuth/config/properties');
+const permissionRecords = Object.values(require('../modules/workflow/data/init-v001/records/identity/workflowPermissionData'));
+const permissionHeader = require('../modules/workflow/data/init-v001/headers/identity/workflowPermissionHeader');
+const permissionPack = require('../modules/workflow/data/manifest.json').sections.permissionCatalogue;
+const profileInit = require('../../nodics.platform/modules/profile/data/manifest.json').sections['init-v001'];
 const routers = require('../modules/workflow/src/router/routers');
 
-const permissionCatalog = new Set(authProperties.identityGovernance.permissionCatalog);
+const permissionCatalog = new Set(permissionRecords.map(row => row.code));
+assert.strictEqual(permissionCatalog.size, permissionRecords.length, 'Process permission definitions must be unique');
+assert.deepStrictEqual([...permissionCatalog].sort(), [
+    'process.backoffice.view', 'process.definition.read', 'process.definition.create', 'process.definition.update',
+    'process.definition.validate', 'process.definition.publish', 'process.definition.delete',
+    'process.instance.start', 'process.instance.start.internal', 'process.instance.cancel', 'process.instance.retry',
+    'process.instance.compensate', 'process.incident.read', 'process.task.claim', 'process.task.assign',
+    'process.task.complete', 'process.task.cancel', 'process.trigger.manage', 'process.trigger.execute',
+].sort());
+permissionRecords.forEach(row => {
+    assert.strictEqual(row.ownerModule, 'workflow');
+    assert.strictEqual(row.active, true);
+    assert.deepStrictEqual(Object.keys(row).sort(), ['active', 'code', 'name', 'ownerModule'],
+        'Permission definitions must not assign groups or principals');
+});
+assert.strictEqual(permissionPack.owningDomain, 'workflow');
+assert.strictEqual(permissionPack.selectionPolicy, 'EXPLICIT');
+assert.strictEqual(permissionPack.destinationRole, 'PLATFORM');
+assert(Object.hasOwn(permissionPack.files, 'init-v001/records/identity/workflowPermissionData.js'));
+assert(Object.hasOwn(permissionPack.files, 'init-v001/headers/identity/workflowPermissionHeader.js'));
+assert.deepStrictEqual(Object.keys(permissionHeader), ['profile']);
+assert.strictEqual(permissionHeader.profile.workflowPermission.options.schemaName, 'permission');
+assert.strictEqual(permissionHeader.profile.workflowPermission.options.operation, 'ensureReferenceAll');
+assert(profileInit.prerequisites.some(ref => ref.moduleName === 'workflow' &&
+    ref.sectionCode === 'permissionCatalogue' && ref.partition === 'DEFAULT'));
 const routeGroups = [routers.workflow.processDefinitions, routers.workflow.processOperations];
 const missing = [];
 

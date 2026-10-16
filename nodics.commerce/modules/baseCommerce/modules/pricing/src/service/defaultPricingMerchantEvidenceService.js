@@ -338,9 +338,26 @@ module.exports = {
       const exact = SERVICE.DefaultExactAmountService,
         now = new Date(),
         context = { ...r, authData: admission.ownerAuth(r), storeCode: store.code, currency: cart.currency, now };
-      const publicationContext = structuredClone(context);
       const publication = SERVICE.DefaultPricingPublicationService;
       if (!publication.deliveryEnabled(context)) this.fail();
+      const rowDelivery = CONFIG.get('pricing')?.publication?.delivery?.rowReleases === true;
+      if (rowDelivery) {
+        if (typeof publication.rowProductCodes !== 'function') this.fail();
+        context.productCodes = [...new Set(entries.map(entry => entry.productCode))];
+        const needed = await publication.rowProductCodes(structuredClone(context));
+        admission.admitted(r);
+        if (!Array.isArray(needed) || needed.some(code => !context.productCodes.includes(code))) this.fail();
+        if (needed.length) {
+          const product = SERVICE.DefaultProductDiscoveryService;
+          if (typeof product?.consumerReferences !== 'function') this.fail();
+          context.locale = cart.locale;
+          context.productReferences = await product.consumerReferences({ ...context, authData: r.authData },
+            entries.filter(entry => needed.includes(entry.productCode))
+              .map(entry => ({ productCode: entry.productCode, sku: entry.sku, variantCode: entry.variantCode })));
+          admission.admitted(r);
+        }
+      }
+      const publicationContext = structuredClone(context);
       admission.admitted(r);
       if (!isDeepStrictEqual(context, publicationContext)) this.fail();
       const records = await publication.readConfigured(context),

@@ -2,6 +2,62 @@
   "contractVersion": 2,
   "module": "order",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "order permissionCatalogue",
+      "description": "Explicit order identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/orderPermissionHeader.js": "ac1008a1302a97e2e194a934a361619e255d4c9dad99beb1bb3d2bd5eceba487",
+        "init-v001/records/identity/orderPermissionData.js": "57df7f331f70338f38e8a17d4da8e82d445586da91b246ebdda49a1ce013b403"
+      }
+    },
+    "enterpriseRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "order enterpriseRoles",
+      "description": "Explicit order identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/orderEnterpriseRoleHeader.js": "eae422d6c6191ee6eff398a4bf7e2434a148ff18aa5bec33f366959a960ed5af",
+        "init-v001/records/identity/orderEnterpriseRoleData.js": "c0c131c5f5e3a12c0bc1e7dc76db0cb27d0e8964aceaec662147c541ce6a822d"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "order",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "9956f02f29ce9431e523ca594a7d4ab50603176a2d025e4ee01942c7b70d5aef"
+        }
+      ]
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
@@ -48,6 +104,222 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "accessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "order accessGroups",
+      "description": "Explicit order identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/orderUserGroupHeader.js": "77df78024eadd143d65623a378e4d4eba090285eee3f470821c8d51e3cf072bd",
+        "init-v001/records/identity/orderUserGroupData.js": "12af186838616c78e61b5d98683950745ad88cb244e37760afa8116ccaa7a42c"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "6f411a90fd89c1894fa7a92a1de5d35796dec3481514073a2aa38e0247c44b1c",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "backoffice",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "8ad193e9316013aa5a65de9c57d2b3a09cd8855b46d218173353793b448eefba",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "fulfillmentCore",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "d43b69913c35c3d2fafe0f4f34a6df6f8c5aada28883cf634bfb27705704c39b",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7b8cfbcac58a8f106aa3e066bd200a0ea32e3b23fc22619602ea85a5e241c421",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "specialAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Refund Exception Reviewer Group",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/orderSpecialAccessGroupHeader.js": "879fe61166e6710e086a22a0ddacb352a5b9853aec314ad09a6a4f650633294c",
+        "init-v001/records/identity/orderSpecialAccessGroupData.js": "4e5cb5cc20e88b298640d7989c4532aa595ebcc2ffd94556dee3227d0b95d713"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7b8cfbcac58a8f106aa3e066bd200a0ea32e3b23fc22619602ea85a5e241c421",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "specialAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Refund Exception Reviewer Role",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/orderSpecialAccessRoleHeader.js": "fde1f6e889b261f86bd6b9255d06d68255672682197d300899f5ecb0687ff674",
+        "init-v001/records/identity/orderSpecialAccessRoleData.js": "e49dfab6ad3493b22c1fdf7c76d496e354384f4e2915294b69c547ab9cd27356"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "order",
+          "sectionCode": "specialAccessGroups",
+          "version": "0.0.1",
+          "checksum": "c705e38a2b7883a259cc9e84273336c2417ed2ded478e7e1e0f7b6f3f7f19510"
+        }
+      ]
+    },
+    "businessAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Orders business access groups",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/orderBusinessAccessGroupData.js": "08af67281ecca5139e2256f5f196f5534723c2b0c64cd3ca4b0f784bedefa82b",
+        "init-v001/headers/identity/orderBusinessAccessGroupHeader.js": "fd6bceb7b40ab0d665883149f9826d322fb5c5ff0e796f2bc473e7b7ea83ff6b"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "axis",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+        },
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "order",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7b8cfbcac58a8f106aa3e066bd200a0ea32e3b23fc22619602ea85a5e241c421",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "businessAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Orders business access roles",
+      "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
+      "owningDomain": "order",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/identity/orderBusinessAccessRoleData.js": "730b68b28070fea7bd47df877a71d54809ad060eca5358350605096020a901f2",
+        "init-v001/headers/identity/orderBusinessAccessRoleHeader.js": "a8ca10e3eefac3bd9d4f1e597f8d7230a578d5b560ac8496d9a9c17407498f9c"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "order",
+          "sectionCode": "businessAccessGroups",
+          "version": "0.0.1",
+          "checksum": "55e6337ba3e2e8cc27a5f358f5102dbf5953e0f249880a8d4840b3e77d8111af"
         }
       ]
     }

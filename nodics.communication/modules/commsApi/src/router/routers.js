@@ -41,6 +41,43 @@ module.exports = {
       },
     },
     internal: {
+      diagnoseCommunication: {
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permission: "communication.request",
+        apiExposure: "communicationIntegration",
+        key: "/internal/communications/:intentCode/diagnostic",
+        requestPrivacy: { sensitive: true },
+        method: "POST",
+        controller: "DefaultCommunicationApiController",
+        operation: "diagnoseDelivery",
+        cache: { enabled: false },
+        summary: "Read static diagnostics from the exact latest persisted delivery attempt",
+        requestBody: { required: true, content: { "application/json": { schema: {
+          type: "object", additionalProperties: false, required: ["sourceModule", "sourceType", "sourceCode"], properties: {
+            sourceModule: { type: "string", maxLength: 180 }, sourceType: { type: "string", maxLength: 180 }, sourceCode: { type: "string", maxLength: 180 },
+          },
+        } } } },
+        responses: {
+          200: { description: "Source-authorized fixed latest-attempt classification without private provider data", content: { "application/json": { schema: {
+            type: "object", additionalProperties: false, required: ["data"], properties: { data: {
+              type: "object", additionalProperties: false, required: ["intentCode", "status", "revision", "diagnostic"], properties: {
+                intentCode: { type: "string", pattern: "^COMM_[a-f0-9]{64}$" },
+                status: { type: "string", enum: ["ACCEPTED", "SUPPRESSED", "QUEUED", "DELIVERING", "DELIVERED", "FAILED", "CANCELLED", "RETRY_PENDING", "UNCERTAIN", "DEAD_LETTER", "UNCONFIGURED"] },
+                revision: { type: "integer", minimum: 0 },
+                diagnostic: { type: "object", additionalProperties: false, required: ["classification", "attempt", "message"], properties: {
+                  classification: { type: "string", enum: ["ATTEMPT_NOT_RECORDED", "TRANSPORT_ACK_UNCONFIRMED", "DELIVERY_INTERRUPTED", "INVALID_PROVIDER_OUTCOME", "PROVIDER_ACCEPTED", "PROVIDER_CONFIGURATION_REQUIRED", "DESTINATION_UNAVAILABLE", "PROVIDER_UNAVAILABLE", "PROVIDER_THROTTLED", "PROVIDER_REJECTED", "ATTEMPT_UNCLASSIFIED", "ATTEMPT_STATUS_DIFFERS"] },
+                  attempt: { type: "integer", minimum: 0 }, message: { type: "string", maxLength: 400 },
+                } },
+              },
+            } },
+          } } } },
+          400: { description: "Only the exact source binding and no query selectors are accepted" },
+          403: { description: "Private entry or stored source authority was refused" },
+          503: { description: "Current persisted intent or attempt evidence could not be qualified" },
+        },
+      },
       inspectCommunication: {
         secured: true,
         authTokenTypes: ["service"],
@@ -164,6 +201,21 @@ module.exports = {
       },
     },
     integration: {
+      receiveTelegramStart: {
+        secured: false,
+        accessGroups: ["userGroup"],
+        publicAccess: true,
+        apiExposure: "communicationTelegramInbound",
+        key: "/integrations/telegram/:receiverCode/start",
+        method: "POST",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        bodyParserHandler: "telegramInboundBodyParserHandler",
+        controller: "DefaultCommunicationApiController",
+        operation: "receiveTelegramStart",
+        summary: "Receive a secret-authenticated private Telegram Mini App launch update",
+        description: "Native JSON authentication precedes route parsing. Only one durably claimed private /start update may return a raw Telegram method; duplicates and unsupported updates receive an empty acknowledgment. No login or delivered-outcome evidence is created.",
+      },
       receiveCallback: {
         secured: true,
         authTokenTypes: ["service"],

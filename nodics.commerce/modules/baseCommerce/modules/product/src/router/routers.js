@@ -21,6 +21,29 @@
 module.exports = {
     product: {
         // Selective schema APIs reuse generated controllers; broad CRUD remains disabled.
+        businessAuthoring: {
+            businessProductSchemas: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permissionConfig: 'product.businessAuthoring.readPermission', apiExposure: 'commerceManagement',
+                key: '/business/products/schemas', method: 'GET', controller: 'DefaultProductBusinessAuthoringController', operation: 'schemas' },
+            businessProductCapabilities: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permissionConfig: 'product.businessAuthoring.readPermission', apiExposure: 'commerceManagement',
+                key: '/business/products/capabilities', method: 'GET', controller: 'DefaultProductBusinessAuthoringController', operation: 'capabilities' },
+            businessProductSearch: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permissionConfig: 'product.businessAuthoring.readPermission', apiExposure: 'commerceManagement', cache: { enabled: false },
+                key: '/business/products/search', method: 'POST', controller: 'DefaultProductBusinessAuthoringController', operation: 'search' },
+            businessProductCreate: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permissionConfig: 'product.businessAuthoring.writePermission', apiExposure: 'commerceManagement', cache: { enabled: false },
+                key: '/business/products', method: 'PUT', controller: 'DefaultProductBusinessAuthoringController', operation: 'create' },
+            businessProductUpdate: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permissionConfig: 'product.businessAuthoring.writePermission', apiExposure: 'commerceManagement', cache: { enabled: false },
+                key: '/business/products', method: 'PATCH', controller: 'DefaultProductBusinessAuthoringController', operation: 'update' },
+            businessProductArchive: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permissionConfig: 'product.businessAuthoring.archivePermission', apiExposure: 'commerceManagement', cache: { enabled: false },
+                key: '/business/products/archive', method: 'POST', controller: 'DefaultProductBusinessAuthoringController', operation: 'archive' },
+            businessProductRead: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permissionConfig: 'product.businessAuthoring.readPermission', apiExposure: 'commerceManagement', cache: { enabled: false },
+                key: '/business/products/:productCode', method: 'GET', controller: 'DefaultProductBusinessAuthoringController', operation: 'read' },
+        },
 
         customer: {
             list: {
@@ -43,7 +66,19 @@ module.exports = {
             applyPublicationDecision: { active: true, secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
                 permission: 'commerce.product.publish', apiExposure: 'productPublicationSource', key: '/workflow/actions/applyPublicationDecision', method: 'POST',
                 controller: 'DefaultProductPublicationController', operation: 'applyPublicationDecision' },
-            createListing:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'commerce.product.publish',apiExposure:'commerceManagement',key:'/internal/products/listings',method:'POST',controller:'DefaultProductListingAuthoringController',operation:'create'},
+            createListing:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'commerce.product.publish',apiExposure:'commerceManagement',requestPrivacy:{sensitive:true},cache:{enabled:false},key:'/internal/products/listings',method:'POST',controller:'DefaultProductListingAuthoringController',operation:'create'},
+            createHumanListing: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'commerce.product.publish', apiExposure: 'productPublicationSource', requestPrivacy: { sensitive: true },
+                cache: { enabled: false }, key: '/products/listings', method: 'POST',
+                controller: 'DefaultProductListingAuthoringController', operation: 'createHuman' },
+            listingStoreContext: { active: true, secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'commerce.product.read', apiExposure: 'productPublicationSource', requestPrivacy: { sensitive: true },
+                cache: { enabled: false }, key: '/internal/products/listings/store-context', method: 'POST',
+                controller: 'DefaultProductListingAuthoringController', operation: 'storeContext' },
+            listingSourceEvidence: { active: true, secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'commerce.product.read', apiExposure: 'productPublicationSource', requestPrivacy: { sensitive: true },
+                cache: { enabled: false }, key: '/internal/products/listings/source-evidence', method: 'POST',
+                controller: 'DefaultProductListingAuthoringController', operation: 'sourceEvidence' },
             publishSearch: {
                 secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
                 permission: 'commerce.product.publish', apiExposure: 'commerceManagement',

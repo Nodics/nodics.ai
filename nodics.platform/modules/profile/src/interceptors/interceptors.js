@@ -17,6 +17,13 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+  ...Object.fromEntries(["permission", "enterpriseRole"].flatMap(item => [
+    ["preGet", "authorize"], ["preSave", "validate"], ["preUpdate", "validate"], ["preRemove", "remove"],
+    ["postSave", "finalize"], ["postUpdate", "finalize"], ["postRemove", "finalize"],
+  ].map(([trigger, method]) => ["identityCatalogue_" + item + "_" + trigger, {
+    type: "schema", item, trigger, active: "true", index: -40,
+    handler: "DefaultIdentityCatalogueGovernanceService." + method,
+  }]))),
   ...Object.fromEntries([
     ["preGet", "protectRead"], ["preSave", "protectSave"],
     ["preUpdate", "protectUpdate"], ["preRemove", "protectRemove"],
@@ -239,6 +246,14 @@ module.exports = {
     active: "true",
     index: -20,
     handler: "DefaultUserGroupGovernanceService.validate",
+  },
+  validateUserGroupRemove: {
+    type: "schema",
+    item: "userGroup",
+    trigger: "preRemove",
+    active: "true",
+    index: -20,
+    handler: "DefaultUserGroupGovernanceService.validateRemoval",
   },
   validateEmployeeSave: {
     type: "schema",

@@ -69,6 +69,14 @@ perform no acceptance operations. Independent-project and failure tests live in
   for reusable Axis schema workspaces. Treat it as labels, default columns,
   filters, and owner-action hints only; it is not executable authority and must
   not bypass target-module permissions or services.
+- `workbenchPresentation.schemaDiscovery` may select a fixed same-owner GET
+  descriptor route with exactly `path` and `apiVersion`. Paths are bounded,
+  relative module routes without query strings, fragments, placeholders or
+  traversal; no host, headers, actor, tenant or method override is accepted.
+  Axis reuses its Workbench renderer and advertised `apiOperations`. The domain
+  owner supplies authorized descriptors and separately enforces every data
+  operation. Discovery cannot grant generic schema access, replace owner scope
+  checks or advertise unsupported mutations as an access level.
 - Axis reusable component metadata must stay backend-driven and data-only.
   Schema-backed business pages declare `workbenchTarget`, bounded
   `workbenchPresentation`, lifecycle-action hints, reusable detail panels, and
@@ -78,6 +86,35 @@ perform no acceptance operations. Independent-project and failure tests live in
   render functions, or duplicated page-specific CRUD behavior.
 - Framework capability help must link to framework documentation routes. Use
   Axis-only documentation only for concepts that are truly Axis-client specific.
+
+## Batched Lease Snapshot Work
+
+Only `registerBatch` sets the existing private request-wrapper
+`_batchRegistration: true` after validating the approved service identity and
+bounded batch contract. It suppresses per-item Runtime Registry snapshot refresh,
+not per-item validation, authority-claim scans, persistence, discovery or
+availability scheduling. HTTP bodies must never map this flag onto the wrapper;
+unknown body fields remain rejected. Standalone registration still refreshes its
+snapshot independently, even while another batch is running. No global suppression
+state, registration cache, scheduler or new HTTP option is introduced.
+
+Wait for every bounded item attempt to settle before finishing the batch. A
+rejected item must not leave a late successful sibling write outside the recovery
+snapshot. On success, scan leases once and publish the consolidated snapshot
+before awaiting active-lease catalogue reconciliation; do not later overwrite a
+concurrent registration with that older captured list. Failures before publication
+refresh from persisted leases, then reject the original operation. If that recovery
+also fails, retain both errors rather than reporting success. A failure after
+publication does not require a duplicate refresh.
+
+The claim-free 72-module registration and renewal budget is one store scan and
+one snapshot refresh per batch. Authority-bearing items retain their required
+independent scans; this optimization does not eliminate those security checks.
+Run `node nodics.platform/modules/backoffice/test/backofficeRegistryBatchSnapshot.test.js`
+and `node nodics.platform/modules/backoffice/test/backofficePerformanceContract.test.js`.
+These isolated structural budgets do not prove native latency, throughput or the
+sole cause of upstream rate limits/timeouts. Runtime credentials, operational-state
+expiry, capture guards and HTTP rate-limit policy remain unchanged.
 
 ## Startup and configuration validation
 
@@ -297,16 +334,22 @@ approval, media, search, assistant, or application readiness from page-local
 state when a backend section is available.
 
 Documentation readiness is an aggregate over documentation sources and their
-publication/indexing state. `nodics.docs` owns framework documentation content
-and content-pack data; BackOffice may expose install/stage/Online/indexing
-repair metadata for Axis, but it must not import source files directly or move
-documentation-content authority into the customer project.
+publication/indexing state. Implementing modules own their documentation packs;
+`nodics.docs` owns shared scaffolding, discovery and cross-framework guides.
+BackOffice may expose install/stage/Online/indexing repair metadata for Axis,
+but it must not import source files directly or move documentation-content
+authority into the customer project.
 
 Application parity readiness is profile/provider based. Nexus, Agora, Circa and
 future applications must appear as owner profile status facts from Setup &
 Accelerators or their owning capability services. BackOffice may count and group
 parity states, but it must not infer application readiness from frontend routes,
 open browser tabs, or customer-project folder names.
+Return the observed `applicationCodes` and `applicationStatusCounts` without
+brand-specific parity fields or name-matching heuristics. eWaste observations
+use its existing module connection and WASTE runtime-role authority, never a
+fixed customer server name. The deployment owns the actual endpoint and server;
+the original operator bearer and owner permission checks remain required.
 
 Readiness repair governance is backend-owned. Owner modules register executable
 repair providers and BackOffice validates contract version, lifecycle state,

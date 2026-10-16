@@ -25,6 +25,9 @@ module.exports = {
 
     /** Returns the client-safe designer authority model and accepted workflow operations. */
     getAuthoringModel: async function (request) {
+        this.access().authorize(request, 'cms.backoffice.view');
+        const metadata = await this.authoringMetadata(request);
+        this.access().authorize(request, 'cms.backoffice.view');
         return {
             result: {
                 contractVersion: 0,
@@ -47,7 +50,12 @@ module.exports = {
                 operations: ['validateDraftComposition', 'saveDraftComposition', 'addSection', 'updateSection', 'deleteSection',
                     'reorderSection', 'addComponent', 'updateComponent', 'deleteComponent', 'reorderComponent',
                     'associateMedia', 'detachMedia', 'assignRoute', 'assignNavigation', 'validatePublishReadiness',
-                    'submitForPublication'],
+                    'submitForPublication'].filter(operation => {
+                        const route = require('../../router/routers').cms.cmsDesignerComposition[operation];
+                        const security = SERVICE.DefaultSecuredRequestPipelineService;
+                        return CONFIG.get('runtimeRole')?.publication === 'STAGED' &&
+                            security.isPermissionGranted(route.permission, security.getGrantedPermissions(request), {});
+                    }),
                 rules: {
                     catalogFirst: true,
                     arbitrarySlots: true,
@@ -55,8 +63,33 @@ module.exports = {
                     pixelPerfectRendering: false
                 },
                 defaults: this.clientAuthoringDefaults(),
-                metadata: await this.authoringMetadata(request)
+                retirement: this.retirementPresentation(),
+                metadata
             }
+        };
+    },
+
+    /** Supplies inert retirement review copy; permitted operations remain the only command admission projection. */
+    retirementPresentation: function () {
+        return {
+            title: 'Retire content', targetLabel: 'Record kind', codeLabel: 'Record code',
+            catalogLabel: 'Catalog', siteLabel: 'Site', enterpriseLabel: 'Enterprise',
+            reviewLabel: 'Review retirement', reviewTitle: 'Review content retirement',
+            confirmLabel: 'Confirm retirement', cancelLabel: 'Close review',
+            acknowledgeLabel: 'I reviewed this record, scope and consequence',
+            inspectionLabel: 'I inspected the current CMS record after this outcome',
+            uncertainMessage: 'The outcome is uncertain. Inspect the current record through its CMS owner before another submission. This command will not be replayed.',
+            successMessage: 'Retirement saved as an inactive version. Publication remains a separate governed action.',
+            changedMessage: 'Authority or scope changed. Close this review and review the current selection again.',
+            historyMessage: 'History is retained. This does not remove references, delete Media assets or deploy a publication.',
+            actions: [
+                { operation: 'deleteSection', label: 'Section placement',
+                    consequence: 'Retires only this placement, not its target component. Page placements retain their Site; nested component placements belong to the shared Catalog.' },
+                { operation: 'deleteComponent', label: 'Shared component',
+                    consequence: 'Retires this component in the selected enterprise and Catalog. It may be reused by multiple Sites in that Catalog; their references are not removed.' },
+                { operation: 'detachMedia', label: 'Media association',
+                    consequence: 'Retires only this component-to-Media association. The Media asset and component remain; the association may be shared across Sites in this Catalog.' }
+            ]
         };
     },
 
@@ -97,14 +130,17 @@ module.exports = {
                 }
             }
         }
-        if (draft.route) saved.route = await this.assignRoute(Object.assign({}, request, { cmsDesigner: this.routeIntent(draft) }));
-        if (draft.navigation) saved.navigation = await this.assignNavigation(Object.assign({}, request, { cmsDesigner: this.navigationIntent(draft) }));
+        if (draft.route) saved.route = await this.assignRoute(Object.assign({}, request, { cmsDesigner:
+            Object.assign({ siteCode: draft.siteCode, catalogCode: draft.catalogCode }, this.routeIntent(draft)) }));
+        if (draft.navigation) saved.navigation = await this.assignNavigation(Object.assign({}, request, { cmsDesigner:
+            Object.assign({ siteCode: draft.siteCode, catalogCode: draft.catalogCode }, this.navigationIntent(draft)) }));
         await this.invalidateDelivery(request);
         return { result: { status: 'DRAFT_SAVED', evidence: evidence, saved: saved } };
     },
 
     /** Adds one section placement by creating a CMS component-detail record. */
     addSection: async function (request) {
+        this.access().authorize(request, 'cms.authoring.write');
         let input = request.cmsDesigner || request.body || {};
         let model = this.componentDetailIntent(input);
         await this.validateSlotPlacement(request, model);
@@ -128,6 +164,7 @@ module.exports = {
 
     /** Adds one CMS component record. */
     addComponent: async function (request) {
+        this.access().authorize(request, 'cms.authoring.write');
         let model = this.componentIntent(request.cmsDesigner || request.body || {});
         if (model.renderer) {
             await SERVICE.DefaultCmsContractValidationService.validateRenderer({ model: { renderer: model.renderer } });
@@ -152,6 +189,7 @@ module.exports = {
 
     /** Associates a governed media item or set with one CMS component. */
     associateMedia: async function (request) {
+        this.access().authorize(request, 'cms.authoring.write');
         let model = this.mediaIntent(request.cmsDesigner || request.body || {});
         await SERVICE.DefaultCmsContractValidationService.validateComponentMedia(Object.assign({}, request, { model: model }));
         return { result: await this.saveRecord('DefaultCmsComponentMediaService', request, model) };
@@ -164,6 +202,7 @@ module.exports = {
 
     /** Assigns one draft route to a CMS page after route uniqueness validation. */
     assignRoute: async function (request) {
+        this.access().authorize(request, 'cms.authoring.write');
         let model = this.routeIntent(request.cmsDesigner || request.body || {});
         await SERVICE.DefaultCmsContractValidationService.validateRoute({ model: model });
         await this.validateRouteUniqueness(request, model);
@@ -172,6 +211,7 @@ module.exports = {
 
     /** Assigns one navigation node to a CMS Site. */
     assignNavigation: async function (request) {
+        this.access().authorize(request, 'cms.authoring.write');
         let model = this.navigationIntent(request.cmsDesigner || request.body || {});
         await SERVICE.DefaultCmsContractValidationService.validateNavigationNode(Object.assign({}, request, { model: model }));
         return { result: await this.saveRecord('DefaultCmsNavigationNodeService', request, model) };
@@ -190,6 +230,7 @@ module.exports = {
 
     /** Submits one saved Page Designer route version to CMS/nPublish governance. */
     submitForPublication: async function (request) {
+        this.access().authorize(request, 'cms.authoring.write');
         let draft = this.normalizeDraft(request.cmsDesigner || request.body || {});
         let readiness = await this.validatePublishReadiness(Object.assign({}, request, { cmsDesigner: draft }));
         let routeIntent = this.routeIntent(draft);
@@ -209,15 +250,18 @@ module.exports = {
             catalogCode: draft.catalogCode
         };
         let lifecycle = this.service('DefaultPublicationLifecycleService');
+        this.access().authorize(request, 'cms.authoring.write');
         let created = await lifecycle.create(Object.assign({}, request, {
             publication: publication,
             reason: 'Axis Page Designer submit to Publishing'
         }));
+        this.access().authorize(request, 'cms.authoring.write');
         let validated = await lifecycle.validate(Object.assign({}, request, {
             publicationCode: created.code,
             expectedRevision: created.revision,
             reason: 'Axis Page Designer publish-readiness validation'
         }));
+        this.access().authorize(request, 'cms.authoring.write');
         let pending = await lifecycle.requestApproval(Object.assign({}, request, {
             publicationCode: validated.code,
             expectedRevision: validated.revision,
@@ -303,6 +347,7 @@ module.exports = {
 
     /** Validates the Catalog-first graph and returns client-safe readiness evidence. */
     validateDraftGraph: async function (request, draft) {
+        const scope = await this.access().scope(request, 'cms.authoring.write');
         let catalog = await this.getSingle('DefaultCatalogService', request, { code: draft.catalogCode, catalogType: 'CONTENT', active: true }, 'ERR_CMS_00101');
         let site = await this.getSingle('DefaultCmsSiteService', request, { code: draft.siteCode, active: true }, 'ERR_CMS_00102');
         if (this.codeOf(site.catalog) !== draft.catalogCode) throw this.error('ERR_CMS_00102', 'CMS Site does not belong to the selected Content Catalog');
@@ -314,6 +359,19 @@ module.exports = {
             let route = this.routeIntent(draft);
             await SERVICE.DefaultCmsContractValidationService.validateRoute({ model: route });
             await this.validateRouteUniqueness(request, route);
+        }
+        const planned = [['DefaultCmsPageService', this.pageModel(draft)]];
+        draft.sections.forEach((section, sectionIndex) => section.components.forEach((component, componentIndex) => {
+            planned.push(['DefaultCmsComponentService', this.componentModel(component)]);
+            planned.push(['DefaultCmsComponentDetailService', this.sectionModel(draft, section, component, sectionIndex, componentIndex)]);
+            component.localizations.forEach(locale => planned.push(['DefaultCmsComponentLocalizationService', this.localizationModel(component, locale)]));
+            component.media.forEach((media, index) => planned.push(['DefaultCmsComponentMediaService', this.mediaModel(component, media, index)]));
+        }));
+        if (draft.route) planned.push(['DefaultCmsPageRouteService', this.routeIntent(draft)]);
+        if (draft.navigation) planned.push(['DefaultCmsNavigationNodeService', this.navigationIntent(draft)]);
+        for (const [serviceName, model] of planned) {
+            await this.access().assertIdentity(serviceName, request, model.code, scope);
+            await this.assertModelScope(serviceName, request, model, scope, planned);
         }
         return {
             catalog: { code: catalog.code, name: catalog.name, catalogType: catalog.catalogType },
@@ -546,10 +604,22 @@ module.exports = {
 
     /** Saves one record through an existing generated service. */
     saveRecord: async function (serviceName, request, model) {
+        const scope = await this.access().scope(request, 'cms.authoring.write');
+        if (model.active === false) this.access().authorize(request, 'cms.authoring.delete');
+        const rows = await this.access().assertIdentity(serviceName, request, model.code, scope);
+        const modelScope = await this.assertModelScope(serviceName, request, model, scope);
+        if (serviceName === 'DefaultCmsComponentDetailService' &&
+            rows.some(row => row.authoringScope.siteCode !== modelScope.siteCode)) this.access().deny();
         let service = this.service(serviceName);
+        this.access().authorize(request, 'cms.authoring.write');
         try {
-            let response = await service.save({ tenant: request.tenant, authData: request.authData, model: model });
-            return this.firstResult(response) || model;
+            let response = await service.save({ tenant: request.tenant, authData: this.access().persistenceAuth(),
+                model: this.access().nextModel(Object.assign({}, model, {
+                    authoringScope: modelScope }), rows) });
+            const saved = this.access().savedRecord(response);
+            this.access().authorize(request, 'cms.authoring.write');
+            if (!saved || saved.code !== model.code || !this.access().matches(saved, scope, serviceName)) this.access().deny();
+            return saved;
         } catch (error) {
             let message = serviceName + ' failed to save ' + (model && model.code ? model.code : 'draft record') +
                 ': ' + (error && error.message ? error.message : error);
@@ -557,12 +627,19 @@ module.exports = {
         }
     },
 
-    /** Removes one record through an existing generated service. */
+    /** Retires an owned record through the existing generated versioned save path. */
     removeRecord: async function (serviceName, request, query) {
+        const scope = await this.access().scope(request, 'cms.authoring.delete');
+        const rows = await this.access().assertIdentity(serviceName, request, query.code, scope, true);
+        const current = rows.sort((left, right) => Number(right.versionId || 0) - Number(left.versionId || 0))[0];
         let service = this.service(serviceName);
-        if (typeof service.remove === 'function') return service.remove({ tenant: request.tenant, authData: request.authData, query: query });
-        if (typeof service.delete === 'function') return service.delete({ tenant: request.tenant, authData: request.authData, query: query });
-        throw this.error('ERR_CMS_00100', serviceName + ' does not expose a remove operation');
+        const model = this.access().nextModel(Object.assign({}, current, { active: false }), rows);
+        this.access().authorize(request, 'cms.authoring.delete');
+        const response = await service.save({ tenant: request.tenant, authData: this.access().persistenceAuth(), model });
+        const saved = this.access().savedRecord(response);
+        this.access().authorize(request, 'cms.authoring.delete');
+        if (!saved || saved.code !== query.code || saved.active !== false || !this.access().matches(saved, scope, serviceName)) this.access().deny();
+        return saved;
     },
 
     /** Fetches exactly one matching record or throws the requested CMS error. */
@@ -580,29 +657,31 @@ module.exports = {
 
     /** Performs a safe generated-service get and normalizes its result array. */
     safeGet: async function (serviceName, request, query) {
-        let service = this.service(serviceName);
-        let response = await service.get({
-            tenant: request.tenant,
-            authData: request.authData,
-            options: Object.assign({}, request.options || {}, { recursive: false }),
-            query: query,
-            searchOptions: { limit: this.authoringPolicy().maximumReferenceLookupItems }
-        });
-        return response && Array.isArray(response.result) ? response.result : [];
+        const result = await this.access().records(serviceName, request, query);
+        const enterpriseCode = this.access().authorize(request, 'cms.backoffice.view').enterpriseCode;
+        const { catalogCode } = this.access().inputScope(request);
+        if (result.some(row => row.authoringScope && (row.authoringScope.enterpriseCode !== enterpriseCode ||
+            catalogCode && row.authoringScope.catalogCode !== catalogCode))) this.access().deny();
+        return result;
     },
 
     /** Builds the client-safe backend metadata needed by Axis Designer forms. */
     authoringMetadata: async function (request) {
-        let sites = await this.safeGet('DefaultCmsSiteService', request, { active: true });
-        let catalogs = await this.safeOptionalGet('DefaultCatalogService', request, { catalogType: 'CONTENT', active: true });
-        if (catalogs.length === 0) catalogs = this.catalogsFromSites(sites);
-        let templates = await this.safeGet('DefaultCmsPageTemplateService', request, { active: true });
-        let slots = await this.safeGet('DefaultCmsSlotDefinitionService', request, { active: true });
-        let typeCodes = await this.safeGet('DefaultCmsTypeCodeService', request, { active: true });
-        let groups = await this.safeGet('DefaultCmsComponentTypeGroupService', request, { active: true });
+        const enterpriseCode = this.access().authorize(request, 'cms.backoffice.view').enterpriseCode;
+        let sites = await this.safeGet('DefaultCmsSiteService', request, { active: true, enterpriseCode });
+        if (sites.some(site => site.enterpriseCode !== enterpriseCode)) this.access().deny();
+        let catalogs = this.catalogsFromSites(sites);
+        const referenceRows = async serviceName => (await this.access().records(serviceName, request, { active: true }))
+            .filter(row => !row.authoringScope || row.authoringScope.enterpriseCode === enterpriseCode &&
+                catalogs.some(catalog => catalog.code === row.authoringScope.catalogCode));
+        let templates = await referenceRows('DefaultCmsPageTemplateService');
+        let slots = await referenceRows('DefaultCmsSlotDefinitionService');
+        let typeCodes = await referenceRows('DefaultCmsTypeCodeService');
+        let groups = await referenceRows('DefaultCmsComponentTypeGroupService');
         let mediaFolders = await this.safeOptionalGet('DefaultMediaFolderService', request, { status: 'ACTIVE' });
         let mediaFormats = await this.safeOptionalGet('DefaultMediaFormatService', request, { status: 'ACTIVE' });
-        let navigationNodes = await this.safeOptionalGet('DefaultCmsNavigationNodeService', request, { status: 'ACTIVE' });
+        let navigationNodes = await this.safeOptionalGet('DefaultCmsNavigationNodeService', request,
+            { status: 'ACTIVE', 'authoringScope.enterpriseCode': enterpriseCode });
         return {
             contentCatalogs: catalogs.map(this.catalogReference.bind(this)),
             sites: sites.map(this.siteReference.bind(this)),
@@ -763,10 +842,37 @@ module.exports = {
         return service;
     },
 
-    /** Returns the first generated-service result item. */
-    firstResult: function (response) {
-        if (response && Array.isArray(response.result)) return response.result[0];
-        return response && response.result ? response.result : response;
+    /** Resolves the existing CMS owner guard; absence is a configuration failure, not open access. */
+    access: function () { return this.service('DefaultCmsDesignerAccessService'); },
+
+    /** Rejects foreign relationships before an owner-authored record reaches generated persistence. */
+    assertModelScope: async function (serviceName, request, model, scope, planned = []) {
+        let modelScope = this.access().ownedScope(scope, serviceName);
+        if (model.site && model.site !== scope.siteCode || model.cmsSite &&
+            (!Array.isArray(model.cmsSite) || model.cmsSite.some(site => site !== scope.siteCode))) this.access().deny();
+        const references = [];
+        if (model.page) references.push(['DefaultCmsPageService', model.page]);
+        if (model.targetPage) references.push(['DefaultCmsPageService', model.targetPage]);
+        if (model.targetRoute) references.push(['DefaultCmsPageRouteService', model.targetRoute]);
+        if (model.componentCode) references.push(['DefaultCmsComponentService', model.componentCode]);
+        if (serviceName === 'DefaultCmsNavigationNodeService' && model.parent) references.push(['DefaultCmsNavigationNodeService', model.parent]);
+        if (serviceName === 'DefaultCmsComponentDetailService') {
+            references.push(['DefaultCmsComponentService', model.target]);
+            const pages = await this.access().records('DefaultCmsPageService', request, { code: model.source });
+            const pageSource = pages.length || planned.some(([owner, item]) => owner === 'DefaultCmsPageService' && item.code === model.source);
+            references.push([pageSource ? 'DefaultCmsPageService' : 'DefaultCmsComponentService', model.source]);
+            if (!pageSource) modelScope = this.access().ownedScope(scope, 'DefaultCmsComponentService');
+        }
+        for (const detail of model.subComponents || []) {
+            const code = this.codeOf(detail);
+            const placements = await this.access().assertIdentity('DefaultCmsComponentDetailService', request, code, scope, true);
+            if (placements.some(placement => placement.source !== model.code)) this.access().deny();
+        }
+        for (const [owner, code] of references) {
+            if (!planned.some(([plannedOwner, item]) => plannedOwner === owner && item.code === code))
+                await this.access().assertIdentity(owner, request, code, scope, true);
+        }
+        return modelScope;
     },
 
     /** Returns a stable code whether a generated reference is stored as text or populated object. */

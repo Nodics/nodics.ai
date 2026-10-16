@@ -9,6 +9,14 @@ Follow the root Nodics AI agent contract before changing this boundary:
 
 Preserve tenant isolation, idempotency, content-free events, provider neutrality, secured callbacks, and domain ownership. Do not use archived Notify code as authority. Update source, tests, documentation, and generated evidence together.
 
+Customer inbox Profile reads must forward the admitted HTTP customer bearer,
+matching normalized router credentials and signed access-token customer/tenant
+context. Never substitute runtime auth, add service groups/grants, trust body
+identity or weaken schema access. Reuse Communication's generated-result parser;
+require a successful envelope and unique matching canonical customer before
+inbox/source reads. Preserve `test/communicationInboxSource.test.js` and the
+[identity contract](llm/contracts/README.md#customer-inbox-identity).
+
 Read [private internal transport](llm/contracts/private-internal-transport.md).
 Require exact qualified private admission before reading sensitive internal input;
 preserve it into derived verification contexts. Caller privacy flags are not proof.
@@ -21,6 +29,10 @@ authorize the private stored source before effects; a configured source name,
 body authority or generic service group is not delegation. Preserve this boundary
 in effective facade overrides and runtime grant qualification.
 
+Resolution's optional sourceModule/sourceCode pair is an exact stored-intent
+binding, never payload-derived authority. Validate the pair, require signed source
+scope, and compare both with the stored intent before the existing runtime guards.
+
 Inspection reuses the same bounded uncached owner read and stored-source admission.
 Require exactly an empty object body and project only intentCode, actual persisted
 status and managed revision. No recipient, rendered content, proof, provider data,
@@ -28,4 +40,14 @@ send, retry or uncertainty resolution belongs in inspection. Missing/unreadable
 evidence is refusal, never NOT_OBSERVED. Read the source-scoped intent contract.
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
+
+Static attempt diagnosis is a separate source-scoped `/diagnostic` read; never
+widen `/inspect`'s three-field DTO. Its only body is the exact sourceModule,
+sourceType and sourceCode binding; compare all three with persisted intent before
+attempt reads. Match one exact current attempt and recheck
+the intent revision/source after reading it. Return only registered static
+classification/copy and attempt number. Missing or conflicting evidence must
+remain unknown/refused, never successful delivery or resend authorization.
+No raw provider response, exception, destination, credential or message content
+belongs in this diagnostic. See the source-scoped intent contract.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

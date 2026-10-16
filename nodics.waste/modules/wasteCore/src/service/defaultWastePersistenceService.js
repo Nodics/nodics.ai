@@ -61,16 +61,15 @@ module.exports = {
     return {
       tenant: tenant,
       transactionContext: request.transactionContext,
-      authData: Object.assign({}, request.authData || {}, {
-        tenant: tenant,
-        principalId: "wasteOperationService",
-        principalType: "service",
-        loginId: "wasteOperationService",
-        code: "wasteOperationService",
-        userGroups: ["serviceAccountUserGroup"],
-        groups: ["serviceAccountUserGroup"],
-      }),
+      authData: this.systemAuthority(),
     };
+  },
+  /** Canonical local authority follows domain admission; never fabricate a service principal or groups. */
+  systemAuthority: function () {
+    const identity = SERVICE.DefaultIdentityGovernanceService;
+    if (typeof identity?.getSystemAuthData !== 'function')
+      this.fail('ERR_WASTE_RUNTIME_UNAVAILABLE', 'Canonical persistence authority is unavailable');
+    return identity.getSystemAuthData();
   },
   /** Returns a bounded selection through generated reads. */
   list: async function (schema, request, query, limit) {

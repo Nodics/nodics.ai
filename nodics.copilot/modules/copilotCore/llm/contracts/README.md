@@ -1,5 +1,14 @@
 # copilotCore contracts
 
+## Runtime Context Defaults
+
+Core's PLATFORM role derives `core.environment` through nConfig's trusted
+`environmentCode` context binding. Customer project identity remains an explicit
+customer choice; no reference application or environment name belongs here.
+This metadata does not enable API/provider access or supply actor authority.
+Missing context stays missing, unrelated roles are unchanged, and later customer
+overrides use normal layering. See `test/copilotEnvironmentConfigurationOwnership.test.js`.
+
 Deterministic module inventory routes apply to counts, lists and exports.
 Explanations of module ownership/responsibility stay on governed knowledge
 retrieval, even when the question contains "which" or "what". This routing

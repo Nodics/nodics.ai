@@ -142,3 +142,13 @@ Later layers may decorate the CMS consumer and owner presentation, but must
 preserve exact-release selection, bounded inspection, signed scope, fail-closed
 qualification and independent approval. Mock tests prove these source contracts,
 not live storage/transport qualification or public image delivery.
+
+## Baseline Root Derivation
+
+An explicitly selected content-pack baseline retains releaseVersion and
+sourceVersion. CMS may derive rootType=site and rootCode only when that exact
+available release is WCMS_STAGED/PUBLISHABLE/ADMIN_INITIATED and declares exactly
+one site. Missing version, ambiguity, conflicting partial roots or release drift
+reject; status reports INVALID_RELEASE without importing or publishing. Multi-site
+packs and ordinary data-release baselines retain explicit roots. Stored approval
+and coordinated Media dependencies still bind the original immutable release.

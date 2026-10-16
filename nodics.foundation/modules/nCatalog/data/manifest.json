@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "catalog",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "catalog permissionCatalogue",
+      "description": "Explicit catalog identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "catalog",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/catalogPermissionHeader.js": "974b3f7de8769ac2baad0196fcb2ed49c150f0a3b07d24a4a0692c0fdbb5c6c3",
+        "init-v001/records/identity/catalogPermissionData.js": "98cd824b4bcef190a0ad713686c04a2b8a632ae9a8b3aa602bee9044a7ab9e41"
+      }
+    },
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",

@@ -19,7 +19,11 @@ module.exports = {
         request.orderCode = params.orderCode || request.orderCode; request.requestCode = params.requestCode || request.requestCode; request.actionCode = params.actionCode || request.actionCode;
         request.payload = http.body || request.payload || {}; request.query = http.query || request.query || {};
         request.idempotencyKey = request.idempotencyKey || (http.headers && http.headers['idempotency-key']);
-        const promise = FACADE.DefaultOrderLifecycleFacade[operation](request).then(data => ({ data }));
+        const promise = Promise.resolve().then(() => FACADE.DefaultOrderLifecycleFacade[operation](request)).then(data => {
+            if (operation === 'list') data = data.map(row => SERVICE.DefaultOrderBusinessAccessService.publicLifecycle(row));
+            else if (operation === 'action') data = SERVICE.DefaultOrderBusinessAccessService.publicLifecycle(data);
+            return { data };
+        });
         if (!callback) return promise; promise.then(value => callback(null, value)).catch(callback);
     },
     /** Previews lifecycle eligibility. @param {Object} request Request. @param {Function} callback Callback. @returns {Promise<Object>|void} Preview. */

@@ -82,6 +82,7 @@ function fixture(t) {
     }),
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseManagementService: profile,
     DefaultEnterpriseCommandReceiptService: owner,
     DefaultModelCommandReceiptService: protocol,

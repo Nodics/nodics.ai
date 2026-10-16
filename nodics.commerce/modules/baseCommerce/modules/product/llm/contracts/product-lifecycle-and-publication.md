@@ -1,5 +1,26 @@
 # Product contracts
 
+## Consumed Product Pins
+
+Governed customer enrichment forwards the retained projection's exact
+`publicationVersion` as Pricing's internal
+`{productCode, storeCode, targetVersion}` reference. Duplicate Product results
+must agree on that version. Caller-supplied pins are ignored.
+
+Cart and merchant pricing use `DefaultProductDiscoveryService.consumerReferences`
+with at most 100 identity selectors and the original owner scope. This internal
+read requires activated STALE selection, exact generated retained readback,
+tenant/enterprise/Store/locale identity and optional SKU/variant membership.
+Inert activation, missing/foreign/duplicate retained rows, malformed versions,
+failed reads and changed original context refuse without CURRENT/latest fallback.
+Pricing independently verifies its approved Product reference and fresh target
+proof before/after delivering an individual row. This is not publication,
+employee admission or an authorization cache.
+
+Run `test/productConsumerReferences.test.js` with Product digital availability,
+Pricing row publication and Cart activated policy tests. These are isolated
+source/in-memory integration checks, not installed runtime acceptance.
+
 ## Exact Product Graph And Activation
 
 `DefaultProductPublicationGraphService.captureReferences(request, productCode,
@@ -481,3 +502,187 @@ permission defaults remain. Update grants through their existing authority.
 Preserve generated raw-model PUT and query/model PATCH contracts, original
 revisions, persisted responses, Staged enforcement and domain publication.
 Source/prepared tests do not establish live authentication or persisted grants.
+
+## Retained Listing Handoff
+
+The separate human `POST /products/listings` route uses an access token,
+`employeeUserGroup`, `commerce.product.publish`, qualified private capture and
+the original signed Staged tenant/enterprise. Its body is exactly
+`{contractVersion:1,assetCode,listingKey,expectedRevision,intentDigest,storeCode}`.
+Key/digest are 64 lowercase hex. `expectedRevision` is the current asset revision;
+the returned proof's `requestRevision` is the distinct original intent revision.
+No editable Product command, namespace, owner, price, policy or endpoint is accepted.
+
+Product independently consumes the fixed `/internal/listing-requests/proof`
+through `product.marketplaceAuthoring.intentSource` using its own runtime token,
+never the human bearer or an enterprise header. The configured source owner must
+authorize its narrow intent-read capability for that deployment; Product does
+not prescribe a domain permission or acquire completion, transfer or financial
+authority through this proof.
+The default binding has null module/connection/role and does not execute.
+Configure only reviewed module/connection/role metadata in the later layer.
+HTTPS verification and redirects-off are mandatory; an exact loopback exception
+requires the explicit later-layer `allowInsecureLoopback` selection.
+
+The source proof has exactly `contractVersion:1`, `tenant`, `assetCode`,
+`assetRevision`, `listingKey`, `requestRevision`, `intentDigest`, `sourceRef`,
+`ownerRef`, `storeContext`, `authoringContext` and `productCommand`. It binds
+asset/current revision, original request revision/key/digest, source/customer
+refs, canonical Store revision/enterprise, exact catalog/locales and the retained
+allowlisted Product command. The proof remains bounded to 32 KiB and 32 unique
+locales. The command accepts only `sourceRef`, `ownerRef`, `name`, `description`,
+`issuer`, `imageUrl`, `biddingEnabled`, `sample` and `idempotencyKey`.
+
+Pricing and source-domain settlement semantics are not part of this contract.
+The originating owner validates its entire retained intent and required business
+terms before projecting the proof. `intentDigest` binds that original intent as
+opaque evidence: Product compares it with the selectors and fresh owner read,
+but never reconstructs it or validates an accelerator's settlement policies.
+Additional price/policy fields are rejected, not silently adopted. A partner
+asset source without reward/carbon policies can implement this same proof using
+the existing configured transport; it must retain its own independent authority,
+immutable intent validation and narrow read permission.
+
+Missing Product terms, malformed proofs, mismatching Store/catalog/locales or
+foreign signed human scope fail before writes. Source/Store and original human
+authority are checked again before acknowledgment. Partial writes remain original
+immutable graph components, never a completed/published outcome; recover only
+the same intent/key. Private exact-request admission is retired on every exit.
+
+The Product consumer and source producer must deploy this narrowed proof together;
+an older producer emitting price/policy fields fails closed. This changes neither
+retained intent bytes/digests nor the stored `sourceProof` binding and requires no
+historical record rewrite. The operator queue/detail contract remains owned by
+the originating domain and may still present its own price and policy references.
+
+The standard `{data:...}` acknowledgment contains
+`{productCode,variantCode,sku,catalogVersion,versionId,locales,sourceProof,publicationRequired:true}`.
+`versionId` is read from the actual qualified source root, never guessed zero.
+`sourceProof` binds `{contractVersion:1,assetCode,listingKey,requestRevision,intentDigest,storeContext}`;
+it grants no publication or business authority. The root retains this original
+binding. Normal `/products/publication` accepts
+`{publicationCode,productCode,storeCode,versionId}` and retains existing
+nPublish/Process governance. Human authoring creates no approval/Process refs.
+
+Fixed private runtime reads require `requireRuntimePrincipal(product)` and the
+existing `commerce.product.read`, never publication authority merely to inspect:
+
+- `POST /internal/products/listings/store-context` accepts exactly
+  `{contractVersion:1,storeCode}` with no query selectors. It reads the separately
+  configured operational Store owner's fixed `POST /internal/stores/placement` and
+  returns `{contractVersion:1,tenant,store:{code,enterpriseCode,revision,active,status},authoring:{catalogVersion,locales}}`.
+  Placement metadata never supplies human enterprise membership.
+  `product.marketplaceAuthoring.storeSource` has exactly `moduleName: "store"`,
+  a reviewed non-default `connectionName`, `connectionType: "abstract"`, the
+  operational receiver's `runtimeRole`, bounded `timeoutMs` (1..15000) and Boolean
+  `allowInsecureLoopback`. Default module/connection/role remain null. A later
+  deployment selects its existing Commerce connection and exact Store owner's
+  role; source availability does not activate this binding or install grants.
+  Product sends only `{contractVersion:1,storeCode}` with its current Staged
+  runtime's own internal bearer and tenant header. Never forward the human or
+  upstream runtime credential, enterprise headers or signed groups. HTTPS
+  verification, redirects-off and one attempt remain mandatory, except the
+  explicitly selected loopback allowance. There is no Staged-local Store read,
+  generic CRUD fallback, provider lookup, automatic retry or mutable repair.
+  Store independently admits the exact original signed deployment, existing
+  `commerce.store.read` and configured Store/enterprise pair; it owns normalization
+  of schema-bound long/short/code-only/string references and rejects conflicting
+  aliases. Product accepts only the version-1 bounded placement DTO with exact
+  tenant/Store identity, active/status and positive safe-integer revision. Failed,
+  ambiguous, duplicate or malformed envelopes refuse rather than prove absence.
+  Private handoff admission, original actor/router, namespace aliases, selectors
+  and binding are checked across the awaited read; changed evidence retires the
+  response before graph writes or acknowledgment. Explicit same-intent retry
+  rechecks the remote owner and preserves existing idempotency recovery.
+  `productListingAuthoringAdmission.test.js` runs the actual Store placement
+  controller/service in an isolated receiver with synthetic generated I/O, plus
+  original Product real versioned writers. Store's separate placement suite owns
+  generated get/pipeline/provider qualification. Neither proves installed state.
+- `POST /internal/products/listings/source-evidence` accepts the same six proof
+  selectors as human authoring. It independently rereads the original proof,
+  Store and entire fixed CURRENT versioned graph twice. Qualified graph absence
+  returns `product:null`; unavailable/malformed/partial evidence throws, never
+  becomes absence or a write-side recovery. Foreign graph reads additionally
+  require the existing `publish.approvalWorkflow.runtimeEnterpriseScope` admission
+  for the unchanged original runtime. No body enterprise or token rewrite exists.
+
+Source evidence returns
+`{contractVersion:1,tenant,assetCode,listingKey,intentDigest,storeCode,product,productReference,publicationReferences}`.
+`product` is null or `{productCode,variantCode,sku,catalogVersion,locales,versionId}`.
+For a sealed root, only its exact retained publication code is read. The immutable
+version provider proves scope/graph; ONLINE references also require genuine approval
+and fresh stable target pointer/receipt evidence. The exact reference is
+`{publicationCode,productCode,storeCode,sourceVersion,targetVersion}`; pending
+approval returns null, never an older/current-latest substitute. Safe publication
+refs are `{domain:"product",code,state,processCode?}` from actual nPublish
+workflow evidence, not invented tasks or URLs. Missing publication owners refuse.
+
+`test/productListingAuthoringAdmission.test.js` exercises real generated schema
+save admission, merged base/vService and vMongodb immutable writes, human/source
+transport, read-only absence/partial faults, scope/receipt drift, recovery and
+concurrent independent actors. Artificial fixtures do not qualify installed grants,
+transport, Process, delivery, native business state or physical evidence.
+
+## Admitted Listing Persistence
+
+`POST /internal/products/listings` remains service-only with
+`commerce.product.publish`; it now uses existing nRouter private capture admission
+and disables response caching. The original exact request must carry a scoped
+Product runtime principal in the signed tenant/enterprise, on Staged with
+marketplace authoring enabled. Copied requests, enumerable privacy flags, body
+namespace overrides and missing permission cannot mint local persistence authority.
+
+After admission, only the fixed Product, Variant and configured localized records
+use `DefaultIdentityGovernanceService.getSystemAuthData()` through generated saves.
+Queries and models retain the signed tenant/enterprise; the original runtime
+principal never receives schema groups. Schema access and normal save hooks remain
+active. Authority, private capture, payload and policy are rechecked across awaits.
+Deterministic listing/variant/SKU identities and the original idempotency key are
+unchanged. This does not authorize Pricing, Inventory, publication, approval,
+custody or financial effects, and supplies no new grants or qualification flags.
+
+The root's optional schema-owned `listingAuthoring` field binds the original
+source, owner, effective authored terms, catalogue and locale set. Generated
+uncached exact reads preflight every existing graph component before writes.
+Matching replays do not save existing rows or reset revisions/timestamps. Missing
+ordinary components use the existing generated insert-only path and exact
+readback, so concurrent conflicts or lost acknowledgements cannot upsert changed terms.
+Versioned components require the effective generated model's CURRENT read
+capability and the merged writer's `saveVersionedItems` selection. Create only
+explicit `versionId: 0` through generated saves, without `insertOnly`; the
+canonical versioned provider validates history and inserts an immutable first
+version under the installed unique logical-identity/version index. Never
+increment a version to recover a listing, select ordinary `saveItems`, weaken
+the insert-only guard, or infer empty history from a failed read. Missing
+capabilities or malformed stored version identities refuse. Runtime model/writer
+selection stays pinned across awaits. Installed schema/index qualification is
+a deployment prerequisite, not something this business owner migrates or proves.
+Localized schemas explicitly retain the optional signed enterprise namespace.
+An unrelated same-scope root, changed owner/name/terms, inconsistent component,
+or orphan graph fails closed. Legacy roots without the original binding cannot
+be automatically adopted, even if their display fields happen to match; retain
+them for authorized owner reconciliation, never reset or infer missing evidence.
+Unsupported ordinary insert-only or versioned persistence likewise refuses
+rather than falling back to an ordinary save/upsert.
+
+Root and localized/variant attributes explicitly carry the reviewed ownership
+classification: `productType: DIGITAL`, `digitalDeliveryType: DIGITAL_OWNERSHIP`
+and attribute `inventoryStrategy: DIGITAL_COMMERCE`. The actual localized
+projection builder consumes these attributes; `kind: ASSET` is display/domain
+metadata, never delivery classification. This declares no binding, available
+supply, owner qualification or custody. DigitalCore retains those independent
+checks; an absent integration cannot fall through to physical Inventory.
+
+An interrupted call can leave part of this graph persisted. Reconcile the owning
+source first and recover only its original retained listing terms/key; never infer
+rollback from a generic error. `test/productListingAuthoringAdmission.test.js`
+covers group-free admission, actual schema access checks, copied/forged request
+refusal, namespace isolation, drift and original-command recovery with isolated
+persistence. The versioned regression executes generated save dispatch, actual
+base-plus-vService save admission/writer and vMongodb history validation/insert
+with isolated driver I/O, plus the actual localization/projection builder and
+DigitalCore classification dispatch. Keep guard rejection, first-version/replay,
+all partial prefixes, changed terms, concurrent identical/conflicting commands,
+lost acknowledgements, history failure and missing capability coverage. Native
+authentication, installed persistence and downstream publication still require
+separate operator qualification.

@@ -383,7 +383,7 @@ module.exports = {
                 _self.LOG.info('Server is not started yet, hence waiting');
                 setTimeout(() => {
                     _self.startOnStartup(_self);
-                }, CONFIG.get('processRetrySleepTime') || 2000);
+                }, CONFIG.get('cronjob').processRetrySleepTime);
             }
         }
     }

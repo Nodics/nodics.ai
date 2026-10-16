@@ -20,7 +20,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const routes = require("../src/router/routers").profile.loadDefaults;
-const properties = require("../config/properties");
+const properties = require("./helpers/identityCatalogueFixture").properties();
 const controller = require("../src/controller/enterprise/defaultEnterpriseManagementController");
 const facade = require("../src/facade/enterprise/defaultEnterpriseManagementFacade");
 test("committed recovery has a fixed exact DTO and independent default-off qualification", () => {
@@ -86,6 +86,7 @@ test("membership exposure defaults off and team commands require explicit permis
 test("workspace facade dispatches only to the fixed Profile team owner", async () => {
   const request = { authData: { entCode: "business" } };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseTeamAdministrationService: {
       workspace: async (value) => {
         assert.equal(value, request);

@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "loyaltyWallet",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "loyaltyWallet permissionCatalogue",
+      "description": "Explicit loyaltyWallet identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "loyaltyWallet",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/loyaltyWalletPermissionHeader.js": "26059445fe931e576aab75b8b06315733402608d39a5eeae2414e1c195a47707",
+        "init-v001/records/identity/loyaltyWalletPermissionData.js": "39efdc94c368f1a18d54248e644eb8987fcbf6f80f11c78bb38a589aad2d5b66"
+      }
+    },
     "sample-lifecycle": {
       "kind": "DATA_RELEASE",
       "dataType": "sample",
@@ -72,6 +96,77 @@
             "manifestPath": "nodics.docs/data/manifest.json",
             "manifestSection": "foundation"
           }
+        }
+      ]
+    },
+    "specialAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Reviewed Sample Credit Group",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "loyaltyWallet",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/loyaltyWalletSpecialAccessGroupHeader.js": "6a3d8c6db579c56880f2d7daf71aac71eb57d73ef44e9c2a23fd12ab4f161f4d",
+        "init-v001/records/identity/loyaltyWalletSpecialAccessGroupData.js": "f7ec6d68dd537266cfe1843c4d7dd7efbdaac7df769f99a374f56b665b50c7f3"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.2",
+          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+        },
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "838336cb02e48538bb992bd7d2140b0b784b8ffa582451a18bef88399ed1499f",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "specialAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Reviewed Sample Credit Role",
+      "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
+      "owningDomain": "loyaltyWallet",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/loyaltyWalletSpecialAccessRoleHeader.js": "d84f06ea932303e3fd8cce28d4af5a4b497f194b7927a9ed599fa60ebca47abe",
+        "init-v001/records/identity/loyaltyWalletSpecialAccessRoleData.js": "412254786d30a08ca6fa0cbfc55161d61204adb738ed7cff5ce49b528bfcc05c"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "loyaltyWallet",
+          "sectionCode": "specialAccessGroups",
+          "version": "0.0.1",
+          "checksum": "9819b4e9df796eeb34e3604e2834c226df25fef33375092bc8b9d3a6350b4fde"
         }
       ]
     }

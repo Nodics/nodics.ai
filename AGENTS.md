@@ -131,6 +131,23 @@ review and release process. An explicitly authorized Nodics-maintainer task is a
 separate scope. Classify framework capability, domain accelerator and customer
 application ownership before placing code, data, tests or documentation.
 
+Circa and Agora reference extensions in Kickoff are demo data/composition ONLY.
+Move reusable behavior, defaults and access definitions to the existing
+implementing framework module or accelerator. Real partner projects remain
+extensible through supported contracts. Profile owns standard bootstrap users,
+access mechanics and runtime assignments; each implementing module owns its
+permission contributions and business-area definitions. Demo identities, accounts
+and assignments are optional Kickoff data, never standard bootstrap prerequisites.
+Axis presents business area + No access / View / Edit / Full control + Scope,
+resolved by Profile and enforced by backend owners. Full control never bypasses
+approval, ledger/financial rules, simulation gates or tenant isolation.
+
+The authorized reference/access refactor has no backwards compatibility: update
+consumers and remove superseded adapters, routes and role aliases. Do not introduce
+a catch-all module or parallel authority. Preserve historical evidence and installed
+receipts; changing guidance or source does not authorize live adoption. Keep
+documentation and business releases independently selected and governed.
+
 ## Token optimisation principle
 
 Apply [Token Optimisation And Proportionate Execution](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#token-optimisation-and-proportionate-execution)
@@ -138,6 +155,14 @@ to every task and customer project. Reuse valid evidence, bound reads and output
 and avoid redundant validation and CI polling without weakening required gates.
 
 ## Minimal configuration principle
+
+Apply the [mandatory default ownership gate](nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate).
+All reusable property definitions, defaults and standard wiring belong to their
+implementing framework modules. Customer files contain only actual selections
+and overrides, never mandatory copies of standard publication/provider mechanics.
+Review consumers and mixed objects, not only equal values. Keep registration,
+activation, qualification and authorization separate. Tests and generators must
+not make misplaced customer declarations part of the framework contract.
 
 Apply [Runtime Knowledge Is Framework-Owned](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#runtime-knowledge-is-framework-owned).
 Never add Copilot source catalogs to modules or accelerators. Active modules are

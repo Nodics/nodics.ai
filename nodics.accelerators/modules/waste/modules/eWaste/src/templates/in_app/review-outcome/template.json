@@ -1,0 +1,36 @@
+{
+  "formatVersion": 1,
+  "code": "WASTE_REVIEW_OUTCOME_V1",
+  "ownerModule": "eWaste",
+  "channel": "IN_APP",
+  "version": 2,
+  "status": "ACTIVE",
+  "requiresSelection": true,
+  "purpose": "WASTE_REVIEW_OUTCOME",
+  "sourceModules": [
+    "eWaste"
+  ],
+  "defaultLocale": "en",
+  "parameters": {
+    "submissionCode": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 16384
+    },
+    "status": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 16384
+    },
+    "comment": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 16384
+    },
+    "detailUrl": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 16384
+    }
+  }
+}

@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "checkoutCore",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "checkoutCore permissionCatalogue",
+      "description": "Explicit checkoutCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "checkoutCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/checkoutCorePermissionHeader.js": "516853e6e566b6dbd6c7997b59242873b0175e234bc0aa6e688852523cfde544",
+        "init-v001/records/identity/checkoutCorePermissionData.js": "e7ee5c19ea319f23f2974d60a098124b09b10c6fae8968a3de0d445119159508"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

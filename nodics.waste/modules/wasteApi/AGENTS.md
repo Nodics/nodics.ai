@@ -7,6 +7,11 @@ Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enable
 resource-oriented and secured; they must not use partner names or role words as
 ownership.
 
+Business Workbench routes follow the [Waste Core scope contract](../wasteCore/llm/contracts/business-workbench.md).
+Keep discovery, descriptor module identity and search routes on `wasteApi`.
+Require signed human access tokens and owner permission/scope admission; never
+enable generic schema grants or expose raw provider queries as a fallback.
+
 Installed evidence uses only the bounded, permissioned inspection operation.
 Preserve [Waste Core's inspection contract](../wasteCore/llm/contracts/README.md#installed-evidence-inspection),
 effective service resolution, authenticated tenant, and transaction redaction.

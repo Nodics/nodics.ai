@@ -55,6 +55,7 @@ function fixture() {
         : "default",
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseManagementService: require("../src/service/enterprise/defaultEnterpriseManagementService"),
     DefaultLoggerService: {
       runSensitiveOperation: async (request, operation) => {

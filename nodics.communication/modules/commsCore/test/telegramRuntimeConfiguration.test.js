@@ -48,7 +48,9 @@ test("Communication declares an inert delivery contract only for its selected ro
   const schema = engagement.runtimeConfigurationSchemas.telegramDelivery;
   assert.equal(schema.ownerModule, "commsCore");
   assert.equal(schema.fields[0].credentialReference, "telegram.bot.delivery");
-  assert.deepEqual(schema.fields[0].path, [
+  assert.equal(schema.fields[0].path, undefined);
+  const schemaOwner = require('../../../../nodics.foundation/modules/nSystem/src/service/config/defaultRuntimeConfigurationSchemaService');
+  assert.deepEqual(schemaOwner.resolveFieldPath(schema.fields[0]), [
     "credentials",
     "telegram.bot.delivery",
     "value",

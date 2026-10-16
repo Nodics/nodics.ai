@@ -631,13 +631,34 @@ separate projects.
 ## Repository ownership rules
 
 - Framework source belongs in `nodics.ai`.
-- Framework documentation content belongs in `nodics.docs`.
+- Capability documentation belongs in the implementing module. `nodics.docs`
+  owns shared documentation scaffolding, discovery and cross-framework guides.
 - Axis product documentation content belongs in `nodics.platform/modules/axis`.
 - Customer/project documentation content belongs in the owning customer project,
   for example `nodics.kickoff`.
 - `nodics.axis` owns browser rendering and recovery behavior only. It must not
   own backend-importable CMS catalog, site, page, component, route, or
   documentation records.
+
+Circa and Agora reference extensions in Kickoff contain demo data/composition
+ONLY. Reusable behavior, defaults and access definitions belong to the existing
+implementing framework module or accelerator. Genuine partner projects retain
+supported customization; the reference restriction does not prohibit custom
+policies, integrations or extensions in those projects.
+
+Profile owns standard bootstrap users, access mechanics and runtime assignments.
+Implementing modules contribute their own permissions and business-area access
+definitions. Axis presents business area + No access / View / Edit / Full control
+with Scope, resolved by Profile and enforced by backend owners. Full control does
+not bypass approval, ledger/financial rules, simulation gates or tenant isolation.
+Demo identities/accounts/assignments are optional Kickoff data. Documentation and
+business releases are independently selected and governed.
+
+The authorized reference/access refactor removes superseded routes, adapters and
+role aliases with no backwards compatibility, while preserving historical evidence
+and installed receipts. It introduces no catch-all module or parallel authority.
+See the [canonical principles](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#existing-layers-and-project-independence)
+and [customer contract](nodics.foundation/modules/nSetup/llm/contracts/customer-project-mode-contract.md).
 
 ## Run Nodics locally in the reference workspace
 

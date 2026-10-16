@@ -262,7 +262,7 @@ module.exports = {
     const target = await management.retrieveEnterpriseForAccess(
       record.enterpriseCode,
     );
-    const policy = intake.enterprisePolicy(target.enterprise);
+    const policy = await intake.enterprisePolicy(target.enterprise);
     if (
       !policy ||
       target.tenantCode !== record.tenantCode ||

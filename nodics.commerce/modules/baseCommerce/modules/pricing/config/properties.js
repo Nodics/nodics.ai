@@ -12,7 +12,7 @@
 /** @module pricing/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner pricing */
 module.exports = {
   publish: {
-    setup: { permissions: { pricing: 'publish.lifecycle.create' } },
+    setup: { permissions: { pricing: "publish.lifecycle.create" } },
     providers: {
       domainAdapters: { pricing: null },
       versionProviders: { pricing: null },
@@ -25,6 +25,27 @@ module.exports = {
           ownerModule: "pricing",
           actionKey: "pricing.applyPublicationDecision",
           sourceRuntimeRole: "COMMERCE_STAGED",
+        },
+      },
+    },
+
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        providers: {
+          domainAdapters: { pricing: "DefaultPricingPublicationService" },
+          versionProviders: { pricing: "DefaultPricingPublicationService" },
+          workflowProviders: {
+            pricing: "DefaultPublicationApprovalWorkflowService",
+          },
+        },
+      },
+      COMMERCE: {
+        setup: {
+          observation: {
+            targetObservers: {
+              pricing: "DefaultPricingPublicationService",
+            },
+          },
         },
       },
     },
@@ -74,6 +95,45 @@ module.exports = {
       includeEvidence: false,
       missingPriceBehavior: "omit",
     },
+
+    // Registration remains separate from availability; installed qualification is an operator gate.
+    publication: {
+      runtimeRole: null,
+      sourceVersioningQualified: false,
+      delivery: { enabled: false, rootCodes: [], rowReleases: false },
+      legacyCasRecovery: { enabled: false, operations: [] },
+      targetTransportProvider: null,
+      // Mutations require exact signed deployments on the existing transport bindings.
+      sourceAuthority: {
+        callers: [],
+        moduleName: "pricing",
+        connectionName: null,
+        connectionType: "abstract",
+        runtimeRole: "COMMERCE_STAGED",
+      },
+      target: {
+        callers: [],
+        moduleName: "pricing",
+        connectionName: null,
+        connectionType: "abstract",
+        runtimeRole: "COMMERCE",
+      },
+      maxDependencies: 1000,
+    },
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        publication: {
+          runtimeRole: "STAGED",
+          targetTransportProvider: "DefaultPricingPublicationTransportService",
+        },
+      },
+      COMMERCE: {
+        publication: {
+          runtimeRole: "ONLINE",
+          targetTransportProvider: "DefaultPricingPublicationTransportService",
+        },
+      },
+    },
   },
   schemaPolicies: {
     pricing: {
@@ -112,6 +172,17 @@ module.exports = {
         },
       },
     },
+
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        pricing: {
+          publicationVersioned: {
+            isVersionedEnabled: true,
+            versionedReadMode: "CURRENT",
+          },
+        },
+      },
+    },
   },
   apiExposure: {
     categories: {
@@ -122,14 +193,4 @@ module.exports = {
       },
     },
   },
-};
-
-// Registration remains separate from availability; installed qualification is an operator gate.
-module.exports.pricing.publication = {
-  runtimeRole: null,
-  sourceVersioningQualified: false,
-  delivery: { enabled: false, rootCodes: [] },
-  legacyCasRecovery: { enabled: false, operations: [] },
-  targetTransportProvider: null,
-  maxDependencies: 1000,
 };

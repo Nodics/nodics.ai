@@ -19,31 +19,43 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const merge = require("../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService");
 const governance = require("../../../../nodics.platform/modules/profile/src/service/group/defaultUserGroupGovernanceService");
+const catalogue = require("../../../../nodics.platform/modules/profile/src/service/identity/defaultIdentityCatalogueService");
+const fixture = require("../../../../nodics.platform/modules/profile/test/helpers/identityCatalogueFixture");
 const authDefaults = require("../../../../nodics.foundation/modules/nAuth/config/properties");
 const knowledgeDefaults = require("../config/properties");
 
-test("migration permissions survive configuration layering and Profile group validation without default grants", (t) => {
-  const prior = { CONFIG: global.CONFIG, CLASSES: global.CLASSES };
+test("owner migration permissions pass fresh Profile validation without default grants or enabling mutations", async (t) => {
+  const prior = { CONFIG: global.CONFIG, CLASSES: global.CLASSES, SERVICE: global.SERVICE };
   t.after(() => Object.assign(global, prior));
   const configuration = merge.merge(authDefaults, knowledgeDefaults);
-  for (const permission of authDefaults.identityGovernance.permissionCatalog)
-    assert.ok(
-      configuration.identityGovernance.permissionCatalog.includes(permission),
-    );
+  const records = structuredClone(fixture.records("Permission"));
+  global.SERVICE = {
+    DefaultIdentityCatalogueService: {
+      ...catalogue,
+      async rows(serviceName, query) {
+        assert.equal(serviceName, "DefaultPermissionService");
+        assert.equal(query.active, true);
+        return records.filter((row) => row.active === true && query.code.$in.includes(row.code));
+      },
+    },
+  };
   global.CONFIG = { get: (key) => configuration[key] };
   global.CLASSES = { NodicsError: class extends Error {} };
   const permissions = ["read", "execute", "erase"].map(
     (verb) => "copilot.knowledge.migration." + verb,
   );
-  assert.doesNotThrow(() => governance.validatePermissions([{ permissions }]));
-  assert.throws(() =>
+  for (const permission of permissions)
+    assert.equal(records.find((row) => row.code === permission)?.ownerModule, "copilotKnowledge");
+  await assert.doesNotReject(() => governance.validatePermissions([{ permissions }]));
+  await assert.rejects(() =>
     governance.validatePermissions([
       { permissions: ["copilot.knowledge.migration.unregistered"] },
     ]),
   );
-  for (const group of Object.values(
-    configuration.identityGovernance.migration.groupTargets,
-  ))
+  await assert.rejects(() => governance.validatePermissions([{ permissions: ["*"] }]));
+  records.find((row) => row.code === permissions[0]).active = false;
+  await assert.rejects(() => governance.validatePermissions([{ permissions }]));
+  for (const group of fixture.records("UserGroup"))
     assert.equal(
       (group.permissions || []).some((permission) =>
         permissions.includes(permission),

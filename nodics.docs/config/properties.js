@@ -2769,7 +2769,7 @@ module.exports = {
         },
         "docs-ewaste": {
           "contentPackCode": "eWasteDocumentation",
-          "releaseVersion": "0.0.5",
+          "releaseVersion": "0.0.6",
           "rootType": "site",
           "rootCode": "nodicsDocumentationSite",
           "sourceVersion": "0"
@@ -3189,7 +3189,7 @@ module.exports = {
         },
         "circadocs": {
           "contentPackCode": "circaDocumentation",
-          "releaseVersion": "0.0.2",
+          "releaseVersion": "0.0.3",
           "rootType": "site",
           "rootCode": "circaDocumentationSite",
           "sourceVersion": "0"

@@ -1,5 +1,58 @@
 # database AI Contracts
 
+## Platform Schema Access
+
+`DefaultSchemaAccessHandlerService.getAccessPoint(authData, accessGroups, request)`
+consumes nRouter's `hasPlatformFullAccess` predicate rather than a second role
+registry or a local administrator flag. The explicit persisted full-access grant
+on a native human Platform PASSWORD access session yields configured
+`accessPoints.fullAccessPoint` even without a domain operating group. If nRouter's
+predicate is unavailable, ordinary explicit group matching remains in force;
+database does not infer full access from a wildcard or group name by itself.
+
+Generated get/save/update/remove and `DefaultSchemaUtilityService` pass the
+original request so its target tenant must match the authenticated authority
+tenant for this shortcut. Enterprise sessions, service/API-key/runtime identities,
+linked contexts and missing wildcard grants do not qualify. This is solely schema
+group admission: schema availability, ownership attribution/query constraints,
+explicit schema operations, property access policies, publication authority,
+approval/lifecycle hooks and provider/tenant admission remain unchanged.
+An explicit field denial is not overridden by schema-level full access.
+
+`test/platformAdministratorSchemaAccess.test.js` loads the real fresh admin seed
+with isolated test credentials, exercises all four generated access guards and
+schema operation metadata, and chains the actual Rules definitions route into
+generated read admission. Negative cases include enterprise/service/API-key/linked
+claims, absent grants, target-tenant mismatch, owner reassignment, protected fields
+and Online publication. These are offline source regressions, not live adoption.
+
+## Single-Save Failure Diagnostics
+
+`DefaultModelSaveInitializerService.saveModel` uses its canonical `LOG.error`
+boundary, never a direct console sink. Sensitivity comes only from nConfig's
+`DefaultLoggerService.isSensitiveRequest(request)`, including exact private
+objects outside their original async context. Sensitive failures pass only the
+fixed registered `ERR_SAVE_00000` diagnostic to the logger, never the driver
+Error, message, stack, model or metadata. Canonical logger ingress independently
+suppresses private async records. Caller-authored privacy flags confer no proof.
+
+Ordinary failures retain their original Error at the canonical logger and the
+existing `process.error` boundary; ordinary credential redaction still applies.
+Both branches preserve error identity and pipeline control flow. This correction
+does not rewrite error codes, claims, persistence results or HTTP responses.
+nRouter's existing private error projector remains responsible for fixed public
+status diagnostics. Do not copy that projector into database or infer privacy
+from `internalPersistence`, a schema name or a domain-specific caller.
+
+`test/privateModelSaveDiagnosticsContract.test.js` exercises actual `saveModel`,
+`persistModel` and the MongoDB adapter with a synthetic failing driver, real
+nConfig logger ingress and nRouter private response formatting. It covers base
+and merged vService compositions selecting the base initializer, exact private
+objects outside async context, ordinary error preservation and successful saves.
+Later save overrides must preserve the same logger/privacy contract. Rebuild and
+restart affected runtimes through the parent/operator owner before installed
+qualification; source tests do not qualify external driver sinks or deployments.
+
 ## Bulk Failure Metadata Boundary
 
 `DefaultModelsSaveInitializerService.addFailure` preserves capability-owner error

@@ -31,6 +31,23 @@ module.exports = {
             throw new CLASSES.NodicsError('CMS_BASELINE_INVALID', 'CMS baseline code is invalid');
         }
         let descriptor = (this.settings().baselines || {})[code];
+        if (descriptor && descriptor.contentPackCode && descriptor.releaseVersion &&
+            (!descriptor.rootType || !descriptor.rootCode)) {
+            const owner = SERVICE.DefaultContentPackService;
+            const context = owner.resolvePackContext(descriptor.contentPackCode);
+            const release = owner.inspectRelease(context);
+            const manifest = release.manifest || {};
+            const sites = manifest.sites;
+            if (!release.available || release.version !== descriptor.releaseVersion ||
+                manifest.destinationRole !== 'WCMS_STAGED' || manifest.lifecycle !== 'PUBLISHABLE' ||
+                manifest.initialPublicationPolicy !== 'ADMIN_INITIATED' ||
+                !Array.isArray(sites) || sites.length !== 1 || typeof sites[0] !== 'string' || !sites[0] ||
+                (descriptor.rootType && descriptor.rootType !== 'site') ||
+                (descriptor.rootCode && descriptor.rootCode !== sites[0])) {
+                throw new CLASSES.NodicsError('CMS_BASELINE_RELEASE_INVALID', 'CMS baseline requires an exact unambiguous pack root');
+            }
+            descriptor = Object.assign({}, descriptor, { rootType: 'site', rootCode: sites[0] });
+        }
         if (!descriptor || (!descriptor.releaseCode && !descriptor.contentPackCode) || !descriptor.releaseVersion || !descriptor.rootType ||
             !descriptor.rootCode || !descriptor.sourceVersion) {
             throw new CLASSES.NodicsError('CMS_BASELINE_UNAVAILABLE', 'CMS baseline is unavailable');
@@ -312,12 +329,16 @@ module.exports = {
     /** Derives a sanitized readiness projection from nImport and nPublish authorities. */
     status: async function (code, request) {
         this.assertStaged();
-        let descriptor = this.descriptor(code);
+        let descriptor;
         let release;
         try {
+            descriptor = this.descriptor(code);
             release = await this.release(descriptor, request);
         } catch (error) {
-            if (error && error.code === 'CMS_BASELINE_RELEASE_INVALID') return this.invalidReleaseStatus(descriptor, error);
+            if (error && error.code === 'CMS_BASELINE_RELEASE_INVALID') {
+                const selected = descriptor || Object.assign({ code }, this.settings().baselines[code]);
+                return this.invalidReleaseStatus(selected, error);
+            }
             throw error;
         }
         let publication = await this.publication(descriptor, request);

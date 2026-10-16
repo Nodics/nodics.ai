@@ -18,6 +18,11 @@
  */
 module.exports = {
   copilot: {
+    runtimeRoleProfiles: {
+      PLATFORM: {
+        core: { environment: { $config: "context", name: "environmentCode" } },
+      },
+    },
     core: {
       supportedChannels: ["axis", "storefront", "api"],
       defaultChannel: "axis",

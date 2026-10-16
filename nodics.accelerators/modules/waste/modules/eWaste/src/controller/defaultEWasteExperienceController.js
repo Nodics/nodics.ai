@@ -216,6 +216,10 @@ module.exports = {
   retrySettlement: function (request, callback) {
     return this.invoke("retrySettlement", request, callback);
   },
+  /** Maps the dedicated evidence-only rejection command without approval orchestration. */
+  rejectEvidence: function (request, callback) {
+    return this.invoke("rejectEvidence", request, callback);
+  },
   /** Queries scoped and paginated review records through the backend review workspace. */
   reviewSearch: function (request, callback) {
     return this.invoke("reviewSearch", request, callback);

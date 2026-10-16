@@ -1,5 +1,22 @@
 # Store Agent Contract
 
+Store owns the semantic COMMERCE placement-read role profile. It does not enable
+the endpoint or select callers. Projects supply explicit enablement, qualified
+capture and exact caller/placement scope; do not copy the role mapping into servers.
+
+Fixed HTTP controllers must support nRouter's callback dispatch as well as direct
+Promise callers. A returned Promise alone does not complete the HTTP pipeline.
+Exercise the actual `handleRequest` boundary for both success and owner failure;
+direct service/controller tests cannot prove HTTP completion.
+
+Store owns Online operational master records. Staged consumers must use the
+fixed deployment-bound placement read, not duplicate Store releases or assume
+local records. Preserve exact caller coordinates, Store/enterprise pairs,
+private-capture checks and transient generated-read admission. No generic schema
+permission or changed runtime identity follows from `commerce.store.read`.
+See `llm/contracts/README.md#deployment-bound-placement-reads`; run its real
+generated-pipeline tests before adopting any later-layer configuration.
+
 - Merchant protected reads project Mongo's raw envelope before generated get adds
   its success code. Code omission is allowed only on the first exact private
   admission, prepared receiver and original query/options references. Preserve

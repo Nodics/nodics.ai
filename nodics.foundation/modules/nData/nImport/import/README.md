@@ -20,6 +20,21 @@ This module owns generic import mechanics. Functional modules own their data mea
 
 ## Developer Notes
 
+- DATA_RELEASE sections may pin same-type `prerequisites` by exact module,
+  section, version and checksum. The existing release owner preflights and
+  topologically executes that graph, including explicitly referenced inactive
+  data owners without activating their code. Only Init can run at startup;
+  existing owner installations require operator selection for graph upgrades.
+  CURRENT dependencies never replay to repair deleted authority. Optional
+  `partition: "DEFAULT"` references use exact existing default-partition receipts
+  for other tenants, never cross-partition writes; unqualified groups stay
+  tenant-local. See the
+  [prerequisite contract](llm/contracts/import-release-contracts.md#exact-release-prerequisites).
+  Existing installations can use the bounded
+  [maintenance sequence](llm/contracts/import-release-contracts.md#existing-installation-maintenance-sequence):
+  suppress `types.init.startupExecution`, keep Init enabled, migrate the default
+  partition before tenants through governed operator imports, then restore startup.
+
 - Custom owner installers read fixed JSON payloads through
   `DefaultDataReleaseService.readContributionPayload(contribution, installerCode, payloadName)`.
   It requalifies the exact current release and destination, rejects symlinks and

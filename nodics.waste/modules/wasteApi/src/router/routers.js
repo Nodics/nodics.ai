@@ -14,6 +14,20 @@
 /** @module wasteApi/src/router/routers @description Declares secured generic Waste Management framework APIs. @layer router @owner wasteApi @override Later modules may add routes while preserving resource-oriented route keys and ownership boundaries. */
 module.exports = {
     wasteApi: {
+        businessWorkbench: {
+            schemas: { secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                apiVersion: 'v0', cache: { enabled: false },
+                permission: 'waste.backoffice.view', apiExposure: 'wasteInternal',
+                key: '/business/waste/schemas', method: 'GET', controller: 'DefaultWasteBusinessWorkbenchController', operation: 'schemas' },
+            capabilities: { secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                apiVersion: 'v0', cache: { enabled: false },
+                permission: 'waste.backoffice.view', apiExposure: 'wasteInternal',
+                key: '/business/waste/:schemaName/capabilities', method: 'GET', controller: 'DefaultWasteBusinessWorkbenchController', operation: 'capabilities' },
+            search: { secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                apiVersion: 'v0', cache: { enabled: false },
+                permission: 'waste.backoffice.view', apiExposure: 'wasteInternal',
+                key: '/business/waste/:schemaName/search', method: 'POST', controller: 'DefaultWasteBusinessWorkbenchController', operation: 'search' },
+        },
         internal: {
             inspectInstalledData: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['adminGroup'],

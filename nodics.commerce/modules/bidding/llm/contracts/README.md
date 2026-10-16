@@ -22,7 +22,11 @@ asset provenance is optional. A deployment may explicitly enable the generic
 eligibility always wins. Domain rules belong in product publication or the
 calling domain adapter. Bid payloads cannot override seller or eligibility.
 
-DefaultBiddingIdentityService resolves customers through Profile and enterprise
+DefaultBiddingIdentityService resolves customers through Profile's private
+`GET /customer/identity`, forwarding the original customer access token without
+selectors. Validate contract version, tenant, enterprise, login and bounded code;
+missing proof or failed/malformed owner responses refuse without generic CRUD or
+service-token fallback. It resolves enterprise
 representatives through Profile's effective scopes. Later trusted identity and
 offer services may support other business schemas through CONFIG. The lifecycle
 compares complete typed references; equal codes in different schemas never grant

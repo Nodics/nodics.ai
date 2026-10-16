@@ -334,7 +334,7 @@ module.exports = {
       storeCode: m.storeRef?.code,
       storeRevision: m.storeRevision,
       ...(m.pricedBenefit?.sourceStage === "SIMULATED_ITEMS" && m.pricedBenefit.simulated === true ?
-        { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" } : {}),
+        { simulated: true, deliveryVerified: false, evidenceMode: "SIMULATION" } : {}),
     };
   },
   /** Applies a revisioned entitlement mutation and rereads authoritative state. */
@@ -617,11 +617,12 @@ module.exports = {
       p.evidenceService === "DefaultPromotionPricedTransactionAdapterService"
     );
   },
-  /** Allows ITEM receipt handles for qualified delivery or explicitly gated LOCAL simulation; monetary handles retain their own adapter and binding. @returns {boolean} */
+  /** Allows ITEM receipt handles only for the selected verified or admitted simulation owner; monetary handles retain their own adapter and binding. @returns {boolean} */
   itemEvidenceSelected: function () {
     const p = CONFIG.get("promotion")?.merchantBenefits;
-    return p?.enabled === true && (p.qualified === true ||
-      p.itemEvidenceMode === "LOCAL_SIMULATION" && SERVICE.DefaultPromotionItemBenefitService?.simulationSelected() === true) &&
+    const mode = p?.itemEvidenceMode === undefined ? "VERIFIED" : p.itemEvidenceMode;
+    return p?.enabled === true && ((mode === "VERIFIED" && p.qualified === true) ||
+      mode === "SIMULATION" && SERVICE.DefaultPromotionItemBenefitService?.simulationSelected() === true) &&
       /^[A-Za-z][A-Za-z0-9_]{0,127}$/.test(p.itemEvidenceService || "") &&
       typeof SERVICE[p.itemEvidenceService]?.evaluate === "function";
   },
@@ -791,7 +792,7 @@ module.exports = {
       entitlementCode: item.code,
       state: "UNCONFIRMED",
       ...(marker.pricedBenefit?.sourceStage === "SIMULATED_ITEMS" && marker.pricedBenefit.simulated === true ?
-        { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" } : {}),
+        { simulated: true, deliveryVerified: false, evidenceMode: "SIMULATION" } : {}),
     };
     if (item.claimStatus !== "REDEEMED") return pending;
     const receipt = await this.readBoundMerchantReceipt(
@@ -827,7 +828,7 @@ module.exports = {
       merchantCode: merchant.code,
       mode: merchant.mode,
       ...(marker.pricedBenefit?.sourceStage === "SIMULATED_ITEMS" && marker.pricedBenefit.simulated === true ?
-        { simulated: true, deliveryVerified: false, evidenceMode: "LOCAL_SIMULATION" } : {}),
+        { simulated: true, deliveryVerified: false, evidenceMode: "SIMULATION" } : {}),
       ...(merchant.store
         ? {
             storeCode: merchant.store.code,

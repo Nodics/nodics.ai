@@ -119,7 +119,7 @@ module.exports = {
                 configured: configured,
                 value: configured ? this.maskValue(value, field) : undefined,
                 sensitive: field.sensitive === true,
-                sourcePath: field.path,
+                sourcePath: this.resolveFieldPath(field),
                 restartRequired: field.restartRequired === true
             };
             if (field.required === true && !configured) {
@@ -255,6 +255,7 @@ module.exports = {
         described.code = described.code || schemaCode;
         described.fields = (described.fields || []).map(field => {
             let copy = _.cloneDeep(field);
+            copy.path = this.resolveFieldPath(field);
             delete copy.placeholderValue;
             delete copy.sampleValue;
             return copy;
@@ -282,15 +283,31 @@ module.exports = {
         };
     },
 
+    /** Derives the wrapped path from a logical credential selector without reading its value. Conflicting declarations fail closed. */
+    resolveFieldPath: function (field) {
+        if (field.credentialReference === undefined) return field.path;
+        const reference = field.credentialReference;
+        if (typeof reference !== 'string' || !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(reference) ||
+            reference.split('.').some(part => ['__proto__', 'prototype', 'constructor'].includes(part))) {
+            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Invalid runtime credential selector');
+        }
+        const path = ['credentials', reference, 'value'];
+        if (field.path !== undefined && !_.isEqual(field.path, path)) {
+            throw new CLASSES.NodicsError('ERR_SYS_00002', 'Conflicting runtime credential path');
+        }
+        return path;
+    },
+
     /** Resolves one field from runtime, secure, or credential configuration sources. */
     resolveFieldValue: function (field) {
+        const fieldPath = this.resolveFieldPath(field);
         let runtime = CONFIG.get('runtimeConfiguration') || {};
         let secure = CONFIG.get('secureConfiguration') || {};
         let generic = CONFIG.get('credentials') || {};
         let candidates = field.sources || [
-            { root: 'runtimeConfiguration', path: field.path },
-            { root: 'secureConfiguration', path: field.path },
-            { root: 'credentials', path: field.credentialReference ? [field.credentialReference] : field.path }
+            { root: 'runtimeConfiguration', path: fieldPath },
+            { root: 'secureConfiguration', path: fieldPath },
+            { root: 'credentials', path: field.credentialReference ? [field.credentialReference] : fieldPath }
         ];
         let roots = {
             runtimeConfiguration: runtime,
@@ -516,11 +533,12 @@ module.exports = {
                 return;
             }
             let value = fieldRecord.sensitive ? this.decryptSensitiveValue(fieldRecord.encryptedValue, record.tenant) : fieldRecord.value;
-            if (field.path) {
-                if (this.fieldPathTargetsValue(field.path)) {
-                    _.set(patch, field.path, value);
+            const fieldPath = this.resolveFieldPath(field);
+            if (fieldPath) {
+                if (this.fieldPathTargetsValue(fieldPath)) {
+                    _.set(patch, fieldPath, value);
                 } else {
-                    _.set(patch, field.path, { value: value });
+                    _.set(patch, fieldPath, { value: value });
                 }
             }
         });

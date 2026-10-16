@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "bidding",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "bidding permissionCatalogue",
+      "description": "Explicit bidding identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "bidding",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/biddingPermissionHeader.js": "1d96033d53dd5eca8765bc7d57fc846cff912e13c76e367b2a74d6dfef1956d3",
+        "init-v001/records/identity/biddingPermissionData.js": "846f7545d1d962107d30cd6a7e603b14c608268d4eb4701440f18270457e0dd4"
+      }
+    }
+  }
+}

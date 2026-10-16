@@ -12,6 +12,7 @@
     "loadableByNodicsModuleLoader": true,
     "owns": [
       "configuration",
+      "utility",
       "service",
       "test",
       "llm"

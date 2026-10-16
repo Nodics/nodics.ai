@@ -9,6 +9,16 @@ Follow the root Nodics AI agent contract before changing this boundary:
 
 Preserve tenant isolation, idempotency, content-free events, provider neutrality, secured callbacks, and domain ownership. Do not use archived Notify code as authority. Update source, tests, documentation, and generated evidence together.
 
+Uncertain-outcome reconciliation must recognize an exact recorded revision/action/
+reason/operator replay as read-only, returning current owner state even after a
+lost acknowledgement. It must never append another decision or authorize/send
+again. Changed commands still conflict. Preserve source admission and attempt caps.
+
+Malformed Telegram acknowledgement shapes remain `UNCERTAIN` / `TELEGRAM_UNCERTAIN`;
+never infer no-send or retry automatically from null, primitive or array JSON.
+Only failed destination invocation before transport may return the fixed
+`DESTINATION_RESOLUTION_FAILED` retry-pending outcome; retain historical uncertainty.
+
 Follow [template resources](llm/contracts/template-resources.md) before changing
 rendering. Use module-owned `src/templates` files, indexed/raw discovery, typed
 escaped parameters and immutable private rendered content. Do not put HTML in

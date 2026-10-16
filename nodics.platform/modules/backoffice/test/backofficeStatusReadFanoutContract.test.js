@@ -16,6 +16,7 @@
  * @description Composes bootstrap/readiness and real Media controller/facade/aggregate with safe owner mocks; no HTTP/provider/runtime writes.
  * @layer test
  * @owner backoffice
+ * @override Inert owner fixtures must retain exact-request identity, bounded reads and readiness contracts.
  */
 const assert = require("node:assert/strict");
 const path = require("node:path");
@@ -38,6 +39,21 @@ const mediaService = require(
 const mediaLibrary = require(
   path.join(mediaRoot, "service/defaultMediaLibraryService"),
 );
+
+/** Controls owner completion without wall-clock performance assertions. */
+function deferredStatus() {
+  let resolve, reject;
+  const promise = new Promise((onResolve, onReject) => {
+    resolve = onResolve;
+    reject = onReject;
+  });
+  return { promise, resolve, reject };
+}
+
+/** Allows the current promise workers to finish or claim their next item. */
+function flushStatusWorkers() {
+  return new Promise(resolve => setImmediate(resolve));
+}
 
 describe("Bounded setup status fanout", function () {
   let request, owner, transportCalls, databaseCalls, rows, oldFetch;
@@ -211,9 +227,12 @@ describe("Bounded setup status fanout", function () {
     assert.equal(result.status, "UNAVAILABLE");
     assert(!result.description.includes("private failure"));
   });
-  it("one real bootstrap reuses every profile result between navigation and real readiness composition", async function () {
+  it("real bootstrap bounds remaining reads, reuses navigation results and awaits readiness/admission", async function () {
     const calls = [];
-    const profiles = [{ code: "docs" }, { code: "application" }];
+    const profiles = [{ code: "docs" }, ...Array.from({ length: 9 }, (_, index) => ({ code: "application-" + index }))];
+    const lastRead = deferredStatus();
+    let active = 0, peak = 0, settled = false;
+    const reports = [], admissions = [];
     const sources = [
       {
         type: "CMS",
@@ -232,6 +251,10 @@ describe("Bounded setup status fanout", function () {
       profiles: () => profiles,
       status: async (code, context) => {
         calls.push({ code, context });
+        peak = Math.max(peak, ++active);
+        await flushStatusWorkers();
+        if (code === "application-8") await lastRead.promise;
+        active--;
         return { profileCode: code, readiness: "IMPORTED" };
       },
     };
@@ -240,6 +263,14 @@ describe("Bounded setup status fanout", function () {
     };
     SERVICE.DefaultAxisExperiencePolicyService = {
       getEffective: async () => ({}),
+    };
+    SERVICE.DefaultAxisInitializationService = {
+      status: async context => {
+        assert.equal(active, 0);
+        assert.equal(reports.length, admissions.length + 1);
+        admissions.push(context);
+        return { readiness: "READY" };
+      },
     };
     const operational = Object.create(readiness);
     operational.startupValidationReport = () => ({
@@ -263,6 +294,11 @@ describe("Bounded setup status fanout", function () {
       "acceptanceSection",
     ])
       operational[method] = () => undefined;
+    operational.publishingSection = report => {
+      assert.equal(active, 0);
+      reports.push(report);
+      return undefined;
+    };
     operational.operationalRecoveryMatrix = () => [];
     operational.recordOperationalReadinessSnapshot = (report) => ({
       state: report.state,
@@ -281,18 +317,168 @@ describe("Bounded setup status fanout", function () {
     bootstrap.buildEffectiveNavigationComposition = () => ({});
     bootstrap.getOverallCompatibilityStatus = () => "COMPATIBLE";
     bootstrap.selectUiComposition = () => ({});
-    await bootstrap.bootstrap(request);
+    const pending = bootstrap.bootstrap(request).then(result => {
+      settled = true;
+      return result;
+    });
+    try {
+      for (let turn = 0; turn < 20 && !calls.some(call => call.code === "application-8"); turn++) await flushStatusWorkers();
+      assert(calls.some(call => call.code === "application-8"));
+      assert.equal(settled, false);
+      assert.equal(reports.length, 0);
+      assert.equal(admissions.length, 0);
+      assert.equal(peak, 4);
+    } finally {
+      lastRead.resolve();
+    }
+    const result = await pending;
+    assert.equal(result.data.axisInitializationAdmission, "READY");
     assert.deepEqual(
       calls.map((call) => call.code),
-      ["docs", "application"],
+      profiles.map(profile => profile.code),
     );
+    assert.deepEqual(reports[0].statuses.map(status => status.profileCode), profiles.map(profile => profile.code));
+    assert.deepEqual(reports[0].errors, []);
+    assert.equal(admissions[0], request);
     assert(calls.every((call) => call.context === request));
-    await bootstrap.bootstrap({
+    const otherRequest = {
       ...request,
       authData: { ...request.authData, principalId: "other" },
+    };
+    await bootstrap.bootstrap(otherRequest);
+    assert.equal(calls.length, profiles.length * 2);
+    assert(calls.slice(profiles.length).every(call => call.context === otherRequest));
+    assert.equal(admissions[1], otherRequest);
+  });
+  it("keeps four reads in flight and assembles mixed outcomes in input order after all settle", async function () {
+    const profiles = Array.from({ length: 9 }, (_, index) => ({ code: String(index) }));
+    const gates = profiles.map(deferredStatus);
+    const started = [], statuses = profiles.map(profile => ({ profileCode: profile.code }));
+    const errors = [new Error("first denial"), new Error("second denial")];
+    let active = 0, peak = 0, settled = false;
+    const pending = registry.applicationStatusReport(profiles, async code => {
+      const index = Number(code);
+      started.push(index);
+      peak = Math.max(peak, ++active);
+      try { return await gates[index].promise; }
+      finally { active--; }
+    }).then(report => { settled = true; return report; });
+    try {
+      await flushStatusWorkers();
+      assert.deepEqual(started, [0, 1, 2, 3]);
+      gates[3].resolve(statuses[3]);
+      await flushStatusWorkers();
+      assert.deepEqual(started, [0, 1, 2, 3, 4]);
+      assert.equal(active, 4);
+      gates[2].reject(errors[1]);
+      gates[1].reject(errors[0]);
+      for (const index of [4, 5, 6, 7, 8]) gates[index].resolve(index === 7 ? undefined : statuses[index]);
+      await flushStatusWorkers();
+      assert.equal(settled, false);
+      assert.equal(active, 1);
+      assert.equal(peak, 4);
+    } finally {
+      gates.forEach((gate, index) => gate.resolve(index === 7 ? undefined : statuses[index]));
+    }
+    const report = await pending;
+    assert.deepEqual(report.statuses, [statuses[0], statuses[3], statuses[4], statuses[5], statuses[6], undefined, statuses[8]]);
+    report.statuses.forEach(status => { if (status) assert.equal(status, statuses[Number(status.profileCode)]); });
+    assert.deepEqual(report.errors, [{ profile: profiles[1], error: errors[0] }, { profile: profiles[2], error: errors[1] }]);
+    assert.equal(report.errors[0].profile, profiles[1]);
+    assert.equal(report.errors[0].error, errors[0]);
+  });
+  it("skips empty profile entries, preserves inert successes and collects synchronous throws without stopping workers", async function () {
+    const error = new Error("synchronous denial"), failed = { code: "denied" };
+    const seen = [];
+    const report = await registry.applicationStatusReport([null, undefined, {}, { code: "" }, { code: 0 }, failed, { code: 7 }, { code: "empty" }], code => {
+      seen.push(code);
+      if (code === "denied") throw error;
+      return code === "empty" ? undefined : code;
     });
-    assert.equal(calls.length, 4);
-    assert.equal(calls[2].context.authData.principalId, "other");
+    assert.deepEqual(seen, ["denied", "7", "empty"]);
+    assert.deepEqual(report, { statuses: ["7", undefined], errors: [{ profile: failed, error }] });
+    for (const profiles of [undefined, null, [], [null, {}]]) {
+      assert.deepEqual(await registry.applicationStatusReport(profiles, () => { throw new Error("Unexpected read"); }), { statuses: [], errors: [] });
+    }
+  });
+  it("bounds single, partial, full and 66-profile reports without dropping any owner result", async function () {
+    for (const count of [1, 3, 4, 66]) {
+      const profiles = Array.from({ length: count }, (_, index) => ({ code: String(index) }));
+      let active = 0, peak = 0, calls = 0;
+      const report = await registry.applicationStatusReport(profiles, async code => {
+        calls++;
+        peak = Math.max(peak, ++active);
+        await flushStatusWorkers();
+        active--;
+        return code;
+      });
+      assert.equal(peak, Math.min(4, count));
+      assert.equal(active, 0);
+      assert.equal(calls, count);
+      assert.deepEqual(report, { statuses: profiles.map(profile => profile.code), errors: [] });
+    }
+  });
+  it("isolates simultaneous actors and same-actor request copies while retaining duplicate outcome positions", async function () {
+    const requests = [request, { ...request, authData: { ...request.authData } }, {
+      ...request, tenant: "tenant-b", authData: { ...request.authData, tenant: "tenant-b", principalId: "operator-b" },
+    }];
+    const profiles = [...Array.from({ length: 7 }, (_, index) => ({ code: String(index) })), { code: "0" }, { code: "denied" }, { code: "denied" }];
+    const calls = new Map(), active = new Map(), peaks = new Map();
+    const failures = new Map(requests.map(context => [context, new Error("isolated denial")]));
+    SERVICE.DefaultBackofficeApplicationInitializationService = {
+      status: async (code, context) => {
+        assert(requests.includes(context));
+        const seen = calls.get(context) || [];
+        seen.push(code);
+        calls.set(context, seen);
+        active.set(context, (active.get(context) || 0) + 1);
+        peaks.set(context, Math.max(peaks.get(context) || 0, active.get(context)));
+        try {
+          await flushStatusWorkers();
+          if (code === "denied") throw failures.get(context);
+          return { code, context };
+        } finally { active.set(context, active.get(context) - 1); }
+      },
+    };
+    const reports = await Promise.all(requests.map(context => registry.applicationStatusReport(profiles, registry.applicationStatusReader(context))));
+    requests.forEach((context, index) => {
+      assert.equal(peaks.get(context), 4);
+      assert.deepEqual(calls.get(context), ["0", "1", "2", "3", "4", "5", "6", "denied"]);
+      assert(reports[index].statuses.every(status => status.context === context));
+      assert.equal(reports[index].statuses[0], reports[index].statuses[7]);
+      assert.equal(reports[index].errors.length, 2);
+      assert(reports[index].errors.every(outcome => outcome.error === failures.get(context)));
+      assert.equal(active.get(context), 0);
+    });
+    assert.notEqual(reports[0].statuses[0], reports[1].statuses[0]);
+    assert.notEqual(reports[0].errors[0].error, reports[2].errors[0].error);
+  });
+  it("rechecks fresh owner authority after a synchronous failure without retrying the failed composition", async function () {
+    const profiles = [{ code: "application" }, { code: "application" }];
+    const error = new Error("authority unavailable"), status = { readiness: "READY" };
+    let calls = 0;
+    SERVICE.DefaultBackofficeApplicationInitializationService = {
+      status: (code, context) => {
+        assert.equal(context, request);
+        calls++;
+        throw error;
+      },
+    };
+    const failedRead = registry.applicationStatusReader(request);
+    const first = await registry.applicationStatusReport(profiles, failedRead);
+    assert.equal(calls, 1);
+    assert.deepEqual(first.statuses, []);
+    assert(first.errors.every(outcome => outcome.error === error));
+    SERVICE.DefaultBackofficeApplicationInitializationService = {
+      status: (code, context) => { assert.equal(context, request); calls++; return status; },
+    };
+    const retained = await registry.applicationStatusReport(profiles, failedRead);
+    assert.equal(calls, 1);
+    assert.equal(retained.errors.length, 2);
+    const recovered = await registry.applicationStatusReport(profiles, registry.applicationStatusReader(request));
+    assert.equal(calls, 2);
+    assert.deepEqual(recovered, { statuses: [status, status], errors: [] });
+    assert.equal(recovered.statuses[0], status);
   });
   it("reuses a rejected owner read only within its request, without retry or successful fallback", async function () {
     let reads = 0;

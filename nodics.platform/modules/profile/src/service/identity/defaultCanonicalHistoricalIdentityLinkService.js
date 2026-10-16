@@ -1103,6 +1103,9 @@ module.exports = {
       )
         this.fail();
     }
+    // Atomic insertion cannot replace a retained identity and rejects update operators.
+    // Keep the evidence checks above; the generated insert primitive owns duplicate refusal.
+    if (request.options?.insertOnly === true) return true;
     if (request.query)
       request.query = {
         $and: [

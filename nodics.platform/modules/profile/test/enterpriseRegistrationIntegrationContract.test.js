@@ -19,7 +19,7 @@ const assert = require('node:assert/strict');
 global.ENUMS = { ContactType: Object.fromEntries(['EMAIL', 'PHONE', 'FAX', 'PAGER'].map(key => [key, { key }])) };
 const schemas = require('../src/schemas/schemas').profile;
 const routes = require('../src/router/routers').profile;
-const properties = require('../config/properties');
+const properties = require("./helpers/identityCatalogueFixture").properties();
 const controller = require('../src/controller/enterprise/defaultEnterpriseManagementController');
 const endpoints = properties.enterpriseManagement.registration.endpoints;
 const flat = Object.values(routes).flatMap(group => Object.values(group));

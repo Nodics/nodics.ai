@@ -14,6 +14,8 @@ const path = require("path");
 const _ = require("lodash");
 const repositoryRoot = path.resolve(__dirname, "../../../..");
 const authProperties = require(path.join(repositoryRoot, "nodics.foundation/modules/nAuth/config/properties"));
+const identityFixture = require("./helpers/identityCatalogueFixture");
+const referenceGroups = Object.fromEntries(identityFixture.records("UserGroup").map(group => [group.code, group]));
 
 // @nodics-capability-behavior @nodics-area profile
 global.CONFIG = {
@@ -449,14 +451,11 @@ assert(
   "Runtime admin data should avoid broad wildcard permissions",
 );
 const runtimeAdminMigrationPermissions =
-  authProperties.identityGovernance.migration.groupTargets
-    .runtimeConfigAdminUserGroup.permissions;
+  referenceGroups.runtimeConfigAdminUserGroup.permissions;
 const runtimeConfigRequesterMigrationPermissions =
-  authProperties.identityGovernance.migration.groupTargets
-    .runtimeConfigRequesterUserGroup.permissions;
+  referenceGroups.runtimeConfigRequesterUserGroup.permissions;
 const runtimeConfigOperatorMigrationPermissions =
-  authProperties.identityGovernance.migration.groupTargets
-    .runtimeConfigOperatorUserGroup.permissions;
+  referenceGroups.runtimeConfigOperatorUserGroup.permissions;
 assert(
   runtimeConfigRequesterMigrationPermissions.includes("runtime.config.validate"),
   "Runtime configuration requester migration target must include runtime.config.validate",
@@ -500,7 +499,7 @@ assert(
     "Runtime admin migration target must include " + permission,
   );
 });
-const permissionCatalog = authProperties.identityGovernance.permissionCatalog;
+const permissionCatalog = identityFixture.records("Permission").map(permission => permission.code);
 Object.values(userGroupsData).forEach((group) =>
   (group.permissions || []).forEach((permission) => {
     assert(
@@ -593,6 +592,8 @@ const routeSecurity = require(path.join(repositoryRoot,
   "nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService"));
 const originalConfig = global.CONFIG;
 const originalClasses = global.CLASSES;
+const originalServices = global.SERVICE;
+require("node:test")("persisted group definitions constrain independently assignable permissions", async () => {
 try {
   global.CONFIG = { get: key => authProperties[key] };
   global.CLASSES = {
@@ -600,29 +601,38 @@ try {
       constructor(code, message) { super(message || code); this.code = code; }
     },
   };
+  global.SERVICE = { ...originalServices, DefaultIdentityCatalogueService: identityFixture.catalogue(undefined, permissionCatalog) };
   for (const route of [sellerRoutes.inspectSellers, sellerRoutes.manageSeller]) {
     assert.strictEqual(route.permission, sellerPermission);
-    assert.doesNotThrow(() => groupGovernance.validatePermissions([
+    await assert.doesNotReject(() => groupGovernance.validatePermissions([
       { permissions: [route.permission] },
     ]), "Existing seller-authorization route permission must be assignable through Profile");
   }
   const sampleCreditPermission = "loyalty.sampleCredit.apply";
-  assert.doesNotThrow(() => groupGovernance.validatePermissions([{ permissions: [sampleCreditPermission] }]),
+  await assert.doesNotReject(() => groupGovernance.validatePermissions([{ permissions: [sampleCreditPermission] }]),
     "Reviewed sample-credit permission must be independently assignable through Profile");
-  for (const [code, group] of Object.entries(authProperties.identityGovernance.migration.groupTargets)) {
+  for (const [code, group] of Object.entries(referenceGroups)) {
     assert(!(group.permissions || []).includes(sampleCreditPermission), code + " must not receive a default sample-credit grant");
   }
-  assert.throws(() => groupGovernance.validatePermissions([
+  await assert.rejects(() => groupGovernance.validatePermissions([
     { permissions: ["commerce.coupon.seller.unknown"] },
   ]), /Unknown permission/);
+  const hydrate = (code, seen = []) => {
+    assert(!seen.includes(code), "Reference group ancestry must remain acyclic");
+    const group = referenceGroups[code];
+    assert(group, "Missing canonical group: " + code);
+    return { ...group, parentGroups: (group.parentGroups || []).map(parent => hydrate(parent, [...seen, code])) };
+  };
   for (const code of ["runtimeConfigAdminUserGroup", "commerceMerchantUserGroup", "customerUserGroup"]) {
-    assert(authProperties.identityGovernance.migration.groupTargets[code], "Missing canonical role: " + code);
-    const grants = routeSecurity.getGrantedPermissions({ authData: { userGroups: [code] } });
+    assert(referenceGroups[code], "Missing canonical role: " + code);
+    const grants = routeSecurity.getGrantedPermissions({ authData: { userGroups: [hydrate(code)] } });
     assert(!grants.includes(sellerPermission), code + " must not gain seller-consent administration, including through inheritance");
     assert(!grants.includes(sampleCreditPermission), code + " must not gain sample-credit permission through inheritance");
   }
 } finally {
   global.CONFIG = originalConfig;
   global.CLASSES = originalClasses;
+  global.SERVICE = originalServices;
 }
 console.log("Profile user group permission resolution validated");
+});

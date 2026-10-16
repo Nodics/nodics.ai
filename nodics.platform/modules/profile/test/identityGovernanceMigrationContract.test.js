@@ -12,17 +12,19 @@
 /**
  * @module profile/test/IdentityGovernanceMigrationContract
  * @description Validates identity-governance migration contracts for ownership,
- * principal policy, permission targets, service credential rules, and
+ * principal policy, persisted assignments, service credential rules, and
  * permission-based runtime decision behavior without binding the contract to backlog
  * priority labels.
  * @layer test
  * @owner profile
- * @override Project identity modules may extend the migration configuration and
- * keep this contract as the baseline for governed principal bootstrap behavior.
+ * @override Project identity modules may extend migration controls while preserving
+ * installed assignments and using owner catalogue records, never configuration grants.
  */
 const assert = require("assert");
 const path = require("path");
 const repositoryRoot = path.resolve(__dirname, "../../../..");
+const ownerPermissionCodes = Object.values(require("../../../../nodics.foundation/modules/nAuth/data/init-v001/records/identity/authPermissionData"))
+  .filter(record => record.active === true).map(record => record.code);
 
 global.CLASSES = {
   NodicsError: class NodicsError extends Error {
@@ -48,10 +50,6 @@ const values = {
     },
   },
   identityGovernance: {
-    permissionCatalog: [
-      "auth.internal.token.read",
-      "auth.internal.token.read.anyTenant",
-    ],
     principalPolicy: {
       allowedTypes: ["human", "service", "customer"],
       serviceType: "service",
@@ -60,29 +58,6 @@ const values = {
     },
     migration: {
       version: 1,
-      servicePrincipalCodes: ["apiAdmin"],
-      servicePrincipalScopes: {
-        apiAdmin: [
-          "auth.internal.token.read",
-          "auth.internal.token.read.anyTenant",
-        ],
-      },
-      administratorCodes: ["admin"],
-      serviceGroup: "serviceAccountUserGroup",
-      administratorGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
-      humanDefaultGroup: "employeeUserGroup",
-      customerGroup: "customerUserGroup",
-      groupTargets: {
-        userGroup: { parentGroups: [] },
-        adminGroup: { parentGroups: ["userGroup"] },
-        serviceAccountUserGroup: {
-          parentGroups: ["userGroup"],
-          permissions: [
-            "auth.internal.token.read",
-            "auth.internal.token.read.anyTenant",
-          ],
-        },
-      },
     },
     separationOfDuties: {
       requireActor: true,
@@ -192,6 +167,7 @@ async function validateOwnership() {
 async function validateSecurityStamp() {
   let cache = {};
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(undefined, ownerPermissionCodes),
     DefaultAuthSecurityService: require("../../../../nodics.foundation/modules/nAuth/src/service/security/defaultAuthSecurityService"),
     DefaultCacheService: {
       putVersioned: async (options) => {
@@ -320,6 +296,7 @@ async function validatePasswordStampTargeting() {
     result: rows,
   });
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(undefined, ownerPermissionCodes),
     DefaultIdentityGovernanceService: {
       getSystemAuthData: () => ({ isSystem: true }),
     },
@@ -377,6 +354,7 @@ async function validateStableAndTransitiveStamping() {
     result: rows,
   });
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(undefined, ownerPermissionCodes),
     DefaultIdentityGovernanceService: {
       getSystemAuthData: () => ({ isSystem: true }),
     },
@@ -481,6 +459,8 @@ async function validateEffectivePartialUpdates() {
   const groupGovernance = require("../src/service/group/defaultUserGroupGovernanceService");
   let groupLookupRequest;
   global.SERVICE = {
+    DefaultIdentityCatalogueGovernanceService: { authorizeGroupMutation: async () => true },
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(undefined, ownerPermissionCodes),
     DefaultIdentityGovernanceService: {
       getSystemAuthData: () => ({ isSystem: true }),
     },
@@ -500,6 +480,7 @@ async function validateEffectivePartialUpdates() {
       get: (request) => {
         groupLookupRequest = request;
         return Promise.resolve({
+          code: "SUC_DBS_00000", count: 3,
           result: [
             { code: "parent", active: true, parentGroups: [] },
             {
@@ -535,8 +516,38 @@ async function validateEffectivePartialUpdates() {
   );
 }
 
+function validateMigrationAssignmentPreservation() {
+  const migration = require("../src/service/identity/defaultIdentityGovernanceMigrationService");
+  // Deliberately hostile retired configuration: never the fixture catalogue or desired authority.
+  const owner = { ...migration, getPolicy: () => ({ version: 1,
+    administratorCodes: ["admin"], administratorGroups: ["platformAdministratorUserGroup"],
+    servicePrincipalCodes: ["apiAdmin"], serviceGroup: "adminGroup",
+    humanDefaultGroup: "adminGroup", customerGroup: "adminGroup",
+    groupTargets: { customGroup: { permissions: ["*"] } },
+  }) };
+  for (const userGroups of [[], ["customGroup"], ["platformAdministratorUserGroup", "customGroup"]]) {
+    const principal = { code: "admin", loginId: "admin", principalType: "human", userGroups };
+    const target = owner.targetPrincipal(principal, "employee");
+    assert.deepStrictEqual(target.userGroups, userGroups);
+    assert.notStrictEqual(target.userGroups, userGroups);
+  }
+  const namedService = owner.targetPrincipal({ code: "apiAdmin", userGroups: [], apiKey: "legacy" }, "employee");
+  assert.strictEqual(namedService.principalType, "human");
+  assert.strictEqual(namedService.revokeAPIKey, true);
+  assert.strictEqual(namedService.rotationRequired, false);
+  assert.deepStrictEqual(owner.targetPrincipal({ code: "customer", userGroups: ["customGroup"] }, "customer").userGroups, ["customGroup"]);
+  for (const principal of [
+    { principalType: "service", userGroups: [] },
+    { userGroups: ["serviceAccountUserGroup"] },
+    { principalType: "human", userGroups: ["serviceAccountUserGroup"] },
+    { principalType: "customer", userGroups: [] },
+    { principalType: "human", userGroups: [{ code: "adminGroup" }] },
+  ]) assert.throws(() => owner.targetPrincipal(principal, "employee"), /separate reviewed correction/);
+}
+
 async function validateMigration() {
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(undefined, ownerPermissionCodes),
     DefaultPrincipalSecurityStampGovernanceService: require("../src/service/identity/defaultPrincipalSecurityStampGovernanceService"),
     DefaultEnterpriseRegistrationService: require("../src/service/enterprise/defaultEnterpriseRegistrationService"),
     DefaultIdentityGovernanceService: {
@@ -633,15 +644,15 @@ async function validateMigration() {
       {
         code: "apiAdmin",
         loginId: "apiAdmin",
-        principalType: undefined,
-        userGroups: ["adminGroup"],
+        principalType: "service",
+        userGroups: ["serviceAccountUserGroup"],
         apiKey: "legacy-service-key",
       },
       {
         code: "customService",
         loginId: "customService",
         principalType: "service",
-        userGroups: ["customServiceGroup"],
+        userGroups: ["customServiceGroup", "serviceAccountUserGroup"],
         apiKey: "custom-service-key",
       },
       {
@@ -668,7 +679,8 @@ async function validateMigration() {
     contacts: [{ code: "contact-a" }],
   };
   let preview = migration.buildPreview(state);
-  assert.strictEqual(preview.changeCount, 10);
+  assert.strictEqual(preview.changeCount, 7);
+  assert(!preview.changes.some(change => change.schema === "userGroup"), "Migration must not replace persisted group authority from configuration");
   assert.strictEqual(
     preview.changes.find((change) => change.code === "admin").to.revokeAPIKey,
     true,
@@ -824,12 +836,26 @@ async function validateMigration() {
     "Rollback must never restore a legacy plaintext service credential",
   );
   let clientKey = "client-generated-service-key-value-1234567890";
+  const originalServiceRead = global.SERVICE.DefaultEmployeeService.get;
+  for (const principal of [{ principalType: "human", userGroups: ["serviceAccountUserGroup"] },
+    { userGroups: ["serviceAccountUserGroup"] }, { principalType: "service", userGroups: [] }]) {
+    const before = writes.length;
+    global.SERVICE.DefaultEmployeeService.get = async () => ({ result: [{ code: "apiAdmin", loginId: "apiAdmin", ...principal }] });
+    await assert.rejects(migration.rotateServiceKey({ tenant: "default", authData: { loginId: "admin" },
+      identityMigration: { principalCode: "apiAdmin", newApiKey: clientKey } }), /service principals/);
+    assert.strictEqual(writes.length, before);
+  }
+  global.SERVICE.DefaultEmployeeService.get = originalServiceRead;
+  values.identityGovernance.migration.version = 7;
   let rotation = await migration.rotateServiceKey({
     tenant: "default",
     authData: { loginId: "admin" },
     identityMigration: { principalCode: "apiAdmin", newApiKey: clientKey },
   });
   assert.strictEqual(rotation.data.status, "CREDENTIAL_ROTATED");
+  assert.strictEqual(savedAudit.migrationVersion, 7,
+    "Credential rotation must record the effective migration policy version");
+  values.identityGovernance.migration.version = 1;
   assert.strictEqual(rotation.data.newApiKey, undefined);
   assert(
     writes.some(
@@ -867,13 +893,6 @@ async function validateMigration() {
       principal,
       migration.targetPrincipal(principal, "customer"),
       { apiKey: undefined },
-    ),
-  );
-  state.groups = state.groups.map((group) =>
-    Object.assign(
-      {},
-      group,
-      values.identityGovernance.migration.groupTargets[group.code] || {},
     ),
   );
   state.addresses = state.addresses.map((record) =>
@@ -944,6 +963,7 @@ Promise.resolve()
   .then(validatePasswordStampTargeting)
   .then(validateStableAndTransitiveStamping)
   .then(validateEffectivePartialUpdates)
+  .then(validateMigrationAssignmentPreservation)
   .then(validateMigration)
   .then(validatePermissionBasedRuntimeDecision)
   .then(() =>

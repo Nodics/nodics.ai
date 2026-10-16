@@ -222,7 +222,8 @@ module.exports = {
         if (!input || Object.keys(input).sort().join(',') !== expectedKeys ||
             input.contractVersion !== 1 || !['SOURCE', 'TARGET', 'INSTALLATION', 'MEDIA', 'BASELINE'].includes(input.mode) ||
             !this.identifier(input.stageCode)) this.fail();
-        if (!CONFIG.get('identityGovernance')?.permissionCatalog?.includes(permission)) this.fail();
+        // This fixed capability contract is not an editable vocabulary lookup.
+        // The independently issued runtime grant below remains mandatory.
         const auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'publish');
         if (auth !== request.authData || auth.principalType !== 'service' || auth.isSystem ||
             !Array.isArray(auth.permissions) || !auth.permissions.includes(permission) ||

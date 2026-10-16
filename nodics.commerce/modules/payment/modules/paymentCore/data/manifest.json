@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "paymentCore",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "paymentCore permissionCatalogue",
+      "description": "Explicit paymentCore identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "paymentCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/paymentCorePermissionHeader.js": "3ed2ad235ac8adb7610eda513d819adf6829a12d0d070036276d306ecc1415f9",
+        "init-v001/records/identity/paymentCorePermissionData.js": "774570cb924a0c12600a975a7eab389ad5e14ad094e68ec5cd35fe2a60b8a83b"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

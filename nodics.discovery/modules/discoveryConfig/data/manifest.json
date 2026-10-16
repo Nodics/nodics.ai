@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "discoveryConfig",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "discoveryConfig permissionCatalogue",
+      "description": "Explicit discoveryConfig identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "discoveryConfig",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/discoveryConfigPermissionHeader.js": "187a934aabbc76f97972d933bd80a9cf5361424f1cf021d179cee862092edbb4",
+        "init-v001/records/identity/discoveryConfigPermissionData.js": "dbd3d124c989a22760008115df915e99cc7a65c2c0343aea4597bb466d5d0e9d"
+      }
+    }
+  }
+}

@@ -10,6 +10,75 @@ and the canonical Foundation schema-data-modeling guide.
 
 CMS owns content sites, catalogs, routes, pages, templates, slots, components, renderer metadata, localized content, and resolved delivery behavior.
 
+## Business Authoring
+
+Business Content View reads the scoped Designer model. Content Edit has explicit
+`cms.authoring.write` for draft validation/save, section/component add/update/reorder,
+Media association, route/navigation assignment, readiness and publication submission.
+Full control additionally has `cms.authoring.delete` for section/component/Media
+association retirement. Retirement saves an inactive version; it does not erase
+published history. Publication approval and Online deployment remain independent.
+
+Designer commands require canonical human/access authentication and the signed
+tenant/enterprise. Writes are Staged-only and carry `siteCode` and `catalogCode`.
+The existing `cmsSite.enterpriseCode` must explicitly match the enterprise; an
+unbound Site or a Catalog shared with a foreign/unbound active Site refuses.
+Authored records retain `authoringScope`. Pages, routes, navigation and page
+placements bind enterprise, Site and Catalog. Shared components, their locale/Media
+records and component-owned nested placements bind enterprise and Catalog, allowing
+reuse across Sites in that same Catalog. Shared template/renderer definitions keep
+their existing reference semantics; an explicit foreign Catalog owner is rejected.
+Foreign or unowned existing codes cannot be adopted. Fresh optional source packs
+may explicitly declare known Site and record owners. This does not authorize an
+automatic ownership migration of installed records or any live/demo mutation.
+
+Owner lookups require the real generated success code, exact query, complete bounded
+`count` and matching selected model tenant. CMS records need no invented tenant
+field; contradictory returned tenant aliases are rejected. Original human identity,
+permissions and Site/Catalog selection stay pinned across awaited reads and are
+rechecked before each write. Reads over 100 returned/history rows fail closed.
+Malformed or cyclic group claims are rejected before shared security walkers;
+employee ancestry and native Platform full-access eligibility come from nRouter.
+Bearer context is required and pinned. Optional provider success/acknowledgement
+flags and error collections must agree with the affirmative generated envelope.
+
+CMS model routes select only `schemaOperations`; legacy broad CRUD routes are not
+generated. Generic HTTP mutations are read-only, and human business groups receive
+no generated write access or `system.schema.*` permission. Scoped commands use
+generated owner persistence only after permission, identity and relationship checks.
+The multi-record Designer save is not a new atomic transaction or replay protocol.
+Failures must be inspected before another submission.
+Save/retirement outcomes must contain exactly one scoped persisted record and no
+contradictory success flag, error code or error collection. An invalid outcome may
+follow persistence; CMS never turns it into draft success or retries the write.
+
+The active business navigation entry is `/content/designer`, using
+`GET /designer/composition/model` and the existing owner commands. Workbench links
+add the existing `system.schema.view` requirement rather than granting it to business
+groups. Axis limits separate metrics requests to available authorized Workbench
+targets and consumes the returned permitted `operations` for each write control
+and callback. Owner metadata loads independently of generic discovery. CMS still
+rejects unauthorized commands regardless of frontend presentation.
+Operations are projected after metadata completes and the admitted identity is
+rechecked, so an awaited lookup cannot advertise an earlier runtime's write state.
+Axis selects the declared `WCMS_STAGED` / `STAGED` connection, not deployment
+server names. Error-bearing owner envelopes never confer UI authority or cause a
+generic schema fallback.
+Designer supplies inert retirement labels and consequences alongside permitted
+operations. Axis separately reviews placement retirement, shared-component retirement
+and Media-association detachment by exact record code and selected Site/Catalog.
+Only advertised operations enable confirmation; the backend remains the ownership
+authority. Shared components/associations can affect multiple Sites in their Catalog;
+retirement never cascades references or removes Media assets. An uncertain outcome
+requires owner-record inspection and a new explicit review, never automatic replay.
+
+`test/cmsBusinessAuthoringAccess.test.js` exercises real persisted groups against
+nRouter and generated save guards, scoped command success, View/Online denial,
+foreign/unbound Site and identity rejection, and version-preserving retirement.
+It also connects Profile's persisted Content area/level descriptor to those same
+groups and checks final model admission after metadata reads. Source regression
+coverage is not execution or installed-data evidence.
+
 ## Responsibility
 
 This module provides the WCMS content model used by Axis authoring, staged publication, Online delivery, Nexus rendering, and documentation-as-content use cases.

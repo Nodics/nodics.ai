@@ -18,6 +18,12 @@ separate contribution/request and release process. Reuse potential does not
 change write authority. Classify capability, domain and application ownership
 before choosing an extension point.
 
+For the authorized reference/access refactor, Circa and Agora extensions contain
+demo data/composition ONLY. Move reusable behavior, defaults and access definitions
+to the existing implementing framework or accelerator owner. Real partner projects
+retain the supported customization paths below. Do not create a catch-all module,
+parallel authority or backwards-compatibility implementation for the references.
+
 ## Core Rule
 
 ### Email And SMS Implementation Gate
@@ -258,6 +264,16 @@ schemas, or business actions directly in Axis. Later customer, project,
 environment, or partner layers may extend or replace the module-owned data
 through the standard module hierarchy without editing out-of-the-box Axis.
 
+Present business access as business area + No access / View / Edit / Full control +
+Scope. Profile owns standard bootstrap users, access mechanics and runtime
+assignments; implementing modules contribute their own permission and business-area
+definitions through existing contracts. Demo identities/accounts/assignments remain
+optional Kickoff data. Do not move reusable definitions into demo packs or require
+a reference application for standard access administration. Axis consumes the
+backend-resolved contract, and backend owners enforce it. Full control never
+bypasses approval, ledger/financial rules, simulation gates or tenant isolation.
+Keep exact access-level mappings with Profile and the implementing owners.
+
 Strict implementation rules:
 
 - do not add local `AxisNavigationItem` constants, preview-only navigation
@@ -275,8 +291,11 @@ Strict implementation rules:
 - initial/default capability data must be published from the owning module's
   `data/manifest.json` as `init` or `core` `DATA_RELEASE` sections and imported
   through nImport when the functional module is activated;
-- `sample` data remains user-triggered unless an owning contract explicitly
-  promotes it to required activation data.
+- `sample` data remains user-triggered; optional Circa/Agora demo identities and
+  assignments must not become framework activation prerequisites. Required
+  standard access contributions belong in their implementing owners.
+- documentation releases and business releases are independently selected and
+  governed; neither may silently import or activate the other.
 
 ## Configuration-First Does Not Mean Everything Is Configuration
 
@@ -315,6 +334,16 @@ schema, route metadata, status definitions, or a generator contract.
 
 The owning module defines reusable defaults once. Later layers do not copy
 those defaults.
+
+Pass the [mandatory default ownership gate](customer-config-classification-contract.md#mandatory-default-ownership-gate)
+before adding or relocating a property. Trace each declaration to its consumer;
+distinguish standard mechanics from enablement, deployment inputs and governed
+business data. A framework default missing from its owner must not be supplied
+as mandatory customer wiring. Review mixed objects leaf by leaf, including
+publication providers, schema policies, observers, templates and source fallbacks.
+Update generators and tests that perpetuate the wrong placement. Preserve safety
+pins and immutable release selections without blanket exceptions. Source-only
+review or contract-presence checks cannot establish effective runtime correctness.
 
 Project, environment, server, and node `properties.js` files should be light.
 They may define:
@@ -503,6 +532,19 @@ remove superseded routes/adapters in the same batch. Do not create compatibility
 aliases based on assumed external users. A real released contract or an explicit
 user requirement is necessary to justify backward-compatibility work. Preserve
 needed capabilities while replacing their implementation through existing owners.
+For the authorized reference/access refactor, no backwards compatibility is
+required: remove superseded reference adapters, routes, role aliases and access
+definitions after updating consumers. Preserve historical evidence and installed
+receipts; their retention is not a reason to retain executable compatibility.
+Migration or live adoption requires its own authorized operation and evidence.
+
+Review the affected test inventory when removing or relocating an implementation.
+Retain capability, rejection, isolation and immutable-evidence checks; update
+their consumers to the current owner. Remove tests that only require the retired
+implementation or duplicate an already-selected canonical check, recording the
+replacement coverage. Do not delete a failing test merely to obtain a pass or
+replace behavior assertions with exact guidance-wording checks. Source review
+and test authoring are not test execution.
 
 
 For each coherent correction or refactor batch:
@@ -528,8 +570,8 @@ For each coherent correction or refactor batch:
 
 Apply [Capability APIs And Safe Consolidation](nodics-principles.md#capability-apis-and-safe-consolidation)
 when changing API ownership, shared metadata or consumer adapters. Preserve the
-existing policy and outcome contracts through the migration, with an explicit
-removal condition for temporary compatibility code.
+existing security, lifecycle and outcome invariants through the migration. The
+authorized reference/access refactor permits no temporary compatibility code.
 
 ## AI Memory And Decision Pattern
 

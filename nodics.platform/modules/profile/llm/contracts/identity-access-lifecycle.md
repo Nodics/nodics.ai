@@ -1,5 +1,279 @@
 # profile AI Contracts
 
+## Business Access Presentation
+
+Ordinary business levels are persisted enterpriseRole definitions, not a new
+registry: `businessArea`, `businessAreaLabel`, `ownerModule`, and `accessLevel`
+(`view`, `edit`, `fullControl`) form explicit metadata. Existing `groupCodes`
+retain the sole userGroup-to-permission mapping authority. Partial metadata,
+duplicate area/level mappings, conflicting owners, administrator classifications,
+and unsupported scopes fail closed. No permission is inferred from a verb, role
+name, label, or route. Special approval, financial, simulation, and platform
+responsibilities remain outside the ordinary selector.
+
+Module-owned `businessAccessGroups` and `businessAccessRoles` Init sections supply
+reviewed definitions. Profile reads installed records fresh. Platform-governed
+changes and insert-only replay retain existing narrowing and deactivation. New
+source definitions alone do not install records or qualify runtime enforcement.
+Full control contains only explicitly listed supported ordinary operations; it
+never synthesizes delete, approval, ledger, tenant, or simulation bypass rights.
+
+The invitation workspace publishes a typed `BUSINESS_ACCESS` field and submits
+the selected canonical roleCode. Empty invitation selection is not a revocation
+command. Existing employees use Profile's separate, fixed
+`GET/POST /enterprise-team/business-access` transport. Inventory reads require a
+complete successful owner response; failed acknowledgment, malformed success or
+error markers reject even when plausible employee records accompany them.
+GET supplies fresh choices,
+employee area selections and an opaque review fingerprint; POST accepts only
+`employeeCode`, `reviewFingerprint`, `operationId` and a bounded `changes` array
+of `{businessArea, accessLevel}`. The authenticated enterprise is the scope;
+callers cannot supply another tenant or enterprise in this command.
+
+`noAccess` removes only the selected area's direct standard groups. Other areas
+and advanced responsibilities remain unchanged. It is not an explicit deny of
+permissions independently granted by other groups. Axis displays those retained
+responsibilities rather than promising that all effective permissions vanished.
+Native employees use exact generated Employee compare-and-set and existing
+security-stamp hooks. Accepted linked memberships retain original invitation,
+role and registration evidence; private `membership.businessAccess` records the
+current group selection through the existing membership write/revision owner.
+Session creation, inviter checks and group invalidation use these current groups.
+Neither path changes credentials, enterprise placement, principal scope or
+activation, and no second permission or identity store is introduced.
+
+Linked changes use the existing serialized Team operation. Same-command recovery
+requires the original actor and exact committed membership evidence; uncertain
+writes are never replayed automatically or unlocked on a timer. Safe refusals
+before the write finish the held operation explicitly. Native uncertain results
+require a fresh review, not an automatic retry. Every change requires fresh human
+PASSWORD authority, `profile.enterpriseAccess.assign`, a matching review and an
+available nAuth audit owner. Membership qualification still applies to linked
+identities; standard native employee administration does not enable membership
+features implicitly.
+
+## Persisted Identity Definitions
+
+Profile owns the generated `permission` and `enterpriseRole` schemas. The
+implementing domain owns each seed record in its explicit nImport identity
+release. Both catalogues live in `CONFIG.get("defaultTenant")`; runtime module
+activation does not select or hide these data dependencies. Existing `userGroup`
+records remain the only group-to-permission mapping authority. Enterprise role
+records select groups and assignment requirements, not a parallel permission set.
+
+| Record | Meaning | Change owner |
+| --- | --- | --- |
+| `permission` | Recognised capability vocabulary and owning module | Profile generated administrative schema |
+| `userGroup` | Persisted permissions and inherited groups | Existing group governance and stamp hooks |
+| `enterpriseRole` | Assignable enterprise responsibility referencing groups | Profile catalogue governance |
+| Employee and scope assignments | Actual independently granted access | Existing Profile assignment owners |
+
+`DefaultIdentityCatalogueService.requirePermissions(codes)` validates vocabulary,
+never authorises an action. `role(code)` and `roles()` return fresh persisted
+definitions asynchronously. Group/API-key governance, invitation, registration,
+applications, Team, membership, consent and setup continuation await these reads.
+Failed, missing, inactive, duplicate or incomplete catalogue evidence rejects.
+There is no configuration fallback. Route permission requirements remain backend
+contracts, and runtime-deployment permissions remain independently governed grants.
+
+Axis uses generated administrative schema operations. Direct catalogue reads and
+writes require the authority tenant and a freshly verified human PASSWORD actor
+in the configured Platform enterprise, with current persisted administrator
+groups and a fresh native Platform Employee satisfying `assertPlatformPrincipal`.
+Linked sessions, external identities, runtime contexts, enterprise projections,
+conflicting signed enterprise aliases and caller `isSystem` flags do not admit
+catalogue management, including shared group changes in the authority partition.
+Private owner reads use request-object admission,
+not a public bypass flag. Ordinary backend registration builds static metadata
+without database access; the existing `/enterprise-access/workspace` returns
+fresh role selections. Consumers must refresh that owner response for selections.
+
+Initial installation imports explicitly selected owner permission packs before
+Profile Init groups, then access groups and enterprise roles. Inactive-owner
+discovery and ordering belong to nImport's prerequisite plan, not a Profile
+loader. Upgrades select forward releases and retain existing Init receipts.
+`ensureReferenceAll` on the three generated owners creates missing records using
+`options.insertOnly: true`. Re-import preserves existing narrowing, deactivation
+and credentials. Concurrent insertion failure never becomes an update or blind
+retry. Supplied success/acknowledged flags must be Boolean true; a success code
+cannot override a failed or malformed acknowledgement, even with valid readback.
+nImport's private
+`isIdentityAuthorityReleaseExecution(tenant, schemaName, operation)` context admits
+only the currently awaited, immutable-header-bound operation; header groups alone
+confer no authority. Permission and role seeds remain authority-partition-only.
+User groups seed into each exact admitted tenant; their permissions still validate
+against the authority catalogue. Public flags, copied services and another
+tenant's active import cannot authorize those creates.
+
+Permission `active` means available vocabulary for new governed definitions; it
+is not a global runtime kill switch. Referenced permission retirement is held
+while groups, role requirements, API-key scopes or runtime grants still refer to
+the code. Revoke actual grants through their owners, which invalidate credentials
+and sessions. Do not represent a catalogue edit as deployment-grant revocation.
+Role edits invalidate old/new group holders through existing pre/post stamp
+propagation across registered tenant partitions. They do not rewrite existing
+employee groups, role assignments or runtime grants. Membership and registration
+owners independently reject responsibility drift; changed assignments require
+their governed operations. Failed post-write invalidation is not successful
+completion and must be inspected before retrying.
+
+Regression coverage: `test/identityCatalogueContract.test.js`, existing identity
+governance and migration suites, enterprise invitation/registration/application,
+Team/membership/consent/setup suites and Employee reference import suites. These
+are isolated tests, not installed import or live Axis acceptance. Later modules
+extend owner data and Profile services while retaining these authority boundaries.
+
+### Human Platform Full Access
+
+`platformAdministratorUserGroup` is a dedicated persisted human authority. Its
+explicit `*` permission is an active Profile-owned catalogue record; the shared
+`adminGroup` and `ENTERPRISE_ADMIN` responsibility never receive `*`. The group
+inherits only `adminGroup`, avoiding a dependency cycle with nConfig's groups.
+The fresh bootstrap admin retains its existing direct groups and adds this one.
+Group definitions can exist in tenant Init data; assignment is restricted to
+native human Employees in the configured authority tenant and Platform enterprise.
+Enterprise-associated, registered, linked, retired, Customer and service
+identities cannot receive it. No group may inherit it and no enterprise role may
+select it. API-key scopes and runtime deployment grants cannot contain `*`.
+
+nRouter's `hasPlatformFullAccess(request)` requires both the explicit grant and
+an authenticated native human PASSWORD access-token context in the configured
+Platform enterprise and authority tenant. A group name, `isSystem`, header,
+cached administrator flag, service token or bare wildcard alone does not confer
+human Platform authority. Existing trusted internal system permissions remain a
+separate contract. Profile checks the same context before issuing refresh state.
+Full access satisfies route permissions, including `rules.definition.read`, and
+domain operating-group gates without enumerating newly discovered permissions.
+The existing nDatabase schema access owner consumes this predicate for generated
+get/save/update/remove and schema operation metadata. These owners and nRouter
+retain the request target tenant; the full-access shortcut cannot cross tenants.
+Token types, runtime/module restrictions, explicit property policies, tenant and
+enterprise placement, approvals, ledgers, owner validation and lifecycle rules
+still apply. It is not a business-operation or cross-tenant bypass.
+
+All shared group mutations and reserved Employee assignment use fresh catalogue operator
+verification and the existing generated governance/security-stamp hooks. Removing
+or narrowing the actual group grant invalidates affected sessions. Catalogue
+retirement alone is not revocation. Later modules customize persisted definitions
+through the existing owners; they cannot assign this authority to service or
+enterprise actors or derive it from startup discovery.
+
+### Existing Administrator Adoption
+
+Existing-account adoption is explicit, never Init replay or startup repair.
+Select Profile `permissionCatalogue` and `accessGroups` successor version
+`0.0.2`, and Profile `init-v001` version `0.0.3`, through the existing reviewed
+nImport plan after the coordinated prerequisite pins are finalized. Keep the
+`init-v001` folder and retained installed receipts. These insert-only definitions
+preserve installed narrowing and inactivity. Installed Employees keep all their
+credentials and groups until a separate adoption command is reviewed and applied.
+If the reserved group or permission already exists narrowed/inactive, resolve it
+through its authorized owner; adoption does not restore it.
+
+After the owner starts a source-qualified Profile runtime, use its existing
+authenticated API client with a fresh PASSWORD access token from the installed
+Platform admin. Do not fabricate `authData`, use API-key/system authority, or
+expose credentials or tokens in logs. The governed HTTP commands are:
+
+```http
+POST /nodics/profile/v0/identity/migration/platform-administrator/preview
+Content-Type: application/json
+
+{"target":{"code":"admin","loginId":"admin"}}
+```
+
+Review the returned exact code/login, placement, original groups, proposed group
+union, stamp and `data.reviewFingerprint`. Only after that review, invoke with
+the exact fingerprint returned by this preview (not the placeholder below):
+
+```http
+POST /nodics/profile/v0/identity/migration/platform-administrator/apply
+Content-Type: application/json
+
+{"target":{"code":"admin","loginId":"admin"},"confirmed":true,"reviewFingerprint":"<reviewed 64-character SHA-256>"}
+```
+
+Both commands require the existing `runtimeConfigAdminUserGroup` and respective
+`identity.migration.preview` / `identity.migration.apply` permission. Neither
+requires the new full-access group: the installed native Platform admin can
+install the insert-only catalogue/group successors and then adopt. Body/query
+tenant or actor overrides are rejected. Controllers require the existing private
+sensitive-request admission and send `Cache-Control: no-store`; deployment
+request-privacy qualification is mandatory. Reauthenticate after successful
+adoption because the normal security-stamp hooks invalidate old sessions.
+
+The owner re-verifies the actor and freshly reads the exact active native target,
+Platform placement, reserved group and active `*` vocabulary. The fingerprint
+binds that observed state; drift rejects. Its generated Employee update carries
+the original caller and exact old groups, credential reference, stamp and native
+identity/placement selectors. It adds only `platformAdministratorUserGroup`,
+preserves every other membership and credential, and awaits ordinary stamp hooks
+and strict readback. The private `ownsPlatformAdministratorAdoption(request)`
+guard admits only that exact additive in-flight command through Team's generic
+mutation protection; copied requests and public flags are insufficient.
+
+The existing `DefaultAuthAuditService` records REQUESTED and SUCCESS with actor,
+immutable target ID, exact target code/login, authority placement and reviewed
+fingerprint. Audit rejection stops completion. Qualify its configured durable
+publisher before installed operation; the default logger is not durable audit
+evidence. An uncertain write, failed post-write stamp/audit or failed readback
+requires inspection of committed state, stamps and audit before any new reviewed
+operation. There is no blind retry or rollback. An already-adopted target is a
+no-write result after a fresh review. The old session is stale after adoption;
+authenticate again before validating Rules and other administrative operations.
+
+Regression evidence is isolated: `test/platformAdministratorFullAccess.test.js`
+and nRouter's `test/platformAdministratorAccess.test.js` cover real owner/stamp
+hooks, exact audit, drift/CAS rejection, tenant/service/role/inheritance rejection,
+refresh issuance and the actual Rules definitions route. nDatabase's
+`test/platformAdministratorSchemaAccess.test.js` covers generated CRUD admission,
+schema operation metadata and preserved ownership/field/publication restrictions.
+Live release installation,
+durable audit qualification and signed-in acceptance remain separate operator work.
+
+### Operator Migration
+
+Before the next restart of an existing installation, plan an explicitly authorized
+maintenance migration using nImport, not startup reconciliation:
+
+1. Retain installed receipts, credentials, current groups and role/grant decisions.
+   Inventory the authority tenant and each existing tenant requiring Profile Init.
+2. Select `profile:init-v001`, version `0.0.3`, in the existing Init release workflow.
+   Preflight through `DefaultDataReleaseService.preflight` (Axis Init validation)
+   with `releaseCodes: ["profile:init-v001"]`. Inspect the exact owner prerequisites,
+   versions, checksums, target tenants and PLATFORM destination before execution.
+3. Execute the selected plan through the existing authorized Init installation
+   operation, with operator execution enabled by the deployment policy. Install
+   authority definitions first, then tenant-local groups and identity records.
+   Keep normal import grants and source validation; do not use startup flags or
+   force-current replay to bypass missing prerequisites.
+4. Verify successful receipts and current owner reads. Existing narrowed or
+   inactive records must remain unchanged. Missing or conflicting evidence means
+   the migration is incomplete; inspect the failed attempt before restart.
+
+Startup intentionally refuses a successor prerequisite migration over existing
+Init history. A source update, offline regression or generated documentation is
+not evidence that an installed deployment completed these steps. No migration is
+performed by this implementation batch.
+
+## Current Customer Identity
+
+`GET /nodics/profile/v0/customer/identity` resolves the signed customer's own
+business reference. It requires an access token and Customer group, sensitive
+request handling and no cache. No query or body selectors are accepted. Profile
+validates the live actor through the existing identity owner, then resolves the
+single active target Customer with fresh nonrecursive `findByLoginId`. Native
+accounts do not opt into membership policy; linked contexts retain their normal
+qualification and revocation checks. A linked anchor is never substituted for
+the target customer projection. Tenant/enterprise aliases must agree throughout.
+
+The response contains only `contractVersion: 1`, signed `tenant`, signed
+`enterpriseCode`, and `customer: {code, loginId}`. It exposes no credentials,
+contacts, groups, membership evidence or generic query authority. Commerce
+forwards the original customer Authorization and validates the complete envelope;
+missing customer proof must never fall back to a service token. Owner and consumer
+coverage lives in `test/customerCurrentIdentity.test.js` and Bidding's contracts.
+
 ## Hierarchical Enterprise Delegation
 
 Follow the [framework-wide delegation contract](enterprise-delegation.md) before
@@ -20,8 +294,20 @@ intentional: source availability never certifies a runtime or message receipt.
 
 Follow [canonical identity and enterprise membership](enterprise-membership.md)
 before changing linked accounts, context sessions or team commands. Default-off
-source is not rollout readiness; preserve legacy reconciliation and qualification
+source is not rollout readiness; preserve governed recovery and qualification
 boundaries as well as the later-layer customization path.
+
+## Credential Migration
+
+Explicit credential migration preserves each principal's exact persisted group
+assignments, including empty and narrowed assignments. Account codes such as
+`admin` and `apiAdmin` confer no classification or grants. Existing service
+principals require an explicit service type and the service-class group; missing
+or conflicting classification is held for separate reviewed correction, never
+repaired by adding groups. Customer metadata backfill and credential retirement
+do not replace customer groups. Rotation requires both persisted service facts.
+The migration contract/integration fixtures read nAuth's owner permission records;
+retired target keys appear only in clearly marked negative regression inputs.
 
 ## Read-Only Identity Inventory
 
@@ -47,21 +333,14 @@ The capability-owned runtime deployment grant suite reads existing governed
 assignments; it never provisions credentials, rotates keys or repairs grants.
 Imports and help are inert. Every selected runtime must have one matching active
 ALLOW service assignment for its project, environment, server, instance, enterprise
-and tenant. Verify both active and remote module requirements and both owner
-permission sources from each runtime's own effective policy, matching the bootstrap
-owner. Platform's policy is not a permission union for sibling runtimes; missing
-runtime policy refuses instead of inheriting it. The suite never expands installed
-grants to satisfy a mismatched verifier. Modules and permissions must be arrays, never strings whose
-substring matching could fabricate coverage. Missing, ambiguous, malformed and
-denied records fail the suite.
-
-Run `node --test nodics.platform/modules/profile/test/runtimeDeploymentGrantAcceptance.test.mjs`
-from the framework root. These injected API fixtures prove assertions and refusal
-behavior only; live assignment provisioning remains a separate governed operation.
-
-This folder contains module-specific AI/developer contracts for `nodics.platform/modules/profile`.
-
-Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
+and tenant. Topology supplies identity coordinates only; permissions and module
+ceilings come from the retained assignment, not migration properties. Valid
+narrowed grants and alternative persisted service principals remain valid without
+configuration supplementation. Effective-date checks reject expired or future
+grants. Modules and permissions must be bounded unique nonempty code arrays,
+never strings whose substring matching could fabricate coverage. Missing,
+ambiguous, malformed and denied records fail the suite. This structural grant
+check does not prove every business journey has the permissions it needs.
 
 ## Authentication route governance
 
@@ -123,7 +402,7 @@ utility so generated and domain consumers receive one contract.
   resolve and complete only a matching, active pre-assignment and must not
   expose recursive identity data.
 - Registration must create an employee, save the password through Profile's
-  password service, assign configured user groups from layered role policy, and
+  password service, assign groups resolved from fresh persisted enterpriseRole records, and
   create a Profile `principalScopeAssignment` with `scopeType: ENTERPRISE`.
 - Axis enterprise/user-management components must be driven by the Profile
   BackOffice `backendWorkspace` contract or the public
@@ -292,53 +571,82 @@ themselves by choosing headers. A single-use enrollment-grant provider is not
 implemented by this path. Restart and renewal reauthenticate retained proof and
 re-read the assignment; no second business registration is required.
 
-Native local startup is the one repair exception. After a local schema reset,
-Profile mandatory identity bootstrap may discover sibling runtime server package
-metadata from the selected project/environment, resolve each server's effective
-active modules through nConfig, and create or update explicit local
-`RUNTIME_DEPLOYMENT` assignments for the generated `apiAdmin` proof. The
-permissions used by those grants must also be present on the service principal
-API-key scope through `identityGovernance.migration`; the runtime request
-headers remain a request and are still checked against the persisted assignment.
-This local repair does not apply to non-local environments and does not create a
-generic topology-based entitlement path.
+Startup is not an identity-repair or authorization source, including canonical
+LOCAL deployments. First-install employees, groups, scopes and assignments are
+module-owned records installed by the existing governed nImport Init path.
+After import, `DefaultMandatoryIdentityBootstrapService.reconcile` only reads
+the complete tenant-scoped runtime-assignment inventory and validates active
+assignments through the existing runtime authorization owner. It never discovers
+permissions from deployment configuration, recreates missing groups or grants,
+reclassifies service principals, rotates keys, restores administrator passwords,
+clears lockouts or emits a mutation audit for a no-write validation.
 
-For the generated native-Local `apiAdmin` proof, credential reconciliation
-unions the permissions from those same isolated, effective deployment policies.
-This is a credential ceiling, not a merged runtime grant: each token still
-receives only its own matched assignment's modules and permissions. It must not
-copy authority-runtime permissions into sibling grants, accept caller headers as
-policy, revive revoked assignments, or expand another principal or non-Local
-credential. The mandatory-bootstrap regression covers these scope boundaries.
+Axis changes remain persisted authority: removing a grant permission, module,
+API-key scope, group membership or parent group survives restart in every
+environment. Valid narrowed grants are not compared with a configured ceiling.
+Inactive, denied and revoked records remain retained history. Malformed active
+assignments or incomplete inventories fail validation without attempted repair.
+Missing assignments are not synthesized; normal token issuance refuses absent
+authority. Explicit approved changes use existing Profile commands and their
+invalidation/audit hooks, not a startup exception.
 
-Local bootstrap's approved module ceiling is the selected server's **indexed
-composed graph**, resolved by nConfig's isolated deployment projection through
-nConfig's normal loader in an isolated process, plus that server's explicit
-`runtimeIdentity.remoteModules`. The raw `activeModules.modules` selection is
-not the composed graph: required/group/parent modules and selected runtime
-structural nodes may also be loaded. Available inactive modules and sibling
-servers must never be added merely because discovery finds them. Structural
-nodes remain in the ceiling because the normal internal-token client requests
-the same indexed graph; their presence does not grant permissions or activate
-additional capabilities. Invalid, unresolved or oversized graphs refuse before
-any deployment-assignment write; caller headers never widen the grant.
+The deployment bootstrap selection flag remains a tenant-provisioning admission
+selector, not a role or permission source. Topology projection is retained for
+provisioning compatibility checks only. Deployments continue to use exact signed
+proof, persisted assignments and immutable namespace pins. First-install data
+must not become an upgrade-time authority fallback: changing seed bytes or
+replaying an already installed release is not a grant migration. Retained
+deterministic grant codes and historical reason markers are not rewritten.
 
-Existing active `LOCAL_RUNTIME_BOOTSTRAP` assignments for the exact service
-principal, tenant and enterprise can be reconciled through
-`DefaultMandatoryIdentityBootstrapService.reconcileLocalRuntimeDeploymentGrant`
-before initial token issuance. This uses the existing generated assignment
-update/invalidation hooks and mandatory-bootstrap audit, not direct database
-repair or replay of Init. An unchanged graph is a no-write result. Inactive,
-revoked, denied or differently owned retained assignments require explicit
-owner policy review and cannot be revived by startup. Outside the separately
-enabled native-Local bootstrap policy, grants remain operator-owned.
+Focused regression coverage lives in `test/mandatoryIdentityBootstrapService.test.js`.
+The password ownership pipeline suite independently proves that governed Init
+preserves existing credentials while still initializing new principals.
+Live deployment adoption and the full demo remain separate acceptance scopes.
 
-The source correction does not require a clean reset just to repair a raw-list
-ceiling. Rebuild/start the authority runtime with its retained policy and verify
-the owner reconciliation and strict issuance against the installed records.
-Failed stamp propagation, custom owners, differently owned grants, or other
-retained initialization failures remain separate acceptance gates; source
-projection alone does not prove deployed runtime readiness.
+Forward Profile Init headers may use `operation: "ensureBootstrapAll"` for
+Employee, Customer, Address, Contact, Enterprise and Tenant. Fixed-schema service
+wrappers delegate to `DefaultMandatoryIdentityBootstrapService.ensureBootstrapAll`.
+Only nImport's private awaited exact tenant/schema/`ensureBootstrapAll` capability
+admits this operation, for startup or explicit migration. Broad startup context,
+public
+request markers, an `isSystem` field or caller options cannot establish provenance.
+All reads remain fresh, tenant-scoped and bounded. The complete batch is checked
+for identity collisions before the first creation. Existing active or inactive
+records produce code-only receipts without save/update calls: credentials,
+API-key state, groups, lockouts, names and other installed values stay unchanged.
+Code/login conflicts, principal-type changes, linked/retired principal identities
+and changed Enterprise tenant bindings reject. Humans and the bootstrap Customer
+remain authority-tenant-only; service employees may initialize tenant-local data.
+
+Missing records use ordinary generated `save` with `insertOnly: true`, never an
+upsert or a caller-selected bypass. Existing validators, nested credential owners
+and provider uniqueness checks remain mandatory. A concurrent creator may cause
+a safe duplicate-key failure; the importer must not overwrite that winner.
+Failed batches are resumable, not transactional. Source files and installed
+receipts remain immutable; a forward header/version is required to adopt this
+operation. Re-executing a completed release is not an account-repair mechanism.
+`test/bootstrapRecordPreservation.test.js` exercises actual private nImport
+provenance, header operation dispatch and the generated insert-only persistence
+primitive with isolated providers. It does not prove installed deployment adoption.
+The successor-header tests in `passwordOwnershipPipelineContract.test.js` also
+exercise the generated nested credential pipeline and Mongo insertion adapter
+against an in-memory driver: first installation hashes a new credential, while
+existing inactive principals receive zero writes. Historical evidence checks
+remain active on insertion; only update-only query fences are omitted because
+the atomic insert primitive cannot replace an existing principal.
+
+Explicit deployment packs use the fixed PrincipalScopeAssignment operation
+`ensureDeploymentAll`. `DefaultRuntimeAuthorizationService` requires the existing
+identity-authority release/human admission through
+`DefaultIdentityCatalogueGovernanceService.authorizeSeed`, validates each exact
+deployment binding and permission vocabulary, then saves missing records through
+generated insert-only persistence. Existing records retain all permission/module
+reductions, inactive/revoked status and denial effects. A conflicting code,
+principal, tenant, enterprise or deployment coordinate rejects before writes;
+an alternate-code binding cannot be shadowed. This is not startup repair and
+cannot infer bindings or authority from configuration. Another environment needs
+an explicitly reviewed Profile binding. Catalogue admission must be available;
+there is no fallback when private release provenance is absent.
 
 Assignment save/update/removal captures old and new affected principals and
 awaits their existing Employee update path. That path allocates the security
@@ -347,7 +655,7 @@ request invalidation through an Employee/Customer update containing authVersion;
 they do not allocate their own version or call a process-local clock. Assignment
 reads bypass item caching. Failed invalidation cannot be acknowledged as success.
 
-The initial authority and every tenant use the same proof/grant authorization as renewal. `DefaultMandatoryIdentityBootstrapService.prepareTenant` first awaits governed Init release completion and then reconciles existing identity metadata. It never derives approvals from requested modules or generates runtime credentials.
+The initial authority and every tenant use the same proof/grant authorization as renewal. `DefaultMandatoryIdentityBootstrapService.prepareTenant` first awaits governed Init release completion and then validates retained assignments read-only. It never derives approvals from requested modules or generates runtime credentials.
 
 Generated Profile reads return the canonical `{code, result}` envelope, with a
 success code and result array; they do not set a Boolean `success: true`. Runtime
@@ -407,7 +715,8 @@ authority-tenant-only; tenant-local service employees require unchanged service
 principal type. The conditional parent selector also fences principal type,
 canonical-link and retirement metadata, so concurrent changes cannot be erased
 even when the caller's version has not advanced. Neither hook rotates a password;
-existing explicit local bootstrap reconciliation remains its separate owner.
+restart does not rotate it either. Explicit credential changes use the existing
+governed credential owner, never bootstrap configuration.
 Fresh employees still use the ordinary credential-creation pipeline. Public
 markers, changed principal types, linked/shared identities and later-layer
 refusal retain fail-closed behavior.

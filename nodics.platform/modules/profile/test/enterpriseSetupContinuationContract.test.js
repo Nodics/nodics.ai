@@ -31,7 +31,7 @@ const tenantGuardSource = require("../src/service/enterprise/defaultTenantProvis
 const { randomUUID, createHash } = require("node:crypto");
 const { readFileSync } = require("node:fs");
 
-function fixture() {
+async function fixture() {
   global.CLASSES = {
     NodicsError: class extends Error {
       constructor(code, message) {
@@ -170,6 +170,7 @@ function fixture() {
         : JSON.stringify(actual) === JSON.stringify(value);
     });
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultEnterpriseSetupContinuationService: owner,
     DefaultLoggerService: {
       runSensitiveOperation: async (_command, execute) => execute(),
@@ -230,7 +231,7 @@ function fixture() {
         return response;
       },
       update: async (command) => {
-        owner.protectMutation(command);
+        await owner.protectMutation(command);
         assert.equal(team.ownsEnterpriseWrite(command), true);
         mutations.push(cloneDeep(command));
         if (!matches(command.query)) throw new Error("CAS conflict");
@@ -265,7 +266,7 @@ function fixture() {
         ]),
       ),
   };
-  row.setupContinuation = owner.createSnapshot(row, nomination);
+  row.setupContinuation = await owner.createSnapshot(row, nomination);
   const f = {
     owner,
     team,
@@ -303,25 +304,25 @@ function fixture() {
   return f;
 }
 
-test("snapshot is deterministic and privately bound to original nomination without modifying input", () => {
-  const f = fixture(),
+test("snapshot is deterministic and privately bound to original nomination without modifying input", async () => {
+  const f = await fixture(),
     before = cloneDeep(f.row);
   assert.deepEqual(
-    f.owner.createSnapshot(f.row, f.nomination),
+    await f.owner.createSnapshot(f.row, f.nomination),
     f.row.setupContinuation,
   );
   assert.deepEqual(f.row, before);
-  assert.throws(() =>
+  await assert.rejects(() =>
     f.owner.createSnapshot(f.row, {
       ...f.nomination,
       roleCode: "PLATFORM_ADMIN",
     }),
   );
-  assert.throws(() => f.owner.createSnapshot(f.row));
+  await assert.rejects(() => f.owner.createSnapshot(f.row));
 });
 
 test("disabled qualification and non-human/non-platform callers cannot inspect", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.policy.setupContinuation.inspectionQualified = false;
   await assert.rejects(f.owner.inspect(f.request()));
   f.policy.setupContinuation.inspectionQualified = true;
@@ -337,9 +338,64 @@ test("disabled qualification and non-human/non-platform callers cannot inspect",
   assert.equal(f.effects.writes, 0);
 });
 
+test("inspection observes fresh canonical runtime readiness without gating INITIAL resume or causing effects", async () => {
+  const f = await fixture(),
+    before = cloneDeep(f.row),
+    runtime = SERVICE.DefaultEnterpriseHandlerService;
+  f.policy.setupContinuation.resumeQualified = false;
+  const readEnterprise = f.owner.readEnterprise;
+  let freshEnterprise,
+    calls = 0;
+  f.owner.readEnterprise = async function (code) {
+    freshEnterprise = await readEnterprise.call(this, code);
+    return freshEnterprise;
+  };
+  runtime.isEnterpriseRuntimeReady = function (enterprise) {
+    calls++;
+    assert.equal(this, runtime);
+    assert.equal(enterprise, freshEnterprise);
+    assert.notEqual(enterprise, f.row);
+    return enterpriseHandlerSource.isEnterpriseRuntimeReady.call(
+      this,
+      enterprise,
+    );
+  };
+  for (const ready of [false, true, false]) {
+    f.runtime = ready;
+    const inspected = await f.owner.inspect(f.request());
+    assert.equal(inspected.setup.runtimeReady, ready);
+    assert.equal(inspected.setup.state, "RESUMABLE");
+    assert.equal(inspected.setup.canResume, true);
+    assert.equal(inspected.setup.revision, 0);
+    assert.deepEqual(inspected.setup.reasonCodes, []);
+    assert.equal(inspected.descriptor.actions.resume.qualified, false);
+  }
+  assert.equal(calls, 3);
+  assert.deepEqual(f.row, before);
+  assert.equal(f.effects.activation, 0);
+  assert.equal(f.effects.invitation, 0);
+  assert.equal(f.effects.writes, 0);
+});
+
+test("inspection observes readiness for HELD legacy intent without backfill or altered eligibility", async () => {
+  const f = await fixture();
+  delete f.row.setupContinuation;
+  f.runtime = true;
+  const before = cloneDeep(f.row),
+    result = await f.owner.inspect(f.request());
+  assert.equal(result.setup.runtimeReady, true);
+  assert.equal(result.setup.state, "HELD");
+  assert.equal(result.setup.canResume, false);
+  assert.deepEqual(result.setup.reasonCodes, ["ORIGINAL_INTENT_UNAVAILABLE"]);
+  assert.deepEqual(f.row, before);
+  assert.equal(f.effects.activation, 0);
+  assert.equal(f.effects.invitation, 0);
+  assert.equal(f.effects.writes, 0);
+});
+
 /** Composes native actor verification and setup authorization with fresh generated-owner read doubles, not installed human proof. @returns {Object} Mutable source fixture. */
-function nativeAuthorizationFixture() {
-  const f = fixture();
+async function nativeAuthorizationFixture() {
+  const f = await fixture();
   f.policy.memberships = {
     enabled: false,
     inventoryQualified: false,
@@ -415,7 +471,7 @@ function nativeAuthorizationFixture() {
 }
 
 test("native setup inspection verifies canonical actor with membership gates off while membership actor remains unavailable", async () => {
-  const f = nativeAuthorizationFixture();
+  const f = await nativeAuthorizationFixture();
   const result = await f.owner.inspect(f.command);
   assert.equal(result.enterprise.code, "example");
   assert.equal(f.reads.length, 2);
@@ -431,7 +487,7 @@ test("native setup inspection verifies canonical actor with membership gates off
 });
 
 test("native setup resumes through actual Team serialization with optional Team and membership features off", async () => {
-  const f = nativeAuthorizationFixture();
+  const f = await nativeAuthorizationFixture();
   f.policy.teamAdministration = {
     enabled: false,
     serializedWritesQualified: false,
@@ -472,7 +528,7 @@ test("private setup serialization refuses copied requests, retargeted input and 
     "qualification",
     "permission",
   ]) {
-    const f = nativeAuthorizationFixture();
+    const f = await nativeAuthorizationFixture();
     f.policy.teamAdministration = {
       enabled: false,
       serializedWritesQualified: false,
@@ -564,7 +620,7 @@ test("setup inspect and resume reject stale or unauthorized native actors before
     },
   ]) {
     for (const operation of ["inspect", "resume"]) {
-      const f = nativeAuthorizationFixture();
+      const f = await nativeAuthorizationFixture();
       mutate(f);
       if (operation === "resume") f.command.body = { expectedRevision: 0 };
       await assert.rejects(f.owner[operation](f.command));
@@ -576,7 +632,7 @@ test("setup inspect and resume reject stale or unauthorized native actors before
 });
 
 test("native actor final canonical read refuses version drift during verification", async () => {
-  const f = nativeAuthorizationFixture();
+  const f = await nativeAuthorizationFixture();
   const get = SERVICE.DefaultEmployeeService.get;
   SERVICE.DefaultEmployeeService.get = async (command) => {
     if (command.query._id) f.person.authVersion = 4;
@@ -588,8 +644,8 @@ test("native actor final canonical read refuses version drift during verificatio
   assert.equal(f.effects.writes, 0);
 });
 
-test("Profile read query converts bounded ID paths through selected provider without mutating selectors or business keys", () => {
-  const f = nativeAuthorizationFixture();
+test("Profile read query converts bounded ID paths through selected provider without mutating selectors or business keys", async () => {
+  const f = await nativeAuthorizationFixture();
   const model = { dataBase: {} };
   SERVICE.DefaultProfileService.getProfileModuleName = () => "customProfile";
   NODICS.getModels = (moduleName, tenant) => {
@@ -633,9 +689,9 @@ test(
   "installed canonical actor reads a BSON ID through generated GET and provider-owned conversion",
   { skip: !process.env.NODICS_PROFILE_INSTALLED_SETUP_MONGO_URI },
   async () => {
-    const protectedFixture = nativeReadFixture();
+    const protectedFixture = await nativeReadFixture();
     const protection = { ...SERVICE };
-    const f = nativeAuthorizationFixture();
+    const f = await nativeAuthorizationFixture();
     for (const key of [
       "DefaultSchemaReadAccessPolicyService",
       "DefaultProfileVerifiedContactInterceptorService",
@@ -766,8 +822,8 @@ test(
   },
 );
 
-test("continuation uses target-bound runtime owner readiness without truthy-token fallback", () => {
-  const f = fixture();
+test("continuation uses target-bound runtime owner readiness without truthy-token fallback", async () => {
+  const f = await fixture();
   f.runtime = true;
   assert.equal(f.owner.runtimeReady(f.row), true);
   NODICS.getTenantForEnterprise = () => "anotherTenant";
@@ -784,7 +840,7 @@ test("continuation uses target-bound runtime owner readiness without truthy-toke
 });
 
 test("old failed records without original intent stay HELD with no reconstruction", async () => {
-  const f = fixture();
+  const f = await fixture();
   delete f.row.setupContinuation;
   assert.equal(
     (await f.owner.inspect(f.request())).setup.reasonCodes[0],
@@ -797,7 +853,7 @@ test("old failed records without original intent stay HELD with no reconstructio
 });
 
 test("changed policy and unsafe namespace remain HELD without provisioning", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.role.groupCodes.push("newGroup");
   assert.deepEqual((await f.owner.inspect(f.request())).setup.reasonCodes, [
     "NOMINATION_POLICY_CHANGED",
@@ -815,7 +871,7 @@ test("changed policy and unsafe namespace remain HELD without provisioning", asy
 });
 
 test("successful continuation uses actual Team fences and exact monotonic CAS", async () => {
-  const f = fixture();
+  const f = await fixture();
   const result = await f.resume();
   assert.equal(result.setup.state, "COMPLETE");
   assert.equal(f.effects.activation, 1);
@@ -848,7 +904,7 @@ test("successful continuation uses actual Team fences and exact monotonic CAS", 
 });
 
 test("current matching registered assignment is never overwritten or reinvited", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.runtime = true;
   f.assignment = {
     ...f.nominationRecord(),
@@ -864,7 +920,7 @@ test("current matching registered assignment is never overwritten or reinvited",
 });
 
 test("uncertain activation is checkpointed and cannot be redispatched", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.management.activateEnterpriseRuntime = async () => {
     f.effects.activation++;
     throw new Error("unknown");
@@ -879,7 +935,7 @@ test("uncertain activation is checkpointed and cannot be redispatched", async ()
 });
 
 test("uncertain invitation without a fresh assignment remains held and never resends", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.runtime = true;
   f.management.prepareDefaultAdministrator = async () => {
     f.effects.invitation++;
@@ -892,7 +948,7 @@ test("uncertain invitation without a fresh assignment remains held and never res
 });
 
 test("committed invitation with lost response can finalize without another invitation", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.runtime = true;
   f.management.prepareDefaultAdministrator = async () => {
     f.effects.invitation++;
@@ -905,7 +961,7 @@ test("committed invitation with lost response can finalize without another invit
 });
 
 test("lost checkpoint and finish acknowledgement use actual owner readback without duplicate effects", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.loseAck = () => true;
   assert.equal((await f.resume()).setup.state, "COMPLETE");
   assert.equal(f.effects.activation, 1);
@@ -913,7 +969,7 @@ test("lost checkpoint and finish acknowledgement use actual owner readback witho
 });
 
 test("completed checkpoint with unacknowledged serialization finish finalizes without replay", async () => {
-  const f = fixture(),
+  const f = await fixture(),
     finish = f.team.finish;
   f.team.finish = async () => {
     throw new Error("before finish");
@@ -928,7 +984,7 @@ test("completed checkpoint with unacknowledged serialization finish finalizes wi
 });
 
 test("stale or augmented request is rejected before writes", async () => {
-  const f = fixture();
+  const f = await fixture();
   for (const body of [
     { expectedRevision: 1 },
     { expectedRevision: 0, email: "replacement@example.test" },
@@ -939,7 +995,7 @@ test("stale or augmented request is rejected before writes", async () => {
 });
 
 test("another held operation and another operator cannot take over", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.row.teamOperation = { operation: "HANDOVER", phase: "PENDING" };
   assert.deepEqual((await f.owner.inspect(f.request())).setup.reasonCodes, [
     "OTHER_OPERATION_PENDING",
@@ -956,19 +1012,19 @@ test("another held operation and another operator cannot take over", async () =>
 });
 
 test("creation admission is exact, immutable and transient; forged flags never admit", async () => {
-  const f = fixture(),
+  const f = await fixture(),
     command = { ...f.request(), model: cloneDeep(f.row) };
-  assert.throws(() => f.owner.protectMutation(command));
+  await assert.rejects(() => f.owner.protectMutation(command));
   await f.owner.withCreationMutation(command, f.nomination, async () => {
-    assert.equal(f.owner.protectMutation(command), true);
-    assert.throws(() => f.owner.protectMutation(cloneDeep(command)));
+    assert.equal(await f.owner.protectMutation(command), true);
+    await assert.rejects(() => f.owner.protectMutation(cloneDeep(command)));
     command.model.setupContinuation.revision++;
-    assert.throws(() => f.owner.protectMutation(command));
+    await assert.rejects(() => f.owner.protectMutation(command));
     command.model.setupContinuation.revision--;
   });
-  assert.throws(() => f.owner.protectMutation(command));
+  await assert.rejects(() => f.owner.protectMutation(command));
   assert.equal(
-    f.owner.protectMutation({
+    await f.owner.protectMutation({
       model: [{ name: "ordinary" }],
       options: { overwrite: true },
     }),
@@ -977,7 +1033,7 @@ test("creation admission is exact, immutable and transient; forged flags never a
 });
 
 test("public nested/frozen envelopes redact without mutating cached rows and private read expires", async () => {
-  const f = fixture(),
+  const f = await fixture(),
     date = new Date(),
     buffer = Buffer.from("public");
   const cached = Object.freeze({
@@ -1000,7 +1056,7 @@ test("public nested/frozen envelopes redact without mutating cached rows and pri
 });
 
 test("concurrent resumes allow only one checkpoint winner to issue effects", async () => {
-  const f = fixture();
+  const f = await fixture();
   const results = await Promise.allSettled([f.resume(), f.resume()]);
   assert.equal(
     results.filter((result) => result.status === "fulfilled").length,
@@ -1011,7 +1067,7 @@ test("concurrent resumes allow only one checkpoint winner to issue effects", asy
 });
 
 test("fresh nDatabase resolver and durable binding owner reject namespace drift without preparation", async () => {
-  const f = fixture();
+  const f = await fixture();
   const databaseSource = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/config/defaultDatabaseConfigurationService");
   const provider = require("../../../../nodics.foundation/modules/nDatabase/mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService");
   const database = { ...databaseSource, dbs: {} };
@@ -1081,7 +1137,7 @@ test("fresh nDatabase resolver and durable binding owner reject namespace drift 
 });
 
 test("refused and expired assignment reads cannot become invitation absence", async () => {
-  const f = fixture();
+  const f = await fixture();
   f.runtime = true;
   f.assignment = { ...f.nominationRecord(), expiresAt: "2000-01-01T00:00:00Z" };
   assert.deepEqual((await f.owner.inspect(f.request())).setup.reasonCodes, [
@@ -1099,7 +1155,7 @@ test("refused and expired assignment reads cannot become invitation absence", as
 });
 
 test("private read selector mutation and copied requests never retain continuation", async () => {
-  const f = fixture(),
+  const f = await fixture(),
     get = SERVICE.DefaultEnterpriseService.get;
   SERVICE.DefaultEnterpriseService.get = async (command) => {
     const copied = cloneDeep(command);
@@ -1117,8 +1173,8 @@ test("private read selector mutation and copied requests never retain continuati
   );
 });
 
-test("private mutation protection remains on with qualifications off and rejects operator/dotted forgery", () => {
-  const f = fixture();
+test("private mutation protection remains on with qualifications off and rejects operator/dotted forgery", async () => {
+  const f = await fixture();
   f.policy.setupContinuation = {};
   for (const model of [
     { setupContinuation: f.row.setupContinuation },
@@ -1126,21 +1182,20 @@ test("private mutation protection remains on with qualifications off and rejects
     { $unset: { setupContinuation: true } },
     [{ setupContinuation: f.row.setupContinuation }],
   ])
-    assert.throws(() =>
-      f.owner.protectMutation({
+    await assert.rejects(() => f.owner.protectMutation({
         model,
         private: true,
         options: { ownWrite: true },
       }),
     );
   assert.equal(
-    f.owner.protectMutation({ model: [{ name: "plain" }, { name: "other" }] }),
+    await f.owner.protectMutation({ model: [{ name: "plain" }, { name: "other" }] }),
     true,
   );
 });
 
 test("generated system creation requires separate fresh original human authorization", async () => {
-  const f = fixture(),
+  const f = await fixture(),
     command = { model: cloneDeep(f.row), authData: { system: true } };
   await assert.rejects(
     f.owner.withCreationMutation(command, f.nomination, async () => true),
@@ -1149,15 +1204,15 @@ test("generated system creation requires separate fresh original human authoriza
     command,
     f.nomination,
     async () => {
-      assert.equal(f.owner.protectMutation(command), true);
+      assert.equal(await f.owner.protectMutation(command), true);
     },
     f.request(),
   );
-  assert.throws(() => f.owner.protectMutation(command));
+  await assert.rejects(() => f.owner.protectMutation(command));
 });
 
 test("checkpoint query drift cannot weaken exact private CAS admission", async () => {
-  const f = fixture(),
+  const f = await fixture(),
     update = SERVICE.DefaultEnterpriseService.update;
   SERVICE.DefaultEnterpriseService.update = async (command) => {
     if (command.model.setupContinuation)
@@ -1170,8 +1225,8 @@ test("checkpoint query drift cannot weaken exact private CAS admission", async (
   assert.equal(f.effects.invitation, 0);
 });
 
-function nativeReadFixture() {
-  const f = fixture();
+async function nativeReadFixture() {
+  const f = await fixture();
   global.ENUMS = {
     ContactType: Object.fromEntries(
       ["EMAIL", "PHONE", "FAX", "PAGER"].map((key) => [key, { key }]),
@@ -1253,7 +1308,7 @@ function nativeReadFixture() {
 async function installedSetupFixture(connection, namespace) {
   assert.match(namespace, /^nodics_profile_qualification_[a-f0-9]{32}$/);
   assert.equal(connection.connection.databaseName, namespace);
-  const f = nativeReadFixture();
+  const f = await nativeReadFixture();
   const foundation = "../../../../nodics.foundation/modules/";
   SERVICE.DefaultModelValidatorService = {
     ...require(
@@ -1563,8 +1618,7 @@ if (process.env.NODICS_PROFILE_INSTALLED_SETUP_MONGO_URI)
               .revision,
             0,
           );
-          assert.throws(() =>
-            f.owner.protectMutation({
+          await assert.rejects(() => f.owner.protectMutation({
               query: { code: "example" },
               model: { "setupContinuation.revision": 99 },
             }),
@@ -1774,8 +1828,8 @@ if (process.env.NODICS_PROFILE_INSTALLED_SETUP_MONGO_URI)
     );
   });
 
-test("public mutation count/models projection composes Team and Tenant owners with flags off without erasing retained private rows", () => {
-  const f = fixture();
+test("public mutation count/models projection composes Team and Tenant owners with flags off without erasing retained private rows", async () => {
+  const f = await fixture();
   f.policy.setupContinuation = {};
   const retained = {
     ...cloneDeep(f.row),
@@ -1839,8 +1893,8 @@ test("public mutation count/models projection composes Team and Tenant owners wi
   );
 });
 
-test("actual setup route privacy middleware requires early binding and selected logger protection before inspection", () => {
-  fixture();
+test("actual setup route privacy middleware requires early binding and selected logger protection before inspection", async () => {
+  await fixture();
   const logger = require("../../../../nodics.foundation/modules/nConfig/src/service/DefaultLoggerService");
   const routing = require("../../../../nodics.foundation/modules/nRouter/src/service/router/defaultRouterOperationService");
   const route = require("../src/router/routers").profile.loadDefaults
@@ -1881,7 +1935,7 @@ test("actual setup route privacy middleware requires early binding and selected 
 });
 
 test("actual prepared Enterprise Mongo boundary rejects private selectors before find/count with flags OFF", async () => {
-  const f = nativeReadFixture();
+  const f = await nativeReadFixture();
   f.policy.setupContinuation = {};
   for (const parts of [
     { query: { "setupContinuation.revision": 0 } },
@@ -1901,7 +1955,7 @@ test("actual prepared Enterprise Mongo boundary rejects private selectors before
 });
 
 test("actual provider and export projection preserve ordinary fields but redact all composed evidence", async () => {
-  const f = nativeReadFixture();
+  const f = await nativeReadFixture();
   Object.assign(f.row, {
     profileVerifiedContact: { revision: 1 },
     customerEligibilityDecision: { revision: 1 },
@@ -1936,7 +1990,7 @@ test("actual provider and export projection preserve ordinary fields but redact 
 });
 
 test("actual protected cache preflight denies private selection and ordinary reads skip cached evidence", async () => {
-  const f = nativeReadFixture();
+  const f = await nativeReadFixture();
   await assert.rejects(
     f.pipeline("lookupCache", {
       schemaModel: f.model,
@@ -1953,7 +2007,7 @@ test("actual protected cache preflight denies private selection and ordinary rea
 });
 
 test("native generated private owner read survives provider projections and exact paging decoration", async () => {
-  const f = nativeReadFixture();
+  const f = await nativeReadFixture();
   const row = await f.owner.readEnterprise("example");
   assert.ok(row.setupContinuation);
   assert.equal(row.setupRequestHash, f.row.setupRequestHash);
@@ -1972,7 +2026,7 @@ test("native generated private owner read survives provider projections and exac
 });
 
 test("actual generated pre/postGet hooks invoke setup guards and redaction with prior hooks retained", async () => {
-  const f = nativeReadFixture();
+  const f = await nativeReadFixture();
   const hooks = require("../src/interceptors/interceptors");
   const selected = Object.values(hooks).filter(
     (hook) =>
@@ -2030,8 +2084,8 @@ test("actual generated pre/postGet hooks invoke setup guards and redaction with 
 });
 
 test("workspace DTO/routes/controller/facade use fixed owner metadata and safe error projection", async () => {
-  const f = fixture();
-  const properties = require("../config/properties");
+  const f = await fixture();
+  const properties = require("./helpers/identityCatalogueFixture").properties();
   f.policy.setupContinuation = cloneDeep(
     properties.enterpriseManagement.setupContinuation,
   );
@@ -2089,6 +2143,65 @@ test("workspace DTO/routes/controller/facade use fixed owner metadata and safe e
   );
 });
 
+test("inspection readiness owner failures and nonboolean results expose only the registered assessment diagnostic", async () => {
+  const controller = require("../src/controller/enterprise/defaultEnterpriseManagementController"),
+    facade = require("../src/facade/enterprise/defaultEnterpriseManagementFacade");
+  const cases = [
+    () => {
+      delete SERVICE.DefaultEnterpriseHandlerService;
+    },
+    () => {
+      delete SERVICE.DefaultEnterpriseHandlerService.isEnterpriseRuntimeReady;
+    },
+    ...[undefined, null, 0, 1, "true", {}, Promise.resolve(true)].map(
+      (value) => () => {
+        SERVICE.DefaultEnterpriseHandlerService.isEnterpriseRuntimeReady = () =>
+          value;
+      },
+    ),
+    () => {
+      SERVICE.DefaultEnterpriseHandlerService.isEnterpriseRuntimeReady = () => {
+        throw new Error("private-runtime-provider-and-token-detail");
+      };
+    },
+    () => {
+      SERVICE.DefaultEnterpriseHandlerService.isEnterpriseRuntimeReady =
+        async () => {
+          throw new Error("private-async-runtime-provider-detail");
+        };
+    },
+  ];
+  for (const mutate of cases) {
+    const f = await nativeAuthorizationFixture(),
+      before = cloneDeep(f.row);
+    global.FACADE = { DefaultEnterpriseManagementFacade: facade };
+    f.command.httpRequest = {
+      params: { enterpriseCode: "example" },
+      query: {},
+      body: {},
+    };
+    f.command.httpResponse = {
+      setHeader: (key, value) =>
+        assert.deepEqual([key, value], ["Cache-Control", "no-store"]),
+    };
+    mutate();
+    await assert.rejects(
+      controller.inspectEnterpriseSetup(f.command),
+      (error) => {
+        assert.equal(error.code, "ERR_PROFILE_SETUP_INSPECTION_ASSESSMENT");
+        assert.equal(error.message, error.code);
+        assert.equal(error.cause, undefined);
+        assert.equal(error.metadata, undefined);
+        return true;
+      },
+    );
+    assert.deepEqual(f.row, before);
+    assert.equal(f.effects.activation, 0);
+    assert.equal(f.effects.invitation, 0);
+    assert.equal(f.effects.writes, 0);
+  }
+});
+
 test("assembled HTTP inspection reports only exact owner-bound fixed failure stages", async () => {
   const controller = require("../src/controller/enterprise/defaultEnterpriseManagementController");
   const facade = require("../src/facade/enterprise/defaultEnterpriseManagementFacade");
@@ -2129,7 +2242,7 @@ test("assembled HTTP inspection reports only exact owner-bound fixed failure sta
       },
     ],
   ]) {
-    const f = nativeAuthorizationFixture();
+    const f = await nativeAuthorizationFixture();
     global.FACADE = { DefaultEnterpriseManagementFacade: facade };
     f.command.params = { enterpriseCode: "wrong-outer-value" };
     f.command.httpRequest = {
@@ -2157,7 +2270,7 @@ test("assembled HTTP inspection reports only exact owner-bound fixed failure sta
     );
     assert.equal(f.effects.writes, 0);
   }
-  const f = fixture();
+  const f = await fixture();
   global.FACADE = {
     DefaultEnterpriseManagementFacade: {
       inspectEnterpriseSetup: async () => {
@@ -2170,20 +2283,19 @@ test("assembled HTTP inspection reports only exact owner-bound fixed failure sta
   });
 });
 
-test("immutable creation fingerprints cannot be changed by ordinary update even with recovery disabled", () => {
-  const f = fixture();
+test("immutable creation fingerprints cannot be changed by ordinary update even with recovery disabled", async () => {
+  const f = await fixture();
   f.policy.setupContinuation = {};
   for (const model of [
     { setupRequestKey: "changed" },
     { $set: { setupRequestHash: "changed" } },
   ])
-    assert.throws(() =>
-      f.owner.protectMutation({ query: { code: "example" }, model }),
+    await assert.rejects(() => f.owner.protectMutation({ query: { code: "example" }, model }),
     );
 });
 
-test("workspace routes honor actual nRouter prepared prefix/context/version and ambiguity fails unavailable", () => {
-  const f = fixture();
+test("workspace routes honor actual nRouter prepared prefix/context/version and ambiguity fails unavailable", async () => {
+  const f = await fixture();
   const router = require("../../../../nodics.foundation/modules/nRouter/src/service/router/defaultRouterService");
   const definitions = require("../src/router/routers").profile.loadDefaults;
   const registry = {};
@@ -2224,7 +2336,7 @@ test("workspace routes honor actual nRouter prepared prefix/context/version and 
 });
 
 test("actual controller/facade/management inspection retains old-record HELD and no private DTO", async () => {
-  const f = fixture();
+  const f = await fixture();
   delete f.row.setupContinuation;
   const controller = {
     ...require("../src/controller/enterprise/defaultEnterpriseManagementController"),

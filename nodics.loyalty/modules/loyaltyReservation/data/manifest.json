@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "loyaltyReservation",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "loyaltyReservation permissionCatalogue",
+      "description": "Explicit loyaltyReservation identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "loyaltyReservation",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/loyaltyReservationPermissionHeader.js": "85ae2e5b255230a8a8f650687d1cc84c718894202c74837cd13e2fd0f71ea86a",
+        "init-v001/records/identity/loyaltyReservationPermissionData.js": "363283ab525f0d2148a54dedf2fa45a1d65cd6ee1b67d22966f9a2cb25ed1745"
+      }
+    },
     "sample-lifecycle": {
       "kind": "DATA_RELEASE",
       "dataType": "sample",

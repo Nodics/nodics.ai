@@ -631,10 +631,12 @@ module.exports = {
   rows: function (response) {
     if (
       !response ||
-      response.success === false ||
+      (response.success !== undefined && response.success !== true) ||
+      (response.acknowledged !== undefined && response.acknowledged !== true) ||
       response.error ||
       !/^SUC_/.test(response.code || "") ||
-      (Array.isArray(response.errors) && response.errors.length) ||
+      (response.errors !== undefined && response.errors !== null &&
+        (!Array.isArray(response.errors) || response.errors.length)) ||
       !Array.isArray(response.result)
     )
       this.fail("STORAGE");
@@ -839,7 +841,7 @@ module.exports = {
    * @param {boolean} [permitRegistered] Permit inspection of previously completed registration.
    * @returns {void} Returns only for currently valid responsibilities; otherwise throws.
    */
-  assertAssignment: function (assignment, email, permitRegistered = false) {
+  assertAssignment: async function (assignment, email, permitRegistered = false) {
     if (
       !assignment ||
       assignment.normalizedEmail !== email ||
@@ -878,7 +880,7 @@ module.exports = {
         ))
     )
       this.fail("ASSIGNMENT");
-    const role = SERVICE.DefaultEnterpriseManagementService.rolePolicy(
+    const role = await SERVICE.DefaultEnterpriseManagementService.rolePolicy(
       assignment.roleCode,
     );
     if (this.digest(role.groupCodes) !== this.digest(assignment.groupCodes))
@@ -1034,7 +1036,7 @@ module.exports = {
       )
         continue;
       try {
-        this.assertAssignment(assignment, session.email);
+        await this.assertAssignment(assignment, session.email);
       } catch (error) {
         if (error.code === "ERR_PROFILE_REG_ASSIGNMENT") continue;
         throw error;
@@ -1227,7 +1229,7 @@ module.exports = {
       saved.registration.mutation !== mutation
     )
       this.fail("CONFLICT");
-    this.assertAssignment(saved, assignment.normalizedEmail, true);
+    await this.assertAssignment(saved, assignment.normalizedEmail, true);
     return saved;
   },
   /**
@@ -1243,7 +1245,7 @@ module.exports = {
       context.tenant,
       { code },
     );
-    this.assertAssignment(item, session.email, true);
+    await this.assertAssignment(item, session.email, true);
     const enterprise =
       await SERVICE.DefaultEnterpriseTeamAdministrationService.enterpriseForAccess(
         item.enterpriseCode,
@@ -1883,7 +1885,7 @@ module.exports = {
         code: person.registrationAssignmentCode,
       },
     );
-    this.assertAssignment(item, person.loginId, true);
+    await this.assertAssignment(item, person.loginId, true);
     if (
       !person.active ||
       person.disabled === true ||

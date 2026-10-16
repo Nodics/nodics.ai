@@ -1,5 +1,32 @@
 # profile Agent Contract
 
+Business access presentation comes from fresh `enterpriseRole` metadata, with
+explicit owner-defined `userGroup` permission mappings. See the business access
+section of `llm/contracts/identity-access-lifecycle.md`. A business selector is
+not a multi-area assignment command; never translate No access into whole-person
+or whole-membership revocation when unrelated business grants exist.
+
+Permission vocabulary and assignable enterprise responsibilities are persisted
+`permission` and `enterpriseRole` records in Profile's configured authority
+tenant. `userGroup` remains the only role-to-permission mapping authority.
+Do not restore permission catalogues, role maps or migration group targets in
+configuration. All consumer lookups are fresh, asynchronous and fail closed.
+See [persisted identity definitions](llm/contracts/identity-access-lifecycle.md#persisted-identity-definitions).
+Use the existing generated administrative schemas in Axis. Registry mutations
+require a fresh human Platform administrator; an enterprise-local admin, a
+claimed system flag or header groups are insufficient. nImport reference seeds
+require its private identity-authority execution context and generated
+`insertOnly` saves; replay preserves installed narrowing and deactivation.
+Role changes invalidate affected sessions through the existing stamp owner,
+but never rewrite employee assignments or runtime deployment grants.
+
+`GET /customer/identity` is a private, uncached self-read using the original
+Customer access token. Resolve live authority through `verifyAuthenticatedActor`
+and the exact fresh target Customer through `findByLoginId`; linked identity
+anchors are not target customer codes. Reject selectors and placement aliases,
+return only code/login and bound placement, and never grant generic schema access.
+See [the identity contract](llm/contracts/identity-access-lifecycle.md#current-customer-identity).
+
 The separate `/internal/enterprise/resolve` capability is default-off under
 `profileRuntimeEnterpriseResolution`. Admit only exact selected group-free
 deployment coordinates, service identity, signed tenant/principal enterprise,
@@ -11,24 +38,24 @@ Never widen `getRuntimeEnterprise` or touch customer-evidence authority to solve
 namespace placement. Preserve `test/profileRuntimeEnterpriseResolutionContract.test.js`.
 
 Commerce setup responsibilities follow [the explicit setup role contract](llm/contracts/commerce-setup-roles.md).
-Keep publisher and issuer groups in separate explicitly selected Core packs;
-never rewrite Init, assign staff from role-definition installation, add Administrator ancestry or
-enable qualifications. Existing native Employee group changes use authorized
-generated updates and stamp hooks; linked identities retain membership authority.
-Publisher composition also requires the separate forward
-`commercePublicationStarterRole` Core pack: Process start only, without speculative
-definition reads. Preserve the installed original publisher pack and receipt; `0.0.1` is not
-nImport's mutable `0.0.0` development baseline. Never repair it by checksum drift.
+Use canonical Product, Promotion and Publication `accessGroups` contributions,
+not duplicate Profile-owned domain packs. Installing definitions never assigns
+staff, adds Administrator ancestry or enables qualifications. Existing Employee
+changes use authorized generated updates and stamp hooks; linked identities
+retain membership authority. Publication's companion permits Process start only,
+not speculative definition reads. Preserve installed receipts as history; no
+compatibility source alias or checksum-drift replay is required or permitted.
 
 Enterprise Commerce refund-reviewer setup follows
 [the scoped reviewer contract](llm/contracts/commerce-refund-reviewer.md).
-Its explicit core pack creates a new least-privilege group only. Preserve current
-Init receipts, default-off onboarding and ordinary administrator grants; invite
-through Profile after actual qualification, never through acceptance-owned identities.
+Order owns the explicit `accessGroups` contribution. Preserve receipts and
+default-off onboarding; invite through Profile after actual qualification,
+never through acceptance-owned identities. Profile owns assignment mechanics,
+not another copy of Order's definitions.
 
-Read-only runtime-grant acceptance compares each deployment to its own resolved
-permission policy, as the bootstrap owner does. Never demand Platform's union
-from sibling runtimes or repair grants inside acceptance.
+Read-only runtime-grant acceptance validates each deployment's persisted
+assignment against its own identity coordinates, never a configured permission
+union. Neither acceptance nor startup repairs grants or restores removed groups.
 
 Reference employee imports use `DefaultEmployeeService.ensureReferenceAll` when
 the source intends create-or-preserve rather than an account mutation. Keep
@@ -39,7 +66,7 @@ onboarding, membership activation or password-reset authority.
 
 Explicit application reference-role instructions use
 `DefaultEmployeeService.addReferenceGroupsAll`, never partial employee saveAll.
-Keep exact five-field instructions, current configured non-administrative roles,
+Keep exact five-field instructions, current persisted non-administrative roles,
 complete active group/Enterprise and native identity preflight, retained enterprise
 association, additive ordered groups, exact current-group/password/stamp CAS,
 normal generated access/governance/stamp hooks and strict acknowledgement/readback.
@@ -95,10 +122,15 @@ deployment snapshots, exact runtime proof/grants and before-provider CAS/readbac
 Generic Tenant CRUD/search must not forge or erase lifecycle authority. Internal
 exposure and loopback transport default off; no implicit grants, relocation,
 startup quarantine or reset-based recovery acceptance.
-Explicit native Local remote-only upgrades use the server-owned
-`profileTenantProvisioning.localRuntimeRemoteModuleExtensions` allowlist, canonical
+Explicit deployment remote-only upgrades use the server-owned
+`profileTenantProvisioning.runtimeRemoteModuleExtensions` allowlist, canonical
 isolated deployment projection and fresh authenticated grants. Never infer that
 adoption from new package modules or change original namespace snapshots.
+`identityGovernance.migration.runtimeDeploymentBootstrapEnabled` defaults false;
+each selected server's effective policy must explicitly enable it. This selector
+never supplies permissions or permits credential, lockout or grant repair in any
+environment. Authority is persisted governed data. Preserve retained grant
+codes and historical reason markers, and test both selected and denied paths.
 
 Parent-company administration follows the [enterprise delegation contract](llm/contracts/enterprise-delegation.md).
 Reuse the existing hierarchy; target-consented ancestor administration has partial,
@@ -264,13 +296,21 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Runtime admission reuses direct RUNTIME_DEPLOYMENT principal scope assignments. Never infer approval from headers, topology, broad groups or cross-tenant permission. Scope mutations await existing principal invalidation; the pre-update hook owns atomic version allocation.
 
-Native-Local bootstrap reconciles only its own active grants from the selected
-server's isolated canonical loader graph plus explicit remote modules, never
-the raw selection list, discovered inactive inventory or caller module headers.
-The generated shared Local proof's credential ceiling covers the same resolved
-sibling policies; never union those permissions into individual runtime grants.
-Preserve strict module ceilings for every environment and do not revive revoked
-grants. See the Local bootstrap section of `llm/contracts/identity-access-lifecycle.md`.
+Startup validates retained runtime grants read-only in every environment. Never
+derive permissions, group ancestry or credential scopes from migration properties,
+restore administrator passwords/lockouts, or recreate missing authority on restart.
+First-install records use governed nImport data packs; later changes use Profile
+commands and their existing invalidation hooks. Valid narrowed grants must survive
+validation unchanged. Session groups use persisted ancestry only. See runtime
+deployment grants in `llm/contracts/identity-access-lifecycle.md`.
+
+Forward Init uses fixed-schema `ensureBootstrapAll` wrappers for Employee,
+Customer, Address, Contact, Enterprise and Tenant. Keep the shared admission in
+the existing bootstrap owner: private nImport context, fresh exact identity reads,
+no writes for retained active/inactive records, and generated insert-only creation
+for missing records. Never reclassify principals, reset credentials, change
+Enterprise tenant bindings or upsert a concurrent winner. Do not edit installed
+release bytes or treat this operation as a public repair command.
 
 The default Enterprise Init seed must not re-enter tenant preparation before
 runtime grants exist. Defer its post-save activation event only through the
@@ -280,7 +320,10 @@ prove remote runtime readiness. See `llm/contracts/enterprise-tenant-provisionin
 
 Requested runtime modules must be a subset of the exact matched deployment grant in every environment. Neither a `Local` suffix nor `requireExactModules: false` relaxes this ceiling; Local shared-principal compatibility is independent. See [runtime deployment grants](llm/contracts/identity-access-lifecycle.md#runtime-deployment-grants) and the issuance-owner fixture `test/profileRuntimeBoundInternalToken.test.js`.
 
-Tenant preparation uses the existing governed Init release owner before mandatory identity reconciliation. Non-local deployment grants and credentials remain governed operator records. Native local startup may idempotently reconcile explicit `RUNTIME_DEPLOYMENT` grants for discovered sibling runtime identities from package metadata and effective module configuration, using framework-owned generated local credential proof; this is local bootstrap repair, not runtime self-enrollment from request headers.
+Tenant preparation uses the existing governed Init release owner before read-only
+identity validation. Deployment grants and credentials remain governed records in
+all environments. Neither package metadata nor runtime configuration may create
+or expand persisted authority, even when a provisioning selector is enabled.
 
 Generated Profile reads return the canonical `{code, result}` envelope, with a
 success code and result array; they do not set a Boolean `success: true`. Runtime
@@ -308,11 +351,15 @@ metadata does not select the initializer employee. Custom identities require
 matching governed Init data; partial checks never reset existing credentials.
 Human bootstrap employees and the credential-bearing guest are authority-tenant
 Init records, not automatic tenant administrators. The forward `profile:init-v001`
-`0.0.1` source (`init-v001`) separates service employees and uses existing layered
+`0.0.2` source (`init-v001`) separates service employees and uses existing layered
 header `options.tenants` intersection for humans/guest. Preserve per-tenant
 groups/services, configured authority selectors, retained release evidence and
 the unchanged nonauthority review refusal. Never repair old clones by changing
 qualification flags or silently replaying an edited same-version release.
+Bootstrap assessment may inspect `saveAll` and `ensureBootstrapAll` principal
+headers without executing either operation. Its selected release still requires
+an exact current installation version/checksum; an older receipt does not qualify
+the successor source.
 
 Profile refresh sessions use the Profile-owned `auth` cache channel. Its module
 configuration references nAuth's strict channel defaults through nConfig; do not

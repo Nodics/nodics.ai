@@ -261,3 +261,14 @@ module.exports = {
     }
   }
 };
+
+// Explicit owner commands, not permission-name or HTTP-verb classification.
+for (const operation of ['validateDraftComposition', 'saveDraftComposition', 'addSection', 'updateSection',
+    'reorderSection', 'addComponent', 'updateComponent', 'reorderComponent', 'associateMedia',
+    'assignRoute', 'assignNavigation', 'validatePublishReadiness', 'submitForPublication']) {
+    module.exports.cms.cmsDesignerComposition[operation].permission = 'cms.authoring.write';
+}
+for (const operation of ['deleteSection', 'deleteComponent', 'detachMedia']) {
+    module.exports.cms.cmsDesignerComposition[operation].permission = 'cms.authoring.delete';
+}
+for (const route of Object.values(module.exports.cms.cmsDesignerComposition)) route.authTokenTypes = ['access'];

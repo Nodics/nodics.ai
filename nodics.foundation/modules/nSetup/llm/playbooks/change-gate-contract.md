@@ -51,6 +51,15 @@ Required evidence:
 - affected-layer classification
 - focused test selection
 
+For configuration changes, apply
+[the mandatory default ownership gate](../contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate).
+Record the consumer and owner for each declaration, including absent framework
+defaults and mixed mechanism/selection objects. Review generators, source fallbacks
+and tests that could recreate customer-owned framework wiring. Keep confirmed
+violations, unresolved candidates and intentional deployment deltas distinct.
+If the user has held testing until refactor completion, do not run tests or live
+qualification during discovery; retain their acceptance gates as pending.
+
 Fail the gate when ownership or customization is unclear, an existing mechanism
 has not been inspected, or the proposal adds an unnecessary parallel path.
 

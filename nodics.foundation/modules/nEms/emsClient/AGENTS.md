@@ -20,3 +20,6 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 This capability contributes an inert model-service inventory for [governed Local reset](../../nSystem/llm/contracts/local-reset.md).
 Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.
+
+Consumer registration retry timing is emsClient.processRetrySleepTime, owned here
+and independent of Cronjob. Do not restore the obsolete global retry property.

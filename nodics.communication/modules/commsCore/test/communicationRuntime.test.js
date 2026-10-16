@@ -444,6 +444,29 @@ test("Telegram uses verified destination and plain text, handles accepted, rejec
     return { json: async () => ({ ok: true, result: { message_id: 4 } }) };
   });
   assert.equal(success.status, "DELIVERED");
+  const destination = SERVICE.DefaultModuleService.invokeModule;
+  let transportCalls = 0;
+  SERVICE.DefaultModuleService.invokeModule = async () => {
+    throw new Error("private destination lookup failure");
+  };
+  assert.deepEqual(await telegram.deliver(args, async () => { transportCalls++; }), {
+    status: "RETRY_PENDING",
+    responseCode: "DESTINATION_RESOLUTION_FAILED",
+  });
+  assert.equal(transportCalls, 0);
+  SERVICE.DefaultModuleService.invokeModule = destination;
+  for (const acknowledgement of [null, true, false, 0, 42, "accepted", [], {}]) {
+    let attempts = 0;
+    const outcome = await telegram.deliver(args, async () => {
+      attempts++;
+      return { json: async () => acknowledgement };
+    });
+    assert.equal(attempts, 1);
+    assert.deepEqual(outcome, {
+      status: "UNCERTAIN",
+      responseCode: "TELEGRAM_UNCERTAIN",
+    });
+  }
   assert.equal(
     (
       await telegram.deliver(args, async () => {
@@ -525,14 +548,19 @@ test("uncertain delivery needs a current revision, explicit decision and reason;
     (await runtime.read(request, intent.intentCode)).reconciliation.length,
     1,
   );
-  await assert.rejects(
-    runtime.resolveUncertain(request, intent.intentCode, decision),
-  );
+  assert.deepEqual(await runtime.resolveUncertain(request, intent.intentCode, decision), resolved);
+  for (const changed of [{ reason: "Changed reason" }, { action: "MARK_DELIVERED" },
+    { operatorRef: { ...decision.operatorRef, code: "other" } }]) {
+    await assert.rejects(runtime.resolveUncertain(request, intent.intentCode, { ...decision, ...changed }));
+  }
   SERVICE.TelegramTest.deliver = async () => {
     sends++;
     return { status: "DELIVERED" };
   };
   await runtime.retry(request, intent.intentCode);
+  assert.equal(sends, 2);
+  assert.equal((await runtime.resolveUncertain(request, intent.intentCode, decision)).status, "DELIVERED");
+  assert.equal((await runtime.read(request, intent.intentCode)).reconciliation.length, 1);
   assert.equal(sends, 2);
 });
 test("optional terminal fields remain valid typed values for Mongo validators", async () => {

@@ -295,6 +295,7 @@ function fixture() {
         : undefined,
   };
   global.SERVICE = {
+    DefaultIdentityCatalogueService: require("./helpers/identityCatalogueFixture").catalogue(() => CONFIG.get("enterpriseManagement")?.accessAssignments?.roles),
     DefaultLoggerService: {
       runSensitiveOperation: async (request, operation) => {
         captured.add(request);

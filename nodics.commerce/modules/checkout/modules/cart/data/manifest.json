@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "cart",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "cart permissionCatalogue",
+      "description": "Explicit cart identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "cart",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/cartPermissionHeader.js": "37818870ca1f1d546db3a40f15b22696a3ffa7ca3bee745a1d9150c7c4d736f9",
+        "init-v001/records/identity/cartPermissionData.js": "ad563d2af9213bca5a8850319016414a9706da67ddc312b3da6cb26c20b7dc7e"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

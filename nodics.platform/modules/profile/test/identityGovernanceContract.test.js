@@ -28,7 +28,6 @@ global.CONFIG = {
                     serviceGroup: 'serviceAccountUserGroup',
                     minimumServiceApiKeyLength: 32
                 },
-                permissionCatalog: ['profile.read', 'profile.write'],
                 customerRegistration: { group: 'customerUserGroup', principalType: 'customer', active: true }
             };
         }
@@ -67,12 +66,12 @@ const schemaAccessHandler = require(path.join(repositoryRoot,
 registration.LOG = { debug: function () {} };
 
 global.SERVICE = { DefaultIdentityGovernanceService: identityService, DefaultAPIKeyCredentialService: apiKeyCredential };
+global.SERVICE.DefaultIdentityCatalogueService = require("./helpers/identityCatalogueFixture").catalogue(undefined, ["profile.read", "profile.write"]);
 
 assert.strictEqual(identityService.hasAdministrativeAccess({ userGroups: ['adminGroup'] }), true);
 assert.strictEqual(identityService.hasAdministrativeAccess({ userGroups: ['customerUserGroup'] }), false);
 assert.deepStrictEqual(identityService.getSystemAuthData().userGroups, ['serviceAccountUserGroup']);
 
-assert.throws(() => groupGovernance.validatePermissions([{ permissions: ['unknown.permission'] }]), /Unknown permission/);
 assert.throws(() => groupGovernance.validateGraph([
     { code: 'one', active: true, parentGroups: ['two'] },
     { code: 'two', active: true, parentGroups: ['one'] }
@@ -125,6 +124,7 @@ assert.strictEqual(schemaAccessHandler.getAccessPoint({ userGroups: ['customerUs
 assert.strictEqual(schemaAccessHandler.getAccessPoint({ userGroups: ['adminGroup'] }, profileSchemas.employee.accessGroups), 10);
 
 (async function () {
+    await assert.rejects(groupGovernance.validatePermissions([{ permissions: ['unknown.permission'] }]), /Unknown permission/);
     await assert.rejects(principalGovernance.validate({ model: {
         principalType: 'human', userGroups: ['serviceAccountUserGroup']
     } }), /Only service principals/);

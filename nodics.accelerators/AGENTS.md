@@ -1,9 +1,14 @@
 # nodics.accelerators Agents
 
-Agora Apparel, Electronics and Telco, like Circa eWaste, are customer applications
-in Kickoff. Their data and profiles must not move here merely because they reuse
-accelerators or are reference applications. Follow the customer-project-mode
-contract's ownership table. Run `npm test` here for the discovery boundary check.
+Circa and Agora are reference demonstrations of framework accelerators, not
+owners of reusable implementations. Their optional fictional business data,
+assets, accounts and assignments belong in the corresponding Kickoff demo packs.
+Reusable journeys, schemas, services and access definitions belong to the
+implementing framework capabilities. Keep actual deployment coordinates and
+explicit demo selections out of reusable defaults. This rule applies equally to
+Apparel, Electronics, Telco, Waste and future accelerator demos; it does not
+authorize unfinished domain features. Follow the customer-project-mode contract
+and run `npm test` here for the discovery boundary check.
 
 Follow the root Nodics AI agent contract before changing this boundary:
 

@@ -26,9 +26,11 @@ acceptance are required before enabling EMAIL/SMS.
 For coupon products, it identifies calculation entries backed by a `COUPON_CODE_POOL`, asks Promotion to reserve one code per purchased unit during checkout placement, confirms the sale after payment authorization, and marks delivery after fulfillment release.
 
 Merchant fulfillment follows [the merchant redemption contract](llm/contracts/merchant-redemption-contract.md).
-Its explicitly selected LOCAL ITEM simulation exercises the same coordination
+Its explicitly deployment-selected ITEM simulation exercises the same coordination
 without claiming verified goods delivery. Responses retain simulation labels;
 already-redeemed benefit reversals are not supported.
+New projections use SIMULATION; retained historical Local simulation markers
+remain unverified, with original benefit hashes and receipt bindings unchanged.
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

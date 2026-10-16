@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "testimonial",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "testimonial permissionCatalogue",
+      "description": "Explicit testimonial identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "testimonial",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/testimonialPermissionHeader.js": "7959ac5ad2fc25765a52113aa72de9d73cbb2e238f2a38c44cb00029a6709458",
+        "init-v001/records/identity/testimonialPermissionData.js": "3815e17932169f1741bab41daa8b93e749cf1e50e8747eb7820945869e8f013e"
+      }
+    }
+  }
+}

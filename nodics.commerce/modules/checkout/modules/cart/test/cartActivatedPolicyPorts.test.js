@@ -170,3 +170,47 @@ test('activated Promotion quote preserves detached original signed authority, no
     await portsService.create(cart, original).promotion({ ...input, authData: { principalType: 'customer' } });
     assert.equal(reads[2].authData.principalType, 'service', 'Unselected defaults preserve existing internal calculation authority');
 });
+
+test('row delivery Cart pricing obtains exact owner Product pins and ignores supplied pins', async t => {
+    const previous = { SERVICE: global.SERVICE, CONFIG: global.CONFIG };
+    t.after(() => Object.assign(global, previous));
+    const f = setup(), reads = [], pins = [{ productCode: 'product-a', storeCode: 'store-a', targetVersion: 'a'.repeat(64) }];
+    f.settings.pricing.publication.delivery.rowReleases = true;
+    SERVICE.DefaultProductDiscoveryService = { consumerReferences: async (context, items) => {
+        assert.equal(context.locale, 'en'); assert.equal(context.storeCode, 'store-a');
+        assert.equal(context.authData.principalType, 'service');
+        assert.deepEqual(items, [{ productCode: 'product-a', sku: 'sku-a', variantCode: undefined }]);
+        return structuredClone(pins);
+    } };
+    const publication = SERVICE.DefaultPricingPublicationService;
+    publication.rowProductCodes = async () => ['product-a'];
+    const read = publication.readConfigured.bind(publication);
+    publication.readConfigured = async request => { reads.push(structuredClone(request)); return read(request); };
+    const ports = portsService.create({ ...cart, storeCode: 'store-a', locale: 'en' });
+    assert.equal((await ports.pricing({ ...input, productReferences: [{ targetVersion: 'foreign' }] })).totalAmount, '24');
+    assert.deepEqual(reads[0].productReferences, pins);
+    SERVICE.DefaultProductDiscoveryService.consumerReferences = async () => { throw new Error('Product pin failure'); };
+    await assert.rejects(ports.pricing(input), /Product pin failure/);
+    delete SERVICE.DefaultProductDiscoveryService;
+    await assert.rejects(ports.pricing(input), /Product publication owner/);
+    assert.equal(reads.length, 1, 'No price read without the consumed Product');
+    f.settings.pricing.publication.delivery.rowReleases = false;
+    assert.equal((await ports.pricing(input)).totalAmount, '24');
+});
+
+test('global row delivery leaves book-only and unrelated Cart prices unchanged without Product admission', async t => {
+    const previous = { SERVICE: global.SERVICE, CONFIG: global.CONFIG };
+    t.after(() => Object.assign(global, previous));
+    const f = setup();
+    f.settings.pricing.publication.delivery.rowReleases = true;
+    SERVICE.DefaultProductDiscoveryService = { consumerReferences: () => assert.fail('Unrelated Cart must not request Product authority') };
+    const ports = portsService.create({ ...cart, storeCode: 'store-a' });
+    assert.equal((await ports.pricing(input)).totalAmount, '24');
+    for (const change of [{ productCode: 'unrelated' }, { storeCode: 'unrelated' }, { priceBookCode: 'unrelated' }]) {
+        f.evidence.pricing.pointer.push({ tenant: cart.tenant, enterpriseCode: cart.enterpriseCode,
+            code: 'unrelated-row', rootType: 'priceRow', rootCode: 'unrelated', priceBookCode: 'book-a',
+            storeCode: 'store-a', productCode: input.productCode, version: 'a'.repeat(64), receiptCode: 'unread', ...change });
+        assert.equal((await ports.pricing({ ...input, productReferences: [{ targetVersion: 'forged' }] })).totalAmount, '24');
+        f.evidence.pricing.pointer.pop();
+    }
+});

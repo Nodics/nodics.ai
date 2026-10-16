@@ -30,6 +30,14 @@ select resources and delivery independently: files do not enable SMTP or onboard
   sms/<resource-name>/
     template.json
     en/message.txt
+  telegram/<resource-name>/
+    template.json
+    en/subject.txt
+    en/message.txt
+  in_app/<resource-name>/
+    template.json
+    en/subject.txt
+    en/message.txt
 ```
 
 Channel directories are lowercase; OTP is a purpose, not a channel. These are
@@ -37,7 +45,7 @@ deployable source resources, not configuration blobs or database imports.
 `template.json` is inert JSON containing:
 
 - `formatVersion: 1`, stable `code`, `ownerModule`, positive integer `version`;
-- `status: ACTIVE`, `purpose`, `sourceModules`, channel `EMAIL` or `SMS`;
+- `status: ACTIVE`, `purpose`, `sourceModules`, channel `EMAIL`, `SMS`, `TELEGRAM` or `IN_APP`;
 - `defaultLocale` and `parameters`, keyed by simple parameter name;
 - optional boolean `requiresSelection`, immutable across presentation overrides;
 - parameters declare `type: string`, `required`, `maximumLength`, optional

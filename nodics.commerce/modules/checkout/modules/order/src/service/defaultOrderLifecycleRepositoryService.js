@@ -37,14 +37,16 @@ module.exports = {
             patch.revision !== record.revision + 1 ||
             ['tenant', 'code', 'enterpriseCode', 'ownerId', 'orderCode'].some(key => patch[key] !== undefined && patch[key] !== record[key])) fail();
         const owner = SERVICE.DefaultOrderLifecycleRequestService;
+        const placement = Object.fromEntries(['enterpriseCode', 'ownerId', 'orderCode']
+            .filter(key => typeof record[key] === 'string').map(key => [key, record[key]]));
         const result = this.confirmedResult(await owner.update({ tenant, authData,
             options: { recursive: false, skipItemCache: true },
-            query: { tenant, code: record.code, revision: record.revision }, model: { $set: patch } }));
+            query: { tenant, code: record.code, ...placement, revision: record.revision }, model: { $set: patch } }));
         if (result?.acknowledged !== true || result.matchedCount !== 1 || result.modifiedCount !== 1 ||
             result.upsertedCount > 0 || result.upsertedId != null) fail();
         const rows = this.confirmedResult(await owner.get({ tenant, authData,
             options: { recursive: false, skipItemCache: true },
-            query: { tenant, code: record.code, revision: patch.revision },
+            query: { tenant, code: record.code, ...placement, revision: patch.revision },
             searchOptions: { pageSize: 2, limit: 2, pageNumber: 1 } }));
         if (!Array.isArray(rows) || rows.length !== 1) fail();
         const stored = rows[0];

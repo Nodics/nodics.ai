@@ -16,7 +16,86 @@
  * @owner profile
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
+const { isDeepStrictEqual } = require("node:util");
 module.exports = {
+  /** Preserves installed bootstrap identities; only private nImport Init may create missing records. */
+  ensureBootstrapAll: function (request) {
+    return SERVICE.DefaultMandatoryIdentityBootstrapService.ensureBootstrapAll(this, "customer", request);
+  },
+  /** Projects only the signed customer's current business identity; callers cannot select another account. */
+  currentIdentity: async function (request) {
+    const fail = () => {
+      throw new CLASSES.NodicsError("ERR_AUTH_00003");
+    };
+    const empty = (value) =>
+      value === undefined ||
+      (value &&
+        Object.getPrototypeOf(value) === Object.prototype &&
+        Reflect.ownKeys(value).length === 0);
+    const auth = request.authData,
+      tenant = request.tenant;
+    if (
+      !auth ||
+      auth.principalType !== "customer" ||
+      auth.tokenType !== "access" ||
+      auth.isSystem ||
+      auth.tenant !== tenant ||
+      !auth.loginId ||
+      !auth.entCode ||
+      [
+        request.query,
+        request.body,
+        request.payload,
+        request.httpRequest?.query,
+        request.httpRequest?.body,
+      ].some((value) => !empty(value))
+    )
+      fail();
+    SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+    const pin = structuredClone(auth);
+    const bound = () => {
+      if (
+        !isDeepStrictEqual(request.authData, pin) ||
+        request.tenant !== tenant ||
+        [request.tenantCode, pin.tenantCode].some(
+          (value) => value !== undefined && value !== tenant,
+        ) ||
+        [
+          pin.enterpriseCode,
+          request.enterpriseCode,
+          request.entCode,
+          request.httpRequest?.headers?.["x-enterprise-code"],
+        ].some((value) => value !== undefined && value !== pin.entCode)
+      )
+        fail();
+    };
+    bound();
+    await SERVICE.DefaultEnterpriseMembershipService.verifyAuthenticatedActor(
+      request,
+    );
+    bound();
+    const customer = await this.findByLoginId({
+      tenant,
+      loginId: pin.loginId,
+      options: { recursive: false, skipItemCache: true },
+    });
+    bound();
+    if (
+      customer?.active !== true ||
+      customer.loginId !== pin.loginId ||
+      typeof customer.code !== "string" ||
+      !customer.code.trim() ||
+      customer.code.length > 191 ||
+      (customer.tenant !== undefined && customer.tenant !== tenant)
+    )
+      fail();
+    return {
+      contractVersion: 1,
+      tenant,
+      enterpriseCode: pin.entCode,
+      customer: { code: customer.code, loginId: customer.loginId },
+    };
+  },
   /**
    * Retrieves by login id information.
    *

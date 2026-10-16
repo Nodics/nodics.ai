@@ -50,14 +50,14 @@
       "description": "eWaste owned declarative BackOffice capability source; not an executable import.",
       "sourceRoot": "backoffice",
       "files": {
-        "backoffice/eWasteBackofficeCapabilityData.js": "eee55eee464aa87cfe893280be0552036b0b3549ce3128629ec9293803f3e8d9"
+        "backoffice/eWasteBackofficeCapabilityData.js": "cb80ab2865b7f84aad317ac6ec866f3221101f251a78049644e0d75807e41eba"
       }
     },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "eWaste",
-      "version": "0.0.5",
+      "version": "0.0.6",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -79,7 +79,7 @@
       "pages": 12,
       "components": 12,
       "routes": 12,
-      "releaseChecksum": "741d88bfe7eb3b9f2259afba9f1d6f119f05a47c6076a7248865b46833a211d9",
+      "releaseChecksum": "7ab938bd4215eda83e9ba16b2f833abb0884145d4eedb41e66f06bf23f86e2b2",
       "generatedHashes": {
         "docs-v001/records/documentation/eWasteDocumentationPageData.js": "b2a2445166e63de59910b8d46f495cf091684d075a5562a04214c52346568826",
         "docs-v001/records/documentation/eWasteDocumentationRouteData.js": "7a4952a6c95ae7d1a9ccb70003a976aa29bc18464cac47937f9afcda063c161d",
@@ -105,11 +105,11 @@
         "docs-v001/assets/documentation/files/images/circa-submission.svg": "a460135ceba159518a6325d129b4774ea33ce9fab32b611e4f1c572aee1298cd",
         "docs-v001/assets/documentation/eWasteDocumentationAssetManifest.js": "ff625a27a0eabc7409d0613cc414a662e0a25f4e93835a892d5fb6fc5e1db09e",
         "docs-v001/records/documentation/eWasteDocumentationRelease004NodeData.js": "d3195bfd0a455ef5e475b034eb2f5fdfcdd2c0c17bbbd01bb8241d378407849f",
-        "docs-v001/records/documentation/eWasteDocumentationRelease005ComponentData.js": "ab2f4723bd70b4e23f72cabfa47b539ff87c7bf4ad4c5630d52e3f274faf7057",
-        "docs-v001/records/documentation/eWasteDocumentationRelease005PageMetadataData.js": "bd6d932a43432d6f8a8945d15a6c78cd608b751aef0ab80c4b356788fcbc2f13",
-        "docs-v001/records/documentation/eWasteDocumentationRelease005SearchMetadataData.js": "4f205a9b75f96f9083072c9597c9564f70e4d59b8430fd61b2179fbf2ec53a19",
-        "docs-v001/records/documentation/eWasteDocumentationRelease005PublicationStateData.js": "655a7bffbce5923221682c0e59c09eccdf1b7b06cffc042b1ba8296146640514",
-        "docs-v001/headers/103_eWasteDocumentationRelease005ContentPackHeader.js": "86e291c4666a3c53c26abfeb7a039d8a2d5e0140c9fcc10fd033647fabb94e42"
+        "docs-v001/records/documentation/eWasteDocumentationRelease006ComponentData.js": "137318041cc30bb83ede149234eb8785a24fab55780bc0544274c468e6e2579b",
+        "docs-v001/records/documentation/eWasteDocumentationRelease006PageMetadataData.js": "c46fdfcc4841be4fced9fd7402c4943b1530fb904aa967dc5d61f3784644b21b",
+        "docs-v001/records/documentation/eWasteDocumentationRelease006SearchMetadataData.js": "da0c8e486eba17160712786402ae4c6a49c0a8f0bf28db2f1edec04ec67f6102",
+        "docs-v001/records/documentation/eWasteDocumentationRelease006PublicationStateData.js": "38e6efed84e4f55dd427839207c94b769567a6273660ba3d580f6cb6d77c388a",
+        "docs-v001/headers/103_eWasteDocumentationRelease006ContentPackHeader.js": "a81e30f5b08fe2f98970c524ec4b9e600d7ad164f132a5e0d4c20ce306390b6f"
       },
       "includes": [
         {
@@ -127,7 +127,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "eWaste",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "owningDomain": "eWaste",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -160,7 +160,7 @@
       "pages": 4,
       "components": 5,
       "routes": 4,
-      "releaseChecksum": "4f098e451a16a9ad5682af78015f37ef8d45e4168dbfdc7c19327a8d288d7d59",
+      "releaseChecksum": "f6e1b7b5b52e6331a4a4f339a224be59513477dc50b62dba423c75e8c58fdd7c",
       "generatedHashes": {
         "docs-v001/records/documentation/circaDocumentationSiteData.js": "709889ce61cbc23538aaa3321bc2be89b584b5a11393ab856ec3221068852ce1",
         "docs-v001/records/documentation/circaDocumentationProductData.js": "1557a5771d7fcd0bddabca7cf5bbd9b0999d1520a2e5a7398973e2790a3b1a54",
@@ -169,17 +169,41 @@
         "docs-v001/records/documentation/circaDocumentationDashboardData.js": "ace9957354f9631414a0859a9cfa03e9885a54871d200e3eddec27a68dcb4386",
         "docs-v001/records/documentation/circaDocumentationLegacyNavigationCleanupData.js": "7d0830a19f0bba6845d4aeadb693a9d8b6eeffa42fdd7014026b089b723bc633",
         "docs-v001/records/documentation/circaDocumentationNodeData.js": "ae5bc82c2b8510819727eeeadf9545576de87b10b2fbd41d13e920a3c8ae005a",
-        "docs-v001/records/documentation/circaDocumentationRelease002PageMetadataData.js": "1ffb76a3b18a3e9144d537d74ac0145dca00d49a1088ce45dceb14f7e466e18e",
-        "docs-v001/records/documentation/circaDocumentationRelease002PublicationStateData.js": "fde92fa4d7fd0b97a0868007694c7db0461327db65d4f45857c1481643c81e56",
-        "docs-v001/records/documentation/circaDocumentationRelease002SearchMetadataData.js": "1c15926a642a2f8445e15a0ffa1860ca45711d825e7653d191645da1489d7799",
         "docs-v001/records/documentation/circaDocumentationTypeCodeData.js": "979d539c0c5a5806a43878aace4b70334ce7ed182c534ecb0baacba71e23598b",
         "docs-v001/records/documentation/circaDocumentationRendererData.js": "3d75676b9c83f5c9c72b20039c67de0a39b2ac1a6032ed3d9b172f712c5b1a57",
         "docs-v001/records/documentation/circaDocumentationSlotData.js": "7a75a1c0ffe12cdd6bace80fa53247c36f64b1c31af547255bc79511f06e5351",
         "docs-v001/records/documentation/circaDocumentationTemplateData.js": "16288f09d3b50c26c2df4dbc0a946a83108c487cfc78b116c53ca2d6a3393d93",
-        "docs-v001/records/documentation/circaDocumentationRelease002ComponentData.js": "f5e6b0f77deb97695b9b7472523e42a7413350fb83a656a58d4f371e76f6e20e",
         "docs-v001/records/documentation/circaDocumentationPageData.js": "0f8c3e99bc74aa87e9b6800fc8bb68a0a0300dac907d23b67b5c5ddee759e965",
         "docs-v001/records/documentation/circaDocumentationRouteData.js": "f746046d5a3479585650c2921204af3781eaddfc277af83797e8513795e77176",
-        "docs-v001/headers/circaDocumentationRelease002ContentPackHeader.js": "2a58bd5bc65a2e3c66d53aa2464d08bd7fc09659b95cc276aec717dc2523eab2"
+        "docs-v001/records/documentation/circaDocumentationRelease003ComponentData.js": "eb109772263bb67fe8cd43b5db283e19a2b92bc441c11514a008456eaf313806",
+        "docs-v001/records/documentation/circaDocumentationRelease003PageMetadataData.js": "448c22d4d4c65e96dfc051d52c0aa572c8a500128e85b551644e59e8abfe3b39",
+        "docs-v001/records/documentation/circaDocumentationRelease003SearchMetadataData.js": "edb621107a688b4b692dde864ee747632e2d038beee8cf4a63cb84d831e8c91b",
+        "docs-v001/records/documentation/circaDocumentationRelease003PublicationStateData.js": "72ef3b2b5c1f99bd42d2fe5c6b4aebdb961ac0ffe1614a0068d0c81a263ff0a0",
+        "docs-v001/headers/circaDocumentationRelease003ContentPackHeader.js": "6efab0f4fbebd160f598879ea02008db03640b8289fb969c3bef0a82f1e5d89a"
+      }
+    },
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "eWaste permissionCatalogue",
+      "description": "Explicit eWaste listing authority vocabulary; create missing records and preserve installed Axis decisions.",
+      "owningDomain": "eWaste",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/eWastePermissionHeader.js": "093e7b89e513aac20ad7a0e16b56ff6d23b24b8d099e48c4a95d0ae1844776dd",
+        "init-v001/records/identity/eWastePermissionData.js": "4f12522020c97977d1fc0bf398dc643bbfa17235ea380a93730407fb2aa7602d"
       }
     }
   }

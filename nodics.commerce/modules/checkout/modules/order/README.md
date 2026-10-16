@@ -3,6 +3,9 @@
 Order is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
 
 Customer manual reviews follow [the purchase review contract](llm/contracts/manual-purchase-review-contract.md).
+The default-off missing-policy exception uses exact configured environment names
+and original purchase approval pins, not environment.class. Its historical audit
+kind remains immutable; selection never waives unused-unit or financial checks.
 
 Generic reverse requests prove submission only and remain blocked before owner
 effects. The independently enabled, Store-scoped guarded refund path can select
@@ -20,6 +23,11 @@ reconciliation checkpoints; they cannot be reported as completed reversals.
 Operator actions return a confirmed persisted lifecycle request, not a database
 write acknowledgment. Stale revisions and unconfirmed readback require
 reread/reconciliation. Retrying an unchanged blocked action preserves its revision.
+
+Ordinary employee View/Edit/Full control definitions are Order-owned data. Axis
+uses enterprise-bound business projections, without generic schema administration.
+Full control adds manual dispute review, not refund execution or Order deletion.
+See [employee access](llm/contracts/manual-purchase-review-contract.md#ordinary-employee-access).
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

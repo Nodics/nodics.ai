@@ -44,7 +44,8 @@ module.exports = function (t, records, schemaNames = ['coupon', 'couponBatch']) 
     if (typeof CLASSES.NodicsError.enrich !== 'function') CLASSES.NodicsError.enrich = error => error;
     global.PIPELINE = { ...foundation('nPipeline/src/pipelines/pipelines'), ...foundation('nDatabase/database/src/pipelines/pipelines') };
     const log = { debug() {}, warn() {}, error() {}, info() {} };
-    const state = { reads: [], hooks: [], findCalls: 0, countCalls: 0, sameRequest: true };
+    const state = { reads: [], hooks: [], findCalls: 0, countCalls: 0, sameRequest: true,
+        matchesQuery: (row, query) => Object.entries(query).every(([key, value]) => row[key] === value) };
     const schemaOwner = foundation('nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService');
     const effective = schemaOwner.applyNamedSchemaPolicies('promotion', structuredClone(require('../../src/schemas/schemas').promotion));
     const models = Object.fromEntries(schemaNames.map(name => [name + 'Model', { ...mongo,
@@ -52,7 +53,7 @@ module.exports = function (t, records, schemaNames = ['coupon', 'couponBatch']) 
         find(query, options) {
             state.findCalls++;
             state.reads.push({ schema: name, query: structuredClone(query), options: structuredClone(options) });
-            const rows = records(name).filter(row => Object.entries(query).every(([key, value]) => row[key] === value));
+            const rows = records(name).filter(row => state.matchesQuery(row, query));
             const skip = options.skip || 0;
             const cursor = {
                 sort(order) {
@@ -71,7 +72,7 @@ module.exports = function (t, records, schemaNames = ['coupon', 'couponBatch']) 
         },
         countDocuments: async query => {
             state.countCalls++;
-            return records(name).filter(row => Object.entries(query).every(([key, value]) => row[key] === value)).length;
+            return records(name).filter(row => state.matchesQuery(row, query)).length;
         },
     }]));
     global.NODICS = { getModels: () => models };

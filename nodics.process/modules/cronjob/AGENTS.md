@@ -42,3 +42,6 @@ not a qualified Process trigger, source assignment or activated schedule.
 Optional source bindings are inert, exact policy-fingerprint associations. Validate
 them against approved Process context; never treat them as a source grant or an
 activation receipt. Source-aware Axis surfaces must exclude unbound/stale choices.
+
+Startup retry timing is cronjob.processRetrySleepTime, defined by this consumer.
+It is independent of EMS retry timing; do not restore a shared global delay.

@@ -20,7 +20,7 @@ const persistenceSchemaNames = new Set(persistenceSchemas.map(([moduleName, sche
 
 /**
  * @module loyaltyWallet/service/DefaultLoyaltySampleCreditContributionService
- * @description Posts explicitly reviewed Local sample credits through nImport and
+ * @description Posts explicitly reviewed environment-selected sample credits through nImport and
  * Loyalty's ledger/balance owner. Never imports snapshots or opens a wallet.
  * @owner loyaltyWallet @layer service
  * @override Later layers may narrow approval and eligibility; preserve independent
@@ -29,21 +29,21 @@ const persistenceSchemaNames = new Set(persistenceSchemas.map(([moduleName, sche
 module.exports = {
   /** Throws a content-free owner status. */
   fail: function (code = "ERR_LOYALTY_SAMPLE_CREDIT_INVALID", gate, schema) {
-    try { return SERVICE.DefaultLoyaltyRewardOperationService.fail(code, "Reviewed Local sample credit is unavailable"); }
+    try { return SERVICE.DefaultLoyaltyRewardOperationService.fail(code, "Reviewed sample credit is unavailable"); }
     catch (error) {
       if (gate) Object.defineProperty(error, "sampleCreditGate", { value: gate });
       if (persistenceSchemaNames.has(schema)) Object.defineProperty(error, "sampleCreditSchema", { value: schema });
       throw error;
     }
   },
-  /** Requires an authenticated human sample-credit permission and independently selected Local policy. */
+  /** Requires human sample-credit permission and an explicitly selected environment policy, independent of deployment class. */
   context: function (request) {
     const auth = request.authData || {}, policy = CONFIG.get("loyalty")?.sampleCredits;
     const security = SERVICE.DefaultSecuredRequestPipelineService;
     const enterpriseCode = auth.enterpriseCode || auth.entCode;
     const actorCode = auth.principalId || auth.code || auth.loginId;
     const environment = NODICS.getSelectedEnvironmentName();
-    if (policy?.enabled !== true || CONFIG.get("environment")?.class !== "LOCAL" ||
+    if (policy?.enabled !== true ||
         CONFIG.get("runtimeRole")?.code !== "LOYALTY" ||
         !Array.isArray(policy.allowedEnvironments) || !policy.allowedEnvironments.includes(environment) ||
         auth.principalType !== "human" || auth.tokenType !== "access" || auth.isSystem ||

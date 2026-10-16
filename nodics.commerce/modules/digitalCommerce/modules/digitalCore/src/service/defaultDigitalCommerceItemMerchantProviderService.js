@@ -13,7 +13,7 @@
 "use strict";
 /** @module digitalCore/service/defaultDigitalCommerceItemMerchantProviderService @description Rechecks canonical item-delivery evidence through the existing durable merchant confirmation flow. @layer service @owner digitalCore @override Preserve fresh Profile/outlet authority, exact original receipt binding and independent delivery evidence. */
 module.exports = {
-  /** Rechecks original delivery evidence or the explicitly selected unverified LOCAL simulation, never staff attestation. @param {Object} input Signed staff request. @param {Object} original Persisted merchant instruction. @returns {Promise<Object>} Bound receipt projection retaining simulation labels. */
+  /** Rechecks original delivery evidence or explicitly admitted unverified simulation, never staff attestation. @param {Object} input Signed staff request. @param {Object} original Persisted merchant instruction. @returns {Promise<Object>} Bound receipt projection retaining simulation labels. */
   confirm: async function (input, original) {
     const owner = SERVICE.DefaultDigitalCommerceMerchantService;
     const r = await owner.pricedAuthority(input, original);
@@ -44,6 +44,6 @@ module.exports = {
       redemptionCode: redemption.code, merchantCode: merchant.code, mode: merchant.mode,
       merchantReceiptReference: redemption.merchantReceiptReference,
       storeCode: merchant.store.code, storeRevision: merchant.store.revision, pricedBenefit: benefit,
-      ...(simulated ? { simulated: true, verified: false, evidenceMode: "LOCAL_SIMULATION" } : {}) };
+      ...(simulated ? { simulated: true, verified: false, evidenceMode: "SIMULATION" } : {}) };
   },
 };

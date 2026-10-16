@@ -19,10 +19,10 @@ const path = require("node:path");
 const manifest = require("../data/manifest.json");
 const release = require("../../../../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService");
 
-test("forward bootstrap adopts current Copilot grants only for the existing runtime administrator", () => {
+test("module-owned bootstrap declares Copilot grants only for the runtime administrator without replaying historical groups", () => {
   const root = path.resolve(__dirname, "../data");
   const active = manifest.sections["init-v001"];
-  const groups = require(path.join(root, active.sourceRoot, "records/groups/defaultBootstrapUserGroupsData"));
+  const groups = require('./helpers/identityCatalogueFixture').records('UserGroup');
   const previous = require("./fixtures/compatibility/bootstrapGroupsBeforeCopilot");
   const administrator = Object.values(groups).find((group) => group.code === "runtimeConfigAdminUserGroup");
   const added = [
@@ -32,10 +32,15 @@ test("forward bootstrap adopts current Copilot grants only for the existing runt
     "copilot.provider.check", "copilot.usage.read",
   ];
   for (const grant of added) assert(administrator.permissions.includes(grant));
-  for (const [key, group] of Object.entries(groups)) {
-    if (group.code !== administrator.code) assert.deepEqual(group, previous[key]);
-    else assert.deepEqual(group.permissions, [...previous[key].permissions, ...added]);
-  }
+  const priorAdministrator = Object.values(previous).find(group => group.code === administrator.code);
+  for (const grant of added) assert(!priorAdministrator.permissions.includes(grant));
+  // Historical nAuth groupTargets at 16c53ef2 granted these reads to adminGroup, not configuration administration.
+  const historicalAdminReads = ["copilot.knowledge.internal.read", "copilot.knowledge.restricted.read"];
+  for (const group of groups.filter(group => group.code !== administrator.code))
+    assert.deepEqual((group.permissions || []).filter(grant => added.includes(grant)).sort(),
+      group.code === "adminGroup" ? [...historicalAdminReads].sort() : [], group.code + ' must preserve its exact historical boundary');
+  assert.equal(active.version, '0.0.3');
+  assert(!Object.keys(active.files).some(file => file.includes('/records/groups/')));
   assert.equal(active.sourceRoot, "init-v001");
   assert.equal(manifest.retainedRoots, undefined);
   release.validateRetainedRoots(root, manifest);

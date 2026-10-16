@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "wasteCollection",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "wasteCollection permissionCatalogue",
+      "description": "Explicit wasteCollection identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "wasteCollection",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wasteCollectionPermissionHeader.js": "d8994ba05979907a4d9a6ae88f3a761f587913d2486bdb312936502286597eb8",
+        "init-v001/records/identity/wasteCollectionPermissionData.js": "cc319c119784cccc539e9952515f0127cb9d2d615aab20fd81f84ca6d889e0e6"
+      }
+    },
     "sample-profile-addresses": {
       "kind": "DATA_RELEASE",
       "dataType": "sample",

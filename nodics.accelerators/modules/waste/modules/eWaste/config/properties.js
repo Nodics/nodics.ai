@@ -13,10 +13,104 @@
 
 /** @module eWaste/config/properties @description Defines reusable e-waste defaults and project-injectable integration seams. @layer config @owner eWaste @override Later layers supply application codes, valuation services, marketplace policy and contextual guidance. */
 module.exports = {
-  copilot: { providers: { profiles: {
-    eWasteEnvironmentalAssessment: { maximumOutputTokens: 10000, structuredOutput: true, webSearch: true, reasoningEffort: "medium" },
-  } } },
+  copilot: {
+    providers: {
+      profiles: {
+        eWastePhotoMetadata: {
+          maximumOutputTokens: 2400,
+          structuredOutput: true,
+          imageDetail: "high",
+        },
+        eWasteEnvironmentalAssessment: {
+          maximumOutputTokens: 10000,
+          structuredOutput: true,
+          webSearch: true,
+          reasoningEffort: "medium",
+        },
+      },
+    },
+  },
   waste: {
+    listingWorkspace: {
+      views: {
+        "ewaste.listingRequests": {
+          ownerModule: "eWaste",
+          label: "Electronics listing requests",
+          mode: "LISTING_REQUESTS",
+          familyCode: "ELECTRONICS",
+          labels: {
+            title: "Electronics listing requests",
+            refresh: "Refresh requests",
+            loading: "Loading listing requests",
+            empty: "No listing requests",
+            unavailable: "Listing requests are unavailable",
+            details: "Read details",
+            close: "Close",
+            previous: "Previous",
+            next: "Next",
+            page: "Page",
+            asset: "Asset",
+            name: "Item",
+            status: "Status",
+            signedEnterprise: "Signed enterprise",
+            store: "Store",
+            product: "Product",
+            priceRow: "Price row",
+            publication: "Publication",
+            unknown: "Not available",
+            readOnly: "Read-only inspection",
+            wrongEnterprise:
+              "Sign in to the required Store enterprise to author this listing",
+            reconciliationRequired:
+              "Original listing terms need owner reconciliation",
+            commandUnavailable: "This owner command is not available here",
+            authorProduct: "Author Product source",
+            openPublication: "Open publication workflow",
+            queue: "Listing requests",
+            detail: "Listing request",
+            rewardPrice: "Requested reward price",
+            requiredEnterprise: "Required Store enterprise",
+            reconciliation: "Original listing terms need owner reconciliation",
+            ownerUnavailable: "Owner inspection is unavailable",
+            enterpriseMismatch:
+              "Sign in to the required Store enterprise to author this listing",
+          },
+          states: {
+            OWNER_INSPECTION_REQUIRED: "Owner inspection required",
+            OWNER_UNAVAILABLE: "Owner unavailable",
+            AWAITING_AUTHORING: "Awaiting source authoring",
+            AWAITING_PUBLICATION: "Awaiting publication",
+            AWAITING_BINDING: "Awaiting digital binding",
+            LISTED: "Listed",
+            RECONCILIATION_REQUIRED: "Reconciliation required",
+          },
+          reconciliation: {
+            inspectLabel: "Inspect reconciliation",
+            withdrawLabel: "Withdraw request and retain hold",
+            reasonLabel: "Reason for withdrawal",
+            confirmLabel: "Confirm withdrawal and hold",
+            cancelLabel: "Keep request unchanged",
+            holdMessage:
+              "Request withdrawn; reconciliation pending. Economic effects remain unresolved and relisting is unavailable.",
+            uncertainMessage:
+              "Withdrawal result unconfirmed. Inspect the retained receipt before another action.",
+            unavailableMessage:
+              "Reconciliation is unavailable. The listing remains unresolved.",
+          },
+          authoring: {
+            reviewTitle: "Review Product source",
+            confirmLabel: "Create Product source",
+            cancelLabel: "Cancel",
+            workingLabel: "Creating Product source",
+            savedMessage:
+              "Product source created. Publication approval still required.",
+            uncertainMessage:
+              "Result unconfirmed. Inspect before another action.",
+            inspectLabel: "Inspect result",
+          },
+        },
+      },
+    },
     reviewWorkspace: {
       views: {
         "ewaste.overview": {
@@ -44,6 +138,7 @@ module.exports = {
   wasteSubmission: {
     requireEnvironmentalAssessment: true,
     metadataSuggestion: {
+      profile: "eWastePhotoMetadata",
       subjectLabel: "electronic item",
       allowBundles: true,
       manualReviewFallback: true,
@@ -60,10 +155,14 @@ module.exports = {
   wasteImpact: {
     calculation: {
       openAiEnvironmental: {
-        adapter: "openai", profile: "eWasteEnvironmentalAssessment",
-        geography: "Location unspecified; disclose the source geography and do not claim local applicability",
+        adapter: "openai",
+        profile: "eWasteEnvironmentalAssessment",
+        geography:
+          "Location unspecified; disclose the source geography and do not claim local applicability",
         maximumWeightKg: 10000,
-        referenceStartingPoints: ["https://www.epa.gov/system/files/documents/2023-12/warm_electronics_v16_dec.pdf"],
+        referenceStartingPoints: [
+          "https://www.epa.gov/system/files/documents/2023-12/warm_electronics_v16_dec.pdf",
+        ],
       },
       // EPA WARM v16, December 2023, management practices Exhibit 1-1. Values are tCO2e per US short ton.
       warm: {
@@ -104,18 +203,29 @@ module.exports = {
         // A disclosed comparison against the EPA reference mix, not an inferred bundle composition.
         bundleReferenceScenario: {
           enabled: true,
-          itemTypeCode: "UNKNOWN_ELECTRONIC_ITEM", categoryCode: "MIXED_ELECTRONICS",
-          category: "MIXED_ELECTRONICS", version: "MIXED_BUNDLE_REFERENCE_V1",
-          explanation: "This comparison uses the EPA mixed-electronics reference mix and your bundle’s total electronic-item weight. Your mix of cables, adapters or devices may differ from the reference mix. The range reflects weight uncertainty only; it does not cover differences in composition or local recycling processes.",
+          itemTypeCode: "UNKNOWN_ELECTRONIC_ITEM",
+          categoryCode: "MIXED_ELECTRONICS",
+          category: "MIXED_ELECTRONICS",
+          version: "MIXED_BUNDLE_REFERENCE_V1",
+          explanation:
+            "This comparison uses the EPA mixed-electronics reference mix and your bundle’s total electronic-item weight. Your mix of cables, adapters or devices may differ from the reference mix. The range reflects weight uncertainty only; it does not cover differences in composition or local recycling processes.",
         },
         referenceScenarios: {
           CHARGER: {
-            enabled: true, sizeClass: "SMALL", category: "ELECTRONIC_PERIPHERALS",
-            version: "SMALL_CHARGER_REFERENCE_V1", minKg: 0.05, maxKg: 0.15,
-            explanation: "Reference scenario: WARM electronic peripherals proxy, not a charger-specific factor. Assumed 50–150 g per small charger; modelling bounds, not measured weight or a statistical confidence interval.",
-            weightSource: "Samsung published adapter examples: 87.7 g (25W) and 92.5 g (45W); expanded modelling assumption 50–150 g.",
-            weightSourceRef: "https://www.samsung.com/ie/mobile-accessories/25w-power-adapter-black-ep-t2510xbeggb/",
-            comparisonSourceRef: "https://www.samsung.com/za/business/mobile-accessories/45w-power-adapter-black-ep-t4511nbegww/",
+            enabled: true,
+            sizeClass: "SMALL",
+            category: "ELECTRONIC_PERIPHERALS",
+            version: "SMALL_CHARGER_REFERENCE_V1",
+            minKg: 0.05,
+            maxKg: 0.15,
+            explanation:
+              "Reference scenario: WARM electronic peripherals proxy, not a charger-specific factor. Assumed 50–150 g per small charger; modelling bounds, not measured weight or a statistical confidence interval.",
+            weightSource:
+              "Samsung published adapter examples: 87.7 g (25W) and 92.5 g (45W); expanded modelling assumption 50–150 g.",
+            weightSourceRef:
+              "https://www.samsung.com/ie/mobile-accessories/25w-power-adapter-black-ep-t2510xbeggb/",
+            comparisonSourceRef:
+              "https://www.samsung.com/za/business/mobile-accessories/45w-power-adapter-black-ep-t4511nbegww/",
           },
         },
         itemTypes: {
@@ -141,12 +251,18 @@ module.exports = {
         // Presentation mappings reference provider metrics; they supply no factors or measurements.
         indicators: {
           recyclingInputMass: {
-            metricCode: "POTENTIAL_RECYCLING_INPUT_KG", label: "E-waste available for recycling",
-            unitOfMeasure: "KG", requirements: ["Item weight or a disclosed reference-weight assumption"],
+            metricCode: "POTENTIAL_RECYCLING_INPUT_KG",
+            label: "E-waste available for recycling",
+            unitOfMeasure: "KG",
+            requirements: [
+              "Item weight or a disclosed reference-weight assumption",
+            ],
           },
           recyclingItemCount: {
-            metricCode: "RECYCLING_INPUT_ITEM_COUNT", label: "Items in this assessment",
-            unitOfMeasure: "EACH", requirements: ["Item count"],
+            metricCode: "RECYCLING_INPUT_ITEM_COUNT",
+            label: "Items in this assessment",
+            unitOfMeasure: "EACH",
+            requirements: ["Item count"],
           },
           avoidedEmissions: {
             metricCode: "ESTIMATED_CO2E_SAVED_KG",
@@ -267,6 +383,9 @@ module.exports = {
       maximumProducts: 2000,
     },
     journey: {
+      contractVersion: 2,
+      arrivalRadiusMetres: 50,
+      conversationMaximumCharacters: 1500,
       maximumPositionAgeMs: 60000,
       captureTimeoutMs: 12000,
       nearestCentreCount: 3,
@@ -442,6 +561,20 @@ module.exports = {
         retentionStatus: "CUSTOMER_DRAFT_UNTIL_SUBMIT_OR_REPLACE",
         rejectedCleanupStatus: "OWNER_POLICY_REVIEW_REQUIRED",
         acceptedEvidenceRetentionStatus: "RETAIN_WITH_APPROVED_ASSET_EVIDENCE",
+        cleanup: {
+          enabled: false,
+          executionEnabled: false,
+          deletionEnabled: false,
+          batchSize: 25,
+          maximumBatchSize: 100,
+          maximumCollectionPoints: 500,
+          maximumEvidencePerSubmission: 100,
+          retention: {
+            abandonedDraftMs: null,
+            rejectedSubmissionMs: null,
+            replacedDraftMediaMs: null,
+          },
+        },
       },
       scenarios: {
         accept: { enabled: true },
@@ -455,21 +588,58 @@ module.exports = {
     },
     applicationCode: "EWASTE",
     assetCreationPolicyCode: "EWASTE_APPROVED_ASSET_STANDARD",
-    rewardValuationService: null,
-    targetAuthorities: {},
+    rewardValuation: null,
+    application: {
+      frameworkModuleName: "nodics.waste",
+      backendModuleName: "eWaste",
+    },
+    presentation: {},
+    targetAuthorities: {
+      engagement: {
+        runtimeRole: "ENGAGEMENT",
+      },
+      commerce: {
+        runtimeRole: "COMMERCE",
+      },
+      commerceStaged: {
+        runtimeRole: "COMMERCE_STAGED",
+      },
+      wcms: {
+        runtimeRole: "WCMS_STAGED",
+      },
+    },
     marketplace: {
       autoPublishListings: false,
+      listingHandoff: {
+        enabled: false,
+        reconciliation: { enabled: false },
+        pageSize: 25,
+        maximumPageSize: 100,
+        maximumInspectorSources: 1000,
+      },
       orderCodePrefix: "EWASTE_ORDER_",
       digitalOwnership: {
         enabled: false,
         qualified: false,
         allowedServicePrincipals: [],
-        targets: {},
+        customerEvidenceApiName: "/internal/customer-evidence",
+        targets: {
+          commerce: "COMMERCE",
+          loyalty: "LOYALTY",
+          profile: "PLATFORM",
+        },
       },
     },
     conversation: {
+      profile: "customerGuidance",
       rewardGuidance:
         "Rewards and environmental estimates depend on the configured programme and verified assessment. Review the current offer and settlement terms before confirming an action.",
+    },
+
+    outcomeCommunication: {
+      enabled: false,
+      connectionName: null,
+      templateCode: "WASTE_REVIEW_OUTCOME_V1",
     },
   },
 
@@ -480,6 +650,34 @@ module.exports = {
       },
       wasteInternal: {
         enabled: true,
+      },
+    },
+  },
+
+  product: {
+    runtimeRoleProfiles: {
+      COMMERCE_STAGED: {
+        marketplaceAuthoring: {
+          intentSource: { moduleName: "eWaste", runtimeRole: "WASTE" },
+        },
+      },
+    },
+  },
+  digitalCore: {
+    runtimeRoleProfiles: {
+      COMMERCE: {
+        digitalOwnership: {
+          owner: {
+            moduleName: "eWaste",
+            apiPrefix: "/internal/digital-sales",
+          },
+        },
+        ownershipEvidence: {
+          bindingAdmission: {
+            moduleName: "eWaste",
+            apiName: "/internal/digital-listings/plan",
+          },
+        },
       },
     },
   },

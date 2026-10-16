@@ -10,6 +10,7 @@
  */
 
 "use strict";
+const reviewDiagnostics = require("../utils/reviewDiagnostics");
 
 /** @module eWaste/service/defaultEWasteExperienceService @description Composes authenticated customer journeys through Waste, Profile, Media, Loyalty and Commerce authorities. @layer service @owner eWaste @override Project modules supply policy and presentation deltas through CONFIG. */
 /** Merchant integration preserves Commerce ownership. */
@@ -114,6 +115,11 @@ module.exports = {
     return this.unwrap(result);
   },
   /** Returns public taxonomy, Location-enriched centres and application presentation. */
+  publicJourney: function () {
+    const { reviewAssignment, ...publicSettings } = SERVICE.DefaultEWasteJourneyService.settings();
+    return publicSettings;
+  },
+  /** Projects domain collections and configured presentation without private review routing. */
   experience: async function (request) {
     const context = this.store().context(request);
     const [categories, itemTypes, centres] = await Promise.all([
@@ -129,6 +135,9 @@ module.exports = {
       ),
     ]);
     return {
+      application: this.settings().application || {},
+      presentation: this.settings().presentation || {},
+      journey: this.publicJourney(),
       categories: categories,
       itemTypes: itemTypes,
       centres: centres.records,
@@ -441,15 +450,58 @@ module.exports = {
   /** Resumes the immutable pending decision before repeating settlement with its existing references. */
   reviewRecovery: async function (request) {
     request.assetCreationPolicyCode = this.settings().assetCreationPolicyCode;
-    return this.finishReview(request, await SERVICE.DefaultWasteVerificationOperationService.recoverReview(request));
+    const result = await SERVICE.DefaultWasteVerificationOperationService.recoverReview(request);
+    return result.decisionBasis === "EVIDENCE_ONLY"
+      ? this.notifyEvidenceRejection(request, result)
+      : this.finishReview(request, result);
+  },
+  /** Rejects unusable evidence without verification, reward assessment or settlement orchestration. */
+  rejectEvidence: async function (request) {
+    return this.notifyEvidenceRejection(request, await SERVICE.DefaultWasteVerificationOperationService.rejectEvidence(request));
+  },
+  /** Delivers the existing rejected-review outcome only; notification recovery cannot repeat the decision. */
+  notifyEvidenceRejection: async function (request, result) {
+    if (result.decisionBasis !== "EVIDENCE_ONLY" || result.submission?.submissionStatus !== "REJECTED" || result.asset)
+      this.store().fail("ERR_WASTE_REVIEW_CONFLICT", "An evidence-only rejection result is required");
+    if (SERVICE.DefaultEWasteOutcomeCommunicationService) {
+      try {
+        result.submission = await SERVICE.DefaultEWasteOutcomeCommunicationService.notify(request, result.submission);
+      } catch (_) { result.notificationStatus = "PENDING"; }
+    }
+    return result;
   },
   /** Returns scoped paginated review search/counts through Waste ownership. */
   reviewSearch: function (request) {
     return SERVICE.DefaultWasteReviewWorkspaceService.search(request);
   },
   /** Returns one scope-checked review detail. */
-  reviewDetail: function (request) {
-    return SERVICE.DefaultWasteReviewWorkspaceService.detail(request);
+  reviewDetail: async function (request) {
+    const detail = await SERVICE.DefaultWasteReviewWorkspaceService.detail(request);
+    if (detail.submissionStatus === "APPROVED" &&
+      typeof SERVICE.DefaultEWasteRewardAssessmentOperationService?.savedConfirmed === "function") {
+      try {
+        await SERVICE.DefaultWasteOperationalAccessService.authorize(request, "waste.review.approve");
+        const submission = await this.store().one("wasteSubmission", request, detail.code);
+        await SERVICE.DefaultWasteOperationalAccessService.assertRecord(request, "waste.review.approve", submission);
+        try {
+          const scoped = { ...request, expectedRevision: detail.revision };
+          const asset = await SERVICE.DefaultWasteVerificationOperationService.approvedAsset(scoped, submission);
+          if (asset.metadata?.confirmedRewardAssessmentRef === undefined && asset.metadata?.settlementStatus === "PENDING") {
+            await SERVICE.DefaultEWasteRewardAssessmentOperationService.savedConfirmed(scoped, submission, asset);
+            detail.savedRewardRecovery = {
+              available: true,
+              message: "Original saved reward evidence is verified. Restore its reference and retry the original settlement without calculating a replacement reward.",
+            };
+          }
+        } catch (error) {
+          const diagnostic = reviewDiagnostics.savedRewardRecovery(error);
+          detail.savedRewardRecovery = { available: false, message: diagnostic.message, diagnostic };
+        }
+      } catch (_) { /* Read permission does not confer recovery authority. */ }
+    }
+    return SERVICE.DefaultEWasteOutcomeCommunicationService?.inspectDiagnostic
+      ? SERVICE.DefaultEWasteOutcomeCommunicationService.inspectDiagnostic(request, detail)
+      : detail;
   },
   /** Reads immutable assessment history through Waste's scoped owner. */
   impactRecover: function (request) { return SERVICE.DefaultWasteImpactAssessmentService.recover(request); },
@@ -513,6 +565,55 @@ module.exports = {
       );
     return assessment;
   },
+  /** Restores only a missing pointer to qualified immutable evidence, with actor audit and asset revision fencing. */
+  recoverSavedRewardReference: async function (request, submission, asset) {
+    const store = this.store();
+    const owner = SERVICE.DefaultEWasteRewardAssessmentOperationService;
+    if (request.confirmed !== true)
+      store.fail("ERR_WASTE_REVIEW_CONFLICT", "Explicit recovery confirmation is required");
+    if (typeof owner?.savedConfirmed !== "function")
+      store.fail("ERR_EWASTE_REWARD_ASSESSMENT_UNCONFIRMED", "The saved reward evidence owner is unavailable");
+    const assessment = await owner.savedConfirmed(request, submission, asset);
+    const currentSubmission = await store.one("wasteSubmission", request, submission.code);
+    store.revision(currentSubmission, request.expectedRevision);
+    if (currentSubmission.metadata?.reviewDigest !== submission.metadata?.reviewDigest ||
+      currentSubmission.metadata?.reviewKey !== submission.metadata?.reviewKey)
+      store.fail("ERR_EWASTE_REWARD_RECOVERY_CONFLICT", "The original approval changed during recovery");
+    await SERVICE.DefaultWasteOperationalAccessService.assertRecord(request, "waste.review.approve", currentSubmission);
+    const current = await SERVICE.DefaultWasteVerificationOperationService.approvedAsset(request, currentSubmission);
+    store.revision(current, asset.revision);
+    if (current.metadata?.confirmedRewardAssessmentRef !== undefined ||
+      current.metadata?.settlementStatus !== "PENDING" ||
+      JSON.stringify(current.ownerRef) !== JSON.stringify(asset.ownerRef))
+      store.fail("ERR_EWASTE_REWARD_RECOVERY_CONFLICT", "Asset settlement evidence changed during recovery");
+    await owner.assertRecoverySettlementEvidence(request, currentSubmission, current);
+    const reference = { module: "wasteReward", schema: "wasteRewardAssessment", code: assessment.code };
+    const recovered = await store.update("wasteAsset", request, current, {
+      metadata: {
+        ...current.metadata,
+        confirmedRewardAssessmentRef: reference,
+        confirmedReward: {
+          assessmentCode: assessment.code, assessmentType: assessment.assessmentType,
+          rewardScore: assessment.finalScore, scoreBandCode: assessment.scoreBandCode,
+          rewardTypeCode: assessment.rewardTypeCode, rewardAmount: assessment.rewardAmount,
+          policyCode: assessment.policyCode, policyVersion: assessment.policyVersion,
+          calculatedAt: assessment.calculatedAt,
+        },
+        confirmedRewardRecovery: {
+          assessmentRef: reference, sourceHash: assessment.sourceHash,
+          sourceRevision: assessment.sourceRevision, submissionRevision: submission.revision,
+          assetRevision: current.revision, verificationRef: assessment.sourceVerificationRef,
+          principalRef: { module: "profile", schema: "employee", code: request.authData.loginId },
+          recoveredAt: new Date().toISOString(),
+          idempotencyKey: assessment.code + ":restore-reference",
+        },
+      },
+    });
+    if (recovered?.metadata?.confirmedRewardAssessmentRef?.code !== assessment.code ||
+      recovered?.metadata?.confirmedRewardRecovery?.sourceHash !== assessment.sourceHash)
+      store.fail("ERR_EWASTE_REWARD_RECOVERY_CONFLICT", "Saved reference recovery could not be confirmed");
+    return recovered;
+  },
   /** Settles exactly one persisted confirmed Rules outcome through the Loyalty-owned wallet API. */
   settle: async function (request, asset) {
     const assessment = await this.confirmedRewardAssessment(request, asset);
@@ -524,8 +625,6 @@ module.exports = {
         );
       return asset;
     }
-    const rules = this.settings().rewardRules || {};
-    const outcome = assessment.rewardOutcome || {};
     const amount = String(assessment.rewardAmount);
     const numericAmount = Number(amount);
     if (!Number.isFinite(numericAmount) || numericAmount < 0)
@@ -536,13 +635,16 @@ module.exports = {
     let wallet;
     let ledgerReference;
     if (numericAmount > 0) {
+      const owner = SERVICE.DefaultEWasteRewardAssessmentOperationService;
+      const terms = owner.recordedSettlementTerms(assessment);
+      const beneficiary = await owner.settlementBeneficiary(request, asset, assessment);
       wallet = await this.remote(
         request,
         "loyaltyApi",
         "loyalty",
         "/wallets",
         "POST",
-        { ownerType: "CUSTOMER", ownerCode: asset.ownerRef.code },
+        { ownerType: "CUSTOMER", ownerCode: beneficiary.code },
       );
       if (!wallet?.code)
         this.store().fail(
@@ -557,10 +659,10 @@ module.exports = {
         "POST",
         {
           walletCode: wallet && wallet.code,
-          programCode: outcome.programCode || rules.loyaltyProgramCode || "default",
+          programCode: terms.programCode,
           rewardTypeCode: assessment.rewardTypeCode,
           amount: amount,
-          scale: outcome.scale === undefined ? rules.rewardScale : outcome.scale,
+          scale: terms.scale,
           sourceType: "WASTE_REWARD_ASSESSMENT",
           sourceCode: assessment.code,
           targetType: "WASTE_ASSET",
@@ -635,27 +737,47 @@ module.exports = {
         "ERR_WASTE_REVIEW_CONFLICT",
         "Only an approved submission can retry settlement",
       );
-    const asset = await this.store().one(
-      "wasteAsset",
-      request,
-      "WASTE_ASSET_" + submission.code,
-    );
-    if (!asset)
-      this.store().fail(
-        "ERR_WASTE_RECORD_NOT_FOUND",
-        "Approved asset was not found",
-      );
+    let asset = await SERVICE.DefaultWasteVerificationOperationService.approvedAsset(request, submission);
     try {
+      try {
+        await this.confirmedRewardAssessment(request, asset);
+      } catch (error) {
+        if (error?.code !== "ERR_EWASTE_REWARD_ASSESSMENT_REQUIRED" ||
+          asset.metadata?.confirmedRewardAssessmentRef !== undefined) throw error;
+        asset = await this.recoverSavedRewardReference(request, submission, asset);
+        await this.confirmedRewardAssessment(request, asset);
+      }
+    } catch (error) {
+      const diagnostic = reviewDiagnostics.reward("REWARD_ASSESSMENT", error);
       return {
-        submission,
-        asset: await this.settle(request, asset),
+        submission: await this.saveReviewDiagnostic(
+          request,
+          submission,
+          diagnostic,
+        ),
+        settlementStatus: "BLOCKED",
+        settlementMessage: diagnostic.message,
+        reviewDiagnostic: diagnostic,
+      };
+    }
+    try {
+      const settled = await this.settle(request, asset);
+      return {
+        submission: await this.saveReviewDiagnostic(request, submission, null),
+        asset: settled,
         settlementStatus: "COMPLETED",
       };
-    } catch {
+    } catch (error) {
+      const diagnostic = reviewDiagnostics.reward("REWARD_SETTLEMENT", error);
       return {
-        submission,
+        submission: await this.saveReviewDiagnostic(
+          request,
+          submission,
+          diagnostic,
+        ),
         settlementStatus: "PENDING",
-        settlementMessage: "Approval is saved. Reward settlement needs retry.",
+        settlementMessage: diagnostic.message,
+        reviewDiagnostic: diagnostic,
       };
     }
   },
@@ -667,83 +789,168 @@ module.exports = {
     return this.finishReview(request, result);
   },
   /** Delegates explicit notification uncertainty resolution. */
-  outcomeResolve:function(request){return SERVICE.DefaultEWasteOutcomeCommunicationService.resolve(request);},
+  outcomeResolve: function (request) {
+    return SERVICE.DefaultEWasteOutcomeCommunicationService.resolve(request);
+  },
   /** Retries only notification for a scope-authorized recorded decision through the Communication adapter. */
-  outcomeRetry:function(request){return SERVICE.DefaultEWasteOutcomeCommunicationService.retry(request);},
+  outcomeRetry: function (request) {
+    return SERVICE.DefaultEWasteOutcomeCommunicationService.retry(request);
+  },
+  /** Saves a content-free stage projection on the original recorded decision, not another lifecycle or error log. */
+  saveReviewDiagnostic: async function (request, submission, diagnostic) {
+    const store = this.store(),
+      current = await store.one("wasteSubmission", request, submission.code);
+    if (
+      !current ||
+      current.submissionStatus !== submission.submissionStatus ||
+      current.metadata?.reviewKey !== submission.metadata?.reviewKey
+    )
+      store.fail(
+        "ERR_WASTE_REVIEW_CONFLICT",
+        "The recorded decision changed during recovery",
+      );
+    if (
+      JSON.stringify(current.metadata?.reviewDiagnostic || null) ===
+      JSON.stringify(diagnostic)
+    )
+      return current;
+    return store.update("wasteSubmission", request, current, {
+      metadata: { ...current.metadata, reviewDiagnostic: diagnostic },
+    });
+  },
   /** Completes eWaste post-review orchestration. Confirmed reward assessment is recorded before the existing settlement seam is invoked. */
   finishReview: async function (request, result) {
-    if (result.asset && result.submission && SERVICE.DefaultEWasteRewardAssessmentOperationService) {
+    let diagnostic;
+    if (result.asset && result.submission) {
       try {
-        const verificationCode =
-          result.submission.verificationRef && result.submission.verificationRef.code;
-        const verification = verificationCode
-          ? await this.store().one("wasteVerification", request, verificationCode)
-          : undefined;
-        const facts =
-          (result.submission.metadata && result.submission.metadata.reviewedFacts) ||
-          (verification && verification.verifiedFacts) ||
-          result.submission.confirmedFacts ||
-          result.submission.submittedFacts ||
-          {};
-        const assessment =
-          await SERVICE.DefaultEWasteRewardAssessmentOperationService.assessConfirmed({
-            ...request,
-            submission: result.submission,
-            asset: result.asset,
-            facts,
-            descriptor:
-              result.submission.metadata && result.submission.metadata.suggestion,
-            impact: result.impact ||
-              (result.submission.metadata && result.submission.metadata.approvedEstimate),
-            verification,
-            sourceRevision: result.submission.revision,
-            idempotencyKey:
-              (request.idempotencyKey || result.submission.code) +
-              ":confirmed-reward",
-          });
-        if (assessment && assessment.code) {
-          const summary = {
-            assessmentCode: assessment.code,
-            assessmentType: assessment.assessmentType,
-            rewardScore: assessment.finalScore,
-            scoreBandCode: assessment.scoreBandCode,
-            rewardTypeCode: assessment.rewardTypeCode,
-            rewardAmount: assessment.rewardAmount,
-            policyCode: assessment.policyCode,
-            policyVersion: assessment.policyVersion,
-            calculatedAt: assessment.calculatedAt,
-          };
-          result.asset = await this.store().update("wasteAsset", request, result.asset, {
-            metadata: {
-              ...(result.asset.metadata || {}),
-              confirmedRewardAssessmentRef: {
-                module: "wasteReward",
-                schema: "wasteRewardAssessment",
-                code: assessment.code,
+        if (result.asset.metadata?.confirmedRewardAssessmentRef) {
+          result.rewardAssessment = await this.confirmedRewardAssessment(
+            request,
+            result.asset,
+          );
+        } else {
+          if (result.replayed === true)
+            this.store().fail(
+              "ERR_EWASTE_REWARD_ASSESSMENT_REQUIRED",
+              "Completed review replay cannot evaluate a replacement Rules policy",
+            );
+          if (!SERVICE.DefaultEWasteRewardAssessmentOperationService)
+            this.store().fail(
+              "ERR_EWASTE_REWARD_ASSESSMENT_UNCONFIRMED",
+              "Confirmed reward assessment owner is unavailable",
+            );
+          const verificationCode =
+            result.submission.verificationRef &&
+            result.submission.verificationRef.code;
+          const verification = verificationCode
+            ? await this.store().one(
+                "wasteVerification",
+                request,
+                verificationCode,
+              )
+            : undefined;
+          const facts =
+            (result.submission.metadata &&
+              result.submission.metadata.reviewedFacts) ||
+            (verification && verification.verifiedFacts) ||
+            result.submission.confirmedFacts ||
+            result.submission.submittedFacts ||
+            {};
+          const assessment =
+            await SERVICE.DefaultEWasteRewardAssessmentOperationService.assessConfirmed(
+              {
+                ...request,
+                submission: result.submission,
+                asset: result.asset,
+                facts,
+                descriptor:
+                  result.submission.metadata &&
+                  result.submission.metadata.suggestion,
+                impact:
+                  result.impact ||
+                  (result.submission.metadata &&
+                    result.submission.metadata.approvedEstimate),
+                verification,
+                sourceRevision: result.submission.revision,
+                idempotencyKey:
+                  (request.idempotencyKey || result.submission.code) +
+                  ":confirmed-reward",
               },
-              confirmedReward: summary,
-            },
-          });
-          result.rewardAssessment = assessment;
+            );
+          if (assessment && assessment.code) {
+            const summary = {
+              assessmentCode: assessment.code,
+              assessmentType: assessment.assessmentType,
+              rewardScore: assessment.finalScore,
+              scoreBandCode: assessment.scoreBandCode,
+              rewardTypeCode: assessment.rewardTypeCode,
+              rewardAmount: assessment.rewardAmount,
+              policyCode: assessment.policyCode,
+              policyVersion: assessment.policyVersion,
+              calculatedAt: assessment.calculatedAt,
+            };
+            result.asset = await this.store().update(
+              "wasteAsset",
+              request,
+              result.asset,
+              {
+                metadata: {
+                  ...(result.asset.metadata || {}),
+                  confirmedRewardAssessmentRef: {
+                    module: "wasteReward",
+                    schema: "wasteRewardAssessment",
+                    code: assessment.code,
+                  },
+                  confirmedReward: summary,
+                },
+              },
+            );
+            result.rewardAssessment = assessment;
+          } else
+            this.store().fail(
+              "ERR_EWASTE_REWARD_ASSESSMENT_UNCONFIRMED",
+              "Confirmed reward evidence was not returned",
+            );
         }
       } catch (error) {
         // Approval remains authoritative even when a reward programme is not yet
         // configured. Settlement accepts only persisted CONFIRMED evidence.
         result.rewardAssessmentStatus = "PENDING";
-        result.rewardAssessmentMessage =
-          "Approval is saved. Confirmed reward assessment needs configuration or retry.";
+        diagnostic = reviewDiagnostics.reward("REWARD_ASSESSMENT", error);
+        result.rewardAssessmentMessage = diagnostic.message;
       }
     }
-    if (result.asset) {
+    if (result.asset && !diagnostic) {
       try {
         result.asset = await this.settle(request, result.asset);
       } catch (error) {
         result.settlementStatus = "PENDING";
-        result.settlementMessage =
-          "Approval is saved. Reward settlement needs retry.";
+        diagnostic = reviewDiagnostics.reward("REWARD_SETTLEMENT", error);
+        result.settlementMessage = diagnostic.message;
+      }
+    } else if (result.asset && diagnostic) {
+      result.settlementStatus = "BLOCKED";
+      result.settlementMessage = diagnostic.message;
+    }
+    if (result.submission && result.asset) {
+      result.submission = await this.saveReviewDiagnostic(
+        request,
+        result.submission,
+        diagnostic || null,
+      );
+      if (diagnostic) result.reviewDiagnostic = diagnostic;
+    }
+    if (result.submission && SERVICE.DefaultEWasteOutcomeCommunicationService) {
+      try {
+        result.submission =
+          await SERVICE.DefaultEWasteOutcomeCommunicationService.notify(
+            request,
+            result.submission,
+          );
+      } catch (error) {
+        result.notificationStatus = "PENDING";
       }
     }
-    if(result.submission && SERVICE.DefaultEWasteOutcomeCommunicationService) { try {result.submission=await SERVICE.DefaultEWasteOutcomeCommunicationService.notify(request,result.submission);}catch(error){result.notificationStatus='PENDING';} }
     return result;
   },
 };

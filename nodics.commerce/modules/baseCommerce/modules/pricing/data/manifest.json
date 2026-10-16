@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "pricing",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "pricing permissionCatalogue",
+      "description": "Explicit pricing identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "pricing",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/pricingPermissionHeader.js": "0540d5f7ef7e086b72b57eed20f20a28a2b58334009e7040825515a9859add90",
+        "init-v001/records/identity/pricingPermissionData.js": "2b0f36e6d05a013b1a31df8805b1cccf2b90895420e7b3a1e3067509a3d2875e"
+      }
+    },
     "pricingPublicationWorkflow": {
       "kind": "DATA_RELEASE",
       "selectionPolicy": "EXPLICIT",

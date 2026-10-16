@@ -106,8 +106,14 @@ module.exports = {
         const pricing = this.enrichmentPolicy('pricing');
         const priceService = SERVICE[pricing.serviceName || 'DefaultCustomerPriceSummaryService'];
         this.assertConsumerProvider('pricing', 'DefaultPricingPublicationService', request, request, pricing, priceService);
-        const products = new Map();
+        const products = new Map(), references = new Map();
         for (const row of rows) {
+            if (typeof row.publicationVersion !== 'string' || !/^[a-f0-9]{64}$/.test(row.publicationVersion) ||
+                references.has(row.productCode) && references.get(row.productCode).targetVersion !== row.publicationVersion) {
+                throw new Error('Conflicting retained Product version');
+            }
+            references.set(row.productCode, { productCode: row.productCode, storeCode: row.storeCode,
+                targetVersion: row.publicationVersion });
             const skus = products.get(row.productCode) || new Set();
             Object.values((row.payload || {}).variantSkuMap || {}).filter(sku => typeof sku === 'string' && sku)
                 .forEach(sku => skus.add(sku));
@@ -140,7 +146,7 @@ module.exports = {
         }
         const [prices, availability] = await Promise.all([
             pricing.enabled !== false && priceService && typeof priceService.summarize === 'function'
-                ? priceService.summarize({ ...context, productCodes: [...products.keys()],
+                ? priceService.summarize({ ...context, productCodes: [...products.keys()], productReferences: [...references.values()],
                     currency, quantity: pricing.defaultQuantity || '1' }) : {},
             this.consumerAvailability({ ...request, authData: auth }, rows)
         ]);
@@ -179,17 +185,39 @@ module.exports = {
             ? await service.summarize({ ...context, products: [...physical].map(([productCode, skus]) =>
                 ({ productCode, skus: [...skus] })) }) : {};
         const summaries = { ...result };
+        const authority = request.authData || {}, admission = SERVICE.DefaultPromotionDistributionAdmissionService;
+        const reads = new Map(), publicProducts = [];
         for (const [productCode, row] of digital) {
-            // Retained catalogue scope must not manufacture access-token enterprise authority for a digital owner.
-            const authority = request.authData || {}, admission = SERVICE.DefaultPromotionDistributionAdmissionService;
             const read = { ...context, authData: structuredClone(authority), productCode, quantity: '1' };
+            reads.set(productCode, read);
             const publicRead = row.payload?.localizedAttributes?.digitalDeliveryType === 'COUPON_CODE' &&
                 authority.isSystem !== true &&
                 (authority.principalType === undefined || authority.principalType === 'anonymous' ||
                     ['human', 'customer'].includes(authority.principalType) && !authority.enterpriseCode && !authority.entCode);
-            const admitted = publicRead && admission?.selected(read) ? await admission.publicAvailability(read) : undefined;
+            if (publicRead && admission?.selected(read)) publicProducts.push(productCode);
+        }
+        const publicSummaries = new Map();
+        if (publicProducts.length) {
+            if (typeof admission.publicAvailabilityBatch !== 'function') throw new Error('Promotion browsing batch owner is unavailable');
+            const batch = await admission.publicAvailabilityBatch({ ...context, authData: structuredClone(authority), quantity: '1' }, publicProducts);
+            if (!(batch instanceof Map) || batch.size !== publicProducts.length ||
+                publicProducts.some(code => !batch.has(code))) throw new Error('Promotion browsing batch is incomplete');
+            for (const code of publicProducts) {
+                const summary = batch.get(code);
+                if (!summary || typeof summary !== 'object' || Array.isArray(summary) ||
+                    ![Object.prototype, null].includes(Object.getPrototypeOf(summary)) ||
+                    Reflect.ownKeys(summary).length !== 2 ||
+                    typeof Object.getOwnPropertyDescriptor(summary, 'available')?.value !== 'boolean' ||
+                    Object.getOwnPropertyDescriptor(summary, 'status')?.value !== (summary.available ? 'IN_STOCK' : 'OUT_OF_STOCK'))
+                    throw new Error('Promotion browsing batch summary is invalid');
+                publicSummaries.set(code, { available: summary.available, status: summary.status });
+            }
+        }
+        for (const [productCode, row] of digital) {
+            // Retained catalogue scope must not manufacture access-token enterprise authority for a digital owner.
+            const read = reads.get(productCode), admitted = publicSummaries.get(productCode);
             let availability = admitted;
-            if (admitted === undefined) {
+            if (!publicSummaries.has(productCode)) {
                 try {
                     availability = await digitalService.availabilityFromProjection(read, row);
                 } catch (error) {

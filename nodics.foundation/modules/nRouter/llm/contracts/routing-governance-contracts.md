@@ -33,6 +33,16 @@ Never derive this limit from request bodies, headers or query parameters.
 
 ## Token-type boundaries
 
+Principal authority comes from authenticated claims or persisted hydrated group
+records. The router does not add permissions or parent groups from migration
+`groupTargets` or route `groupPermissions`. Configuration selects the route's
+required permission, not the caller's grants. Removing persisted permissions or
+parent relationships must remain effective even while old configuration exists.
+Runtime-bound tokens retain their explicit module/permission ceilings. Trusted
+system contexts retain their explicit grants; a system marker alone grants none.
+See `test/routeActionAuthorization.test.js` for persisted-parent removal,
+inactive-parent, configuration-fallback denial and system-claim regressions.
+
 OpenAPI is a projection of the effective route declarations, not an independent
 authorization registry. Preserve both string and object `apiExposure` values in
 operation `x-nodics` metadata. Keep absence distinct from an explicit category;

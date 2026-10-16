@@ -1,5 +1,13 @@
 # database Agent Contract
 
+Generated single-save failures must use the canonical logger, not direct console
+output. Resolve sensitivity through nConfig's private request owner; pass only a
+fixed status diagnostic for sensitive requests while preserving original errors
+through `process.error` and ordinary canonical logging. Caller flags are not
+privacy proof. Run `test/privateModelSaveDiagnosticsContract.test.js` against base
+and merged vService selecting the base initializer. See
+[failure diagnostics](llm/contracts/README.md#single-save-failure-diagnostics).
+
 Private `internalPersistence: 'DURABLE_JOURNAL'` requests require qualified
 provider capability, insert-only saves or exact conditional updates, and strict
 acknowledgements. Preserve normal generated access/validation; reject transactions,

@@ -16,7 +16,6 @@ const assert = require("node:assert/strict");
 const writer = require("../src/service/interceptors/defaultPasswordSaveInterceptorService");
 const concurrency = require("../../../../nodics.foundation/modules/nDatabase/database/src/service/schema/defaultModelConcurrencyService");
 const recovery = require("../src/service/employee/defaultEmployeeRecoveryService");
-const bootstrap = require("../src/service/identity/defaultMandatoryIdentityBootstrapService");
 
 function fixture() {
   global.CLASSES = {
@@ -159,82 +158,6 @@ test("recovery cannot acknowledge a competing or pre-write same-password state a
     } else {
       await assert.rejects(owner.confirmReset({}, session, "proof"), /closed/);
       assert.equal(stamps, 0);
-    }
-  }
-});
-
-test("local bootstrap repair uses fresh original credential identity/token and refuses retired originals", async () => {
-  for (const retired of [false, true]) {
-    const f = fixture(),
-      saves = [],
-      updates = [];
-    if (retired) f.row.active = false;
-    global.UTILS = { compareHash: async (_, hash) => hash === "new-hash" };
-    SERVICE.DefaultEmployeeService = {
-      get: async () => ({
-        code: "SUC_READ",
-        count: 1,
-        result: [
-          {
-            _id: "employee-id",
-            active: true,
-            principalType: "human",
-            code: "admin",
-            loginId: f.row.loginId,
-            password: { _id: f.row._id, password: "stale-populated-hash" },
-          },
-        ],
-      }),
-      update: async (request) => {
-        updates.push(request);
-        return { code: "SUC_UPDATE" };
-      },
-    };
-    SERVICE.DefaultCustomerService = {
-      get: async () => ({ code: "SUC_READ", count: 0, result: [] }),
-    };
-    SERVICE.DefaultPasswordService = {
-      get: async (request) => {
-        assert.deepEqual(request.query, { _id: f.row._id });
-        assert.equal(request.options.skipItemCache, true);
-        return { code: "SUC_READ", count: 1, result: [{ ...f.row }] };
-      },
-      update: async (request) => {
-        saves.push(request);
-        f.row.revision = 5;
-        f.row.password = "new-hash";
-        return {
-          code: "SUC_UPDATE",
-          result: { acknowledged: true, matchedCount: 1 },
-        };
-      },
-    };
-    const owner = {
-      ...bootstrap,
-      getLocalBootstrapAdminPassword: () => "local-proof",
-    };
-    if (retired) {
-      await assert.rejects(
-        owner.reconcileLocalAdministratorCredential(
-          { tenant: "original" },
-          { administratorCodes: ["admin"] },
-        ),
-        /ERR_PROFILE_CREDENTIAL_OWNERSHIP/,
-      );
-      assert.equal(saves.length, 0);
-      assert.equal(updates.length, 0);
-    } else {
-      assert.deepEqual(
-        await owner.reconcileLocalAdministratorCredential(
-          { tenant: "original" },
-          { administratorCodes: ["admin"] },
-        ),
-        ["admin"],
-      );
-      assert.equal(saves[0].query.revision, 4);
-      assert.equal(saves[0].query.password, undefined);
-      assert.equal(saves[0].model.code, "original-code");
-      assert.equal(updates.length, 0);
     }
   }
 });

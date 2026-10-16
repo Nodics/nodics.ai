@@ -158,6 +158,8 @@ test("controller allowlists route channel/proof and prevents response caching", 
 test("remote proof and transport failures retain domain-owned HTTP error categories", async () => {
   for (const [remote, expected] of [
     ["ERR_PROFILE_EXTERNAL_ASSERTION", "ERR_EWASTE_CHANNEL_IDENTITY"],
+    ["ERR_PROFILE_EXTERNAL_UNAVAILABLE", "ERR_EWASTE_CHANNEL_UNAVAILABLE"],
+    ["ERR_PROFILE_TELEGRAM_CONFIGURATION_REQUIRED", "ERR_EWASTE_CHANNEL_CONFIGURATION_REQUIRED"],
     ["ETIMEDOUT", "ERR_EWASTE_CHANNEL_UNAVAILABLE"],
   ]) {
     SERVICE.DefaultModuleService.invokeModule = async () => {
@@ -165,6 +167,31 @@ test("remote proof and transport failures retain domain-owned HTTP error categor
     };
     await assert.rejects(service.enter(req()), { code: expected });
   }
+});
+
+test("actual Profile credential failure survives the remote public envelope as a safe domain configuration error", async () => {
+  const telegram = require("../../../../../../nodics.platform/modules/profile/src/service/authentication/defaultTelegramIdentityProviderService");
+  const profileDefinitions = require("../../../../../../nodics.platform/modules/profile/src/utils/statusDefinitions");
+  const domainDefinitions = require("../src/utils/statusDefinitions");
+  const response = require("../../../../../../nodics.foundation/modules/nRouter/src/service/handlers/response/defaultJsonResponseHandlerService");
+  const NodicsError = require("../../../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError");
+  const previousGet = CONFIG.get;
+  CONFIG.get = key => key === "defaultErrorCodes" ? { NodicsError: "ERR_SYS_00000" } : previousGet(key);
+  SERVICE.DefaultStatusService = { get: code => profileDefinitions[code] || domainDefinitions[code] || { code: "500", message: "Error" } };
+  CLASSES.NodicsError = NodicsError;
+  SERVICE.DefaultModuleService.invokeModule = async () => {
+    try { telegram.verify({ proof: "private-launch-proof", application: { credentialReference: "unconfigured-reference" }, policy: {} }); }
+    catch (error) { throw response.publicError(error); }
+  };
+  await assert.rejects(service.enter(req()), error => {
+    const envelope = response.publicError(error);
+    assert.equal(envelope.code, "ERR_EWASTE_CHANNEL_CONFIGURATION_REQUIRED");
+    assert.equal(envelope.responseCode, "503");
+    assert.equal(JSON.stringify(envelope).includes("private-launch-proof"), false);
+    assert.equal(JSON.stringify(envelope).includes("unconfigured-reference"), false);
+    assert.equal(envelope.runtimeConfigurationStatus, undefined);
+    return true;
+  });
 });
 
 test("real Nodics error normalization preserves the local HTTP 409 status", async () => {

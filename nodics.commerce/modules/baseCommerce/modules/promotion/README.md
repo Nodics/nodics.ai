@@ -1,5 +1,11 @@
 # Operational Release Admission
 
+Public coupon catalogue browsing uses an internal Product-bound availability
+batch with fresh bounded Profile references before and after work. Each Product
+retains canonical visibility, installed guards, receipt/policy/consent and stock
+checks. There is no auth cache, public flag or financial mutation change. See
+[batch boundaries and failure behavior](llm/contracts/trusted-distribution-read-admission.md#bounded-public-browsing-batch).
+
 Exact Product distribution reads now have a loader-visible, source-only
 [trusted/public admission owner](llm/contracts/trusted-distribution-read-admission.md).
 It preserves signed caller authority, admits no general service/anonymous scope,
@@ -20,11 +26,25 @@ single-use stock during a failed release repair.
 
 ## Promotion
 
+The existing Promotion Workspace and Promotions pages use
+[owner-scoped campaign discovery and search](llm/contracts/promotion-lifecycle-and-publication.md#ordinary-business-browsing).
+View, Edit and FullControl can browse their signed enterprise without generic
+schema grants. Edit/FullControl use the separate `commerce.promotion.draft.write`
+permission for qualified Staged, CURRENT-versioned draft metadata create/update.
+They do not receive legacy `commerce.promotion.manage`, transitions, approval,
+budget mutations or coupon issuance. FullControl retains the independently scoped
+seller-management permission. Unqualified deployments remain browse-only.
+This is not a financial/policy editor or coupon-secret viewer; the eight planned
+specialist pages remain disabled. See the owner contract for command shapes,
+protected fields, readback evidence and controlled installed-data adoption.
+
 Exact ITEM promises use the [verified ITEM contract](llm/contracts/verified-item-benefits.md).
-Its separately selected LOCAL simulation is explicitly unverified and cannot
+Its separately selected SIMULATION mode is explicitly unverified and cannot
 qualify delivery or move stock. Already-redeemed benefit reversals remain disabled
 in the approved local-demo scope; unused purchase and original asset refunds keep
 their separate owner policies.
+Simulation requires the real Fulfillment owner's exact environment allowlist;
+LOCAL_SIMULATION is historical evidence vocabulary, not an execution selector.
 
 Selectable accelerator setup uses the existing nImport installer
 `PROMOTION_CAMPAIGN_ISSUANCE` and immutable `promotionSetup.json` instructions.

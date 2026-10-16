@@ -26,6 +26,7 @@ module.exports = {
   },
 
   emsClient: {
+    processRetrySleepTime: 2000,
     logFailedMessages: false,
     messageHandlers: {
       jsonMessageHandler: "jsonMessageHandlerPipeline",

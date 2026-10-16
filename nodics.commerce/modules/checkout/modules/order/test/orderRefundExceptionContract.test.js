@@ -11,7 +11,7 @@
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 "use strict";
-/** @module order/test/orderRefundExceptionContract @description Exact Local adjudication, immutable policy, private phase admission and original financial-owner integration. @layer test @owner order */
+/** @module order/test/orderRefundExceptionContract @description Exact deployment-selected adjudication, immutable policy, private phase admission and original financial-owner integration. @layer test @owner order */
 const test = require("node:test"), assert = require("node:assert/strict"), { isDeepStrictEqual } = require("node:util");
 const exception = require("../src/service/defaultOrderRefundExceptionService");
 const recovery = require("../src/service/defaultOrderRefundRecoveryService");
@@ -117,19 +117,22 @@ test("default off, private management route independently requires exception per
   assert.deepEqual(route.cache, { enabled: false });
 });
 
-test("exception permission is recognized by real Profile group governance without default assignment", t => {
-  const auth = require("../../../../../../nodics.foundation/modules/nAuth/config/properties");
+test("exception permission is recognized by real Profile group governance without default assignment", async t => {
+  const identityCatalogueFixture = require("../../../../../../nodics.platform/modules/profile/test/helpers/identityCatalogueFixture");
   const governance = require("../../../../../../nodics.platform/modules/profile/src/service/group/defaultUserGroupGovernanceService");
-  const permission = "commerce.refund.exception.adjudicate", previous = global.CONFIG;
-  t.after(() => { global.CONFIG = previous; });
-  global.CONFIG = { get: key => key === "identityGovernance" ? auth.identityGovernance : undefined };
-  assert(auth.identityGovernance.permissionCatalog.includes(permission));
-  governance.validatePermissions([{ permissions: [permission] }]);
-  for (const group of Object.values(auth.identityGovernance.migration.groupTargets))
+  const permission = "commerce.refund.exception.adjudicate", previous = global.SERVICE;
+  t.after(() => { if (previous === undefined) delete global.SERVICE; else global.SERVICE = previous; });
+  const permissionCodes = identityCatalogueFixture.records("Permission").filter(row => row.active === true).map(row => row.code);
+  const groups = identityCatalogueFixture.records("UserGroup");
+  global.SERVICE = { DefaultIdentityCatalogueService: identityCatalogueFixture.catalogue(undefined, permissionCodes) };
+  assert(permissionCodes.includes(permission));
+  await governance.validatePermissions([{ permissions: [permission] }]);
+  assert(groups.length > 0, "Persisted default groups must be inspected");
+  for (const group of groups)
     assert(!group.permissions?.includes(permission));
 });
 
-test("exact Local adjudication is immutable, audited, decimal-normalized and has no financial effects", async () => {
+test("exact selected adjudication is immutable, audited, decimal-normalized and has no financial effects", async () => {
   const { request, state } = fixture(), before = copy({ unit: state.unit, coupon: state.coupon, order: state.order });
   const result = await exception.adjudicate(request);
   assert.deepEqual(result, { caseCode: "CASE", status: "SUBMITTED", revision: 1, exceptionCommandKey: request.idempotencyKey });
@@ -138,6 +141,53 @@ test("exact Local adjudication is immutable, audited, decimal-normalized and has
   assert.deepEqual(await exception.adjudicate(request), result); assert.equal(state.writes.length, 1);
   assert.deepEqual({ unit: state.unit, coupon: state.coupon, order: state.order }, before);
   assert.equal(state.payments, 0); assert.equal(state.revokes, 0); assert.equal(JSON.stringify(result).includes("private"), false);
+});
+
+test("explicit deployment selection works across environment classes without changing unused checks or immutable audit kind", async () => {
+  for (const classification of ["LOCAL", "PRODUCTION", "STAGING", "QA", undefined]) {
+    const { request, state } = fixture();
+    state.environment = classification;
+    const result = await exception.adjudicate(request);
+    assert.equal(result.status, "SUBMITTED");
+    assert.equal(state.row.evidence.refundPolicyException.kind, "LOCAL_UNUSED_COUPON_MISSING_REFUND_POLICY");
+    assert.equal(state.unit.claimStatus, "UNCLAIMED");
+    assert.equal(state.payments, 0);
+    assert.equal(state.revokes, 0);
+  }
+});
+
+test("historical audit survives classification changes only under the same current exact deployment selection", async () => {
+  const { request, state } = fixture();
+  await exception.adjudicate(request);
+  const original = copy(state.row.evidence.refundPolicyException);
+  state.environment = "PRODUCTION";
+  assert.equal((await exception.validate(request, "preview")).commandKey, request.idempotencyKey);
+  assert.deepEqual(state.row.evidence.refundPolicyException, original);
+  assert.equal(state.writes.length, 1);
+  state.environmentName = "otherDeployment";
+  await assert.rejects(exception.validate(request, "preview"), failure);
+  assert.equal(state.payments, 0);
+  assert.equal(state.revokes, 0);
+});
+
+test("exact canonical selection rejects malformed allowlists and never falls back from an invalid selected environment", async () => {
+  for (const names of [undefined, [], "testLocal", ["*"], ["testLocal", "testLocal"], ["testLocal", " "],
+    ["testLocal", "x".repeat(129)], ["testLocal", 12], Object.assign(Array(2), { 0: "testLocal" }),
+    Array.from({ length: 17 }, (_, index) => index ? "other" + index : "testLocal")]) {
+    const { request, state } = fixture(); state.config.environmentNames = names;
+    await assert.rejects(exception.adjudicate(request), failure);
+    assert.equal(state.profileReads, 0); assert.equal(state.writes.length, 0);
+  }
+  for (const value of [undefined, null, true, {}, [], "", "foreign", " testLocal"]) {
+    const { request, state } = fixture();
+    global.NODICS = { getSelectedEnvironmentName: () => value, getEnvironmentName: () => "testLocal" };
+    await assert.rejects(exception.adjudicate(request), failure);
+    assert.equal(state.profileReads, 0); assert.equal(state.writes.length, 0);
+  }
+  const { request, state } = fixture();
+  state.config.approvals = Object.assign(Array(2), { 0: state.pin });
+  await assert.rejects(exception.adjudicate(request), failure);
+  assert.equal(state.writes.length, 0); assert.equal(state.payments, 0);
 });
 
 test("existing refund orchestration consumes exact private adjudication, preserves terms and replays without effects", async () => {
@@ -158,9 +208,8 @@ test("existing refund orchestration consumes exact private adjudication, preserv
 });
 
 for (const [name, change] of Object.entries({
-  "disabled": f => { f.state.config.enabled = false; }, "nonLocal": f => { f.state.environment = "PRODUCTION"; },
+  "disabled": f => { f.state.config.enabled = false; },
   "Docker sibling": f => { f.state.environmentName = "testDockerLocal"; }, "wrong runtime": f => { f.state.role = "PLATFORM"; },
-  "missing environment metadata": f => { f.state.environment = undefined; },
   "partial pin": f => { delete f.state.pin.couponCode; }, "duplicate pin": f => { f.state.config.approvals.push(copy(f.state.pin)); },
   "wrong case pin": f => { f.state.pin.caseCode = "OTHER"; }, "wrong buyer pin": f => { f.state.pin.ownerId = "other"; },
   "wrong amount pin": f => { f.state.pin.amount = "49"; }, "wrong currency pin": f => { f.state.pin.currency = "POINT"; },

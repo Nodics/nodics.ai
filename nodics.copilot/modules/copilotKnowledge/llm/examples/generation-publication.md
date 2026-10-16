@@ -19,9 +19,11 @@ old dedicated index through nSearch, and supports original receipt inspection.
 Retirement retains old data and never implies physical erasure or completion for
 historical writers. A separate reviewed erasure command supports the qualified
 API-key-only profile described in that guide. Ordinary generation cleanup
-eligibility is unchanged. nAuth declares migration read/execute/erase in
-the canonical permission catalogue consumed by Profile; deployments assign them explicitly
-to scoped operators. Declaration grants no access and both mutation gates remain
+eligibility is unchanged. Knowledge contributes migration read/execute/erase
+definitions through its implementing-owner identity data pack. Profile owns the
+persisted permission catalogue and asynchronously validates fresh active records;
+deployments assign these permissions explicitly to scoped operators through
+Profile. Declaration grants no access and both mutation gates remain
 disabled by default.
 
 1. Deploy the private `discoveryGeneration` schema with its unique `code` index

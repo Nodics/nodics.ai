@@ -21,6 +21,13 @@ const path = require('path');
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Resolves governed source metadata through nImport's exact private pin without activating absent runtime modules. Legacy raw owners retain their existing lookup. @param {Object} release Selected release descriptor. @returns {Object} Source owner. */
+    releaseSourceOwner: function (release) {
+        const service = typeof SERVICE !== 'undefined' && SERVICE.DefaultDataReleaseService;
+        const owner = service?.releaseSourceOwner ? service.releaseSourceOwner(release) : NODICS.getRawModule(release.moduleName);
+        if (!owner?.path) throw new Error('Qualified import source owner is unavailable');
+        return owner;
+    },
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
      * defined it that with Promise way
@@ -46,10 +53,11 @@ module.exports = {
     /** Resolves active modules for legacy imports and explicitly qualified raw owners for governed destination contributions. */
     modulesForImport: function (moduleList, dataReleasePlan) {
         if (Array.isArray(dataReleasePlan) && dataReleasePlan.length > 0) {
-            return Array.from(new Set(dataReleasePlan.map(release => release.moduleName)))
-                .filter(moduleName => moduleList.includes(moduleName))
-                .map(moduleName => NODICS.getRawModule(moduleName))
-                .filter(moduleObject => moduleObject && moduleObject.path);
+            const owners = new Map();
+            for (const release of dataReleasePlan) {
+                if (moduleList.includes(release.moduleName)) owners.set(release.moduleName, this.releaseSourceOwner(release));
+            }
+            return [...owners.values()];
         }
         let modules = [];
         NODICS.getIndexedModules().forEach(moduleObject => {
@@ -160,8 +168,7 @@ module.exports = {
         const files = {}, used = new Set();
         for (const release of dataReleasePlan) {
             if (!moduleList.includes(release.moduleName)) continue;
-            const moduleObject = NODICS.getRawModule(release.moduleName);
-            if (!moduleObject?.path) throw new Error('Qualified import source owner is unavailable');
+            const moduleObject = this.releaseSourceOwner(release);
             const root = path.resolve(moduleObject.path, 'data');
             for (const file of release.declaredFiles || []) {
                 if (!folders.some(folder => file.split('/').includes(folder))) continue;
@@ -197,8 +204,7 @@ module.exports = {
         let filtered = {};
         let used = new Set();
         dataReleasePlan.forEach(release => {
-            let moduleObject = NODICS.getRawModule(release.moduleName);
-            if (!moduleObject || !moduleObject.path) return;
+            let moduleObject = this.releaseSourceOwner(release);
             (release.declaredFiles || []).filter(file => {
                 let segments = file.split('/');
                 return folderAliases.some(alias => segments.includes(alias));

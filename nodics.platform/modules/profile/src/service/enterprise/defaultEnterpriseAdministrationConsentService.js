@@ -146,7 +146,7 @@ module.exports = {
         parentCode,
         recipient.identity,
       );
-      const ceilings = this.ceilings(rights);
+      const ceilings = await this.ceilings(rights);
       if (
         ceilings.actions.includes("MANAGE_ACCESS") &&
         recipientAuthority.accessManagementAllowed !== true
@@ -481,7 +481,7 @@ module.exports = {
     return anchor;
   },
   /** Requires explicit enterprise-super-administrator classification, never business roles or a generic permission. @param {Object} source Fresh enterprise. @param {Object} item Fresh accepted assignment. @returns {boolean} Classified administration authority. */
-  classifiedAdministrator: function (source, item) {
+  classifiedAdministrator: async function (source, item) {
     const classification = this.policy().administratorRoleCodes;
     if (item.code === source.defaultAdminAssignmentCode) return true;
     if (
@@ -491,7 +491,7 @@ module.exports = {
       !classification.includes(item.roleCode)
     )
       return false;
-    const role = SERVICE.DefaultEnterpriseManagementService.rolePolicy(
+    const role = await SERVICE.DefaultEnterpriseManagementService.rolePolicy(
       item.roleCode,
     );
     return (
@@ -528,15 +528,14 @@ module.exports = {
             ],
           },
         );
-    const candidates = rows.filter((row) =>
-      this.classifiedAdministrator(source, row),
-    );
+    const candidates = [];
+    for (const row of rows) if (await this.classifiedAdministrator(source, row)) candidates.push(row);
     if (candidates.length !== 1) this.fail("FORBIDDEN");
     const { item } = await m.assignment(candidates[0].code);
     if (
       item.status !== "REGISTERED" ||
       item.enterpriseCode !== code ||
-      !this.classifiedAdministrator(source, item) ||
+      !(await this.classifiedAdministrator(source, item)) ||
       item.tenantCode !==
         SERVICE.DefaultEnterpriseService.hierarchyReferenceCode(source.tenant)
     )
@@ -557,7 +556,7 @@ module.exports = {
       ) !== m.digest(identity)
     )
       this.fail("FORBIDDEN");
-    const role = SERVICE.DefaultEnterpriseManagementService.rolePolicy(
+    const role = await SERVICE.DefaultEnterpriseManagementService.rolePolicy(
       item.roleCode,
     );
     if (m.digest(role.groupCodes) !== m.digest(item.groupCodes))
@@ -583,7 +582,7 @@ module.exports = {
       this.fail("FORBIDDEN");
     const groups = await m.groups(
       item.tenantCode,
-      item.membership ? item.groupCodes : actualGroups,
+      item.membership ? m.currentGroupCodes(item) : actualGroups,
     );
     if (
       ![actor.person.authVersion ?? 1, person.authVersion ?? 1].every(
@@ -667,7 +666,7 @@ module.exports = {
         ),
       ),
       roleDigest: m.digest(
-        SERVICE.DefaultEnterpriseManagementService.rolePolicy(item.roleCode),
+        await SERVICE.DefaultEnterpriseManagementService.rolePolicy(item.roleCode),
       ),
       projectionAuthVersion: person.authVersion || 1,
       accessManagementAllowed,
@@ -688,7 +687,7 @@ module.exports = {
     };
   },
   /** Validates explicit role/action/recipient ceilings for both direct and derived commands. @param {Object} input Reviewed policy/input. @returns {Object} Normalized bounded ceilings. */
-  ceilings: function (input) {
+  ceilings: async function (input) {
     const policy = this.policy(),
       roleCodes = this.selections(input.roleCodes, 25),
       actions = this.selections(input.actions, 3);
@@ -700,7 +699,7 @@ module.exports = {
     )
       this.fail("FORBIDDEN");
     for (const code of roleCodes) {
-      const role = SERVICE.DefaultEnterpriseManagementService.rolePolicy(code);
+      const role = await SERVICE.DefaultEnterpriseManagementService.rolePolicy(code);
       if (
         role.delegable !== true ||
         !policy.allowedRoleCodes.includes(code) ||
@@ -1717,14 +1716,14 @@ module.exports = {
       if (rows.length > 100) this.fail("UNAVAILABLE");
       const assignments = [];
       for (const row of rows) {
-        if (!this.classifiedAdministrator(enterprise, row)) continue;
+        if (!(await this.classifiedAdministrator(enterprise, row))) continue;
         try {
           const recipient = await this.assignmentRecipient(row.code, code);
           assignmentCount += 1;
           if (assignmentCount > 100) this.fail("UNAVAILABLE");
           const recipientName = this.recipientName(recipient);
           const roleLabel = this.businessLabel(
-            SERVICE.DefaultEnterpriseManagementService.rolePolicy(row.roleCode)
+            (await SERVICE.DefaultEnterpriseManagementService.rolePolicy(row.roleCode))
               .label,
           );
           assignments.push({
@@ -1760,16 +1759,15 @@ module.exports = {
     }
     const state = this.state(target),
       parent = authority.parent;
-    const roleCodes = (
-      parent ? parent.roleCodes : policy.allowedRoleCodes
-    ).filter((code) => {
-      const role = SERVICE.DefaultEnterpriseManagementService.rolePolicy(code);
-      return (
+    const roleCodes = [];
+    for (const code of parent ? parent.roleCodes : policy.allowedRoleCodes) {
+      const role = await SERVICE.DefaultEnterpriseManagementService.rolePolicy(code);
+      if (
         role.delegable === true &&
         role.administrationClass !== "ENTERPRISE_ADMIN" &&
         policy.allowedRoleCodes.includes(code)
-      );
-    });
+      ) roleCodes.push(code);
+    }
     const actions = parent
       ? parent.actions
       : [
@@ -1957,7 +1955,7 @@ module.exports = {
         recipient.identity,
         input.recipientAssignmentCode,
       );
-      const { roleCodes, actions, recipients } = this.ceilings(input);
+      const { roleCodes, actions, recipients } = await this.ceilings(input);
       if (
         actions.includes("MANAGE_ACCESS") &&
         recipientAuthority.accessManagementAllowed !== true
@@ -2093,7 +2091,7 @@ module.exports = {
         authorizationPolicyVersion
     )
       this.fail("FORBIDDEN");
-    const normalized = this.ceilings(grant);
+    const normalized = await this.ceilings(grant);
     if (m.digest(normalized.recipients) !== m.digest(grant.recipients))
       this.fail("FORBIDDEN");
     if (

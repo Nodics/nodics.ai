@@ -21,15 +21,17 @@ module.exports = {
         let definitions = SERVICE.DefaultBackofficeCapabilityDefinitionService;
         let item = (id, parentId, label, route, schemaName, order, summary, presentation, featureState) => definitions.workbench({
             id: id, parentId: parentId, label: label, route: route, moduleName: 'product', schemaName: schemaName,
-            order: order, permission: id === 'catalog-and-products' ? 'commerce.catalog.read' : 'commerce.product.read',
-            summary: summary, presentation: presentation, featureState: featureState,
+            order: order, permission: 'commerce.product.read',
+            summary: summary, presentation: schemaName === 'product' ? this.rootPresentation(presentation) : presentation, featureState: featureState,
+            lifecycleActions: schemaName === 'product' ? this.rootActions() : undefined,
             group: id === 'catalog-and-products' ? { id: 'products-merchandising', label: 'Products & Merchandising', order: 500 } : undefined
         });
         let node = (id, label, order, summary, featureState) => definitions.workbench({
             id: id, label: label, route: '/commerce/catalog#' + id, moduleName: 'product', schemaName: 'product',
             order: order, permission: 'commerce.product.read', summary: summary, featureState: featureState || 'DISABLED',
             group: { id: 'products-merchandising', label: 'Products & Merchandising', order: 500 },
-            presentation: { defaultColumns: ['code', 'name', 'status', 'catalogVersion', 'revision'] }
+            presentation: this.rootPresentation({ defaultColumns: ['code', 'name', 'status', 'catalogVersion', 'versionId'] }),
+            lifecycleActions: this.rootActions()
         });
         return definitions.capability({ capabilityId: 'commerce-product', displayName: 'Catalog & Products', category: 'commerce', icon: 'commerce', navigation: [
             item('catalog-and-products', undefined, 'Product Workspace', '/commerce/catalog', 'product', 500, 'Review all products, create products, attention states, review readiness, publishing readiness, published products, and archived products.', { defaultColumns: ['code', 'name', 'productType', 'fulfillmentStrategy', 'status', 'catalogVersion', 'revision'], editableFields: ['code', 'name', 'productType', 'fulfillmentStrategy', 'digitalDeliveryType', 'status', 'catalogVersion', 'revision'], forbiddenFields: ['tenant', 'enterpriseCode'] }),
@@ -46,5 +48,20 @@ module.exports = {
             item('product-search-locales', 'products', 'Localized Search Status', '/commerce/catalog/products/search-locales', 'productSearchProjection', 124, 'Inspect deterministic Store-and-locale Product search projection status.', { defaultColumns: ['productCode', 'storeCode', 'locale', 'status', 'sourceHash', 'projectedAt'], fixedFilters: [] }),
             item('make-product-sellable', 'product-readiness', 'Make Product Sellable', '/commerce/catalog/readiness', 'product', 561, 'Guide product basics, variants, localization, price, tax, stock authority, search visibility, and publishability without moving domain ownership into Axis.', { defaultColumns: ['code', 'name', 'status', 'catalogVersion', 'revision'] })
         ] });
+    },
+    /** Adds only the root's same-owner discovery route to existing Workbench presentation metadata. */
+    rootPresentation: function (presentation) {
+        return { ...presentation, schemaDiscovery: { path: '/business/products/schemas', apiVersion: 'v0' },
+            editableFields: ['code', 'name', 'catalogVersion', 'productType', 'fulfillmentStrategy', 'digitalDeliveryType', 'status'],
+            forbiddenFields: ['tenant', 'enterpriseCode', 'revision', 'versionId', 'publicationReferences', 'listingAuthoring'] };
+    },
+    /** Full control archives a source successor only; existing publication responsibilities are separate. */
+    rootActions: function () {
+        const permission = CONFIG.get('product')?.businessAuthoring?.archivePermission;
+        if (!permission) return [];
+        return [{ id: 'archiveProduct', label: 'Archive source', intent: 'ARCHIVE', permission,
+            summary: 'Archive this Staged Product source. Existing Online publications remain unchanged.',
+            targetStatuses: ['DRAFT', 'ACTIVE'], featureState: CONFIG.get('runtimeRole')?.publication === 'STAGED' ? 'ACTIVE' : 'DISABLED', ownerModule: 'product',
+            operationRoute: '/business/products/archive', httpMethod: 'POST', order: 100 }];
     }
 };

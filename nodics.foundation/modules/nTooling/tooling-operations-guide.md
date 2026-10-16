@@ -144,11 +144,15 @@ and AI tools.
 
 ## Local Runtime Isolation
 
-Native Local startup provisions `NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY`
-once in the existing environment `generated/local-runtime/credentials.json`
+Native Local first startup provisions `NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY`
+with the initial environment `generated/local-runtime/credentials.json`
 (mode 0600). This enables the nSystem secret-safe runtime configuration API.
-Existing keys are never replaced by startup normalization; deployment environment
-inputs still take precedence. Back up this private file separately from source
+Later starts validate and read existing storage without normalization, chmod,
+key additions or rotation. Invalid storage refuses startup rather than regenerating
+credentials. Missing purpose keys require an explicitly authorized owner operation;
+deployment environment inputs still take precedence without changing storage.
+See [startup credentials](llm/contracts/tooling-governance-contracts.md#native-local-startup-credentials).
+Back up this private file separately from source
 before resetting or moving a local workspace. Losing or replacing the key makes
 previously encrypted provider credentials unreadable. Non-Local deployments
 must supply their own encryption key. Provider tokens are configured through

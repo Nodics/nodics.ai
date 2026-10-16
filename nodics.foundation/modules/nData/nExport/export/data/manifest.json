@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "export",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "export permissionCatalogue",
+      "description": "Explicit export identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "export",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/exportPermissionHeader.js": "495dfd396561c6575cfaf881d0884601ef84a290b65e70fe86310371714e93c2",
+        "init-v001/records/identity/exportPermissionData.js": "1b4ec3f42f25ddd4137a881dc550226372a9d4b45c76dac4ef0dd4b9e61e9fac"
+      }
+    }
+  }
+}

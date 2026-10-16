@@ -81,15 +81,23 @@ const byId = Object.fromEntries(capability.navigation.map(item => [item.id, item
 assert.equal(byId['waste-management'].group.id, 'sustainability-operations');
 assert.equal(byId['waste-collection-centres'].route, '/waste/collection-centres');
 assert.equal(byId['waste-collection-centres'].parentModuleName, 'wasteCore');
-assert.equal(byId['waste-collection-centres'].workbenchTarget.moduleName, 'wasteCollection');
+assert.equal(byId['waste-collection-centres'].workbenchTarget.moduleName, 'wasteApi');
 assert.equal(byId['waste-collection-centres'].workbenchTarget.schemaName, 'wasteCollectionPoint');
 assert.equal(byId['waste-submissions'].parentModuleName, 'wasteCore');
-assert.equal(byId['waste-submissions'].workbenchTarget.moduleName, 'wasteSubmission');
+assert.equal(byId['waste-submissions'].workbenchTarget.moduleName, 'wasteApi');
 assert.equal(byId['waste-submissions'].workbenchTarget.schemaName, 'wasteSubmission');
 assert.equal(byId['waste-impact'].workbenchTarget.schemaName, 'wasteImpactProfile');
 assert.equal(byId['waste-assets'].parentModuleName, 'wasteCore');
-assert.equal(byId['waste-assets'].workbenchTarget.moduleName, 'wasteCore');
+assert.equal(byId['waste-assets'].workbenchTarget.moduleName, 'wasteApi');
 assert.equal(byId['waste-assets'].workbenchTarget.schemaName, 'wasteAsset');
+for (const id of ['waste-collection-centres', 'waste-submissions', 'waste-verification', 'waste-receipts',
+    'waste-assets', 'waste-asset-ownership-events', 'waste-asset-marketplace-projections']) {
+    assert.equal(byId[id].workbenchTarget.moduleName, 'wasteApi');
+    assert.deepEqual(byId[id].workbenchPresentation.schemaDiscovery, { path: '/business/waste/schemas', apiVersion: 'v0' });
+    assert.deepEqual(byId[id].workbenchPresentation.editableFields, []);
+}
+assert.equal(byId['waste-asset-types'].workbenchTarget.moduleName, 'wasteCore');
+assert.equal(byId['waste-asset-types'].workbenchPresentation.schemaDiscovery, undefined);
 assert.equal(byId['waste-asset-types'].workbenchTarget.schemaName, 'wasteAssetType');
 assert.equal(byId['waste-asset-creation-policies'].workbenchTarget.schemaName, 'wasteAssetCreationPolicy');
 assert.equal(byId['waste-asset-ownership-events'].workbenchTarget.schemaName, 'wasteAssetOwnershipEvent');

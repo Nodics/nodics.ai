@@ -32,10 +32,11 @@ Coordinate shared Shipment schema/private-write changes before implementation;
 preserve original allocation, replay, revocation and return guards. The refusal
 tests are not successful native or installed provider qualification.
 
-`DefaultFulfillmentItemSimulationService` is a separate, default-off LOCAL-only
+`DefaultFulfillmentItemSimulationService` is a separate, default-off
 orchestration aid, not an implementation of authenticated delivery. Read the same
-contract's simulation section. Require canonical deployment class, exact selected
-environment allowlist and matching Promotion mode/service. Preserve `SIM:` handles,
+contract's simulation section. Require exact canonical selected environment
+allowlist admission and matching Promotion SIMULATION mode/service, not LOCAL
+classification or a name heuristic. Preserve `SIM:` handles,
 `simulated: true`, `verified: false`, `immutable: false`, no delivery timestamp and
 no inventory, transport or persistence effects. Never turn simulation into a
 qualification flag or a production fallback.

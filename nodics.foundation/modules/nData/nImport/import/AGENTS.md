@@ -59,6 +59,32 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Content-pack rules
 
+- Release prerequisites belong to the existing `DefaultDataReleaseService`.
+  Resolve exact manifest-owned module/section/version/checksum references through
+  raw discovery, falling back only for explicit prerequisites to nConfig's
+  `UTILS.resolveInstalledSourceDescriptor`, never module activation or an
+  identity-specific loader. Preserve private exact-source bindings through
+  composition and dispatch; requalify descriptor metadata and bytes, reject
+  serialized/caller-supplied source authority, and never silently omit an
+  unavailable governed source from headers or file selection. Preflight
+  the complete bounded same-type graph before writes; persist dependencies before
+  owner row validation. Keep Init-only startup, CURRENT receipt skips, existing
+  installation migration holds and owner create-or-preserve semantics. Never use
+  dependencies or force replay to reconstruct deleted authority. See
+  `llm/contracts/import-release-contracts.md#exact-release-prerequisites`.
+
+- Prerequisite `partition: "DEFAULT"` resolves only from framework `defaultTenant`.
+  Outside the requested tenant it is an exact CURRENT receipt-only dependency,
+  including its inherited closure. Never write another partition, copy its
+  receipts, force replay it or accept caller-supplied partition authority. Keep
+  graph identity partition-qualified so tenant-local groups remain independent.
+
+- Profile seed authority uses `isIdentityAuthorityReleaseExecution`, qualified
+  by an exact claimed Init release, privately bound run and matching awaited
+  owner operation. Preserve revocation on return/rejection and deny request
+  flags, system markers and unrelated imports. Permissions/roles remain in the
+  default authority partition; tenant-local groups do not broaden that scope.
+
 - nImport owns the complete protected `acceptance:staged-sample-data` API suite.
   Projects retain only release-module/role selections and adoption checks. Resolve
   effective application descriptors through nConfig, not raw customer source paths.
@@ -97,9 +123,10 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Preserve the same `importRun` object across header finalization, finalized
   file processing, and model dispatch. Nested pipeline boundaries must not
   discard record counters, failures, tenant exclusions, or traceability.
-- Configuration is disabled by default. Project and environment layers enable
-  sources, permissions, cleanup, and update policy without changing framework
-  source.
+- Configuration is disabled by default. Project and environment layers select
+  sources, cleanup and update policy without changing framework source.
+  Permissions and roles are implementing-module data administered by Profile and
+  Axis; deployment configuration never grants them.
 - Browser-facing file import must be media-reference based. Axis or another
   frontend uploads files through `nodics.wcms/media`; `nImport` resolves a
   trusted media descriptor and owns import-run staging. Do not let a frontend
@@ -142,3 +169,8 @@ Own release safeguards and inert initialization profile templates. Deployment se
 Content-pack defaults belong to `data.contentPacks.defaults` in this capability. Selected packs inherit source conventions, update policy and complete presentation fields; partner contributions override only intentional differences. Resolve omitted content paths from the selected manifest section, preserving explicit path overrides and all import authorization/checksum/staging guards. See `llm/contracts/README.md#content-pack-defaults-and-manifest-paths`.
 
 Sample releases are available to authorized manual operators by default, with optional deployment restriction. Only Init can auto-run at startup. Environment scope reads the effective `environment.class` projected by nConfig from the selected environment module metadata; never author it in environment properties or derive it from the selected environment name or another capability policy. Permissions, roles, tenant isolation, release checksums and durable receipts remain mandatory.
+
+Advanced `specialAccessGroups` and `specialAccessRoles` definitions are owner data.
+Keep them separate from ordinary business access levels. Assignments and exact
+approval/source/deployment pins stay with the consuming project; these roles
+never waive owner admission or activate operations.

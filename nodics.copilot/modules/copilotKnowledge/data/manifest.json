@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "copilotKnowledge",
   "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "copilotKnowledge permissionCatalogue",
+      "description": "Explicit copilotKnowledge identity definitions; create missing records and preserve existing Axis-managed authority.",
+      "owningDomain": "copilotKnowledge",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/copilotKnowledgePermissionHeader.js": "33ed729e209b366817ccb703badb74ee79da092a7e45f9f94d5caff20635f51f",
+        "init-v001/records/identity/copilotKnowledgePermissionData.js": "2496fe68dea2e57d333137787117da8e705fcf80b08b4d65fdda4f2d4cb59499"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",

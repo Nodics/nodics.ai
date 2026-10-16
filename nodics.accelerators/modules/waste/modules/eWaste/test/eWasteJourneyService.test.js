@@ -125,21 +125,21 @@ test("missing domain policy fails closed and a later-layer settings hook is hono
   );
 });
 
-test("neutral journey defaults require a positive explicit arrival policy", () => {
+test("framework journey defaults preserve the approved radius and validate deployment overrides", () => {
   const defaults = require("../config/properties").eWaste.journey;
-  assert.equal(defaults.arrivalRadiusMetres, undefined);
+  assert.equal(defaults.arrivalRadiusMetres, 50);
   assert.equal(defaults.maximumPositionAgeMs, 60000);
   assert.equal(defaults.captureTimeoutMs, 12000);
   assert.equal(defaults.nearestCentreCount, 3);
-  assert.throws(() => service.validateSettings(defaults), { code: "ERR_EWASTE_JOURNEY_UNAVAILABLE" });
+  assert.deepEqual(service.validateSettings(defaults), defaults);
   const selected = { ...defaults, arrivalRadiusMetres: 150, captureTimeoutMs: 18000 };
   assert.deepEqual(service.validateSettings(selected), selected);
-  for (const arrivalRadiusMetres of [0, -1, NaN, Infinity, "150"]) {
+  for (const arrivalRadiusMetres of [undefined, 0, -1, NaN, Infinity, "150"]) {
     assert.throws(() => service.validateSettings({ ...selected, arrivalRadiusMetres }), {
       code: "ERR_EWASTE_JOURNEY_UNAVAILABLE",
     });
   }
-  assert.equal(defaults.arrivalRadiusMetres, undefined);
+  assert.equal(defaults.arrivalRadiusMetres, 50);
 });
 
 test("freshness boundaries are inclusive and rejected checks preserve saved evidence", async () => {

@@ -108,9 +108,10 @@ before purchasing retained coupon rights and
 qualification requires the actual active outlet records, original staff session,
 fresh Profile direct STORE ALLOW/DENY checks and protected Store read admission.
 Retain `promotion.merchantBenefits.enabled: true`,
-`itemEvidenceMode: "LOCAL_SIMULATION"` and
+`itemEvidenceMode: "SIMULATION"` and
 `itemEvidenceService: "DefaultFulfillmentItemSimulationService"`; its actual
-`assertSelected` must admit the LOCAL environment. Keep all of the following false:
+`assertSelected` must admit the exact explicitly configured environment, regardless
+of environment class. Keep all of the following false:
 
 - `promotion.merchantBenefits.qualified` (real delivery/monetary qualification).
 - `promotion.merchantBenefits.pricedSource.qualified`.
@@ -151,7 +152,7 @@ passed. The sidecar's isolated provider tests authorize no qualification change.
 | `sellerAuthorization.{enabled,qualified}: true` and seller-management exposure | Original signed issuer and fresh Profile scopes/active references; reviewed private-capture attestation. Budget-only preflight is independent evidence, not consent proof. Actual consent POST must pass Distribution `assertInstalled` before CAS or replay. |
 | `purchasedRights.{enabled,qualified}: true` for the approved ITEM test | Retained approved rights and the existing purchase owner; installed private coupon lifecycle/CAS and secure issuance remain required. No claim of completed purchase is made by selecting the policy. |
 | `merchantRedemption.enabled: true`, `storeScope.{enabled,qualified}: true` | Original staff session; active exact issuer outlet; fresh direct Profile STORE scopes and DENY precedence; Store's protected merchant read and normal Digital workspace/validation. No broad Store schema grant. |
-| `merchantBenefits.enabled: true`, `itemEvidenceMode: "LOCAL_SIMULATION"`, existing simulator owner | Actual Fulfillment `assertSelected` must admit the approved LOCAL environment; exact retained ITEM rights and original outlet binding. Leave `merchantBenefits.qualified: false`; label outputs simulated/unverified. |
+| `merchantBenefits.enabled: true`, `itemEvidenceMode: "SIMULATION"`, existing simulator owner | Actual Fulfillment `assertSelected` must admit the exact selected environment; exact retained ITEM rights and original outlet binding. Leave `merchantBenefits.qualified: false`; label outputs simulated/unverified. |
 | Monetary benefit/priced-source/provider qualification | Separate native owner-priced evidence and transport/provider acceptance. Consent, budget preflight, ITEM simulation and source tests do not prove these prerequisites. Keep unqualified until those are evidenced. |
 
 Distribution's installed gate requires an operational runtime; the non-versioned
