@@ -20,6 +20,10 @@ module.exports = {
               moduleName: "loyaltyCore",
               sections: ["core-enterprise-reference"],
             },
+            {
+              moduleName: "loyaltyWallet",
+              sections: ["specialAccessGroups", "specialAccessRoles", "participantAccessGroups"],
+            },
           ],
         },
       },

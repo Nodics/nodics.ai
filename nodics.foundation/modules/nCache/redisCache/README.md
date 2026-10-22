@@ -44,6 +44,11 @@ Because all nodes share Redis, Nodics does not need redundant peer invalidation 
 
 Redis connection data must come from layered configuration or secret-backed runtime configuration. Do not hardcode Redis URLs, credentials, database numbers, TLS settings, or key prefixes in services.
 
+The provider also owns bounded offline-reset defaults under
+`redisLocalResetMaintenance`. Later deployment layers may raise or lower those
+bounds for an isolated disposable runtime, but cannot exceed the provider's
+hard safety ceilings. Runtime business modules must not copy these defaults.
+
 
 Redis provider properties own the default `cache.default.engines.redis.options.prefix`
 value `localRuntimeAuth`. Inherit it through nConfig; a Local environment enabling

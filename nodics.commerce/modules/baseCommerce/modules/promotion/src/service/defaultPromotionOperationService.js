@@ -179,6 +179,7 @@ module.exports = {
     return Object.assign({}, request.authData || {}, {
       tenant: request.tenant,
       enterpriseCode: request.enterpriseCode,
+      entCode: request.enterpriseCode,
       principalId: "promotionOperationService",
       code: "promotionOperationService",
       loginId: "promotionOperationService",
@@ -429,6 +430,13 @@ module.exports = {
       (promotion) => !promotion.budgetAdmission,
     );
   },
+  /** Returns complete public-safe issuer membership for canonical eligible coupon Products, never policy or financial data. */
+  couponIssuerMemberships: function (request, productCodes) {
+    const owner = SERVICE.DefaultPromotionDistributionAdmissionService;
+    if (typeof owner?.couponIssuerMemberships !== 'function')
+      throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+    return owner.couponIssuerMemberships(request, productCodes);
+  },
   /** Selects the receipt-bound reader only for independently enabled activated seller distribution. Missing selected ownership refuses rather than falling back to mutable or foreign policy. @param {Object} request Original authenticated Store context. @returns {Object|undefined} Canonical read owner. @override Preserve original signed scope and qualification checks inside the owner. */
   sellerPolicyReader: function (request) {
     if (typeof CONFIG === "undefined" || CONFIG.get("promotion")?.sellerAuthorization?.enabled !== true ||
@@ -529,6 +537,7 @@ module.exports = {
       tenant: request.tenant,
       authData: this.serviceAuthData(request),
       query: this.enterpriseQuery(request, { tenant: request.tenant, code }),
+      ...(request.transactionContext ? { transactionContext: request.transactionContext } : {}),
       options: { recursive: false, skipItemCache: true },
       searchOptions: { pageSize: 2 },
     });
@@ -579,6 +588,7 @@ module.exports = {
     const command = {
       tenant: request.tenant,
       authData: this.serviceAuthData(request),
+      ...(request.transactionContext ? { transactionContext: request.transactionContext } : {}),
       query: this.enterpriseQuery(request, {
         tenant: request.tenant,
         code: previous.code,
@@ -663,6 +673,34 @@ module.exports = {
       throw new Error("The coupon campaign is not available for purchase");
     return { campaign, activated };
   },
+  /** Resolves an exact checkout coupon campaign without conflating participant authentication with seller business scope. */
+  trustedCouponPurchaseCampaign: async function (request, coupon) {
+    const authenticatedEnterprise = request.authData?.enterpriseCode || request.authData?.entCode;
+    if (!this.sellerPolicyReader(request) ||
+        (authenticatedEnterprise && authenticatedEnterprise === request.enterpriseCode))
+      return this.couponPurchaseCampaign(request, coupon);
+    const owner = SERVICE.DefaultPromotionDistributionAdmissionService;
+    if (typeof owner?.trustedCouponPolicy !== "function")
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED");
+    return { activated: true, campaign: await owner.trustedCouponPolicy({
+      tenant: request.tenant,
+      enterpriseCode: request.authData?.enterpriseCode || request.authData?.entCode,
+      storeCode: request.storeCode,
+      locale: request.locale,
+      ownerId: request.ownerId,
+      ownerRef: structuredClone(request.ownerRef),
+      authData: structuredClone(request.authData || {}),
+    }, {
+      tenant: request.tenant,
+      enterpriseCode: request.enterpriseCode,
+      storeCode: request.storeCode,
+      locale: request.locale,
+      ownerId: request.ownerId,
+      ownerRef: structuredClone(request.ownerRef),
+      productCode: request.payload?.productCode || coupon.productCode,
+      authData: this.serviceAuthData(request),
+    }, coupon) };
+  },
   /** Captures bounded rights from selected owner policy with fresh operational consent rechecks, never caller policy or published grants. @param {Object} request Context. @param {Object} coupon Reserved unit. @param {Date} purchasedAt Original successful sale time. @returns {Promise<Object>} Retained rights patch or legacy empty patch. */
   capturePurchasedRights: async function (request, coupon, purchasedAt) {
     const governedSeller = Boolean(
@@ -679,7 +717,7 @@ module.exports = {
       );
       if (!sellerProof) throw new Error("Coupon seller consent proof is unavailable");
     }
-    const { campaign, activated } = await this.couponPurchaseCampaign(request, coupon);
+    const { campaign, activated } = await this.trustedCouponPurchaseCampaign(request, coupon);
     this.assertSupportedCouponBenefit(campaign);
     if (governedSeller) {
       const seller = SERVICE.DefaultCouponSellerAuthorizationService;
@@ -707,6 +745,7 @@ module.exports = {
     )
       throw new Error("Coupon campaign is outside its sale window");
     const policy = campaign.purchasedCouponPolicy;
+    if (campaign.couponOffer) return SERVICE.DefaultCouponOfferService.capture(request, campaign, coupon, purchasedAt);
     if (!policy) {
       const window = {};
       for (const key of ['validFrom', 'validTo']) {
@@ -791,6 +830,7 @@ module.exports = {
   },
   /** Resolves retained campaign rules only under independent qualification; legacy codes keep legacy policy. @param {Object} coupon Purchased code. @param {Object} campaign Current campaign. @returns {Object} Authoritative redemption rules. */
   purchasedCampaign: function (coupon, campaign) {
+    if (coupon.purchasePolicy?.version === 2) return SERVICE.DefaultCouponOfferService.retained(coupon, campaign);
     if (!coupon.purchasePolicy) {
       if (campaign?.budgetAdmission)
         throw new CLASSES.NodicsError("ERR_PROMOTION_BUDGET_ADMISSION_UNCONFIRMED");
@@ -1401,6 +1441,7 @@ module.exports = {
       authData: this.serviceAuthData(request),
       query,
       options: { recursive: false, skipItemCache: true },
+      ...(request.transactionContext ? { transactionContext: request.transactionContext } : {}),
       searchOptions: { pageSize: maximum + 1, limit: maximum + 1 },
     });
     this.assertLifecycleEnvelope(response);
@@ -1447,6 +1488,7 @@ module.exports = {
         policy.status === "ACTIVE" && policy.conditions?.sourceProductCode === request.productCode);
       if (policies.length !== 1) throw new Error("Coupon Product policy is missing or ambiguous");
       this.assertSupportedCouponBenefit(policies[0]);
+      if (policies[0].couponOffer) return SERVICE.DefaultCouponOfferAllocationService.availability(request, policies[0]);
       const query = this.enterpriseQuery(request, { tenant: request.tenant, promotionCode: policies[0].code, status: "GENERATED" });
       if (delegated) query.code = delegated.batchCode;
       const response = await SERVICE.DefaultCouponBatchService.get({ tenant: request.tenant,
@@ -1540,6 +1582,34 @@ module.exports = {
    */
   reserveCouponCodeForCheckout: async function (request) {
     this.requireOperationalRuntime();
+    if (request.payload?.promotionCode) {
+      const sellerReader = this.sellerPolicyReader(request);
+      const candidates = (sellerReader ? await SERVICE.DefaultPromotionDistributionAdmissionService.trustedPolicies({
+        tenant: request.tenant,
+        enterpriseCode: request.authData?.enterpriseCode || request.authData?.entCode,
+        storeCode: request.storeCode,
+        locale: request.locale,
+        ownerId: request.ownerId,
+        ownerRef: structuredClone(request.ownerRef),
+        authData: structuredClone(request.authData || {}),
+      }, {
+        tenant: request.tenant,
+        enterpriseCode: request.enterpriseCode,
+        storeCode: request.storeCode,
+        locale: request.locale,
+        ownerId: request.ownerId,
+        ownerRef: structuredClone(request.ownerRef),
+        productCodes: [request.payload.productCode],
+        authData: this.serviceAuthData(request),
+      }) : await this.promotions(request)).filter(policy => policy.code === request.payload.promotionCode &&
+        policy.status === 'ACTIVE' && policy.active !== false);
+      if (candidates.length === 1 && candidates[0].couponOffer) {
+        if (candidates[0].conditions?.sourceProductCode && candidates[0].conditions.sourceProductCode !== request.payload.productCode)
+          throw new CLASSES.NodicsError('ERR_PROMOTION_COUPON_OFFER_INVALID');
+        this.assertSupportedCouponBenefit(candidates[0]);
+        return SERVICE.DefaultCouponOfferAllocationService.reserve(request, candidates[0]);
+      }
+    }
     const existing = await this.findCouponByIdempotency(request);
     const payload = request.payload || {};
     if (
@@ -1566,13 +1636,16 @@ module.exports = {
           "Coupon reservation replay differs from its original purchase",
         );
       if (current.status === "RESERVED")
-        this.assertSupportedCouponBenefit((await this.couponPurchaseCampaign(request, current)).campaign);
+        this.assertSupportedCouponBenefit((await this.trustedCouponPurchaseCampaign(request, current)).campaign);
       return current;
     }
     const coupons = await this.loadCouponPool(request);
     const coupon = coupons.find((item) => this.couponSaleAvailable(item));
     if (!coupon) throw new Error("Coupon code stock unavailable");
-    this.assertSupportedCouponBenefit((await this.couponPurchaseCampaign(request, coupon)).campaign);
+    const selectedCampaign = (await this.trustedCouponPurchaseCampaign(request, coupon)).campaign;
+    this.assertSupportedCouponBenefit(selectedCampaign);
+    if (selectedCampaign.couponOffer) return SERVICE.DefaultCouponOfferAllocationService.reserve({ ...request,
+      payload: { ...payload, promotionCode: selectedCampaign.code } }, selectedCampaign);
     if (
       CONFIG.get("promotion")?.sellerAuthorization?.enabled === true &&
       !SERVICE.DefaultCouponSellerAuthorizationService?.authorizeSale
@@ -1660,6 +1733,7 @@ module.exports = {
       throw new Error("The coupon does not belong to this order");
     if (coupon.refundReference && coupon.refundReference !== request.refundCode)
       throw new Error("This coupon belongs to another refund");
+    if (coupon.purchasePolicy?.version === 2) throw new CLASSES.NodicsError('ERR_PROMOTION_COUPON_OFFER_INVALID');
     const target = request.complete ? "REVOKED" : "REFUND_PENDING";
     if (coupon.status === target || coupon.status === "REVOKED")
       return { code: coupon.code, status: coupon.status };
@@ -1795,7 +1869,10 @@ module.exports = {
         throw new Error("The coupon has expired; request manual order review");
     }
     stage = "CONDITIONS";
-    this.assertSupportedCouponBenefit(campaign);
+    const staffItemRecording = campaign.actions?.benefitType === "ITEM" &&
+      await SERVICE.DefaultPromotionMerchantScopeService?.staffRecording?.(request, coupon) === true;
+    if (staffItemRecording) SERVICE.DefaultPromotionItemBenefitService.assertTerms(campaign);
+    else this.assertSupportedCouponBenefit(campaign);
     this.validateMerchantConditions(campaign, coupon, request);
     if (
       CONFIG.get("promotion")?.merchantBenefits?.enabled === true &&
@@ -1806,7 +1883,7 @@ module.exports = {
     const benefitOwner = campaign.actions?.benefitType === "ITEM"
       ? SERVICE.DefaultPromotionItemBenefitService : SERVICE.DefaultPromotionMerchantBenefitService;
     stage = "BENEFIT";
-    const benefit =
+    const benefit = staffItemRecording ? undefined :
       await benefitOwner?.validate(
         request,
         campaign,
@@ -1991,6 +2068,8 @@ module.exports = {
    */
   confirmCouponCodeSale: async function (request) {
     this.requireOperationalRuntime();
+    const current = await this.readLifecycleCoupon(request, request.payload?.couponCode || request.couponCode);
+    if (current.offerAllocationCode) return SERVICE.DefaultCouponOfferAllocationService.complete(request, current);
     return this.transitionReservedCouponSale(request, "SOLD", {
       saleStatus: "SOLD",
       benefitStatus: "UNCLAIMED",
@@ -2026,6 +2105,7 @@ module.exports = {
     if (!couponCode) throw new Error("Coupon code is required");
     const coupon = await this.readLifecycleCoupon(request, couponCode);
     if (!coupon) return undefined;
+    if (coupon.offerAllocationCode) return SERVICE.DefaultCouponOfferAllocationService.release(request, coupon);
     if (coupon.status !== "RESERVED") return coupon;
     if (
       coupon.reservedFor &&
@@ -2647,6 +2727,44 @@ module.exports = {
         mutationPerformed: false,
       }),
     );
+  },
+  /** Quotes only exact Product-bound policies admitted from a preserved signed participant and a separately derived seller service scope. */
+  trustedQuote: async function (original, request) {
+    const owner = SERVICE.DefaultPromotionDistributionAdmissionService;
+    if (typeof owner?.trustedPolicies !== "function")
+      throw new CLASSES.NodicsError("ERR_PROMOTION_SELLER_UNCONFIRMED");
+    const policies = await owner.trustedPolicies(original, request);
+    const normalized = Object.assign({}, request, {
+      payload: Object.assign({}, request.payload, {
+        cartCode: (request.payload && request.payload.cartCode) || request.cartCode,
+        couponCode: (request.payload && request.payload.couponCode) || request.couponCode,
+        subtotal: (request.payload && request.payload.subtotal) || request.subtotal,
+        productCodes: (request.payload && request.payload.productCodes) || request.productCodes || [],
+        customerGroup: (request.payload && request.payload.customerGroup) || request.customerGroup,
+        currency: (request.payload && request.payload.currency) || request.currency,
+      }),
+    });
+    const preview = Object.assign({}, SERVICE.DefaultPromotionSimulationService.simulate({
+      tenant: normalized.tenant,
+      context: this.context(normalized),
+      now: normalized.now,
+    }, policies), { ownerId: normalized.ownerId, cartCode: normalized.cartCode, redemptionStateMutation: "NONE" });
+    const selection = await this.selectPromotionForRequest(normalized, preview);
+    if (!selection.promotion)
+      return { discountAmount: "0", reasonCode: "NO_APPLICABLE_PROMOTION", sourceHash: "none", mutationPerformed: false };
+    const action = selection.promotion.actions || {};
+    const decision = SERVICE.DefaultPromotionDecisionService.decide({
+      tenant: normalized.tenant,
+      promotionCode: selection.promotion.code,
+      targetType: normalized.targetType || (normalized.cartCode ? "CART" : "CUSTOMER_CONTEXT"),
+      targetCode: normalized.cartCode || normalized.ownerId,
+      discountAmount: this.discountAmount(normalized, action),
+      currency: normalized.currency || normalized.payload.currency,
+      reasonCode: action.reasonCode || "APPLIED",
+      correlationId: normalized.correlationId || normalized.requestId,
+    }, selection.promotion, this.exact());
+    return Object.freeze(Object.assign({}, decision, { couponCode: selection.coupon && selection.coupon.code,
+      mode: "QUOTE", mutationPerformed: false }));
   },
   /**
    * Executes `apply` as a loader-visible operation owned by this module.

@@ -94,7 +94,7 @@ test("canonical serviceId-only admission requires original nAuth runtime scope w
   auth.serviceId = "changed";
   assert.throws(() => sale.recheckAuthority(admitted), /authority changed/);
 });
-test("modern and legacy internal routes retain service-only transfer authority; staff refund remains Order-owned", () => {
+test("digital evidence retains service-only authority without a legacy reversal route; generic staff refunds remain Order-owned", () => {
   const route = routers.eWaste.internalDigitalSale.internalDigitalSaleInvoke;
   assert.equal(route.key, "/internal/digital-sales/:phase");
   assert.equal(route.secured, true);
@@ -102,7 +102,7 @@ test("modern and legacy internal routes retain service-only transfer authority; 
   assert.deepEqual(route.accessGroups, ["serviceAccountUserGroup"]);
   assert.equal(route.permission, "waste.asset.sale.transfer");
   assert.equal(route.apiExposure, "wasteInternal");
-  assert.equal(routers.eWaste.internalOrderReversal.internalOrderReversalInvoke.permission, route.permission);
+  assert.equal(routers.eWaste.internalOrderReversal, undefined);
   assert.equal(orderRoutes.order.disputes.refundPreview.permission, "commerce.dispute.review");
   assert.equal(orderRoutes.order.disputes.refundExecute.permission, "commerce.refund.execute");
   assert.deepEqual(orderRoutes.order.disputes.refundExecute.authTokenTypes, ["access"]);

@@ -51,11 +51,11 @@ function matches(model, query) {
 function createGeneratedService(store) {
     return {
         get: async function (request) {
-            return { result: store.filter(item => matches(item, request.query)).map(clone) };
+            return { code: 'SUC_DBS_00000', result: store.filter(item => matches(item, request.query)).map(clone) };
         },
         save: async function (request) {
             store.push(clone(request.model));
-            return { result: clone(request.model) };
+            return { code: 'SUC_DBS_00000', result: clone(request.model) };
         },
         update: async function (request) {
             let update = request.model && request.model.$set || request.model || {};
@@ -66,7 +66,7 @@ function createGeneratedService(store) {
                     count += 1;
                 }
             });
-            return { result: { n: count } };
+            return { code: 'SUC_DBS_00000', result: { n: count } };
         },
         remove: async function (request) {
             let before = store.length;
@@ -75,12 +75,13 @@ function createGeneratedService(store) {
                     store.splice(index, 1);
                 }
             }
-            return { result: { n: before - store.length } };
+            return { code: 'SUC_DBS_00000', result: { n: before - store.length } };
         }
     };
 }
 
 global.SERVICE = {
+    DefaultModelsUpdateInitializerService: require('../../nodics.foundation/modules/nDatabase/database/src/service/procs/update/defaultModelsUpdateInitializerService'),
     DefaultProcessGraphValidationService: require('../modules/workflow/src/service/designer/defaultProcessGraphValidationService'),
     DefaultProcessDefinitionService: createGeneratedService(definitions),
     DefaultProcessDefinitionVersionService: createGeneratedService(versions)
@@ -100,6 +101,11 @@ const validGraph = Object.freeze({
 });
 
 (async function run() {
+    for (const response of [undefined, { result: {} }, { code: 'ERR_DBS' }, { code: 'SUC_DBS_00000', success: false }]) {
+        assert.throws(() => lifecycleService.assertResponse(response), error => error.code === 'ERR_PROCESS_00027');
+    }
+    assert.throws(() => lifecycleService.assertOneWrite({ code: 'SUC_DBS_00000', result: { n: 0 } }),
+        error => error.code === 'ERR_PROCESS_00027');
     let created = await lifecycleService.createDefinition({
         tenant: 'default',
         authData: { loginId: 'admin' },

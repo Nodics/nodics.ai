@@ -125,6 +125,11 @@ extend owner data and Profile services while retaining these authority boundarie
 
 ### Human Platform Full Access
 
+For a current original-token proof without issuing credentials or mutating access,
+use [platform administrator evidence](platform-administrator-evidence.md). That
+Profile endpoint rereads native identity, reserved group ancestry and permission
+catalogue state; scopes and legacy administrator flags are insufficient.
+
 `platformAdministratorUserGroup` is a dedicated persisted human authority. Its
 explicit `*` permission is an active Profile-owned catalogue record; the shared
 `adminGroup` and `ENTERPRISE_ADMIN` responsibility never receive `*`. The group
@@ -162,7 +167,8 @@ enterprise actors or derive it from startup discovery.
 
 Existing-account adoption is explicit, never Init replay or startup repair.
 Select Profile `permissionCatalogue` and `accessGroups` successor version
-`0.0.2`, and Profile `init-v001` version `0.0.3`, through the existing reviewed
+`0.0.2`, Profile runtime-evidence permissions `0.0.1`, and Profile `init-v001`
+version `0.0.8`, through the existing reviewed
 nImport plan after the coordinated prerequisite pins are finalized. Keep the
 `init-v001` folder and retained installed receipts. These insert-only definitions
 preserve installed narrowing and inactivity. Installed Employees keep all their
@@ -238,7 +244,11 @@ maintenance migration using nImport, not startup reconciliation:
 
 1. Retain installed receipts, credentials, current groups and role/grant decisions.
    Inventory the authority tenant and each existing tenant requiring Profile Init.
-2. Select `profile:init-v001`, version `0.0.3`, in the existing Init release workflow.
+2. Select `profile:init-v001`, version `0.0.8`, in the existing Init release workflow.
+   Its exact prerequisites include the Profile-owned customer-reference and
+   tenant-binding definitions plus the Pricing and Communication Verification
+   permissions consumed by reviewed runtime assignments. These releases define
+   vocabulary only and never create grants.
    Preflight through `DefaultDataReleaseService.preflight` (Axis Init validation)
    with `releaseCodes: ["profile:init-v001"]`. Inspect the exact owner prerequisites,
    versions, checksums, target tenants and PLATFORM destination before execution.
@@ -618,9 +628,12 @@ Code/login conflicts, principal-type changes, linked/retired principal identitie
 and changed Enterprise tenant bindings reject. Humans and the bootstrap Customer
 remain authority-tenant-only; service employees may initialize tenant-local data.
 
-Missing records use ordinary generated `save` with `insertOnly: true`, never an
-upsert or a caller-selected bypass. Existing validators, nested credential owners
-and provider uniqueness checks remain mandatory. A concurrent creator may cause
+Missing records use ordinary generated `save` with `insertOnly: true`,
+`recursive: false` and `returnModified: false`, never an upsert or a
+caller-selected bypass. Enterprise mutation interceptors preserve these explicit
+false values and supply their expanded-response defaults only when an ordinary
+caller omits them. Existing validators, nested credential owners and provider
+uniqueness checks remain mandatory. A concurrent creator may cause
 a safe duplicate-key failure; the importer must not overwrite that winner.
 Failed batches are resumable, not transactional. Source files and installed
 receipts remain immutable; a forward header/version is required to adopt this

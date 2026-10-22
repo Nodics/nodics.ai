@@ -35,6 +35,18 @@ const projectionBuilder = require('../src/service/defaultProductLocalizedProject
 const searchPublication = require('../src/service/defaultProductSearchPublicationService');
 const searchEnrichment = require('../src/service/defaultProductSearchEnrichmentService');
 
+test('governed Media identity overrides inherited direct URLs while URL-only media remains supported', () => {
+    const governed = discovery.mediaDescriptor({ mediaCode: 'asset-photo', url: '/legacy/photo.svg',
+        publicUrl: 'https://legacy.example/photo.svg' }, 'primary', 'Asset photo');
+    assert.equal(governed.mediaCode, 'asset-photo');
+    assert.equal(governed.deliveryUrl, '/nodics/media/v0/content/asset-photo');
+    assert.equal(governed.publicUrl, '/nodics/media/v0/content/asset-photo');
+    const direct = discovery.mediaDescriptor({ url: '/public/photo.svg' }, 'primary', 'Public photo');
+    assert.equal(direct.mediaCode, undefined);
+    assert.equal(direct.deliveryUrl, '/public/photo.svg');
+    assert.equal(direct.publicUrl, '/public/photo.svg');
+});
+
 test('missing Product detail uses the shared not-found HTTP mapping', async () => {
     const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
     const foundation = '../../../../../../nodics.foundation/modules/';

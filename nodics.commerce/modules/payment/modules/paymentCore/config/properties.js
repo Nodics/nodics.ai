@@ -26,6 +26,11 @@ module.exports = {
     },
 
     paymentCore: { enabled: true },
+    apiExposure: {
+        categories: {
+            moduleInternal: { enabled: true }
+        }
+    },
     schemaPolicies: { paymentCore: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
         tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "wasteImpact",
   "sections": {
+    "carbonEvidencePermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "wasteImpact capability permissions",
+      "description": "Explicit owner permission definitions; preserve existing Profile-managed assignments.",
+      "owningDomain": "wasteImpact",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/wasteImpactCarbonEvidencePermissionHeader.js": "6f2b47ecb2266ba9c105c7d11a4258ede1c28f1d92d2b8305aba4fcbf8d0b917",
+        "init-v002/records/identity/wasteImpactCarbonEvidencePermissionData.js": "0189107008647a2236c97a7b5e9453efe1fc7b548332a13259a963ca9471e010"
+      }
+    },
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
@@ -28,9 +52,9 @@
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v001",
+      "contentPath": "docs-v002",
       "pack": "wasteImpact",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -44,7 +68,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sourceAuthority": "data/docs-v002/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -52,16 +76,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "48bb53717afa19bac6848fc33215a7eb76e22c7e9958e2df53d4b066efb07b43",
+      "releaseChecksum": "7c166862bcedb4fedc27725deaafc35ac9b296cee80a5cf43dd1d343d1e9f685",
       "generatedHashes": {
-        "docs-v001/records/documentation/wasteImpactDocumentationNodeData.js": "8d4b5fe3e256bc4fe8752628ba4205e033ec16de4e7b4420b7a7eb309f63bb6d",
-        "docs-v001/records/documentation/wasteImpactDocumentationPageMetadataData.js": "a955f927ce3f553dab413230317ae5ea26eb96760fb4f30bd743eb2515771868",
-        "docs-v001/records/documentation/wasteImpactDocumentationPublicationStateData.js": "daf757d5314d56ca7b6ab428b16ea998a732556bbd2352063b5caf3eb1ed7dec",
-        "docs-v001/records/documentation/wasteImpactDocumentationSearchMetadataData.js": "fa6df3536b01c88d88a0608fccbb9971967323821025f7a95ef36d767232c395",
-        "docs-v001/records/documentation/wasteImpactDocumentationComponentData.js": "751f7360fd00634fb6dceadd281d81ad240df4c9556ee56cdcb95a6803c92249",
-        "docs-v001/records/documentation/wasteImpactDocumentationPageData.js": "6ed4021bbf9efea397605e0c50c4a51b58e4f417e4ec6f69493a3b54c4a0f132",
-        "docs-v001/records/documentation/wasteImpactDocumentationRouteData.js": "df7f648bdcaf7287dc52fff3797cdd70af0055ceea94370bc1444900cd5cb22c",
-        "docs-v001/headers/100_wasteImpactDocumentationContentPackHeader.js": "028bdd359dbb484f7ca6f5a4ce25b2c2f6dd06d95ba0c6243eb020f90de46ad8"
+        "docs-v002/records/documentation/wasteImpactDocumentationComponentData.js": "dbc3b87c5a9ea65e232459cd0ec4f46b0593ad2b04b52f58ac1e5335a3b3781f",
+        "docs-v002/records/documentation/wasteImpactDocumentationNodeData.js": "dfeb974054c516a129f0224bb430131894c3f00ede6d429b8fc5330c1c74227b",
+        "docs-v002/records/documentation/wasteImpactDocumentationPageData.js": "6ed4021bbf9efea397605e0c50c4a51b58e4f417e4ec6f69493a3b54c4a0f132",
+        "docs-v002/records/documentation/wasteImpactDocumentationPageMetadataData.js": "ac937909e3cba4762df686adaf9e741de297223aad49fd074e79ac27a4324320",
+        "docs-v002/records/documentation/wasteImpactDocumentationSearchMetadataData.js": "7212522ae413fbce36bef384441951fc5e087a5aa3dc8822cfa6dd4bef277703",
+        "docs-v002/records/documentation/wasteImpactDocumentationPublicationStateData.js": "ec07c745c4cadce455e684af2ac59d3ca137c597743905617ec9de1c96c32a8c",
+        "docs-v002/records/documentation/wasteImpactDocumentationRouteData.js": "5708c2f4ffb079ab4781d6fdb2748d8ee1f64433aa9ae1ecaa5bb77de8ef7fef",
+        "docs-v002/headers/100_wasteImpactDocumentationContentPackHeader.js": "028bdd359dbb484f7ca6f5a4ce25b2c2f6dd06d95ba0c6243eb020f90de46ad8"
       },
       "includes": [
         {

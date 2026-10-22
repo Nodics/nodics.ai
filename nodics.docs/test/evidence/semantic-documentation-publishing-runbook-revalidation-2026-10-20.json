@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 1,
+  "evidenceQualification": {
+    "mechanism": "nodics.docs/scripts/semantic-review-contract.mjs:qualifySemanticReview",
+    "status": "closed-with-evidence",
+    "expected": true,
+    "sourceAndSupportingHashes": "ALL_CURRENT_AT_FINAL_CHECK",
+    "validatorHashes": "UNCHANGED",
+    "scope": "Publishing runbook selected-successor revalidation only; shared aggregate not edited."
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVALIDATION",
+  "item": "Documentation publishing runbook",
+  "requestedAction": "Document canonical CMS data, optional CONTENT_PACK selection, Staged import, review, Online publication, rollback, and rendering.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "rationale": "Read the complete current publishing runbook plus the delegated CMS running-example rollback procedure against baseline descriptor/status/rollback and the full history-capacity test. Root derivation only removes duplicated root metadata for an explicitly selected exact single-site pack; it neither selects/imports that pack nor approves or publishes it. Invalid derived releases report INVALID_RELEASE. Rollback still requires ONLINE lineage and previousOnlineVersion and forwards the current revision to nPublish. Bounded distinct-identity dependency reads preserve complete frozen publication graphs instead of mistaking repeated historical versions for distinct dependencies. The requested optional selection, Staged review, immutable Online activation, recovery and rendering boundaries remain accurate.",
+  "readiness": {
+    "mode": "AUTHORIZED_FRAMEWORK_MAINTAINER_REVIEW",
+    "writeOwner": "nodics.docs/test/evidence",
+    "outcome": "Requalify exact stale editorial scopes without weakening validators or claiming runtime acceptance.",
+    "method": "Recovered matching historical source bytes where stated, read actual deltas/current named methods and cited article blocks, compare authority/failure/override claims, reuse only byte-identical prior source reviews.",
+    "excluded": "No runtime startup, E2E, import, publication, credentials, source/manifest rewrite, generated context, commits or shared aggregate edits."
+  },
+  "historicalBaseline": {
+    "aggregate": "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "aggregateSha256AtRead": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+    "previousSourceRevalidation": {
+      "reviewDate": "2026-10-09",
+      "artifact": "semantic-documentation-frozen-source-revalidation-2026-10-09.json",
+      "previousDisposition": "PASS_SOURCE_REVIEW",
+      "canonicalArticleBytes": "UNCHANGED",
+      "changedSourceFiles": [
+        "nodics.platform/modules/backoffice/src/router/routers.js",
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js"
+      ],
+      "manuallyReviewedSourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js"
+      ],
+      "boundary": "Manual source-editorial review only. Shared hash renewal for a passing scope cannot close an OPEN_CONTENT_GAP scope. No CMS/config/runtime/native writes or financial/provider acceptance."
+    }
+  },
+  "items": [
+    {
+      "item": "Documentation publishing runbook",
+      "requestedAction": "Document canonical CMS data, optional CONTENT_PACK selection, Staged import, review, Online publication, rollback, and rendering.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Read the complete current publishing runbook plus the delegated CMS running-example rollback procedure against baseline descriptor/status/rollback and the full history-capacity test. Root derivation only removes duplicated root metadata for an explicitly selected exact single-site pack; it neither selects/imports that pack nor approves or publishes it. Invalid derived releases report INVALID_RELEASE. Rollback still requires ONLINE lineage and previousOnlineVersion and forwards the current revision to nPublish. Bounded distinct-identity dependency reads preserve complete frozen publication graphs instead of mistaking repeated historical versions for distinct dependencies. The requested optional selection, Staged review, immutable Online activation, recovery and rendering boundaries remain accurate. Reread complete selected publishing runbook and exact added source-evidence resolver. Recovered pre-change contract bytes match the prior reviewed SHA256 exactly after removing only the added URL import and resolver. Existing catalogue, manifest generation, composition, CMS references, lifecycle and publication behavior are unchanged. New local validation proves the underlying file and decoded Markdown ATX section outside fenced examples; unknown fragments and missing files still fail. This implements the runbook requirement for real source evidence without treating filesystem fragments as CMS graph anchors or granting import/publication authority.",
+      "evidence": [
+        {
+          "documentId": "docs.documentation-publishing-runbook",
+          "anchors": [
+            "docsDocumentationPublishingRunbook-1-source-map",
+            "docsDocumentationPublishingRunbook-2-publishing-model",
+            "docsDocumentationPublishingRunbook-3-authoring-steps",
+            "docsDocumentationPublishingRunbook-4-generated-data-contract",
+            "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+            "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+            "docsDocumentationPublishingRunbook-7-common-mistakes",
+            "docsDocumentationPublishingRunbook-8-verification",
+            "docs-publishing-module-ownership-composition",
+            "docs-publishing-references-pictures-checks",
+            "docsPublishingRunbook-functional-visibility-and-record-ownership"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-3-running-example"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js",
+        "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+        "nodics.platform/modules/backoffice/src/router/routers.js",
+        "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+        "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js",
+        "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js",
+        "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js",
+        "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js",
+        "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js"
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "docs.documentation-publishing-runbook": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "563d69c3be80f2fa3afeda4a440c7145b412fb7282193962ff8cd16f44192ef8"
+    },
+    "wcms.publishing-lifecycle": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "articleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c"
+    }
+  },
+  "priorCanonicalDocuments": {
+    "docs.documentation-publishing-runbook": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentdocsDocumentationPublishingRunbook",
+      "route": "/docs/framework/docs-documentation-publishing-runbook",
+      "blocksha256": "56ab6500193080aeff8a264fd3e500e721f37e579a8677117ce0471f65730a69",
+      "articleBlocksSha256": "563d69c3be80f2fa3afeda4a440c7145b412fb7282193962ff8cd16f44192ef8",
+      "sections": [
+        {
+          "anchor": "docsDocumentationPublishingRunbook-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-2-publishing-model",
+          "title": "Publishing model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-3-authoring-steps",
+          "title": "Authoring steps",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-4-generated-data-contract",
+          "title": "Canonical data contract",
+          "headingLevel": 2,
+          "blockIndex": 8
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+          "title": "Review and Online activation",
+          "headingLevel": 2,
+          "blockIndex": 11
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 18
+        },
+        {
+          "anchor": "docsDocumentationPublishingRunbook-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 20
+        },
+        {
+          "anchor": "docs-publishing-module-ownership-composition",
+          "title": "Module Ownership and Optional Composition",
+          "headingLevel": 2,
+          "blockIndex": 22
+        },
+        {
+          "anchor": "docs-publishing-references-pictures-checks",
+          "title": "References, Pictures and Publication Checks",
+          "headingLevel": 2,
+          "blockIndex": 29
+        },
+        {
+          "anchor": "docsPublishingRunbook-functional-visibility-and-record-ownership",
+          "title": "Functional visibility and physical record ownership",
+          "headingLevel": 2,
+          "blockIndex": 35
+        }
+      ]
+    },
+    "wcms.publishing-lifecycle": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentwcmsPublishingLifecycle",
+      "route": "/docs/framework/wcms-publishing-lifecycle",
+      "blocksha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "articleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "sections": [
+        {
+          "anchor": "wcmsPublishingLifecycle-1-why-separate-staged-and-online",
+          "title": "Why separate Staged and Online",
+          "headingLevel": 2,
+          "blockIndex": 2
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-2-data-lifecycle-categories",
+          "title": "Data lifecycle categories",
+          "headingLevel": 2,
+          "blockIndex": 6
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-3-running-example",
+          "title": "Running example",
+          "headingLevel": 2,
+          "blockIndex": 10
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-4-site-bundle-shape",
+          "title": "Site bundle shape",
+          "headingLevel": 2,
+          "blockIndex": 15
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-5-initialization-and-reusable-site-bundles",
+          "title": "Initialization and reusable site bundles",
+          "headingLevel": 2,
+          "blockIndex": 21
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-6-security-and-integrity-rules",
+          "title": "Security and integrity rules",
+          "headingLevel": 2,
+          "blockIndex": 24
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-7-customization-boundary",
+          "title": "Customization boundary",
+          "headingLevel": 2,
+          "blockIndex": 26
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-8-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 28
+        },
+        {
+          "anchor": "wcmsPublishingLifecycle-9-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 30
+        },
+        {
+          "anchor": "wcms-coordinated-pack-asset-approvals",
+          "title": "Coordinated pack and asset approvals",
+          "headingLevel": 2,
+          "blockIndex": 34
+        },
+        {
+          "anchor": "wcms-exact-media-readiness-capacity",
+          "title": "Exact Media readiness and capacity",
+          "headingLevel": 2,
+          "blockIndex": 39
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "aac2dbf65bf27205113100af55ada425be972f24b7e0ef70b5300e6f2999ee2e",
+    "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "e3eb2122fbf984db335948def37c3e663d40ab4a7cbe6d9035288d2778222a3f",
+    "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js": "ebb2ad51a15069289ff18f6f697ebff6000ee3259a3a791199ad9cf8b5b6cac9",
+    "nodics.platform/modules/backoffice/src/router/routers.js": "955bf8cd357859e16394ab66f425820fd2f76577e1139cf2b92086373c518a25",
+    "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "c77bbf60c8135a175324e7a27c107f04c342a064a7b41afb431428f36f3b21b5",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+    "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js": "facb6a6744301f2451b25a1b32d4990095e5ff462a9ffe4f5ad9c6d4ebd019c5",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
+    "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
+    "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js": "b796caca48ab333de664e81ae84813359ce1a2097f6cad40fffca4f2480a9041",
+    "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js": "a975e46dabac84330246f06c452f2c7432d0bb01f6aec4f76445b66fd1d38668",
+    "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js": "9363bc706d16a4ddce2cf56a53b1bab165bdefd3cc5f8f849a1a289384f4bfd6"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js",
+      "previousSha256": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+      "sha256": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js",
+      "previousSha256": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+      "sha256": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js",
+      "previousSha256": "406446bfd139172108ebf8f41598b0460ba03f1e0c875706cb64f3d0d40a83c6",
+      "sha256": "e3eb2122fbf984db335948def37c3e663d40ab4a7cbe6d9035288d2778222a3f",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Recovered 3f5ab7b57 bytes match the prior hash. Reviewed descriptor/status changes and current rollback: exact qualified one-site pack may fill missing root, failures stay non-mutating INVALID_RELEASE; explicit data-release/multi-site roots and original approval/Media lineage remain required."
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+      "previousSha256": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+      "sha256": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+      "previousSha256": "ebb2ad51a15069289ff18f6f697ebff6000ee3259a3a791199ad9cf8b5b6cac9",
+      "sha256": "ebb2ad51a15069289ff18f6f697ebff6000ee3259a3a791199ad9cf8b5b6cac9",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/src/service/publication/defaultCmsMediaDependencyReadinessService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.platform/modules/backoffice/src/router/routers.js",
+      "previousSha256": "955bf8cd357859e16394ab66f425820fd2f76577e1139cf2b92086373c518a25",
+      "sha256": "955bf8cd357859e16394ab66f425820fd2f76577e1139cf2b92086373c518a25",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.platform/modules/backoffice/src/router/routers.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+      "previousSha256": "c77bbf60c8135a175324e7a27c107f04c342a064a7b41afb431428f36f3b21b5",
+      "sha256": "c77bbf60c8135a175324e7a27c107f04c342a064a7b41afb431428f36f3b21b5",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+      "previousSha256": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+      "sha256": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js",
+      "previousSha256": "c84793cec04b6000e88e5f8bde862ac984f67ca4319565e44695e139508ca917",
+      "sha256": "facb6a6744301f2451b25a1b32d4990095e5ff462a9ffe4f5ad9c6d4ebd019c5",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Prior exact bytes were not found in the last 25 path-history commits; no historical diff is claimed. Read the entire current test and ran it: repeated retained versions cannot hide a lower-version distinct capability, source tenant/auth/query stay intact, maximum distinct identities rejects, and non-advancing evidence rejects. The recorded adapter hash is unchanged."
+    },
+    {
+      "path": "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js",
+      "previousSha256": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
+      "sha256": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js",
+      "previousSha256": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
+      "sha256": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js",
+      "previousSha256": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
+      "sha256": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js",
+      "previousSha256": "b796caca48ab333de664e81ae84813359ce1a2097f6cad40fffca4f2480a9041",
+      "sha256": "b796caca48ab333de664e81ae84813359ce1a2097f6cad40fffca4f2480a9041",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/test/cmsMediaDependencyReadinessContract.test.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js",
+      "previousSha256": "a975e46dabac84330246f06c452f2c7432d0bb01f6aec4f76445b66fd1d38668",
+      "sha256": "a975e46dabac84330246f06c452f2c7432d0bb01f6aec4f76445b66fd1d38668",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js",
+      "previousSha256": "9363bc706d16a4ddce2cf56a53b1bab165bdefd3cc5f8f849a1a289384f4bfd6",
+      "sha256": "9363bc706d16a4ddce2cf56a53b1bab165bdefd3cc5f8f849a1a289384f4bfd6",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    }
+  ],
+  "correctnessAndCoverageLimitations": [
+    "Current test rereview substitutes for unavailable historical test bytes, not for any claimed recovered diff.",
+    "No content pack installation, approval, rollback, Online pointer operation, browser rendering or Media delivery was executed."
+  ],
+  "tests": [
+    {
+      "command": "node --test nodics.wcms/modules/cms/test/cmsBaselineRootOwnership.test.js nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js",
+      "passed": 4,
+      "failed": 0
+    }
+  ],
+  "evidenceValidatorRegression": {
+    "command": "node --test --test-name-pattern='manual review closure binds' nodics.docs/test/semanticReviewContract.test.mjs",
+    "passed": 1,
+    "failed": 0
+  },
+  "unchangedValidatorSha256": {
+    "nodics.docs/test/semanticReviewContract.test.mjs": "89fa7fc0f9b23eee170f04aa4023f21054226eb274642614297d6a48d1c12457",
+    "nodics.docs/scripts/semantic-review-contract.mjs": "5ebe473c28ed21de599d5cd6d5ea96eaddc6d1ed6d548a543afd060442f57f0e"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "selectedSuccessorRevalidation": {
+    "disposition": "PASS_UNCHANGED_ARTICLE_SUCCESSOR_REBINDING",
+    "previousComponentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+    "selectedComponentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+    "articleBlocksSha256": "563d69c3be80f2fa3afeda4a440c7145b412fb7282193962ff8cd16f44192ef8",
+    "rationale": "Resolved the actual owner catalogue selection and compared predecessor and successor article blocks with strict deep equality. The complete article blocks retain their previously reviewed hash; all inspected source and validator hashes also remain unchanged. The original substantive review and prior canonical document evidence are preserved. Optional selection, Staged review, Online approval/publication, rollback and rendering claims therefore retain their original semantic qualification; this changes only the selected immutable successor binding, not behavior or runtime acceptance."
+  },
+  "integration": {
+    "aggregateWriter": "Heisenberg",
+    "aggregateEditedByThisReview": false,
+    "instruction": "Verify current article/source hashes, merge only this scope's sourceFileSha256 bindings and reasoned sourceRevalidation into the existing aggregate; preserve original action, historical findings/limits and unrelated scopes. Changed inputs reopen review."
+  },
+  "sourceEvidenceAnchorRevalidation": {
+    "previousSourceSha256": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+    "currentSourceSha256": "aac2dbf65bf27205113100af55ada425be972f24b7e0ef70b5300e6f2999ee2e",
+    "articleBlocksUnchanged": true,
+    "rationale": "Reread complete selected publishing runbook and exact added source-evidence resolver. Recovered pre-change contract bytes match the prior reviewed SHA256 exactly after removing only the added URL import and resolver. Existing catalogue, manifest generation, composition, CMS references, lifecycle and publication behavior are unchanged. New local validation proves the underlying file and decoded Markdown ATX section outside fenced examples; unknown fragments and missing files still fail. This implements the runbook requirement for real source evidence without treating filesystem fragments as CMS graph anchors or granting import/publication authority.",
+    "regression": {
+      "path": "nodics.foundation/modules/nTooling/test/documentationSourceEvidence.test.js",
+      "sha256": "0648444fbe9fdbfa20f4a6457ec14fbe44af22ad06d0f0cb89f9c0194b22cb32",
+      "log": "/tmp/circa-docs-source-anchor.tap",
+      "passed": 3,
+      "failed": 0
+    }
+  }
+}

@@ -271,9 +271,10 @@ function observationFixture(t) {
     const body = input.requestBody, step = steps.find(item => item.code === body.stageCode);
     const stage = body.mode === "BASELINE" ? plan.baseline : plan.stages.find(item => item.code === body.stageCode);
     f.calls.push({ owner: "observation", operation: body.mode, code: body.stageCode });
-    const items = step?.publicationPlan?.items.map(item => ({ code: item.code, domain: item.domain, rootType: item.rootType,
+    let items = step?.publicationPlan?.items.map(item => ({ code: item.code, domain: item.domain, rootType: item.rootType,
       rootCode: item.rootCode, sourceVersion: item.sourceVersion, targetVersion: "digest", operationKey: "actual-owner-operation",
       previousOnlineVersion: null, revision: body.mode === "SOURCE" ? 4 : 1, status: "CURRENT" }));
+    if (body.mode === "MEDIA") items = [{ metadataMatched: f.state.observationReady }];
     if (body.mode === "TARGET") {
       assert.deepEqual(body.operations, items.map(item => ({ code: item.code, operationKey: item.operationKey })));
       if (f.state.targetDrift) items[0].operationKey = "foreign-operation";
@@ -284,6 +285,8 @@ function observationFixture(t) {
       server: body.mode === "TARGET" ? stage.online.server : stage.server,
       runtimeRole: body.mode === "TARGET" ? stage.online.runtimeRole : body.mode === "BASELINE" ? stage.runtimeRole : stage.descriptor.targetRuntimeRole,
       ready: f.state.observationReady, items, version: "1.0.0", evidenceKind: "PERSISTED_CURRENT_METADATA",
+      ...(body.mode === "INSTALLATION" && !f.state.omitObservationStatus
+        ? { status: f.state.observationReady ? "CURRENT" : "NOT_CURRENT" } : {}),
       authority: structuredClone(f.authority) } };
   };
   return { ...f, foreign, foreignRelease, plan };
@@ -292,7 +295,7 @@ function observationFixture(t) {
 test("reviewed service proof admits shared BEFORE and aggregate foreign stages without changing local human authority", async t => {
   const f = observationFixture(t), auth = structuredClone(f.request.authData);
   const result = await f.status();
-  assert.equal(result.readiness, "READY");
+  assert.equal(result.readiness, "READY", JSON.stringify(result));
   assert.equal(result.preparation.steps.find(step => step.code === f.foreign.code).status, "CURRENT");
   assert.equal(result.preparation.steps.find(step => step.code === f.foreignRelease.code).status, "CURRENT");
   assert(f.calls.some(call => call.owner === "observation" && call.operation === "BASELINE"));
@@ -303,11 +306,38 @@ test("reviewed service proof admits shared BEFORE and aggregate foreign stages w
   await assert.rejects(f.initiate(), { code: "ERR_BOF_00082" }); assert.deepEqual(f.calls, []);
 });
 
-test("shared observation refusal or foreign tenant blocks before CMS and all AFTER owner work", async t => {
+test("ordinary scoped initiation submits the CMS baseline when no AFTER stage is selected", async t => {
+  const f = observationFixture(t);
+  Object.assign(f.authority, {
+    readiness: "NOT_IMPORTED",
+    releaseStatus: undefined,
+    publication: undefined,
+    mediaDependencies: undefined,
+  });
+  f.calls.length = 0;
+  await f.initiate();
+  assert(f.calls.some(call => call.owner === "cms" && call.operation === "POST"));
+  assert(!f.calls.some(call => call.owner === "observation" && call.operation === "BASELINE"));
+});
+
+test("shared observation separates an uninstalled release from malformed or foreign evidence", async t => {
   const f = observationFixture(t); f.state.observationReady = false;
+  const missing = await f.service.sharedPreparationObservation(f.application, f.request);
+  assert.equal(missing.status, "ACTION_REQUIRED");
+  assert(missing.steps.filter(step => step.type === "DATA_RELEASE").every(step => step.status === "NOT_INSTALLED"));
+  delete f.authority.releaseCode;
+  delete f.authority.releaseVersion;
+  Object.assign(f.authority, { readiness: "NOT_IMPORTED", releaseStatus: undefined,
+    publication: undefined, mediaDependencies: undefined });
+  const status = await f.status();
+  assert.equal(status.releaseCode, f.before.code);
+  assert.equal(status.releaseVersion, "1.0.0");
+  assert(status.allowedActions.includes("INITIALIZE"));
+  f.calls.length = 0; f.state.omitObservationStatus = true;
   assert.equal((await f.status()).readiness, "BLOCKED");
   assert(f.calls.every(call => call.owner === "observation" && ["INSTALLATION", "MEDIA"].includes(call.operation)));
-  f.calls.length = 0; f.state.observationReady = true; f.state.wrongObservationTenant = true;
+  f.calls.length = 0; f.state.observationReady = true; f.state.omitObservationStatus = false;
+  f.state.wrongObservationTenant = true;
   assert.equal((await f.status()).readiness, "BLOCKED");
   assert(f.calls.every(call => call.owner === "observation" && ["INSTALLATION", "MEDIA"].includes(call.operation)));
 });
@@ -320,7 +350,7 @@ test("actual installation observer envelope preserves plan hash through foreign 
   const hash = value => crypto.createHash("sha256").update(value).digest("hex");
   const stage = f.plan.stages.find(item => item.code === f.foreignRelease.code);
   const release = { moduleName: "partner.setup", releaseCode: stage.code, sectionCode: "foreignInstalled", dataType: "core",
-    version: "1.0.0", sourceRoot: "core-v001", declaredFiles: ["core-v001/reviewed.json"], environmentScope: ["local"],
+    version: "1.0.0", sourceRoot: "core-v001", declaredFiles: ["core-v001/reviewed.json"], prerequisites: [], environmentScope: ["local"],
     checksum: hash("core-v001/reviewed.json:" + hash(bytes)) };
   stage.release = release;
   global.NODICS.getSelectedEnvironmentName = () => "local";
@@ -351,7 +381,7 @@ test("actual installation observer envelope preserves plan hash through foreign 
     return { result };
   };
   const result = await f.status();
-  assert.equal(result.readiness, "READY");
+  assert.equal(result.readiness, "READY", JSON.stringify(result));
   assert.equal(result.preparation.steps.find(item => item.code === stage.code).status, "CURRENT");
 });
 

@@ -1,0 +1,27 @@
+{
+  "formatVersion": 1,
+  "code": "DIGITAL_BUNDLE_GIFT_ACCEPTED_IN_APP",
+  "ownerModule": "digitalCore",
+  "version": 1,
+  "status": "ACTIVE",
+  "purpose": "DIGITAL_BUNDLE_GIFT_ACCEPTED",
+  "sourceModules": [
+    "digitalCore"
+  ],
+  "channel": "IN_APP",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "giftReference": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128
+    },
+    "deadline": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128,
+      "presentation": "date-time"
+    }
+  }
+}

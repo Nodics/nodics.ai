@@ -783,10 +783,81 @@ module.exports = {
     if (policy.enabled === false || policy.startupExecution === false)
       return { skipped: true, reason: "INIT_DISABLED" };
     const modules = new Set(request.modules || NODICS.getActiveModules());
+    const profileSelections = policy.startupProfileSelections || [];
+    if (
+      !Array.isArray(profileSelections) ||
+      profileSelections.length > 32 ||
+      profileSelections.some((selection) => {
+        const codes = selection && selection.profileCodes;
+        return (
+          !selection ||
+          Object.keys(selection).some(
+            (key) =>
+              !["environmentCode", "runtimeRole", "profileCodes"].includes(key),
+          ) ||
+          typeof selection.environmentCode !== "string" ||
+          !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(
+            selection.environmentCode,
+          ) ||
+          typeof selection.runtimeRole !== "string" ||
+          !/^[A-Z][A-Z0-9_]{0,63}$/.test(selection.runtimeRole) ||
+          !Array.isArray(codes) ||
+          !codes.length ||
+          codes.length > 32 ||
+          new Set(codes).size !== codes.length ||
+          codes.some(
+            (code) =>
+              typeof code !== "string" ||
+              !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(code),
+          )
+        );
+      }) ||
+      new Set(
+        profileSelections.map(
+          (selection) =>
+            selection.environmentCode + ":" + selection.runtimeRole,
+        ),
+      ).size !== profileSelections.length
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Startup initialization profile selection is invalid",
+      );
+    }
+    const environmentCode = NODICS.getSelectedEnvironmentName();
+    const runtimeRole = CONFIG.get("runtimeRole")?.code;
+    const selectedProfileCodes = profileSelections
+      .filter(
+        (selection) =>
+          selection.environmentCode === environmentCode &&
+          selection.runtimeRole === runtimeRole,
+      )
+      .flatMap((selection) => selection.profileCodes);
+    const profiles = this.initializationProfiles();
+    const selectedReleaseCodes = new Set();
+    for (const code of selectedProfileCodes) {
+      const profile = profiles[code];
+      if (!profile)
+        throw this.error(
+          "ERR_IMP_00003",
+          "Startup initialization profile is unavailable: " + code,
+        );
+      if (profile.steps.some((step) => step.dataType !== "init"))
+        throw this.error(
+          "ERR_IMP_00003",
+          "Startup initialization profiles may select Init releases only",
+        );
+      profile.steps.forEach((step) =>
+        step.releaseCodes.forEach((releaseCode) =>
+          selectedReleaseCodes.add(releaseCode),
+        ),
+      );
+    }
     const releases = this.discoverReleases("init").filter(
       (release) =>
         modules.has(release.moduleName) &&
-        release.selectionPolicy !== "EXPLICIT" &&
+        (release.selectionPolicy !== "EXPLICIT" ||
+          selectedReleaseCodes.has(release.releaseCode)) &&
         (release.invalidManifest || this.isDestinationCompatible(release)),
     );
     if (releases.length === 0)
@@ -1037,10 +1108,14 @@ module.exports = {
         "ERR_IMP_00004",
         "Requested data release is unavailable",
       );
-    if (releases.some((release) => release.invalidManifest === true)) {
+    const invalidReleases = releases.filter(
+      (release) => release.invalidManifest === true,
+    );
+    if (invalidReleases.length > 0) {
       throw this.error(
         "ERR_IMP_00003",
-        "Requested data release manifest is invalid; repair manifest before installation",
+        "Requested data release manifest is invalid; repair manifest before installation: " +
+          invalidReleases.map((release) => release.releaseCode).join(", "),
       );
     }
     const selectedCodes = new Set(releases.map((release) => release.releaseCode));
@@ -2973,9 +3048,15 @@ module.exports = {
                 ["permission", "userGroup", "enterpriseRole"].includes(options.schemaName);
               const bootstrap = options.operation === "ensureBootstrapAll" &&
                 ["employee", "customer", "address", "contact", "enterprise", "tenant"].includes(options.schemaName);
+              const deployment = options.operation === "ensureDeploymentAll" &&
+                options.schemaName === "principalScopeAssignment";
+              const serviceScopes = options.operation === "adoptRuntimeServiceScopesAll" &&
+                options.schemaName === "employee";
               const authorityPartition = plan.tenant === (CONFIG.get("defaultTenant") || "default");
-              if ((reference || bootstrap) &&
-                  (authorityPartition || !["permission", "enterpriseRole"].includes(options.schemaName))) {
+              const authorityOwned = ["permission", "enterpriseRole", "principalScopeAssignment"].includes(options.schemaName) ||
+                serviceScopes;
+              if ((reference || bootstrap || deployment || serviceScopes) &&
+                  (authorityPartition || !authorityOwned)) {
                 identityTargets.push(Object.freeze({ moduleName: "profile", schemaName: options.schemaName,
                   operation: options.operation, dataFilePrefix: options.dataFilePrefix || name,
                   tenants: Array.isArray(options.tenants) ? Object.freeze(options.tenants.slice()) : undefined }));

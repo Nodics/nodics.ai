@@ -1,0 +1,722 @@
+{
+  "schemaVersion": 1,
+  "validation": {
+    "sourceTests": {
+      "passed": 264,
+      "failed": 0,
+      "logs": [
+        "/tmp/semantic-commerce-internal-tests.log",
+        "/tmp/semantic-commerce-original-evidence-tests.log"
+      ]
+    },
+    "strictGateNegativeContract": {
+      "command": "node --test --test-name-pattern='manual review closure binds scope' nodics.docs/test/semanticReviewContract.test.mjs",
+      "passed": 1,
+      "failed": 0
+    },
+    "sidecarQualification": {
+      "status": "PASS",
+      "method": "Unchanged qualifySemanticReview applied to current canonical catalogue and exact source hashes after editorial correction.",
+      "scopesChecked": 4,
+      "closed": 4,
+      "openContentGap": 0
+    },
+    "concurrentChange": "Initial final check caught nTooling quick-start component relocation to docs-v002. Its article hash was unchanged; corrected the evidence path and reran all four checks successfully.",
+    "integratedAggregate": "Not modified. Heisenberg owns final aggregate/composition integration; runtime/provider/publication acceptance is not executed.",
+    "editorialSuccessorTests": {
+      "passed": 42,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-successor-tests.log"
+    },
+    "finalSourceTests": {
+      "passed": 62,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-final-source-tests.log",
+      "command": "node --test nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalBundleSettlement.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js"
+    },
+    "finalContractTests": {
+      "passed": 44,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-final-doc-contract-tests.log"
+    },
+    "originalRecoveryTests": {
+      "passed": 56,
+      "failed": 0,
+      "log": "/tmp/commerce-final-ownership-recovery-tests.log"
+    },
+    "documentationQuality": {
+      "command": "npm run quality:docs",
+      "status": "PASS",
+      "log": "/tmp/commerce-final-quality-docs.log",
+      "limits": "Public navigation gate explicitly skipped by configured governance; not claimed as visual/publication acceptance."
+    }
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "PASS_SOURCE_REVIEW",
+  "coordination": {
+    "aggregateOwner": "Heisenberg",
+    "aggregateEdited": false,
+    "canonicalSourceEdited": true,
+    "handoff": "Final sidecars sent to Heisenberg for exclusive shared-aggregate integration; no aggregate edit here. Recheck exact bytes before merging.",
+    "sourceFreeze": "Owner article, projection, contract and fixture writes complete; central integration remains Heisenberg exclusive."
+  },
+  "method": {
+    "baseline": "semantic-documentation-closure.json",
+    "baselineSha256": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "sourceSnapshotAt": "2026-10-20T10:57:55.320Z",
+    "review": "Current source/contracts compared with article assertions; exact-byte prior semantic evidence retained for unchanged files. Matching batch2 ownership records reused. Bounded documentation review, not a new full source audit.",
+    "changedBoundSources": 24,
+    "unchangedReuse": 6,
+    "commsEngagement": "No evolving Communication/Engagement runtime review or edits. Identical referenced bytes retain prior evidence only; future drift invalidates it.",
+    "finalReviewAt": "2026-10-20T11:28:06.395Z",
+    "finalComparison": "Read corrected article assertions against previously inspected unchanged source bytes; preserved exact blocks for unrelated reviewed articles. Six editorial corrections plus Digital historical-refund correction have explicit semantic rationale, not hash-only renewal."
+  },
+  "items": [
+    {
+      "item": "Commerce product, price, inventory, and fulfillment authoring",
+      "requestedAction": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "evidence": [
+        {
+          "documentId": "commerce.data-authoring-fulfillment",
+          "anchors": [
+            "commerceDataAuthoringFulfillment-1-source-map",
+            "commerceDataAuthoringFulfillment-2-data-bundle",
+            "commerceDataAuthoringFulfillment-3-authoring-sequence",
+            "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+            "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+            "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+            "commerceDataAuthoringFulfillment-7-common-mistakes",
+            "commerceDataAuthoringFulfillment-8-verification",
+            "commerce-stock-lane-boundaries"
+          ]
+        },
+        {
+          "documentId": "promotion.campaigns-coupon-issuance",
+          "anchors": [
+            "promotion-issuer-merchant-scope",
+            "promotion-coupon-bound-benefit-accounting",
+            "promotion-local-item-simulation",
+            "promotion-used-benefit-inverses-disabled"
+          ]
+        },
+        {
+          "documentId": "digital.purchase-delivery-reveal",
+          "anchors": [
+            "digital-issuer-merchant-confirmation",
+            "digital-original-sale-ownership-refund",
+            "digital-local-item-simulation",
+            "digital-simulation-recovery"
+          ]
+        },
+        {
+          "documentId": "fulfillment.shipping-management",
+          "anchors": [
+            "physical-cancellation-return-owner-bridge",
+            "physical-return-receipt-inspection",
+            "fulfillment-item-delivery-boundary",
+            "fulfillment-local-item-simulation",
+            "fulfillment-sim-receipt-boundary",
+            "fulfillment-simulation-recovery"
+          ]
+        },
+        {
+          "documentId": "commerce.fulfillment-core-source-map",
+          "anchors": [
+            "commerceFulfillmentCoreSourceMap-2-source-map",
+            "commerceFulfillmentCoreSourceMap-6-operating-rules"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js",
+        "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultPhysicalOrderReversalService.js",
+        "nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderRefundRecoveryService.js",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionMerchantScopeService.js",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionCouponBudgetService.js",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/issuer-merchant-stock-admission.md",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-bound-issuer-budget.md",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService.js",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceRefundService.js",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemDeliveryEvidenceService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionItemBenefitService.js",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js",
+        "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceItemMerchantProviderService.js",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/merchant-redemption-contract.md",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js",
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Product/Pricing/operational Inventory and physical reversal remain source-backed. Corrected all four simulation guides to effective SIMULATION plus canonical selected-environment allowlist independent of deployment class, with unverified/nonimmutable evidence and historical receipt preservation. The final Digital reread additionally corrected historical original-sale refund prose: current eWaste phases refuse completed ownership refunds; only original incomplete Checkout recovery remains. Source review does not claim browser, provider or deployed acceptance. The adjacent persisted ownership contract is now also corrected: no current eWaste original-sale reversal instructions, with separately preserved generic Commerce recovery and historical evidence.",
+      "sourceFindings": [
+        {
+          "id": "DOC-COMMERCE-SIMULATION-SELECTOR",
+          "severity": "P1",
+          "documentIds": [
+            "promotion.campaigns-coupon-issuance",
+            "digital.purchase-delivery-reveal",
+            "fulfillment.shipping-management",
+            "commerce.fulfillment-core-source-map"
+          ],
+          "anchors": [
+            "promotion-local-item-simulation",
+            "digital-local-item-simulation",
+            "digital-simulation-recovery",
+            "fulfillment-local-item-simulation",
+            "fulfillment-simulation-recovery",
+            "commerceFulfillmentCoreSourceMap-2-source-map"
+          ],
+          "actualSource": "Fulfillment assertSelected checks SIMULATION, the exact evaluator, enabled flags and canonical selected-environment allowlist; it never reads environment.class. Digital public projections emit SIMULATION. Retired LOCAL_SIMULATION refuses. Historical ITEM_SIMULATION/SIMULATED_ITEMS hashes and receipts remain readable.",
+          "contradiction": "Fulfillment guide requires environment.class exactly LOCAL and LOCAL_SIMULATION selection; Digital requires LOCAL_SIMULATION response tags; Promotion and source map describe the current evaluator as LOCAL-only.",
+          "regression": "fulfillmentItemSimulationContract.test.js rejects retired mode and admits explicit selected environments independently of LOCAL/PRODUCTION/STAGING/QA/undefined class.",
+          "correction": "Forward-correct all four articles and derived metadata/search projections to SIMULATION and explicit deployment allowlist. Preserve stable anchors, frozen historical releases, unverified/nonimmutable/no-delivery labels and current staff recording as a separate flow. Do not restore a class gate or enable a deployment.",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "resolution": "Forward-correct all four articles and derived metadata/search projections to SIMULATION and explicit deployment allowlist. Preserve stable anchors, frozen historical releases, unverified/nonimmutable/no-delivery labels and current staff recording as a separate flow. Do not restore a class gate or enable a deployment."
+        },
+        {
+          "id": "DOC-DIGITAL-RETIRED-REFUND-GUIDANCE",
+          "severity": "P1",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "documentIds": [
+            "digital.purchase-delivery-reveal"
+          ],
+          "anchors": [
+            "digital-original-sale-ownership-refund"
+          ],
+          "contradiction": "The article described a supported original-sale refund bridge although current eWaste phases refuse it.",
+          "actualSource": "Digital rejects bundle refunds; eWaste returns final-sale ineligibility at preview and throws on mutation phases.",
+          "resolution": "Marked retained policy/phase records historical only, replaced execution diagram with final-sale/original-command-recovery boundary, preserved stable anchor and provider qualification limits."
+        }
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
+      },
+      "previousRationale": "Product/Pricing/operational Inventory, exact physical reversal, version-2 coupon finality and staff-attestation boundaries remain source-backed. But four Commerce/Fulfillment articles still require LOCAL_SIMULATION and LOCAL class while current owners select SIMULATION via explicit deployment allowlist independent of class. Hash refresh would conceal a real editorial contradiction."
+    }
+  ],
+  "canonicalDocuments": {
+    "commerce.data-authoring-fulfillment": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "8ec3483ca29f64fdc79db00cfa4e971b3ee203f7c1196eb252d8724d067c4ac7"
+    },
+    "promotion.campaigns-coupon-issuance": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003ComponentData.js",
+      "articleBlocksSha256": "876fbd7fdd8a70c2cc7b930b464fd53586941e1f1c5de9717f3ee0f4dfa8ffb1"
+    },
+    "digital.purchase-delivery-reveal": {
+      "owner": "nodics.commerce/modules/digitalCommerce/modules/digitalCore",
+      "componentFile": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003ComponentData.js",
+      "articleBlocksSha256": "4d8489bafb96afd501d82d2436441246929f9e72fd276013ec6720b970b43a9f"
+    },
+    "fulfillment.shipping-management": {
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "18e1af46191ca9382c5c0b4c619fc743c79598a4341fef1afb910f5ec245b2c2"
+    },
+    "commerce.fulfillment-core-source-map": {
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "c3b98334c84fb8e0568f847ddf6983b2a8044c0cef2bd60cd5a9e3b783156687"
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js": "09028b4d8b020695eca68f784ff3891d00e1920b10094fa10b50bc3f259ace93",
+    "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js": "563b947a3840375db0b830c25e65d81906cecdd02eec3458f6dbffd925f048a7",
+    "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js": "fb7f3f81a24f990c50e8766cc55bf06152452867ec3e0c4facae6db7f02b163e",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js": "fa6678e2e77a792c51e7cd4a7fe49848851573678bbe04f3eb3bd52c796bac35",
+    "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js": "738e99cb171af61029b2488937232b6059a2c56e1dc0a43f17e5c14249f41fb7",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultPhysicalOrderReversalService.js": "7c5b631f072f8dc73271c8d0c26e11393014abc5d67613dec5fff9f18207e4e2",
+    "nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderRefundRecoveryService.js": "976fc60d6b25a1dda6f495bb99ed9adc569a37eacd17a4128265a9a2fcd56240",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionMerchantScopeService.js": "df6a53c45ddafdd155bc55dd4fb7efcc478f93ec06008fac9b1831115606d1b6",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionCouponBudgetService.js": "37cf7c0078d003c5951a92217a4b8a7dc3d749f2cb142a7a62c7bbc20bb372dc",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/issuer-merchant-stock-admission.md": "e3627f022adc465918745c14319e685d22ba130be945787dda8f53174a2f435e",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-bound-issuer-budget.md": "c27dc84991e5656dd03e08c2f41d202574b8caa44bcf8eb43df204602507ecc4",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js": "722448d11d0127ae4eecd94b79e7d2b3c4c85db1b217c69c0c38405f8c610f53",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService.js": "072d7d592deb93fbfdd7aeebc6a56dbf9cd512612f4d8f3f8d62d0957ef515bd",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceRefundService.js": "ea677fe93d679bf8ee47143455ac735ad3e7ce251c204eaa809aea2190a952fb",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md": "5f4dfc88291956a67f6c05c89f25adae99fff8b801c004d42a3b995ddca978f3",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemDeliveryEvidenceService.js": "719c6cf5e30d31a5a0006df35aaea0dc38674e1697245eb946f56acbc4822af6",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md": "68c341494ae97e6571240627220105aadae95f968a4a47ee012af52053d90caf",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js": "a1fd87a2331cae7216eb8e01bee2c118357c006b1028212acdd18f6a97c8a093",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "b98bce5ddf0925fb12bc3413d61a2852dd078e3bf72a7a3e46b06abae80317fe",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionItemBenefitService.js": "8847ac809611c302dfea3a035d23ca3d5a99415143d6433dd75d35e9cb7d4c05",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md": "1399f509f3e14e2b6c0194fe1f7916a77ee87a7757af2caae9d8a6ffdd4995f5",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js": "69748335ee71bc5e18482706af3efd1a8b7ee9bf855ac283c4f6a328702b0edb",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js": "40a30dce5e41e010b982fe4a38b0f3b11588df2079198fd9f378136cda7e379b",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceItemMerchantProviderService.js": "e2f866983af01aa3e6fae2c538635ef1cb7c51d20ad9c1423c40c4896fd92fd2",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/merchant-redemption-contract.md": "728c3456576e8b3cb5d5a8f361196a22bff452d0151e4e1f7d20e9a58237830d",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js": "660da729e9af23f95c4e33ac0d8cc9f384298c32b1bc5daaf2e3afc4bde2726d",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js": "e0a73632719b6979efaa512c35228ddf3088e6e2cc02973a8852db2c496082bd",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js": "8efb2772375c1e984c6e15713f4e9350478282c7ee011a05a3be1938e107cbea",
+    "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js": "6d77dae0ba1e4a03a7980295a43a657ef719a9e5592ef2e90498f86a6f534838",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js": "10f32daa302bc96bd70b691dae2d69bfe21c29e811850feef44df42f208dc9f6"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js",
+      "finalSha256": "09028b4d8b020695eca68f784ff3891d00e1920b10094fa10b50bc3f259ace93",
+      "previousSha256": "2b7f151865e2ffdfdf6367e7f67cb04d33793521d4d23d8df49dc2271f99a18d",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Internal Product listing creation retains exact digital classification, immutable source proof, staged publication and strict UTC listing windows. The shared authoring guide does not expose this service-only specialized lane as generic business CRUD. Current matched ownership review corroborates its private capability boundary.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "09028b4d8b020695eca68f784ff3891d00e1920b10094fa10b50bc3f259ace93",
+          "disposition": "reviewed-corrected"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js",
+      "finalSha256": "563b947a3840375db0b830c25e65d81906cecdd02eec3458f6dbffd925f048a7",
+      "previousSha256": "563b947a3840375db0b830c25e65d81906cecdd02eec3458f6dbffd925f048a7",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js",
+      "finalSha256": "fb7f3f81a24f990c50e8766cc55bf06152452867ec3e0c4facae6db7f02b163e",
+      "previousSha256": "ea96a97b35865d39bca8d6132aa1b8e9bcaabdf7c0e0b83ef67dfae0806672a6",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Checked changed protected read and target-context validation against the guide's retained Pricing publication/activation claims. Original scoped owner readback remains authoritative; publication is not an Inventory operation or a whole-pack atomic transaction.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "fb7f3f81a24f990c50e8766cc55bf06152452867ec3e0c4facae6db7f02b163e",
+          "disposition": "reviewed-corrected"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
+      "finalSha256": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
+      "previousSha256": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js",
+      "finalSha256": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
+      "previousSha256": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js",
+      "finalSha256": "fa6678e2e77a792c51e7cd4a7fe49848851573678bbe04f3eb3bd52c796bac35",
+      "previousSha256": "90f49f1136d1fdb59ad3215a5a14a78c87b8c88e8a0c8674d88a21d9c54cfbaa",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read current routes: /internal/products/listings remains service-only. New bundle-listing prepare/publish/inspect/withdraw commands do not remove that historical specialized lane or transfer generic Product authoring to the browser.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "fa6678e2e77a792c51e7cd4a7fe49848851573678bbe04f3eb3bd52c796bac35",
+          "disposition": "reviewed-retain"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js",
+      "finalSha256": "738e99cb171af61029b2488937232b6059a2c56e1dc0a43f17e5c14249f41fb7",
+      "previousSha256": "738e99cb171af61029b2488937232b6059a2c56e1dc0a43f17e5c14249f41fb7",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultPhysicalOrderReversalService.js",
+      "finalSha256": "7c5b631f072f8dc73271c8d0c26e11393014abc5d67613dec5fff9f18207e4e2",
+      "previousSha256": "f122c8ec842496681a15d9473b5bbe6e369e333aec8aa5cc8c2de678659e43a2",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Compared original SHIPPED quantities, exact package receipts, accepted inspection and original-command recovery with both Fulfillment guides; physical owner settlement delegates Inventory and completion follows Payment evidence. Focused physical bridge tests passed; no actual warehouse/carrier claim.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderRefundRecoveryService.js",
+      "finalSha256": "976fc60d6b25a1dda6f495bb99ed9adc569a37eacd17a4128265a9a2fcd56240",
+      "previousSha256": "2f6be914f20b57c1336bd8aa2aedf3ce17231dd4eac7889eb0fc39ebfb802e53",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Compared paymentAuthority, physical authority and domain checkpoint sequencing with the guides' independent approval/original-payment limits. Physical/unused historical refund paths remain distinct from new final-sale bundles and version-2 coupons.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionMerchantScopeService.js",
+      "finalSha256": "df6a53c45ddafdd155bc55dd4fb7efcc478f93ec06008fac9b1831115606d1b6",
+      "previousSha256": "62b40e67b7efb25eada43cc3c0e6030d80cd44bf62592b26ae0f9f8322f4ec35",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Matched full ownership evidence and current staff-recording qualification against new article introduction. Staff attestation uses fresh participant/outlet authority without integrated benefit proof; integrated private issuer COMMIT remains separately qualified and has no canonical RELEASE caller.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-promotion-agreements.json",
+          "sha256": "df6a53c45ddafdd155bc55dd4fb7efcc478f93ec06008fac9b1831115606d1b6",
+          "disposition": "FIXED_P09_ITEM_STAFF_RECORDING"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionCouponBudgetService.js",
+      "finalSha256": "37cf7c0078d003c5951a92217a4b8a7dc3d749f2cb142a7a62c7bbc20bb372dc",
+      "previousSha256": "5a9b88cb3846c42357cf82e7176e30d7b9c6f0b6995453c9ab225951759a54b3",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Reconciled the existing bound-budget contract with the article's exact-original COMMIT and missing canonical inverse caller limits. No new merchant permission or distribution grant is represented as general issuer budget authority.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/issuer-merchant-stock-admission.md",
+      "finalSha256": "e3627f022adc465918745c14319e685d22ba130be945787dda8f53174a2f435e",
+      "previousSha256": "42879959de62ec87ba0b7eb2aa491e60f2c405ffb710178ed0cac091f954142a",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Article retains exact secure purchased-unit membership, original signed human staff and scoped private persistence; read admission does not become general vendor identity or arbitrary lifecycle write admission.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-bound-issuer-budget.md",
+      "finalSha256": "c27dc84991e5656dd03e08c2f41d202574b8caa44bcf8eb43df204602507ecc4",
+      "previousSha256": "c11865e5fa681eec108c4534335a27c5e4a4d620f7c2611181d95470582b0412",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Article preserves explicit original benefit-consumption purpose, lifetime coupon COMMIT identity, atomic owner budget transaction and lack of canonical RELEASE handoff. No provider acknowledgement is promoted to distributed settlement.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js",
+      "finalSha256": "722448d11d0127ae4eecd94b79e7d2b3c4c85db1b217c69c0c38405f8c610f53",
+      "previousSha256": "277ed37f4fdf155a9500d73f0ee9e1014e391ccee1a0b67c1a70221bafa7ede4",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "The current confirmation/query projections emit evidenceMode SIMULATION; guide still requires LOCAL_SIMULATION. Newly documented staff attestation is distinct from integrated evidence and preserves original receipt/single-use guards. The simulation selector/projection discrepancy blocks this scope.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "722448d11d0127ae4eecd94b79e7d2b3c4c85db1b217c69c0c38405f8c610f53",
+          "disposition": "reviewed-corrected"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService.js",
+      "finalSha256": "072d7d592deb93fbfdd7aeebc6a56dbf9cd512612f4d8f3f8d62d0957ef515bd",
+      "previousSha256": "2a52d1b154a7d943fb730fb57b46d5be839fc3945771db6849347f0b46923bb2",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read current refund dispatch: finalSale/digitalCore bundles refuse; only exact one-unit wasteCore historical ownership with original Order authority and retained plan/lock dispatches the old owner bridge. Historical guide refund section remains narrowly bounded, not new bundle refund authority.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "072d7d592deb93fbfdd7aeebc6a56dbf9cd512612f4d8f3f8d62d0957ef515bd",
+          "disposition": "reviewed-corrected"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceRefundService.js",
+      "finalSha256": "ea677fe93d679bf8ee47143455ac735ad3e7ce251c204eaa809aea2190a952fb",
+      "previousSha256": "dc6c84a2a9b2d524727ea0187783189235be1a2b3fbf8af40a6d99c73e73cc14",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Current complete unit matching and original phase authority preserve historical unused-coupon and exact ownership routing. Version-2 finality in the article introduction must not be read as permission for the historical refund path.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md",
+      "finalSha256": "5f4dfc88291956a67f6c05c89f25adae99fff8b801c004d42a3b995ddca978f3",
+      "previousSha256": "8a5854e8b88d23561e827e4c134476caee433f1b3a30c0164b60c680c6b606f8",
+      "disposition": "PASS_SOURCE_REVIEW_AFTER_CONTRACT_CORRECTION",
+      "rationale": "Reread the complete contract against current Digital bundle refund refusal and eWaste secured dispatch plus current eWaste finality/recovery contract. Removed executable PREPARE/SETTLE/PAYMENT/COMPLETE instructions and stale bridge-qualification claims. New Circa/eWaste sales use common bundles and are final; existing generic coupon/physical Commerce recovery remains independently governed. Retained original one-asset evidence and bounded incomplete-purchase cleanup are not completed-sale refunds. Historical policy/checkpoint references remain read-only provenance; no compatibility mutation, provider qualification or runtime behavior added.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemDeliveryEvidenceService.js",
+      "finalSha256": "719c6cf5e30d31a5a0006df35aaea0dc38674e1697245eb946f56acbc4822af6",
+      "previousSha256": "719c6cf5e30d31a5a0006df35aaea0dc38674e1697245eb946f56acbc4822af6",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md",
+      "finalSha256": "68c341494ae97e6571240627220105aadae95f968a4a47ee012af52053d90caf",
+      "previousSha256": "43622d176764bad15588857765c5b0bbea78bc5d1bfd56512d23d3d79ce119ee",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Current owner contract explicitly retires LOCAL_SIMULATION, selects SIMULATION through an explicit environment allowlist, and states LOCAL/QA/STAGING/PRODUCTION class neither admits nor denies. This contradicts current Fulfillment article admission table.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js",
+      "finalSha256": "a1fd87a2331cae7216eb8e01bee2c118357c006b1028212acdd18f6a97c8a093",
+      "previousSha256": "9eedb9c7ddba49769550fc21a94f0e9dfb0ab1502d9d511f15a5eafbe3966f62",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Compared current plain staff ITEM recording with new article introduction and exact purchased-term checks. Protected encrypted fields, issuer admission and integrated proof remain independent. Simulation uses the effective owner selection, not a fabricated delivery assertion.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-promotion-agreements.json",
+          "sha256": "a1fd87a2331cae7216eb8e01bee2c118357c006b1028212acdd18f6a97c8a093",
+          "disposition": "FIXED_P09_ITEM_STAFF_RECORDING"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js",
+      "finalSha256": "b98bce5ddf0925fb12bc3413d61a2852dd078e3bf72a7a3e46b06abae80317fe",
+      "previousSha256": "f56e90f1323d0888b768f6f3b45664799250459cc967b442019e0eb94d3ad864",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Current isolated composed staff-recording and merchant tests passed. They preserve staff/outlet/participation/term guards, original replay and separate integrated evidence. These tests do not qualify live delivery or native persistence.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-promotion-agreements.json",
+          "sha256": "b98bce5ddf0925fb12bc3413d61a2852dd078e3bf72a7a3e46b06abae80317fe",
+          "disposition": "FIXED_P09_ITEM_STAFF_RECORDING"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionItemBenefitService.js",
+      "finalSha256": "8847ac809611c302dfea3a035d23ca3d5a99415143d6433dd75d35e9cb7d4c05",
+      "previousSha256": "ba324e00efc822256f8b94c7a78599cd91c41cadd7750a7d8bde72f1b71216f8",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read current selector and proof projection: SIMULATION delegates explicit simulator admission; VERIFIED still requires independent immutable delivery evidence. Current Promotion article describes the retired LOCAL_SIMULATION selector and needs correction.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-promotion-agreements.json",
+          "sha256": "8847ac809611c302dfea3a035d23ca3d5a99415143d6433dd75d35e9cb7d4c05",
+          "disposition": "FIXED_P09_ITEM_STAFF_RECORDING"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md",
+      "finalSha256": "1399f509f3e14e2b6c0194fe1f7916a77ee87a7757af2caae9d8a6ffdd4995f5",
+      "previousSha256": "4261486e75b583f224e04e7afaefaa1bc029b5f78eaf11bbbd4a853dd4742bb7",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Owner contract now describes deployment-selected SIMULATION, rejected retired LOCAL_SIMULATION and unchanged historical hash/stage. Staff attestation is an independent exact-term path, not fallback when integrated evidence is missing.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-promotion-agreements.json",
+          "sha256": "1399f509f3e14e2b6c0194fe1f7916a77ee87a7757af2caae9d8a6ffdd4995f5",
+          "disposition": "FIXED_P09_ITEM_STAFF_RECORDING"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js",
+      "finalSha256": "69748335ee71bc5e18482706af3efd1a8b7ee9bf855ac283c4f6a328702b0edb",
+      "previousSha256": "1ea6fbbd9287dfefdbd0caeb491ce48ed45d01861274de71b94370f7fc542804",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Ran current isolated consumer tests: exact source/identity/bundle labels and refusal of promoted verified evidence remain enforced. Test success does not make stale LOCAL_SIMULATION instructions correct.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js",
+      "finalSha256": "40a30dce5e41e010b982fe4a38b0f3b11588df2079198fd9f378136cda7e379b",
+      "previousSha256": "30916f6ebfcc21e9fea0243bee960421b2425b6987d3e7e62b8f414ada2c7b25",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Ran current inverse-boundary regressions; genuine COMMIT cannot admit RELEASE and unused historical refunds remain separate. Supported simulation still grants no used-benefit replenishment or inverse.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceItemMerchantProviderService.js",
+      "finalSha256": "e2f866983af01aa3e6fae2c538635ef1cb7c51d20ad9c1423c40c4896fd92fd2",
+      "previousSha256": "d4067b8bba05111c9b5610a75d554024d85cb0d8b7216b8affb73ba76b61aff6",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read full provider: original signed human authority, CLAIMED entitlement, exact pricedBinding and fresh validateCoupon are required; simulated acknowledgement now emits evidenceMode SIMULATION. Current Digital article's required LOCAL_SIMULATION output is stale.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/merchant-redemption-contract.md",
+      "finalSha256": "728c3456576e8b3cb5d5a8f361196a22bff452d0151e4e1f7d20e9a58237830d",
+      "previousSha256": "bbf398f85a7d29a711e3d3918f5530960a328bb383d3f9ed3589abb7d147be54",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Contract explicitly identifies current SIMULATION projection, retains old hash/receipt readability and denies execution through retired LOCAL_SIMULATION. Article must distinguish retained historical data from current selector/output.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js",
+      "finalSha256": "660da729e9af23f95c4e33ac0d8cc9f384298c32b1bc5daaf2e3afc4bde2726d",
+      "previousSha256": "ab015a2fd29c1f9b8ed2ef87ebafa89b8bb3ddbc453380da1d6035fdf2028b7a",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Ran current actual-provider source tests. Original private authority and current generic SIMULATION labels are tested separately from installed/native delivery and financial acceptance.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js",
+      "finalSha256": "e0a73632719b6979efaa512c35228ddf3088e6e2cc02973a8852db2c496082bd",
+      "previousSha256": "fe6325d7b34bb5a65007b5c5bb599dfafd873b6b4b499caf52cae922a5692540",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read full service: enabled owner settings, exact SIMULATION service selection and canonical selected-environment allowlist gate evaluation; environment.class is not read. It emits deterministic simulated/unverified/nonimmutable proof without persistence or transport. Guide LOCAL-only admission is false.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js",
+      "finalSha256": "8efb2772375c1e984c6e15713f4e9350478282c7ee011a05a3be1938e107cbea",
+      "previousSha256": "a40c51e5a1cc910b91a3f3768cc3da81efc6781956dde8231d71d7d9c888885b",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Current passing tests reject retired LOCAL_SIMULATION and expressly admit an allowlisted selected environment independently of LOCAL/PRODUCTION/STAGING/QA/undefined classification. This directly demonstrates the canonical guide contradiction.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js",
+      "finalSha256": "6d77dae0ba1e4a03a7980295a43a657ef719a9e5592ef2e90498f86a6f534838",
+      "disposition": "REVIEWED_CURRENT_REFUND_DISPATCH_BOUNDARY",
+      "rationale": "Inspected current secured dispatch at refund-preview/prepare/settle/complete: preview returns COMPLETED_BUNDLE_FINAL_SALE and mutations throw. Original Checkout compensation is separate. This bounded source check invalidates the old article executable refund promise; it is not a whole-service rereview."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js",
+      "finalSha256": "10f32daa302bc96bd70b691dae2d69bfe21c29e811850feef44df42f208dc9f6",
+      "disposition": "ADDED_OWNER_LOCAL_DOCUMENTATION_REGRESSION",
+      "rationale": "Tests distinguish final Circa/eWaste ownership sales from independently governed common recovery, prohibit retired executable refund claims and verify local reference targets including current eWaste finality anchor."
+    }
+  ],
+  "canonicalReview": [
+    {
+      "documentId": "commerce.data-authoring-fulfillment",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "8ec3483ca29f64fdc79db00cfa4e971b3ee203f7c1196eb252d8724d067c4ac7",
+      "previousArticleBlocksSha256": "8ec3483ca29f64fdc79db00cfa4e971b3ee203f7c1196eb252d8724d067c4ac7",
+      "articleBytesChanged": false,
+      "componentRelocated": true,
+      "anchors": [
+        "commerceDataAuthoringFulfillment-1-source-map",
+        "commerceDataAuthoringFulfillment-2-data-bundle",
+        "commerceDataAuthoringFulfillment-3-authoring-sequence",
+        "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+        "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+        "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+        "commerceDataAuthoringFulfillment-7-common-mistakes",
+        "commerceDataAuthoringFulfillment-8-verification",
+        "commerce-stock-lane-boundaries"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "promotion.campaigns-coupon-issuance",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003ComponentData.js",
+      "articleBlocksSha256": "876fbd7fdd8a70c2cc7b930b464fd53586941e1f1c5de9717f3ee0f4dfa8ffb1",
+      "previousArticleBlocksSha256": "31eb14faeb35fa1eb2a885561e53dd02683e36807836d3e3a287ba73ccbcbd16",
+      "articleBytesChanged": true,
+      "componentRelocated": true,
+      "anchors": [
+        "promotion-issuer-merchant-scope",
+        "promotion-coupon-bound-benefit-accounting",
+        "promotion-local-item-simulation",
+        "promotion-used-benefit-inverses-disabled"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW_AFTER_IMMUTABLE_EDITORIAL_CORRECTION",
+      "rationale": "Product/Pricing/operational Inventory and physical reversal remain source-backed. Corrected all four simulation guides to effective SIMULATION plus canonical selected-environment allowlist independent of deployment class, with unverified/nonimmutable evidence and historical receipt preservation. The final Digital reread additionally corrected historical original-sale refund prose: current eWaste phases refuse completed ownership refunds; only original incomplete Checkout recovery remains. Source review does not claim browser, provider or deployed acceptance."
+    },
+    {
+      "documentId": "digital.purchase-delivery-reveal",
+      "componentFile": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003ComponentData.js",
+      "articleBlocksSha256": "4d8489bafb96afd501d82d2436441246929f9e72fd276013ec6720b970b43a9f",
+      "previousArticleBlocksSha256": "6c10ea3b6480b309620ba63780709f8af6d98691a42f4c262cbd6b40b8c8919f",
+      "articleBytesChanged": true,
+      "componentRelocated": true,
+      "anchors": [
+        "digital-issuer-merchant-confirmation",
+        "digital-original-sale-ownership-refund",
+        "digital-local-item-simulation",
+        "digital-simulation-recovery"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW_AFTER_IMMUTABLE_EDITORIAL_CORRECTION",
+      "rationale": "Product/Pricing/operational Inventory and physical reversal remain source-backed. Corrected all four simulation guides to effective SIMULATION plus canonical selected-environment allowlist independent of deployment class, with unverified/nonimmutable evidence and historical receipt preservation. The final Digital reread additionally corrected historical original-sale refund prose: current eWaste phases refuse completed ownership refunds; only original incomplete Checkout recovery remains. Source review does not claim browser, provider or deployed acceptance."
+    },
+    {
+      "documentId": "fulfillment.shipping-management",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "18e1af46191ca9382c5c0b4c619fc743c79598a4341fef1afb910f5ec245b2c2",
+      "previousArticleBlocksSha256": "5a6ca17cce7ca188c2308fbb4887b17425c6c2096aaa0b37057c244428d60db0",
+      "articleBytesChanged": true,
+      "componentRelocated": true,
+      "anchors": [
+        "physical-cancellation-return-owner-bridge",
+        "physical-return-receipt-inspection",
+        "fulfillment-item-delivery-boundary",
+        "fulfillment-local-item-simulation",
+        "fulfillment-sim-receipt-boundary",
+        "fulfillment-simulation-recovery"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW_AFTER_IMMUTABLE_EDITORIAL_CORRECTION",
+      "rationale": "Product/Pricing/operational Inventory and physical reversal remain source-backed. Corrected all four simulation guides to effective SIMULATION plus canonical selected-environment allowlist independent of deployment class, with unverified/nonimmutable evidence and historical receipt preservation. The final Digital reread additionally corrected historical original-sale refund prose: current eWaste phases refuse completed ownership refunds; only original incomplete Checkout recovery remains. Source review does not claim browser, provider or deployed acceptance."
+    },
+    {
+      "documentId": "commerce.fulfillment-core-source-map",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "c3b98334c84fb8e0568f847ddf6983b2a8044c0cef2bd60cd5a9e3b783156687",
+      "previousArticleBlocksSha256": "ef763053ea50378fd68c5823b49395c34a3890633d070dcaaae8b083b60467c2",
+      "articleBytesChanged": true,
+      "componentRelocated": true,
+      "anchors": [
+        "commerceFulfillmentCoreSourceMap-2-source-map",
+        "commerceFulfillmentCoreSourceMap-6-operating-rules"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW_AFTER_IMMUTABLE_EDITORIAL_CORRECTION",
+      "rationale": "Product/Pricing/operational Inventory and physical reversal remain source-backed. Corrected all four simulation guides to effective SIMULATION plus canonical selected-environment allowlist independent of deployment class, with unverified/nonimmutable evidence and historical receipt preservation. The final Digital reread additionally corrected historical original-sale refund prose: current eWaste phases refuse completed ownership refunds; only original incomplete Checkout recovery remains. Source review does not claim browser, provider or deployed acceptance."
+    }
+  ],
+  "tests": [
+    {
+      "command": "node --test nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchRankingContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchPublicationContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchBenefitContract.test.js nodics.commerce/modules/baseCommerce/modules/product/test/productCatalogueQuery.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentParticipantContextContract.test.js nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js nodics.waste/modules/wasteReward/test/materialConfiguration.test.js nodics.waste/modules/wasteReward/test/materialTransportContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 211,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-internal-tests.log"
+    },
+    {
+      "command": "node --test nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/physicalOrderReversalContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentOriginalCaptureSandboxContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceRefundContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 53,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-original-evidence-tests.log"
+    }
+  ],
+  "exclusions": [
+    "No runtime source, canonical CMS/manifest/shared closure edits.",
+    "No browser/E2E, native deployment, external calls, secrets, imports, publication, commits or context regeneration.",
+    "Local source fixtures and classification cannot qualify installed providers, transactions or financial settlement."
+  ]
+}

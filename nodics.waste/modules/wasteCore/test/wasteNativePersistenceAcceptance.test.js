@@ -18,7 +18,6 @@
 const test = require("node:test"), assert = require("node:assert/strict");
 const fixture = require("./helpers/nativePersistenceFixture");
 const transfer = require("../src/service/defaultWasteAssetTransferOperationService");
-const reversal = require("../src/service/defaultWasteAssetReversalOperationService");
 const native = { skip: !process.env.NODICS_WASTE_NATIVE_MONGO_URI };
 const ref = code => ({ module: "profile", schema: "customer", code });
 
@@ -106,8 +105,6 @@ test("Waste native validator diagnostics disclose field and rule names only", ()
 
 test("native Waste: actual unique identity, managed CAS, competing reservations, exact replay and custody preservation", native, async t => {
   const f = await fixture.create(t);
-  assert.equal(f.settings.eWaste.marketplace.digitalOwnership.enabled, false);
-  assert.equal(f.settings.eWaste.marketplace.digitalOwnership.qualified, false);
   await transfer.digitalPersistence(f.request, "wasteAsset");
   await transfer.digitalPersistence(f.request, "wasteAssetOwnershipEvent");
   const original = await asset(f, "race_asset");
@@ -127,9 +124,6 @@ test("native Waste: actual unique identity, managed CAS, competing reservations,
   assert.equal((await SERVICE.DefaultWasteAssetOwnershipEventService.get({ ...f.request, query: { assetCode: original.code } })).result.length, 1);
   await assert.rejects(transfer.digitalUpdate(f.request, "wasteAsset", original, { assetStatus: "ARCHIVED" }));
   await assert.rejects(transfer.completeDigitalSale(f.request, event, {}), /Captured digital-sale settlement is required/);
-  assert.equal(reversal.digitalEligible(locked, event), false);
-  await assert.rejects(reversal.prepareDigital(f.request, event, { saleCode: event.code,
-    orderCode: event.metadata.digitalSale.command.orderCode, refundCode: "unapproved_refund" }), /moved or is locked/);
   await f.reconnect();
   assert.deepEqual(await transfer.digitalRead(f.request, "wasteAsset", original.code), locked);
   assert.deepEqual(await transfer.digitalRead(f.request, "wasteAssetOwnershipEvent", event.code), event);

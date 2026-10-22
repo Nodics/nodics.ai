@@ -36,9 +36,10 @@ module.exports = {
     reveal: async function (request) {
         const digital = SERVICE.DefaultDigitalCommerceEntitlementService;
         request = digital.revealContext(request);
+        const scoped = await digital.couponReadContext(request);
         const coupon =
             await SERVICE.DefaultPromotionOperationService.readLifecycleCoupon(
-                request,
+                scoped,
                 request.couponCode,
             );
         await digital.authorizeCouponReveal(request, coupon);
@@ -47,7 +48,7 @@ module.exports = {
             if (Date.parse(coupon.validTo) <= Date.now())
                 throw new Error('The purchased coupon has expired');
         }
-        const token = await SERVICE.DefaultCouponSecureIssuanceService.revealToken(request, coupon);
+        const token = await SERVICE.DefaultCouponSecureIssuanceService.revealToken(scoped, coupon, request);
         return { couponCode: coupon.code, status: 'REVEALED', token, tokenSource: 'AUTHENTICATED_RETENTION',
             correlationId: request.correlationId };
     },

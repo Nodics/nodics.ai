@@ -28,9 +28,9 @@
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v001",
+      "contentPath": "docs-v002",
       "pack": "shoppingList",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -44,7 +44,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sourceAuthority": "data/docs-v002/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -52,16 +52,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "687d2d2c9c54ada25af09e7fda26404b28980a0b91f6279eb658f84483165a64",
+      "releaseChecksum": "589113633042a0baa6b338db319927769b0531fb1a16df799f237c570629d51a",
       "generatedHashes": {
-        "docs-v001/records/documentation/shoppingListDocumentationNodeData.js": "e9676658c92f692e3ac50e907d98d55a6b6113b2e8a836627ce37827d00eaf43",
-        "docs-v001/records/documentation/shoppingListDocumentationPageMetadataData.js": "d79ac5d7ff35869b4f99157261a240b1d9e64a31e608e3a7633bdfdd450c75d6",
-        "docs-v001/records/documentation/shoppingListDocumentationPublicationStateData.js": "634dc2064fdafa2579ca45535667682fd223f69b9b59e3b02bc4c59a638a4be7",
-        "docs-v001/records/documentation/shoppingListDocumentationSearchMetadataData.js": "2e070aa65ad83b4aaea56330e4d82fc6a5b0d0428769abae74c085dde2e1f320",
-        "docs-v001/records/documentation/shoppingListDocumentationComponentData.js": "bbc3925b132b23574e99a62c69dbfcae7b5f91b934aada3ae3e98d4c60280c50",
-        "docs-v001/records/documentation/shoppingListDocumentationPageData.js": "af55d9beb45a3ee1755fec86f060e3e4d0d27bba9cad72fd1bf5d0c1b26f1e68",
-        "docs-v001/records/documentation/shoppingListDocumentationRouteData.js": "eb0a9eadd75ac16a2623294c33c7dd1e585ed5996d13b21ca6953b3ed856f960",
-        "docs-v001/headers/100_shoppingListDocumentationContentPackHeader.js": "673d88e5039bd7e54273b8f50c565e0b34785255ca148ca740c252b268a943c8"
+        "docs-v002/records/documentation/shoppingListDocumentationNodeData.js": "7183c2cfe3b2dce9bcf2c222f48972a5c320a3cdf0c496cba96b28c81e15f060",
+        "docs-v002/records/documentation/shoppingListDocumentationPageMetadataData.js": "f4ba850789ed7f644a254802763d9f17c5f30bc7883710689488f143e67d8ae3",
+        "docs-v002/records/documentation/shoppingListDocumentationPublicationStateData.js": "0dcc2abcfbeed7d36251cb925ce4e08e697754e041c737508cf52b0e94070475",
+        "docs-v002/records/documentation/shoppingListDocumentationSearchMetadataData.js": "e7e868747908aeb237080e8bc93654826b4e8ec1628d4a29ff693ff32be643b8",
+        "docs-v002/records/documentation/shoppingListDocumentationComponentData.js": "9e7e95b76b5835b264152aae4a8edf79331200e3f206eb6ae6bed39aceb497cf",
+        "docs-v002/records/documentation/shoppingListDocumentationPageData.js": "af55d9beb45a3ee1755fec86f060e3e4d0d27bba9cad72fd1bf5d0c1b26f1e68",
+        "docs-v002/records/documentation/shoppingListDocumentationRouteData.js": "5840ec7478b1ac19cc9858bcc18107ce74a45aeb5b87563b3146f9d9ef744549",
+        "docs-v002/headers/100_shoppingListDocumentationContentPackHeader.js": "673d88e5039bd7e54273b8f50c565e0b34785255ca148ca740c252b268a943c8"
       },
       "includes": [
         {

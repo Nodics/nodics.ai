@@ -35,6 +35,8 @@ module.exports = {
           role: "WCMS_STAGED",
         },
         profileTemplate: "foundation",
+        requestTimeoutMs: 30000,
+        initializationTimeoutMs: 360000,
       },
     },
   },

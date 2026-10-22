@@ -313,7 +313,8 @@ function historicalFixture(t) {
     ["DefaultCheckoutCheckpointService", [checkpoint]],
     [
       "DefaultPaymentTransactionEntryService",
-      [{ status: "CAPTURED", currency: "AED", totalAmount: "10.00" }],
+      [{ tenant: r.tenant, ownerId: r.ownerId, orderCode: order.code, evidence: { operation: "CAPTURE" },
+        status: "CAPTURED", currency: "AED", totalAmount: "10.00" }],
     ],
     ["DefaultDigitalDeliveryService", [delivery]],
   ]) {
@@ -412,6 +413,7 @@ test("versioned native notification workspace remains disabled and exposes only 
   );
   const provider = require("../src/service/defaultDigitalCommerceBackofficeCapabilityService");
   global.SERVICE.DefaultDigitalCommerceNotificationService = service;
+  global.SERVICE.DefaultDigitalParticipationService = require('../src/service/defaultDigitalParticipationService');
   global.SERVICE.DefaultBackofficeCapabilityDefinitionService = require("../../../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService");
   const navigation = provider
     .getCapability()

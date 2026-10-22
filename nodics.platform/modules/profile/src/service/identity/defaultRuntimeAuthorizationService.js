@@ -25,19 +25,19 @@ module.exports = {
         await SERVICE.DefaultIdentityCatalogueGovernanceService.authorizeSeed(request, service);
         const models = structuredClone(request.models), codes = new Set(), placements = new Set();
         const read = async model => {
-            const response = await service.get({ tenant: request.tenant, authData: request.authData,
-                query: { $or: [{ code: model.code }, { principalType: 'service', principalCode: model.principalCode,
+            const inspect = async query => {
+                const rows = await SERVICE.DefaultPrincipalSecurityStampGovernanceService.inventory(
+                    service, request.tenant, query,
+                );
+                if (!Array.isArray(rows) || rows.length > 1) fail();
+                return rows[0];
+            };
+            const original = await inspect({ code: model.code }) || await inspect({
+                    principalType: 'service', principalCode: model.principalCode,
                     scopeType: 'RUNTIME_DEPLOYMENT', tenantCode: model.tenantCode, enterpriseCode: model.enterpriseCode,
                     ...Object.fromEntries(['projectCode', 'environmentCode', 'serverCode', 'instanceCode'].map(key =>
-                        ['runtimeScope.' + key, model.runtimeScope[key]])) }] },
-                options: { recursive: false, skipItemCache: true },
-                searchOptions: { pageSize: 2, pageNumber: 1 } });
-            if (!/^SUC_/.test(response?.code || '') ||
-                response.success !== undefined && response.success !== true ||
-                response.acknowledged !== undefined && response.acknowledged !== true || response.error ||
-                response.errors && (!Array.isArray(response.errors) || response.errors.length) ||
-                !Array.isArray(response.result) || response.count !== response.result.length || response.result.length > 1) fail();
-            const original = response.result[0];
+                        ['runtimeScope.' + key, model.runtimeScope[key]])),
+            });
             if (original && (!original._id || ['code', 'principalType', 'principalCode', 'scopeType', 'scopeCode',
                 'tenantCode', 'enterpriseCode', 'inheritanceMode'].some(key => original[key] !== model[key]) ||
                 ['projectCode', 'environmentCode', 'serverCode', 'instanceCode'].some(key => original.runtimeScope?.[key] !== model.runtimeScope[key]))) fail();

@@ -21,7 +21,7 @@ const expected = new Map([
     ['product', '70.11'], ['pricing', '70.12'], ['tax', '70.13'],
     ['promotion', '70.14'], ['inventory', '70.15'], ['digitalCore', '70.16'],
     ['shoppingList', '70.17'], ['digitalCommerce', '70.18'], ['commerceSearch', '76.17'],
-    ['commerceSearchCore', '76.16'], ['checkout', '70.29'],
+    ['commerceSearchCore', '76.16'], ['commercialAgreement', '76.15'], ['checkout', '70.29'],
     ['bidding', '70.23'], ['checkoutCore', '70.20'], ['cart', '70.21'], ['order', '70.22'],
     ['payment', '70.49'], ['paymentCore', '70.30'], ['paymentMethods', '70.35'],
     ['cardPayment', '70.31'], ['walletPayment', '70.32'], ['loyaltyRewardPayment', '70.32.5'],
@@ -51,6 +51,7 @@ packages.forEach(({ folder, value }) => {
 });
 assert.deepStrictEqual(packages[0].value.requiredModules, ['baseCommerce', 'checkout', 'bidding', 'digitalCommerce', 'payment', 'fulfillment']);
 assert.deepStrictEqual(packages.find(item => item.value.name === 'baseCommerce').value.requiredModules, ['store', 'product', 'pricing', 'tax', 'promotion', 'inventory', 'shoppingList']);
+assert.deepStrictEqual(packages.find(item => item.value.name === 'commerceSearchCore').value.requiredModules, ['commercialAgreement']);
 assert.deepStrictEqual(packages.find(item => item.value.name === 'checkout').value.requiredModules, ['checkoutCore', 'cart', 'order']);
 assert(Number(packages.find(item => item.value.name === 'commerceSearch').value.index) > 75.99,
     'Commerce Search must load after generic Discovery services');

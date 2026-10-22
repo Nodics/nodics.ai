@@ -10,9 +10,36 @@
  */
 
 'use strict';
-/** @module product/service/defaultProductGovernedPublicationService @description Seals catalogue membership through versioned Product save and submits existing nPublish governance; validates target intent against stored lifecycle state. @layer service @owner product */
+/**
+ * @module product/service/defaultProductGovernedPublicationService
+ * @description Seals catalogue membership through versioned Product save and submits existing nPublish
+ * governance; validates target intent against stored lifecycle state.
+ * @layer service
+ * @owner product
+ * @remarks Governed Product publication retains sealed-root identity and the existing publisher
+ * lifecycle. Extensions may customize effective members but cannot fabricate human approval or bypass
+ * source sealing.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: create, authorizeTarget.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
-    /** Captures and saves one successor root using the original version; retries reuse the publication's sealed root. */
+    /**
+     * Captures and saves one successor root using the original version; retries reuse the publication's
+     * sealed root.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
+     * grant authority.
+     * @returns {Promise<Object>} Retained publication with its original sealed successor root.
+     * @remarks Effects: Persists through existing Product/version/publication owners; retries reuse the
+     * same root.
+     * Failure behavior: Rejects scope/version/source drift and propagates unresolved owner write failure.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
     create: async function (request, input) {
         request = { ...request, authData: structuredClone(request.authData || {}) };
         input = structuredClone(input);
@@ -57,7 +84,8 @@ module.exports = {
                 rootType: 'product', rootCode: input.productCode, sourceVersion: String(saved.versionId) } });
         }
         if (publication.state === 'STAGED') publication = await lifecycle.validate({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });
-        if (publication.state === 'VALIDATED') publication = await lifecycle.requestApproval({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });
+        if (publication.state === 'VALIDATED' && !SERVICE.DefaultProductBundlePublicationService?.admission(request))
+            publication = await lifecycle.requestApproval({ ...request, publicationCode: publication.code, expectedRevision: publication.revision });
         return publication;
     },
     /** Checks stored nPublish intent, source identity, target digest and immutable operation key independently of the transport caller. */

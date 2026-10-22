@@ -15,6 +15,45 @@ const reads = new WeakSet(), writes = new WeakSet(), retention = new WeakSet();
 
 /** @module promotion/service/defaultCouponSecureIssuanceService @description Owns atomic generated coupon issuance, encrypted retention on coupon aggregates, private reads and replay. Key material remains with the purpose-bound secret owner. @layer service @owner promotion @override Narrow issuance bounds or owner admission through exported members; retain immutable intent, original actor, generated transactions, authenticated scope and private read/write guards. */
 module.exports = {
+    /** Issues one encrypted unit inside the actual offer allocation transaction; no caller can request free-standing unlimited stock. */
+    issueOfferUnit: async function (r, campaign, allocationCode) {
+        const allocation = SERVICE.DefaultCouponOfferAllocationService;
+        if (!r.transactionContext || !allocation?.issuance(r, campaign, allocationCode) ||
+            campaign.couponOffer?.supply?.mode !== 'UNLIMITED' || campaign.vendorEnterpriseRef?.code !== r.enterpriseCode ||
+            campaign.issuerEnterpriseRef?.code !== campaign.vendorEnterpriseRef?.code) this.fail();
+        return this.privateOperation(r, async () => {
+            await this.persistence(r);
+            const owner = await this.keyOwner(r), fp = SERVICE.DefaultPromotionPublicationService.fingerprint;
+            const batchCode = allocation.code('unlimited', [r.tenant, campaign.code, allocationCode]);
+            const command = { tenant: r.tenant, enterpriseCode: campaign.issuerEnterpriseRef.code, promotionCode: campaign.code,
+                batchCode, quantity: 1, commandReference: allocationCode, storeCode: r.storeCode, rootCode: campaign.code,
+                policyFingerprint: fp(campaign), actorId: r.authData?.loginId || r.authData?.principalId };
+            const issuerContext = { ...r, enterpriseCode: campaign.issuerEnterpriseRef.code };
+            const existing = await this.original(issuerContext, command, campaign);
+            if (existing) return (await this.read('DefaultCouponService', r, { tenant: r.tenant, code: batchCode + ':1' }))[0];
+            const token = crypto.randomBytes(32).toString('hex').toUpperCase(), intentDigest = fp(command);
+            const coupon = SERVICE.DefaultPromotionOperationService.withSchemaBase({ code: batchCode + ':1', tenant: r.tenant,
+                enterpriseCode: r.enterpriseCode, enterpriseRef: structuredClone(campaign.vendorEnterpriseRef),
+                issuerEnterpriseRef: structuredClone(campaign.issuerEnterpriseRef), vendorEnterpriseRef: structuredClone(campaign.vendorEnterpriseRef),
+                promotionCode: campaign.code, batchCode, tokenHash: SERVICE.DefaultPromotionOperationService.hashToken(r.tenant, token),
+                secureIssuanceCode: batchCode, status: 'ACTIVE', saleStatus: 'AVAILABLE', benefitStatus: 'UNCLAIMED',
+                maxUses: 1, usedCount: 0, revision: 0,
+                ...(command.issuanceAuthority ? { sellerAuthorizationProof: command.issuanceAuthority.sellerAuthorizationProof } : {}) }, r);
+            coupon.protectedToken = await owner.protect({ tenant: r.tenant, purpose: 'PROMOTION_COUPON_TOKEN',
+                binding: this.binding(coupon, intentDigest, command.issuanceAuthority?.sellerAuthorizationProof), value: token });
+            if (!coupon.protectedToken || typeof coupon.protectedToken !== 'object' || JSON.stringify(coupon.protectedToken).includes(token)) this.fail();
+            const batch = SERVICE.DefaultPromotionOperationService.withSchemaBase({ code: batchCode, tenant: r.tenant,
+                enterpriseCode: r.enterpriseCode, enterpriseRef: coupon.enterpriseRef, issuerEnterpriseRef: coupon.issuerEnterpriseRef,
+                vendorEnterpriseRef: coupon.vendorEnterpriseRef, promotionCode: campaign.code, status: 'GENERATED', issuedCount: 1,
+                reservedCount: 0, revision: 0, tokenHashPolicy: 'TENANT_UPPERCASE_SHA256', secureIssuance: { command,
+                    createdAt: new Date().toISOString(), units: [{ code: coupon.code, tokenHash: coupon.tokenHash,
+                        protectedFingerprint: fp(coupon.protectedToken) }] } }, r);
+            if (!allocation.issuance(r, campaign, allocationCode)) this.fail();
+            await this.insert('DefaultCouponBatchService', r, batch);
+            await this.insert('DefaultCouponService', r, coupon);
+            return coupon;
+        });
+    },
     /** Refuses without reporting secret values or provider errors. @param {string} code Stable failure. @returns {never} Refusal. */
     fail: function (code = 'ERR_PROMOTION_SECURE_ISSUANCE_UNCONFIRMED') { throw new CLASSES.NodicsError(code); },
     /** Resolves the fixed purpose-bound key owner; no generic configuration key or caller provider is accepted. @param {Object} r Trusted context. @returns {Promise<Object>} Ready owner. */
@@ -322,7 +361,7 @@ module.exports = {
         });
     },
     /** Decrypts only after the existing Digital owner revalidates payment/purchase/delivery and current customer scope. @param {Object} r Privately admitted customer request. @param {Object} observed Already authorized coupon snapshot. @returns {Promise<string>} Raw token only to reveal response. */
-    revealToken: async function (r, observed) {
+    revealToken: async function (r, observed, ownerRequest = r) {
         if (!SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection(r)) this.fail();
         const fp = SERVICE.DefaultPromotionPublicationService.fingerprint;
         const current = (await this.read('DefaultCouponService', r, { tenant: r.tenant, code: observed.code }))[0];
@@ -335,12 +374,12 @@ module.exports = {
             !unit || unit.tokenHash !== current.tokenHash || unit.protectedFingerprint !== fp(current.protectedToken)) this.fail();
         this.assertStockScope(batch, receipt.command, batch);
         this.assertStockScope(current, receipt.command, batch);
-        await SERVICE.DefaultDigitalCommerceEntitlementService.authorizeCouponReveal(r, current);
+        await SERVICE.DefaultDigitalCommerceEntitlementService.authorizeCouponReveal(ownerRequest, current);
         retention.add(current);
         let token;
         try { token = await this.retainedToken(r, current, receipt.command); }
         finally { retention.delete(current); }
-        await SERVICE.DefaultDigitalCommerceEntitlementService.authorizeCouponReveal(r, current);
+        await SERVICE.DefaultDigitalCommerceEntitlementService.authorizeCouponReveal(ownerRequest, current);
         const final = (await this.read('DefaultCouponService', r, { tenant: r.tenant, code: current.code }))[0];
         if (!final || final.revision !== current.revision || final.status !== current.status || final.soldTo !== current.soldTo ||
             fp(final.protectedToken) !== fp(current.protectedToken)) this.fail();

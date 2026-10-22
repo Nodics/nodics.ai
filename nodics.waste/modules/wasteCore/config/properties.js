@@ -74,6 +74,11 @@ module.exports = {
     },
   },
   waste: {
+    certificateHoldings: { maximumPageSize: 100 },
+    certificateCoupons: {
+      maximumCertificates: 100,
+      commerce: { connectionName: "commerce", targetAuthority: { runtimeRole: "COMMERCE" }, timeoutMs: 15000 },
+    },
     installedDataInspection: {
       pageSize: 100,
       resources: {

@@ -28,8 +28,10 @@ module.exports = {
      */
     enterprisePreSave: function (request, response) {
         return new Promise((resolve, reject) => {
-            request.options.returnModified = request.options.returnModified || true;
-            request.options.recursive = request.options.recursive || true;
+            if (request.options.returnModified === undefined)
+                request.options.returnModified = true;
+            if (request.options.recursive === undefined)
+                request.options.recursive = true;
             resolve(true);
         });
     },
@@ -50,8 +52,10 @@ module.exports = {
 
     enterprisePreUpdate: function (request, response) {
         return new Promise((resolve, reject) => {
-            request.options.returnModified = request.options.returnModified || true;
-            request.options.recursive = request.options.recursive || true;
+            if (request.options.returnModified === undefined)
+                request.options.returnModified = true;
+            if (request.options.recursive === undefined)
+                request.options.recursive = true;
             resolve(true);
         });
     },
@@ -64,8 +68,10 @@ module.exports = {
      */
     enterprisePreRemove: function (request, response) {
         return new Promise((resolve, reject) => {
-            request.options.returnModified = request.options.returnModified || true;
-            request.options.recursive = request.options.recursive || true;
+            if (request.options.returnModified === undefined)
+                request.options.returnModified = true;
+            if (request.options.recursive === undefined)
+                request.options.recursive = true;
             resolve(true);
         });
     },

@@ -1,5 +1,23 @@
 # Cart Agent Contract
 
+Profile wildcard capability scopes must match both allow and deny; preserve
+tenant/Enterprise qualifiers and deny precedence in the effective facade member.
+`test/cartParticipantScope.test.js` covers every shared purchaser permission
+without exporting private authority or changing original employee credentials.
+
+Persist calculation entries with their original Pricing priceDecision, including
+priceRowCode. Schema projection must not discard this purchased-consideration
+evidence; Digital validates it before governed coupon inputs become consumed.
+
+Resolve customer/Enterprise purchasers with original Profile access authority.
+Never change signed employee claims to a customer or accept a body owner tuple.
+Private generated storage follows typed owner admission. Fixed-price scope comes
+from canonical Store placement and then retained Cart evidence, never the signed
+buyer Enterprise. Auction partition comes only from Checkout's retained commitment.
+Reject selected-cart entry mutations. Follow [merchant scope](llm/contracts/merchant-scope.md)
+for runtime-authenticated Store reads and participant-preserving persistence.
+Read [participant context](../checkoutCore/llm/contracts/auction-checkout.md).
+
 - Follow `../../../../../AGENTS.md` and `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow ancestor contracts and read local guidance.
 

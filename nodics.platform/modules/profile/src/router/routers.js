@@ -18,6 +18,70 @@
  */
 module.exports = {
   profile: {
+    giftNotificationRecipients: {
+      resolve: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permissionConfig: "profileGiftNotifications.permission", apiExposure: "moduleInternal",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/internal/bundles/gifts/notification-recipients", method: "POST",
+        controller: "DefaultProfileGiftNotificationRecipientController", operation: "resolve",
+      },
+    },
+    auctionNotificationRecipients: {
+      resolve: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permissionConfig: "profileAuctionNotifications.permission", apiExposure: "moduleInternal",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/internal/auctions/notification-recipients", method: "POST",
+        controller: "DefaultProfileAuctionNotificationRecipientController", operation: "resolve",
+      },
+    },
+    couponNotificationRecipients: {
+      resolve: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permissionConfig: "profileCouponNotifications.permission", apiExposure: "moduleInternal",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/internal/coupons/notification-recipients", method: "POST",
+        controller: "DefaultProfileCouponNotificationRecipientController", operation: "resolve",
+      },
+      inboxIdentity: {
+        secured: true, authTokenTypes: ["access"], accessGroups: ["employeeUserGroup"],
+        permission: "communication.customer.read", apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/employee/inbox-identity", method: "GET",
+        controller: "DefaultProfileCouponNotificationRecipientController", operation: "inboxIdentity",
+      },
+    },
+    transferNotificationRecipients: {
+      resolve: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permission: "profile.transfer.notification.recipient.resolve", apiExposure: "moduleInternal",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/internal/transfers/notification-recipients", method: "POST",
+        controller: "DefaultProfileTransferNotificationRecipientController", operation: "resolve",
+      },
+    },
+    platformAdministratorEvidence: {
+      evidence: {
+        secured: true, authTokenTypes: ["access"], accessGroups: ["platformAdministratorUserGroup"],
+        permission: "loyalty.wallet.testCredit", apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/identity/platform-administrator/evidence", method: "POST",
+        controller: "DefaultProfilePlatformAdministratorEvidenceController", operation: "evidence",
+      },
+    },
+    participantDirectory: {
+      search: {
+        secured: true, authTokenTypes: ["access"], accessGroups: ["customerUserGroup", "employeeUserGroup"],
+        apiExposure: "profileManagement", requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/participants/search", method: "POST", controller: "DefaultProfileParticipantDirectoryController", operation: "search",
+      },
+      resolve: {
+        secured: true, authTokenTypes: ["access"], accessGroups: ["customerUserGroup", "employeeUserGroup"],
+        apiExposure: "profileManagement", requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/participants/resolve", method: "POST", controller: "DefaultProfileParticipantDirectoryController", operation: "resolve",
+      },
+    },
     customerIdentity: {
       current: {
         secured: true,

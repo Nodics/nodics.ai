@@ -1,5 +1,16 @@
 # commsCore
 
+The selected [v002 CMS outcome-delivery guide](data/docs-v002/records/documentation/communicationDurableOutcomesDocumentationComponentData.js)
+covers actual transfer, coupon, auction and gift recipient integrations, current
+Profile permission/consent checks and genuine Employee inboxes. The successor
+preserves v001 source bytes and remains Staged pending explicit review/publication.
+
+Source-dependent delivery can require a framework-contributed current eligibility
+owner while retaining the existing durable intent/retry authority. Checks run
+before claim and immediately before send without exposing content or contacts.
+See [the delivery contract](llm/contracts/durable-outcome-delivery.md#source-eligibility)
+for the fixed callback and separate domain/recipient integration responsibilities.
+
 Communication orchestration and delivery governance. This module follows the active `nodics.communication` ownership contract. Read `AGENTS.md` and `llm/contracts/README.md`; verify through focused tests and the effective server build.
 
 Module-owned HTML/text templates live under `src/templates/<channel>/<name>`.

@@ -27,7 +27,7 @@ const contracts = require("../src/schemas/apiContracts");
 const mediaProperties = require("../../../../nodics.wcms/modules/media/config/properties");
 const mediaOwner = require("../../../../nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService");
 const clone = (value) => JSON.parse(JSON.stringify(value));
-const library = clone(mediaProperties.media.library);
+const library = clone(require("../../../../nodics.wcms/modules/media/data/backoffice/mediaLibraryWorkspaceData"));
 const listing = library.workspace.tabs[0].sections[0];
 const form = library.publicationWorkspace.tabs[0].sections[0];
 listing.rowNavigation = {

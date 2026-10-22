@@ -1,5 +1,28 @@
 # eWaste agent contract
 
+Journey defaults, including unassigned review (`reviewAssignment: null`) and
+neutral deposit guidance, belong in this module's properties. Confirmation
+consumes the effective instruction and rejects missing/invalid text before
+writing; do not restore an inline fallback. Missing journey selections include
+the standard journey contract without customer `enabled: true` copies. Keep
+generic omission/customization tests here; customer tests verify real adoption.
+Deployment queue, copy and arrival-radius differences remain later overrides.
+
+Marketplace binding definitions belong in this module's config/properties.js:
+storeCode, currency, jurisdiction, programCode and rewardTypeCode default to null;
+locale has a complete framework default. Runtime layers select identities, never
+supply missing definitions. Discovery uses configured locale; retained Product
+locale takes precedence in offers. Do not expose a purchase DTO with incomplete
+binding or infer a program/currency from another journey.
+Retained listing policy selectors also default to null here, with neutral
+listingPresentation fields. They support original evidence inspection only;
+neither definitions nor customer selections reopen legacy sale admission.
+
+Coupon list/detail acquisitionRequirements come exclusively from Product's live
+Promotion-backed availability DTO. Reject malformed transport shape as null and
+unavailable. Never use localizedAttributes, infer REWARDS, or invent coupon rules.
+Certificate-only offers retain a canonical zero price without a fake payment.
+
 eWaste owns its neutral photo-metadata profile, selected profile identifiers and
 customer-evidence protocol route/receiver roles. Shared customer-guidance generation
 defaults belong to Copilot Conversation. Reference projects select providers,
@@ -29,6 +52,11 @@ and owner-qualified references. Corrected content and its derived publication
 metadata remain STAGED without invented approval/Online actors. Main deployment
 owners advance exact publication descriptors separately. The frozen-source and
 forward content gates live in test/eWasteDocumentationForwardRelease.test.js.
+Current source selectors are documentation 0.0.8 and referenceDocumentation
+0.0.4. Their immediate predecessors remain frozen in
+test/fixtures/documentationFrozen006.json. Current guides describe final-sale
+coupons and common Cart/Checkout, not the retired eWaste purchase/reversal
+adapters. Historical refund evidence is not current activation authority.
 
 OpenAI environmental assessment is separate from photo metadata. Preserve source
 evidence, mass boundaries and estimate semantics; failed validation uses the configured
@@ -48,32 +76,29 @@ preset data and journey orchestration over existing framework operations.
 Generic Waste schemas/lifecycles/persistence belong in nodics.waste. Do not create
 parallel submissions, assets, receipts, wallets, coupons or locations here.
 
-Read the [persisted digital asset sale owner contract](llm/contracts/digital-ownership-sale.md)
-before ownership-sale work. Waste owns lock/event CAS; DigitalCore owns the
-digital contract; eWaste verifies the original one-asset Loyalty capture and
-coordinates only original seller credit. Never call legacy purchase to debit
-again, infer physical custody, adopt unapproved policy or treat flags/source tests
-as installed qualification. Expiry alone cannot unlock; captured/uncertain
-settlement and unsupported automatic refunds retain owner/manual recovery.
-Exact amount checks use the sale owner's mergeable `amount()` accessor over
-the pure nCommon utility, never the Pricing service registry or local Commerce
-activation. Preserve the split-Waste confirmation and refund regressions.
-The original-sale refund slice is described in that contract: explicit retained
-transfer-policy refund term, original Order approval/phase readback, original
-Loyalty seller-earning reversal, original Payment buyer refund and Waste CAS
-ownership restoration. Keep legacy `/internal/order-reversals` refusal for modern
-digital sales; only secured `/internal/digital-sales/refund-*` uses the stronger
-contract. Never backfill approval into old sale snapshots, rewrite a buyer token
-or grant general refund authority through the integration qualification flags.
-The private `compensation-resolve` phase resolves only persisted original command
+Read [common bundle Commerce](llm/contracts/common-bundle-commerce.md) before
+listing/gift/purchase work. New commands delegate to Digital manifests and common
+Commerce. Waste owns certificate CAS; Digital owns purchase/proceeds; Loyalty
+alone writes balances. Never restore deprecated eWaste admission or seller-credit
+paths to satisfy historical tests. Completed purchases are final; refund mutation
+phases refuse. Preserve original evidence and explicit recovery without custody
+changes, reward-labelled carbon transfers, fabricated receipts or program defaults.
+The obsolete Order reversal service/controller/route are removed. Do not restore
+them or marketplace precision/refund switches to satisfy historical tests or
+references. Preserve immutable records and use original Checkout recovery only
+for incomplete purchases, never completed-sale returns.
+Historical exact amount evidence uses the pure nCommon accessor, not runtime
+Pricing activation. Old one-asset contract material is historical inspection/
+recovery context, not authorization for a new sale or return.
+The historical private `compensation-resolve` phase resolves only persisted original command
 selectors, never current Cart/Product. Captured/full-refunded cancellation needs
 the original failed checkpoint/Payment/Loyalty chain and unfenced RESERVED state.
 Waste must CAS a cancellation fence before qualified Commerce entitlement and
 source-wide Loyalty seller-EARN absence reads. Capture-fenced/settling sales
 remain recovery-required. Preserve audit, revision/custody fences and exact
 replay; no financial effects or owner transfer. Normalize only schema-mirrored
-Payment evidence, refusing contradictory aliases. Loyalty earning/reversal
-mutations retain the original signed namespace without business headers or
+Payment evidence, refusing contradictory aliases. Protected Loyalty evidence
+reads retain the original signed namespace without business headers or
 forwarded credentials. See the contract's refunded-reservation cleanup section.
 DigitalCore binding admission uses the read-only `/internal/digital-listings/plan`
 phase; preserve `preview` as a compatible alias. Neither phase creates a binding,

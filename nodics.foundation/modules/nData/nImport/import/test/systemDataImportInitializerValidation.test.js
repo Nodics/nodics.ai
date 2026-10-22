@@ -71,6 +71,11 @@ global.NODICS = {
         return moduleName === 'activeTarget';
     }
 };
+global.CONFIG = {
+    get: function (key) {
+        return key === 'runtimeIdentity' ? { remoteModules: [] } : undefined;
+    }
+};
 
 let buildHeaderState = {};
 let headerRequest = {
@@ -105,6 +110,26 @@ assert.deepStrictEqual(headerRequest.data.headers['activeTarget:activeData'].opt
 assert.strictEqual(headerRequest.importRun.summary.enabledHeaders, 1);
 assert.strictEqual(headerRequest.importRun.summary.disabledHeaders, 1);
 assert.strictEqual(headerRequest.importRun.headers[0].targetModule, 'activeTarget');
+
+let remoteHeaderRequest = {
+    data: { headerFiles: { mixedHeaders: [require.resolve('./fixtures/system-import/mixedTargetHeader.js')] } },
+    importRun: { summary: { enabledHeaders: 0, disabledHeaders: 0 }, headers: [] }
+};
+global.CONFIG.get = key => key === 'runtimeIdentity' ? { remoteModules: ['inactiveTarget'] } : undefined;
+createService().buildHeaderInstances(remoteHeaderRequest, {}, {
+    nextSuccess: function () {},
+    error: function (_request, _response, error) { throw error; }
+});
+assert.deepStrictEqual(Object.keys(remoteHeaderRequest.data.headers).sort(),
+    ['activeTarget:activeData', 'inactiveTarget:inactiveData']);
+assert.strictEqual(remoteHeaderRequest.importRun.summary.enabledHeaders, 2);
+assert.strictEqual(remoteHeaderRequest.importRun.summary.disabledHeaders, 0);
+
+for (const remoteModules of [['inactiveTarget', 'inactiveTarget'], ['bad/target'], Array(513).fill('inactiveTarget')]) {
+    global.CONFIG.get = key => key === 'runtimeIdentity' ? { remoteModules: remoteModules } : undefined;
+    assert.strictEqual(createService().isImportTargetAvailable('inactiveTarget'), false);
+}
+global.CONFIG.get = key => key === 'runtimeIdentity' ? { remoteModules: [] } : undefined;
 
 let serviceTokenState = {};
 let serviceTokenRequest = {

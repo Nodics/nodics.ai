@@ -1,5 +1,17 @@
 # Order Agent Contract
 
+Refund owner ports default to an empty map. Standard Commerce must not select
+an accelerator or retain a retired accelerator endpoint. Historical refund
+evidence remains immutable; an unavailable original owner requires reconciliation,
+never a replacement owner or a new financial effect. Preserve the owner-local
+`test/orderRefundOwnerRetirement.test.js` regression and explicit extension path.
+
+Own-order projections admit signed Profile purchasers, including Enterprise
+employees, and require typed owner continuity. Bound entry/lifecycle reads to the
+verified Order's tenant, merchant partition and original owner. Do not let a
+customer and Enterprise with equal textual IDs share evidence. This does not grant
+Enterprise employees operator/refund authority or relax reverse lifecycle guards.
+
 The module owns explicit ordinary business access definitions in
 `data/manifest.json` sections `businessAccessGroups` and `businessAccessRoles`.
 Keep mappings on persisted Profile roles and user groups; never infer grants from

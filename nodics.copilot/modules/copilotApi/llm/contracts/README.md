@@ -10,6 +10,18 @@ the independent configuration-administrator and enterprise/user budget owner
 grants, inactive/unknown permission rejection and rejection of wildcard grants
 for ordinary groups. Catalogue registration does not grant a role or enable a feature.
 
+nConfig's explicit `runtimeConfigAdminUserGroup` definition includes the
+configuration-administrator grant; recognizing that owner definition is not an
+employee assignment. Do not prohibit all privileged group definitions to prove
+default denial. Keep enterprise/user budget grants independently unassigned and
+retain inactive, unknown and wildcard rejection in the owner regression.
+
+The immutable knowledge-refresh workflow uses the recorded 2026-10-07 unreleased
+baseline rebase, not its superseded 1.1.0 version. The contribution regression
+checks the recorded manifest seal and its payload hashes without changing
+predecessor bytes. A future source change requires a governed successor and new
+evidence; never silently refresh a frozen expected hash.
+
 The facade translates the Conversation owner's exact not-found codes to
 `ERR_CPA_00001` / HTTP 404. Missing, foreign and unavailable conversation/turn
 identities receive the same bounded response without record identifiers or

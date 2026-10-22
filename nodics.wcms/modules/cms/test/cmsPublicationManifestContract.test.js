@@ -334,6 +334,9 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     SERVICE.TestCmsTargetTransport.deploy = originalTransportDeploy;
 
     properties.cms.publication.enabled = true;
+    SERVICE.DefaultIdentityGovernanceService = { getSystemAuthData: () => ({
+        isSystem: true, userGroups: ['systemUserGroup'], permissions: []
+    }) };
     const delivery = require('../src/service/delivery/defaultCmsDeliveryService');
     let delivered = await delivery.resolvePage({ tenant: 'tenant-a', authData: {}, router: { publicAccess: true },
         delivery: { site: 'site-a', path: '/home', locale: 'en', channel: 'web' } });

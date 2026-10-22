@@ -16,7 +16,30 @@ const confirmations = new WeakMap(), delegatedActions = new WeakMap();
 const validationFailures = new WeakMap();
 const confirmationFailures = new WeakMap();
 const merchantFailures = new WeakMap();
-/** @module digitalCore/service/defaultDigitalCommerceMerchantService @description Supports enterprise employees validating customer-presented purchased coupons and confirming fulfillment in Axis. Profile enterprises and employee scopes are the merchant authority; Promotion owns coupon eligibility and redemption. @layer service @owner digitalCore @override Configure an installed fulfillment provider, never a parallel merchant registry. Future POS adapters consume the same owner operations. */
+/**
+ * @module digitalCore/service/defaultDigitalCommerceMerchantService
+ * @description Supports enterprise employees validating customer-presented purchased coupons and
+ * confirming fulfillment in Axis. Profile enterprises and employee scopes are the merchant authority;
+ * Promotion owns coupon eligibility and redemption.
+ * @layer service
+ * @owner digitalCore
+ * @override Configure an installed fulfillment provider, never a parallel merchant registry. Future
+ * POS adapters consume the same owner operations.
+ * @remarks Digital merchant identity comes from canonical Profile Enterprise evidence. Display fields
+ * and provider selection cannot grant redemption authority.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: policy, fail, validationDiagnostic, confirmationDiagnostic, merchantFailureStage,
+ * delegation, admitDelegation, delegatedAction, resolveDelegatedAction, validateCoupon, fulfillCoupon,
+ * readBoundMerchantReceipt, persistBoundMerchantReceipt, withStore, workspace, context, storage,
+ * unwrap, entitlement, assertEntitlement, merchant, summary, update, command, targetCode,
+ * eligibleMerchants, claim, staff, scoped, validationCode, pricedBinding, nativeBasketReference,
+ * nativePricingSelected, itemEvidenceSelected, pricedAuthority, validate, queue, inspectReceipt,
+ * confirm, merchantReceiptModel, persistMerchantReceipt, readMerchantReceipt,
+ * assertMerchantReceiptOwner.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
   /** Resolves deployment fulfillment policy without a merchant identity catalogue. */
   policy: function () {
@@ -240,7 +263,18 @@ module.exports = {
     )
       this.fail("The coupon entitlement is missing or ambiguous");
   },
-  /** Resolves the coupon issuer through canonical Profile enterprise identity. */
+  /**
+   * Resolves the coupon issuer through canonical Profile enterprise identity.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} item Original bound item/coupon evidence.
+   * @returns {Promise<Object>} Canonical issuer code/label and reviewed merchant-screen presentation.
+   * @remarks Effects: Reads Profile Enterprise through the existing owner transport; no redemption or
+   * grant mutation.
+   * Failure behavior: Rejects missing/foreign/failed issuer proof.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   merchant: async function (r, item) {
     let stage = "RETAINED_UNIT";
     try {
@@ -263,7 +297,8 @@ module.exports = {
         this.fail("The purchased coupon does not match its entitlement");
       stage = "ISSUER_REFERENCE";
       const ref = coupon.issuerEnterpriseRef || coupon.enterpriseRef;
-      const code = typeof ref === "string" ? ref : ref?.code;
+      const issuerCode = typeof ref === "string" ? ref : ref?.code;
+      const code = coupon.purchasePolicy?.version === 2 && r.authData?.principalType === 'human' ? r.enterpriseCode : issuerCode;
       if (
         typeof code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(code) ||
         (typeof ref === "object" &&
@@ -271,6 +306,10 @@ module.exports = {
             (ref.schemaName || ref.schema || "enterprise") !== "enterprise"))
       )
         this.fail("The coupon needs a canonical issuing enterprise");
+      if (coupon.purchasePolicy?.version === 2 && r.authData?.principalType === 'human') {
+        stage = 'RETAINED_PARTICIPATION';
+        await SERVICE.DefaultCouponRedeemerParticipationService.authorizeRedemption(r, coupon);
+      }
       stage = "PROFILE_READ";
       const referenceResponse = await SERVICE.DefaultModuleService.invokeModule({
           local: false,
@@ -306,6 +345,7 @@ module.exports = {
           this.policy().providerService ||
           "DefaultDigitalCommerceMerchantScreenProviderService",
         coupon,
+        ...(coupon.purchasePolicy?.version === 2 ? { issuerEnterpriseCode: issuerCode, redeemerEnterpriseCode: code } : {}),
       };
     } catch (error) {
       if (error && typeof error === "object") merchantFailures.set(error, stage);
@@ -1054,6 +1094,11 @@ module.exports = {
       revealCount: 0,
       evidence: {
         enterpriseRef: marker.enterpriseRef,
+        ...(item.purchasePolicy?.version === 2 ? {
+          issuerEnterpriseRef: item.purchasePolicy.issuerEnterpriseRef,
+          redeemerEnterpriseRef: marker.enterpriseRef,
+          originalOwnerRef: item.purchasePolicy.originalOwnerRef,
+        } : {}),
         redemptionCode: marker.code,
         merchantReceiptReference: marker.merchantReceiptReference,
         confirmedBy: marker.confirmedBy,

@@ -10,6 +10,7 @@
  */
 
 "use strict";
+require("./helpers/runtimeEnums.js")();
 
 /**
  * @module loyaltyWallet/test/loyaltyTransactionContract
@@ -37,7 +38,7 @@ function fixture(t) {
     capabilities: { multiRecordAtomic: true, contextPropagation: true },
   };
   const settings = {
-    loyalty: { transactions: { enabled: true } },
+    loyalty: { transactions: { ...require("../config/properties").loyalty.transactions, enabled: true } },
     databaseTransactions: { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 },
   };
   const database = { getOptions: () => ({ connectionHandler: "FixtureTransactionAdapter" }) };
@@ -57,7 +58,7 @@ function fixture(t) {
       }
     },
   };
-  global.SERVICE = {
+  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
     DefaultLoyaltyTransactionService: bridge,
     DefaultDatabaseTransactionService: canonical,
     DefaultDatabaseConfigurationService: {
@@ -139,6 +140,23 @@ test("qualify is synchronous, read-only and selects only effective owner configu
   assert.deepEqual(f.state.rows, []);
   delete f.request.tenant;
   assert.equal(bridge.qualify(f.request).scope.tenant, "tenant-a");
+});
+
+test("explicit composition joins child reward operations without nesting or leaking a token", async t => {
+  const f = fixture(t);
+  let token;
+  await bridge.compose(f.request, async () => {
+    token = f.request.transactionContext;
+    assert.equal(bridge.isComposed(f.request), true);
+    await rewardOperation.transaction({ ...f.request }, () => f.rows(f.request).push({ code: "joined" }));
+    await assert.rejects(rewardOperation.transaction({ ...f.request, tenant: "other" }, () => assert.fail("foreign scope")),
+      { code: "ERR_LOYALTY_TRANSACTION_CONTEXT" });
+  });
+  assert.equal(f.state.started, 1);
+  assert.deepEqual(f.state.rows, [{ code: "joined" }]);
+  assert.equal(bridge.isComposed({ transactionContext: token }), false);
+  f.settings.loyalty.transactions.enabled = false;
+  await assert.rejects(bridge.compose(f.request, () => assert.fail("disabled composition")), { code: "ERR_LOYALTY_TRANSACTION_UNAVAILABLE" });
 });
 
 test("existing hook keeps one opaque token for all owner writes/postreads and expires it after commit", async t => {

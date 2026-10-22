@@ -376,12 +376,6 @@ module.exports = {
     },
   },
   eWaste: {
-    catalogue: {
-      pageSize: 12,
-      maximumPageSize: 48,
-      discoveryBatchSize: 100,
-      maximumProducts: 2000,
-    },
     journey: {
       contractVersion: 2,
       arrivalRadiusMetres: 50,
@@ -389,6 +383,8 @@ module.exports = {
       maximumPositionAgeMs: 60000,
       captureTimeoutMs: 12000,
       nearestCentreCount: 3,
+      reviewAssignment: null,
+      depositInstruction: "Follow the collection centre's deposit instructions.",
     },
     rewardRules: {
       propertyProviderCode: "eWaste.reward",
@@ -609,7 +605,22 @@ module.exports = {
       },
     },
     marketplace: {
+      storeCode: null,
+      currency: null,
+      jurisdiction: null,
+      programCode: null,
+      rewardTypeCode: null,
+      locale: "en",
+      catalogVersion: null,
+      priceBookCode: null,
+      warehouseCode: null,
+      transferPolicyCode: null,
+      rewardSettlementPolicyCode: null,
+      carbonSettlementPolicyCode: null,
+      saleMode: null,
+      listingPresentation: { description: null, imageUrl: null, sample: false },
       autoPublishListings: false,
+      auctionHistory: { maximumPages: 100, maximumRounds: 10000, timeoutMs: 30000 },
       listingHandoff: {
         enabled: false,
         reconciliation: { enabled: false },

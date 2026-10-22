@@ -1,0 +1,1 @@
+Your transfer of {{amount}} {{rewardTypeCode}} is complete. Transfer fee: {{feeAmount}}. Reference: {{transferReference}}.

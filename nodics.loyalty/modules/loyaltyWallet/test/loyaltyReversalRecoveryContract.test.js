@@ -9,6 +9,7 @@
 
  */
 
+require("./helpers/runtimeEnums.js")();
 /** @module loyaltyWallet/test/loyaltyReversalRecoveryContract @description Verifies balance-write interruption, changed retry keys and concurrent duplicate reversals through real Loyalty posting logic and optimistic owner stores. @layer test @owner loyaltyWallet */
 const test = require("node:test"),
   assert = require("node:assert/strict"),
@@ -93,7 +94,7 @@ test.beforeEach(() => {
     ],
   ]);
   failLedger = false;
-  global.SERVICE = {
+  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
     DefaultLoyaltyWalletRewardBalanceService: store(balances),
     DefaultRewardLedgerEntryService: store(ledger),
   };

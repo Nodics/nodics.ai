@@ -13,6 +13,18 @@
 
 /** @module promotion/src/controller/defaultPromotionController @description HTTP adapter for customer promotion eligibility APIs. @layer controller @owner promotion */
 module.exports = {
+  /** Reads owner form copy and current authoring admission. */
+  couponWorkspace: function (request, callback) { return this.invoke(request, 'couponWorkspace', callback); },
+  /** Inspects one scoped immutable offer. */
+  inspectCouponOffer: function (request, callback) { return this.invoke(request, 'inspectCouponOffer', callback); },
+  /** Runs one bilateral participation command with the original staff bearer. */
+  couponParticipation: function (request, callback) {
+    return this.invoke(request, 'couponParticipation', callback);
+  },
+  /** Returns protected acquisition aggregates for both dashboard and export consumers. */
+  acquisitionReport: function (request, callback) { return this.invoke(request, 'acquisitionReport', callback); },
+  /** Returns an unsaved copy restricted to reusable offer content. */
+  couponPrefill: function (request, callback) { return this.invoke(request, 'couponPrefill', callback); },
   /** Inspects issuer-managed consent without private actor or command evidence. @param {Object} r Signed request. @param {Function} c Callback. @returns {Promise<Object>|void} Safe consent list. */
   inspectSellers: function (r, c) {
     const http = r.httpRequest || {};
@@ -64,6 +76,7 @@ module.exports = {
       redemptionCode: params.redemptionCode,
       promotionCode: params.promotionCode,
       batchCode: params.batchCode,
+      authorization: httpRequest.headers?.authorization,
     });
   },
   /**

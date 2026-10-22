@@ -192,3 +192,72 @@ test('later facade projection override preserves bearer admission and source/rec
  await assert.rejects(customized.listInbox({...request,authorization:undefined}),/Customer context required/);
  assert.equal(calls.length,count);assert.equal(calls.profile.length,1);
 });
+
+test('Employee inbox inherits response bounds and rejects incomplete later configuration before transport', async () => {
+ setup();
+ const input={...structuredClone(request),authData:{...request.authData,principalType:'human'}};
+ const config=structuredClone(defaults);
+ global.CONFIG={get:()=>config};
+ const stopped=new Error('isolated transport boundary');
+ let calls=0;
+ SERVICE.DefaultModuleService.invokeModule=async call=>{
+  calls++;
+  assert.equal(call.maxResponseBytes,config.employeeInbox.maxResponseBytes);
+  assert.equal(call.header.Authorization,input.authorization);
+  throw stopped;
+ };
+ assert.equal(config.employeeInbox.maxResponseBytes,8192);
+ for(const bytes of [8192,32768]){
+  config.employeeInbox.maxResponseBytes=bytes;
+  await assert.rejects(facade.listInbox(input),error=>error===stopped);
+ }
+ assert.equal(calls,2);
+ for(const value of [undefined,0,-1,1.5,'8192',Infinity]){
+  config.employeeInbox.maxResponseBytes=value;
+  await assert.rejects(facade.listInbox(input),/Employee context required/);
+ }
+ assert.equal(calls,2);
+});
+
+test('Employee inbox composes real Profile self identity and isolates the existing inbox without a personal Customer account', async () => {
+ setup();
+ const profile = require('../../../../nodics.platform/modules/profile/src/service/identity/defaultProfileCouponNotificationRecipientService');
+ const employee = {code:'staff',loginId:request.authData.loginId,principalType:'human',active:true};
+ const input = {...structuredClone(request),authData:{...request.authData,principalType:'human'}};
+ let actorChecks=0;
+ SERVICE.DefaultLoggerService={assertSensitiveRequest(){}};
+ SERVICE.DefaultEnterpriseMembershipService={verifyAuthenticatedActor:async r=>{actorChecks++;assert.equal(r.authData.loginId,employee.loginId);}};
+ SERVICE.DefaultEnterpriseRegistrationService={read:async()=>undefined};
+ SERVICE.DefaultEmployeeService={findByLoginId:async r=>{assert.equal(r.tenant,input.tenant);return employee;}};
+ SERVICE.DefaultModuleService.invokeModule=async call=>{
+  assert.equal(call.apiName,'/employee/inbox-identity');assert.equal(call.methodName,'GET');
+  assert.equal(call.header.Authorization,input.authorization);assert.equal(call.requireInternalAuth,undefined);
+  return {code:'SUC_PRFL_00000',data:await profile.inboxIdentity({tenant:input.tenant,authData:input.authData})};
+ };
+ const reads=[];
+ SERVICE.DefaultCommunicationRuntimeService.list=async(schema,r,query)=>{
+  reads.push(query);assert.equal(query.recipientId,'profile-employee:staff');
+  return schema==='CommsInboxMessage'?[{code:'mine',intentCode:'intent',body:'Expiry reminder'}]:[
+   {code:'intent',sourceModule:'digitalCore',sourceType:'DIGITAL_COUPON_EXPIRING',sourceCode:'public-selector'}];
+ };
+ const result=await facade.listInbox(input);
+ assert.equal(actorChecks,2);assert.equal(reads.length,2);assert.equal(result[0].source.type,'DIGITAL_COUPON_EXPIRING');
+ assert.equal(JSON.stringify(result).includes('recipientId'),false);
+});
+
+test('Employee inbox rejects foreign Profile proof, substituted bearer and authority drift before returning messages', async () => {
+ for(const kind of ['FOREIGN','ERROR','BAD_RECIPIENT','DRIFT','BEARER','ALIAS','HTTP_ERROR','CREDENTIAL_DRIFT']) {
+  setup();const input={...structuredClone(request),authData:{...request.authData,principalType:'human'}};
+  let reads=0;
+  SERVICE.DefaultCommunicationRuntimeService.list=async()=>{reads++;return [];};
+  SERVICE.DefaultModuleService.invokeModule=async()=>{
+   if(kind==='DRIFT') input.authData.loginId='other';
+   if(kind==='CREDENTIAL_DRIFT') input.auth.credential='other';
+   return {responseCode:kind==='HTTP_ERROR'?503:200,code:kind==='ERROR'?'ERR_READ':'SUC_PRFL_00000',data:{contractVersion:1,tenant:kind==='FOREIGN'?'other':input.tenant,
+    enterpriseCode:input.authData.entCode,recipientId:kind==='BAD_RECIPIENT'?'customer-code':'profile-employee:staff'}};
+  };
+  if(kind==='BEARER') input.authorization='Bearer other';
+  if(kind==='ALIAS') input.enterpriseCode='other';
+  await assert.rejects(facade.listInbox(input));assert.equal(reads,0,kind);
+ }
+});

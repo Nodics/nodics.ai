@@ -19,6 +19,8 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      loyaltyAuction: { enabled: true },
+      loyaltyParticipation: { enabled: true },
       loyaltyInternal: {
         enabled: true,
       },

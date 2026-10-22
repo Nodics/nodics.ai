@@ -1,0 +1,39 @@
+{
+  "name": "wasteCarbon",
+  "index": "82.78",
+  "description": "Waste-derived carbon provenance, allocations and persisted holdings operations.",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "requiredModules": [
+    "wasteCore",
+    "wasteSubmission"
+  ],
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Waste Carbon",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "service",
+      "router",
+      "controller",
+      "facade",
+      "utility",
+      "data",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}

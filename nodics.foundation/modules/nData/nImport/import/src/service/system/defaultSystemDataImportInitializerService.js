@@ -44,6 +44,21 @@ module.exports = {
     },
 
     /**
+     * Accepts a header target only when this runtime owns the module locally or
+     * its governed runtime identity explicitly admits that remote capability.
+     * @param {string} moduleName Header target module.
+     * @returns {boolean} Whether this runtime can dispatch to the target.
+     */
+    isImportTargetAvailable: function (moduleName) {
+        if (!NODICS.isModuleActive || NODICS.isModuleActive(moduleName)) return true;
+        const remoteModules = typeof CONFIG !== 'undefined' && CONFIG.get &&
+            CONFIG.get('runtimeIdentity') && CONFIG.get('runtimeIdentity').remoteModules;
+        return Array.isArray(remoteModules) && remoteModules.length <= 512 &&
+            remoteModules.every(code => typeof code === 'string' && /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(code)) &&
+            new Set(remoteModules).size === remoteModules.length && remoteModules.includes(moduleName);
+    },
+
+    /**
 
      * Validates request rules.
 
@@ -453,8 +468,8 @@ module.exports = {
             _.each(headerFile, (moduleHeaders, moduleName) => {
                 _.each(moduleHeaders, (header, sourceHeaderName) => {
                     const headerName = moduleName + ':' + sourceHeaderName;
-                    const active = !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
-                    if (header.options && header.options.enabled && active) {
+                    const available = this.isImportTargetAvailable(moduleName);
+                    if (header.options && header.options.enabled && available) {
                         request.data.headers = request.data.headers || {};
                         if (request.data.headers[headerName]) this.addDuplicateHeader(request, headerName, moduleName, headerFileName);
                         const instance = _.cloneDeep(header);

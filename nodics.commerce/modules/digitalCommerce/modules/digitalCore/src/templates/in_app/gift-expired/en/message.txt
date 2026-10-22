@@ -1,0 +1,1 @@
+Gift {{giftReference}} expired at {{deadline}}. Its reservations were released; it can no longer be accepted.

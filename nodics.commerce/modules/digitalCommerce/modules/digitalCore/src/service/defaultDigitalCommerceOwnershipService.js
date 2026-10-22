@@ -11,7 +11,24 @@
 
 "use strict";
 const { isDeepStrictEqual } = require("node:util");
-/** @module digitalCore/service/defaultDigitalCommerceOwnershipService @description Adapts exact retained Product/binding evidence to a configured secured persisted ownership owner, without owning transfer or settlement state. @layer service @owner digitalCore @override Later layers select a qualified owner through digitalCore.digitalOwnership; source defaults remain absent/off. */
+/**
+ * @module digitalCore/service/defaultDigitalCommerceOwnershipService
+ * @description Adapts exact retained Product/binding evidence to a configured secured persisted
+ * ownership owner, without owning transfer or settlement state.
+ * @layer service
+ * @owner digitalCore
+ * @override Later layers select a qualified owner through digitalCore.digitalOwnership; source
+ * defaults remain absent/off.
+ * @remarks Digital ownership retains original binding and private cross-owner transport. New bundles
+ * use settlement; historical source identity is retained. Completed bundles are final-sale and legacy
+ * owners cannot be inferred from availability or caller flags.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: timestamp, isEntry, settings, remote, resolveCompensation, availability, command,
+ * verify, reserve, phase, verifyRecord, record, release, refund.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
   /** Reads exact timestamp milliseconds without Date-to-string precision loss or non-date coercion. */
   timestamp: function (value) {
@@ -24,14 +41,36 @@ module.exports = {
     if (a.productType !== "DIGITAL" || a.inventoryStrategy !== "DIGITAL_COMMERCE") throw new Error("Contradictory digital ownership classification");
     return true;
   },
-  /** Resolves an explicitly selected server-owned integration, never body-selected providers or qualification inferred from availability. */
+  /**
+   * Resolves an explicitly selected server-owned integration, never body-selected providers or
+   * qualification inferred from availability.
+   * @returns {Object} Validated effective Digital ownership integration policy.
+   * @remarks Effects: Reads framework configuration; registration is not qualification.
+   * Failure behavior: Rejects incomplete/malformed provider or deployment policy.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   settings: function () {
     const p = (CONFIG.get("digitalCore") || {}).digitalOwnership || {};
     if (p.enabled !== true || p.qualified !== true || !p.owner?.moduleName || !p.owner.connectionName ||
-        !p.owner.targetAuthority || !p.owner.apiPrefix) throw new Error("Digital ownership owner is not qualified");
+        !p.owner.targetAuthority || !p.owner.apiPrefix || !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0)
+      throw new Error("Digital ownership owner is not qualified");
     return p;
   },
-  /** Executes one secured owner invocation and rejects failed or malformed envelopes; uncertain mutations are not automatically retried. */
+  /**
+   * Executes one secured owner invocation and rejects failed or malformed envelopes; uncertain mutations
+   * are not automatically retried.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {string} phase Fixed owner lifecycle phase; never arbitrary executable input.
+   * @param {Object} payload Bounded original owner command selectors.
+   * @returns {Promise<Object>} Validated response from one fixed qualified owner phase.
+   * @remarks Effects: Performs one original scoped owner call; uncertain mutations are not automatically
+   * retried.
+   * Failure behavior: Rejects failed/malformed envelopes and propagates transport uncertainty.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   remote: async function (r, phase, payload) {
     const p = this.settings();
     if (typeof r.enterpriseCode !== "string" || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(r.enterpriseCode) ||
@@ -43,7 +82,7 @@ module.exports = {
       requestBody: { ...payload, enterpriseCode: r.enterpriseCode }, header: {
         "Idempotency-Key": payload.idempotencyKey || payload.checkoutIdempotencyKey,
         "X-Correlation-Id": r.correlationId || payload.idempotencyKey || payload.checkoutIdempotencyKey },
-      timeoutMs: 15000, maxAttempts: 1 });
+      timeoutMs: p.timeoutMilliseconds, maxAttempts: 1 });
     for (let n = 0; n < 6 && value; n++) {
       if (value.error || value.success === false || value.acknowledged === false ||
           (value.errors && (!Array.isArray(value.errors) || value.errors.length)) || /^ERR_/.test(value.code || "") ||
@@ -56,8 +95,22 @@ module.exports = {
     if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Digital ownership evidence is unavailable");
     return value;
   },
-  /** Resolves the original reserved command through the private domain owner, never mutable Cart/Product or caller unit fields. */
+  /**
+   * Resolves the original reserved command through the private domain owner, never mutable Cart/Product
+   * or caller unit fields.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} selector Exact original command selectors, not replacement financial instructions.
+   * @returns {Promise<Object>} Original reserved unit resolved by its canonical owner.
+   * @remarks Effects: Reads original command evidence; no current Cart/Product repricing or new
+   * reservation.
+   * Failure behavior: Rejects missing, foreign or mismatched retained selector binding.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   resolveCompensation: async function (r, selector) {
+    if (/^bundle-operation:[a-f0-9]{64}$/.test(selector?.code || ""))
+      return SERVICE.DefaultDigitalBundleSettlementService.resolve(r, selector);
     if (![r.tenant, r.enterpriseCode, r.ownerId, selector?.orderCode, selector?.checkoutIdempotencyKey].every(v => typeof v === "string" && v.trim()) ||
         selector.ownerId !== r.ownerId || !/^TRANSFER_[A-F0-9]{32}$/.test(selector.code || ""))
       throw new Error("Original compensation scope is required");
@@ -73,8 +126,22 @@ module.exports = {
     this.command({ ...r, payload: { orderCode: selector.orderCode } }, unit);
     return unit;
   },
-  /** Returns bounded unavailable supply for an unselected integration; selected reads require exact retained binding pins and persisted owner evidence. */
+  /**
+   * Returns bounded unavailable supply for an unselected integration; selected reads require exact
+   * retained binding pins and persisted owner evidence.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} projection Canonical Product/owner projection.
+   * @returns {Promise<Object>} Non-guaranteed supply projection or explicit unavailable state.
+   * @remarks Effects: Reads canonical binding and live owner supply; never reserves or qualifies an
+   * unselected provider.
+   * Failure behavior: Rejects selected-provider proof failures or retained binding drift.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   availability: async function (r, projection) {
+    if (projection.payload?.localizedAttributes?.bundleRef)
+      return SERVICE.DefaultDigitalBundleSettlementService.availability(r, projection);
     const p = (CONFIG.get("digitalCore") || {}).digitalOwnership || {};
     if (p.enabled !== true || p.qualified !== true) {
       const reasons = ENUMS.DigitalOwnershipAvailabilityReason;
@@ -87,9 +154,17 @@ module.exports = {
     const candidates = variants.filter(code => typeof map[code] === "string" && (!r.sku || map[code] === r.sku) && (!r.variantCode || code === r.variantCode));
     if (candidates.length !== 1 || Number(r.quantity) !== 1) throw new Error("Digital ownership requires one exact retained asset unit");
     const variantCode = candidates[0], sku = map[variantCode];
-    const rows = await SERVICE.DefaultDigitalCommerceEntitlementService.readRecords(SERVICE.DefaultDigitalProductBindingService, r, {
+    const reader = SERVICE.DefaultDigitalCommerceEntitlementService;
+    const rows = await reader.readRecords(SERVICE.DefaultDigitalProductBindingService, r, {
       tenant: r.tenant, enterpriseCode: r.enterpriseCode, productCode: r.productCode, variantCode, sku, status: "ACTIVE",
     });
+    if (rows.length === 0) {
+      const reasons = ENUMS.DigitalOwnershipAvailabilityReason;
+      return { available: false, status: "UNAVAILABLE", guaranteed: false,
+        reservableAt: "CHECKOUT_BEFORE_PAYMENT", inventoryStrategy: "DIGITAL_COMMERCE",
+        productType: "DIGITAL", digitalDeliveryType: "DIGITAL_OWNERSHIP",
+        reasonCode: reasons.DIGITAL_OWNERSHIP_BINDING_UNAVAILABLE.key };
+    }
     const b = rows[0], ref = b?.providerReference, pins = b?.evidence?.retainedProducts;
     if (!Array.isArray(pins) || !pins.length || pins.length > 20 || new Set(pins.map(pin => pin.locale)).size !== pins.length)
       throw new Error("Retained digital ownership locale pins are unavailable");
@@ -98,9 +173,19 @@ module.exports = {
         b.productCode !== r.productCode || b.variantCode !== variantCode || b.sku !== sku || b.status !== "ACTIVE" ||
         b.providerOwner !== "wasteCore" || b.digitalDeliveryType !== "DIGITAL_OWNERSHIP" || b.inventoryStrategy !== "DIGITAL_COMMERCE" ||
         !b.code || !Number.isSafeInteger(b.revision) || ref?.storeCode !== r.storeCode ||
-        !ref.assetCode || ref.assetCode !== payload.localizedAttributes?.assetCode ||
-        pin?.code !== projection.code || !pin.sourceHash || pin.sourceHash !== projection.sourceHash ||
-        !pin.publicationVersion || pin.publicationVersion !== projection.publicationVersion)
+        !ref.assetCode || ref.assetCode !== payload.localizedAttributes?.assetCode || !pin?.code || !pin.sourceHash || !pin.publicationVersion)
+      throw new Error("Retained digital ownership binding is unavailable");
+    const retainedRows = await reader.readRecords(SERVICE.DefaultProductSearchProjectionService, r, {
+      tenant: r.tenant, enterpriseCode: r.enterpriseCode, code: pin.code, productCode: r.productCode,
+      storeCode: r.storeCode, locale: r.locale,
+    });
+    const retained = retainedRows[0], retainedPayload = retained?.payload, retainedAttributes = retainedPayload?.localizedAttributes;
+    if (retainedRows.length !== 1 || !["CURRENT", "STALE"].includes(retained.status) ||
+        retained.sourceHash !== pin.sourceHash || retained.publicationVersion !== pin.publicationVersion ||
+        retainedPayload?.variantCodes?.length !== 1 || retainedPayload.variantCodes[0] !== variantCode ||
+        retainedPayload?.variantSkuMap?.[variantCode] !== sku || retainedAttributes?.assetCode !== ref.assetCode ||
+        retainedAttributes.productType !== "DIGITAL" || retainedAttributes.digitalDeliveryType !== "DIGITAL_OWNERSHIP" ||
+        retainedAttributes.inventoryStrategy !== "DIGITAL_COMMERCE")
       throw new Error("Retained digital ownership binding is unavailable");
     const response = await this.remote(r, "availability", { bindingCode: b.code, productCode: r.productCode, sku, storeCode: r.storeCode, locale: r.locale });
     if (typeof response.available !== "boolean" || response.assetCode !== ref.assetCode || response.status !== "OWNER_CHECKED")
@@ -129,7 +214,19 @@ module.exports = {
         (status === "DELIVERED" && this.timestamp(result.deliveredAt) !== this.timestamp(result.soldAt))) throw new Error("Persisted digital ownership evidence is unconfirmed");
     return result;
   },
-  /** Re-resolves pinned Product and binding before acquisition, ignoring calculation-carried owner selectors. */
+  /**
+   * Re-resolves pinned Product and binding before acquisition, ignoring calculation-carried owner
+   * selectors.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} entry Original scoped Cart/Order entry.
+   * @returns {Promise<Object>} Canonical original reservation unit.
+   * @remarks Effects: Re-reads pinned Product/binding before invoking qualified reserve; never trusts
+   * calculation-carried owner selectors.
+   * Failure behavior: Rejects stale binding, unavailable supply or uncertain owner acknowledgement.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   reserve: async function (r, entry) {
     if (String(entry.quantity) !== "1") throw new Error("Digital ownership quantity must be one");
     const availability = await SERVICE.DefaultDigitalCommerceCheckoutService.availability({
@@ -138,6 +235,8 @@ module.exports = {
     });
     // Unavailable supply may be this command's existing lock; only the persisted owner may distinguish replay from a competing buyer.
     if (!this.isEntry({ availability })) throw new Error("Digital asset is unavailable");
+    if (availability.providerOwner === "digitalCore")
+      return SERVICE.DefaultDigitalBundleSettlementService.reserve(r, entry, availability);
     const command = this.command(r, { entryCode: entry.code, productCode: entry.productCode, sku: entry.sku,
       storeCode: r.storeCode, locale: r.locale, bindingCode: availability.bindingCode, checkoutIdempotencyKey: r.idempotencyKey,
       idempotencyKey: r.idempotencyKey + ":digital:" + entry.code + ":0" });
@@ -145,8 +244,29 @@ module.exports = {
     if (result.assetCode !== availability.assetCode) throw new Error("Reserved asset binding changed");
     return result;
   },
-  /** Confirms or delivers only the original persisted sale; eWaste independently re-reads Commerce capture and original transfer evidence. */
+  /**
+   * Confirms or delivers only the original persisted sale; eWaste independently re-reads Commerce
+   * capture and original transfer evidence.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} order Persisted original Order and owner binding.
+   * @param {Object} unit Retained original Digital reservation/delivery unit.
+   * @param {string} phase Fixed owner lifecycle phase; never arbitrary executable input.
+   * @returns {Promise<Object>} Original confirmed/delivered sale result.
+   * @remarks Effects: Delegates original bundle or legacy owner's phase after persisted payment/transfer
+   * proof.
+   * Failure behavior: Rejects phase mismatch, foreign unit or incomplete owner proof.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   phase: async function (r, order, unit, phase) {
+    if (unit.providerOwner === "digitalCore") {
+      const request = { ...r, payload: { ...r.payload, orderCode: order.code } };
+      const sale = await SERVICE.DefaultDigitalBundleSettlementService.confirm(request, unit);
+      if (phase !== "confirm" && phase !== "deliver") throw new Error("Unsupported bundle purchase phase");
+      await SERVICE.DefaultDigitalBundleSettlementService.record(request, order, sale, phase === "deliver");
+      return phase === "deliver" ? { ...sale, status: "DELIVERED" } : sale;
+    }
     const request = { ...r, payload: { ...r.payload, orderCode: order.code } };
     if (unit.tenant !== r.tenant || unit.enterpriseCode !== r.enterpriseCode || unit.ownerId !== r.ownerId || unit.orderCode !== order.code)
       throw new Error("Digital ownership purchase scope changed");
@@ -193,9 +313,23 @@ module.exports = {
     }
     return entitlement;
   },
-  /** Releases only original reservations whose owner proves durable terminal payment and persisted cancellation; uncertainty remains failed. */
+  /**
+   * Releases only original reservations whose owner proves durable terminal payment and persisted
+   * cancellation; uncertainty remains failed.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} unit Retained original Digital reservation/delivery unit.
+   * @returns {Promise<Object>} Confirmed original release or explicit FAILED recovery-required result.
+   * @remarks Effects: Invokes only canonical release after terminal original payment/cancellation proof;
+   * retains uncertainty.
+   * Failure behavior: Unavailable or uncertain owner release returns failure rather than fabricated
+   * cleanup.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   release: async function (r, unit) {
     try {
+      if (unit.providerOwner === "digitalCore") return await SERVICE.DefaultDigitalBundleSettlementService.release(r, unit);
       const command = this.command({ ...r, payload: { ...r.payload, orderCode: unit.orderCode } }, unit);
       const result = await this.remote(r, "cancel", command);
       if (!["CANCELLED", "EXPIRED"].includes(result.status)) throw new Error("Digital release is unconfirmed");
@@ -205,8 +339,26 @@ module.exports = {
       return { type: "DIGITAL_OWNERSHIP_RELEASE", code: unit.code, status: "FAILED", errorCode: "DIGITAL_OWNERSHIP_RECOVERY_REQUIRED" };
     }
   },
-  /** Coordinates one original ownership refund under freshly revalidated Order staff approval; domain owners retain all asset and ledger authority. */
+  /**
+   * Preserves completed-bundle finality and existing qualified legacy-owner refund dispatch without
+   * inventing replacement authority.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object[]} items Original persisted purchased items.
+   * @param {string} phase Fixed owner lifecycle phase; never arbitrary executable input.
+   * @returns {Promise<Object>} Final-sale ineligibility or existing qualified historical-owner result.
+   * @remarks Effects: Completed bundles refuse mutation; other admitted legacy phases remain delegated
+   * to their canonical owner.
+   * Failure behavior: Rejects final-sale mutation, unsupported phase or missing current Order
+   * approval/owner proof.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   refund: async function (r, items, phase) {
+    if (items.some(item => item.evidence?.finalSale === true || item.providerOwner === "digitalCore" && item.digitalDeliveryType === "DIGITAL_OWNERSHIP")) {
+      if (phase === "preview") return { eligible: false, reason: "COMPLETED_BUNDLE_FINAL_SALE" };
+      throw new Error("Completed bundle purchases are final sales");
+    }
     const item = items[0], entry = r.entries?.[0], owner = SERVICE.DefaultDigitalCommerceEntitlementService;
     const exact = items.length === 1 && r.entries?.length === 1 && entry &&
       ["string", "number"].includes(typeof entry.quantity) && String(entry.quantity) === "1" &&

@@ -18,6 +18,13 @@ admission loads the original owner-bound Cart and rejects absent, conflicting or
 foreign scope. Checkout pins that Store into Order evidence; only that matching
 retained Store selects `ownerByStore`. Caller Store fields are not authority.
 Existing legacy prefixes and external `defaultOwnerPort` remain independent.
+The framework defines no external owner selection and defaults `ownerPorts` to
+an empty map. Accelerator endpoints are not standard Commerce dependencies.
+Retained plans for an unavailable owner remain historical evidence and fail
+closed on execution; they must not be rewritten or retried through a substitute.
+Explicit later-layer port overrides still require the existing scoped approval
+and phase checks. `test/orderRefundOwnerRetirement.test.js` covers default
+selection, retired-owner refusal before transport and intentional extension.
 Payment reads the single successful
 capture from the existing `paymentTransactionEntry` store. The first supported
 automatic provider is Loyalty reward points; other provider and split-capture

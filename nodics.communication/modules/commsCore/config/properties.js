@@ -52,6 +52,8 @@ module.exports = {
     enabled: true,
     defaultProvider: "local",
     trustedSourceModules: [],
+    // Domain modules contribute fixed source-type validators; no delivery is enabled here.
+    dispatchEligibilityOwners: {},
     templates: {},
     templateResources: {
       enabled: true,

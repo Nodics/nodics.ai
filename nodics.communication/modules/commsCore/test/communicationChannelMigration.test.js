@@ -294,9 +294,10 @@ test("current v001 business releases remain separate from documentation content 
     );
   }
   assert.equal(manifest.sections.documentation.kind, "CONTENT_PACK");
-  assert.equal(manifest.sections.documentation.contentPath, "docs-v001");
+  assert.equal(manifest.sections.documentation.contentPath, "docs-v002");
+  assert.equal(manifest.sections.documentation.version, "0.0.2");
   assert.ok(Object.keys(manifest.sections.documentation.generatedHashes).every(
-    (file) => file.startsWith("docs-v001/"),
+    (file) => file.startsWith(manifest.sections.documentation.contentPath + "/"),
   ));
   assert.ok(
     fs.existsSync(

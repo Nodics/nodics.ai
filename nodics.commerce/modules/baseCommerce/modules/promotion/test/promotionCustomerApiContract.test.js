@@ -70,6 +70,7 @@ function installGlobals() {
         DefaultBackofficeCapabilityDefinitionService: {
             capability: (value) => value,
             workbench: (value) => value,
+            nativeWorkspace: (value) => require('../../../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService').nativeWorkspace(value),
         },
         DefaultPromotionSimulationService: simulation,
         DefaultPromotionDecisionService: decision,
@@ -600,6 +601,13 @@ test('Promotion publication transport rejects without changing rules coupons or 
 
 test('Promotion BackOffice capability exposes builder lifecycle coupon budget and analytics routes', () => {
     const capability = backofficeCapability.getCapability();
+    const authoring = capability.navigation.find(item => item.id === 'coupon-offer-authoring');
+    assert.equal(authoring.backendWorkspace.workspaceCode, 'promotion.couponOffers');
+    assert.equal(authoring.backendWorkspace.ownerSelector.publicationRole, 'STAGED');
+    assert.deepEqual(authoring.requiredPermissions, ['commerce.promotion.read']);
+    const reporting = capability.navigation.find(item => item.id === 'coupon-acquisition-reporting');
+    assert.equal(reporting.backendWorkspace.workspaceCode, 'promotion.couponAcquisition');
+    assert.equal(reporting.backendWorkspace.ownerSelector.publicationRole, 'ONLINE');
     const builder = capability.navigation.find(
         (item) => item.id === 'promotions-builder',
     );

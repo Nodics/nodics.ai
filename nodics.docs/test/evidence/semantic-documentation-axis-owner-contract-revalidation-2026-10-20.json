@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_AXIS_REVIEW_OTHER_BACKLOG_ITEMS_REMAIN_OPEN",
+  "item": "Axis setup and user-safe error contracts",
+  "requestedAction": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "boundary": "Only the two changed Axis-source contracts are requalified here. All other stale review hashes remain unchanged and fail the existing strict integrated test. No CMS bytes, release manifest, runtime implementation, grants, approval actors, imports, publication or E2E execution changed.",
+  "historicalBaseline": {
+    "commit": "3f5ab7b57",
+    "verification": "git show bytes match both old SHA256 values recorded in the aggregate. Full current contract contents and their exact diff were read; no inferred historical diff."
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.platform/modules/backoffice/llm/contracts/governed-application-setup.md",
+      "previousSha256": "2ce85fc858451e4cab1330eee8df9d76b7ca34ac9806ca311a8b70a42cb2cc6c",
+      "sha256": "6de60d86fd2c19e2ed09d88c44470505754f5cabdc043d139e7cf996371f6534",
+      "rationale": "Only Project Context Ownership was added. BackOffice owns PLATFORM-scoped projectCode/projectRoot bindings; trusted nConfig context and explicit NODICS_PROJECT_CODE override replace copied customer defaults. Profiles, package selections, connection names and deployment decisions remain customer-owned. Missing trusted path fails closed. Nothing installs, grants, enables reset or publishes. Current config/properties.js and applicationTargetDefaults.test.js substantiate the addition. The existing article's deliberately selected project dataPackages example and owner-safe repair flow remain accurate."
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/llm/contracts/setup-observation.md",
+      "previousSha256": "119e4c8016ad8035d2d427960b360201f26932760bb4a9709c19b22c9a011271",
+      "sha256": "647b52468f19300fcb69e111740e9fc233675601a4107ee85e48b0cc8a6036bf",
+      "rationale": "Only permission-vocabulary ownership explanation changed: nPublish contributes publish.setup.observe to Profile persisted catalogue; a mutable configuration vocabulary is neither grant nor runtime prerequisite. The service authorize method still demands exact original service claims, explicit permission, deployment allowlist and checksummed plan; the secured service-only route preserves independent admission. No reader or financial privileges are added. The existing article does not claim nAuth configuration-catalogue ownership and correctly separates implementation, explicit adoption, exact read authority and local write permissions."
+    }
+  ],
+  "canonicalReview": {
+    "documentId": "applications.axis-setup-error-contracts",
+    "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js",
+    "release": "0.0.2",
+    "articleChanged": false,
+    "method": "Read every current article block, all fourteen named anchors, the exact two contract diffs and supporting owner declarations. The other four recorded runtime source hashes remain identical to the prior review.",
+    "conclusion": "State precedence, missing prerequisites, bounded safe diagnostics, non-executable owner handoffs, explicit singleton signed-operator selection, original-receipt recovery and aggregate-only exact-plan observation still explain the requested scope accurately. No guide correction or new immutable release is necessary for these two changes.",
+    "limits": [
+      "The article is not an exhaustive tutorial for the new project-context defaults; the owner contract and focused test supply those implementation details.",
+      "No browser, native signed-deployment admission, business financial flow or provider acceptance is established."
+    ]
+  },
+  "tests": [
+    {
+      "command": "node --test nodics.platform/modules/backoffice/test/applicationTargetDefaults.test.js",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "command": "node --test nodics.foundation/modules/nPublish/test/publicationSetupObservation.test.js",
+      "passed": 42,
+      "failed": 0
+    }
+  ],
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  }
+}

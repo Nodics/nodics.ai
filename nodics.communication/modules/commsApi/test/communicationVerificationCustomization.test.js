@@ -18,7 +18,7 @@
  */
 const { test, afterEach } = require("node:test");
 const assert = require("node:assert/strict");
-const api = require("../src/service/defaultCommunicationVerificationApiService");
+const api = require("../src/service/defaultCommunicationVerificationOperationService");
 const saved = { SERVICE: global.SERVICE, CLASSES: global.CLASSES };
 afterEach(() => {
   for (const [key, value] of Object.entries(saved)) {

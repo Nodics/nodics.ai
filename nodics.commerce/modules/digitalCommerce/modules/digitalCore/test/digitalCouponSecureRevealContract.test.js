@@ -24,6 +24,44 @@ const notifications = require('../src/service/defaultDigitalCommerceNotification
 const refund = require('../src/service/defaultDigitalCommerceRefundService');
 const checkout = require('../src/service/defaultDigitalCommerceCheckoutService');
 
+test('Enterprise coupon read/reveal rejects wildcard denials before entitlement or token effects', async t => {
+    const previous = ['CONFIG', 'SERVICE', 'CLASSES'].map(key => [key, Object.hasOwn(global, key), global[key]]);
+    t.after(() => {
+        for (const [key, present, value] of previous) {
+            if (present) global[key] = value;
+            else delete global[key];
+        }
+    });
+    const defaults = require('../config/properties');
+    global.CONFIG = { get: key => defaults[key] };
+    global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
+    const request = { tenant: 'tenant', enterpriseCode: 'company', ownerId: 'company', authorization: 'Bearer original',
+        authData: { tenant: 'tenant', entCode: 'company', principalType: 'human', tokenType: 'access', loginId: 'employee',
+            permissions: ['commerce.digital.own.read', 'commerce.digital.own.reveal'] }, payload: {} };
+    const evidence = { principalCode: 'employee',
+        scopes: [{ scopeType: 'ENTERPRISE', scopeCode: 'company', capabilityCode: '*' }], deniedScopes: [] };
+    global.SERVICE = { DefaultSecuredRequestPipelineService: require(path.join(root,
+        'nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService')),
+        DefaultModuleService: { invokeModule: async input => {
+            assert.equal(input.apiName, '/identity/scopes/me');
+            assert.equal(input.header.Authorization, request.authorization);
+            return evidence;
+        } } };
+    for (const permission of request.authData.permissions) {
+        evidence.deniedScopes = [];
+        assert.deepEqual(await digital.freshCouponOwner(request, undefined, permission), { type: 'ENTERPRISE', code: 'company' });
+        for (const [scopeType, scopeCode] of [['GLOBAL', '*'], ['TENANT', 'tenant'], ['ENTERPRISE', 'company']]) {
+            evidence.deniedScopes = [{ scopeType, scopeCode, capabilityCode: '*', permissionCode: permission }];
+            await assert.rejects(digital.freshCouponOwner(request, undefined, permission), { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' });
+        }
+    }
+    evidence.deniedScopes = [];
+    evidence.scopes = [{ scopeType: 'GLOBAL', scopeCode: '*', enterpriseCode: 'foreign' }];
+    await assert.rejects(digital.freshCouponOwner(request), { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' });
+    evidence.scopes = [{ scopeType: 'ENTERPRISE', scopeCode: 'company' }];
+    await assert.rejects(({ ...digital, matchesCouponScope: () => false }).freshCouponOwner(request), { code: 'ERR_DIGITAL_REVEAL_FORBIDDEN' });
+});
+
 /** @module digitalCore/test/digitalCouponSecureRevealContract @description Exercises actual encrypted issuance and Promotion/Digital committed reveal owners using real key and privacy owners plus isolated persistence doubles. No native transaction/payment/provider qualification is claimed. @layer test @owner digitalCore */
 async function purchased(t) {
     const f = fixture.create(t);
@@ -32,9 +70,16 @@ async function purchased(t) {
     await setup.installContribution(f.request);
     const coupon = f.rows.coupon[0];
     const scope = { tenant: 'tenantA', enterpriseCode: 'issuerA', ownerId: 'buyerA' };
-    const authData = { ...scope, principalId: scope.ownerId, principalType: 'customer', tokenType: 'access' };
-    f.settings.digitalCore = { maximumCouponUnitsPerCheckout: 100 };
-    const purchase = { ...scope, authData, storeCode: 'storeA', idempotencyKey: 'checkoutA',
+    const authData = { ...scope, principalId: scope.ownerId, loginId: scope.ownerId, principalType: 'customer', tokenType: 'access' };
+    f.settings.digitalCore = { maximumCouponUnitsPerCheckout: 100,
+        couponAccess: { maximumOwnEntitlements: 100,
+            profile: { connectionName: 'profile', targetAuthority: 'profile', timeoutMilliseconds: 1000 } } };
+    SERVICE.DefaultModuleService = { invokeModule: async input => {
+        assert.equal(input.apiName, '/customer/identity');
+        return { contractVersion: 1, tenant: scope.tenant, enterpriseCode: scope.enterpriseCode,
+            customer: { code: scope.ownerId, loginId: scope.ownerId } };
+    } };
+    const purchase = { ...scope, authData, authorization: 'Bearer customer', storeCode: 'storeA', idempotencyKey: 'checkoutA',
         payload: { orderCode: 'purchaseA', cartCode: 'cartA' } };
     const entryCode = ['cartA', 'offerA', 'SKU-A'].join('|');
     const reservations = await checkout.reserveForCheckout(purchase, { entries: [{ code: entryCode, productCode: 'offerA',
@@ -51,7 +96,7 @@ async function purchased(t) {
             totalAmount: '10.00', currency: 'AED' }],
         DefaultCommerceOrderEntryService: [{ ...scope, code: coupon.orderCode + ':' + coupon.entryCode,
             orderCode: coupon.orderCode, productCode: coupon.productCode, quantity: '1' }],
-        DefaultCheckoutCheckpointService: [{ ...scope, code: coupon.orderCode, status: 'COMPLETED',
+        DefaultCheckoutCheckpointService: [{ ...scope, code: coupon.orderCode, orderCode: coupon.orderCode, status: 'COMPLETED',
             evidence: { orderCode: coupon.orderCode, digitalDeliveryCodes: [coupon.code] } }],
         DefaultPaymentTransactionEntryService: [{ tenant: scope.tenant, ownerId: scope.ownerId, code: 'captureA', orderCode: coupon.orderCode,
             status: 'CAPTURED', totalAmount: '10.00', currency: 'AED', evidence: { operation: 'CAPTURE' } }],
@@ -75,7 +120,7 @@ async function purchased(t) {
     records.DefaultDigitalDeliveryService.push({ ...scope, code: 'deliveryA', orderCode: coupon.orderCode,
         entitlementCode: entitlement.code, deliveryType: 'COUPON_CODE', providerOwner: 'promotion', providerCode: coupon.code,
         status: 'DELIVERED', deliveredAt: coupon.deliveredAt });
-    const customer = { ...scope, authData,
+    const customer = { ...scope, authData, authorization: purchase.authorization,
         payload: { entitlementCode: entitlement.code } };
     return { ...f, records, coupon, entitlement, customer,
         reveal: (request = structuredClone(customer)) => f.privateRun(request, () => digital.reveal(request)) };

@@ -122,6 +122,7 @@ test.beforeEach(() => {
   writes = [];
   failAcceptance = false;
   policy = {
+    ...structuredClone(require("../config/properties").bidding),
     enabled: true,
     policyVersion: "test-v1",
     holdTiming: "CHECKOUT_AFTER_ACCEPTANCE",

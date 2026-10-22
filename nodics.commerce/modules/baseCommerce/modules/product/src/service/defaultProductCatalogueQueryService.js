@@ -16,7 +16,17 @@
  * @description Applies complete, bounded catalogue filtering to published Product projections.
  * @layer service
  * @owner product
- * @override Large catalogues may replace this service with provider aggregation while preserving the public result contract.
+ * @override Large catalogues may replace this service with provider aggregation while preserving the
+ * public result contract.
+ * @remarks Product owns complete catalogue candidate retrieval, availability filtering, facets and
+ * pagination. Live owners remain authoritative; unavailable/partial retrieval cannot be converted into
+ * a complete result.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: init, postInit, policy, invalid, values, decimal, compareDecimal, filters,
+ * candidates, available, list.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
  */
 module.exports = {
   /** Initializes the catalogue query service without runtime side effects. */
@@ -76,7 +86,17 @@ module.exports = {
     return a < b ? -1 : a > b ? 1 : 0;
   },
 
-  /** Parses only configured facet dimensions and public price/sale controls. */
+  /**
+   * Parses only configured facet dimensions and public price/sale controls.
+   * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
+   * grant authority.
+   * @param {Object} dimensions Configured public facet dimensions.
+   * @returns {Object} Normalized supported facet, price and sale filters.
+   * @remarks Effects: Pure selector normalization; does not change Product or configuration.
+   * Failure behavior: Rejects invalid filters or unsupported values.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   filters: function (input, dimensions) {
     let filters = input.filters || {};
     if (typeof filters === "string") {
@@ -95,6 +115,7 @@ module.exports = {
       "priceMin",
       "priceMax",
       "saleOnly",
+      "validThrough",
     ]);
     if (Object.keys(filters).some((key) => !allowed.has(key)))
       throw this.invalid("A product filter is not supported.");
@@ -130,15 +151,33 @@ module.exports = {
     if (filters.saleOnly !== undefined && typeof filters.saleOnly !== "boolean")
       throw this.invalid("Sale filter is invalid.");
     result.saleOnly = filters.saleOnly === true;
+    if (filters.validThrough !== undefined && filters.validThrough !== "") {
+      const value = filters.validThrough;
+      if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
+          !Number.isFinite(Date.parse(value)) || new Date(value).toISOString().slice(0, 10) !== value)
+        throw this.invalid("Product validity date is invalid.");
+      result.validThrough = Date.parse(value);
+    }
     return result;
   },
 
-  /** Collects a complete catalogue through the existing scoped search boundary or fails closed. */
+  /**
+   * Collects a complete catalogue through the existing scoped search boundary or fails closed.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @param {Object} discovery Effective Product discovery service.
+   * @param {Object} policy Validated effective framework policy.
+   * @returns {Promise<Object[]>} Complete scoped Product candidate set within configured bounds.
+   * @remarks Effects: Reads through the existing discovery boundary; never truncates silently.
+   * Failure behavior: Rejects malformed, partial or over-bound candidate reads.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   candidates: async function (request, discovery, policy) {
-    let maximum = Number(policy.maximumCandidates || 1000),
+    let maximum = Number(policy.maximumCandidates),
       batch = Math.min(
-        Number(policy.readPageSize || 100),
-        Number(discovery.policy().maximumPageSize || 100),
+        Number(policy.readPageSize),
+        Number(discovery.policy().maximumPageSize),
       );
     if (
       !Number.isInteger(maximum) ||
@@ -184,19 +223,54 @@ module.exports = {
     throw new Error("The complete catalogue could not be loaded.");
   },
 
-  /** Lists complete filtered results with stable pagination and whole-query facet counts. */
+  /**
+   * Applies retained listing windows and explicit live owner availability before facets or pagination.
+   * @param {Object} product Canonical scoped Product projection and retained availability/listing terms.
+   * @param {number} now Owner-selected current timestamp in milliseconds.
+   * @returns {boolean} Whether the explicit owner availability and listing window admit the Product now.
+   * @remarks Effects: Reads retained product fields only; does not alter coupon validity.
+   * Failure behavior: Rejects malformed retained listing dates/windows.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  available: function (product, now) {
+    const window = product.localizedAttributes?.listingWindow;
+    if (window) {
+      const start = window.startsAt === null ? null : Date.parse(window.startsAt);
+      const end = window.endsAt === null ? null : Date.parse(window.endsAt);
+      if ((start !== null && !Number.isFinite(start)) || (end !== null && !Number.isFinite(end)) ||
+          (start !== null && end !== null && end <= start)) throw new Error("Invalid retained Product listing window");
+      if (start !== null && start > now || end !== null && end <= now) return false;
+    }
+    return product.availability?.available === true;
+  },
+
+  /**
+   * Lists complete filtered results with stable pagination and whole-query facet counts.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Tenant/Store/locale result with products, total, pagination and
+   * whole-query facets.
+   * @remarks Effects: Reads candidates and derives facets/ranking before slicing; no Product writes.
+   * Failure behavior: Propagates scope, filter, completeness, availability and configured-bound
+   * failures.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   list: async function (request) {
     let discovery = SERVICE.DefaultProductDiscoveryService,
       policy = this.policy(),
       input = request.query || {};
     let dimensions = policy.dimensions || {},
       filters = this.filters(input, dimensions);
+    if ([input.page, input.pageSize, input.limit].some(value => value !== undefined && !["string", "number"].includes(typeof value)))
+      throw this.invalid("Product page is invalid.");
+    if (input.q !== undefined && typeof input.q !== "string") throw this.invalid("Search text is invalid.");
     let page = Number(input.page || 1),
       pageSize = Number(
         input.pageSize ||
           input.limit ||
-          discovery.policy().defaultPageSize ||
-          24,
+          discovery.policy().defaultPageSize,
       );
     if (
       !Number.isInteger(page) ||
@@ -204,7 +278,7 @@ module.exports = {
       page > 10000 ||
       !Number.isInteger(pageSize) ||
       pageSize < 1 ||
-      pageSize > Number(discovery.policy().maximumPageSize || 100)
+      pageSize > Number(discovery.policy().maximumPageSize)
     )
       throw this.invalid("Product page is invalid.");
     let term = String(input.q || "")
@@ -220,10 +294,17 @@ module.exports = {
         "name-desc",
         "price-asc",
         "price-desc",
+        "expiry-asc",
       ].includes(sort)
     )
       throw this.invalid("Product sort is invalid.");
     let products = await this.candidates(request, discovery, policy);
+    if (input.view !== undefined && input.view !== "AVAILABLE_SHOP")
+      throw this.invalid("Product view is invalid.");
+    if (input.view === "AVAILABLE_SHOP") {
+      const now = Date.now();
+      products = products.filter(product => this.available(product, now));
+    }
     let dimensionValues = (product, key) => [
       ...new Set(
         ((dimensions[key] || {}).paths || [])
@@ -291,6 +372,8 @@ module.exports = {
         return false;
       if (filters.priceMax && this.compareDecimal(price, filters.priceMax) > 0)
         return false;
+      const expiresAt = product.localizedAttributes?.expiresAt || product.localizedAttributes?.listingWindow?.endsAt;
+      if (filters.validThrough && expiresAt && (!Number.isFinite(Date.parse(expiresAt)) || Date.parse(expiresAt) < filters.validThrough)) return false;
       if (
         filters.saleOnly &&
         !(policy.saleCollectionCodes || []).some(
@@ -307,7 +390,17 @@ module.exports = {
     else
       products.sort((a, b) => {
         let order = 0;
-        if (sort.startsWith("name-"))
+        if (sort === "expiry-asc") {
+          const expiry = value => {
+            const date = value.localizedAttributes?.expiresAt || value.localizedAttributes?.listingWindow?.endsAt;
+            if (!date) return Infinity;
+            const timestamp = Date.parse(date);
+            if (!Number.isFinite(timestamp)) throw new Error("Invalid retained Product expiry");
+            return timestamp;
+          };
+          const left = expiry(a), right = expiry(b);
+          order = left < right ? -1 : left > right ? 1 : 0;
+        } else if (sort.startsWith("name-"))
           order = String(a.name || a.productCode).localeCompare(
             String(b.name || b.productCode),
           );

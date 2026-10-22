@@ -14,11 +14,43 @@
 /** @module checkoutCore/src/router/routers @description Declares secured idempotent checkout placement API. @layer router @owner checkoutCore */
 module.exports = {
   checkoutCore: {
+    participantSpend: {
+      settings: { secured: true, authTokenTypes: ["access"], accessGroups: ["employeeUserGroup"],
+        permission: "commerce.checkout.spend.manage", apiExposure: "commerceCustomer", requestPrivacy: { sensitive: true },
+        cache: { enabled: false }, key: "/checkout/enterprise-spending/read", method: "POST",
+        controller: "DefaultCommerceParticipantSpendController", operation: "settings" },
+      updateSettings: { secured: true, authTokenTypes: ["access"], accessGroups: ["employeeUserGroup"],
+        permission: "commerce.checkout.spend.manage", apiExposure: "commerceCustomer", requestPrivacy: { sensitive: true },
+        cache: { enabled: false }, key: "/checkout/enterprise-spending/update", method: "POST",
+        controller: "DefaultCommerceParticipantSpendController", operation: "updateSettings" }
+    },
+    auction: {
+      cancelAuctionPurchase: {
+        secured: true, authTokenTypes: ["access"], accessGroups: ["customerUserGroup", "employeeUserGroup"],
+        permission: "commerce.checkout.place", apiExposure: "commerceCustomer", requestPrivacy: { sensitive: true },
+        cache: { enabled: false }, key: "/checkout/auction/cancel", method: "POST",
+        controller: "DefaultCheckoutAuctionController", operation: "cancel"
+      },
+      auctionFundsEvidence: {
+        secured: true, authTokenTypes: ["access", "service"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup", "serviceAccountUserGroup"],
+        permissions: ["commerce.bid.participate", "commerce.bid.manage"], apiExposure: "commerceCustomer",
+        requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        key: "/checkout/auction-funds/evidence", method: "POST",
+        controller: "DefaultCheckoutAuctionController", operation: "evidence"
+      }
+    },
     customer: {
+      resumeBundle: {
+        secured: true, authTokenTypes: ["access"], accessGroups: ["customerUserGroup", "employeeUserGroup"],
+        permission: "commerce.checkout.place", apiExposure: "commerceCustomer", requestPrivacy: { sensitive: true },
+        cache: { enabled: false }, key: "/checkouts/:commandCode/recovery/resume", method: "POST",
+        controller: "DefaultCheckoutCustomerController", operation: "resumeBundle"
+      },
       commandStatus: {
         secured: true,
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.checkout.place",
         apiExposure: "commerceCustomer",
         requestPrivacy: { sensitive: true },
@@ -31,7 +63,7 @@ module.exports = {
       recoverCompensation: {
         secured: true,
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.checkout.place",
         apiExposure: "commerceCustomer",
         key: "/checkouts/:commandCode/compensation/recover",
@@ -41,8 +73,10 @@ module.exports = {
       },
       status: {
         secured: true,
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.checkout.place",
         apiExposure: "commerceCustomer",
         key: "/checkouts/:orderCode",
@@ -53,7 +87,7 @@ module.exports = {
       place: {
         secured: true,
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.checkout.place",
         apiExposure: "commerceCustomer",
         key: "/checkouts/place",

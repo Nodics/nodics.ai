@@ -9,11 +9,17 @@ describes. For example, one published Product/SKU may represent one listed Waste
 asset. Checkout captures Loyalty points; the domain credits the original seller
 and Waste records the original buyer's digital ownership.
 
-This is an implemented, disabled-by-default source integration, not installed or
-live qualification. It supports one asset, quantity one, in a one-entry Order,
-paid entirely through the original `LOYALTY_REWARD` capture. Domain policy must
-explicitly permit the supported settlement. It does not approve a business
-proposal, create policy data, install owners or publish Products.
+This contract describes the retained one-asset DigitalCore interface and its
+original evidence, not permission for a new eWaste sale. The historical shape is
+one asset, quantity one, in a one-entry Order paid through the original
+`LOYALTY_REWARD` capture. New Circa/eWaste sales use
+[common bundle settlement](bundle-settlement.md) and are final sales with no
+return/refund path. The retired one-asset eWaste adapter reports unavailable,
+refuses new reserve and incomplete confirm, and permits only exact completed
+evidence readback and bounded original incomplete-purchase recovery. Historical
+policy snapshots cannot re-enable it. Neither source integration nor this
+contract proves installed/live qualification or creates policy, owners or
+published Products.
 
 This contract owns the DigitalCore/Checkout interface. The optional
 [eWaste owner contract](../../../../../../../nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/digital-ownership-sale.md)
@@ -28,7 +34,7 @@ proof. These links are documentation references, not a new runtime dependency.
 | Checkout and Payment | Original Cart scope, Order, authorization and captured payment | A reservation, matching amount or browser flag is not captured-payment proof. |
 | DigitalCore | Classification, binding contract, digital entitlement and delivery evidence | No asset transfer store, wallet settlement or physical stock fallback. |
 | Waste | Persisted asset lock, ownership event, revisions and current owner | No local DigitalCore transfer shadow or direct database update. |
-| eWaste | Secured domain orchestration and exact supported settlement policy | Do not call its legacy marketplace purchase to charge the buyer again. |
+| eWaste | Secured retained-evidence checks, bounded incomplete-purchase recovery and delegation to common bundle owners | No retired marketplace purchase, seller-credit writer or completed-sale reversal. |
 | Loyalty | Original buyer capture and idempotent seller earning ledger | No invented ledger reference or compensation success. |
 | Profile | Canonical customer identity, including login-to-code resolution | A login string is not automatically the customer record code. |
 
@@ -66,9 +72,22 @@ unique-locale array of 1..20 entries:
 evidence.retainedProducts[] = { locale, code, sourceHash, publicationVersion }
 ```
 
-The selected pin must match the retained projection exactly, and its localized
-`assetCode` must match the binding. See the eWaste contract for reverse binding,
-Store reference normalization and required policy identities.
+The selected pin must match its original retained projection exactly, and its
+localized `assetCode` must match the binding. Customer discovery may supply a
+newer governed Product publication, such as a media correction, without
+rewriting that historical pin. Availability validates the original pinned row
+and independently requires the current projection to preserve the same asset,
+variant, SKU, delivery type and inventory identity. A missing or changed
+historical row, or a successor that changes those ownership identities, refuses.
+See the eWaste contract for reverse binding, Store reference normalization and
+required policy identities.
+
+An exact zero-row binding read means the published listing is not yet saleable.
+Availability returns bounded unavailable evidence with
+`DIGITAL_OWNERSHIP_BINDING_UNAVAILABLE` and does not call Waste. More than one
+binding, or any malformed/stale retained binding, remains an owner-evidence error.
+This distinction permits safe catalogue browsing before binding admission without
+inventing inventory or weakening checkout's exact reservation requirement.
 
 Availability is non-reserving. Its response includes `available`,
 `status: AVAILABLE | UNAVAILABLE`, `guaranteed: false`,
@@ -132,10 +151,14 @@ the generated OrderEntry code `<orderCode>:<entryCode>`.
 
 DigitalCore invokes its server-configured owner with one POST, `maxAttempts: 1`,
 15-second timeout, trusted tenant context and enterprise/correlation/idempotency
-headers. The eWaste route is `/internal/digital-sales/:phase`; phases are
-`availability`, `reserve`, `confirm`, `deliver`, `cancel`, and the original-sale
-`refund-preview/refund-prepare/refund-settle/refund-complete` phases below. No automatic mutation
-retry is implied by module invocation.
+headers. The retained eWaste route is `/internal/digital-sales/:phase`.
+`availability` reports `COMMON_COMMERCE_BUNDLE_REQUIRED`; new `reserve` and
+incomplete `confirm` refuse. Completed `confirm`/`deliver` check exact original
+evidence without new settlement or transfer. `cancel` and `compensation-resolve`
+remain bounded original-purchase recovery, with `evidence` supplying protected
+owner readback. `refund-preview` returns final-sale ineligibility and all
+`refund-prepare/refund-settle/refund-complete` mutation phases refuse. They are
+not executable reversal endpoints. No automatic mutation retry is implied.
 
 | Request field | Meaning |
 | --- | --- |
@@ -190,7 +213,7 @@ not another charge or invented delivery.
 Native Date values use exact `getTime()` milliseconds when compared with original
 ISO transport timestamps; never pass Date objects through `Date.parse`, which
 loses milliseconds during coercion. Invalid dates, non-date values and exact
-one-millisecond drift refuse in ownership readback and refund admission.
+one-millisecond drift refuse in ownership readback and historical evidence checks.
 
 ## Compensation And Unsupported Outcomes
 
@@ -210,54 +233,50 @@ locked for domain/manual recovery. The exact proof matrix and sequence are in
 the eWaste contract; do not substitute a boolean cancellation flag.
 
 Generic entitlement REFUND remains nonrefundable `MANUAL_REVIEW`; RETURN remains
-nonrefundable `BLOCKED`. The narrow reviewed original-sale path below does not
-inherit unused-coupon refund policy. Onward ownership prevents delivery replay
-and original-sale reversal. Physical custody, shipping, collection,
+nonrefundable `BLOCKED`. These generic review labels do not grant a Circa/eWaste
+completed-sale refund. Common Commerce retains separately governed coupon,
+physical-order and original-payment recovery contracts; their eligibility and
+evidence do not transfer to completed ownership sales. Onward ownership prevents
+original delivery replay and grants no reversal authority. Physical custody, shipping, collection,
 physical inventory return, carbon issuance/transfer, split payments, mixed
 monetary allocation and external item fulfillment are not established here.
 
-## Original Sale Refund
+## Completed Sales And Historical Refund Evidence
 
-`DefaultDigitalCommerceRefundService` dispatches only a complete one-entry,
-quantity-one `wasteCore/DIGITAL_OWNERSHIP` purchase to the existing ownership
-adapter. Mixed, extra, empty, foreign or duplicate units refuse; coupon dispatch
-and Promotion revocation remain separate. Every phase reloads exact entitlement
-scope, Product/SKU and original OrderEntry identity. The original event, asset,
-capture, seller and settlement remain immutable evidence, not API overrides.
+Completed Circa/eWaste certificate and bundle purchases cannot be refunded or
+returned. Digital's bundle refund preview returns
+`eligible:false/reason:COMPLETED_BUNDLE_FINAL_SALE`; mutation phases throw.
+The retained eWaste dispatcher likewise returns ineligible at `refund-preview`
+and refuses `refund-prepare`, `refund-settle` and `refund-complete`. Old private
+service selectors, staff approval, a generic Order refund plan or a historical
+policy flag cannot activate the removed domain bridge. Do not restore a
+compatibility mutation or add a replacement eWaste accounting path.
 
-| Order phase | Digital responsibility | Domain responsibility |
-| --- | --- | --- |
-| Preview | Reuse fresh Order `paymentAuthority(..., false)` and exact full purchase units. | Read original sale/capture/earning, exact current retained policies, active original entitlement and latest buyer-held asset. Return typed `DIGITAL_OWNERSHIP` plan with sale/asset/refund/entitlement identities. |
-| PREPARE | Revalidate signed staff approval with `paymentAuthority(..., PREFLIGHT)` and persisted `digitalCore` ownership plan; lock entitlement REFUND_PENDING with original refund code. | Independently reread Order approval and lock; CAS original asset LOCKED and retain a linked reversal command/event before financial effects. |
-| SETTLE | Revalidate original approval/entitlement lock; no buyer debit or local wallet write. | Require durable Order PREPARE, reverse only original seller EARN through Loyalty and verify fresh exact original-entry ledger; retain that reference under the reversal. |
-| PAYMENT | Existing Order/Payment owners perform the full original-capture refund after successful PREPARE/SETTLE. | No substitute eWaste buyer refund operation. |
-| COMPLETE | Revalidate `paymentAuthority(..., true)`; only after domain completion mark entitlement REVOKED and retain exact Digital reversal evidence. | Require Order SETTLE/PAYMENT checkpoints plus original PaymentTransaction/Loyalty readback, restore original seller's digital ownership, complete linked event and clear only original lock. |
+Supported common Commerce recovery is distinct from a completed-sale reversal:
 
-The existing owner transport carries only original sale code, entitlement code,
-Order/buyer selectors, canonical refund code and the same refund idempotency key.
-No staff bearer impersonation, financial selector, refund flag or extra debit is
-forwarded. A service token alone cannot authorize an unapproved refund. Local
-Order still refreshes signed staff scope on each attempt; eWaste independently
-verifies persisted approved business authority through protected owning reads.
+| Situation | Current owner behavior |
+| --- | --- |
+| Unstarted acquisition with confirmed original compensation evidence | Checkout may release only the original confirmed reservation through the existing owner port; uncertain acquisition remains recovery-required. |
+| Persisted bundle Order, capture or component transfer | Resume original Checkout forward recovery with retained terms and exact owner evidence. Do not reprice, rebuild a Cart, refund a completed sale or create another debit. |
+| Retained one-asset reservation with original failed-purchase Payment compensation | Use only the bounded eWaste cancellation/refunded-reservation cleanup contract and original keys. This does not reverse a completed sale or execute another financial operation. |
+| Completed Circa/eWaste ownership sale | Final-sale refusal, regardless of old refund terms or later ownership. |
+| Independently eligible coupon or physical Commerce order | Its existing Order/Payment/domain policy governs; this contract neither removes those supported contracts nor extends them to final ownership sales. |
 
-The explicit active transfer-policy term must already be retained in the original
-sale command: `metadata.digitalOwnership.refund` equals
-`ORIGINAL_TRANSFER_REVERSAL_ONLY_BEFORE_ONWARD_TRANSFER`. No flag or imported
-proposal supplies this term automatically, and old sale snapshots are never
-backfilled. The current transfer/reward/carbon policies must exactly match those
-original pins. Only original seller proceeds, no fee/no carbon, one original
-Loyalty capture are supported. Missing term, changed policies or spent proceeds
-requires review/recovery rather than assumed eligibility or another financial key.
-The [eWaste refund contract](../../../../../../../nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/digital-ownership-sale.md#original-sale-refund)
-owns the full reference and recovery matrix.
+Historical records may retain `metadata.digitalOwnership.refund` with
+`ORIGINAL_TRANSFER_REVERSAL_ONLY_BEFORE_ONWARD_TRANSFER`, original policy pins,
+refund codes, PREPARE/SETTLE/PAYMENT checkpoints, captures, seller earnings and
+reversal references. Preserve them unchanged for provenance and owner-led
+reconciliation. They are not current executable instructions, cannot be
+backfilled to manufacture eligibility, and do not authorize releasing uncertain
+locks or altering balances. The generic Digital dispatcher retaining historical
+validation logic does not establish an available eWaste reversal implementation.
 
-Source tests exercise real Order approval/lifecycle and Payment dispatch, Digital,
-eWaste, Waste and Loyalty reversal owners through isolated persistence/transport
-and a staff-admission double. Lost seller acknowledgements/postings, concurrent
-retries, interrupted ownership/event cleanup and Digital writes keep original
-references and recover without repeating balances. They do not prove installed
-private transports, Profile admission, database atomicity or approved deployment
-policy. No native mutation, automatic recovery worker or physical return is added.
+See [eWaste finality and original recovery](../../../../../../../nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/digital-ownership-sale.md#completed-purchases-are-final)
+and [common bundle forward recovery](bundle-settlement.md). Both preserve original
+commands and qualified owner evidence. Source tests establish refusal, retained
+evidence and isolated recovery behavior only; installed private transports,
+Profile admission, database atomicity and provider settlement remain separate
+acceptance gates.
 
 ## Admission, Extension And Verification
 
@@ -297,7 +316,9 @@ builders with isolated generated persistence, transport and Loyalty doubles.
 It covers success/replay, canonical locale/Store/merchant binding, no second debit,
 lost acknowledgements, uncertain credit, persisted cleanup recovery, expiry/VOID,
 tampered entitlement/delivery evidence, missing owners, onward transfer, unapproved
-refund refusal, the scoped original-sale refund and later-layer availability narrowing. It does not prove installed
+final-sale refund refusal, retained original-purchase recovery and later-layer
+availability narrowing. Historical reversal fixtures are not current bridge
+qualification. It does not prove installed
 database/provider atomicity, service grants, publication, live settlement or
 automatic recovery workers. See the eWaste contract for complete test ownership
 and installed/publication acceptance gates.

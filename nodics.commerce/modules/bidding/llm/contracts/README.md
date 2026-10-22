@@ -1,5 +1,11 @@
 # Commerce bidding contract
 
+Bidder and seller scope matching includes wildcard capabilities and all
+tenant/Enterprise qualifiers for both allow and deny. Any applicable denial wins.
+The documented `matchesEnterpriseScope` member remains effective-layer
+customizable without changing original Profile admission or granting private
+authority. Preserve `test/biddingIdentityTransport.test.js`.
+
 `bidding` owns `DefaultBiddingService`, its controller and participant API:
 `/nodics/bidding/v0/bids` (GET/POST), `/bids/:code` (GET), and
 `/bids/:code/decisions` (POST). Require `commerce.bid.participate` and service
@@ -31,7 +37,9 @@ representatives through Profile's effective scopes. Later trusted identity and
 offer services may support other business schemas through CONFIG. The lifecycle
 compares complete typed references; equal codes in different schemas never grant
 access. Lists are enterprise-partitioned, participant-scoped and bounded to 100.
-Pagination and timed auctions are future capabilities, not implied by this API.
+The negotiation list remains bounded. Explicit auction publications use the
+separate persisted [auction-round contract](auction-round-contract.md); that
+contract never uses this truncated list for winner selection or release.
 
 Pricing alone issues accepted private quotes. Every quote binds buyer, product and variant,
 store, currency, quantity, expiry, cart and order. Checkout validates those bindings
@@ -54,3 +62,25 @@ Business evaluators get reusable negotiation; customers get review/confirmation
 and reload-safe outcomes; administrators configure eligibility and scope; partners
 extend the identity/offer seams; maintainers and AI tools preserve owner contracts
 and run `test/biddingContract.test.js` plus connected consumer acceptance.
+
+## Auction and identity extension
+
+`DefaultBiddingAuctionService` owns published listing rounds;
+`DefaultBiddingCloseService` supplies permission-guarded scheduler commands.
+The auction participant API is `/auctions` (POST), `/auctions/:code` (GET),
+and `/auctions/:code/commands` (POST). Supply the governed `storeCode` in the body
+or GET query. Existing `/bids` creates ordinary negotiations and rejects an
+explicit AUCTION publication so it cannot bypass the listing-wide winner fence.
+
+Customer authority still uses Profile's self-only identity. Human actors resolve
+the same signed `/identity/scopes/me` evidence once; participation and management
+are evaluated independently. Enterprise buyers require participation permission
+and a matching effective scope with denial taking precedence. Enterprise sellers
+add management permission/scope. The purchasing owner is the signed Enterprise,
+not the employee and not every Enterprise the employee can represent. Actual
+funding qualification enforces the actor's current spending limit. The governed
+store's listing partition stays separate from signed participant Enterprise
+context, permitting distinct Enterprise owners to trade through the same store.
+
+Auction behavior, persistence, full defaults, port signatures and remaining
+integration prerequisites are detailed in `auction-round-contract.md`.

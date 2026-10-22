@@ -16,6 +16,8 @@ const assert = require('node:assert/strict');
 const paymentExecution = require('../../../../paymentCore/src/service/defaultPaymentExecutionService');
 const provider = require('../src/service/defaultLoyaltyRewardPaymentProviderService');
 const operationService = require('../../../../../../../../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService');
+const loyaltyAmount = require('../../../../../../../../nodics.loyalty/modules/loyaltyCore/src/service/defaultLoyaltyAmountService');
+require('../../../../../../../../nodics.loyalty/modules/loyaltyWallet/test/helpers/runtimeEnums')();
 
 function createStore() {
     const rows = [];
@@ -54,8 +56,13 @@ const reservationStore = createStore();
 const redemptionStore = createStore();
 const repository = paymentRepository();
 
-global.CONFIG = { get: key => key === 'loyaltyRewardProvider' ? undefined : undefined };
+global.CONFIG = { get: key => key === 'loyaltyRewardProvider' ? require('../config/properties').loyaltyRewardProvider : key === 'loyalty' ? {
+    ...require('../../../../../../../../nodics.loyalty/modules/loyaltyCore/config/properties').loyalty,
+    ...require('../../../../../../../../nodics.loyalty/modules/loyaltyReservation/config/properties').loyalty
+} : undefined };
 global.SERVICE = {
+    DefaultLoyaltyAmountService: loyaltyAmount,
+    DefaultExactAmountService: require('../../../../../../baseCommerce/modules/pricing/src/service/defaultExactAmountService'),
     DefaultLoyaltyWalletRewardBalanceService: balanceStore,
     DefaultRewardLedgerEntryService: ledgerStore,
     DefaultRewardReservationService: reservationStore,

@@ -45,3 +45,9 @@ activation receipt. Source-aware Axis surfaces must exclude unbound/stale choice
 
 Startup retry timing is cronjob.processRetrySleepTime, defined by this consumer.
 It is independent of EMS retry timing; do not restore a shared global delay.
+
+Scheduled-execution acceptance belongs to Cronjob. Register reusable command and
+timing defaults here; projects supply only reviewed schedule selections and
+runtime operator sessions. Use the canonical lifecycle, run and persisted job
+APIs. Never create schedules, call domain work directly or treat an HTTP run
+acknowledgement as execution evidence.

@@ -13,7 +13,6 @@
 "use strict";
 const crypto = require("node:crypto");
 const { isDeepStrictEqual } = require("node:util");
-const amounts = require("../../../loyaltyCore/src/service/defaultLoyaltyAmountService");
 const counters = ["available", "reserved", "earned", "spent", "expired", "reversed"];
 const persistenceSchemas = [["loyaltyWallet", "loyaltyWallet"], ["loyaltyWallet", "loyaltyWalletRewardBalance"], ["loyaltyLedger", "rewardLedgerEntry"]];
 const persistenceSchemaNames = new Set(persistenceSchemas.map(([moduleName, schemaName]) => moduleName + "." + schemaName));
@@ -27,7 +26,21 @@ const persistenceSchemaNames = new Set(persistenceSchemas.map(([moduleName, sche
  * human permission, exact source/intent binding and atomic posting/readback.
  */
 module.exports = {
-  /** Throws a content-free owner status. */
+  /**
+   * Resolves the effective registered amount owner, including later customizations.
+   * @returns {Object} Effective exact-amount service; no inline arithmetic or fallback.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
+  amount: function () { return SERVICE.DefaultLoyaltyAmountService; },
+  /**
+   * Throws a content-free owner status.
+   * @param {string} [code] Exact record identity or stable owner error code, as described above.
+   * @param {string} gate Fixed content-free diagnostic gate.
+   * @param {string} schema Fixed participating schema name.
+   * @returns {never} Always throws a content-safe owner error; no business writes.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   fail: function (code = "ERR_LOYALTY_SAMPLE_CREDIT_INVALID", gate, schema) {
     try { return SERVICE.DefaultLoyaltyRewardOperationService.fail(code, "Reviewed sample credit is unavailable"); }
     catch (error) {
@@ -36,7 +49,13 @@ module.exports = {
       throw error;
     }
   },
-  /** Requires human sample-credit permission and an explicitly selected environment policy, independent of deployment class. */
+  /**
+   * Requires human sample-credit permission and an explicitly selected environment policy, independent of deployment class.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {*} Requires human sample-credit permission and an explicitly selected environment policy, independent of deployment class.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   context: function (request) {
     const auth = request.authData || {}, policy = CONFIG.get("loyalty")?.sampleCredits;
     const security = SERVICE.DefaultSecuredRequestPipelineService;
@@ -55,7 +74,13 @@ module.exports = {
       this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "HUMAN_CONTEXT");
     return { ...request, authData: structuredClone(auth), enterpriseCode, environment, actorCode };
   },
-  /** Accepts bounded scalar instructions and the exact original six-counter balance revision. */
+  /**
+   * Accepts bounded scalar instructions and the exact original six-counter balance revision.
+   * @param {Object} input Operation-specific command or evidence input described above; not authorization.
+   * @returns {*} Accepts bounded scalar instructions and the exact original six-counter balance revision.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   instruction: function (input) {
     const fields = ["code", "customerCode", "walletCode", "programCode", "rewardTypeCode", "amount", "approvalReference", "expectedBalance"];
     if (!input || Object.keys(input).sort().join(",") !== fields.sort().join(",") ||
@@ -67,7 +92,13 @@ module.exports = {
         counters.some(key => typeof input.expectedBalance[key] !== "string" || !/^\d{1,12}(\.\d{1,8})?$/.test(input.expectedBalance[key]))) this.fail();
     return structuredClone(input);
   },
-  /** Loads only a qualified immutable JSON contribution; file paths and source flags grant no credit authority. */
+  /**
+   * Loads only a qualified immutable JSON contribution; file paths and source flags grant no credit authority.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Loads only a qualified immutable JSON contribution; file paths and source flags grant no credit authority.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   load: async function (request) {
     request = this.context(request);
     const contribution = structuredClone(request.contribution);
@@ -86,7 +117,15 @@ module.exports = {
     for (const input of credits) this.approval(request, input, source);
     return { request, credits, source };
   },
-  /** Matches the exact source and human-reviewed instruction to deployment selection, never to body authority. */
+  /**
+   * Matches the exact source and human-reviewed instruction to deployment selection, never to body authority.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {Object} input Operation-specific command or evidence input described above; not authorization.
+   * @param {Object} source Qualified source contribution or immutable evidence.
+   * @returns {*} Matches the exact source and human-reviewed instruction to deployment selection, never to body authority.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   approval: function (request, input, source) {
     const policy = CONFIG.get("loyalty")?.sampleCredits;
     const grants = Array.isArray(policy?.approvedSources) ? policy.approvedSources : [];
@@ -95,7 +134,15 @@ module.exports = {
         row.instructionCode === input.code && row.approvalReference === input.approvalReference).length !== 1)
       this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "PINNED_APPROVAL");
   },
-  /** Rejects failed or ambiguous generated reads and retains the established private Loyalty storage actor. */
+  /**
+   * Rejects failed or ambiguous generated reads and retains the established private Loyalty storage actor.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {string} serviceName Owner-selected generated service name.
+   * @param {Object} query Owner-built exact persistence selector, never a client query.
+   * @returns {Promise<*>} Rejects failed or ambiguous generated reads and retains the established private Loyalty storage actor.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   read: async function (request, serviceName, query) {
     const service = SERVICE[serviceName], operations = SERVICE.DefaultLoyaltyRewardOperationService;
     if (typeof service?.get !== "function") this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "GENERATED_READ_OWNER");
@@ -107,18 +154,33 @@ module.exports = {
           Object.entries(query).some(([key, value]) => row[key] !== value))) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "GENERATED_READ_ENVELOPE");
     return response.result[0];
   },
-  /** Binds one posting to its original reviewed source, scope and instruction. */
+  /**
+   * Binds one posting to its original reviewed source, scope and instruction.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {Object} input Operation-specific command or evidence input described above; not authorization.
+   * @param {Object} source Qualified source contribution or immutable evidence.
+   * @param {number} scale Validated decimal precision from the canonical reward unit or issued lot.
+   * @returns {*} Binds one posting to its original reviewed source, scope and instruction.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   posting: function (request, input, source, scale) {
     const key = "sample-credit-" + crypto.createHash("sha256").update(JSON.stringify({ tenant: request.tenant,
       enterpriseCode: request.enterpriseCode, releaseCode: source.releaseCode, instructionCode: input.code })).digest("hex");
     return { ...request, walletCode: input.walletCode, programCode: input.programCode, rewardTypeCode: input.rewardTypeCode,
-      amount: amounts.assertPositive(input.amount, scale), scale, idempotencyKey: key, correlationId: key,
+      amount: this.amount().assertPositive(input.amount, scale), scale, idempotencyKey: key, correlationId: key,
       sourceType: "SAMPLE_DATA_RELEASE", sourceCode: source.releaseCode + "@" + source.version,
       targetType: "CUSTOMER", targetCode: input.customerCode,
       metadata: { operatorCode: request.actorCode,
         sampleCredit: { source, instruction: input, enterpriseCode: request.enterpriseCode, localDemoOnly: true } } };
   },
-  /** Verifies installed atomic provider, eligible schemas and unique posting/balance identities without writes. */
+  /**
+   * Verifies installed atomic provider, eligible schemas and unique posting/balance identities without writes.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Verifies installed atomic provider, eligible schemas and unique posting/balance identities without writes.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   persistence: async function (request) {
     const transaction = SERVICE.DefaultLoyaltyTransactionService;
     if (CONFIG.get("loyalty")?.transactions?.enabled !== true || !transaction?.run || !transaction?.qualify)
@@ -152,43 +214,65 @@ module.exports = {
           Object.keys(index.key || {}).join(",") === "code" && index.key.code === 1)) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "UNIQUE_IDENTITY_INDEX");
     }
   },
-  /** Inspects original evidence and expected balance; replay does not require an unchanged post-spend balance. */
+  /**
+   * Inspects original evidence and expected balance; replay does not require an unchanged post-spend balance.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {Object} input Operation-specific command or evidence input described above; not authorization.
+   * @param {Object} source Qualified source contribution or immutable evidence.
+   * @param {number} scale Validated decimal precision from the canonical reward unit or issued lot.
+   * @returns {Promise<*>} Inspects original evidence and expected balance; replay does not require an unchanged post-spend balance.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   inspect: async function (request, input, source, scale) {
     request = this.context(request); this.approval(request, input, source);
     const wallet = await this.read(request, "DefaultLoyaltyWalletService", { code: input.walletCode, ownerType: "CUSTOMER", ownerCode: input.customerCode });
-    if (!wallet || wallet.status !== "OPEN" || wallet.metadata?.sample !== true) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "SAMPLE_WALLET_ELIGIBILITY");
+    if (!wallet || wallet.status !== ENUMS.LoyaltyWalletStatus.OPEN.key || wallet.metadata?.sample !== true) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "SAMPLE_WALLET_ELIGIBILITY");
     const posting = this.posting(request, input, source, scale), operations = SERVICE.DefaultLoyaltyRewardOperationService;
-    const original = await this.read(request, "DefaultRewardLedgerEntryService", { code: operations.ledgerCode(posting, "EARN") });
+    const original = await this.read(request, "DefaultRewardLedgerEntryService", { code: operations.ledgerCode(posting, ENUMS.LoyaltyLedgerEntryType.EARN.key) });
     const balance = await this.read(request, "DefaultLoyaltyWalletRewardBalanceService", { walletCode: input.walletCode,
       programCode: input.programCode, rewardTypeCode: input.rewardTypeCode });
     if (!balance || balance.metadata?.sample !== true) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "SAMPLE_BALANCE_ELIGIBILITY");
     if (original) {
       for (const key of ["walletCode", "programCode", "rewardTypeCode", "amount", "sourceType", "sourceCode", "targetType", "targetCode", "idempotencyKey", "correlationId"])
         if (original[key] !== posting[key]) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
-      if (original.entryType !== "EARN" || !isDeepStrictEqual(original.metadata?.sampleCredit, posting.metadata.sampleCredit))
+      if (original.entryType !== ENUMS.LoyaltyLedgerEntryType.EARN.key || !isDeepStrictEqual(original.metadata?.sampleCredit, posting.metadata.sampleCredit))
         this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
-      return { action: "CURRENT", posting, balance, ledgerEntry: original };
+      return { action: ENUMS.LoyaltyTestCreditStatus.CURRENT.key, posting, balance, ledgerEntry: original };
     }
     if (balance.revision !== input.expectedBalance.revision || counters.some(key =>
-      amounts.compare(balance[key], input.expectedBalance[key], scale) !== 0)) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
-    return { action: "CREDIT_ONCE", posting, balance };
+      this.amount().compare(balance[key], input.expectedBalance[key], scale) !== 0)) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
+    return { action: ENUMS.LoyaltyTestCreditStatus.CREDIT_ONCE.key, posting, balance };
   },
-  /** Resolves active POINT precision/program policy before any transaction; no carbon or other unit funding. */
+  /**
+   * Resolves active POINT precision/program policy before any transaction; no carbon or other unit funding.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {Object} input Operation-specific command or evidence input described above; not authorization.
+   * @returns {Promise<number>} Canonical reward-unit precision after owner policy admission; no posting.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   scale: async function (request, input) {
     const program = await this.read(request, "DefaultLoyaltyProgramService", { code: input.programCode });
     const reward = await this.read(request, "DefaultLoyaltyRewardTypeService", { code: input.rewardTypeCode });
-    if (!program || program.status !== "ACTIVE" || program.earningEnabled !== true || !reward || reward.status !== "ACTIVE" ||
+    if (!program || program.status !== ENUMS.LoyaltyProgramStatus.ACTIVE.key || program.earningEnabled !== true || !reward || reward.status !== ENUMS.LoyaltyRewardTypeStatus.ACTIVE.key ||
         reward.unitType !== "POINT" || !Number.isSafeInteger(reward.precision) || reward.precision < 0 || reward.precision > 8)
       this.fail("ERR_LOYALTY_SAMPLE_CREDIT_UNAVAILABLE", "PROGRAM_POLICY");
     return reward.precision;
   },
-  /** Read-only nImport preflight with bounded owner blockers. */
+  /**
+   * Read-only nImport preflight with bounded owner blockers.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<Object>} Readiness plan or bounded owner blocker; no posting or import execution.
+   * @throws {Error} Unexpected non-owner failures propagate; recognized sample-credit/transaction refusals become blockers.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   preflightContribution: async function (request) {
     try {
       const loaded = await this.load(request), plans = [];
       await this.persistence(loaded.request);
       for (const input of loaded.credits) plans.push(await this.inspect(loaded.request, input, loaded.source, await this.scale(loaded.request, input)));
-      return { ready: true, plan: { creditCount: plans.length, currentCount: plans.filter(row => row.action === "CURRENT").length } };
+      return { ready: true, plan: { creditCount: plans.length, currentCount: plans.filter(row => row.action === ENUMS.LoyaltyTestCreditStatus.CURRENT.key).length } };
     } catch (error) {
       if (!/^ERR_LOYALTY_(SAMPLE_CREDIT|TRANSACTION)/.test(error.code || "")) throw error;
       const gates = new Set(["HUMAN_CONTEXT", "PINNED_APPROVAL", "GENERATED_READ_OWNER", "GENERATED_READ_ENVELOPE",
@@ -201,7 +285,13 @@ module.exports = {
             ? { schema: error.sampleCreditSchema } : {}) } : {}) } };
     }
   },
-  /** Posts each reviewed credit atomically with original replay evidence and in-transaction durable readback. */
+  /**
+   * Posts each reviewed credit atomically with original replay evidence and in-transaction durable readback.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Posts each reviewed credit atomically with original replay evidence and in-transaction durable readback.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   installContribution: async function (request) {
     const loaded = await this.load(request), plans = [];
     await this.persistence(loaded.request);
@@ -213,9 +303,9 @@ module.exports = {
       const result = await SERVICE.DefaultLoyaltyTransactionService.run(scoped, async () => {
         const plan = await this.inspect(scoped, row.input, loaded.source, row.scale);
         const operations = SERVICE.DefaultLoyaltyRewardOperationService;
-        if (plan.action === "CURRENT") return { ledgerEntryCode: plan.ledgerEntry.code, action: "CURRENT" };
+        if (plan.action === ENUMS.LoyaltyTestCreditStatus.CURRENT.key) return { ledgerEntryCode: plan.ledgerEntry.code, action: ENUMS.LoyaltyTestCreditStatus.CURRENT.key };
         const after = operations.changeBalance(plan.balance, plan.posting, { available: plan.posting.amount, earned: plan.posting.amount });
-        const entry = operations.ledgerEntry(plan.posting, after, "EARN");
+        const entry = operations.ledgerEntry(plan.posting, after, ENUMS.LoyaltyLedgerEntryType.EARN.key);
         const savedBalance = await operations.saveBalance(plan.posting, after);
         if (savedBalance?.error || savedBalance?.success === false || savedBalance?.acknowledged === false ||
             savedBalance?.errors?.length || /^ERR_/.test(savedBalance?.code || "")) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
@@ -226,9 +316,9 @@ module.exports = {
             savedEntry.acknowledged === false || savedEntry.errors?.length || savedEntry.result?.acknowledged === false)
           this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
         const observed = await this.inspect(scoped, row.input, loaded.source, row.scale);
-        if (observed.action !== "CURRENT" || observed.balance.revision !== after.revision ||
-            counters.some(key => amounts.compare(observed.balance[key], after[key], row.scale) !== 0)) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
-        return { ledgerEntryCode: entry.code, action: "CREDITED" };
+        if (observed.action !== ENUMS.LoyaltyTestCreditStatus.CURRENT.key || observed.balance.revision !== after.revision ||
+            counters.some(key => this.amount().compare(observed.balance[key], after[key], row.scale) !== 0)) this.fail("ERR_LOYALTY_SAMPLE_CREDIT_CONFLICT");
+        return { ledgerEntryCode: entry.code, action: ENUMS.LoyaltyTestCreditStatus.CREDITED.key };
       });
       receipts.push({ instructionCode: row.input.code, ...result });
     }

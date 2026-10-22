@@ -103,3 +103,9 @@ for (const [operation, path] of Object.entries({ targetDeploy: 'deploy', targetS
         apiExposure: operation === 'authorizeTarget' ? 'productPublicationSource' : 'productPublicationTarget',
         key: '/internal/products/publication/' + path, method: 'POST', controller: 'DefaultProductPublicationController', operation };
 }
+for (const operation of ['prepare', 'publish', 'inspect', 'withdraw']) {
+    module.exports.product.operator['bundleListing' + operation] = { active: true, secured: true, authTokenTypes: ['service'],
+        accessGroups: ['serviceAccountUserGroup'], permission: 'commerce.product.publish', apiExposure: 'productPublicationSource',
+        requestPrivacy: { sensitive: true }, cache: { enabled: false }, method: 'POST',
+        key: '/internal/products/bundle-listings/' + operation, controller: 'DefaultProductBundlePublicationController', operation };
+}

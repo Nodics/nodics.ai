@@ -203,6 +203,104 @@ module.exports = {
         });
     });
   },
+  /** Adds reviewed reference groups to existing native customers without replaying credentials. */
+  addReferenceGroupsAll: async function (request) {
+    const fail = () => {
+      throw new CLASSES.NodicsError("ERR_PROFILE_CREDENTIAL_OWNERSHIP");
+    };
+    const plain = (value) => value && Object.getPrototypeOf(value) === Object.prototype;
+    const key = (value, maximum = 192) => typeof value === "string" &&
+      value.length > 0 && value.length <= maximum && value.trim() === value;
+    const codes = (value) => Array.isArray(value) && value.length > 0 &&
+      value.length <= 100 && value.every((item) => key(item)) &&
+      new Set(value).size === value.length;
+    const success = (response) => /^SUC_/.test(response?.code || "") &&
+      response.success !== false && !response.error &&
+      (!response.errors || (Array.isArray(response.errors) && !response.errors.length));
+    const rows = (response, maximum) => {
+      if (!success(response) || !Array.isArray(response.result) ||
+          response.count !== response.result.length || response.result.length > maximum) fail();
+      return response.result;
+    };
+    const reference = (value) => typeof value === "string" ? value :
+      typeof value?.toHexString === "function" ? value.toHexString() : undefined;
+    const models = request?.models;
+    if (!key(request?.tenant) || !Array.isArray(models) || models.length < 1 || models.length > 100 ||
+        !plain(request.authData) || !Array.isArray(request.authData.userGroups) ||
+        !request.authData.userGroups.length) fail();
+    const identities = new Set(), logins = new Set(), requiredGroups = new Set();
+    const instructions = models.map((model) => {
+      if (!plain(model) || Object.keys(model).sort().join("|") !==
+          "code|expectedGroupCodes|groupCodes|loginId" || !key(model.code) ||
+          !key(model.loginId, 320) || !codes(model.expectedGroupCodes) || !codes(model.groupCodes) ||
+          identities.has(model.code) || logins.has(model.loginId) ||
+          model.groupCodes.some((group) => model.expectedGroupCodes.includes(group))) fail();
+      identities.add(model.code);
+      logins.add(model.loginId);
+      model.expectedGroupCodes.forEach((group) => requiredGroups.add(group));
+      model.groupCodes.forEach((group) => requiredGroups.add(group));
+      return { ...model, expectedGroupCodes: [...model.expectedGroupCodes], groupCodes: [...model.groupCodes] };
+    });
+    const read = async (service, query, maximum) => rows(await service.get({
+      tenant: request.tenant, authData: request.authData, query,
+      options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: maximum + 1, pageNumber: 1 },
+    }), maximum);
+    if (typeof SERVICE.DefaultUserGroupService?.get !== "function") fail();
+    const groups = await read(SERVICE.DefaultUserGroupService,
+      { code: { $in: [...requiredGroups] }, active: true }, requiredGroups.size);
+    if (groups.length !== requiredGroups.size ||
+        new Set(groups.map((group) => group.code)).size !== groups.length ||
+        groups.some((group) => group.active !== true || !requiredGroups.has(group.code))) fail();
+    const customerRead = async (instruction) => {
+      const records = await read(this,
+        { $or: [{ code: instruction.code }, { loginId: instruction.loginId }] }, 1);
+      if (records.length !== 1) fail();
+      const record = records[0];
+      if (!record?._id || record.code !== instruction.code || record.loginId !== instruction.loginId ||
+          record.active !== true || record.disabled || record.registrationSuspended ||
+          record.authenticationIdentity || record.principalType !== "customer" ||
+          record.apiKey || record.apiKeyHash || !codes(record.userGroups) || !reference(record.password) ||
+          (record.authVersion !== undefined && (!Number.isInteger(record.authVersion) ||
+            record.authVersion < 0 || record.authVersion >= 2147483647))) fail();
+      return { ...record, userGroups: [...record.userGroups] };
+    };
+    const prepared = [];
+    for (const instruction of instructions) {
+      const original = await customerRead(instruction);
+      const desired = [...instruction.expectedGroupCodes, ...instruction.groupCodes];
+      const current = JSON.stringify(original.userGroups);
+      if (current !== JSON.stringify(instruction.expectedGroupCodes) && current !== JSON.stringify(desired)) fail();
+      prepared.push({ instruction, original, desired });
+    }
+    const result = [];
+    for (const { instruction, original, desired } of prepared) {
+      if (JSON.stringify(original.userGroups) !== JSON.stringify(desired)) {
+        const retained = (value) => value === undefined ? { $exists: false } : value;
+        const updated = await this.update({
+          tenant: request.tenant, authData: request.authData,
+          query: {
+            _id: original._id, code: original.code, loginId: original.loginId,
+            active: true, principalType: "customer", userGroups: original.userGroups,
+            password: original.password, authVersion: retained(original.authVersion),
+            authenticationIdentity: retained(original.authenticationIdentity),
+            disabled: retained(original.disabled), registrationSuspended: retained(original.registrationSuspended),
+          },
+          model: { userGroups: desired }, options: { returnModified: true },
+        });
+        if (!success(updated) || updated.result?.acknowledged !== true ||
+            updated.result.matchedCount !== 1) fail();
+        const current = await customerRead(instruction);
+        if (String(current._id) !== String(original._id) ||
+            reference(current.password) !== reference(original.password) ||
+            JSON.stringify(current.userGroups) !== JSON.stringify(desired) ||
+            current.principalType !== original.principalType ||
+            current.authVersion === undefined || current.authVersion <= (original.authVersion || 0)) fail();
+      }
+      result.push({ code: instruction.code });
+    }
+    return { result };
+  },
   /**
    * Registers a bounded batch with fresh explicit placement and private per-record import admission; existing matching identities are preserved.
    * @param {Object} request Original admitted batch or existing trusted registration context.

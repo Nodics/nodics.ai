@@ -18,6 +18,9 @@ other routes remain unchanged.
   installed APM/custom-sink qualification.
 
 - Declare routes through backend configuration or generated model contracts.
+- Explicit module-owned routes bind before schema-generated routes and shared
+  parameterized fallbacks. This keeps an owned path such as
+  `/participants/search` from being intercepted by `/:indexName/search`.
 - Keep authentication, permission, tenant, and request-context behavior explicit.
 - Generated OpenAPI preserves route `apiExposure` under each operation's
   `x-nodics` metadata. Resolve that category against the selected runtime's

@@ -25,27 +25,6 @@
         "init-v001/headers/identity/authPermissionHeader.js": "ca43986a5ae41f17515acb7920ab3ed644f1e255c17a9aa60e1a429aa671e088",
         "init-v001/records/identity/authPermissionData.js": "9d36ce5b8b5221a2098cafb10b5d98a884557d8ac8acf2f22f28b57fab0aac7c"
       }
-    },
-    "core-v001": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
-      "version": "0.0.1",
-      "description": "Authentication and Authorization core data",
-      "owningDomain": "auth",
-      "lifecycle": "REFERENCE",
-      "destinationRole": "PLATFORM",
-      "environmentScope": [
-        "ALL"
-      ],
-      "sensitivity": "PUBLIC",
-      "versioningPolicy": "NONE",
-      "publicationPolicy": "NONE",
-      "initialPublicationPolicy": "NONE",
-      "removalPolicy": "RETAIN",
-      "files": {
-        "core-v001/source/localization/auth.json": "d761c44d7d950a5f18661bfd2fcc44241388ae86ffc100f689ea26ec76cf2a6c"
-      },
-      "sourceRoot": "core-v001"
     }
   }
 }

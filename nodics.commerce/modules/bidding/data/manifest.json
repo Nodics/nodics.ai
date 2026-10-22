@@ -2,6 +2,31 @@
   "contractVersion": 2,
   "module": "bidding",
   "sections": {
+    "auctionCloseSchedule": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Inactive auction close schedule",
+      "description": "Explicit inactive Cron-owned auction end/grace and notification recovery schedule; no activation.",
+      "owningDomain": "bidding",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "CRON",
+      "installer": "CRON_JOB",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/records/jobs/biddingAuctionCloseJobData.js": "1b4a65a8cb09be0a15cf46d85d6f6651f4a466dcc322d25fe0ce49826730f23f",
+        "init-v001/headers/jobs/biddingAuctionCloseJobHeader.js": "340cd0517fac4525aeeca9e094b97a83f4018f18a649d1b314433241c32e9dee"
+      }
+    },
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
@@ -25,6 +50,55 @@
         "init-v001/headers/identity/biddingPermissionHeader.js": "1d96033d53dd5eca8765bc7d57fc846cff912e13c76e367b2a74d6dfef1956d3",
         "init-v001/records/identity/biddingPermissionData.js": "846f7545d1d962107d30cd6a7e603b14c608268d4eb4701440f18270457e0dd4"
       }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "bidding",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "eb19ca2c5086f23fe5be660c0d428096f3b20c80708a7e566259762fc543edbf",
+      "generatedHashes": {
+        "docs-v001/records/documentation/biddingDocumentationComponentData.js": "689c0cf6981725031e38df289f8b39be8dadb30035a882175fffceac68ddd489",
+        "docs-v001/records/documentation/biddingDocumentationPageMetadataData.js": "e80cfee4438e1d523097aec55779d7de5fb29e9e3a4cb0958dad7a3fec093a5b",
+        "docs-v001/records/documentation/biddingDocumentationNodeData.js": "7ecdabe293b92c571d0d935f09b594d40da587765e1b8c1f5df48f789efc3f1f",
+        "docs-v001/records/documentation/biddingDocumentationSearchMetadataData.js": "267127e6d83791dfdaf58702b8bc50400f17d74eb6896c775d75d48fd338c3e3",
+        "docs-v001/records/documentation/biddingDocumentationPageData.js": "aa1fc4f76c310c65b3f5805f9d27f54f45b97d1dcec3fdb6a4e2d97d6279f19f",
+        "docs-v001/records/documentation/biddingDocumentationRouteData.js": "ae4322e1888d084c2324d179aad63d3792cba1dc0e214892358c30b3e76feecf",
+        "docs-v001/records/documentation/biddingDocumentationPublicationStateData.js": "198745dbcf23533754a1dc223bbdb44430b1b92d1e1791572292c27b6cb0c865",
+        "docs-v001/headers/100_biddingDocumentationContentPackHeader.js": "d47112965a43c04ef1b89c091bdd58b88f09395b9fedf709b4b54cdb8db676d3"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
     }
   }
 }

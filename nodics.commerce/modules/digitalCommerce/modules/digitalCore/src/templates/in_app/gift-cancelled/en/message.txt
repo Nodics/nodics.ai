@@ -1,0 +1,1 @@
+Gift {{giftReference}} was cancelled. Its reservations were released and it is no longer available for acceptance.

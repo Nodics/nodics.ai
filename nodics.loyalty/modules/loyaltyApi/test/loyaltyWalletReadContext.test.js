@@ -10,6 +10,7 @@
  */
 
 "use strict";
+require("./../../loyaltyWallet/test/helpers/runtimeEnums.js")();
 
 /** @module loyaltyApi/test/loyaltyWalletReadContext @description Verifies authorized wallet reads use Loyalty-owned storage context without changing the runtime credential. @layer test @owner loyaltyApi */
 const test = require("node:test");
@@ -23,7 +24,7 @@ test("wallet read uses the same owner storage context as reward operations", asy
     userGroups: [], groups: [], permissions: ["loyalty.wallet.read"],
     runtimeScope: { serverCode: "commerceServer" },
   });
-  global.SERVICE = {
+  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
     DefaultLoyaltyRewardOperationService: operations,
     DefaultLoyaltyWalletService: { get: async request => {
       assert.equal(request.tenant, "tenant-a");

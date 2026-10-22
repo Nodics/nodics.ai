@@ -27,7 +27,8 @@ const failure = { code: "ERR_CHECKOUT_COMPENSATION_UNCONFIRMED" };
 function fixture() {
   const key = "CIRCA_ORDER_261009:GP-C09:purchase";
   const request = { tenant: "t", enterpriseCode: "e", ownerId: "buyer", commandCode: key,
-    authData: { principalType: "customer", principalId: "buyer", tenant: "t", entCode: "e", groups: ["customerUserGroup"] },
+    authData: { principalType: "customer", principalId: "buyer", loginId: "buyer", tokenType: "access", tenant: "t", entCode: "e", groups: ["customerUserGroup"] },
+    authorization: "Bearer original",
     httpRequest: { params: { commandCode: key }, headers: {} } };
   const row = { tenant: "t", enterpriseCode: "e", ownerId: "buyer", idempotencyKey: key, code: key,
     status: "COMPENSATION_REQUIRED", revision: 0, evidence: { completed: ["VALIDATED", "CALCULATED"],
@@ -37,6 +38,8 @@ function fixture() {
   const state = { rows: [row], reads: [], payments: [], paymentReads: [], effects: 0, privacyChecks: 0 };
   const deny = async () => { state.effects++; throw new Error("Forbidden effect"); };
   global.SERVICE = {
+    // DTO/privacy tests isolate partition recovery, exercised with real facades in merchantScopeContract.
+    DefaultCheckoutMerchantScopeService: { resolve: async r => r },
     DefaultCheckoutPlacementPortsService: ports, DefaultCheckoutCompensationRecoveryService: recovery,
     DefaultCheckoutOperationService: operation,
     DefaultLoggerService: { assertSensitiveRequest: () => { state.privacyChecks++; } },
@@ -58,7 +61,10 @@ function fixture() {
     DefaultDigitalCommerceOwnershipService: { release: deny, resolveCompensation: deny },
     DefaultCommerceOrderService: { get: deny }, DefaultCommerceOrderEntryService: { get: deny },
   };
-  global.FACADE = { DefaultCheckoutCustomerFacade: facade };
+  global.CONFIG = { get: key => key === 'cart' ? require('../../cart/config/properties').cart : undefined };
+  SERVICE.DefaultSecuredRequestPipelineService = { getGrantedPermissions: () => ['commerce.checkout.place'], isPermissionGranted: () => true };
+  SERVICE.DefaultModuleService = { invokeModule: async () => ({ contractVersion: 1, tenant: 't', enterpriseCode: 'e', customer: { code: 'customer', loginId: 'buyer' } }) };
+  global.FACADE = { DefaultCheckoutCustomerFacade: facade, DefaultCartCustomerFacade: require('../../cart/src/facade/defaultCartCustomerFacade') };
   global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
   return { request, row, state };
 }
@@ -66,12 +72,33 @@ test.afterEach(() => { delete global.SERVICE; delete global.FACADE; delete globa
 
 test("private route has independent customer permission/exposure and disabled capture/cache", () => {
   assert.deepEqual(routers.checkoutCore.customer.commandStatus, {
-    secured: true, authTokenTypes: ["access"], accessGroups: ["customerUserGroup"],
+    secured: true, authTokenTypes: ["access"], accessGroups: ["customerUserGroup", "employeeUserGroup"],
     permission: "commerce.checkout.place", apiExposure: "commerceCustomer",
     requestPrivacy: { sensitive: true }, cache: { enabled: false },
     key: "/checkouts/commands/:commandCode", method: "GET",
     controller: "DefaultCheckoutCustomerController", operation: "commandStatus",
   });
+});
+
+test("confirmed original-purchase route retains the same independent owner and privacy controls", () => {
+  assert.deepEqual(routers.checkoutCore.customer.resumeBundle, {
+    secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+    permission: 'commerce.checkout.place', apiExposure: 'commerceCustomer', requestPrivacy: { sensitive: true },
+    cache: { enabled: false }, key: '/checkouts/:commandCode/recovery/resume', method: 'POST',
+    controller: 'DefaultCheckoutCustomerController', operation: 'resumeBundle',
+  });
+});
+
+test("shared resume dispatches selected auctions to their original journal, not bundle or replacement placement", async () => {
+  const { request, state } = fixture();
+  request.payload = { confirmed: true }; request.auctionFunds = { commitmentCode: 'original' };
+  let called = false;
+  SERVICE.DefaultCheckoutAuctionService = { resume: async (r, ports) => {
+    called = true; assert.deepEqual(r, request); assert.equal(typeof ports.capturePayment, 'function');
+    return { commandCode: r.commandCode, cartCode: 'original-cart', orderCode: 'original-order', status: 'COMPLETED', revision: 4 };
+  } };
+  assert.equal((await operation.resumeBundle(request)).orderCode, 'original-order');
+  assert.equal(called, true); assert.equal(state.effects, 0);
 });
 
 test("one uncached generated read returns only bounded original-command metadata", async () => {
@@ -108,17 +135,18 @@ test("actual completed checkpoint writer uses Order code, not placement key", as
   assert.deepEqual(result.compensationOutcomes, []); assert.equal(state.effects, 0);
 });
 
-test("actual early-failure compensation writer is explicitly legacy-unqualified", async () => {
+test("actual early-failure compensation writer retains the admitted enterprise partition", async () => {
   const { request, state } = fixture();
+  request.payload = { cartCode: 'cart', orderCode: 'order' };
   SERVICE.DefaultCheckoutCheckpointService.save = async r => {
     state.rows = [copy(r.model)]; return { code: "SUC_SAVE_00000", result: r.model };
   };
   await ports.create().compensate({ ...request, idempotencyKey: request.commandCode, completed: [], results: {} },
     new Error("PRIVATE_DEPENDENCY_TEXT"), request);
-  assert.equal(Object.hasOwn(state.rows[0], "enterpriseCode"), false);
-  assert.equal(Object.hasOwn(state.rows[0], "cartCode"), false);
-  const expected = { status: "COMPENSATED", revision: 0, completedPhases: [], compensationOutcomes: [], scopeQualified: false,
-    originalPaymentRecordCount: 0 };
+  assert.equal(state.rows[0].enterpriseCode, request.enterpriseCode);
+  assert.equal(state.rows[0].cartCode, 'cart');
+  const expected = { status: "COMPENSATED", revision: 0, completedPhases: [], compensationOutcomes: [], scopeQualified: true,
+    originalPaymentRecordCount: 0, cartCode: 'cart', orderCode: 'order' };
   assert.deepEqual(await recovery.commandStatus(request), expected);
   state.rows[0].evidence.paymentCompensationIntent = { enterpriseCode: "e", cartCode: "cart", orderCode: "order" };
   assert.deepEqual(await recovery.commandStatus(request), expected);
@@ -196,7 +224,7 @@ for (const [name, change] of Object.entries({
 for (const [name, change] of Object.entries({
   "non-customer": r => { r.authData.principalType = "service"; },
   "missing principal type": r => { delete r.authData.principalType; },
-  "missing owner": r => { delete r.authData.principalId; },
+  "missing owner": r => { delete r.authData.principalId; delete r.authData.loginId; },
   "missing enterprise": r => { delete r.authData.entCode; },
   "foreign routed tenant": r => { r.tenant = "other"; },
   "foreign routed enterprise": r => { r.enterpriseCode = "other"; },

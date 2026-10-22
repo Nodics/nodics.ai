@@ -21,15 +21,15 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+const vm = require('vm');
+const test = require('node:test');
 
 const nbpmRoot = path.resolve(__dirname, '..');
 const coreRoot = path.resolve(nbpmRoot, '../..');
 const repositoryRoot = path.resolve(coreRoot, '..');
 const coreBootstrap = fs.readFileSync(path.join(coreRoot, 'nodics.js'), 'utf8');
 const schemas = require('../src/schemas/schemas');
-const generatedServicePath = path.join(coreRoot, 'modules/nService/src/service/gen/DefaultWorkflow2SchemaService.js');
-const generatedFacadePath = path.join(coreRoot, 'modules/nFacade/src/facade/gen/DefaultWorkflow2SchemaFacade.js');
-const generatedControllerPath = path.join(coreRoot, 'modules/nController/src/controller/gen/DefaultWorkflow2SchemaController.js');
 const processPackagePath = path.join(repositoryRoot, 'nodics.process/package.json');
 const processPackage = require(processPackagePath);
 const workflowPackage = require(path.join(repositoryRoot, 'nodics.process/modules/workflow/package.json'));
@@ -51,9 +51,6 @@ assert.strictEqual(
     true,
     'workflow2Schema must keep generated service enabled for Core bootstrap compatibility',
 );
-assert(fs.existsSync(generatedServicePath), 'Generated DefaultWorkflow2SchemaService must remain available');
-assert(fs.existsSync(generatedFacadePath), 'Generated DefaultWorkflow2SchemaFacade must remain available');
-assert(fs.existsSync(generatedControllerPath), 'Generated DefaultWorkflow2SchemaController must remain available');
 assert.deepStrictEqual(
     processPackage.requiredModules,
     ['cronjob', 'workflow'],
@@ -66,3 +63,39 @@ assert.deepStrictEqual(
 );
 
 console.log('NBPM Core bootstrap workflow bridge contract validated');
+
+test('workflow association artifacts generate from owner schemas into an isolated selected-server directory', async (t) => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'nbpm-schema-artifacts-'));
+    const previous = { UTILS: global.UTILS, CONFIG: global.CONFIG, NODICS: global.NODICS, _: global._ };
+    const stringKeys = ['toUpperCaseFirstChar', 'toLowerCaseFirstChar', 'toUpperCaseEachWord', 'toLowerCaseEachWord', 'replaceAll'];
+    const descriptors = Object.fromEntries(stringKeys.map(key => [key, Object.getOwnPropertyDescriptor(String.prototype, key)]));
+    t.after(() => {
+        fs.rmSync(directory, { recursive: true, force: true });
+        Object.assign(global, previous);
+        for (const key of stringKeys) {
+            if (descriptors[key]) Object.defineProperty(String.prototype, key, descriptors[key]);
+            else delete String.prototype[key];
+        }
+    });
+    require('../../nConfig/config/prescripts').addStringCamelCaseFunction();
+    global._ = require('lodash');
+    global.UTILS = { ...require('../../nConfig/src/utils/utils'), LOG: { debug() {}, error() {} } };
+    global.CONFIG = { get: () => ({ options: { contextRoot: '/fixture' } }) };
+    global.NODICS = { getNodicsHome: () => directory };
+    for (const [owner, layer, postFix] of [
+        ['nService', 'service', 'Service'], ['nFacade', 'facade', 'Facade'], ['nController', 'controller', 'Controller']
+    ]) {
+        const target = path.join(directory, layer);
+        fs.mkdirSync(target);
+        await UTILS.createObject({
+            currentDir: target, postFix, moduleName: 'system', schemaName: 'workflow2Schema',
+            schemaObject: schemas.system.workflow2Schema,
+            commonDefinition: require(path.join(coreRoot, 'modules', owner, 'src', layer, 'common.js'))
+        });
+        const file = path.join(target, 'DefaultWorkflow2Schema' + postFix + '.js');
+        assert(fs.existsSync(file), 'Owner schema must generate the required ' + layer);
+        const source = fs.readFileSync(file, 'utf8');
+        assert.doesNotThrow(() => new vm.Script(source));
+        assert(source.includes('workflow2Schema'));
+    }
+});

@@ -43,6 +43,10 @@ assert.throws(() => contextService.create({ tenant: 'a', source: 'REQUEST_PARAME
 assert.strictEqual(scopeService.bundleKey({
     tenant: 'tenant-a', scopeCode: 'store-a', channel: 'web', locale: 'en',
     namespaces: ['validation', 'common'], releaseVersion: '0.0.0'
+}), 'tenant-a|store-a|web|en|common,validation|0.0.0');
+assert.strictEqual(scopeService.bundleKey({
+    tenant: 'tenant-a', scopeCode: 'store-a', channel: 'web', locale: 'en',
+    namespaces: ['common', 'validation'], releaseVersion: '12'
 }), 'tenant-a|store-a|web|en|common,validation|12');
 assert.throws(() => scopeService.bundleKey({
     tenant: 'tenant|a', channel: 'web', locale: 'en', namespaces: ['common'], releaseVersion: '0.0.0'

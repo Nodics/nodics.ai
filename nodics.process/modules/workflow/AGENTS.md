@@ -41,6 +41,10 @@ terminal action on the same instance. The instance CAS remains execution authori
 history is a conservative projection, not a recovery credential. Run both remote
 adapter and inspection tests. Read the recorded lifecycle in `llm/contracts/README.md`.
 
+Lifecycle fixtures must return generated-service success envelopes and exact
+mutation counts, including rejection of missing or zero-write acknowledgements.
+Do not bypass persistence checks to preserve an obsolete in-memory fixture.
+
 Source-owned review retirement is separately default-disabled. Preserve signed
 source/context ownership, exact task/instance CAS, private marker admission and
 same-closure recovery. Never steal remote actions or cancel a completed competing

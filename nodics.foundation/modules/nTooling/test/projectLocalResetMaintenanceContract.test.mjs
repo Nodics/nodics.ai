@@ -65,6 +65,20 @@ test('registered discovery is an explicit read-only mode, never an implicit tena
   await assert.rejects(run(parsed, { readSelection: async () => { throw new Error('must not discover'); } }), /RESET_RUNTIME_ADAPTER_OVERRIDE_DENIED/);
 });
 
+test('registered target discovery and stale retirement require explicit bounded read-only selections', () => {
+  const discovered = parseOptions(['--environment=acmeLocal', '--project-code=acme.project',
+    '--discover-registered-tenant-targets=alpha', '--retire-stale-registered-bindings']);
+  assert.deepEqual(discovered, { environment: 'acmeLocal', project: 'acme.project', registeredTenants: ['alpha'],
+    discoverRegisteredTenantTargets: true, retireStaleRegisteredBindings: true, execute: false });
+  for (const extra of ['--execute', '--exclusive-deployment', '--writers-excluded', '--registered-tenants=alpha',
+    '--databases=acmeLocalPlatform', '--auth-namespace=auth_acmeLocalRuntimeAuth_', '--search-indexes=acmelocal_products'])
+    assert.throws(() => parseOptions(['--environment=acmeLocal', '--project-code=acme.project',
+      '--discover-registered-tenant-targets=alpha', extra]), /RESET_DISCOVERY_READ_ONLY_REQUIRED/);
+  assert.throws(() => parseOptions([...args, '--retire-stale-registered-bindings']), /RESET_TENANT_SELECTION_INVALID/);
+  assert.equal(parseOptions([...args, '--registered-tenants=alpha', '--retire-stale-registered-bindings'])
+    .retireStaleRegisteredBindings, true);
+});
+
 test('plan reports scope/counts without credentials or fabricated provider emptiness', () => {
   const s = selection();
   s.scopes.forEach(scope => { scope.databases[0].endpoint = 'mongodb://user:private-secret@127.0.0.1:27017'; });
@@ -232,6 +246,25 @@ test('actual registered runtime composition rejects source base, endpoint and de
   }
   await assert.rejects(consumeRuntime(f.snapshots[0], { ...registration, server: 'otherServer' }), /RESET_TENANT_PIN_CHANGED/);
   await assert.rejects(consumeRuntime(f.snapshots[0], { ...registration, receipt: structuredClone(f.receipt) }), /RESET_REGISTERED_PROOF_REQUIRED/);
+});
+
+test('explicit stale retirement resolves only retained destinations against unchanged current provider bases', async t => {
+  const f = await registeredRuntimeFixture(t);
+  const snapshot = structuredClone(f.snapshots[0]);
+  snapshot.modules.push('extra');
+  snapshot.properties.database.extra = { mongodb: { master: {
+    URI: 'mongodb://127.0.0.1:27017', databaseName: 'acmeLocalExtra',
+  } } };
+  const registration = { owner: f.owner, receipt: f.receipt, server: 'platformServer',
+    options: { ...f.ownerOptions, retireStaleRegisteredBindings: true } };
+  const scope = await consumeRuntime(snapshot, registration);
+  const derived = scope.databases.filter(target => target.tenantCode);
+  assert.equal(derived.length, 4);
+  assert.ok(scope.databases.some(target => target.name === 'acmeLocalExtra'));
+  assert.ok(derived.every(target => target.candidate.binding ===
+    f.receipt.tenants[0].properties.database.tenantNamespaceBindings[target.candidate.scopeKey]));
+  snapshot.properties.database.default.mongodb.master.databaseName = 'acmeLocalChanged';
+  await assert.rejects(consumeRuntime(snapshot, registration), /RESET_TENANT_PIN_CHANGED/);
 });
 
 test('all runtime/channel derived targets compose provider private authority without opening or dropping a database', async t => {

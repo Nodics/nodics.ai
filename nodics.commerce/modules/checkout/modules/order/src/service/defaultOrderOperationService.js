@@ -28,6 +28,8 @@ module.exports = {
     /** Builds service credentials for owner-bounded operational order reads. @param {Object} request Request. @returns {Object} Service auth data. */
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {
+            enterpriseCode: request.enterpriseCode,
+            entCode: request.enterpriseCode,
             principalId: 'commerceOrderOperationService',
             code: 'commerceOrderOperationService',
             loginId: 'commerceOrderOperationService',
@@ -39,27 +41,45 @@ module.exports = {
     /** Reads owner-bounded orders with bounded filters. @param {Object} request Request. @returns {Promise<Array>} Orders. */
     orders: async function (request) {
         const query = { tenant: request.tenant, ownerId: request.ownerId };
+        if (request.ownerRef?.schema === 'enterprise') query['evidence.ownerRef'] = request.ownerRef;
         if (request.orderCode) query.code = request.orderCode;
         const response = await SERVICE.DefaultCommerceOrderService.get({ tenant: request.tenant, authData: this.serviceAuthData(request), query, pageSize: this.pageSize(request.query && request.query.limit) });
-        return this.array(this.unwrap(response));
+        const rows = this.array(this.unwrap(response));
+        for (const row of rows) {
+            if (row.ownerId !== request.ownerId || row.tenant !== request.tenant ||
+                (row.evidence?.ownerRef || request.ownerRef?.schema === 'enterprise') &&
+                !require('node:util').isDeepStrictEqual(row.evidence?.ownerRef, request.ownerRef)) throw this.accessDeniedError();
+        }
+        return rows;
     },
     /** Reads owner-bounded order entries. @param {Object} request Request. @param {string} orderCode Order code. @returns {Promise<Array>} Entries. */
     entries: async function (request, orderCode) {
-        const response = await SERVICE.DefaultCommerceOrderEntryService.get({ tenant: request.tenant, authData: this.serviceAuthData(request), query: { tenant: request.tenant, ownerId: request.ownerId, orderCode }, pageSize: 500 });
-        return this.array(this.unwrap(response));
+        const query = { tenant: request.tenant, ownerId: request.ownerId, orderCode,
+            ...(request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}) };
+        const response = await SERVICE.DefaultCommerceOrderEntryService.get({ tenant: request.tenant, authData: this.serviceAuthData(request), query, pageSize: 500 });
+        const rows = this.array(this.unwrap(response));
+        if (rows.some(row => Object.entries(query).some(([key, value]) => row[key] !== value) ||
+            (row.evidence?.ownerRef || request.ownerRef?.schema === 'enterprise') &&
+            !require('node:util').isDeepStrictEqual(row.evidence?.ownerRef, request.ownerRef))) throw this.accessDeniedError();
+        return rows;
     },
     /** Reads owner-visible lifecycle requests for an order. @param {Object} request Request. @param {string} orderCode Order code. @returns {Promise<Array>} Lifecycle records. */
     lifecycle: async function (request, orderCode) {
         if (!SERVICE.DefaultOrderLifecycleRequestService || typeof SERVICE.DefaultOrderLifecycleRequestService.get !== 'function') return [];
-        const response = await SERVICE.DefaultOrderLifecycleRequestService.get({ tenant: request.tenant, authData: this.serviceAuthData(request), query: { tenant: request.tenant, ownerId: request.ownerId, orderCode }, pageSize: 100 });
-        return this.array(this.unwrap(response));
+        const query = { tenant: request.tenant, ownerId: request.ownerId, orderCode,
+            ...(request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}) };
+        const response = await SERVICE.DefaultOrderLifecycleRequestService.get({ tenant: request.tenant, authData: this.serviceAuthData(request), query, pageSize: 100 });
+        const rows = this.array(this.unwrap(response));
+        if (rows.some(row => Object.entries(query).some(([key, value]) => row[key] !== value))) throw this.accessDeniedError();
+        return rows;
     },
     /** Builds one owner-bounded Order detail response. @param {Object} request Request. @returns {Promise<Object>} Order detail. */
     read: async function (request) {
         if (!request.orderCode) throw new Error('Order code is required');
         const order = (await this.orders(request))[0];
         if (!order) throw this.accessDeniedError();
-        return Object.freeze({ order, entries: await this.entries(request, order.code), lifecycle: await this.lifecycle(request, order.code) });
+        const scope = { ...request, enterpriseCode: order.enterpriseCode };
+        return Object.freeze({ order, entries: await this.entries(scope, order.code), lifecycle: await this.lifecycle(scope, order.code) });
     },
     /** Lists owner-bounded Order summaries. @param {Object} request Request. @returns {Promise<Array>} Orders. */
     listOwn: function (request) { return this.orders(request); }

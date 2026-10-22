@@ -134,12 +134,17 @@ test("Digital Commerce releases Promotion-owned digital reservations during chec
 });
 
 test("Digital Commerce creates entitlements records delivery and reveals only through secure provider boundary", async () => {
-  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : ({ maximumCouponUnitsPerCheckout: 100 }) };
+  const digitalCore = { maximumCouponUnitsPerCheckout: 100,
+    couponAccess: { maximumOwnEntitlements: 100,
+      profile: { connectionName: 'profile', targetAuthority: 'profile', timeoutMilliseconds: 1000 } } };
+  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : digitalCore };
   const entitlements = [];
   const deliveries = [];
   global.SERVICE = {
     DefaultLoggerService: { hasPrivateCaptureProtection: () => true, inheritRequestPrivacy: () => {} },
     DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.digital.own.reveal'], isPermissionGranted: () => true },
+    DefaultModuleService: { invokeModule: async () => ({ contractVersion: 1, tenant: 'default', enterpriseCode: 'enterpriseX',
+      customer: { code: 'customer-1', loginId: 'customer-1' } }) },
     DefaultDigitalEntitlementService: {
       save: async (request) => {
         entitlements.push(request.model);
@@ -185,7 +190,8 @@ test("Digital Commerce creates entitlements records delivery and reveals only th
     ownerId: "customer-1",
     idempotencyKey: "checkout-1",
     correlationId: "corr-1",
-    authData: { tenant: 'default', enterpriseCode: 'enterpriseX', principalId: 'customer-1', principalType: 'customer', tokenType: 'access' },
+    authorization: 'Bearer customer',
+    authData: { tenant: 'default', enterpriseCode: 'enterpriseX', principalId: 'customer-1', loginId: 'customer-1', principalType: 'customer', tokenType: 'access' },
     payload: { cartCode: "cart-1", orderCode: "order-1" },
   };
   const order = { code: "order-1" };
@@ -306,7 +312,9 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
     /** Retains the owner's stable denial code in the isolated controller fixture. @param {string} code Owner status. */
     constructor(code) { super(code); this.code = code; }
   } };
-  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : {} };
+  const digitalCore = { couponAccess: { maximumOwnEntitlements: 100,
+    profile: { connectionName: 'profile', targetAuthority: 'profile', timeoutMilliseconds: 1000 } } };
+  global.CONFIG = { get: key => key === 'runtimeRole' ? 'COMMERCE' : digitalCore };
   const entitlements = [
     {
       code: "entitlement-1",
@@ -340,6 +348,8 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
   global.SERVICE = {
     DefaultLoggerService: { hasPrivateCaptureProtection: () => true, inheritRequestPrivacy: () => {} },
     DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.digital.own.reveal'], isPermissionGranted: () => true },
+    DefaultModuleService: { invokeModule: async () => ({ contractVersion: 1, tenant: 'default', enterpriseCode: 'default',
+      customer: { code: 'customer-1', loginId: 'customer-1' } }) },
     DefaultDigitalCommerceEntitlementService: entitlementService,
     DefaultDigitalEntitlementService: {
       get: async (request) => ({
@@ -369,8 +379,9 @@ test("Digital Commerce customer APIs list owned entitlements and reveal through 
 
   const request = {
     tenant: "default",
-    enterpriseCode: "enterpriseX",
-    authData: { tenant: "default", enterpriseCode: 'enterpriseX', principalId: "customer-1", principalType: 'customer', tokenType: 'access' },
+    enterpriseCode: "default",
+    authorization: 'Bearer customer',
+    authData: { tenant: "default", enterpriseCode: 'default', principalId: "customer-1", loginId: 'customer-1', principalType: 'customer', tokenType: 'access' },
     httpRequest: { query: {}, params: {}, body: {} },
   };
   const listed = await customerController.listEntitlements(request);

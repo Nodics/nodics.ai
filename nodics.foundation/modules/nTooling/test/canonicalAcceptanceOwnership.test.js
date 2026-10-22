@@ -41,6 +41,7 @@ test('an independent project inherits complete suites without customer implement
     'qualification:commerce-live': 'nTooling',
     'acceptance:local': 'backoffice',
     'acceptance:functional': 'nTooling',
+    'acceptance:write-recovery-resilience': 'nTooling',
     'acceptance:runtime-grants': 'profile',
     'acceptance:editorial-live': 'editorial',
     'acceptance:commerce-journey': 'checkoutCore',

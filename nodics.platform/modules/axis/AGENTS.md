@@ -31,9 +31,14 @@
 
 - Backend-importable Axis records must be generated or authored here, never in
   `nodics.axis`.
-- The Axis documentation content pack is maintained directly as CMS records in
-  `data/docs-v001/records/documentation`, and described by the
-  documentation section in `data/manifest.json`.
+- The Axis documentation content pack is maintained directly as CMS records at
+  `sections.documentation.sourceAuthority` in `data/manifest.json`, under that
+  section's selected `data/<contentPath>/records/documentation` directory.
+  Source readers and validators must follow the manifest, not a fixed release
+  directory. Preserve frozen predecessor bytes; advance through unused successor
+  paths and versions with nTooling's canonical `validateGeneration` contract.
+  Keep `test/documentationForwardPackaging.test.js` and its frozen evidence
+  intact. Selecting source documentation does not install or publish it.
 - Image blocks reference Media identities in the same governed release. Do not
   create a parallel `docs/` source or Markdown-to-CMS generator.
 - CMS data may target WCMS schemas, but WCMS remains the CMS schema,
@@ -64,6 +69,7 @@ Run:
 
 ```bash
 npm run docs:check
+node scripts/validate-axis-content-pack.mjs --check
 npm run validate
 npm test
 ```

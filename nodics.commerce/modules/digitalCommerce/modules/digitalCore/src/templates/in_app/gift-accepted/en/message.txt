@@ -1,0 +1,1 @@
+Gift {{giftReference}} was accepted and the complete bundle transferred. The completed gift is final.

@@ -14,6 +14,7 @@
 const assert = require("node:assert/strict");
 const catalogue = require("../src/service/defaultProductCatalogueQueryService");
 const discovery = require("../src/service/defaultProductDiscoveryService");
+const defaults = structuredClone(require("../config/properties"));
 const policy = {
   maximumCandidates: 50,
   readPageSize: 3,
@@ -30,7 +31,7 @@ const policy = {
 global.CONFIG = {
   get: (key) =>
     key === "product"
-      ? { discovery: { maximumPageSize: 100, catalogue: policy } }
+      ? { ...defaults.product, discovery: { ...defaults.product.discovery, catalogue: policy } }
       : undefined,
 };
 const records = Array.from({ length: 12 }, (_, i) => ({
@@ -121,6 +122,18 @@ const request = (query) => ({
     "facets cover the complete query before filtering",
   );
   assert.equal((await catalogue.list(request({ q: "product-11" }))).total, 1);
+  records[0].payload.availability.available = true;
+  records[11].payload.availability.available = true;
+  records[0].payload.localizedAttributes.listingWindow = { startsAt: "2999-01-01T00:00:00.000Z", endsAt: null };
+  const available = await catalogue.list(request({ view: "AVAILABLE_SHOP", pageSize: 1 }));
+  assert.equal(available.total, 1, "unknown and future supply excluded across page boundaries");
+  assert.equal(available.products[0].productCode, "p11");
+  assert.equal(available.facets.categories.some(f => f.code === "tops"), false);
+  delete records[0].payload.localizedAttributes.listingWindow;
+  assert.equal((await catalogue.list(request({ view: "AVAILABLE_SHOP" }))).total, 2);
+  records[0].payload.localizedAttributes.listingWindow = { startsAt: null, endsAt: "invalid" };
+  await assert.rejects(catalogue.list(request({ view: "AVAILABLE_SHOP" })), /listing window/);
+  delete records[0].payload.localizedAttributes.listingWindow;
   assert.equal(
     (await catalogue.list(request({ q: "no matching product" }))).total,
     0,

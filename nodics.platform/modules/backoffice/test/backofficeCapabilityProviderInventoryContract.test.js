@@ -16,10 +16,12 @@ const contract = require('../src/service/contract/defaultBackofficeContractServi
 const root = path.resolve(__dirname, '../../../..');
 // Read the presentation owner's actual defaults; optional qualification remains disabled.
 const digitalDefaults = require('../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/config/properties');
+const agreementDefaults = require('../../../../nodics.commerce/modules/baseCommerce/modules/commercialAgreement/config/properties');
 const mediaDefaults = require('../../../../nodics.wcms/modules/media/config/properties');
-global.CONFIG = { get: key => key === 'media' ? mediaDefaults.media : digitalDefaults[key] };
+global.CONFIG = { get: key => key === 'media' ? mediaDefaults.media : key === 'commercialAgreement' ? agreementDefaults.commercialAgreement : digitalDefaults[key] };
 global.SERVICE = {
     DefaultDigitalCommerceNotificationService: require('../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceNotificationService'),
+    DefaultDigitalParticipationService: require('../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalParticipationService'),
     DefaultBackofficeCapabilityDefinitionService: require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService')
 };
 const files = [];

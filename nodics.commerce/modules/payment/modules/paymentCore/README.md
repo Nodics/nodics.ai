@@ -2,6 +2,12 @@
 
 Payment Core is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
 
+`POST /internal/evidence/query` is a private, service-token-only exact journey
+read for acceptance and recovery evidence. It requires `commerce.payment.read`
+and exact Order, Cart and owner coordinates, uses the generated Payment transaction
+owner, rejects ambiguous or foreign rows, and returns only a bounded safe projection.
+It is not a generic transaction search or customer API.
+
 Refund execution follows the [guarded original-capture contract](llm/contracts/README.md).
 Generic token-based refunds are unavailable. The scoped full Loyalty capture path
 requires persisted Order approval and remaining-authority preflight; failed,

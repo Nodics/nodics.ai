@@ -10,6 +10,9 @@ The separate [exact-plan observer](llm/contracts/setup-observation.md) is disabl
 by default: require reviewed deployment/plan authority and the dedicated explicit
 permission before any private canonical owner reads. Never modify signed claims,
 borrow human identity or expose that internal persistence context to actions.
+Reviewed DATA_RELEASE pins include the owner-canonical prerequisite list. Recompute
+source integrity with the same file-plus-prerequisite checksum contract as nImport;
+never reinterpret a release checksum as a file-only digest.
 Commerce publisher group admission is limited to the six human setup/lifecycle
 routes in that contract. Keep granular permissions and domain/enterprise checks;
 service decisions and activation retain their existing groups and token types.

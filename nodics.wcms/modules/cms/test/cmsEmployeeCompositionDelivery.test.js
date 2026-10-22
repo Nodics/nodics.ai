@@ -166,13 +166,13 @@ for (const [label, mutate] of [
     assert.equal(reads.length, 0);
 });
 
-test('other Sites, non-allowlisted paths and disabled sharing remain ordinary tenant reads', async () => {
+test('other Sites, non-allowlisted paths and disabled sharing retain tenant scope with system persistence authority', async () => {
     for (const change of [() => { request.delivery.site = 'business-site'; },
         () => { request.delivery.site = 'axisCmsSite'; request.delivery.path = '/customers'; },
         () => { request.delivery.path = '/dashboard'; cms.publication.baselines.axis.employeeCompositionPaths = []; }]) {
         change(); reads.length = 0;
         await service.resolvePage(request);
-        assert(reads.every(read => read.input.tenant === request.tenant && read.input.authData === request.authData));
+        assert(reads.every(read => read.input.tenant === request.tenant && read.input.authData === system));
     }
 });
 

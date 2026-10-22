@@ -17,6 +17,12 @@ behavior, raw media storage, map-provider logic, or generic identity ownership
 inside this framework module. Waste records may reference those capabilities through
 source references and lifecycle events.
 
+`wasteCarbon` is the narrowly scoped owner for waste-derived issued-credit lots,
+allocations and beneficial holding transfers. It does not own a money/reward
+ledger, registry certification or Digital transaction orchestration. Impact
+evidence never issues credits. `wasteReward` may coordinate payment-gated
+material-value releases only through canonical Loyalty earning.
+
 Before implementing non-trivial behavior here, record the business outcome,
 owning child module, studied sources, extension path, security/tenant/data/API
 impact, intended files, and validation route.

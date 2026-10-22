@@ -13,10 +13,26 @@
 
 /**
  * @module product/service/defaultProductDiscoveryService
- * @description Projects Product search projections into discovery Home, PLP/Search, and PDP responses across caller contexts.
+ * @description Projects Product search projections into discovery Home, PLP/Search, and PDP responses
+ * across caller contexts.
  * @layer service
  * @owner product
- * @override Later modules may alter card/detail projection fields through configuration or service override while preserving Product-only data ownership.
+ * @override Later modules may alter card/detail projection fields through configuration or service
+ * override while preserving Product-only data ownership.
+ * @remarks Discovery keeps public enrichment separate from internal identity reads. Product/search
+ * truth is unchanged; effective Pricing and availability owners supply consumer summaries.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: init, postInit, policy, serviceAuthData, boundedInteger, indexConfiguration,
+ * discoveryMetadata, query, searchOptions, sort, activeSelection, searchPinned, search,
+ * consumerReferences, resolveVariantSku, searchSelected, completePartialPageFromProjectionStore,
+ * textSearchFallbackOptions, paginateRecords, searchIndexRecords, textMatches, collectTextValues,
+ * filterByText, projectionStoreQuery, projectionStoreRecords, readProjectionStoreModelRecords,
+ * readProjectionCursor, projectionStoreModel, rawProjectionStoreModel, records, findHits, price,
+ * availability, mediaDeliveryBaseUrl, mediaDeliveryUrl, mediaDescriptor, media, image, gallery, card,
+ * detailProjection, facets, rank, list, detail.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
  */
 module.exports = {
   /** Initializes the service lifecycle. @returns {Promise<boolean>} Initialization result. */
@@ -206,10 +222,25 @@ module.exports = {
     return rows;
   },
 
-  /** Adds live summaries only for consumer delivery, leaving internal identity reads catalogue-only. */
+  /**
+   * Adds live summaries only for consumer delivery, leaving internal identity reads catalogue-only.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @param {Object} query Owner-scoped lookup selectors; never permission authority.
+   * @param {Object} searchOptions Bounded pagination and consumer/internal delivery options.
+   * @returns {Promise<Object[]>} Scoped search rows with consumer-safe live summaries when requested.
+   * @remarks Effects: Performs existing search and bounded enrichment reads; does not write projections.
+   * Failure behavior: Propagates discovery/enrichment failure rather than inventing price or
+   * availability.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   search: async function (request, query, searchOptions) {
     const rows = await this.searchPinned(request, query, searchOptions);
-    if (await this.activeSelection(request) === undefined) return rows;
+    if (await this.activeSelection(request) === undefined) {
+      if (request.query?.view === 'AVAILABLE_SHOP') throw new Error('Available Shop requires qualified Product activation and owner summaries');
+      return rows;
+    }
     const enrichment = SERVICE.DefaultProductSearchEnrichmentService;
     if (!enrichment || typeof enrichment.consumerSummaries !== 'function') {
         if (['pricing', 'inventory'].some(domain => (((CONFIG.get(domain) || {}).publication || {}).delivery || {}).enabled === true)) {
@@ -699,6 +730,9 @@ module.exports = {
     return {
       available: availability.available === true,
       status: availability.status,
+      ...(Object.hasOwn(availability, 'acquisitionRequirements') ? { acquisitionRequirements:
+        availability.acquisitionRequirements === null ? null :
+          SERVICE.DefaultCouponOfferService.acquisitionRequirements(availability.acquisitionRequirements) } : {}),
     };
   },
 
@@ -740,11 +774,9 @@ module.exports = {
     }
     if (typeof candidate !== "object") return undefined;
     let code = candidate.mediaCode || candidate.code;
-    let directUrl =
-      candidate.deliveryUrl ||
-      candidate.publicUrl ||
-      candidate.url ||
-      candidate.image;
+    let directUrl = code ? undefined :
+      candidate.deliveryUrl || candidate.publicUrl || candidate.url || candidate.image;
+    let deliveryUrl = this.mediaDeliveryUrl(code) || directUrl;
     let descriptor = {
       code: code,
       mediaCode: code,
@@ -759,9 +791,8 @@ module.exports = {
       businessPurpose: candidate.businessPurpose,
       ownerType: candidate.ownerType,
       ownerReference: candidate.ownerReference,
-      deliveryUrl: directUrl || this.mediaDeliveryUrl(code),
-      publicUrl:
-        candidate.publicUrl || directUrl || this.mediaDeliveryUrl(code),
+      deliveryUrl: deliveryUrl,
+      publicUrl: deliveryUrl,
       altText: candidate.altText || altText,
     };
     Object.keys(descriptor).forEach(
@@ -831,6 +862,13 @@ module.exports = {
   /** Projects one search projection into a customer-safe card. @param {Object} projection Product search projection. @returns {Object} Card. */
   card: function (projection) {
     let payload = projection.payload || {};
+    const { acquisitionRequirements: ignoredRequirements, ...localizedAttributes } = payload.localizedAttributes || {};
+    const window = payload.localizedAttributes?.listingWindow;
+    if (window && (!Object.hasOwn(window, 'startsAt') || !Object.hasOwn(window, 'endsAt') ||
+        [window.startsAt, window.endsAt].some(value => value !== null &&
+          (typeof value !== 'string' || !Number.isFinite(Date.parse(value)))) ||
+        window.startsAt !== null && window.endsAt !== null && Date.parse(window.endsAt) <= Date.parse(window.startsAt)))
+      throw new Error('Published listing window is invalid');
     return {
       productCode: projection.productCode || payload.code,
       version: projection.sourceHash,
@@ -840,7 +878,8 @@ module.exports = {
       categoryCodes: payload.categoryCodes || [],
       variantCodes: payload.variantCodes || [],
       seo: payload.seo,
-      localizedAttributes: payload.localizedAttributes || {},
+      localizedAttributes,
+      ...(window ? { startDate: window.startsAt, endDate: window.endsAt } : {}),
       media: this.media(payload),
       price: this.price(payload.price),
       availability: this.availability(payload.availability),
@@ -903,7 +942,7 @@ module.exports = {
   /** Lists customer-safe Product cards. @param {Object} request Nodics request. @returns {Promise<Object>} Product card response. */
   list: async function (request) {
     request.indexConfiguration = await this.indexConfiguration(request);
-    if (this.policy().catalogue && this.policy().catalogue.enabled === true) {
+    if (request.query?.view !== undefined || this.policy().catalogue && this.policy().catalogue.enabled === true) {
       return SERVICE.DefaultProductCatalogueQueryService.list(request);
     }
     let searchOptions = this.searchOptions(request),

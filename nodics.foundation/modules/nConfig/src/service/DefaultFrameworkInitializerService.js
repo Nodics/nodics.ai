@@ -1432,6 +1432,9 @@ module.exports = {
     let _self = this;
     fileName = fileName || "/config/properties.js";
     const serverPath = NODICS.getServerPath && NODICS.getServerPath();
+    let selectedDefaults;
+    let projectRoot;
+    let frameworkRoot;
     if (fileName === "/config/properties.js" && serverPath) {
       const path = require("node:path");
       const packageFile = path.join(serverPath, "package.json");
@@ -1442,13 +1445,32 @@ module.exports = {
       }
       if (selectors && selectors.length) {
         const context = this.getPropertyBindingContext(path.join(serverPath, "config", "properties.js"));
-        const defaults = this.readInactiveRuntimeRoleConfiguration(this.loadServerProperties(), context);
-        CONFIG.setProperties(configurationBindings.merge(CONFIG.getProperties() || {}, defaults));
+        selectedDefaults = this.readInactiveRuntimeRoleConfiguration(this.loadServerProperties(), context);
+        projectRoot = context.roots.project;
+        frameworkRoot = context.roots.framework;
       }
     }
+    const applySelectedDefaults = () => {
+      if (!selectedDefaults) return;
+      CONFIG.setProperties(configurationBindings.merge(CONFIG.getProperties() || {}, selectedDefaults));
+      selectedDefaults = undefined;
+    };
     NODICS.getIndexedModules().forEach(function (moduleObject, index) {
+      if (selectedDefaults && projectRoot) {
+        const path = require("node:path");
+        const modulePath = NODICS.getRawModule(moduleObject.name)?.path;
+        const relative = modulePath && path.relative(projectRoot, modulePath);
+        const frameworkRelative = modulePath && frameworkRoot && path.relative(frameworkRoot, modulePath);
+        const isFramework = typeof frameworkRelative === "string" && frameworkRelative !== ".." &&
+          !frameworkRelative.startsWith(".." + path.sep) && !path.isAbsolute(frameworkRelative);
+        if (!isFramework && typeof relative === "string" &&
+            relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative)) {
+          applySelectedDefaults();
+        }
+      }
       _self.loadModuleConfiguration(moduleObject.name, fileName);
     });
+    applySelectedDefaults();
   },
 
   /**
@@ -1902,6 +1924,7 @@ module.exports = {
     return {
       [code]: {
         enabled: true,
+        template: "foundation",
         label,
         description: `Install the ${subject} releases discovered from the selected runtime module graph and compatible data manifests.`,
         completionMessage: `The ${subject} foundation is ready for this runtime. Operators can continue with governed validation and business workflows.`,

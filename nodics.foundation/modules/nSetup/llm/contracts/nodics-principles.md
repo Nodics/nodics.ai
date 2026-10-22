@@ -891,14 +891,18 @@ keep source defaults empty, and enforce recurrence checks in nTooling.
 
 ### Framework defaults, customer deltas
 
-Every reusable property definition and default belongs to its implementing
-framework module. Customer configuration is an override, not a required copy of
-framework setup. This includes standard provider wiring and runtime-role
-behavior, not only values already duplicated in two files. Missing owner defaults
-are framework defects, not a reason to put the implementation in a customer project.
-Required deployment inputs retain owner-defined validation and safe unconfigured
-states; credentials, customer identities and business selections are not defaults
-to promote. Registration is not activation or authorization.
+Every reusable property definition, validation contract and complete default
+value belongs exclusively to its implementing framework module. Customer and
+runtime property files may contain only explicit values that override a
+framework-defined default; they must not define properties, supply missing
+defaults or repeat inherited values. This is a strict coding principle for
+human and AI-authored changes. Missing owner defaults are framework defects,
+not a reason to put the implementation in a customer project. Required
+deployment inputs retain owner-defined validation and safe unconfigured
+states; credentials, customer identities and business selections are not
+defaults to promote. Governed business records and runtime topology remain
+with their existing authorities. Registration is not activation or
+authorization.
 
 Apply the [mandatory default ownership gate](customer-config-classification-contract.md#mandatory-default-ownership-gate)
 to every declaration, source fallback, generator and consumer. A publishable
@@ -919,13 +923,15 @@ provider defaults, thresholds, and governance gate data belong in module-owned
 `config/properties.js` under clear namespaces.
 
 Put configurable values, policy defaults, tooling command declarations,
-discovery rules, and governance gate data in module-owned
+discovery rules, and governance gate data in their implementing module-owned
 `config/properties.js` under clear namespaces. Module-owned defaults are the
 single reusable source for their capability. Project, environment, server, and
-node properties are later override layers, not parallel default catalogues.
-They carry only intentional deltas such as topology, local coordinates,
-secret-source references, active runtime composition, tenant/deployment
-selection, or explicit enable/disable decisions.
+node properties are value-override layers only: each value must target a
+framework-defined property and intentionally differ from its inherited
+baseline. They cannot define properties, supply defaults or repeat unchanged
+values. Runtime topology, active-module composition and governed business
+selections remain with their existing authorities rather than being redefined
+as property defaults.
 
 Do not restate facts already supplied by the selected runtime topology or an
 earlier configuration owner. nConfig selects the environment, server and node;
@@ -1234,9 +1240,11 @@ Preserve denials when configured addresses change; never trust request hosts.
 
 Apply the mandatory configuration ownership restrictions in
 `nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`.
-Local provider defaults are framework-owned; customer layers declare only actual
-selection or deployment differences. No environment descriptor, copied secret,
-or duplicate endpoint/authentication authority may be introduced by code or generators.
+Local provider defaults and property contracts are framework-owned; customer
+layers declare only explicit values overriding those framework-defined defaults.
+No customer property definition, copied default, environment descriptor,
+copied secret, or duplicate endpoint/authentication authority may be introduced
+by code or generators.
 
 
 Backend startup, readiness and API acceptance must work without any frontend

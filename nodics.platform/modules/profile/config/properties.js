@@ -17,6 +17,83 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  profileNotificationRecipients: {
+    maximumGroups: 100,
+  },
+  profileGiftNotifications: {
+    enabled: false, qualified: false, sourceConnectionName: "commerce", timeoutMs: 10000,
+    maxResponseBytes: 8192,
+    allowInsecureLoopback: false, maximumRecipients: 20,
+    permission: "profile.commerce.notification.recipient.resolve",
+    events: ["PENDING", "CANCELLED", "ACCEPTED", "DECLINED", "EXPIRED"],
+    recipientSelection: {
+      preferencesField: "giftNotificationPreferences", recipientsField: "giftNotificationRecipients",
+      recipientPermission: "commerce.digital.bundle.manage", capabilityCodes: ["digitalCore", "digitalCommerce"],
+    },
+  },
+  profileAuctionNotifications: {
+    enabled: false, qualified: false, sourceConnectionName: "commerce", timeoutMs: 5000,
+    maxResponseBytes: 8192,
+    allowInsecureLoopback: false, maximumRecipients: 20,
+    permission: "profile.commerce.notification.recipient.resolve",
+    sourceTypes: ["AUCTION_SELECTED", "AUCTION_CANCELLED", "AUCTION_UNSELECTED_RELEASED", "AUCTION_WINNER_PENDING", "AUCTION_UNSOLD"],
+    recipientSelection: {
+      preferencesField: "auctionNotificationPreferences", recipientsField: "auctionNotificationRecipients",
+      recipientPermission: "commerce.bid.participate", capabilityCodes: ["bidding"],
+    },
+  },
+  profileCouponNotifications: {
+    enabled: false, sourceConnectionName: "commerce", timeoutMs: 10000,
+    maxResponseBytes: 8192,
+    allowInsecureLoopback: false, maximumRecipients: 20,
+    permission: "profile.commerce.notification.recipient.resolve",
+    recipientSelection: {
+      preferencesField: "couponReminderPreferences", recipientsField: "couponReminderRecipients",
+      recipientPermission: "commerce.digital.own.read", capabilityCodes: ["digitalCore", "digitalCommerce"],
+    },
+  },
+  profileTransferNotifications: {
+    enabled: false,
+    qualified: false,
+    sourceConnectionName: "loyaltyApi",
+    timeoutMs: 5000,
+    maxResponseBytes: 8192,
+    allowInsecureLoopback: false,
+    maximumRecipients: 20,
+    permission: "profile.transfer.notification.recipient.resolve",
+    recipientSelection: {
+      preferencesField: "transferNotificationPreferences",
+      recipientsField: "transferNotificationRecipients",
+      recipientPermission: "loyalty.wallet.read",
+      capabilityCodes: ["loyaltyWallet", "loyaltyCore"],
+    },
+  },
+  profilePlatformAdministratorEvidence: {
+    enabled: true,
+    allowedPermissions: ["loyalty.wallet.testCredit"],
+    maximumGroups: 100,
+  },
+  profileParticipantDirectory: {
+    enabled: true,
+    minimumSearchLength: 3,
+    maximumSearchLength: 100,
+    maximumResults: 20,
+  },
+  profileAcceptance: {
+    enterpriseActorOwner: {
+      contractVersion: 1,
+      maximumRequiredScopes: 20,
+      refusalStatuses: [401, 403, 404],
+      routes: {
+        memberships: "/nodics/profile/v0/enterprise-memberships",
+        scopes: "/nodics/profile/v0/identity/scopes/me",
+        teamWorkspace: "/nodics/profile/v0/enterprise-team/workspace",
+        revokeMembership: "/nodics/profile/v0/enterprise-team/revoke",
+        administrationWorkspace:
+          "/nodics/profile/v0/enterprise-administration/{enterpriseCode}/workspace",
+      },
+    },
+  },
   runtimeConfigurationSchemas: {
     telegramExternalIdentity: {
       code: "telegramExternalIdentity",
@@ -78,6 +155,13 @@ module.exports = {
         script:
           "src/service/acceptance/defaultRuntimeDeploymentGrantAcceptanceService.mjs",
       },
+      "acceptance:enterprise-actor-owner": {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: "@nTooling/node-script",
+        script:
+          "src/service/acceptance/defaultEnterpriseActorOwnerAcceptanceService.mjs",
+      },
     },
   },
   identityGovernance: {
@@ -113,7 +197,7 @@ module.exports = {
           enabled: false,
           ownerService: "DefaultProfileBootstrapIdentityAssessmentService",
           maximumAgeMs: 300000,
-          sources: [{ releaseCode: "profile:init-v001", version: "0.0.3" }],
+          sources: [{ releaseCode: "profile:init-v001", version: "0.0.8" }],
         },
         pageSize: 100,
         maximumPages: 100,

@@ -241,7 +241,15 @@ function installGlobals() {
         },
         DefaultCommerceCalculationPortsService: calculationPorts
     };
-    global.FACADE = { DefaultCartCustomerFacade: facade };
+    // Operation fixtures isolate admission; merchantScopeContract exercises real Profile/Store/retained scope composition.
+    global.FACADE = { DefaultCartCustomerFacade: { ...facade, context: async request => {
+        const auth = request.authData || {}, payload = request.payload || {};
+        const enterpriseCode = auth.enterpriseCode || auth.entCode || request.enterpriseCode || payload.enterpriseCode;
+        const tenant = auth.tenant || request.tenant || CONFIG.get('commerce')?.enterpriseTenants?.[enterpriseCode];
+        const ownerId = auth.principalId || auth.code || auth.loginId;
+        if (!tenant || !ownerId) throw new Error('Authenticated tenant and customer are required');
+        return { ...request, tenant, enterpriseCode, ownerId };
+    } } };
 }
 
 test.beforeEach(installGlobals);
@@ -327,7 +335,7 @@ test('Cart customer facade uses customer-owned direct calculation snapshots', as
             throw new Error('generic calculation pipeline must not handle customer cart calculation route');
         }
     };
-    const response = await facade.calculate({
+    const response = await FACADE.DefaultCartCustomerFacade.calculate({
         authData: { tenant: 'default', principalId: 'customer-1' },
         cartCode: 'cart1',
         payload: { calculationCode: 'calc-cart1' }

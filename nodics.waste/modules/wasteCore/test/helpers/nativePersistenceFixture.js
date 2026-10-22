@@ -80,8 +80,7 @@ async function create(t, { listing = false } = {}) {
   const database = new (foundation("nDatabase/database/src/lib/database"))();
   database.setURI(uri);
   database.setOptions(_.cloneDeep(foundation("nDatabase/mongodb/config/properties").database.default.mongodb.options));
-  const settings = { databaseTransactions: { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 },
-    eWaste: require("../../../../../nodics.accelerators/modules/waste/modules/eWaste/config/properties").eWaste };
+  const settings = { databaseTransactions: { enabled: true, failClosed: true, maximumCommitTimeMs: 5000 } };
   let client, db, created = false;
   global.CONFIG = global.nConfig = { get: key => settings[key] };
   global.CLASSES = { NodicsError: class extends Error {
@@ -106,7 +105,6 @@ async function create(t, { listing = false } = {}) {
     DefaultInterceptorService: foundation("nCommon/src/service/interceptor/defaultInterceptorService"),
     DefaultWastePersistenceService: require("../../src/service/defaultWastePersistenceService"),
     DefaultWasteAssetTransferOperationService: require("../../src/service/defaultWasteAssetTransferOperationService"),
-    DefaultWasteAssetReversalOperationService: require("../../src/service/defaultWasteAssetReversalOperationService"),
     DefaultDatabaseConfigurationService: {
       getTenantDatabase: (owner, partition) => owner === "wasteCore" && partition === tenant ? { master: database } : undefined,
       getSchemaInterceptors: () => ({}),

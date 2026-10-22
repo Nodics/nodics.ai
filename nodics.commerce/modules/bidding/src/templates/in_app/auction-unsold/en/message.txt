@@ -1,0 +1,1 @@
+Auction {{roundCode}} closed without an eligible winner. Its remaining offer and listing holds have been released.

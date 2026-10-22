@@ -16,7 +16,7 @@ const test = require("node:test"),
   assert = require("node:assert/strict");
 const controller = require("../src/controller/defaultCommunicationApiController"),
   facade = require("../src/facade/defaultCommunicationApiFacade"),
-  verification = require("../src/service/defaultCommunicationVerificationApiService"),
+  verification = require("../src/service/defaultCommunicationVerificationOperationService"),
   routes = require("../src/router/routers").commsApi;
 /** Installs an exact-object admission double, not a browser-supplied private flag. @param {Object} t Test context. @returns {WeakSet<Object>} Admitted entries. */
 function fixture(t) {

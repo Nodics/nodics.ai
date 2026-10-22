@@ -313,8 +313,12 @@ points:
 - local demo behavior versus production behavior;
 - operational and tooling policies.
 
-Keep these in module-owned `config/properties.js` by default, then override
-only intentional deltas in project, environment, server, or node layers.
+Define each property, its validation and its complete reusable default only in
+the implementing framework module's `config/properties.js`. Project,
+environment, server or node property files may contain only explicit values
+that override a framework-defined default; they may not define properties,
+supply missing defaults or repeat inherited values. Keep governed business
+selections and topology metadata in their existing authorities.
 
 Do not convert these into configuration merely because they are literals:
 
@@ -332,8 +336,10 @@ schema, route metadata, status definitions, or a generator contract.
 
 ## Layered Properties Discipline
 
-The owning module defines reusable defaults once. Later layers do not copy
-those defaults.
+The owning framework module exclusively defines each reusable property,
+validation contract and complete default once. Later layers do not define
+properties or copy defaults; they may provide only intentional override values
+for framework-defined properties.
 
 Pass the [mandatory default ownership gate](customer-config-classification-contract.md#mandatory-default-ownership-gate)
 before adding or relocating a property. Trace each declaration to its consumer;
@@ -341,12 +347,14 @@ distinguish standard mechanics from enablement, deployment inputs and governed
 business data. A framework default missing from its owner must not be supplied
 as mandatory customer wiring. Review mixed objects leaf by leaf, including
 publication providers, schema policies, observers, templates and source fallbacks.
-Update generators and tests that perpetuate the wrong placement. Preserve safety
-pins and immutable release selections without blanket exceptions. Source-only
+Update generators and tests that perpetuate the wrong placement. Preserve
+mandatory security invariants in owner enforcement and immutable release
+selections; do not use equal-value property copies as safety pins. Source-only
 review or contract-presence checks cannot establish effective runtime correctness.
 
 Project, environment, server, and node `properties.js` files should be light.
-They may define:
+They may provide only actual override values for framework-defined properties,
+such as:
 
 - project policy differences;
 - environment-specific values;
@@ -357,9 +365,10 @@ They may define:
 - secret-source references;
 - explicit enable/disable decisions.
 
-They must not become a second catalogue of framework defaults. If a value would
-still be correct after renaming the server or changing the port, inspect
-whether it belongs in the owning module instead.
+They must not define property schemas/contracts, supply missing defaults, or
+become a second catalogue of framework defaults. An unchanged inherited value
+must be omitted. If a value would still be correct after renaming the server or
+changing the port, inspect whether it belongs in the owning module instead.
 
 ## File Header And Documentation
 
@@ -486,7 +495,8 @@ loader, validator or competing checklist for the review.
    scope and classify defaults, domain policy, customer choices, environment,
    server and node differences. Inspect bindings/helpers and actual consumers;
    verify activation/index order, shorter/empty/reordered collections, later
-   overrides and missing context. Explain retained equal values. State whether
+   overrides and missing context. Remove equal-to-default property copies;
+   mandatory security pins belong in framework enforcement. State whether
    external, tenant and persisted overrides were inspected or excluded.
 5. **Authority and behavior:** verify authentication, permission, tenant,
    enterprise, business lifecycle, callback provenance, replay/idempotency and
@@ -664,6 +674,8 @@ single actionable record for the change.
 
 Apply the mandatory configuration ownership restrictions in
 `nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`.
-Local provider defaults are framework-owned; customer layers declare only actual
-selection or deployment differences. No environment descriptor, copied secret,
-or duplicate endpoint/authentication authority may be introduced by code or generators.
+Local provider defaults and property contracts are framework-owned; customer
+layers declare only explicit values overriding those framework-defined defaults.
+No customer property definition, copied default, environment descriptor,
+copied secret, or duplicate endpoint/authentication authority may be introduced
+by code or generators.

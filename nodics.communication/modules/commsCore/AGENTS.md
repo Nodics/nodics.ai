@@ -1,5 +1,20 @@
 # commsFoundation Agent Contract
 
+Keep canonical notification guidance in the selected v002 CMS source record pack,
+not only README contracts. Preserve sealed v001 files and business-release bytes.
+Successor technical summaries must reference the selected sourcePath, not the
+sealed predecessor; update dependent checksums and test the rendered reference.
+Transfer, coupon, auction and gift dispatch adapters revalidate exact Profile
+recipients; selected Employees use the existing inbox namespace, never fabricated
+Customer ownership. Source/unit integration is not installed or live acceptance.
+
+Source-dependent messages use the existing durable intent and the fixed
+`communication.dispatchEligibilityOwners` map. Preserve its frozen intent bit
+and metadata-only source/recipient-bound checks before claim and before send;
+missing owners fail closed. Never retarget rendered messages, add a parallel
+outbox, or couple domain value movement to transport outcomes. See
+[durable outcome delivery](llm/contracts/durable-outcome-delivery.md).
+
 Follow the root Nodics AI agent contract before changing this boundary:
 
 - Follow the repository agent contract: `../../../AGENTS.md`.

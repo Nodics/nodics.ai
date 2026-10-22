@@ -12,9 +12,11 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('node:child_process');
 
 const moduleRoot = path.resolve(__dirname, '..');
 const catalogue = require('../../../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService').validateDataRelease(moduleRoot);
+const sourceAuthority = require('../data/manifest.json').sections.documentation.sourceAuthority;
 
 const page = catalogue.pages.find(item => item.code === 'experience-studio');
 assert(page, 'Experience Studio documentation must be registered in the Axis catalogue');
@@ -42,15 +44,15 @@ for (const required of [
 }
 
 const generatedPageData = fs.readFileSync(
-    path.resolve(moduleRoot, 'data/docs-v001/records/documentation/axisDocumentationPageData.js'),
+    path.resolve(moduleRoot, sourceAuthority, 'axisDocumentationPageData.js'),
     'utf8',
 );
 const generatedRouteData = fs.readFileSync(
-    path.resolve(moduleRoot, 'data/docs-v001/records/documentation/axisDocumentationRouteData.js'),
+    path.resolve(moduleRoot, sourceAuthority, 'axisDocumentationRouteData.js'),
     'utf8',
 );
 const generatedComponentData = fs.readFileSync(
-    path.resolve(moduleRoot, 'data/docs-v001/records/documentation/axisDocumentationComponentData.js'),
+    path.resolve(moduleRoot, sourceAuthority, 'axisDocumentationComponentData.js'),
     'utf8',
 );
 
@@ -68,5 +70,20 @@ assert(
         generatedComponentData.includes('Default fallback example'),
     'Generated Axis documentation component data must include Experience Studio body content',
 );
+
+const reportPaths = [
+    'axis-documentation-validation-report.json',
+    'axis-documentation-validation-report.md',
+].map(name => path.join(moduleRoot, 'test/reports', name));
+const previousReports = reportPaths.map(file => fs.existsSync(file) ? fs.readFileSync(file) : null);
+const validationOutput = execFileSync(process.execPath, [
+    path.join(moduleRoot, 'scripts/validate-axis-content-pack.mjs'),
+    '--check',
+], { encoding: 'utf8' });
+assert(validationOutput.includes(`Validated ${catalogue.pages.length} Axis CMS documentation pages`));
+for (const [index, file] of reportPaths.entries()) {
+    assert.deepStrictEqual(fs.existsSync(file) ? fs.readFileSync(file) : null, previousReports[index],
+        'Read-only source validation must not rewrite retained reports');
+}
 
 console.log('Axis Experience Studio documentation validated');

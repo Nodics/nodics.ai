@@ -137,6 +137,8 @@ module.exports = {
                 output: {},
             };
         }
+        if (allowed.requiresCompletedTask === true || allowed.remote?.requiresCompletedTask === true)
+            execution = await SERVICE.DefaultProcessRuntimeLifecycleService.completedDecisionExecution(request, execution);
         if (allowed.remote)
             return SERVICE.DefaultProcessRemoteActionAdapterService.execute(
                 request,
@@ -154,8 +156,6 @@ module.exports = {
                 'Process action adapter implementation is unavailable',
             );
         }
-        if (allowed.requiresCompletedTask === true)
-            execution = await SERVICE.DefaultProcessRuntimeLifecycleService.completedDecisionExecution(request, execution);
         return SERVICE[allowed.service][allowed.method](request, execution);
     },
 };

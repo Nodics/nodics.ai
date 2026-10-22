@@ -2,6 +2,53 @@
 
 ## Outcome And Authority
 
+## Public Coupon Issuer Membership
+
+Search's stable owner port is
+`DefaultPromotionOperationService.couponIssuerMemberships(request, productCodes)`.
+The original Product/Search request supplies tenant, Store, locale and unchanged
+public/customer access context. Supply only distinct eligible COUPON_CODE Product
+codes, not projections or issuer hints. The result is an array in input order,
+exactly one `{productCode, issuerEnterpriseCode}` per code. Empty input returns
+`[]`; duplicates, missing/conflicting evidence and incomplete batches reject.
+`promotion.couponIssuerMembership.maximumProducts` is a complete framework default
+and enforced bound, not truncation. No HTTP route or new permission is introduced.
+
+This is a real owner read, not a stub or the capped mutable `promotions` fallback.
+Each Product is independently reread through pinned activation and retained
+projection before and after membership. Selected delivery and installed private
+guards are required. Receipt-bound delegated candidates use the existing
+SellerPolicy Product reader with original issuance membership, fresh Profile
+activity, original consent and applied retained Promotion evidence. No coupon
+stock count, reserve, reveal or financial mutation is performed.
+
+When no delegated candidate exists, the separate own-issuer receiver reads the
+selected Store's complete applied retained Promotion roots under the Product's
+canonical owning Enterprise, requires exactly one matching active Product policy
+with that same issuer AND vendor, and rereads activation/receipt evidence before
+returning. All selected roots must be provable in that owner scope; missing or
+mixed unresolved roots refuse rather than using a mutable source. Publication
+reuses its canonical local persistence authority only inside this fixed read.
+It never alters original anonymous/customer authentication or mints a principal.
+Fresh Enterprise activity and Product visibility remain mandatory.
+
+Admission uses exact in-flight private object identity, immutable snapshots and
+finally cleanup. Direct/copy/expired own-issuer calls refuse before persistence;
+root, budget, coupon and mutation operations gain no public authority. The only
+output is public Product/issuer association, never policy, benefits, prices,
+receipts, consent actors, token or transaction history. This is membership, not
+stock availability or a reservation guarantee. Search applies agreed boost
+coverage only to its supplied Product-eligible candidate set.
+
+`promotionSellerPolicyBridgeContract.test.js` composes the actual membership,
+Product, SellerPolicy and Publication owners with isolated storage/Profile ports.
+It covers delegated anonymous/customer reads, own-issuer publication, applied
+receipt and Product drift, revocation, bounds, empty/duplicate/incomplete input,
+foreign/service authority, original-auth preservation and zero stock writes.
+This does not qualify installed indexes, live Profile or Search UI acceptance.
+
+## Availability Authority
+
 `DefaultPromotionDistributionAdmissionService` extends the existing Promotion
 seller-policy reader with two explicit, non-mutating entry points. It is not a
 new identity, consent, catalogue, importer or qualification authority. Product
@@ -11,7 +58,7 @@ owners decide whether the exact vendor distribution remains valid.
 
 | Entry | Required authority | Result | Never granted |
 | --- | --- | --- | --- |
-| `publicAvailability(request)` | One freshly activated and retained STALE Product in the exact tenant/Store/locale, plus original delegated receipt and fresh consent | Only `available` and `status`, quantity one | Campaign enumeration, private receipt/token, budget, purchase or mutation |
+| `publicAvailability(request)` | One freshly activated and retained STALE Product in the exact tenant/Store/locale, plus original delegated receipt and fresh consent | Only `available`, `status`, and safe `acquisitionRequirements`, quantity one | Campaign enumeration, private receipt/token, budget, purchase or mutation |
 | `publicAvailabilityBatch(request, productCodes)` | Bounded distinct Products with the same original scope, each independently canonically verified | Internal Map of the same customer-safe summaries | Cross-request approval, auth cache, caller-row admission or financial mutation |
 | `trustedAvailability(original, downstream)` | Original signed human/customer context retained by the calling owner, same tenant/vendor/Store and a derived service read for one Product | Existing internal non-reserving pool summary | Arbitrary service admission, issuer administration, stock replenishment or budget mutation |
 | `assertInstalled(request)` | Actual installed owner models, private hooks, indexes, privacy and transaction capabilities | Boolean after checked prerequisites | A source flag, grant, consent, native acceptance or readiness certificate |
@@ -62,7 +109,9 @@ The implemented owner hooks are:
    `publicAvailability` only for a selected coupon Product and an anonymous,
    unspecified-principal, or human/customer context without signed enterprise
    aliases. Scoped customers use the normal Digital owner; service and system
-   callers do not become public callers. Both paths emit only availability/status.
+   callers do not become public callers. Both paths emit availability/status and
+   Promotion's safe acquisition requirements; missing policy is explicit null and
+   unavailable. Internal priceRef and pool evidence never enter the public DTO.
 5. Cart `create(cart, originalRequest)` detaches the originating authentication
    and bounded coordinates once. Inventory supplies this detached origin as the
    second argument to Digital `availability`, which retains it as the optional

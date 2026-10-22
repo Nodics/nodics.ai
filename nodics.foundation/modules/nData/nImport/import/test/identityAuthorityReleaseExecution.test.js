@@ -95,6 +95,38 @@ test('startup and explicit migration use the same exact bootstrap operation cont
     assert.equal(count, 2);
 });
 
+test('authority-partition Init admits only the exact runtime deployment assignment operation', async t => {
+    const f = fixture(t, { schemaName: 'principalScopeAssignment', operation: 'ensureDeploymentAll' });
+    SERVICE[f.targetName] = { ensureDeploymentAll: async () => {
+        assert.equal(f.service.isIdentityAuthorityReleaseExecution('default', 'principalScopeAssignment', 'ensureDeploymentAll'), true);
+        assert.equal(f.service.isIdentityAuthorityReleaseExecution('default', 'principalScopeAssignment', 'ensureReferenceAll'), false);
+        assert.equal(f.service.isIdentityAuthorityReleaseExecution('partner', 'principalScopeAssignment', 'ensureDeploymentAll'), false);
+    } };
+    await f.install(model => f.dispatch(model));
+    assert.equal(f.service.isIdentityAuthorityReleaseExecution('default', 'principalScopeAssignment', 'ensureDeploymentAll'), false);
+
+    const partner = fixture(t, { tenant: 'partner', schemaName: 'principalScopeAssignment', operation: 'ensureDeploymentAll' });
+    SERVICE[partner.targetName] = { ensureDeploymentAll: async () =>
+        assert.equal(partner.service.isIdentityAuthorityReleaseExecution('partner', 'principalScopeAssignment', 'ensureDeploymentAll'), false) };
+    await partner.install(model => partner.dispatch(model));
+});
+
+test('authority-partition Init admits only the exact runtime service-scope adoption operation', async t => {
+    const f = fixture(t, { schemaName: 'employee', operation: 'adoptRuntimeServiceScopesAll' });
+    SERVICE[f.targetName] = { adoptRuntimeServiceScopesAll: async () => {
+        assert.equal(f.service.isIdentityAuthorityReleaseExecution('default', 'employee', 'adoptRuntimeServiceScopesAll'), true);
+        assert.equal(f.service.isIdentityAuthorityReleaseExecution('default', 'employee', 'ensureBootstrapAll'), false);
+        assert.equal(f.service.isIdentityAuthorityReleaseExecution('partner', 'employee', 'adoptRuntimeServiceScopesAll'), false);
+    } };
+    await f.install(model => f.dispatch(model));
+    assert.equal(f.service.isIdentityAuthorityReleaseExecution('default', 'employee', 'adoptRuntimeServiceScopesAll'), false);
+
+    const partner = fixture(t, { tenant: 'partner', schemaName: 'employee', operation: 'adoptRuntimeServiceScopesAll' });
+    SERVICE[partner.targetName] = { adoptRuntimeServiceScopesAll: async () =>
+        assert.equal(partner.service.isIdentityAuthorityReleaseExecution('partner', 'employee', 'adoptRuntimeServiceScopesAll'), false) };
+    await partner.install(model => partner.dispatch(model));
+});
+
 test('unbound, copied and foreign-tenant requests cannot manufacture authority in-flight', async t => {
     const f = fixture(t);
     let expected = false;

@@ -20,7 +20,7 @@ function fixture(failBootstrap = false, denyActivation = false, technicalModules
   const options = {
     execute: true, environment: { AXIS_PLATFORM_URL: 'https://platform.invalid', NODICS_ACCEPTANCE_ORIGIN: 'https://partner.invalid', AXIS_PASSWORD: 'fixture-only' },
     configuration: { environment: 'partnerLocal', projectCode: 'partner.store',
-      acceptance: { capabilityRegistry: { runtime: { role: 'PROCESS' }, technicalModules } },
+      acceptance: { capabilityRegistry: { requestTimeoutMs: 120000, runtime: { role: 'PROCESS' }, technicalModules } },
       topology: { groups: { backends: [{ role: 'PROCESS', server: 'automation' }] } } },
     log() {}, sleep: async () => {},
     fetch: async (url, request = {}) => {
@@ -76,6 +76,13 @@ test('selection cannot disable all capability assertions', async () => {
   const f = fixture();
   f.options.configuration.acceptance.capabilityRegistry.technicalModules = [];
   await assert.rejects(runCapabilityRegistryAcceptance(f.options), /at least one/);
+  assert.equal(f.calls.length, 0);
+});
+
+test('invalid owner request timeout refuses before transport', async () => {
+  const f = fixture();
+  f.options.configuration.acceptance.capabilityRegistry.requestTimeoutMs = 0;
+  await assert.rejects(runCapabilityRegistryAcceptance(f.options), /request timeout must be an integer/);
   assert.equal(f.calls.length, 0);
 });
 

@@ -21,6 +21,10 @@ module.exports = { commsSchema: {
 } };
 
 // Private retry material and managed compare-and-set claims belong to Communication storage.
+module.exports.commsSchema.commsIntent.definition.requiresSourceEligibility = {
+    type: 'bool', required: false,
+    description: 'Immutable command requires fresh read-only source and recipient eligibility before every send attempt.',
+};
 module.exports.commsSchema.commsTemplate.definition.sourceModules = {
     type: 'array', required: false, description: 'Explicit authorized source modules; legacy missing lists never imply wildcard authority.'
 };

@@ -412,25 +412,27 @@ before the internal Media read; original uploads remain customer-owned.
 
 ## Commerce bidding consumption
 
-The generic `bidding` module owns bids, participant authorization and decisions.
-eWaste consumes its APIs, restricts history/commands to Waste asset provenance
-and its configured store, and validates customer-owned asset eligibility here.
-Do not place product-category restrictions in the generic Bidding engine.
-Pricing and Checkout own accepted quotes and payment; Waste transfers ownership
-only after completed payment. See `test/eWasteBiddingBoundaryContract.test.js`.
+The generic `bidding` module owns rounds, private offers, participant authorization
+and decisions. eWaste account history forwards original Customer/Enterprise
+authority and returns complete bounded auction projections for its governed Store.
+The Customer-only request mapper is intentionally bypassed for this private read;
+no customer identity or Enterprise grant is fabricated. Legacy Circa negotiation
+mutation adapters are closed, while generic Bidding negotiation remains supported.
+See [common bundle commerce](common-bundle-commerce.md) for bounds and migration.
+Pricing owns selected quotes, Checkout owns the existing selected Cart/purchase,
+and Digital/Waste transfer ownership only through confirmed owner settlement.
+See `test/eWasteBiddingBoundaryContract.test.js`.
 
-## Approved digital-sale refunds
+## Final Digital Purchases
 
-`DefaultEWasteOrderReversalService` supplies service-only owner ports to Commerce
-Order. It verifies the original completed sale and current buyer ownership,
-requires recoverable seller proceeds and attached carbon, and locks the asset
-through Waste Core. It reverses only original sale-proceeds and attached-carbon
-ledger references through Loyalty, then restores the former digital owner after
-Commerce confirms the original buyer refund. Original submission/approval rewards
-are unchanged. Assets moved again, unavailable proceeds/carbon, and incomplete
-settlement evidence require manual resolution. No physical return is inferred.
-The API uses internal service tokens and `waste.asset.sale.transfer`; it is not a
-customer or employee backdoor for changing asset ownership.
+Completed digital purchases are final, without return or refund. The legacy
+eWaste Order reversal service, controller and route have been removed; neither
+current configuration nor historical policy can reactivate them. Historical
+receipts remain unchanged. Incomplete purchases retain original Checkout
+recovery and owner evidence, never a completed-sale reversal.
+Loyalty owns reward precision; Waste Carbon owns issued-credit precision.
+No marketplace reward/carbon scale override or reward-labelled carbon mutation
+belongs in this accelerator.
 
 Public collection-centre discovery requires `active: true`,
 `operatingStatus: ACTIVE` and `publicVisibility: PUBLIC` together. A disabled
@@ -931,9 +933,20 @@ owners using synthetic IN_APP storage, not native/provider acceptance.
 
 ## Reusable Catalogue
 
-`DefaultEWasteCatalogueService` owns bounded catalogue discovery, selector
-validation, facets, sorting, pagination and product-kind checks, using existing
-marketplace owner reads. Neutral limits live in `eWaste.catalogue`.
-Applications retain experience identity and policy and may supply explicit
-later-layer catalogue overrides through thin adapters. The service must work
-without Circa identifiers; it does not grant publication or data access.
+`DefaultEWasteCatalogueService` maps domain selectors to Product's
+`AVAILABLE_SHOP` query and preserves its totals, facets, ordering and pagination.
+Product owns generic filtering, limits and availability. eWaste checks domain
+kinds and safe projections; it cannot scan/filter another incomplete catalogue
+or define a parallel `eWaste.catalogue` policy. Invalid owner results fail rather
+than returning partial counts. Customer layers retain actual presentation and
+deployment selections without copying either owner's defaults.
+
+## Coupon Requirements Projection
+
+Marketplace offers carry `acquisitionRequirements` at top level in both list
+and detail, sourced exclusively from `product.availability.acquisitionRequirements`.
+Promotion owns its canonical validation. The accelerator validates transport shape
+only: `{type:REWARDS}` or `{type:CERTIFICATES|BOTH,certificates:{quantity,categoryCode,
+milestoneCode,brandCodes?,modelCodes?}}`. Unknown/malformed is null and unavailable.
+Copied Product attributes cannot override that result. This is not certificate
+eligibility or a purchase authorization; common Checkout owns final admission.

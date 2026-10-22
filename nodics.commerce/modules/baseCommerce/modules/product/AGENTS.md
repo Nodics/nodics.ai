@@ -1,5 +1,14 @@
 # Product Agent Contract
 
+Isolated discovery fixtures load Product's actual `config/properties` and apply
+only test-specific overrides. Do not repeat inherited pagination defaults.
+
+For bundle automation read `llm/contracts/automatic-bundle-publication.md`.
+Preserve the private exact-root capability, independent Digital/Store proof,
+explicit automatic nPublish audit and actual Online receipt. Never manufacture
+a human approval or broaden the ordinary publisher path. Run both bundle
+publication and existing publisher/listing tests after changes.
+
 Ordinary enterprise access uses `DefaultProductBusinessAuthoringService` and
 the existing Workbench discovery/API-operation contract for Product roots only.
 Read [ordinary authoring](llm/contracts/ordinary-product-authoring.md). Never
@@ -133,8 +142,10 @@ Selected public coupon summaries use one Promotion `publicAvailabilityBatch`
 per bounded enrichment call, with untouched original authority and Product codes
 only, never passed projections as admission. Preserve canonical per-Product
 visibility/readback and Promotion's fresh before/after bounded Profile reference
-checks. Validate every selected Map value as exactly an own Boolean `available`
-and its matching `IN_STOCK`/`OUT_OF_STOCK` status, then detach the safe summary.
+checks. Validate every selected Map value as exactly own data fields: Boolean
+`available`, its matching `IN_STOCK`/`OUT_OF_STOCK` status and Promotion-validated
+`acquisitionRequirements` (typed safe DTO or explicit null). Null requires false.
+Detach the safe summary; never copy requirements from Product attributes.
 Undefined/inert, malformed or extra-field values reject the entire call before
 any Digital fallback, even if delivery selection changes during the batch await.
 Missing/incomplete batch owners fail closed; no per-item auth cache or
@@ -162,3 +173,10 @@ COMMERCE_STAGED contributes approval/version wiring. Keep installed qualificatio
 connections, signed caller scopes and explicit deployment differences separate.
 Use publicationConfigurationOwnership.test.js in the Commerce group for the
 shared role-isolation matrix, alongside this owner's behavioral regressions.
+
+Listing-window date validation dispatches through effective
+`DefaultProductListingAuthoringService.listingDate` for both endpoints. Keep
+strict real-UTC normalization and interval ordering; do not close this business
+validator inside `listingTerms` or move private publication admission out of its
+owner. Cover effective overrides and invalid calendar dates in
+`test/productBundlePublication.test.js`.

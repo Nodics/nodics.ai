@@ -62,4 +62,32 @@ assert.deepStrictEqual(
     'Standard module discovery must find the Engagement group and all required children'
 );
 
+const previous = { NODICS: global.NODICS, _: global._, UTILS: global.UTILS };
+try {
+    global._ = require('lodash');
+    global.UTILS = { isBlank: global._.isEmpty };
+    global.NODICS = { getModules: () => ({}) };
+    const registered = [];
+    const router = {
+        ...require('../../nodics.foundation/modules/nRouter/src/service/router/defaultRouterService'),
+        isLocalActiveModule: () => true,
+        prepareDefaultRouter: options => registered.push(options.schemaName)
+    };
+    for (const moduleName of ['engagementCore', 'customerReview', 'customerFeedback', 'testimonial', 'contactSubmission']) {
+        const schemas = require(path.join(groupRoot, 'modules', moduleName, 'src/schemas/schemas.js'))[moduleName];
+        assert(Object.keys(schemas).length > 0);
+        router.activateRouters({}, { metaData: {}, rawSchema: schemas }, moduleName, { default: {} });
+    }
+    assert.deepStrictEqual(registered, [], 'Internal Engagement records must not acquire generic CRUD routes even when their module is router-capable');
+    router.activateRouters({}, {
+        metaData: {},
+        rawSchema: { fixture: { service: { enabled: true }, router: { enabled: true } } }
+    }, 'fixture', { default: {} });
+    assert.deepStrictEqual(registered, ['fixture'], 'The actual router consumer must detect an enabled schema');
+} finally {
+    global.NODICS = previous.NODICS;
+    global._ = previous._;
+    global.UTILS = previous.UTILS;
+}
+
 console.log('Customer Engagement module composition contract validated');

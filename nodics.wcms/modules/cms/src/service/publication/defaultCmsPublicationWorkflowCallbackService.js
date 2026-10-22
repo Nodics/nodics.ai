@@ -23,14 +23,23 @@ module.exports = {
         if (publication.runtimeRole !== 'STAGED') {
             throw new CLASSES.NodicsError('CMS_PUBLICATION_SOURCE_ROLE_INVALID', 'Process decisions are accepted only by CMS Staged');
         }
+        SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'workflow');
         let decision = request.publicationDecision || {};
         if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(decision.publicationCode || '') ||
             !Number.isInteger(Number(decision.expectedRevision)) || typeof decision.approved !== 'boolean' ||
             decision.processDefinitionCode !== 'cmsPublicationApproval' || !Number.isInteger(Number(decision.processVersion)) ||
-            Number(decision.processVersion) < 1 || !decision.processInstanceCode) {
+            Number(decision.processVersion) < 1 || decision.processInstanceCode !==
+                SERVICE.DefaultCmsPublicationWorkflowService.reference({
+                    code: decision.publicationCode,
+                    revision: Number(decision.expectedRevision)
+                })) {
             throw new CLASSES.NodicsError('CMS_PUBLICATION_WORKFLOW_DECISION_INVALID', 'CMS publication workflow decision is invalid');
         }
+        // Elevation is local to CMS Staged and occurs only after the fixed Process runtime and
+        // deterministic workflow identity have both been verified.
         let lifecycleRequest = Object.assign({}, request, {
+            authData: Object.assign({}, request.authData,
+                SERVICE.DefaultIdentityGovernanceService.getSystemAuthData()),
             publicationCode: decision.publicationCode,
             expectedRevision: Number(decision.expectedRevision),
             reason: decision.reason,

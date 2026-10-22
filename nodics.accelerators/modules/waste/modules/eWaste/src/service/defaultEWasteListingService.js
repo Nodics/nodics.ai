@@ -11,12 +11,10 @@
 
 "use strict";
 const crypto = require("node:crypto");
-const { isDeepStrictEqual } = require("node:util");
 /**
  * @module eWaste/service/defaultEWasteListingService
- * @description Retains one original customer listing intent for independently authorized human owner authoring.
- * Qualified owner publication and native human approval are separate prerequisites;
- * no mutable restoration, stock creation or activation is performed here.
+ * @description Delegates new single-certificate listings to Digital manifests and common Commerce publication.
+ * Historical intent helpers remain available to the separate read/reconciliation owner; new commands never backfill them.
  * @layer service
  * @owner eWaste
  * @override Later layers may customize intent presentation, not original terms,
@@ -73,96 +71,28 @@ module.exports = {
     );
   },
   /**
-   * Saves or explicitly resumes one original source command, never automatically retries a remote write.
-   * @param {Object} request Authenticated customer, original key, reviewed revision, price and confirmation.
-   * @returns {Promise<never>} Saved publication-required or reconciliation-required; operator authoring is separate.
-   * @sideEffects One revision-fenced Waste intent write, never a Product/Pricing publication or source write.
+   * Delegates a reviewed single-certificate listing to the common Digital manifest/publication owner.
+   * Historical listing intent is never backfilled, cancelled or repurposed by this command.
    */
   list: async function (request) {
-    const xp = SERVICE.DefaultEWasteExperienceService, store = xp.store(), handoff = SERVICE.DefaultEWasteListingHandoffService;
-    const auth = structuredClone(request.authData || {}), policy = this.policy();
-    const original = structuredClone({ tenant: request.tenant, tenantCode: request.tenantCode,
-      entCode: request.entCode, enterpriseCode: request.enterpriseCode, code: request.code, payload: request.payload,
-      idempotencyKey: request.idempotencyKey, expectedRevision: request.expectedRevision, confirmed: request.confirmed });
-    const enterprise = auth.entCode || auth.enterpriseCode;
-    if (!auth.tenant || request.tenant !== auth.tenant || typeof enterprise !== "string" || !enterprise ||
-      [auth.tenantCode, request.tenantCode].some(value => value !== undefined && value !== auth.tenant) ||
-      [auth.entCode, auth.enterpriseCode, request.entCode, request.enterpriseCode].some(value => value !== undefined && value !== enterprise))
-      store.fail("ERR_WASTE_CONTEXT_REQUIRED", "Trusted customer listing context is required");
-    const owner = store.customer(request);
-    if (policy.autoPublishListings !== true || request.confirmed !== true ||
-      typeof request.idempotencyKey !== "string" || !request.idempotencyKey.trim() || request.idempotencyKey.length > 180 ||
-      !Number.isSafeInteger(request.payload?.rewardPrice) || request.payload.rewardPrice < 1 || request.payload.rewardPrice > 100000)
-      store.fail("ERR_EWASTE_COMMAND_REQUIRED", "Review a whole-number reward price and confirm the listing");
-    const check = () => {
-      if (!isDeepStrictEqual(auth, request.authData) || !isDeepStrictEqual(policy, this.policy()) ||
-        !isDeepStrictEqual(original, { tenant: request.tenant, tenantCode: request.tenantCode,
-          entCode: request.entCode, enterpriseCode: request.enterpriseCode, code: request.code, payload: request.payload,
-          idempotencyKey: request.idempotencyKey, expectedRevision: request.expectedRevision, confirmed: request.confirmed }))
-        store.fail("ERR_EWASTE_COMMAND_CONFLICT", "Listing authority or policy changed. Review the saved command before continuing.");
-    };
-    const read = async () => {
-      check();
-      const result = store.owned(await store.one("wasteAsset", request, original.code), owner, "ownerRef");
-      check();
-      if (result.active !== true || !Number.isSafeInteger(result.revision) || !result.metadata)
-        store.fail("ERR_EWASTE_COMMAND_CONFLICT", "The original listing asset is unavailable");
-      return result;
-    };
-    let asset = await read();
-    if (asset.metadata.listingReconciliation)
-      store.fail("ERR_EWASTE_LISTING_RECONCILIATION_REQUIRED", "The original listing request was withdrawn and remains held for owner reconciliation. No publication was retried.");
-    const listingKey = crypto.createHash("sha256").update(owner.code + ":" + original.idempotencyKey).digest("hex");
-    if (asset.metadata.listingCommand && asset.metadata.listingCommand !== listingKey && asset.assetStatus === "LISTING_REQUESTED")
-      store.fail("ERR_EWASTE_COMMAND_CONFLICT", "Resume the original saved listing before starting another command");
-    if (asset.assetStatus === "LISTING_REQUESTED" && (!asset.metadata.listingIntent || asset.metadata.listingIntent.contractVersion !== 2))
-      store.fail("ERR_EWASTE_LISTING_RECONCILIATION_REQUIRED", "The original listing needs owner reconciliation. No publication was retried.");
-    store.revision(asset, original.expectedRevision);
-    if (asset.metadata.listingCommand !== listingKey) {
-      if (!["OWNED", "SOLD", "GIFTED"].includes(asset.assetStatus))
-        store.fail("ERR_EWASTE_COMMAND_CONFLICT", "This asset is not available to list");
-      if (!handoff || handoff.settings().enabled !== true)
-        store.fail("ERR_EWASTE_LISTING_OWNER_UNAVAILABLE", "Listing owner handoff is not selected");
-      const context = await handoff.storeContext(request, policy.storeCode, check);
-      check();
-      if (context.authoringContext.catalogVersion !== policy.catalogVersion ||
-        !["priceBookCode", "currency", "transferPolicyCode", "rewardSettlementPolicyCode", "carbonSettlementPolicyCode"].every(k => handoff.identifier(policy[k])))
-        store.fail("ERR_EWASTE_LISTING_PROOF_REQUIRED", "The original listing policy is incomplete or differs from its owner");
-      context.policyPins = await handoff.policyPins(request, policy, check);
-      const fresh = await read();
-      if (!isDeepStrictEqual(fresh, asset)) store.fail("ERR_EWASTE_COMMAND_CONFLICT", "The asset changed during Store inspection");
-      const intent = this.intent(request, asset, owner, listingKey, policy, context);
-      const metadata = { ...asset.metadata };
-      delete metadata.listingProduct;
-      const retainedMetadata = { ...metadata, listingCommand: listingKey, listingIdempotencyKey: original.idempotencyKey,
-        listingRewardPrice: original.payload.rewardPrice, listingIntent: intent, listingIntentDigest: handoff.digest(intent) };
-      handoff.intent({ ...asset, metadata: retainedMetadata });
-      if (!isDeepStrictEqual(context.policyPins, await handoff.policyPins(request, policy, check)))
-        store.fail("ERR_EWASTE_LISTING_PROOF_REQUIRED", "The original listing policies changed during capture");
-      check();
-      asset = await store.update("wasteAsset", request, asset, {
-        assetStatus: "LISTING_REQUESTED",
-        metadata: retainedMetadata,
-      });
-      check();
-      asset = store.owned(asset, owner, "ownerRef");
-    }
-    const intent = asset.metadata.listingIntent;
-    if (!intent || intent.contractVersion !== 2)
-      store.fail("ERR_EWASTE_LISTING_RECONCILIATION_REQUIRED", "The original listing needs owner reconciliation. No publication was retried.");
-    if (asset.assetStatus !== "LISTING_REQUESTED" || intent.tenant !== original.tenant || intent.enterpriseCode !== enterprise ||
-      intent.assetCode !== asset.code || !isDeepStrictEqual(intent.ownerRef, owner) || intent.listingKey !== listingKey ||
-      intent.idempotencyKey !== original.idempotencyKey || intent.rewardPrice !== original.payload.rewardPrice ||
-      asset.metadata.listingRewardPrice !== intent.rewardPrice || asset.metadata.listingIdempotencyKey !== intent.idempotencyKey ||
-      !isDeepStrictEqual(intent.policy, policy) ||
-      !isDeepStrictEqual(intent.productCommand?.sourceRef, { module: "wasteCore", schema: "wasteAsset", code: asset.code }) ||
-      !isDeepStrictEqual(intent.productCommand?.ownerRef, owner) || intent.productCommand?.idempotencyKey !== listingKey)
-      store.fail("ERR_EWASTE_COMMAND_CONFLICT", "The saved listing no longer matches its original terms or policy");
-    if (!handoff) store.fail("ERR_EWASTE_LISTING_OWNER_UNAVAILABLE", "Listing owner handoff is unavailable");
-    handoff.intent(asset);
-    if (asset.metadata.listingIntentDigest !== handoff.digest(intent))
-      store.fail("ERR_EWASTE_LISTING_PROOF_REQUIRED", "The saved listing intent digest does not match");
-    // A source acknowledgement or public card is never approval, Pricing delivery or a DigitalCore binding.
-    return this.requirePublication();
+    const xp = SERVICE.DefaultEWasteExperienceService, store = xp.store(), owner = store.customer(request);
+    const input = request.payload || {};
+    if (request.confirmed !== true || typeof request.idempotencyKey !== "string" || !request.idempotencyKey ||
+        !Number.isSafeInteger(request.expectedRevision) || request.expectedRevision < 0)
+      throw new Error("Confirm the original certificate revision and complete listing terms");
+    const asset = store.owned(await store.one("wasteAsset", request, request.code), owner, "ownerRef");
+    if (asset.metadata?.listingIntent || asset.metadata?.listingReconciliation || asset.assetStatus === "LISTING_REQUESTED")
+      throw new Error("Historical listing intent requires owner reconciliation; no automatic migration or relisting");
+    const remote = SERVICE.DefaultEWasteMarketplaceService;
+    const manifest = await remote.customerRemote(request, "digitalCore", "/bundles", "POST", {
+      ownerRef: { module: "profile", schema: "customer", code: owner.code },
+      components: [{ kind: "CERTIFICATE", reference: { module: "wasteCore", schema: "wasteAsset", code: asset.code },
+        quantity: "1", expectedRevision: request.expectedRevision }], idempotencyKey: request.idempotencyKey + ":manifest" });
+    return remote.customerRemote(request, "digitalCore", "/bundles/listings", "POST", {
+      manifestCode: manifest.code, manifestRevision: manifest.revision, idempotencyKey: request.idempotencyKey, confirmed: true,
+      listingContextRef: input.listingContextRef,
+      name: input.name, description: input.description, storeCode: input.storeCode, currency: input.currency,
+      priceBookCode: input.priceBookCode, amount: input.amount, reward: input.reward, saleMode: input.saleMode,
+      startsAt: input.startsAt, endsAt: input.endsAt, categoryCodes: input.categoryCodes });
   },
 };

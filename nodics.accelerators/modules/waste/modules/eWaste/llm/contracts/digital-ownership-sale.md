@@ -2,64 +2,24 @@
 
 ## Meaning And Supported Outcome
 
-This owner connects a named Waste digital asset to an already-captured Commerce
-purchase. Think of a registry clerk: the clerk verifies the original payment,
-pays the recorded seller and changes the register once. The clerk does not
-charge the buyer a second time or arrange movement of the physical item.
+New sales use [common bundle Commerce](common-bundle-commerce.md). Digital owns
+manifests, publication and settlement; Loyalty owns balances; Waste owns
+certificate reservations and transfers. eWaste delegates domain commands and
+never credits sellers, reverses reward-labelled carbon or refunds completed sales.
 
-For example, one retained Product/SKU represents one listed asset. Checkout
-reserves that asset, authorizes and captures Loyalty points. eWaste verifies the
-original authorization and buyer capture, requests only the original seller's
-earning and asks Waste to commit digital ownership. DigitalCore then records
-entitlement/delivery through its existing owners.
+This contract covers retained original one-asset evidence and bounded
+incomplete-purchase recovery. Legacy availability is false with
+`COMMON_COMMERCE_BUNDLE_REQUIRED`; reserve and incomplete confirm refuse.
+Completed confirm/deliver verify original evidence without another financial
+or ownership effect. Existing receipts and historical records remain unchanged.
+Historical policy snapshots never re-enable a removed operation.
 
-This is a source-implemented, disabled/unqualified owner pathway. No business
-proposal is adopted, installed data approved or native/provider qualification
-established. Business users use their authorized application; this contract
-does not expose a new customer purchase route. Partner application-specific
-setup belongs to the partner's contract, which must reference this one instead
-of copying authority or embedding a customer policy in accelerator source.
-
-The [DigitalCore contract](../../../../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md)
-owns classification and the exact Checkout/request/response interface. This
-document owns eWaste orchestration, domain policy and Waste evidence. Waste's
+DigitalCore's [retained ownership contract](../../../../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md)
+owns protected Commerce evidence. Waste's
 [asset contract](../../../../../../../nodics.waste/modules/wasteCore/llm/contracts/README.md)
-remains the generic persistence and ownership authority. Payment's
-[capture contract](../../../../../../../nodics.commerce/modules/payment/modules/paymentCore/llm/contracts/README.md)
-owns financial evidence; this bridge is not a new payment provider.
-
-## Owner Boundaries
-
-| Authority | Source | What it owns |
-| --- | --- | --- |
-| DigitalCore | `DefaultDigitalCommerceOwnershipService` | Retained Product/binding contract, private typed DTOs, exact entitlement/delivery readback. |
-| eWaste | `DefaultEWasteDigitalSaleService` | Secured domain admission; canonical binding/policy/Profile/Store reads; original capture verification; seller earning coordination. |
-| Waste | `DefaultWasteAssetTransferOperationService` digital methods | Existing `wasteAsset` lock and `wasteAssetOwnershipEvent`, CAS, immutable original command, cancellation and transfer completion. |
-| Payment/Checkout/Order | DigitalCore's bounded ownership evidence API over canonical owners | Root command, authorization/capture, complete Order units and durable compensation checkpoint/receipts. |
-| Loyalty/Profile | Existing module APIs | Buyer debit, original seller earning and canonical customers/wallets. |
-
-No direct database access, alternate lock table, shadow transfer state store,
-new wallet, identity registry or physical Inventory fallback is permitted.
-`DefaultEWasteMarketplaceService.purchase` and the legacy asset settlement
-helper are not invoked: they own a different purchase path that can debit or
-transfer Loyalty itself. Checkout has already performed the buyer capture.
-
-## Exact Supported Financial Path
-
-| Dimension | Supported value or bound | Refused alternative |
-| --- | --- | --- |
-| Order allocation | Exactly one complete OrderEntry, quantity `1`, bound to this reservation | Multiple assets, other entries, mixed physical/coupon allocation or inferred per-line proceeds. |
-| Payment | One original active `CAPTURED` `LOYALTY_REWARD` entry, provider `loyalty-reward-points` | Pending/authorized-only, split, duplicate, Card, cash, other provider or fabricated receipt. |
-| Money | Positive captured total equals complete Order total and original authorization total using ExactAmount | Floating-point price reconstruction or a caller-supplied sale price. |
-| Seller proceeds | Explicit retained policy `CAPTURED_TOTAL` to `CURRENT_SELLER` | Commission allocation, alternative payee or settlement defaults. |
-| Original approval rewards | `RETAIN_ORIGINAL_OWNER` | Reassigning historical submission/approval rewards. |
-| Carbon | `NONE`, empty settlement refs | Carbon minting, carbon transfer or inferred environmental credit. |
-| Physical state | Leave `physicalOwnerRef` and `custodyStatus` untouched | Shipping, collection, receipt, physical return or custody inference. |
-
-This bounds confirmation, not Cart financial-allocation design. DigitalCore can
-collect reservations before capture; an unsupported mixed Order cannot settle
-through this owner and requires original Checkout/domain recovery. Do not
-interpret a successfully reserved asset as approval of a mixed cart.
+owns persistence and certificate state. Payment/Order own original capture and
+compensation receipts. No shadow wallet, persistence authority or physical
+Inventory fallback belongs here.
 
 ## Admission And Configuration
 
@@ -67,8 +27,8 @@ The service-only route is `POST /internal/digital-sales/:phase`, logical
 `eWaste.internalDigitalSale.internalDigitalSaleInvoke`. Its existing `wasteInternal` exposure,
 secured admission, `authTokenTypes:[service]`, `serviceAccountUserGroup` and
 `waste.asset.sale.transfer` permission remain independent gates. The controller
-allowlists `evidence/compensation-resolve/availability/reserve/confirm/deliver/cancel` plus the scoped original-sale
-`refund-preview/refund-prepare/refund-settle/refund-complete` phases and forwards only
+allowlists `evidence/compensation-resolve/availability/reserve/confirm/deliver/cancel`,
+with final-sale refusal for all `refund-*` phases, and forwards only
 router-derived auth/tenant plus the phase/body. Body fields cannot replace actor
 or enterprise. This does not introduce another exposure category.
 
@@ -131,19 +91,16 @@ financial records, and capture protection remains mandatory.
 
 Amount verification uses the canonical pure decimal utility at
 `nCommon/src/utils/exactAmount.js` through the mergeable sale `amount()` accessor.
-The reversal owner reuses that accessor; Waste must not activate Pricing or
-depend on `SERVICE.DefaultExactAmountService` for arithmetic. The ownership bridge
-fixture deliberately has no Pricing amount service for Waste confirmation,
-delivery and the original-sale refund/replay regression. Its combined Commerce
-Payment owner still has its own Pricing runtime. CLI acceptance uses the same pure utility, not a registry
-dependency that happens to be available in a combined test process.
+Waste must not activate Pricing or depend on `SERVICE.DefaultExactAmountService`
+for arithmetic. Retained evidence uses the pure utility; current Commerce
+Payment retains its own Pricing runtime.
 
-Internal sale, listing and legacy reversal route leaf keys are respectively
-`internalDigitalSaleInvoke`, `internalDigitalListingInvoke` and
-`internalOrderReversalInvoke`. nRouter registers common/module routes using the
+Internal sale and listing route leaf keys are respectively
+`internalDigitalSaleInvoke` and `internalDigitalListingInvoke`.
+nRouter registers common/module routes using the
 module and leaf key, not the containing group. Keep these leaf identities unique
 so refreshing a bound route cannot select another controller or permission.
-All three controller operations remain `invoke`; their HTTP paths and authority
+Both controller operations remain `invoke`; their HTTP paths and authority
 are unchanged. The registry regression uses real route preparation and refresh
 before controller dispatch, without opening a listener or qualifying native calls.
 
@@ -224,18 +181,10 @@ likewise does not overwrite runtime actors' headers with the business namespace;
 its eWaste evidence body carries that explicit selector. Commerce callers of
 both digital-listing and digital-sale phases must follow the same body contract.
 
-The acceptance helper now uses these capabilities and normal Cart/Checkout,
-customer dispute and staff-approved refund routes. Supply original Waste-runtime
-credentials as the `loyalty` and `commerce` evidence actors (and Profile read),
-and the original Commerce-runtime credential as the `waste` evidence actor.
-These are recipient capability labels, not new identities. CLI variables are
-`NODICS_EWASTE_LOYALTY_EVIDENCE_TOKEN`, `NODICS_EWASTE_COMMERCE_EVIDENCE_TOKEN`,
-`NODICS_EWASTE_WASTE_EVIDENCE_TOKEN`; customer/reviewer sessions remain separate.
-With all admitted APIs, `--plan` returns a redacted reviewable digest. `--execute`
-requires it, verifies actual buyer capture, seller earning, original approved
-refund, ownership/custody, both compensating ledgers, balances and exact replays.
-No wallet opening/funding, seed, qualification write or mock capture occurs.
-Interrupted business commands require canonical owner recovery, not a new key.
+The former original-sale/refund acceptance flow is superseded. Do not execute
+it against a Local environment or treat its old source results as current
+acceptance. Current common-bundle tests belong to the implementing owners.
+Connected E2E execution remains a separate, explicitly authorized phase.
 
 ## Retained Binding And Policy
 
@@ -286,49 +235,13 @@ fixture's synthetic terms do not approve an application policy. No default
 reservation duration, proceeds formula, currency/program, review waiver or
 qualification is created by this contract.
 
-## Successful Sequence
+## Retained Purchase Verification
 
-The diagram shows the supported successful path. Equivalent prose: reserve the
-original asset before payment, let Checkout capture once, verify the original
-capture, retain the settlement fence, earn once for the seller, commit the
-original Waste event, then read back DigitalCore's own evidence.
-
-```mermaid
-sequenceDiagram
-    participant C as Checkout
-    participant D as DigitalCore
-    participant E as eWaste
-    participant W as Waste persistence owner
-    participant P as Commerce owners
-    participant L as Loyalty
-    C->>D: reserveForCheckout with persisted Cart Store and locale
-    D->>E: availability then original reserve command
-    E->>P: Read retained Product, binding and Store
-    E->>W: Read seller asset, projection and exact policies
-    E->>W: CAS asset SALE_PENDING; insert original RESERVED event
-    W-->>D: Original event, keys and expiry
-    D-->>C: RESERVED unit
-    C->>P: Authorize then capture original Loyalty payment
-    P->>L: Original buyer reservation and capture
-    L-->>P: Original buyer debit ledger
-    C->>D: confirmSale with original reservation and Order
-    D->>E: confirm original event
-    E->>P: Read complete Order, authorization and captured Payment
-    E->>L: Read exact original buyer debit and wallet
-    E->>W: CAS retain immutable original capture fence
-    E->>L: Seller EARN with event-code sale-proceeds key
-    L-->>E: Original seller earning ledger
-    E->>W: Retain settlement; CAS digital owner under LOCKED
-    E->>W: Complete original event; clear lock to SOLD
-    E->>L: Verify retained original seller ledger and payee
-    E-->>D: SOLD with original capture, settlement and time
-    D->>D: Save and exactly read back ACTIVE entitlement
-    C->>D: deliver with original sale unit
-    D->>E: Reverify capture, settlement and current ownership
-    E-->>D: DELIVERED with original ownership time
-    D->>D: Save and exactly read back DELIVERED record
-    D-->>C: Verified digital delivery; physical custody unchanged
-```
+The original event binds one complete quantity-one OrderEntry, one original
+Loyalty capture and seller earning, with empty carbon settlement references.
+These are historical evidence constraints, not a new financial path.
+A completed replay verifies them; an incomplete original sale remains with
+canonical Checkout recovery rather than creating an eWaste seller earning.
 
 ### Original Capture Proof
 
@@ -364,49 +277,18 @@ buyer `ledgerCode`, amount and currency. Only after Waste CAS retains that exact
 capture may the domain request seller earning. This fences cancellation against
 uncertain ledger execution; the fence itself is not proof of an earning.
 
-### Seller Credit And Original Delivery
+### Original Seller Evidence And Delivery
 
-Before credit, eWaste rechecks the original seller against canonical protected
-Profile evidence and the three current active Waste policies against the complete
-retained purchase command. Program/reward/scale come from that approved retained
-policy, never response overrides. Seller wallet discovery uses the existing
-protected Loyalty `POST /wallet-evidence` with exact business enterprise,
-canonical seller `customerCode`, `programCode` and `rewardTypeCode`, omitting
-`walletCode`. Loyalty resolves exactly one existing OPEN CUSTOMER owner; it does
-not open a wallet, derive its code or accept a general query. Explicit-code
-consumers keep their existing exact read mode.
+Original wallet and ledger reads use Loyalty's protected evidence capabilities
+with `ownerType:CUSTOMER`, `ownerCode`, programme, reward type and original
+source/key selectors. No generic schema read or wallet creation qualifies
+settlement. Verify exact scope, source, key, amount and wallet owner.
+Missing, ambiguous or changed evidence refuses.
 
-The consumer independently verifies contract version, tenant/business scope,
-customer/program/reward echoes, wallet identity/tenant/owner/status/active state
-and every returned balance's wallet/program/reward/tenant binding. A missing
-balance is `null` and may precede a first earning; it is not invented as zero or
-treated as program activation. A missing, ambiguous, inactive, closed, foreign or
-contradictory wallet refuses before credit, retaining the original capture fence
-for recovery. Tenantless canonical rows succeed only through Loyalty's verified
-generated-read envelope, without adding tenant fields to stored records.
-
-Policy, Profile and original authority are rechecked after wallet lookup; response
-or retained-command drift also refuses before earning. The evidence transport
-leaves the enterprise header absent so the original outgoing runtime token owns
-its namespace; the separately authorized business enterprise remains in the
-body. No principal/group rewrite, new grant, generic schema route, `/wallets`
-POST or `/wallet-projections` fallback is part of seller lookup. These bounded
-reads are not an atomic snapshot, installed financial proof or permission to
-enable sale flags; Loyalty still owns earning admission and posting.
-
-The only seller financial mutation is existing Loyalty `POST /reward-earnings`
-with canonical seller wallet, explicit retained policy program/type/scale,
-captured amount, `sourceType:WASTE_ASSET_SALE`, original event source and key
-`<eventCode>:sale-proceeds`. The owner verifies exact returned EARN identity,
-amount and wallet before retaining typed `loyaltyLedger/rewardLedgerEntry` refs.
-Completed-sale replay does not request another earning. Uncertain pre-completion
-recovery reuses the same key; installed Loyalty uniqueness/idempotency and
-partial-write behavior must be qualified, not assumed from these source tests.
-
-Before delivery/completed replay, the owner reads the original seller ledger
-again and verifies its key/source/program/type/amount and canonical seller wallet.
-It also revalidates original capture and current Waste ownership. No new debit,
-replacement ledger, fresh financial key or flag-based settlement success is used.
+Completed confirm/deliver checks original capture, retained settlement and
+current Waste ownership. It never posts another earning or changes custody.
+Unknown settlement stays recovery-required; current configuration cannot
+manufacture programme, precision, payee or a successful receipt.
 
 ## Persisted State And Recovery
 
@@ -421,12 +303,12 @@ installed persistence inspection.
 
 | Stage | Existing durable evidence | Recovery rule |
 | --- | --- | --- |
-| Acquisition | Asset `SALE_PENDING`, `pendingTransferCode/pendingTransferEvent`; original RESERVED event with command/deadline | If event insertion fails after lock, same original command recovers the pending original event without extending expiry. |
+| Acquisition | Asset `SALE_PENDING`, `pendingTransferCode/pendingTransferEvent`; original RESERVED event with command/deadline | Preserve historical evidence; new admission is closed. Use original Checkout recovery, not a fresh reservation. |
 | Capture fenced | Original event retains `metadata.digitalSale.capture` under CAS | Cancellation refuses, including after timeout; inspect original payment and settlement. |
-| Seller credit uncertain | Capture fence retained; original Loyalty command may have committed | Keep lock/recovery. Reconcile/retry only the original seller key; never debit buyer again or acknowledge compensation. |
+| Seller credit uncertain | Capture fence retained; original Loyalty command may have committed | Keep lock/recovery for canonical owner reconciliation. No eWaste earning retry or inferred compensation. |
 | Settlement retained | Original reward refs and empty carbon refs under `metadata.digitalSale.settlement` | Compare exact retained settlement; do not choose replacement refs. |
-| Ownership committed | Asset digital owner/buyer under `LOCKED`, original last-transfer code and ownership timestamp | Event completion may be retried with original time; no second ownership mutation. |
-| Event complete, cleanup interrupted | Event COMPLETED; asset still LOCKED for same event | Original confirm recovery clears only that lock to SOLD, retaining original time/ledger; deliver does not fabricate cleanup. |
+| Ownership committed | Asset digital owner/buyer under `LOCKED`, original last-transfer code and ownership timestamp | Retain for explicit owner reconciliation; the closed adapter cannot complete an incomplete sale. |
+| Event complete, cleanup interrupted | Event COMPLETED; asset still LOCKED for same event | Retain lock and original evidence for owner reconciliation; completed confirm is verification-only. |
 | Digital record write/readback fails | Completed Waste sale and original financial evidence remain | Retry original confirm/deliver through DigitalCore, which must exactly verify saved evidence. No new charge. |
 | Onward transfer or refund | Current owner/last-transfer no longer original buyer/event | Refuse original delivery or automatic reversal; manual domain resolution. |
 
@@ -517,123 +399,27 @@ headers and forward no incoming auth/token. nService supplies its unchanged
 original signed runtime namespace; exact wallet/source/key checks remain.
 Evidence reads retain explicitly admitted business selectors in their bodies.
 
-## Original Sale Refund
+## Completed Purchases Are Final
 
-This source slice implements the already-reviewed original-sale-only mode, not
-a general asset refund grant. Business execution still requires an original
-Order review and signed employee approval through Order's existing commands.
-DigitalCore refreshes that staff authority through `paymentAuthority` on each
-phase; eWaste accepts only its configured signed service principal and also
-rereads the exact persisted Order approval. No service token, caller flag or
-matching amount alone authorizes a financial reversal. The legacy
-`/internal/order-reversals` adapter continues to reject modern digital sales;
-the stronger flow uses only `/internal/digital-sales/refund-*`.
+Completed certificate/bundle purchases cannot be returned or refunded. The
+`refund-preview` compatibility response is ineligible; all mutation phases
+refuse before touching ownership or financial state. The obsolete
+`/internal/order-reversals` route, controller and service have been removed.
+No eWaste code reverses reward-labelled carbon or chooses precision from
+marketplace settings.
 
-### Explicit Policy And Original Identity
-
-The original sale's retained transfer policy and its current exact active record
-must include `metadata.digitalOwnership.refund` with value
-`ORIGINAL_TRANSFER_REVERSAL_ONLY_BEFORE_ONWARD_TRANSFER`. Current transfer,
-reward and carbon policy records must exactly match their original snapshots
-and remain effective. The approved local-demo proposal's `assets.refund` term is business
-approval evidence for the owning data author, not automatic runtime adoption.
-The parent policy/data owner must carry the approved term into the transfer
-policy before sale reservation. This source does not edit data, enable defaults,
-backfill old sale events or certify installation. An older sale lacking the
-retained term remains manual-review-only.
-
-| Evidence | Required original binding |
-| --- | --- |
-| Private request | Only original sale code, entitlement code, Order/buyer selectors, canonical Order refund code and identical refund idempotency key. No amount, wallet, programme, ledger, payee, phase grant or policy selector. |
-| Sale | One active completed SELL event; exact tenant/merchant/Order/buyer/asset, original seller/buyer references freshly resolved through Profile, original complete captured-payment chain and sole seller earning; no carbon refs. |
-| Entitlement | Exactly one full Order entitlement; original Product/SKU/entry/event/key/time and complete original capture/settlement/binding evidence. ACTIVE for preview; original refund lock for mutations. |
-| Approval | One original active Order REFUND request with approved/executing/reconciliation/completed status, original DISPUTE case, nonempty reviewer/time/reason/stable command and exact digitalCore ownership plan. Same canonical refund code, amount/currency, original capture, sale/asset/entitlement and locked Order. |
-| Original capture | Exact Payment capture and authorization, original buyer CAPTURE ledger/wallet and complete quantity-one OrderEntry. Locked/refunded Order states are accepted only after separate persisted approval validation. |
-| Asset | Original latest buyer-held SOLD asset with matching owner/digital owner, original transfer timestamp/code and no competing lock. Onward transfer or competing refund refuses. |
-| Seller reversal | Fresh unique Loyalty REVERSE of the sole original seller EARN: exact wallet/program/type/amount and `<refundCode>:<originalSellerEntryCode>`, source `ORDER_REFUND` and original Order. Another previously posted reversal/key is not silently adopted. |
-| Buyer refund | Successful original Order PAYMENT checkpoint, exact canonical PaymentTransaction and original refund intent, original full-refund key/provider/amount/currency/scope/approval, plus unique matching Loyalty REVERSE of original buyer CAPTURE. A checkpoint alone is insufficient. |
-
-### Existing Order Phase Sequence
-
-```mermaid
-sequenceDiagram
-    participant O as Order approval and recovery
-    participant D as DigitalCore
-    participant E as eWaste
-    participant W as Waste reversal owner
-    participant L as Loyalty
-    participant P as Payment
-    O->>D: Preview complete original one-asset purchase
-    D->>E: refund-preview original selectors only
-    E-->>O: Exact reviewed original-sale plan
-    O->>O: Persist employee approval and lock original Order
-    O->>P: Original capture preflight
-    O->>D: PREPARE under original approval
-    D->>D: Lock original entitlement REFUND_PENDING
-    D->>E: refund-prepare
-    E->>O: Reread approved plan and original Order lock
-    E->>W: CAS asset LOCKED and linked original reversal event
-    O->>E: SETTLE through DigitalCore
-    E->>L: Reverse sole original seller earning
-    E->>L: Verify original-entry reversal ledger
-    E->>W: Retain exact seller reversal reference
-    O->>P: PAYMENT refund original buyer capture
-    P->>L: Reverse original buyer capture through canonical provider
-    O->>E: COMPLETE through DigitalCore
-    E->>O: Verify original PREPARE, SETTLE and PAYMENT checkpoints
-    E->>P: Verify original refund transaction and intent
-    E->>L: Verify original seller and buyer reversal ledgers
-    E->>W: Restore digital seller under lock, complete event, clear lock
-    E-->>D: Exact completed ownership reversal and seller reference
-    D->>D: Revoke original entitlement, retain Digital reversal
-    O->>O: Mark Order and original review refunded
-```
-
-Seller reversal uses existing Loyalty `/reward-ledger-entries/:code/reverse`;
-both body and transport header carry the same original per-entry key. Loyalty
-owns insufficient-balance refusal, balance CAS and interrupted ledger posting.
-There is no second debit, alternate payee or eWaste buyer-refund operation.
-Order performs its original-capture preflight before PREPARE. The plan is not
-a promise that seller funds will remain available; spent proceeds or concurrent
-financial changes retain owner recovery, never a negative seller balance.
-
-### Recovery And Limits
-
-| Interruption | Retained evidence and safe retry |
-| --- | --- |
-| Asset locked before reversal insert | `pendingRefundCode/pendingRefundEvent` pins the original model; original command inserts/readbacks it without a new lock identity. |
-| Seller reversal timeout or ledger posting failure | Asset and entitlement stay locked. Retry only the original seller entry/key; Loyalty recovers its pending immutable posting without a repeated debit. Buyer Payment does not run until SETTLE succeeds. |
-| Seller reversal posted but Waste reference write fails | Re-read exact original Loyalty reversal and CAS the same reference; no replacement ledger or key. |
-| Buyer Payment uncertain/failed | Order retains original phases and reconciliation. No returned ownership or inferred successful refund. Canonical Payment owns original-key recovery. |
-| Ownership restored before event/cleanup write | Asset remains LOCKED with original refund identity until linked event COMPLETED, then only that lock clears to OWNED. Exact readback resumes, without another financial effect. |
-| Digital revocation/reversal write fails | Domain financial/ownership evidence remains; retry the original COMPLETE and exact Digital evidence readback. No new charge, seller debit or replacement reversal. |
-| Changed asset/custody/approval/policy/reference | Refuse and retain reconciliation. Never switch owner/buyer scope or silently reopen a listed offer. |
-
-Only digital owner/owner reference changes back to the original seller; physical
-owner and custody snapshot must remain unchanged. Original SELL event and original
-submission rewards remain intact. The restored asset becomes OWNED, not LISTED;
-publication/relisting remains its own reviewed workflow. Fee/carbon reversal,
-partial refunds, onward-sale recovery, multi-asset/mixed Orders and physical
-returns remain unsupported. Source tests are not installed CAS/transport/Profile
-or financial qualification, and no distributed transaction or recovery worker
-is claimed.
-
-Native entitlement/delivery date fields can return BSON Date objects while the
-original Waste metadata retains ISO strings. Compare exact milliseconds using
-`Date.getTime()` for Date objects and parse only strings; `Date.parse(Date)` loses
-sub-second precision through string coercion. Missing/invalid dates and even a
-one-millisecond mismatch refuse. Original buyer CAPTURE ledger readback must be
-unique and complete before constructing its wallet-bound refund pin; a record
-disappearing between protected reads yields an explicit owner refusal, not a
-TypeError or guessed wallet. The bridge fixture covers 123ms native Date records,
-complete refund/replay, millisecond drift and an interrupted later ledger read.
+Historical sale, reversal, Payment and Loyalty records remain immutable evidence.
+Their existence is not permission to resume the retired reversal implementation.
+Incomplete purchases use original Checkout recovery and the bounded
+compensation evidence described above; completed transactions never enter that
+recovery as a return. Current sales use the common Digital bundle contract.
 
 ## Explicit Unsupported Boundaries
 
 | Request | Contract outcome |
 | --- | --- |
-| Unapproved/generic asset refund | Generic Digital entitlement remains MANUAL_REVIEW/nonrefundable. Only the exact original-sale policy/approval path above can execute; legacy adapter still returns `DIGITAL_OWNERSHIP_REFUND_POLICY_REQUIRES_REVIEW` for modern sales. |
-| Onward-transfer refund | Existing Waste latest-owner/event check refuses; preview reports `ASSET_MOVED_OR_LOCKED`. Owning another later asset is not original refund authority. |
+| Completed asset/bundle refund | Preview returns `COMPLETED_BUNDLE_FINAL_SALE`; all mutation phases refuse. No approval or historical policy can enable the retired adapter. |
+| Onward-transfer refund | Unsupported; original evidence never authorizes reversing later ownership. |
 | Physical return/custody | Digital RETURN is BLOCKED/nonrefundable. No physical Inventory, receipt, shipping or custody mutation is inferred. |
 | Carbon, fees, mixed/split allocation | Unsupported by this exact settlement contract; require owner design/policy/testing before extension. |
 | Coupon redemption or ITEM merchant fulfillment | Separate DigitalCore/Promotion/provider contracts; ownership delivery is not a coupon benefit or physical fulfillment receipt. |
@@ -682,58 +468,36 @@ permission to sell a newly listed asset to another buyer.
 
 ## Scenarios And Safe Extension
 
-| Scenario | Expected behavior |
-| --- | --- |
-| Smallest success | One listed asset, exact approved binding/policies and one complete original Loyalty capture settle to original seller and deliver original digital ownership. |
-| Unauthorized or foreign merchant | Signed scope/principal/permission or capture enterprise mismatch refuses before seller credit/ownership mutation. |
-| Boundary | Quantity two, an extra OrderEntry, more than 20 locale pins or oversized owner results refuses rather than partial success. |
-| Failure/recovery | Lost event acknowledgement reads original evidence; uncertain seller earning keeps capture fence and original key; interrupted cleanup retains original timestamp. |
-| Later-layer customization | Project-owned configuration can select reviewed integration and exact approved policies; a later-loaded availability override can narrow supply while delegating existing checks. It cannot invent grants, financial proof or custody. |
-
-Partner developers keep custom application adapters and selections in their own
-modules. Framework maintainers extend Waste persisted operations only when
-canonical owner semantics can express the new mode. Supporting counterparty
-acceptance, carbon transfer or another refund mode requires that owning policy and
-recovery contract first; a new flag or parallel state table is not an extension.
-Administrators should troubleshoot the failed gate without dumping private
-buyer/payment/ledger bodies into public logs. No new monitoring/repair worker is
-claimed. Business evaluators should treat physical delivery and actual financial
-qualification as separate acceptance outcomes.
+Completed original purchases can be inspected with exact retained evidence.
+Foreign scope, changed authority, ambiguous ledgers or altered custody refuse.
+Incomplete purchases retain their original Checkout key and recovery evidence.
+New sales use Digital's common bundle flow, never removed eWaste adapters.
+Customer layers may narrow policy or choose deployment values; they cannot
+recreate missing owner authority or copy reusable defaults.
 
 ## Verification Scope And Source Map
 
-From the framework root:
+Focused local tests:
 
 ```bash
+node --test nodics.accelerators/modules/waste/modules/eWaste/test/eWasteCommonCommerceMigration.test.js
+node --test nodics.accelerators/modules/waste/modules/eWaste/test/eWasteInternalRouteRegistration.test.js
+node --test nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDigitalOwnershipAdmission.test.js
 node --test nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDigitalOwnershipBridge.test.js
-node --test nodics.waste/modules/wasteCore/test/*.test.js
-node --test nodics.commerce/modules/payment/modules/paymentCore/test/*.test.js
-node --test nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/*.test.js
-node --test nodics.commerce/modules/checkout/modules/checkoutCore/test/*.test.js
 ```
 
-`npm test` in eWaste additionally executes all its independent owner fixtures.
-The bridge's focused tests use real owner service/controller functions with
-isolated generated storage and module invocation. Refund tests additionally run
-real Order approval/lifecycle, Payment dispatch/provider and Loyalty reversal
-owners with a bounded staff-admission double; they do not qualify real Profile.
-The source batch also exercised Payment, DigitalCore, Checkout, WasteCore and
-separate reference-project publication checks. Executed counts belong in the
-build's test report, not permanent acceptance claims or proof of a native
-environment. Re-run the commands against the build's actual source.
-
-| Suite | Evidence it supplies | Does not establish |
-| --- | --- | --- |
-| `test/eWasteDigitalOwnershipBridge.test.js` | Retained binding/locales/Store, signed service gates and scope aliases, original capture enterprise/key/authorization chain, one seller credit, no repeated debit, CAS/index refusal, cancellation/VOID/uncertainty, exact Digital evidence, original-sale refund execution/replay, concurrent retry, spent proceeds, tampered approval/ledger/Payment and interrupted ownership/Digital cleanup | Installed distributed atomicity, live wallets, credentials, approved business policy or Online pointer deployment. |
-| Payment `paymentEnterpriseRetentionContract.test.js` | Real Payment execution retains original enterprise/keys; conflicting/malformed aliases refuse before reads/dispatch/retention; legacy replay does not backfill merchant; owning schemas declare the field | Migration/backfill or retroactive qualification of old captures. |
-| Existing DigitalCore/WasteCore/Checkout suites | Coupon compatibility, generic Waste lifecycle and parent Checkout routing/Cart-scope behavior | Connected Commerce/Waste/Loyalty transport or provider qualification. |
-| Reference-project publication suite | Actual retained Product classification across both locales; unqualified ownership refuses without physical fallback | A sale, import, publication or installed owner becoming qualified. |
+Migration tests cover delegated listings/gifts, closed legacy admission,
+final-sale refusals and removed reversal modules/routes. Registry tests use real
+preparation/dispatch without a listener. Admission tests retain signed scope and
+privacy checks. The bridge exercises common bundle owner composition.
+None proves native persistence, provider qualification, live payment,
+publication or E2E acceptance.
 
 Authoritative implementation:
-[domain service](../../src/service/defaultEWasteDigitalSaleService.js),
+[domain evidence/recovery service](../../src/service/defaultEWasteDigitalSaleService.js),
 [controller](../../src/controller/defaultEWasteDigitalSaleController.js),
 [route](../../src/router/routers.js),
-[disabled defaults](../../config/properties.js),
-[refund guard](../../src/service/defaultEWasteOrderReversalService.js),
-[bridge fixture](../../test/eWasteDigitalOwnershipBridge.test.js), and Waste's
+[framework defaults](../../config/properties.js),
+[common migration regression](../../test/eWasteCommonCommerceMigration.test.js)
+and Waste's
 [persisted transfer owner](../../../../../../../nodics.waste/modules/wasteCore/src/service/defaultWasteAssetTransferOperationService.js).

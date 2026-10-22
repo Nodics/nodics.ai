@@ -11,8 +11,63 @@
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 "use strict";
-/** @module checkoutCore/src/service/defaultCheckoutPlacementPortsService @description Binds placement orchestration to generated domain repositories and owner services. @layer service @owner checkoutCore */
+/**
+ * @module checkoutCore/src/service/defaultCheckoutPlacementPortsService
+ * @description Binds placement orchestration to generated domain repositories and owner services.
+ * @layer service
+ * @owner checkoutCore
+ * @remarks Checkout's placement ports coordinate existing owners. CERTIFICATES means canonical
+ * persisted zero-money consideration, not merely a zero calculation; Payment remains mandatory for
+ * other baskets.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: certificateOnly, digitalReservationEntry, unwrap, serviceAuthData,
+ * persistenceModel, get, save, update, closeCart, digitalOwnerRequest, preparePaymentMethod, paymentAdapter,
+ * requiresProviderAuthorization, paymentRepository, recordOfflineAuthorization, create.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
+  /**
+   * Omits Payment only for a complete zero-total basket of persisted certificate-only allocations.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @param {Object} calculation Persisted current Cart calculation with price decisions and exact total.
+   * @param {Object[]} reservations Original digital reservation receipts, not supplied success claims.
+   * @returns {Promise<boolean>} True only when every retained allocation proves certificate-only
+   * consideration.
+   * @remarks Effects: Reads original reservation/acquisition proofs without executing Payment or
+   * consuming inputs.
+   * Failure behavior: Rejects malformed, inconsistent or unavailable original consideration evidence.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  certificateOnly: async function (request, calculation, reservations) {
+    if (!Array.isArray(reservations) || !reservations.length || reservations.some(unit => !unit.offerAllocationCode)) return false;
+    const acquisition = SERVICE.DefaultDigitalCommerceCouponAcquisitionService;
+    if (!acquisition?.commandForCoupon || !acquisition.allocation) throw new Error('Coupon consideration owner is unavailable');
+    const entries = calculation.entries;
+    if (!Array.isArray(entries) || !entries.length || new Set(entries.map(entry => entry.code)).size !== entries.length ||
+        new Set(reservations.map(unit => unit.code)).size !== reservations.length) throw new Error('Coupon consideration is incomplete');
+    let certificatesOnly = true;
+    const counts = new Map();
+    for (const unit of reservations) {
+      const command = await acquisition.commandForCoupon(request, unit);
+      if (!command) throw new Error('Original coupon allocation is unavailable');
+      const retained = await acquisition.allocation(command), identity = retained.identity;
+      const entry = entries.find(value => value.code === identity.entryCode);
+      if (!entry || entry.productCode !== identity.productCode || entry.sku !== command.payload.sku ||
+          identity.orderCode !== request.payload.orderCode || retained.coupon.code !== unit.code)
+        throw new Error('Coupon consideration does not match the original calculation');
+      counts.set(entry.code, (counts.get(entry.code) || 0) + 1);
+      if (retained.offer.requirements.type !== 'CERTIFICATES') certificatesOnly = false;
+    }
+    if (!certificatesOnly) return false;
+    if (entries.some(entry => SERVICE.DefaultExactAmountService.compare(String(entry.quantity), String(counts.get(entry.code) || 0)) !== 0) ||
+        SERVICE.DefaultExactAmountService.compare(calculation.totalAmount, '0') !== 0)
+      throw new Error('Certificate-only consideration requires complete allocations and exact zero total');
+    return true;
+  },
   /** Routes only exact calculated domain strategies to Digital Core; incomplete ownership metadata never becomes physical stock. @param {Object} entry Canonical calculated entry. @returns {boolean} Digital domain reservation required. */
   digitalReservationEntry: function (entry) {
     const a = entry?.availability || {};
@@ -40,6 +95,7 @@ module.exports = {
   serviceAuthData: function (request) {
     return Object.assign({}, request.authData || {}, {
       enterpriseCode: request.enterpriseCode,
+      entCode: request.enterpriseCode,
       principalId: "commerceCheckoutPlacementService",
       code: "commerceCheckoutPlacementService",
       loginId: "commerceCheckoutPlacementService",
@@ -47,6 +103,15 @@ module.exports = {
       userGroups: ["serviceAccountUserGroup"],
       groups: ["serviceAccountUserGroup"],
     });
+  },
+  /** Projects the admitted purchasing owner into Digital operations without replacing the signed actor. */
+  digitalOwnerRequest: function (request) {
+    const owner = request?.ownerRef;
+    if (!owner || Object.keys(owner).sort().join(",") !== "code,module,schema" ||
+        owner.module !== "profile" || !["customer", "enterprise"].includes(owner.schema) ||
+        typeof owner.code !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,255}$/.test(owner.code))
+      throw new Error("Canonical Digital purchasing owner is required");
+    return { ...request, ownerId: owner.code };
   },
   /**
    * Executes `persistenceModel` as a loader-visible operation owned by this module.
@@ -153,6 +218,10 @@ module.exports = {
       tenant: request.tenant,
       authData: request.authData,
       ownerId: request.ownerId,
+      ownerRef: request.ownerRef,
+      actorRef: request.actorRef,
+      enterpriseCode: request.authData?.enterpriseCode || request.authData?.entCode || request.enterpriseCode,
+      participantEnterpriseCode: request.participantEnterpriseCode,
       orderCode: payload.orderCode,
       cartCode: payload.cartCode,
       providerToken: payload.providerToken,
@@ -181,7 +250,7 @@ module.exports = {
   },
   /** Selects a Payment-owned provider adapter for the prepared method. @param {Object} method Prepared payment method. @returns {Object} Provider adapter. */
   paymentAdapter: function (method) {
-    if (method && method.providerCode === "loyalty-reward-points")
+    if (method && method.methodCode === "LOYALTY_REWARD")
       return SERVICE.DefaultLoyaltyRewardPaymentProviderService;
     return SERVICE.DefaultStripeSandboxAdapterService;
   },
@@ -190,16 +259,19 @@ module.exports = {
     return method && method.methodCode !== "CASH_ON_DELIVERY";
   },
   /** Builds a generated Payment transaction repository for placement. @param {Object} request Checkout request. @param {string} codeSeed Stable code seed. @returns {Object} Repository adapter. */
-  paymentRepository: function (request, codeSeed) {
+  paymentRepository: function (request, codeSeed, methodCode) {
     const self = this;
+    const enterpriseCode = methodCode === 'LOYALTY_REWARD'
+      ? request.participantEnterpriseCode || request.authData?.enterpriseCode || request.authData?.entCode : request.enterpriseCode;
+    const persistence = { ...request, enterpriseCode };
     return {
       find: async (tenant, key) =>
         (
           await self.get(
             SERVICE.DefaultPaymentTransactionEntryService,
             tenant,
-            { idempotencyKey: key },
-            self.serviceAuthData(request),
+            { idempotencyKey: key, ...(enterpriseCode ? { enterpriseCode } : {}), ownerId: request.ownerId },
+            self.serviceAuthData(persistence),
             1,
           )
         )[0],
@@ -217,7 +289,7 @@ module.exports = {
             },
             model,
           ),
-          self.serviceAuthData(request),
+          self.serviceAuthData(persistence),
         ),
     };
   },
@@ -264,7 +336,7 @@ module.exports = {
                 ? { enterpriseCode: request.enterpriseCode }
                 : {},
             ),
-            request.authData,
+            self.serviceAuthData(request),
             1,
           )
         )[0];
@@ -309,6 +381,17 @@ module.exports = {
             },
           }),
         ),
+      enforceParticipantSpend: async (request, calculation) => {
+        const owner = SERVICE.DefaultCommerceParticipantSpendService;
+        if (!owner || typeof owner.enforce !== "function")
+          throw new Error("Commerce spending policy owner is unavailable");
+        return owner.enforce(request, {
+          ownerRef: request.ownerRef,
+          actorRef: request.actorRef,
+          amount: calculation.totalAmount,
+          currency: calculation.currency,
+        });
+      },
       reserveInventory: async (request, calculation) => {
         const reservations = [];
         for (const entry of calculation.entries) {
@@ -356,15 +439,30 @@ module.exports = {
         if (cart?.code !== request.payload.cartCode ||
             typeof cart.storeCode !== "string" || !cart.storeCode.trim())
           throw new Error("Persisted Cart Store is required for digital reservation");
-        const ownership = (calculation.entries || []).some(entry =>
-          entry.availability?.digitalDeliveryType === "DIGITAL_OWNERSHIP");
-        if (ownership && (typeof cart.locale !== "string" || !cart.locale.trim()))
-          throw new Error("Persisted Cart locale is required for digital ownership reservation");
-        return digital.reserveForCheckout({ ...request, storeCode: cart.storeCode,
-          ...(ownership ? { locale: cart.locale } : {}) }, calculation);
+        const digitalEntries = (calculation.entries || []).filter(entry => self.digitalReservationEntry(entry));
+        if (digitalEntries.length && (typeof cart.locale !== "string" || !cart.locale.trim()))
+          throw new Error("Persisted Cart locale is required for digital reservation");
+        return digital.reserveForCheckout(self.digitalOwnerRequest({ ...request, storeCode: cart.storeCode,
+          ...(digitalEntries.length ? { locale: cart.locale } : {}) }), calculation);
       },
-      authorizePayment: async (request, calculation) => {
-        const method = self.preparePaymentMethod(request, calculation);
+      requiresPayment: async (request, calculation, digitalReservations) => !(await self.certificateOnly(request, calculation, digitalReservations)),
+      authorizePayment: async (request, calculation, digitalReservations) => {
+        if (await self.certificateOnly(request, calculation, digitalReservations)) return undefined;
+        let preparation = request, auctionBinding;
+        if (request.auctionFunds) {
+          if (request.payload.paymentMethod !== "LOYALTY_REWARD") throw new Error("Selected auction requires its original reward hold");
+          if (["walletCode", "programCode", "rewardTypeCode", "rewardAmount", "rewardCurrency", "providerToken"]
+            .some(key => request.payload[key] !== undefined)) throw new Error("Selected auction funding is retained by Checkout");
+          const { row } = await SERVICE.DefaultCheckoutAuctionService.paymentTerms({ ...request,
+            orderCode: request.payload.orderCode, cartCode: request.payload.cartCode,
+            amount: calculation.totalAmount, currency: calculation.currency });
+          preparation = { ...request, payload: { ...request.payload,
+            walletCode: row.terms.reservation.walletCode, programCode: row.terms.reservation.programCode,
+            rewardTypeCode: row.terms.reservation.rewardTypeCode, rewardAmount: row.terms.amount, rewardCurrency: row.terms.currency } };
+          auctionBinding = { commitmentCode: row.code };
+        }
+        const prepared = self.preparePaymentMethod(preparation, calculation);
+        const method = auctionBinding ? Object.freeze({ ...prepared, auctionFunds: auctionBinding }) : prepared;
         if (method.methodCode === "CASH_ON_DELIVERY")
           return self.recordOfflineAuthorization(request, method);
         const adapter = self.paymentAdapter(method);
@@ -380,6 +478,7 @@ module.exports = {
             self.paymentRepository(
               request,
               request.payload.orderCode + ":authorization",
+              method.methodCode,
             ),
           );
         if (authorization?.status !== "AUTHORIZED") {
@@ -407,6 +506,8 @@ module.exports = {
         digitalReservations,
       ) => {
         const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({ ...request, cartCode: request.payload.cartCode });
+        const certificatesOnly = !authorization && await self.certificateOnly(request, calculation, digitalReservations);
+        if (!authorization && !certificatesOnly) throw new Error('Order consideration is unconfirmed');
         if (!cart?.storeCode || cart.code !== request.payload.cartCode || cart.ownerId !== request.ownerId ||
           cart.enterpriseCode !== request.enterpriseCode || cart.tenant !== request.tenant)
           throw new Error("Order requires its authoritative persisted Cart Store");
@@ -431,29 +532,32 @@ module.exports = {
           promotionCode: discount.promotionCode,
           couponCode: discount.couponCode,
           evidence: {
+            ownerRef: request.ownerRef,
+            actorRef: request.actorRef,
+            participantEnterpriseCode: request.participantEnterpriseCode,
+            merchantScope: request.merchantScope,
+            ...(certificatesOnly ? { considerationType: 'CERTIFICATES' } : {}),
             storeCode: cart.storeCode,
             calculationCode: calculation.code,
             reservationCodes: reservations.map((value) => value.code),
             digitalReservationCodes: (digitalReservations || []).map(
               (value) => value.code,
             ),
-            paymentReference: authorization.providerReference,
-            paymentMethod: authorization.methodCode,
-            paymentProvider: authorization.providerCode,
+            ...(authorization ? { paymentReference: authorization.providerReference,
+              paymentMethod: authorization.methodCode, paymentProvider: authorization.providerCode } : {}),
           },
         };
         const serviceAuthData = self.serviceAuthData(request);
-        const order = await self.save(
+        const order = request.auctionFunds
+          ? await SERVICE.DefaultCheckoutAuctionService.insert(request, SERVICE.DefaultCommerceOrderService, { ...model, active: true })
+          : await self.save(
           SERVICE.DefaultCommerceOrderService,
           request.tenant,
           model,
           serviceAuthData,
         );
         for (const entry of calculation.entries) {
-          await self.save(
-            SERVICE.DefaultCommerceOrderEntryService,
-            request.tenant,
-            {
+          const entryModel = {
               code: order.code + ":" + entry.code,
               tenant: request.tenant,
               enterpriseCode:
@@ -469,19 +573,23 @@ module.exports = {
               productCode: entry.productCode,
               sku: entry.sku,
               quantity: entry.quantity,
-              unitAmount: entry.unitAmount,
+              unitAmount: entry.priceDecision?.unitAmount,
               evidence: {
-                lineAmount: entry.lineAmount,
-                pricingDecisionCode: entry.pricingDecisionCode,
+                ownerRef: request.ownerRef,
+                actorRef: request.actorRef,
+                participantEnterpriseCode: request.participantEnterpriseCode,
+                lineAmount: entry.priceDecision?.totalAmount,
+                priceDecision: entry.priceDecision,
                 promotionDecisionCode: entry.promotionDecisionCode,
                 taxDecisionCode: entry.taxDecisionCode,
                 digitalReservationCodes: (digitalReservations || [])
                   .filter((value) => value.entryCode === entry.code)
                   .map((value) => value.code),
               },
-            },
-            serviceAuthData,
-          );
+            };
+          if (request.auctionFunds) await SERVICE.DefaultCheckoutAuctionService.insert(request,
+            SERVICE.DefaultCommerceOrderEntryService, { ...entryModel, active: true });
+          else await self.save(SERVICE.DefaultCommerceOrderEntryService, request.tenant, entryModel, serviceAuthData);
         }
         return order;
       },
@@ -497,9 +605,13 @@ module.exports = {
         return SERVICE.DefaultPaymentExecutionService.execute(
           {
             tenant: request.tenant,
-            authData: self.serviceAuthData(request),
-            enterpriseCode: request.enterpriseCode || request.authData?.entCode || request.authData?.enterpriseCode,
+            authData: authorization.methodCode === "LOYALTY_REWARD" ? request.authData : self.serviceAuthData(request),
+            authorization: request.authorization || request.httpRequest?.headers?.authorization,
+            enterpriseCode: authorization.methodCode === "LOYALTY_REWARD"
+              ? request.authData?.enterpriseCode || request.authData?.entCode || request.enterpriseCode : request.enterpriseCode,
             ownerId: request.ownerId,
+            ownerRef: request.ownerRef, actorRef: request.actorRef, participantEnterpriseCode: request.participantEnterpriseCode,
+            ...(request.auctionFunds ? { auctionFunds: request.auctionFunds } : {}),
             orderCode: order.code,
             cartCode: order.cartCode || request.payload.cartCode,
             operation: "CAPTURE",
@@ -527,6 +639,7 @@ module.exports = {
           self.paymentRepository(
             request,
             request.payload.orderCode + ":capture",
+            authorization.methodCode,
           ),
         );
       },
@@ -577,13 +690,16 @@ module.exports = {
         const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({
           ...request, cartCode: request.payload.cartCode,
         });
-        return digital.confirmSale({ ...request, storeCode: cart.storeCode }, order, reservations);
+        if (cart?.code !== request.payload.cartCode ||
+            typeof cart.storeCode !== "string" || !cart.storeCode.trim())
+          throw new Error("Persisted Cart Store is required for digital confirmation");
+        if (typeof cart.locale !== "string" || !cart.locale.trim())
+          throw new Error("Persisted Cart locale is required for digital confirmation");
+        return digital.confirmSale(self.digitalOwnerRequest({ ...request, storeCode: cart.storeCode,
+          locale: cart.locale }), order, reservations);
       },
-      releaseFulfillment: (request, order) =>
-        self.save(
-          SERVICE.DefaultConsignmentService,
-          request.tenant,
-          {
+      releaseFulfillment: (request, order) => {
+        const model = {
             code: order.code + ":1",
             tenant: request.tenant,
             enterpriseCode: request.enterpriseCode || order.enterpriseCode,
@@ -595,20 +711,23 @@ module.exports = {
             correlationId: request.correlationId,
             currency: order.currency,
             totalAmount: order.totalAmount,
-          },
-          self.serviceAuthData(request),
-        ),
+          };
+        if (request.auctionFunds) return SERVICE.DefaultCheckoutAuctionService.insert(request,
+          SERVICE.DefaultConsignmentService, { ...model, active: true });
+        return self.save(SERVICE.DefaultConsignmentService, request.tenant, model, self.serviceAuthData(request));
+      },
       deliverDigitalUnits: (request, order, sales) =>
         SERVICE.DefaultDigitalCommerceCheckoutService &&
         SERVICE.DefaultDigitalCommerceCheckoutService.deliver
           ? SERVICE.DefaultDigitalCommerceCheckoutService.deliver(
-              request,
+              self.digitalOwnerRequest(request),
               order,
               sales,
             )
           : sales,
       complete: async (checkpoint, result) => {
         const cartClosure = await self.closeCart({
+          ...checkpoint,
           tenant: checkpoint.tenant,
           ownerId: checkpoint.ownerId,
           authData: checkpoint.authData,
@@ -617,20 +736,21 @@ module.exports = {
             orderCode: result.order.code,
           },
         });
-        return self.save(
-          SERVICE.DefaultCheckoutCheckpointService,
-          checkpoint.tenant,
-          {
+        const model = {
             code: result.order.code,
             tenant: checkpoint.tenant,
             enterpriseCode: checkpoint.enterpriseCode,
             ownerId: checkpoint.ownerId,
             cartCode: result.order.cartCode,
+            orderCode: result.order.code,
             status: "COMPLETED",
             revision: 0,
             idempotencyKey: checkpoint.idempotencyKey,
             correlationId: checkpoint.correlationId,
             evidence: {
+              ownerRef: checkpoint.ownerRef, actorRef: checkpoint.actorRef,
+              participantEnterpriseCode: checkpoint.participantEnterpriseCode,
+              merchantScope: checkpoint.merchantScope,
               completed: checkpoint.completed,
               orderCode: result.order.code,
               promotionRedemptionCode:
@@ -656,9 +776,21 @@ module.exports = {
               ),
               cartClosure,
             },
-          },
-          checkpoint.authData,
-        );
+          };
+        if (checkpoint.auctionFunds) {
+          // Closing the already placed Cart is idempotent; retain its first confirmed receipt on retry.
+          const owner = SERVICE.DefaultCheckoutAuctionService;
+          const existing = await owner.read(checkpoint, SERVICE.DefaultCheckoutCheckpointService, model.code);
+          if (existing) {
+            owner.assertFields(existing, { tenant: model.tenant, enterpriseCode: model.enterpriseCode,
+              ownerId: model.ownerId, cartCode: model.cartCode, idempotencyKey: model.idempotencyKey, status: model.status });
+            owner.assertFields(existing.evidence, { ownerRef: checkpoint.ownerRef, actorRef: checkpoint.actorRef,
+              orderCode: model.code, completed: checkpoint.completed });
+            return existing;
+          }
+          return owner.insert(checkpoint, SERVICE.DefaultCheckoutCheckpointService, { ...model, active: true });
+        }
+        return self.save(SERVICE.DefaultCheckoutCheckpointService, checkpoint.tenant, model, self.serviceAuthData(checkpoint));
       },
       notifyCommitted: (request, result) =>
         SERVICE.DefaultDigitalCommerceNotificationService?.request(
@@ -670,11 +802,42 @@ module.exports = {
         ),
       compensate: async (checkpoint, error, request) => {
         const outcomes = [];
+        const bundleUnits = (checkpoint.results.digitalReservation || []).filter(unit =>
+          unit.providerOwner === 'digitalCore' && unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP' && unit.manifestCode);
+        if (bundleUnits.length) {
+          if (!SERVICE.DefaultCheckoutBundleRecoveryService) throw new Error('Bundle recovery owner is unavailable');
+          try {
+            for (const unit of bundleUnits) {
+              const fence = await SERVICE.DefaultDigitalBundleSettlementService.fenceCompensation(request, unit);
+              if (fence?.confirmed !== true || fence.compensationAllowed !== true || fence.code !== unit.code)
+                throw new Error('Original bundle cancellation fence is unconfirmed');
+            }
+          } catch (_) {
+            return SERVICE.DefaultCheckoutBundleRecoveryService.retain(request, checkpoint, bundleUnits, 'BUNDLE');
+          }
+        }
+        const couponAcquisitions = (checkpoint.results.digitalReservation || []).filter(unit => unit.offerAllocationCode);
+        if (couponAcquisitions.length) {
+          if (!SERVICE.DefaultCheckoutBundleRecoveryService) throw new Error('Coupon forward recovery owner is unavailable');
+          try {
+            const decision = await SERVICE.DefaultDigitalCommerceCheckoutService.couponCompensationDisposition(request, couponAcquisitions);
+            if (decision?.disposition !== 'RELEASE_ALLOWED' || !Array.isArray(decision.outcomes) ||
+                decision.outcomes.length !== couponAcquisitions.length ||
+                new Set(decision.outcomes.map(value => value.code)).size !== couponAcquisitions.length ||
+                decision.outcomes.some(value => value.disposition !== 'RELEASE_ALLOWED' || !couponAcquisitions.some(unit => unit.code === value.code)))
+              throw new Error('Original coupon inputs require forward recovery');
+          } catch (_) {
+            return SERVICE.DefaultCheckoutBundleRecoveryService.retain(request, checkpoint, couponAcquisitions, 'COUPON');
+          }
+        }
+        const governedAcquisition = couponAcquisitions.length > 0 || bundleUnits.length > 0;
         const paymentReversalTarget = checkpoint.results.capture || checkpoint.results.authorization;
         const reversalOperation = checkpoint.results.capture ? "REFUND" : "VOID";
         const paymentRequired = paymentReversalTarget && self.requiresProviderAuthorization(paymentReversalTarget);
         const paymentCompensationIntent = paymentRequired ? JSON.parse(JSON.stringify({
           tenant: checkpoint.tenant, enterpriseCode: checkpoint.enterpriseCode, ownerId: checkpoint.ownerId,
+          ownerRef: checkpoint.ownerRef, actorRef: checkpoint.actorRef,
+          participantEnterpriseCode: checkpoint.participantEnterpriseCode,
           orderCode: paymentReversalTarget.orderCode || checkpoint.results.order?.code || request?.payload?.orderCode,
           cartCode: paymentReversalTarget.cartCode || request?.payload?.cartCode,
           operation: reversalOperation, idempotencyKey: checkpoint.idempotencyKey + ":payment:" + reversalOperation.toLowerCase(),
@@ -754,11 +917,11 @@ module.exports = {
         }
         if (
           SERVICE.DefaultDigitalCommerceCheckoutService &&
-          SERVICE.DefaultDigitalCommerceCheckoutService.releaseReservations
+          SERVICE.DefaultDigitalCommerceCheckoutService.releaseReservations && !governedAcquisition
         ) {
           outcomes.push(
             ...(await SERVICE.DefaultDigitalCommerceCheckoutService.releaseReservations(
-              request || checkpoint,
+              self.digitalOwnerRequest(request || checkpoint),
               checkpoint.results.digitalReservation || [],
             )),
           );
@@ -793,7 +956,12 @@ module.exports = {
             reversal = await SERVICE.DefaultPaymentExecutionService.execute(
               {
                 tenant: checkpoint.tenant,
-                authData: self.serviceAuthData(request),
+                authData: paymentCompensationIntent.methodCode === "LOYALTY_REWARD" ? request.authData : self.serviceAuthData(request),
+                authorization: request.authorization,
+                enterpriseCode: paymentCompensationIntent.methodCode === "LOYALTY_REWARD"
+                  ? request.authData?.enterpriseCode || request.authData?.entCode : checkpoint.enterpriseCode,
+                ownerRef: checkpoint.ownerRef, actorRef: checkpoint.actorRef,
+                participantEnterpriseCode: checkpoint.participantEnterpriseCode,
                 ownerId: checkpoint.ownerId,
                 orderCode: request.payload.orderCode,
                 cartCode: request.payload.cartCode,
@@ -834,6 +1002,7 @@ module.exports = {
                 checkpoint.idempotencyKey +
                   ":" +
                   reversalOperation.toLowerCase(),
+                paymentReversalTarget.methodCode,
               ),
             );
             for (let n = 0; n < 8; n++) {
@@ -886,13 +1055,19 @@ module.exports = {
         if (checkpoint.results.inventoryReservationRecoveryRequired === true) {
           outcomes.push({ type: 'INVENTORY_RELEASE', status: 'FAILED', errorCode: 'INVENTORY_RESERVATION_UNCERTAIN' });
         }
+        if (governedAcquisition) for (const unit of checkpoint.results.digitalReservation) outcomes.push({
+          type: unit.digitalDeliveryType === 'DIGITAL_OWNERSHIP' ? 'DIGITAL_OWNERSHIP_RELEASE' : 'DIGITAL_COUPON_RELEASE',
+          code: unit.code, status: 'FAILED', errorCode: 'DIGITAL_RELEASE_PENDING_PAYMENT_EVIDENCE' });
         const saved = await self.save(
           SERVICE.DefaultCheckoutCheckpointService,
           checkpoint.tenant,
           {
             code: checkpoint.idempotencyKey,
             tenant: checkpoint.tenant,
+            enterpriseCode: checkpoint.enterpriseCode,
             ownerId: checkpoint.ownerId,
+            cartCode: request?.payload?.cartCode,
+            orderCode: request?.payload?.orderCode,
             status: outcomes.every((value) => value.status === "COMPLETED")
               ? "COMPENSATED"
               : "COMPENSATION_REQUIRED",
@@ -900,6 +1075,18 @@ module.exports = {
             idempotencyKey: checkpoint.idempotencyKey,
             correlationId: checkpoint.correlationId,
             evidence: {
+              ownerRef: checkpoint.ownerRef, actorRef: checkpoint.actorRef,
+              participantEnterpriseCode: checkpoint.participantEnterpriseCode,
+              merchantScope: checkpoint.merchantScope,
+              orderCode: request?.payload?.orderCode,
+              ...(governedAcquisition ? {
+                couponAcquisitionRecovery: { status: 'READY', orderCode: request.payload.orderCode, cartCode: request.payload.cartCode,
+                  paymentAttemptUnconfirmed: checkpoint.results.paymentAttempted === true && !checkpoint.results.authorization,
+                  reservations: checkpoint.results.digitalReservation.map(unit => ({ code: unit.code,
+                    idempotencyKey: unit.idempotencyKey,
+                    ...(unit.offerAllocationCode ? { offerAllocationCode: unit.offerAllocationCode } : {}),
+                    ...(unit.digitalDeliveryType ? { digitalDeliveryType: unit.digitalDeliveryType } : {}) })) }
+              } : {}),
               completed: checkpoint.completed,
               compensation: JSON.parse(JSON.stringify(outcomes)),
               ...(paymentCompensationIntent ? { paymentCompensationIntent } : {}),
@@ -911,8 +1098,17 @@ module.exports = {
               errorCode: error.code || "PLACEMENT_FAILED",
             },
           },
-          checkpoint.authData,
+          self.serviceAuthData(request || checkpoint),
         );
+        if (governedAcquisition) {
+          const recovery = SERVICE.DefaultCheckoutCompensationRecoveryService;
+          const scope = { ...request, commandCode: checkpoint.idempotencyKey };
+          const retained = await recovery.checkpoint(scope);
+          if (!require('node:util').isDeepStrictEqual(retained.evidence, saved.evidence))
+            throw new Error('Coupon compensation persistence is unconfirmed');
+          if (retained.evidence.couponAcquisitionRecovery.paymentAttemptUnconfirmed) return retained;
+          return recovery.recoverAcquisitions(scope, retained);
+        }
         if (!paymentRequired) return saved;
         let readback = await SERVICE.DefaultCheckoutCheckpointService.get({
           tenant: checkpoint.tenant, authData: self.serviceAuthData(request || checkpoint),

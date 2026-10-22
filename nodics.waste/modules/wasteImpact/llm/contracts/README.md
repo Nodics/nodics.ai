@@ -9,6 +9,16 @@ single-provider contract. Optional bounded `metricEvidence` preserves ranges, so
 URLs and explanations in the saved assessment; references do not establish certification.
 
 Waste Impact owns metric/profile/result envelopes and provider execution.
+
+The service-only `DefaultWasteImpactAssessmentService.evidenceForCarbon`
+accepts trusted tenant/authData and payload.impactCode under the exact
+`waste.impact.evidence.read` permission. It re-reads persisted evidence and
+returns a detached provenance projection. No caller-supplied assessment is
+accepted. Even CONFIRMED or accepted results return
+`creditIssuanceAuthorized: false`, `issuedQuantity: null` and
+`publicClaimAllowed: false`. Waste Carbon separately qualifies issuance,
+allocations and holding eligibility. Missing source/provider evidence remains
+null; the handoff never fabricates certification.
 `EXTERNAL_PROVIDER` profiles dispatch to the configured loader-owned service;
 existing static, weight, and quantity formulas retain their synchronous behavior.
 Consumers should await `calculate(request, runtimeContext)` for either path.
@@ -35,7 +45,7 @@ adapters receive caller idempotency and correlation identifiers. Missing,
 invalid, failed, or timed-out providers yield typed errors or explicitly FAILED
 results according to configured failureMode. They never fall back to mock.
 
-The [canonical guide](../../data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
+The [canonical guide](../../data/docs-v002/records/documentation/wasteImpactDocumentationComponentData.js)
 contains exact configuration, protocol, failure, recovery and validation examples.
 
 ## Environmental assessment disclosure

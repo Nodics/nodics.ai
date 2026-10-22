@@ -8,9 +8,12 @@
 effective `cms` schema registry. Module/schema metadata and exact parent schema
 identity are required; names, caller flags and copied schema objects are not
 proof. Only these admitted CMS children receive association access-group defaults
-and a code query template. `versionedImport` always remains local to the selected
-root operation, never inherited by children. Other options and reference-only
-descriptor behavior remain unchanged.
+and a code query template. A canonical versioned CMS child is read through its
+generated owner and pinned to the current revision before save; the provider
+returns an identical replay unchanged or appends one successor for changed
+content after rechecking that exact revision. `governedVersionedImport` remains
+local to the selected root operation and is never inherited by children. Other options
+and reference-only descriptor behavior remain unchanged.
 
 Implicit generated save queries use fields declared `definition.primary: true`,
 not the provider's `schemaOptions.primaryKeys`, which also includes ordinary

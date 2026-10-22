@@ -186,15 +186,17 @@ module.exports = {
                 ({ productCode, skus: [...skus] })) }) : {};
         const summaries = { ...result };
         const authority = request.authData || {}, admission = SERVICE.DefaultPromotionDistributionAdmissionService;
-        const reads = new Map(), publicProducts = [];
+        const reads = new Map(), publicProducts = [], publishedCoupons = new Set();
         for (const [productCode, row] of digital) {
             const read = { ...context, authData: structuredClone(authority), productCode, quantity: '1' };
             reads.set(productCode, read);
+            if (row.payload?.localizedAttributes?.digitalDeliveryType === 'COUPON_CODE' && admission?.selected(read))
+                publishedCoupons.add(productCode);
             const publicRead = row.payload?.localizedAttributes?.digitalDeliveryType === 'COUPON_CODE' &&
                 authority.isSystem !== true &&
                 (authority.principalType === undefined || authority.principalType === 'anonymous' ||
                     ['human', 'customer'].includes(authority.principalType) && !authority.enterpriseCode && !authority.entCode);
-            if (publicRead && admission?.selected(read)) publicProducts.push(productCode);
+            if (publicRead && publishedCoupons.has(productCode)) publicProducts.push(productCode);
         }
         const publicSummaries = new Map();
         if (publicProducts.length) {
@@ -206,11 +208,15 @@ module.exports = {
                 const summary = batch.get(code);
                 if (!summary || typeof summary !== 'object' || Array.isArray(summary) ||
                     ![Object.prototype, null].includes(Object.getPrototypeOf(summary)) ||
-                    Reflect.ownKeys(summary).length !== 2 ||
+                    Reflect.ownKeys(summary).length !== 3 ||
+                    !Object.hasOwn(Object.getOwnPropertyDescriptor(summary, 'acquisitionRequirements') || {}, 'value') ||
                     typeof Object.getOwnPropertyDescriptor(summary, 'available')?.value !== 'boolean' ||
                     Object.getOwnPropertyDescriptor(summary, 'status')?.value !== (summary.available ? 'IN_STOCK' : 'OUT_OF_STOCK'))
                     throw new Error('Promotion browsing batch summary is invalid');
-                publicSummaries.set(code, { available: summary.available, status: summary.status });
+                const acquisitionRequirements = summary.acquisitionRequirements === null ? null :
+                    SERVICE.DefaultCouponOfferService.acquisitionRequirements(summary.acquisitionRequirements);
+                if (acquisitionRequirements === null && summary.available) throw new Error('Promotion browsing batch summary is invalid');
+                publicSummaries.set(code, { available: summary.available, status: summary.status, acquisitionRequirements });
             }
         }
         for (const [productCode, row] of digital) {
@@ -229,7 +235,12 @@ module.exports = {
             if (!availability || typeof availability.available !== 'boolean' ||
                 (availability.code && !String(availability.code).startsWith('SUC_')) ||
                 availability.error || availability.errors?.length) throw new Error('Digital Product availability is unavailable');
-            summaries[productCode] = { available: availability.available,
+            if (row.payload?.localizedAttributes?.digitalDeliveryType === 'COUPON_CODE') {
+                if (publishedCoupons.has(productCode) && !admitted && !admission.selected(read))
+                    throw new Error('Promotion publication selection changed');
+                summaries[productCode] = admitted || SERVICE.DefaultCouponOfferService.publicSupply(
+                    publishedCoupons.has(productCode) ? availability : { available: false });
+            } else summaries[productCode] = { available: availability.available,
                 status: availability.available ? 'IN_STOCK' : 'OUT_OF_STOCK' };
         }
         return summaries;

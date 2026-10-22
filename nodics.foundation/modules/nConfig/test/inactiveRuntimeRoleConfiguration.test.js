@@ -112,6 +112,76 @@ test("later authored values and explicit empty collections override selected def
   }
 });
 
+for (const nestedFramework of [false, true]) test(`selected defaults follow framework defaults and precede customer contributions (nested framework: ${nestedFramework})`, t => {
+  const f = fixture(t);
+  if (nestedFramework) f.context.roots.project = f.root;
+  const oldConfig = global.CONFIG;
+  t.after(() => { global.CONFIG = oldConfig; });
+  let effective = {};
+  global.CONFIG = { getProperties: () => effective, setProperties: value => { effective = value; } };
+  const modules = [
+    { name: "cms", path: path.join(f.context.roots.framework, "domain/modules/cms") },
+    { name: "customer", path: f.context.roots.project },
+  ];
+  global.NODICS = {
+    getServerPath: () => f.context.roots.server,
+    getIndexedModules: () => modules,
+    getRawModule: name => modules.find(module => module.name === name),
+  };
+  const defaults = { cms: { publication: { baselines: { shell: {
+    rootCode: null, employeeCompositionPaths: ["/framework"],
+  } } } } };
+  let customer = f.properties;
+  const loader = Object.assign({}, initializer, {
+    loadServerProperties: () => f.properties,
+    getPropertyBindingContext: () => f.context,
+    loadModuleConfiguration: name => {
+      effective = bindings.merge(effective, name === "cms" ? defaults : customer);
+    },
+  });
+  loader.loadConfigurations();
+  assert.equal(effective.cms.publication.baselines.shell.rootCode, "projectSite");
+  assert.deepEqual(effective.cms.publication.baselines.shell.employeeCompositionPaths, ["/home", "/lock"]);
+  customer = { ...f.properties, cms: { publication: { baselines: { shell: {
+    rootCode: "customerSite", employeeCompositionPaths: { $config: "replace", value: [] },
+  } } } } };
+  effective = {};
+  loader.loadConfigurations();
+  assert.equal(effective.cms.publication.baselines.shell.rootCode, "customerSite");
+  assert.deepEqual(effective.cms.publication.baselines.shell.employeeCompositionPaths, []);
+});
+
+test("offline selected defaults preserve explicit caller and authored overrides", t => {
+  const f = fixture(t);
+  fs.writeFileSync(path.join(f.context.roots.project, "package.json"), JSON.stringify({ name: "customer" }));
+  fs.writeFileSync(path.join(f.context.roots.project, "envs/local/package.json"),
+    JSON.stringify({ nodics: { kind: "group", runtimeModule: true } }));
+  Object.assign(f.metadata.nodics, { kind: "server", runtimeModule: true });
+  f.saveMetadata();
+  const directory = path.join(f.context.roots.server, "config");
+  fs.mkdirSync(directory);
+  const file = path.join(directory, "properties.js");
+  fs.writeFileSync(file, "module.exports = " + JSON.stringify(f.properties));
+  const options = { projectRoot: f.context.roots.project, frameworkRoot: f.context.roots.framework,
+    environmentCode: "local", serverCode: "online" };
+  const inherited = initializer.readDeploymentConfiguration(options);
+  assert.equal(inherited.cms.publication.baselines.shell.rootCode, "projectSite");
+  assert.deepEqual(inherited.cms.publication.baselines.shell.employeeCompositionPaths, ["/home", "/lock"]);
+  options.inheritedProperties = { cms: { publication: { baselines: { shell: {
+    rootCode: null, employeeCompositionPaths: { $config: "replace", value: [] },
+  } } } } };
+  const caller = initializer.readDeploymentConfiguration(options);
+  assert.equal(caller.cms.publication.baselines.shell.rootCode, null);
+  assert.deepEqual(caller.cms.publication.baselines.shell.employeeCompositionPaths, []);
+  fs.writeFileSync(file, "module.exports = " + JSON.stringify({ ...f.properties, cms: { publication: { baselines: { shell: {
+    rootCode: "authoredSite", employeeCompositionPaths: { $config: "replace", value: [] },
+  } } } } }));
+  delete require.cache[require.resolve(file)];
+  const authored = initializer.readDeploymentConfiguration(options);
+  assert.equal(authored.cms.publication.baselines.shell.rootCode, "authoredSite");
+  assert.deepEqual(authored.cms.publication.baselines.shell.employeeCompositionPaths, []);
+});
+
 for (const [name, change] of [
   ["file path", f => { f.selector.file = "/tmp/injected.js"; }],
   ["traversal", f => { f.selector.moduleName = "../presentation"; }],

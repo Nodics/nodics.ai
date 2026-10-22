@@ -12,8 +12,6 @@
 const assert = require('assert');
 const path = require('path');
 
-const config = require('../../../nConfig');
-
 /**
  * @module nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisher.test
  * @description Runs a guarded EMS publisher smoke test against the active local server configuration and configured provider.
@@ -86,6 +84,7 @@ async function closeEmsClients() {
 }
 
 async function initializeRuntime() {
+    const config = require('../../../nConfig');
     let options = {
         NODICS_HOME: ROOT,
         defaultServer: DEFAULT_SERVER
@@ -98,30 +97,34 @@ async function initializeRuntime() {
     await SERVICE.DefaultEmsClientConfigurationService.configurePublishers();
 }
 
-(async function () {
-    await initializeRuntime();
+if (require.main === module && !process.env.NODE_TEST_CONTEXT && process.argv.includes('--require-live')) {
+    (async function () {
+        await initializeRuntime();
 
-    let publisherName = getEnabledPublisher();
-    await ensurePublisherQueue(publisherName);
-    let result = await SERVICE.DefaultEmsClientService.publish({
-        payloads: {
-            queue: publisherName,
-            message: JSON.stringify({
-                tenant: CONFIG.get('defaultTenant') || 'default',
-                source: 'activeEmsPublisher.test',
-                server: DEFAULT_SERVER,
-                createdAt: new Date().toISOString()
-            })
-        }
-    });
+        let publisherName = getEnabledPublisher();
+        await ensurePublisherQueue(publisherName);
+        let result = await SERVICE.DefaultEmsClientService.publish({
+            payloads: {
+                queue: publisherName,
+                message: JSON.stringify({
+                    tenant: CONFIG.get('defaultTenant') || 'default',
+                    source: 'activeEmsPublisher.test',
+                    server: DEFAULT_SERVER,
+                    createdAt: new Date().toISOString()
+                })
+            }
+        });
 
-    assert.strictEqual(result.code, 'SUC_EMS_00000');
-    console.log('EMS publish smoke passed:', publisherName);
-})().then(() => {
-    return closeEmsClients();
-}).catch(error => {
-    closeEmsClients().then(() => {
-        console.error(error);
-        process.exit(1);
+        assert.strictEqual(result.code, 'SUC_EMS_00000');
+        console.log('EMS publish smoke passed:', publisherName);
+    })().then(() => {
+        return closeEmsClients();
+    }).catch(error => {
+        closeEmsClients().then(() => {
+            console.error(error);
+            process.exit(1);
+        });
     });
-});
+} else {
+    console.log('EMS publisher smoke NOT EXECUTED: direct execution with --require-live is required; test-runner discovery cannot start a runtime');
+}

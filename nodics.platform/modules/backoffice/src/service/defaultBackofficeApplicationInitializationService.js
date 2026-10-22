@@ -3238,6 +3238,24 @@ module.exports = {
         installedVersion: evidence.version, evidenceKind: "EXACT_PLAN_INSTALLED_RELEASE" };
     } catch (error) { return { ...pending, reasonCode: this.setupObservationReasonCode(error) }; }
   },
+  /** Maps typed read-only owner evidence without treating an absent installation as a validation refusal. */
+  sharedPreparationObservationStatus: function (step, evidence) {
+    if (step.type === "DATA_RELEASE") {
+      if (evidence.ready === true && evidence.status === "CURRENT") return "CURRENT";
+      if (evidence.ready === false && evidence.status === "NOT_CURRENT") return "NOT_INSTALLED";
+      return "VALIDATION_BLOCKED";
+    }
+    if (step.type === "MEDIA_ASSET_MANIFEST") {
+      const items = evidence.evidenceKind === "PERSISTED_CURRENT_METADATA" && Array.isArray(evidence.items)
+        ? evidence.items : undefined;
+      if (!items) return "VALIDATION_BLOCKED";
+      const current = items.every(item => item && item.metadataMatched === true);
+      if (evidence.ready === true && current) return "SOURCE_READY";
+      if (evidence.ready === false && !current) return "FAILED";
+      return "VALIDATION_BLOCKED";
+    }
+    return "VALIDATION_BLOCKED";
+  },
   /** Shared BEFORE inspection does not borrow a narrow human's import/CMS/Media mutation grants. */
   sharedPreparationObservation: async function (profile, request) {
     const steps = [];
@@ -3246,15 +3264,19 @@ module.exports = {
       try {
         const evidence = await this.setupObservation(profile, request, step,
           step.type === "MEDIA_ASSET_MANIFEST" ? "MEDIA" : "INSTALLATION");
-        steps.push({ ...step, status: evidence.ready ? step.type === "MEDIA_ASSET_MANIFEST" ? "SOURCE_READY" : "CURRENT" : "VALIDATION_BLOCKED",
+        steps.push({ ...step, status: this.sharedPreparationObservationStatus(step, evidence),
           evidenceKind: step.type === "MEDIA_ASSET_MANIFEST" ? evidence.evidenceKind : "EXACT_PLAN_INSTALLED_RELEASE",
           installedVersion: evidence.version });
       } catch (error) { steps.push({ ...step, status: "AUTHORITY_PENDING", reasonCode: this.setupObservationReasonCode(error) }); }
     }
     const functional = await this.functionalModulePreparationStatus(profile, request);
     steps.push(...functional);
-    return { status: steps.filter(step => step.required !== false).every(step => ["CURRENT", "SOURCE_READY"].includes(step.status))
-      ? "CURRENT" : "BLOCKED", steps };
+    const required = steps.filter(step => step.required !== false);
+    return { status: required.some(step => ["INVALID_RELEASE", "DOWNGRADE_AVAILABLE", "UNAVAILABLE",
+      "READINESS_RATE_LIMITED", "VALIDATION_BLOCKED", "UNKNOWN", "AUTHORITY_PENDING", "NOT_REGISTERED",
+      "NOT_ACTIVE", "RUNTIME_OFFLINE"].includes(step.status)) ? "BLOCKED" :
+      required.some(step => step.status === "RUNNING") ? "RUNNING" :
+        required.every(step => ["CURRENT", "SOURCE_READY"].includes(step.status)) ? "CURRENT" : "ACTION_REQUIRED", steps };
   },
   /** Checks or submits configured publication intents through the secured remote owner, using the resolved application timeout. Failures expose only fixed stages and bounded codes; they never qualify readiness. */
   publicationPreparation: async function (profile, request, submit) {
@@ -3454,7 +3476,7 @@ module.exports = {
       header: { Authorization: "Bearer " + token },
     };
     let responsePromise;
-    if (selection && this.hasSetupObservation(profile)) {
+    if ((operation === "status" || selection?.code !== undefined) && this.hasSetupObservation(profile)) {
       responsePromise = this.setupObservation(profile, request, undefined, "BASELINE")
         .then(evidence => ({ data: evidence.authority }));
     }
@@ -3603,11 +3625,14 @@ module.exports = {
         let updateAvailable =
           readiness === "READY" &&
           ["UPDATE_AVAILABLE", "FAILED"].includes(authority.releaseStatus);
+        const fallbackRelease = this.blockedReleaseIdentity(profile, preparation);
+        const releaseCode = authority.releaseCode || fallbackRelease.releaseCode;
+        const releaseVersion = authority.releaseVersion || fallbackRelease.releaseVersion;
         let projection = {
           readiness: readiness,
           publicationTargetResponded: true,
           releaseStatus: authority.releaseStatus,
-          releaseCode: authority.releaseCode,
+          releaseCode: releaseCode,
           preparation: preparation,
           publication: authority.publication,
           publicationDiagnostic: authority.publicationDiagnostic,
@@ -3654,8 +3679,8 @@ module.exports = {
                   ? []
                   : ["INITIALIZE"],
           readiness: readiness,
-          releaseCode: authority.releaseCode,
-          releaseVersion: authority.releaseVersion,
+          releaseCode: releaseCode,
+          releaseVersion: releaseVersion,
           releaseStatus: authority.releaseStatus,
           preparation: preparation,
           publication: authority.publication,

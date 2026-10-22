@@ -1,18 +1,65 @@
 # Checkout Foundation Agent Contract
 
-Private coupon purchase/reveal/ITEM/refund HTTP acceptance uses the inert
-[coupon journey owner](llm/contracts/coupon-journey-http-acceptance.md). Require
-reviewed selections, fresh existing sessions, observed funds and durable original
-command checkpoints. Never seed, fund, grant or select qualifications; never log
-coupon tokens or replace pending purchase/redemption/refund identities.
-Optional request pacing runs before the transport timeout and receives only
-fixed owner route metadata, never credentials or bodies. Monetary acceptance
-requires Promotion's explicit scoped complete-ledger counts at every accounting
-read; matching partial analytics and ledger pages are not complete evidence.
-Redeemed monetary coupon readback must match Digital's canonical `REDEEMED`
-status and claim status. Resume only a journaled original confirmation; never
-require an already-redeemed entitlement to remain ACTIVE or replay its purchase.
-Keep acceptance fixtures aligned with the actual Digital lifecycle transition.
+Forward-recovery fulfillment validation uses effective `assertFulfillment` for
+both original insert readback and replay. Preserve original Order/key/currency/
+amount checks and the no-new-Payment invariant. Do not close business validation
+over local helpers; private request-identity security remains private.
+
+Spending administrators must satisfy denied-aware Profile scope matching,
+including wildcard capabilities and tenant/Enterprise qualifiers. Use the
+effective `matchesAdministratorScope` member and preserve owner-local regression
+coverage in `test/commerceParticipantSpendContract.test.js`.
+
+Follow [original purchase forward recovery](llm/contracts/forward-purchase-recovery.md).
+Fence bundle/coupon disposition before any compensation effects. Only a qualified
+server action permits explicit original-key continuation; never infer it from a
+generic failure status. Preserve original capture/consideration, typed owner,
+actor, Cart/Order and merchant binding. Complete the retained checkpoint in place.
+Selected auctions must resume their original phase journal and hold, not a second
+financial command. Keep the UI action union and route contract synchronized.
+
+Follow [fixed-price merchant scope](../cart/llm/contracts/merchant-scope.md).
+Resolve Cart/checkpoint merchant scope only after fresh typed participant admission;
+never require a frontend Store workaround for later commands or reads. Retain the
+Cart/Order binding on failure as well as completion, validate status projections,
+and keep reward repository/recovery reads in the signed participant namespace.
+
+For governed coupons, omit Payment only on exact persisted CERTIFICATES
+consideration, not merely zero total. Retain calculation entries/priceDecision.
+Persist failure and any confirmed original Payment reversal before Digital input
+release. Unknown authorization stays recovery-required even with no Payment row.
+See [coupon consideration](llm/contracts/README.md#governed-coupon-consideration).
+
+Follow [selected auction Checkout](llm/contracts/auction-checkout.md). Never reserve
+a second winner hold, issue a competing release after acquisition starts, or infer
+re-award permission from missing/uncertain purchase evidence. Keep Payment's signed
+participant partition separate from private merchant Cart/Order storage. New
+completion and compensation evidence retains typed owner, actor and participant
+Enterprise; recovery revalidates that owner before exposing or changing records.
+Cancellation reconciliation reads the original Payment receipt in the retained
+bid actor's participant Enterprise, never the merchant or scheduler partition.
+Require tenant, participant Enterprise, order and original command identity on
+readback before clearing pending cancellation; do not redispatch financial work.
+
+Enterprise employee purchase ceilings belong to Checkout and are reused by
+Bidding. Do not create another actor spending policy in Loyalty or eWaste.
+Preserve the original owner/actor and framework-default/governed-selection split
+in [Enterprise spending](llm/contracts/enterprise-spending.md).
+
+Coupon acquisition and staff-operated redemption HTTP acceptance use the inert
+[coupon owner acceptance](llm/contracts/coupon-journey-http-acceptance.md).
+Require reviewed selections, fresh existing sessions and durable original-command
+checkpoints. Never seed, fund, grant, install stock or select qualifications;
+never log coupon tokens or replace pending purchase/redemption identities.
+Acquisition must cover REWARDS, CERTIFICATES and BOTH through canonical Checkout,
+prove final issuance, and prove purchased-coupon non-refundability without calling
+refund execution. Redemption must use Digital's workspace, validate, confirm and
+receipt APIs; it is whole, single-use and final with stable same-key replay, no
+partial use and no completed reversal. Optional request pacing runs before the
+transport timeout and receives only fixed owner route metadata, never credentials
+or bodies. Monetary acceptance still requires Promotion's explicit scoped
+complete-ledger counts at every accounting read; matching partial analytics and
+ledger pages are not complete evidence.
 
 Committed coupon notification attempts use the existing Digital Core owner and
 must never enter placement compensation; consult Digital Core's committed
@@ -63,3 +110,11 @@ before the fenced claim, strict original Payment-zero reads before/after cleanup
 and its exact original-unit receipt. Preserve legacy failure evidence and scope;
 never relax the original placement-key guard or turn recovery into retry authority.
 See [prepayment recovery](llm/contracts/README.md#prepayment-uncertain-coupon-recovery).
+
+Purchase-limit workspace access definitions are explicit, unassigned owner data.
+Validate permission payload hashes and exact prerequisite versions/checksums
+through the complete permission -> group -> role chain in
+`test/enterpriseSpendWorkspace.test.js`. A changed prerequisite checksum changes
+its dependent section checksum too. Repair only unsealed additions in place;
+frozen predecessor bytes and pins require a governed successor, not new expected
+test hashes.

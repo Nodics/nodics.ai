@@ -32,6 +32,13 @@ assert.deepStrictEqual(routes.wallet.authTokenTypes, ['access', 'service']);
 assert.strictEqual(routes.captureReservation.key, '/reward-reservations/:reservationCode/capture');
 assert.strictEqual(routes.releaseReservation.key, '/reward-reservations/:reservationCode/release');
 assert.strictEqual(routes.reverseLedgerEntry.key, '/reward-ledger-entries/:entryCode/reverse');
+assert.strictEqual(routes.reservationEvidence.key, '/reward-reservation-evidence');
+assert.strictEqual(routes.redemptionEvidence.key, '/reward-redemption-evidence');
+for (const operation of ['reservationEvidence', 'redemptionEvidence']) {
+    assert.deepStrictEqual(routes[operation].authTokenTypes, ['service']);
+    assert.strictEqual(routes[operation].permission, 'loyalty.wallet.read');
+    assert.strictEqual(routes[operation].cache.enabled, false);
+}
 
 async function main() {
     const calls = [];

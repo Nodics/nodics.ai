@@ -120,6 +120,57 @@ beforeEach(() => {
     };
   }
 });
+test('read-only source eligibility suppresses withdrawn recipients without transport or rendering changes', async () => {
+  policy.dispatchEligibilityOwners = { eWaste: { wasteSubmission: 'DefaultTestEligibilityService' } };
+  SERVICE.DefaultTestEligibilityService = { isDispatchEligible: async r => {
+    assert.equal(r.renderedContent, undefined);
+    assert.equal(r.variables, undefined);
+    return { ...r, eligible: false };
+  } };
+  const result = await runtime.request(request, { ...command, channel: 'TELEGRAM', requiresSourceEligibility: true });
+  assert.equal(result.status, 'SUPPRESSED');
+  assert.equal(sends, 0);
+  assert.equal([...db.CommsIntent.values()][0].requiresSourceEligibility, true);
+});
+
+test('missing source owner is uncertainty before transport and retains the original accepted intent', async () => {
+  await assert.rejects(runtime.request(request, { ...command, channel: 'TELEGRAM', requiresSourceEligibility: true }));
+  assert.equal(sends, 0);
+  const original = [...db.CommsIntent.values()][0];
+  assert.equal(original.status, 'ACCEPTED');
+  assert.equal(original.attempt, 0);
+  await assert.rejects(runtime.request(request, { ...command, channel: 'TELEGRAM' }), /idempotency/);
+});
+
+test('recipient revoked after claim is suppressed at the final pre-send check', async () => {
+  let reads = 0;
+  policy.dispatchEligibilityOwners = { eWaste: { wasteSubmission: 'DefaultTestEligibilityService' } };
+  SERVICE.DefaultTestEligibilityService = { isDispatchEligible: async r => ({ ...r, eligible: ++reads === 1 }) };
+  const result = await runtime.request(request, { ...command, channel: 'TELEGRAM' });
+  assert.equal(result.status, 'SUPPRESSED');
+  assert.equal(reads, 2); assert.equal(sends, 0);
+  assert.equal(db.CommsDeliveryAttempt.size, 1);
+});
+
+test('foreign eligibility evidence and unavailable source never authorize delivery', async () => {
+  policy.dispatchEligibilityOwners = { eWaste: { wasteSubmission: 'DefaultTestEligibilityService' } };
+  SERVICE.DefaultTestEligibilityService = { isDispatchEligible: async r => ({ ...r, tenant: 'foreign', eligible: true }) };
+  await assert.rejects(runtime.request(request, { ...command, channel: 'TELEGRAM' }));
+  assert.equal(sends, 0);
+});
+
+test('post-claim source timeout is retryable no-send, while provider uncertainty remains uncertain', async () => {
+  let reads = 0;
+  policy.dispatchEligibilityOwners = { eWaste: { wasteSubmission: 'DefaultTestEligibilityService' } };
+  SERVICE.DefaultTestEligibilityService = { isDispatchEligible: async r => {
+    if (++reads === 2) throw new Error('source unavailable');
+    return { ...r, eligible: true };
+  } };
+  const result = await runtime.request(request, { ...command, channel: 'TELEGRAM' });
+  assert.equal(result.status, 'RETRY_PENDING'); assert.equal(sends, 0);
+  assert.equal([...db.CommsDeliveryAttempt.values()][0].responseCode, 'SOURCE_ELIGIBILITY_UNCONFIRMED');
+});
+
 test("Web inbox and rendered reviewer comment survive replay without duplicate records", async () => {
   const first = await runtime.request(request, command),
     again = await runtime.request(request, command);

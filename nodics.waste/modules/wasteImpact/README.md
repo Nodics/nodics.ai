@@ -14,9 +14,16 @@ Mock assessments remain `ESTIMATED` with provenance and
 `publicClaimAllowed: false`. The default factor `1` is illustrative. Real
 provider qualification and public claims require separate domain policy.
 
-- [Canonical provider guide](data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
+- [Canonical provider guide](data/docs-v002/records/documentation/wasteImpactDocumentationComponentData.js)
 - [Provider contract](llm/contracts/README.md)
 - [Examples](llm/examples/README.md)
+
+Qualified carbon-evidence services may call
+`DefaultWasteImpactAssessmentService.evidenceForCarbon` with a persisted
+impact identity and `waste.impact.evidence.read` service permission. It returns
+calculation provenance with issuance/public claims explicitly disallowed.
+The separate `wasteCarbon` owner requires independently qualified issuance
+and allocation evidence; accepting an impact assessment cannot create holdings.
 
 Run `npm --prefix nodics.waste test` from the framework root, including the
 provider contract tests. These are local contract checks, not external-provider
@@ -36,3 +43,6 @@ A server must explicitly select it; contributions never enable reset or bypass t
 Provider energy provenance is allowlisted alongside carbon provenance: energy
 factor, source unit, baseline/treatment coefficients, conversion and result bounds.
 The generic dispatcher preserves these scalars; domain providers own their formulas.
+
+Documentation docs-v001 is frozen historical evidence. The selected 0.0.2
+successor in docs-v002 remains STAGED; source checks do not publish it.

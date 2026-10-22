@@ -11,6 +11,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 global.SERVICE = global.SERVICE || {};
+global.CONFIG = { get: key => require('../modules/baseCommerce/modules/product/config/properties')[key] };
 SERVICE.DefaultBackofficeCapabilityDefinitionService = require('../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
 
 const owners = {
@@ -41,6 +42,13 @@ for (const [moduleName, relativeRoot] of Object.entries(owners)) {
 }
 
 for (const item of navigation) {
+    if (item.backendWorkspace) {
+        assert.equal(item.backendWorkspace.renderer, 'axis.workspace.native');
+        assert(['promotion.couponOffers', 'promotion.couponAcquisition'].includes(item.backendWorkspace.workspaceCode));
+        assert.equal(require('../../nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService')
+            .validateBackendWorkspace(item.backendWorkspace), true);
+        continue;
+    }
     const target = item.workbenchTarget;
     assert(owners[target.moduleName], item.id + ' must target a concrete callable owner');
     const schemas = require(owners[target.moduleName] + '/src/schemas/schemas')[target.moduleName];

@@ -33,11 +33,18 @@ for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
   if (entry.isDirectory() && entry.name.startsWith("nodics.")) discover(path.join(root, entry.name));
 }
 const sections = new Map();
+const bootstrapForwardPermissions = new Set([
+  "bundleRuntimePermissions",
+  "merchantEvidencePermission",
+  "runtimeEvidencePermissions",
+  "verificationExecutePermission",
+]);
 for (const [name, owner] of modules) {
   const file = path.join(owner.path, "data/manifest.json");
   if (!fs.existsSync(file)) continue;
   const manifest = JSON.parse(fs.readFileSync(file));
-  for (const code of ["permissionCatalogue", "accessGroups", "enterpriseRoles", "businessAccessGroups", "businessAccessRoles"]) {
+  for (const code of ["permissionCatalogue", "accessGroups", "enterpriseRoles", "businessAccessGroups", "businessAccessRoles",
+    ...bootstrapForwardPermissions]) {
     if (manifest.sections?.[code]) sections.set(name + ":" + code, { owner, section: manifest.sections[code] });
   }
 }
@@ -52,7 +59,7 @@ test("owner identity packs are explicit, portable, byte-pinned and Profile admin
   for (const [code, { owner, section }] of sections) {
     assert.equal(section.owningDomain, owner.name, code);
     assert.equal(section.dataType, "init", code);
-    assert.equal(section.sourceRoot, "init-v001", code);
+    assert.match(section.sourceRoot, /^init-v\d{3}$/, code);
     assert.equal(section.destinationRole, "PLATFORM", code);
     assert.equal(section.selectionPolicy, "EXPLICIT", code);
     assert.deepEqual(section.environmentScope, ["ALL"], code);
@@ -65,7 +72,7 @@ test("owner identity packs are explicit, portable, byte-pinned and Profile admin
       if (relative.includes("/headers/")) {
         assert.deepEqual(Object.keys(data), ["profile"]);
         for (const header of Object.values(data.profile)) assert.equal(header.options.operation, "ensureReferenceAll");
-      } else if (code.endsWith(":permissionCatalogue")) {
+      } else if (/permission/i.test(code.split(":").at(-1))) {
         for (const permission of Object.values(data)) {
           assert.equal(permission.ownerModule, owner.name);
           assert(!permissionCodes.has(permission.code), permission.code);
@@ -97,7 +104,7 @@ test("prerequisite graph is acyclic and every reference pins the exact owner byt
     const { section } = sections.get(code);
     for (const ref of section.prerequisites || []) {
       const target = ref.moduleName + ":" + ref.sectionCode;
-      assert.equal(ref.partition, ["permissionCatalogue", "enterpriseRoles", "businessAccessRoles"].includes(ref.sectionCode) ? "DEFAULT" : undefined,
+      assert.equal(ref.partition, (/permission/i.test(ref.sectionCode) || ["enterpriseRoles", "businessAccessRoles"].includes(ref.sectionCode)) ? "DEFAULT" : undefined,
         "Global definitions require explicit default-partition references; groups remain tenant-local: " + target);
       visit(target);
       assert.equal(ref.version, sections.get(target).section.version, target);
@@ -108,11 +115,18 @@ test("prerequisite graph is acyclic and every reference pins the exact owner byt
   };
   for (const code of sections.keys()) visit(code);
   const init = JSON.parse(fs.readFileSync(path.join(modules.get("profile").path, "data/manifest.json"))).sections["init-v001"];
-  assert.equal(init.version, "0.0.3", "changed installed source requires an explicit successor, not rehashed history");
-  assert.deepEqual(new Set(init.prerequisites.map(ref => ref.moduleName + ":" + ref.sectionCode)), new Set(sections.keys()));
+  assert.equal(init.version, "0.0.8", "changed installed dependency graph requires an explicit successor, not rehashed history");
+  const laterOptionalOwners = new Set(["commercialAgreement:permissionCatalogue", "wasteCarbon:permissionCatalogue", "wasteReward:permissionCatalogue"]);
+  assert.deepEqual(new Set(init.prerequisites.map(ref => ref.moduleName + ":" + ref.sectionCode)),
+    new Set([...sections.keys()].filter(code => !laterOptionalOwners.has(code))));
+  for (const code of laterOptionalOwners) {
+    assert(sections.has(code), code);
+    assert.equal(sections.get(code).section.selectionPolicy, "EXPLICIT",
+      "New optional capabilities must not silently change the retained Profile bootstrap or grant access");
+  }
   for (const ref of init.prerequisites) {
     assert.equal(ref.checksum, checksum(sections.get(ref.moduleName + ":" + ref.sectionCode).section));
-    assert.equal(ref.partition, ["permissionCatalogue", "enterpriseRoles", "businessAccessRoles"].includes(ref.sectionCode) ? "DEFAULT" : undefined);
+    assert.equal(ref.partition, (/permission/i.test(ref.sectionCode) || ["enterpriseRoles", "businessAccessRoles"].includes(ref.sectionCode)) ? "DEFAULT" : undefined);
   }
   assert(Object.keys(init.files).every(file => !file.includes("/records/groups/")));
 });

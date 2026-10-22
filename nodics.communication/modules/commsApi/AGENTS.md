@@ -1,5 +1,21 @@
 # commsApi Agent Contract
 
+Verification dispatch uses `DefaultCommunicationVerificationOperationService`.
+Keep service identities operation-oriented; API exposure belongs to controllers,
+facades and routes. Rename current callers together, never retain a duplicate
+API-named service alias. Preserve private admission and projection override tests.
+
+Employee identity transport inherits `communicationApi.employeeInbox.maxResponseBytes`
+from this module's properties. Validate the effective positive safe integer
+before transport; customer configuration must not supply a missing default.
+Keep inherited/overridden/invalid-value coverage in `communicationInboxSource.test.js`.
+
+Employee inbox reads use Profile's private `/employee/inbox-identity` self-read
+with the original admitted bearer, exact tenant/Enterprise and canonical
+`profile-employee:` recipient. Never infer an employee inbox from a Customer,
+purchasing actor or caller selector. Preserve existing customer behavior and
+run `test/communicationInboxSource.test.js` for both identity paths.
+
 Follow the root Nodics AI agent contract before changing this boundary:
 
 - Follow the repository agent contract: `../../../AGENTS.md`.
@@ -51,3 +67,9 @@ remain unknown/refused, never successful delivery or resend authorization.
 No raw provider response, exception, destination, credential or message content
 belongs in this diagnostic. See the source-scoped intent contract.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Durable-delivery acceptance belongs to Comms API and must use the existing
+source-bound request, retry and inspection routes. Register defaults here;
+projects provide reviewed scenario selections and runtime service sessions.
+Exercise and post-restart inspection are separate phases. Never import a domain
+eligibility service, create an acceptance outbox or replay a send during inspect.

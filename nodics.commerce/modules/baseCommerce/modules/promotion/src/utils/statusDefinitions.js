@@ -55,6 +55,11 @@ module.exports = {
     code: "409",
     message: "The coupon is unavailable for merchant fulfillment",
   },
+  ERR_PROMOTION_COUPON_OFFER_INVALID: { code: '422', message: 'Coupon offer terms or acquisition evidence are invalid' },
+  ERR_PROMOTION_COUPON_PERSISTENCE_UNCONFIRMED: { code: '409', message: 'Coupon owner persistence could not be confirmed' },
+  ERR_PROMOTION_COUPON_ALLOCATION_UNCONFIRMED: { code: '409', message: 'Coupon supply, owner allowance or acquisition could not be confirmed' },
+  ERR_PROMOTION_COUPON_PARTICIPATION_UNCONFIRMED: { code: '409', message: 'Coupon redeemer participation could not be confirmed' },
+  ERR_PROMOTION_COUPON_REPORT_UNCONFIRMED: { code: '409', message: 'Coupon reporting coverage could not be confirmed' },
   ERR_PROMOTION_SELLER_UNCONFIRMED: {
     code: "409",
     message: "Issuer seller authorization could not be confirmed",

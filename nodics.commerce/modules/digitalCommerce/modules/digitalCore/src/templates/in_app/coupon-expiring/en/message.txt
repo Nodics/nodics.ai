@@ -1,0 +1,1 @@
+Your coupon entitlement {{entitlementReference}} expires at {{expiresAt}}. Check the retained terms before redeeming.

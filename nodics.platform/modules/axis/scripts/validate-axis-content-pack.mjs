@@ -112,8 +112,9 @@ for (const [relativePath, expectedHash] of Object.entries(baseline.files ?? {}))
   assert(!source.includes('@owner wcms'), `Axis baseline retained obsolete WCMS owner annotation: ${relativePath}`);
 }
 assert(manifest.pack === 'nodics.platform.axis', 'Axis documentation pack identity drifted');
+documentationContract.validateReleaseSection(manifest);
 assert(
-  manifest.sourceAuthority === 'data/docs-v001/records/documentation',
+  manifest.sourceAuthority === `data/${manifest.contentPath}/records/documentation`,
   'Axis documentation source must be owned by nodics.platform/modules/axis',
 );
 assert(manifest.sourceMode === 'cms-records', 'Axis documentation must use canonical CMS records');
@@ -143,41 +144,41 @@ assert(
 const navigation = documentationContract.validateDataRelease(root);
 
 const generatedComponents = await readFile(
-  resolve(root, 'data/docs-v001/records/documentation/axisDocumentationComponentData.js'),
+  resolve(root, manifest.sourceAuthority, 'axisDocumentationComponentData.js'),
   'utf8',
 );
 const siteRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationSiteData.js',
+  `${manifest.sourceAuthority}/axisDocumentationSiteData.js`,
 );
 const pageRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationPageData.js',
+  `${manifest.sourceAuthority}/axisDocumentationPageData.js`,
 );
 const productRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationProductData.js',
+  `${manifest.sourceAuthority}/axisDocumentationProductData.js`,
 );
 const accessPolicyRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationAccessPolicyData.js',
+  `${manifest.sourceAuthority}/axisDocumentationAccessPolicyData.js`,
 );
 const navigationMetadataRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationNavigationData.js',
+  `${manifest.sourceAuthority}/axisDocumentationNavigationData.js`,
 );
 const dashboardRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationDashboardData.js',
+  `${manifest.sourceAuthority}/axisDocumentationDashboardData.js`,
 );
 const nodeRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationNodeData.js',
+  `${manifest.sourceAuthority}/axisDocumentationNodeData.js`,
 );
 const pageMetadataRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationPageMetadataData.js',
+  `${manifest.sourceAuthority}/axisDocumentationPageMetadataData.js`,
 );
 const publicationStateRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationPublicationStateData.js',
+  `${manifest.sourceAuthority}/axisDocumentationPublicationStateData.js`,
 );
 const searchMetadataRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationSearchMetadataData.js',
+  `${manifest.sourceAuthority}/axisDocumentationSearchMetadataData.js`,
 );
 const routeRecords = await dataRecords(
-  'data/docs-v001/records/documentation/axisDocumentationRouteData.js',
+  `${manifest.sourceAuthority}/axisDocumentationRouteData.js`,
 );
 const validationReport = documentationRecordValidation.validateRecords({
   records: {
@@ -191,10 +192,12 @@ const validationReport = documentationRecordValidation.validateRecords({
     searchMetadata: searchMetadataRecords,
     cmsPages: pageRecords,
     routes: routeRecords,
-    components: await dataRecords('data/docs-v001/records/documentation/axisDocumentationComponentData.js'),
+    components: await dataRecords(`${manifest.sourceAuthority}/axisDocumentationComponentData.js`),
     manifestHashes: manifest.generatedHashes || {},
   },
   options: {
+    // Source packaging is not evidence of governed Online publication.
+    validationScope: 'AUTHORING',
     release: manifest.version,
     source: 'nodics.platform/modules/axis/data/manifest.json',
     owner: 'nodics.platform.axis',
@@ -202,17 +205,19 @@ const validationReport = documentationRecordValidation.validateRecords({
   },
 });
 documentationRecordValidation.assertReady(validationReport);
-await mkdir(resolve(root, 'test/reports'), { recursive: true });
-await writeFile(
-  resolve(root, 'test/reports/axis-documentation-validation-report.json'),
-  JSON.stringify(validationReport, null, 2) + '\n',
-  'utf8',
-);
-await writeFile(
-  resolve(root, 'test/reports/axis-documentation-validation-report.md'),
-  documentationRecordValidation.formatMarkdown(validationReport),
-  'utf8',
-);
+if (!process.argv.includes('--check')) {
+  await mkdir(resolve(root, 'test/reports'), { recursive: true });
+  await writeFile(
+    resolve(root, 'test/reports/axis-documentation-validation-report.json'),
+    JSON.stringify(validationReport, null, 2) + '\n',
+    'utf8',
+  );
+  await writeFile(
+    resolve(root, 'test/reports/axis-documentation-validation-report.md'),
+    documentationRecordValidation.formatMarkdown(validationReport),
+    'utf8',
+  );
+}
 const siteCodes = new Set(siteRecords.map((site) => site.code));
 for (const site of siteRecords) {
   assert(

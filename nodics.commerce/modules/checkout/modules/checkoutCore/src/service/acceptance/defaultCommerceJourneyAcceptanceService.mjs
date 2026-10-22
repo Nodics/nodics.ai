@@ -21,8 +21,11 @@ export async function runCommerceJourneyAcceptance(options = {}) {
   const context = await createAcceptanceContext(options);
   const environment = context.environment;
   const config = options.acceptance || projectRuntimeAcceptance(context.projectRoot, context.configuration, { role: 'COMMERCE' }).commerceJourney || {};
-  for (const field of ["productCode","categoryCode","storeCode","variantCode","secondaryProductCode","secondaryVariantCode","locale","channelCode","jurisdiction","currency","promotionCode","providerToken","shippingMethod","paymentMethod"]) {
+  for (const field of ["productCode","categoryCode","storeCode","variantCode","secondaryProductCode","secondaryVariantCode","locale","channelCode","jurisdiction","currency","providerToken","shippingMethod","paymentMethod"]) {
     if (typeof config[field] !== 'string' || !config[field].trim()) throw new Error('Commerce journey requires fixture ' + field);
+  }
+  if (config.promotionCode !== undefined && (typeof config.promotionCode !== 'string' || !config.promotionCode.trim())) {
+    throw new Error('Commerce journey promotionCode must be a non-empty selected campaign');
   }
   if (!config.shippingAddress || !config.shippingAddress.country || !config.shippingAddress.line1) throw new Error('Commerce journey requires shippingAddress');
   if (config.couponCode !== undefined && (typeof config.couponCode !== 'string' || !config.couponCode.trim())) {
@@ -329,10 +332,12 @@ export async function runCommerceJourneyAcceptance(options = {}) {
         paymentMethod: config.paymentMethod,
       }),
     }));
-    if (placed?.status !== 'COMPLETED' ||
-        !placed.evidence?.completed?.includes('PROMOTION_COMMITTED') ||
-        placed.evidence.promotionCode !== config.promotionCode ||
-        !placed.evidence.promotionRedemptionCode || (config.couponCode && !placed.evidence.couponCode)) {
+    if (placed?.status !== 'COMPLETED') {
+      throw new Error('Checkout did not complete the configured Commerce journey');
+    }
+    if (config.promotionCode && (!placed.evidence?.completed?.includes('PROMOTION_COMMITTED') ||
+        placed.evidence.promotionCode !== config.promotionCode || !placed.evidence.promotionRedemptionCode ||
+        (config.couponCode && !placed.evidence.couponCode))) {
       throw new Error('Checkout promotion apply did not commit configured campaign/redemption or required coupon');
     }
     const placedOrderCode = placed?.orderCode || placed?.code || placed?.evidence?.orderCode || orderCode;
@@ -342,11 +347,13 @@ export async function runCommerceJourneyAcceptance(options = {}) {
     if (order?.order?.code !== placedOrderCode) {
       throw new Error(`Customer order read returned unexpected response: ${JSON.stringify(order)}`);
     }
-    if (order.order.cartCode !== cartSmoke.cartCode || order.order.promotionCode !== config.promotionCode ||
+    if (order.order.cartCode !== cartSmoke.cartCode ||
+        (config.promotionCode && order.order.promotionCode !== config.promotionCode) ||
         (config.couponCode && order.order.couponCode !== placed.evidence.couponCode)) {
-      throw new Error('Customer order did not retain configured campaign/cart or required coupon evidence');
+      throw new Error('Customer order did not retain configured cart, campaign or required coupon evidence');
     }
-    log(`customer promotion preview/checkout apply smoke passed for ${config.promotionCode}`);
+    if (config.promotionCode) log(`customer promotion preview/checkout apply smoke passed for ${config.promotionCode}`);
+    else log(`customer checkout placement completed without a selected promotion fixture`);
     const cancellationPayload = {
       code: `${placedOrderCode}:cancellation`,
       requestType: "CANCELLATION",
@@ -465,7 +472,7 @@ export async function runCommerceJourneyAcceptance(options = {}) {
     await exerciseProductDiscovery(primaryCustomer.headers);
     await exerciseShoppingLists(primaryCustomer.headers);
     const cartSmoke = await exerciseCustomerCart(primaryCustomer.headers);
-    await exerciseCustomerPromotions(cartSmoke);
+    if (config.promotionCode) await exerciseCustomerPromotions(cartSmoke);
     const checkoutSmoke = await exerciseCustomerCheckout(cartSmoke, primaryCustomer);
     const secondaryCredentials = storefrontCustomerCredentials("SECONDARY");
     await ensureStorefrontCustomer(employeeHeaders, secondaryCredentials, "secondary");

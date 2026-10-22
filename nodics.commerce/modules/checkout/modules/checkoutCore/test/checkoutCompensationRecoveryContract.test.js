@@ -315,10 +315,16 @@ test("placement owner rejects retained original compensation before Cart or Paym
 
 test("secured route and facade/controller use only signed owner and the original path command", async () => {
   const f = fixture(); SERVICE.DefaultOrderPlacementService = require("../src/service/defaultOrderPlacementService");
-  global.FACADE = { DefaultCheckoutCustomerFacade: facade };
+  SERVICE.DefaultCheckoutMerchantScopeService = { resolve: async r => r }; // Real partition owner is covered by merchantScopeContract.
+  Object.assign(f.request.authData, { principalType: 'customer', tokenType: 'access', loginId: 'buyer' });
+  f.request.authorization = 'Bearer original';
+  global.CONFIG = { get: key => key === 'cart' ? require('../../cart/config/properties').cart : undefined };
+  SERVICE.DefaultSecuredRequestPipelineService = { getGrantedPermissions: () => ['commerce.checkout.place'], isPermissionGranted: () => true };
+  SERVICE.DefaultModuleService = { invokeModule: async () => ({ contractVersion: 1, tenant: 't', enterpriseCode: 'e', customer: { code: 'customer', loginId: 'buyer' } }) };
+  global.FACADE = { DefaultCheckoutCustomerFacade: facade, DefaultCartCustomerFacade: require('../../cart/src/facade/defaultCartCustomerFacade') };
   const route = require("../src/router/routers").checkoutCore.customer.recoverCompensation;
   assert.equal(route.secured, true); assert.equal(route.permission, "commerce.checkout.place");
-  assert.deepEqual(route.accessGroups, ["customerUserGroup"]); assert.deepEqual(route.authTokenTypes, ["access"]);
+  assert.deepEqual(route.accessGroups, ["customerUserGroup", "employeeUserGroup"]); assert.deepEqual(route.authTokenTypes, ["access"]);
   assert.equal(route.method, "POST"); assert.equal(route.key, "/checkouts/:commandCode/compensation/recover");
   const result = await controller.recoverCompensation({ ...f.request, ownerId: "forged", httpRequest: {
     params: { commandCode: f.request.commandCode }, body: {} } });

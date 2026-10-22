@@ -85,3 +85,9 @@ Route-category defaults belong to this capability; deployments supply only inten
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
 
 Remote actions use the existing allowlist and nService with scoped runtime identity. Process persists an expiring single-claim execution in its instance; the target claims authoritative context before mutation. Optional private attempt recording retains each execution across later actions and published versions, with strict acknowledgement and no uncertain replay. Completed task decisions and immutable versions are read-only through generic APIs. See `llm/contracts/README.md`; no domain HTTP implementation or new identity authority belongs in Process.
+
+Cross-enterprise remote actions are default-disabled. A deployment may select a
+bounded `process.remoteActions.runtimeEnterpriseScope.enterpriseCodes` list only
+when the authenticated human enterprise and immutable instance context contain the
+same selected code. The Process service credential keeps its original deployment
+enterprise; the target owner independently admits any business-enterprise action.

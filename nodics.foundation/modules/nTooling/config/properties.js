@@ -65,6 +65,20 @@ module.exports = {
                         "role": "ENGAGEMENT"
                     }
                 }
+            },
+            "writeRecoveryResilience": {
+                "contractVersion": 1,
+                "maxOperations": 8,
+                "checkpointTimeoutMs": 60000,
+                "ownerCommandTimeoutMs": 600000,
+                "restartTimeoutMs": 300000,
+                "readinessIntervalMs": 1000,
+                "maxEvidenceBytes": 262144,
+                "faultPhases": [
+                    "BEFORE_WRITE",
+                    "AFTER_WRITE_BEFORE_ACK",
+                    "BEFORE_RECEIPT"
+                ]
             }
         },
         discovery: {
@@ -333,6 +347,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/projectConfigurationHarness.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectRuntimePreparationContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectTopologyLifecycleContract.test.mjs' },
+                { node: 'nodics.foundation/modules/nTooling/test/writeRecoveryResilienceAcceptance.test.mjs' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectContainerContracts.test.mjs' },
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderProjectIndependenceContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectBuildTargetContract.test.js' },
@@ -947,6 +962,12 @@ module.exports = {
                 projectHome: true,
                 handler: '@nTooling/node-script',
                 script: 'src/service/project/defaultFunctionalJourneyAcceptanceService.mjs'
+            },
+            'acceptance:write-recovery-resilience': {
+                acceptanceContract: true,
+                projectHome: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/project/defaultWriteRecoveryResilienceAcceptanceService.mjs'
             },
             'validate:root': {
                 description: 'Validate the nodics.ai framework repository boundary and nSetup LLM taxonomy.',

@@ -50,6 +50,30 @@ test("published coupon purchase uses activated rules, never the mutable budget r
   await assert.rejects(owner.capturePurchasedRights(request, { promotionCode: "campaign" }, new Date()), /not available/);
 });
 
+test("purchase-right capture uses the exact admitted coupon campaign", async () => {
+  global.CONFIG = { get: () => ({}) };
+  global.SERVICE = {};
+  let admitted = 0;
+  const owner = {
+    ...source,
+    trustedCouponPurchaseCampaign: async (_request, coupon) => {
+      admitted++;
+      assert.equal(coupon.promotionCode, "campaign");
+      return { campaign: { code: "campaign", status: "ACTIVE", active: true }, activated: true };
+    },
+    couponPurchaseCampaign: () => assert.fail("capture cannot bypass exact coupon admission"),
+  };
+  assert.deepEqual(
+    await owner.capturePurchasedRights(
+      { tenant: "t", enterpriseCode: "seller", authData: { enterpriseCode: "buyer" } },
+      { promotionCode: "campaign" },
+      new Date(),
+    ),
+    {},
+  );
+  assert.equal(admitted, 1);
+});
+
 test("coupon release explicitly removes persisted reservation fields", async () => {
   let saved = { code: "coupon", status: "RESERVED", revision: 1, reservedFor: "buyer", idempotencyKey: "purchase" };
   global.SERVICE = { DefaultCouponService: { update: async request => {

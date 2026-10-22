@@ -68,9 +68,17 @@ test("every secured Copilot route permission is recognized by Profile", async (t
   await assert.rejects(() => governance.validatePermissions([{ permissions: ["*"] }]));
   records.find((row) => row.code === ownerGrants[0]).active = false;
   await assert.rejects(() => governance.validatePermissions([{ permissions: ownerGrants }]));
-  for (const group of fixture.records("UserGroup"))
+  const groups = fixture.records("UserGroup");
+  const privileged = groups.filter((group) =>
+    (group.permissions || []).includes("copilot.configuration.admin"));
+  assert.deepEqual(privileged.map((group) => group.code), ["runtimeConfigAdminUserGroup"]);
+  const configurationGroups = Object.values(require(
+    "../../../../nodics.foundation/modules/nConfig/data/init-v001/records/identity/configUserGroupData"));
+  assert.deepEqual(privileged[0], configurationGroups.find((group) => group.code === privileged[0].code));
+  for (const group of groups)
     assert.equal(
-      (group.permissions || []).some((grant) => ownerGrants.includes(grant)),
+      (group.permissions || []).some((grant) => ownerGrants.slice(1).includes(grant)),
       false,
+      group.code + " must not assign independent budget-owner grants",
     );
 });

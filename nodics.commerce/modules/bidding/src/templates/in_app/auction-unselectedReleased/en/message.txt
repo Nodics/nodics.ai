@@ -1,0 +1,1 @@
+Your offer {{bidCode}} for auction {{roundCode}} was not selected. No funds remain held for this offer.

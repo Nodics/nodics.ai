@@ -2,6 +2,30 @@
   "contractVersion": 2,
   "module": "pricing",
   "sections": {
+    "merchantEvidencePermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Pricing merchant evidence permission",
+      "description": "Forward Pricing permission definition for bounded merchant price evidence; grants remain separately governed.",
+      "owningDomain": "pricing",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/pricingMerchantEvidencePermissionHeader.js": "b2f5c64e1aff121bde092a76f9630644a89871ee7f7b5edcdbdb539616c09f18",
+        "init-v002/records/identity/pricingMerchantEvidencePermissionData.js": "d6f76195075aae11c5892aa2d4835c69af7685cc9c5d0a96f08cd29bedaed4c0"
+      }
+    },
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",

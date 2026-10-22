@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "validation": {
+    "sourceTests": {
+      "passed": 264,
+      "failed": 0,
+      "logs": [
+        "/tmp/semantic-commerce-internal-tests.log",
+        "/tmp/semantic-commerce-original-evidence-tests.log"
+      ]
+    },
+    "strictGateNegativeContract": {
+      "command": "node --test --test-name-pattern='manual review closure binds scope' nodics.docs/test/semanticReviewContract.test.mjs",
+      "passed": 1,
+      "failed": 0
+    },
+    "sidecarQualification": {
+      "status": "PASS",
+      "method": "Unchanged qualifySemanticReview applied to current canonical catalogue and exact source hashes after editorial correction.",
+      "scopesChecked": 4,
+      "closed": 4,
+      "openContentGap": 0
+    },
+    "concurrentChange": "Initial final check caught nTooling quick-start component relocation to docs-v002. Its article hash was unchanged; corrected the evidence path and reran all four checks successfully.",
+    "integratedAggregate": "Not modified. Heisenberg owns final aggregate/composition integration; runtime/provider/publication acceptance is not executed.",
+    "editorialSuccessorTests": {
+      "passed": 42,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-successor-tests.log"
+    },
+    "finalSourceTests": {
+      "passed": 62,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-final-source-tests.log",
+      "command": "node --test nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalBundleSettlement.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js"
+    }
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "PASS_SOURCE_REVIEW",
+  "coordination": {
+    "aggregateOwner": "Heisenberg",
+    "aggregateEdited": false,
+    "canonicalSourceEdited": false,
+    "handoff": "Final sidecars sent to Heisenberg for exclusive shared-aggregate integration; no aggregate edit here. Recheck exact bytes before merging."
+  },
+  "method": {
+    "baseline": "semantic-documentation-closure.json",
+    "baselineSha256": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "sourceSnapshotAt": "2026-10-20T10:57:55.320Z",
+    "review": "Current source/contracts compared with article assertions; exact-byte prior semantic evidence retained for unchanged files. Matching batch2 ownership records reused. Bounded documentation review, not a new full source audit.",
+    "changedBoundSources": 4,
+    "unchangedReuse": 0,
+    "commsEngagement": "No evolving Communication/Engagement runtime review or edits. Identical referenced bytes retain prior evidence only; future drift invalidates it.",
+    "finalReviewAt": "2026-10-20T11:23:34.782Z",
+    "finalComparison": "Read corrected article assertions against previously inspected unchanged source bytes; preserved exact blocks for unrelated reviewed articles. Six editorial corrections plus Digital historical-refund correction have explicit semantic rationale, not hash-only renewal."
+  },
+  "items": [
+    {
+      "item": "Commerce Search guide",
+      "requestedAction": "Document ranking rules, projections, publishing, index ownership, and storefront impact.",
+      "evidence": [
+        {
+          "documentId": "commerce.search-guide",
+          "anchors": [
+            "commerceSearchGuide-1-source-map",
+            "commerceSearchGuide-2-projection-flow",
+            "commerceSearchGuide-3-ranking-and-rules",
+            "commerceSearchGuide-4-customization-and-extension-guidance",
+            "commerceSearchGuide-5-implementation-handoff",
+            "commerceSearchGuide-6-evidence-checklist",
+            "commerceSearchGuide-7-common-mistakes",
+            "commerceSearchGuide-8-verification",
+            "commerce-search-guide-source-depth-1",
+            "commerce-search-guide-source-depth-2",
+            "commerce-search-guide-source-depth-3",
+            "commerce-search-guide-source-depth-4",
+            "commerce-search-guide-complete-set-timing",
+            "commerce-search-guide-agreement-benefits"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchBenefitService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPolicyService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/config/properties.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductCatalogueQueryService.js"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "The current guide accurately separates Product candidate ownership, nSearch indexing and Commerce rule selection. Current source validates complete bounded rule scans and complete candidate ranking before pagination on the selected catalogue path, preserving explicit sorts/zero weights and half-open timing. Agreement benefits resolve through canonical Promotion membership under the original caller. Immutable snapshot replay and sequential non-atomic publication are accurately limited.",
+      "sourceFindings": [],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "commerce.search-guide": {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v002/records/documentation/commerceSearchCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "3170738781a7af9ebb579988b5549536dca85c53435130dc98872ac457ec3df6"
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js": "be38fa2bd54ed9ddd6080a17dcfef50e94481ae11f26635d1880b4d4b1c587e9",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js": "c2c58264dd46c371eb1a7df7b475ea0aac057160d0bfab59ca2a928c3582be68",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js": "2c59b310020b969bf26232e25f1fb5545bec5ea13c09fb44667213226e17b30c",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js": "5dd09694cf304d032627fad69d428317b063b8c2ed9d570922651f11e3164ece",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchBenefitService.js": "3a37eeee573a13153c211a97b1c4b338d244b7fb6c70fc85fa22f154ca71ddc7",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPolicyService.js": "fdb24c94f4900d7326b5f4b4f409f86f8537cc199a6df0a47498420896df4317",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/config/properties.js": "8673b82e53e428f29bdc2bc8251e2c428a958266c5df5870abed0585bbf5af7a",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductCatalogueQueryService.js": "43469d60beaa04ded01054786c325660c3f285227d521fc46be6abb31c104e43"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js",
+      "finalSha256": "be38fa2bd54ed9ddd6080a17dcfef50e94481ae11f26635d1880b4d4b1c587e9",
+      "previousSha256": "03ad3aa2c914e3f3fd3a0940b122b3c956e0e8dddae7e19f7c127680caff7b24",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Ranking projection carries independent validity and benefitRef; immutable rule-version schema/index is distinct from Product candidate source and nSearch indexing. The updated guide preserves those boundaries.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "be38fa2bd54ed9ddd6080a17dcfef50e94481ae11f26635d1880b4d4b1c587e9",
+          "disposition": "reviewed-retain"
+        }
+      ]
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js",
+      "finalSha256": "c2c58264dd46c371eb1a7df7b475ea0aac057160d0bfab59ca2a928c3582be68",
+      "previousSha256": "a14b9eec909b350847c321a4b9fcc88e89310c12e9c6d938eb151a577ac9fbf3",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Reviewed complete bounded deterministic rule scan, scope before applicable-rule limit, half-open validity, exact-zero weights, stable ties and explicit-sort bypass against updated guide. Qualified complete candidate ranking occurs before Product pagination, not on the older page-local branch.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "c2c58264dd46c371eb1a7df7b475ea0aac057160d0bfab59ca2a928c3582be68",
+          "disposition": "reviewed-retain"
+        }
+      ]
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js",
+      "finalSha256": "2c59b310020b969bf26232e25f1fb5545bec5ea13c09fb44667213226e17b30c",
+      "previousSha256": "2e031108e1c4044f4e6ffb0998b7b91545054d2101d6e09caa99dfae9104041c",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Reviewed exact source snapshot replay/readback, effective validation and private WeakSet insert guard. Updated article correctly limits sequential projection/index publication and does not claim global atomicity or operational stock.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "2c59b310020b969bf26232e25f1fb5545bec5ea13c09fb44667213226e17b30c",
+          "disposition": "reviewed-corrected"
+        }
+      ]
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js",
+      "finalSha256": "5dd09694cf304d032627fad69d428317b063b8c2ed9d570922651f11e3164ece",
+      "previousSha256": "9556c3a906c26cbccd1d1380d298d138160fc468357a2d2e0851e97277d4d013",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Compared retained candidate/enrichment path and AVAILABLE_SHOP activation/window selection with guide. Generic provider ownership is unchanged; the guide correctly distinguishes selected complete catalogue ranking from old page-local discovery.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "5dd09694cf304d032627fad69d428317b063b8c2ed9d570922651f11e3164ece",
+          "disposition": "reviewed-corrected"
+        }
+      ],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchBenefitService.js",
+      "finalSha256": "3a37eeee573a13153c211a97b1c4b338d244b7fb6c70fc85fa22f154ca71ddc7",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read full benefit expansion: current Agreement coverage, stable deduplication and canonical Promotion issuer membership use unchanged caller; exact complete batches use Promotion's effective maximumProducts, not a Search copy.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPolicyService.js",
+      "finalSha256": "fdb24c94f4900d7326b5f4b4f409f86f8537cc199a6df0a47498420896df4317",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read full policy: owner bounds/enums, half-open timing and explicit zero; benefit rules cannot mix arbitrary actions or invent eligibility from missing membership.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/config/properties.js",
+      "finalSha256": "8673b82e53e428f29bdc2bc8251e2c428a958266c5df5870abed0585bbf5af7a",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read owner defaults: limits, zero priority and BOOST/BURY baseline reside here. Intentional overrides inherit mechanics, not copied consumer definitions.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductCatalogueQueryService.js",
+      "finalSha256": "43469d60beaa04ded01054786c325660c3f285227d521fc46be6abb31c104e43",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read complete candidates/available/list pipeline: bounded deterministic reads and availability/filters precede ranking; explicit sorts bypass rank; pagination slices only afterward.",
+      "ownershipEvidence": []
+    }
+  ],
+  "canonicalReview": [
+    {
+      "documentId": "commerce.search-guide",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v002/records/documentation/commerceSearchCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "3170738781a7af9ebb579988b5549536dca85c53435130dc98872ac457ec3df6",
+      "previousArticleBlocksSha256": "3170738781a7af9ebb579988b5549536dca85c53435130dc98872ac457ec3df6",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "commerceSearchGuide-1-source-map",
+        "commerceSearchGuide-2-projection-flow",
+        "commerceSearchGuide-3-ranking-and-rules",
+        "commerceSearchGuide-4-customization-and-extension-guidance",
+        "commerceSearchGuide-5-implementation-handoff",
+        "commerceSearchGuide-6-evidence-checklist",
+        "commerceSearchGuide-7-common-mistakes",
+        "commerceSearchGuide-8-verification",
+        "commerce-search-guide-source-depth-1",
+        "commerce-search-guide-source-depth-2",
+        "commerce-search-guide-source-depth-3",
+        "commerce-search-guide-source-depth-4",
+        "commerce-search-guide-complete-set-timing",
+        "commerce-search-guide-agreement-benefits"
+      ],
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS"
+    }
+  ],
+  "tests": [
+    {
+      "command": "node --test nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchRankingContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchPublicationContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchBenefitContract.test.js nodics.commerce/modules/baseCommerce/modules/product/test/productCatalogueQuery.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentParticipantContextContract.test.js nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js nodics.waste/modules/wasteReward/test/materialConfiguration.test.js nodics.waste/modules/wasteReward/test/materialTransportContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 211,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-internal-tests.log"
+    },
+    {
+      "command": "node --test nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/physicalOrderReversalContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentOriginalCaptureSandboxContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceRefundContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 53,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-original-evidence-tests.log"
+    }
+  ],
+  "exclusions": [
+    "No runtime source, canonical CMS/manifest/shared closure edits.",
+    "No browser/E2E, native deployment, external calls, secrets, imports, publication, commits or context regeneration.",
+    "Local source fixtures and classification cannot qualify installed providers, transactions or financial settlement."
+  ]
+}

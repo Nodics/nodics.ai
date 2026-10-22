@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "evidenceQualification": {
+    "mechanism": "nodics.docs/scripts/semantic-review-contract.mjs:qualifySemanticReview",
+    "status": "closed-with-evidence",
+    "expected": true,
+    "sourceAndSupportingHashes": "ALL_CURRENT_AT_FINAL_CHECK",
+    "validatorHashes": "UNCHANGED",
+    "scope": "Eight independent in-memory scoped bundles; shared aggregate not edited. Open release-guide scope intentionally rejects closure."
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVALIDATION",
+  "item": "Module Registry journey",
+  "requestedAction": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "rationale": "Read each cited registry section against the complete register/registerBatch/applicationStatusReport diff and nearest BackOffice contract. Batch registration now settles every sibling before one captured lease snapshot, refreshes persisted partial state on failure, and preserves both original and refresh errors. Single registrations retain independent refresh. Status composition uses at most four request-local workers while retaining input-relative outcomes. These bounded execution changes preserve the documented distinction between observations, human activation, capability availability and API authorization; they do not add a loader or permit a heartbeat to enable a module. No cited article promises transaction-wide rollback, serial profile reads or per-item snapshot publication.",
+  "readiness": {
+    "mode": "AUTHORIZED_FRAMEWORK_MAINTAINER_REVIEW",
+    "writeOwner": "nodics.docs/test/evidence",
+    "outcome": "Requalify exact stale editorial scopes without weakening validators or claiming runtime acceptance.",
+    "method": "Recovered matching historical source bytes where stated, read actual deltas/current named methods and cited article blocks, compare authority/failure/override claims, reuse only byte-identical prior source reviews.",
+    "excluded": "No runtime startup, E2E, import, publication, credentials, source/manifest rewrite, generated context, commits or shared aggregate edits."
+  },
+  "historicalBaseline": {
+    "aggregate": "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "aggregateSha256AtRead": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+    "previousSourceRevalidation": {
+      "reviewDate": "2026-10-09",
+      "artifact": "semantic-documentation-axis-setup-successor-review-2026-10-09.json",
+      "previousDisposition": "PASS_SOURCE_REVIEW",
+      "canonicalArticleBytes": "EXACT_BLOCKS_UNCHANGED_ACTIVE_COMPONENT_PATH_RELOCATED",
+      "changedSourceFiles": [],
+      "manuallyReviewedSourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js"
+      ],
+      "boundary": "Re-read eight cited current anchors and three registry owner files. Only canonical component provenance moves with the selected successor; registration/activation/dependency/status/visibility explanation and non-live boundary remain unchanged."
+    }
+  },
+  "items": [
+    {
+      "item": "Module Registry journey",
+      "requestedAction": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Read each cited registry section against the complete register/registerBatch/applicationStatusReport diff and nearest BackOffice contract. Batch registration now settles every sibling before one captured lease snapshot, refreshes persisted partial state on failure, and preserves both original and refresh errors. Single registrations retain independent refresh. Status composition uses at most four request-local workers while retaining input-relative outcomes. These bounded execution changes preserve the documented distinction between observations, human activation, capability availability and API authorization; they do not add a loader or permit a heartbeat to enable a module. No cited article promises transaction-wide rollback, serial profile reads or per-item snapshot publication.",
+      "evidence": [
+        {
+          "documentId": "platform.module-registry-journey",
+          "anchors": [
+            "platformModuleRegistryJourney-3-registry-contract",
+            "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+            "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states",
+            "platformModuleRegistryJourney-7-axis-administrator-walkthrough",
+            "platformModuleRegistryJourney-8-example-unavailable-target-independent-action",
+            "platformModuleRegistryJourney-12-non-customizable-security-and-ownership",
+            "platformModuleRegistryJourney-13-troubleshooting-and-recovery",
+            "platformModuleRegistryJourney-15-revision-conflict-during-activation"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+        "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js"
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "platform.module-registry-journey": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "ebd86dfe487ea37d352f2dfef84efc23bfb51bf99f050fa453d5408795254908"
+    }
+  },
+  "priorCanonicalDocuments": {
+    "platform.module-registry-journey": {
+      "owner": "nodics.platform/modules/backoffice",
+      "componentFile": "nodics.platform/modules/backoffice/data/docs-v001/records/documentation/backofficeDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "ebd86dfe487ea37d352f2dfef84efc23bfb51bf99f050fa453d5408795254908",
+      "sections": [
+        {
+          "anchor": "platformModuleRegistryJourney-3-registry-contract",
+          "title": "Registry contract"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+          "title": "Dependency and activation rules"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states",
+          "title": "Read the registry without confusing its states"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-7-axis-administrator-walkthrough",
+          "title": "Axis administrator walkthrough"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-8-example-unavailable-target-independent-action",
+          "title": "Example: unavailable target, independent action"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-12-non-customizable-security-and-ownership",
+          "title": "Non-customizable security and ownership"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-13-troubleshooting-and-recovery",
+          "title": "Troubleshooting and recovery"
+        },
+        {
+          "anchor": "platformModuleRegistryJourney-15-revision-conflict-during-activation",
+          "title": "Revision conflict during activation"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js": "350e200059cd7ccdbaf92f32700d0afaa51d4f210b2a01f85bbb0f69c6d94f24",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js": "bd56f030562ab6d7ba0da834cb7aa179eef20c4cda9ef7500053a0d65c8a93da",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+      "previousSha256": "350e200059cd7ccdbaf92f32700d0afaa51d4f210b2a01f85bbb0f69c6d94f24",
+      "sha256": "350e200059cd7ccdbaf92f32700d0afaa51d4f210b2a01f85bbb0f69c6d94f24",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+      "previousSha256": "71abc36501b5ecffe4aa743288103880fddb1735389ef4cfe4061f9a69a7d757",
+      "sha256": "bd56f030562ab6d7ba0da834cb7aa179eef20c4cda9ef7500053a0d65c8a93da",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Recovered 3f5ab7b57 bytes match the prior hash. Read all changed hunks: private batch flag defers per-item refresh only, Promise.allSettled waits late writes, captured leases publish before asynchronous reconciliation, catch repairs only when not already refreshed, and bounded status workers preserve order and undefined successes. Tests cover partial failures, concurrent batches, private flag spoofing and exact-request composition."
+    },
+    {
+      "path": "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+      "previousSha256": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1",
+      "sha256": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    }
+  ],
+  "correctnessAndCoverageLimitations": [
+    "Four workers is a per-composition implementation bound, not a global capacity or latency guarantee.",
+    "No durable deployment leases, real registration/activation, browser navigation or multi-runtime availability acceptance was performed."
+  ],
+  "tests": [
+    {
+      "command": "node --test nodics.platform/modules/backoffice/test/backofficeRegistryBatchSnapshot.test.js",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "command": "node node_modules/mocha/bin/mocha.js nodics.platform/modules/backoffice/test/backofficeStatusReadFanoutContract.test.js --reporter dot",
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "command": "Initial combined node --test invocation included the Mocha file",
+      "passed": 55,
+      "failed": 1,
+      "disposition": "RUNNER_MISMATCH_RESOLVED",
+      "detail": "describe was undefined under Node's runner; unchanged test subsequently passed under repository Mocha. Not an implementation defect."
+    }
+  ],
+  "evidenceValidatorRegression": {
+    "command": "node --test --test-name-pattern='manual review closure binds' nodics.docs/test/semanticReviewContract.test.mjs",
+    "passed": 1,
+    "failed": 0
+  },
+  "unchangedValidatorSha256": {
+    "nodics.docs/test/semanticReviewContract.test.mjs": "89fa7fc0f9b23eee170f04aa4023f21054226eb274642614297d6a48d1c12457",
+    "nodics.docs/scripts/semantic-review-contract.mjs": "5ebe473c28ed21de599d5cd6d5ea96eaddc6d1ed6d548a543afd060442f57f0e"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "integration": {
+    "aggregateWriter": "Heisenberg",
+    "aggregateEditedByThisReview": false,
+    "instruction": "Verify current article/source hashes, merge only this scope's sourceFileSha256 bindings and reasoned sourceRevalidation into the existing aggregate; preserve original action, historical findings/limits and unrelated scopes. Changed inputs reopen review."
+  }
+}

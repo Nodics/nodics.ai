@@ -17,14 +17,33 @@ import { pathToFileURL } from 'node:url';
 export async function runCheckoutContractAcceptance(options = {}) {
   const { request, authenticate } = await createAcceptanceContext(options);
   const headers = await authenticate();
-  const contract = await request('COMMERCE', '/nodics/system/v0/contract/openapi', { headers });
-  const paths = contract?.paths || contract?.openapi?.paths || {};
-  for (const route of ['/nodics/cart/v0/carts/{cartCode}/calculations', '/nodics/checkoutCore/v0/checkouts/place',
-    '/nodics/order/v0/orders/{orderCode}/lifecycle/preview', '/nodics/process/v0/incidents',
-    '/nodics/process/v0/instances/{instanceCode}/retry', '/nodics/process/v0/instances/{instanceCode}/compensate']) {
-    const method = route === '/nodics/process/v0/incidents' ? 'get' : 'post';
-    const operation = paths[route]?.[method];
-    if (!operation || typeof operation !== 'object' || Array.isArray(operation)) throw new Error('Commerce effective contract is missing ' + method.toUpperCase() + ' ' + route);
+  const contracts = [
+    {
+      owner: 'Commerce',
+      role: 'COMMERCE',
+      operations: [
+        ['/nodics/cart/v0/carts/{cartCode}/calculations', 'post'],
+        ['/nodics/checkoutCore/v0/checkouts/place', 'post'],
+        ['/nodics/order/v0/orders/{orderCode}/lifecycle/preview', 'post'],
+      ],
+    },
+    {
+      owner: 'Process',
+      role: 'PROCESS',
+      operations: [
+        ['/nodics/process/v0/incidents', 'get'],
+        ['/nodics/process/v0/instances/{instanceCode}/retry', 'post'],
+        ['/nodics/process/v0/instances/{instanceCode}/compensate', 'post'],
+      ],
+    },
+  ];
+  for (const expected of contracts) {
+    const contract = await request(expected.role, '/nodics/system/v0/contract/openapi', { headers });
+    const paths = contract?.paths || contract?.openapi?.paths || {};
+    for (const [route, method] of expected.operations) {
+      const operation = paths[route]?.[method];
+      if (!operation || typeof operation !== 'object' || Array.isArray(operation)) throw new Error(expected.owner + ' effective contract is missing ' + method.toUpperCase() + ' ' + route);
+    }
   }
   return { state: 'PASSED' };
 }

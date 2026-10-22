@@ -1128,3 +1128,30 @@ module.exports.promotion.promotionPolicyReceipt = {
     },
   },
 };
+
+module.exports.promotion.promotion.definition.couponOffer = {
+  type: 'object', required: false,
+  description: 'Immutable coupon supply, lifetime owner cap, fixed/NONE expiry and typed acquisition requirements.',
+};
+module.exports.promotion.coupon.definition.offerAllocationCode = {
+  type: 'string', required: false, description: 'Original private offer allocation reservation; never reassigned.',
+};
+for (const name of ['couponOfferSupply', 'couponOwnerAllowance', 'couponAcquisitionReservation',
+  'couponRedeemerAgreement', 'couponAcquisitionProjection']) {
+  module.exports.promotion[name] = {
+    super: 'base', model: true, schemaPolicies: ['operational'],
+    service: { enabled: true }, router: { enabled: false },
+    transaction: { enabled: true, sideEffects: 'none' },
+    cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+    readProtection: { owner: 'DefaultCouponAcquisitionPersistenceService' },
+    indexes: { individual: { couponRecordIdentity: { name: 'code', enabled: true, options: { unique: true } } } },
+    definition: {
+      code: { type: 'string', required: true, description: 'Deterministic owner identity.' },
+      tenant: { type: 'string', required: true, description: 'Runtime isolation and generated persistence key.' },
+      enterpriseCode: { type: 'string', required: name !== 'couponAcquisitionProjection', description: 'Issuing Enterprise association; tenant-wide private reporting has no invented Enterprise.' },
+      promotionCode: { type: 'string', required: false, description: 'Original offer identity.' },
+      revision: { type: 'int', required: true, description: 'Owner compare-and-set revision.' },
+      evidence: { type: 'object', required: true, description: 'Private typed owner state, counters or immutable source evidence.' },
+    },
+  };
+}

@@ -37,6 +37,7 @@ export function resolveCommercePublicationFixtures(config, context, options = {}
 }
 
 const requiredDomains = ['product', 'pricing', 'promotion', 'inventory', 'tax', 'media'];
+const defaultAcceptanceName = 'commercePublication';
 const stagedRoutes = { '/nodics/product/v0/products/publication/search': 'post' };
 const onlineRoutes = {
   '/nodics/product/v0/products/discovery': 'get',
@@ -48,6 +49,26 @@ function requireSafeProduct(product, label) {
   for (const field of ['sku', 'warehouseCode', 'priceRowCode', 'supplierCost', 'internalOnly']) {
     requireValue(!JSON.stringify(product).includes('"' + field + '"'), label + ' leaked ' + field);
   }
+}
+
+/** Resolves one bounded customer-owned acceptance profile name from CLI arguments. */
+export function commercePublicationAcceptanceArgument(argv = []) {
+  const values = argv.filter(argument => argument === '--acceptance' || argument.startsWith('--acceptance='));
+  requireValue(values.length <= 1, 'Commerce publication accepts one --acceptance=<name> selection');
+  if (values.length === 0) return defaultAcceptanceName;
+  const name = values[0].startsWith('--acceptance=') ? values[0].slice('--acceptance='.length) : '';
+  requireValue(/^[A-Za-z][A-Za-z0-9]{0,127}$/.test(name),
+    'Commerce publication acceptance selection must use 1..128 letters or digits and start with a letter');
+  return name;
+}
+
+/** Selects a customer fixture without embedding application identities in Product. */
+export function selectCommercePublicationAcceptance(profiles, name = defaultAcceptanceName) {
+  requireValue(/^[A-Za-z][A-Za-z0-9]{0,127}$/.test(name), 'Commerce publication acceptance selection is invalid');
+  const selected = profiles && Object.hasOwn(profiles, name) ? profiles[name] : undefined;
+  requireValue(selected && typeof selected === 'object' && !Array.isArray(selected),
+    'Commerce publication acceptance profile is unavailable: ' + name);
+  return selected;
 }
 
 /** Normalizes exact Product root evidence without treating a representative receipt as catalogue coverage. */
@@ -129,7 +150,11 @@ export async function runCommercePublicationAcceptance(options = {}) {
   requireValue(options.execute === true && options.approvePublications === true,
     'Explicit --execute --approve-publications is required for Staged publication acceptance');
   const context = await createAcceptanceContext(options);
-  const config = resolveCommercePublicationFixtures(options.acceptance || projectRuntimeAcceptance(context.projectRoot, context.configuration, { role: 'COMMERCE_STAGED' }).commercePublication || {}, context, options);
+  const selected = options.acceptance || selectCommercePublicationAcceptance(
+    projectRuntimeAcceptance(context.projectRoot, context.configuration, { role: 'COMMERCE_STAGED' }),
+    options.acceptanceName || defaultAcceptanceName,
+  );
+  const config = resolveCommercePublicationFixtures(selected, context, options);
   requireValue(Array.isArray(config.catalogs) && config.catalogs.length > 0 && config.catalogs.length <= 100,
     'Commerce publication requires 1..100 catalog fixtures');
   for (const catalog of config.catalogs) {
@@ -228,6 +253,6 @@ export async function runCommercePublicationAcceptance(options = {}) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  if (process.argv.includes('--help')) console.log('acceptance:commerce-publication --execute --approve-publications [--legacy-projection-qualification]; requires tooling.acceptance.commercePublication catalogs, exact sourceVersion/targetVersion and approved Online receipts for six domains. Default checks governed delivery without publication writes. Optional legacy qualification writes Staged projections only. Never approves, restores or imports Online.');
-  else runCommercePublicationAcceptance({ execute: process.argv.includes('--execute'), approvePublications: process.argv.includes('--approve-publications'), legacyProjectionQualification: process.argv.includes('--legacy-projection-qualification') }).then(result => console.log(JSON.stringify(result))).catch(error => { console.error(error.message); process.exitCode = 1; });
+  if (process.argv.includes('--help')) console.log('acceptance:commerce-publication --execute --approve-publications [--acceptance=<name>] [--legacy-projection-qualification]; defaults to tooling.acceptance.commercePublication and permits one bounded customer-owned named acceptance profile. Exact sourceVersion/targetVersion and approved Online receipts are required for six domains. Default checks governed delivery without publication writes. Optional legacy qualification writes Staged projections only. Never approves, restores or imports Online.');
+  else runCommercePublicationAcceptance({ execute: process.argv.includes('--execute'), approvePublications: process.argv.includes('--approve-publications'), acceptanceName: commercePublicationAcceptanceArgument(process.argv.slice(2)), legacyProjectionQualification: process.argv.includes('--legacy-projection-qualification') }).then(result => console.log(JSON.stringify(result))).catch(error => { console.error(error.message); process.exitCode = 1; });
 }

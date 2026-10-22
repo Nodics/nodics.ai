@@ -55,7 +55,8 @@ test('actual Profile forward baseline is discovered before dependent group delta
         const baseline = found.find(release => release.releaseCode === 'profile:init-v001');
         assert.equal(baseline.sourceRoot, manifest.sections['init-v001'].sourceRoot);
         assert.equal(baseline.sourceRoot, 'init-v001', 'the successor keeps its source root without rewriting historical files');
-        assert.equal(baseline.version, '0.0.3');
+        assert.equal(baseline.version, manifest.sections['init-v001'].version,
+            'discovery must preserve the current owner-governed baseline version');
         assert(baseline.prerequisites.length > 0, 'authority data is pinned through owner packs');
         assert(!baseline.declaredFiles.some(file => file.endsWith('runtimeConfigurationUpdateUserGroupsData.js')));
         assert(!baseline.declaredFiles.some(file => file.endsWith('backofficeCircaUserGroupsData.js')));

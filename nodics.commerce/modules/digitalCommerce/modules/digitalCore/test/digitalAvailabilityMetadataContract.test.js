@@ -103,7 +103,7 @@ test("selected ownership still validates owner configuration, binding and exact 
   const f = fixture(t, { productType: 'DIGITAL', digitalDeliveryType: 'DIGITAL_OWNERSHIP', inventoryStrategy: 'DIGITAL_COMMERCE', assetCode: 'asset' });
   SERVICE.DefaultDigitalCommerceOwnershipService = ownership;
   const owner = { moduleName: 'domain', connectionName: 'domain', targetAuthority: 'DOMAIN', apiPrefix: '/internal/sales' };
-  const policy = { enabled: true, qualified: true, owner };
+  const policy = { ...require('../config/properties').digitalCore.digitalOwnership, enabled: true, qualified: true, owner };
   CONFIG.get = () => ({ digitalOwnership: policy });
   let reads = 0, calls = 0;
   const binding = { code: 'binding', active: true, revision: 1, tenant: f.request.tenant, enterpriseCode: f.request.enterpriseCode,
@@ -112,7 +112,13 @@ test("selected ownership still validates owner configuration, binding and exact 
     providerReference: { storeCode: f.request.storeCode, assetCode: 'asset' }, evidence: { retainedProducts: [{
       locale: f.request.locale, code: 'projection', sourceHash: 'hash', publicationVersion: 'version' }] } };
   Object.assign(f.projection, { code: 'projection', sourceHash: 'hash', publicationVersion: 'version' });
-  SERVICE.DefaultDigitalCommerceEntitlementService = { readRecords: async () => { reads++; return [structuredClone(binding)]; } };
+  const retained = structuredClone(f.projection);
+  SERVICE.DefaultProductSearchProjectionService = {};
+  SERVICE.DefaultDigitalProductBindingService = {};
+  SERVICE.DefaultDigitalCommerceEntitlementService = { readRecords: async service => {
+    reads++;
+    return [structuredClone(service === SERVICE.DefaultDigitalProductBindingService ? binding : retained)];
+  } };
   SERVICE.DefaultModuleService = { invokeModule: async () => { calls++; return { available: true, status: 'OWNER_CHECKED', assetCode: 'asset' }; } };
   for (const key of Object.keys(owner)) {
     const value = owner[key]; delete owner[key];
@@ -121,10 +127,31 @@ test("selected ownership still validates owner configuration, binding and exact 
   }
   assert.equal(reads, 0); assert.equal(calls, 0);
   assert.equal((await checkout.availabilityFromProjection(f.request, f.projection)).available, true);
+  SERVICE.DefaultDigitalCommerceEntitlementService.readRecords = async service => {
+    reads++;
+    return service === SERVICE.DefaultDigitalProductBindingService ? [] : [structuredClone(retained)];
+  };
+  assert.deepEqual(await checkout.availabilityFromProjection(f.request, f.projection), {
+    available: false, status: 'UNAVAILABLE', guaranteed: false, reservableAt: 'CHECKOUT_BEFORE_PAYMENT',
+    productType: 'DIGITAL', inventoryStrategy: 'DIGITAL_COMMERCE', digitalDeliveryType: 'DIGITAL_OWNERSHIP',
+    reasonCode: 'DIGITAL_OWNERSHIP_BINDING_UNAVAILABLE',
+  });
+  assert.equal(calls, 1);
+  SERVICE.DefaultDigitalCommerceEntitlementService.readRecords = async service => {
+    reads++;
+    return [structuredClone(service === SERVICE.DefaultDigitalProductBindingService ? binding : retained)];
+  };
   binding.evidence.retainedProducts[0].sourceHash = 'corrupt';
   await assert.rejects(checkout.availabilityFromProjection(f.request, f.projection), /binding is unavailable/);
   assert.equal(calls, 1);
   binding.evidence.retainedProducts[0].sourceHash = 'hash';
+  Object.assign(f.projection, { code: 'successor', sourceHash: 'successor-hash', publicationVersion: 'successor-version' });
+  assert.equal((await checkout.availabilityFromProjection(f.request, f.projection)).available, true);
+  assert.equal(calls, 2);
+  retained.payload.localizedAttributes.assetCode = 'foreign';
+  await assert.rejects(checkout.availabilityFromProjection(f.request, f.projection), /binding is unavailable/);
+  assert.equal(calls, 2);
+  retained.payload.localizedAttributes.assetCode = 'asset';
   const fault = new Error('AUTH_OR_REMOTE_FAILURE');
   SERVICE.DefaultModuleService.invokeModule = async () => { throw fault; };
   await assert.rejects(checkout.availabilityFromProjection(f.request, f.projection), error => error === fault);

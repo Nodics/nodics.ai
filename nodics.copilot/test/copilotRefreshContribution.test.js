@@ -63,20 +63,21 @@ test("explicit Process contribution is immutable, domain-owned and inert until s
     "sourceCode",
     "expectedPolicyDigest",
   ]);
-  assert.equal(section.version, "1.1.0");
+  const baseline = require("../../nodics.foundation/modules/nTooling/test/evidence/unreleased-data-baseline-rebase-2026-10-07.json");
+  const manifestPath = "nodics.ai/nodics.copilot/modules/copilotApi/data/manifest.json";
+  const baselineSection = baseline.sections.find(
+    (entry) => entry.manifest === manifestPath && entry.section === "knowledgeRefreshWorkflow");
+  const baselineManifest = baseline.changedFiles.find((entry) => entry.path === manifestPath);
+  assert.equal(baselineSection.previousVersion, "1.1.0");
+  assert.equal(section.version, baselineSection.version);
+  // The recorded rebase seals the manifest, whose declared file hash seals the payload.
+  // Never derive a replacement expected hash from a mutated current predecessor.
   assert.equal(
     crypto
       .createHash("sha256")
-      .update(
-        fs.readFileSync(
-          path.join(
-            ownerPath,
-            "data/init-v001/records/process/copilotKnowledgeWorkflowData.js",
-          ),
-        ),
-      )
+      .update(fs.readFileSync(path.join(ownerPath, "data/manifest.json")))
       .digest("hex"),
-    "a0f19a23631d0367f4f0ecc2ceb0db7f917f6ebc60a4707cf05a5acca2c50b9a",
+    baselineManifest.afterSha256,
   );
   const action = definitions[0].graph.nodes.find(
     (node) => node.type === "ACTION",

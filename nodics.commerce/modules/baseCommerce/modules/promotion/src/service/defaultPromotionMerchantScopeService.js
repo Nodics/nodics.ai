@@ -29,7 +29,8 @@ module.exports = {
     /** Returns a fixed, secret-free stage only for the original failure object; never admission authority or private cause. @param {Error} error Original owner failure. @returns {string|undefined} Bounded diagnostic. */
     admissionFailureStage: function (error) { return error && typeof error === 'object' ? admissionFailures.get(error) : undefined; },
     /** Selects only the existing qualified consent policy; no independent enablement flag. @returns {boolean} Selection. */
-    enabled: function () { return CONFIG.get('promotion')?.sellerAuthorization?.enabled === true; },
+    enabled: function () { return CONFIG.get('promotion')?.sellerAuthorization?.enabled === true ||
+        !!CONFIG.get('promotion')?.couponOffers && CONFIG.get('digitalCore')?.merchantRedemption?.enabled === true; },
     /** Checks bounded owner identities before reads. @param {*} value Identity. @returns {boolean} Valid code. */
     bounded: function (value) { return typeof value === 'string' && /^[A-Za-z0-9_.:-]{1,256}$/.test(value); },
     /** Captures only original admission coordinates, not Express objects or opaque transport state. @param {Object} r Staff request. @returns {Object} Detached signature. */
@@ -70,6 +71,7 @@ module.exports = {
     /** Checks original receipt membership, protected-token fingerprint and unchanged delegated stock binding. @param {Object} r Signed issuer. @param {Object} coupon Persisted unit. @returns {Promise<Object>} Exact private binding. */
     binding: async function (r, coupon) {
         const seller = SERVICE.DefaultCouponSellerAuthorizationService, secure = SERVICE.DefaultCouponSecureIssuanceService;
+        if (coupon.purchasePolicy?.version === 2) return this.retainedParticipantBinding(r, coupon);
         admissionDiagnostics.stage(r, 'COUPON_SCOPE');
         if (!seller.policy() || coupon.tenant !== r.tenant || !this.bounded(coupon.code) ||
             seller.enterprise(coupon.issuerEnterpriseRef) !== r.enterpriseCode ||
@@ -113,6 +115,31 @@ module.exports = {
         admissionDiagnostics.stage(r, 'CONSENT');
         seller.proof({ enterpriseCode: coupon.enterpriseCode }, coupon, campaign);
         return binding;
+    },
+    /** Admits purchased immutable participation independently of later sales consent, retaining exact secure issuance membership. */
+    retainedParticipantBinding: async function (r, coupon) {
+        const secure = SERVICE.DefaultCouponSecureIssuanceService, seller = SERVICE.DefaultCouponSellerAuthorizationService;
+        if (coupon.tenant !== r.tenant || !this.bounded(coupon.code) || !coupon.soldTo ||
+            !['DELIVERED', 'CLAIMED', 'REDEEMED'].includes(coupon.status) ||
+            seller.enterprise(coupon.vendorEnterpriseRef) !== coupon.enterpriseCode) this.fail();
+        const retained = SERVICE.DefaultCouponOfferService.retained(coupon);
+        const participation = await SERVICE.DefaultCouponRedeemerParticipationService.authorizeRedemption(r, coupon);
+        const auth = await SERVICE.DefaultIdentityGovernanceService.getSystemAuthData();
+        if (auth?.isSystem !== true) this.fail();
+        const owner = { tenant: r.tenant, enterpriseCode: coupon.enterpriseCode, authData: auth };
+        await secure.persistence(owner);
+        const batch = await this.read('DefaultCouponBatchService', owner, { tenant: r.tenant, enterpriseCode: coupon.enterpriseCode, code: coupon.batchCode });
+        const command = batch?.secureIssuance?.command, units = batch?.secureIssuance?.units;
+        if (!command || command.enterpriseCode !== retained.issuerEnterpriseRef.code || command.promotionCode !== coupon.promotionCode ||
+            coupon.secureIssuanceCode !== batch.code || !Array.isArray(units)) this.fail();
+        secure.assertStockScope(coupon, command, batch);
+        const matching = units.filter(unit => unit.code === coupon.code);
+        if (matching.length !== 1 || matching[0].tokenHash !== coupon.tokenHash ||
+            matching[0].protectedFingerprint !== SERVICE.DefaultPromotionPublicationService.fingerprint(coupon.protectedToken)) this.fail();
+        await seller.activeEnterprise(r, participation.issuerEnterpriseCode);
+        await seller.activeEnterprise(r, participation.redeemerEnterpriseCode);
+        return { version: 2, ...participation, promotionCode: coupon.promotionCode, batchCode: coupon.batchCode,
+            distributionStoreCode: command.storeCode };
     },
     /** Admits an exact token or entitlement under fresh signed staff and outlet scope; same-enterprise callers retain their existing path. @param {Object} r Original staff request. @param {Object} selection Exact token or entitlement identity. @returns {Promise<boolean>} Private admission established. */
     admit: async function (r, selection = {}) {
@@ -239,6 +266,10 @@ module.exports = {
         const merchant = await SERVICE.DefaultDigitalCommerceMerchantService.withStore(staff, { enterpriseCode: staff.enterpriseCode });
         if (!SERVICE.DefaultDigitalCommerceMerchantService.scoped(staff, merchant) ||
             !isDeepStrictEqual(await this.binding(value.staff, retained), value.binding)) this.fail();
+        if (retained.purchasePolicy?.version === 2) {
+            if (!this.admitted(value.staff) || !isDeepStrictEqual(this.signature(r), value.signature)) this.fail();
+            return SERVICE.DefaultCouponOfferService.retained(retained);
+        }
         const campaign = await SERVICE.DefaultCouponSellerAuthorizationService.campaign(value.staff, retained.promotionCode);
         if (!this.admitted(value.staff) || !isDeepStrictEqual(this.signature(r), value.signature)) this.fail();
         SERVICE.DefaultCouponSellerAuthorizationService.proof({ enterpriseCode: value.vendor }, retained, campaign);
@@ -251,6 +282,42 @@ module.exports = {
         if (value.operation !== 'validate' || !isDeepStrictEqual(this.signature(r), value.signature) ||
             coupon.code !== value.couponCode || coupon.enterpriseCode !== value.vendor || !this.admitted(value.staff)) this.fail();
         return value.staff.enterpriseCode;
+    },
+    /**
+     * Selects only the effective Digital-owned plain staff-screen receipt policy.
+     * The named provider is a qualification invariant, not a Promotion default.
+     * @returns {boolean} Staff attestation selection; missing policy/provider returns false.
+     * @throws {Error} Propagates configuration resolution failures without fallback.
+     * @override Preserve explicit effective owner selection and refusal of integrated or simulated providers; never supply missing Digital defaults.
+     */
+    staffRecordingSelected: function () {
+        const policy = CONFIG.get('digitalCore')?.merchantRedemption;
+        return CONFIG.get('promotion')?.merchantBenefits?.enabled === false && policy?.enabled === true &&
+            policy.providerService === 'DefaultDigitalCommerceMerchantScreenProviderService';
+    },
+    /**
+     * Rechecks original staff and retained outlet rights for a v2 ITEM attestation.
+     * Private delegated children never impersonate the stock owner.
+     * @param {Object} r Exact validation context.
+     * @param {Object} coupon Persisted purchased unit.
+     * @returns {Promise<boolean>} Staff recording only; unselected policy, non-v2 rights or unadmitted service identities return false.
+     * @throws {NodicsError} Refuses changed private identity, participation/outlet mismatch or selection drift; propagates staff/owner denials.
+     * @override Preserve original signed staff, private lifecycle identity, retained rights and before/after checks; never return delivery proof.
+     */
+    staffRecording: async function (r, coupon) {
+        if (!this.staffRecordingSelected() || coupon.purchasePolicy?.version !== 2) return false;
+        const value = lifecycle.get(r), signature = this.signature(r), snapshot = this.recordSnapshot(coupon);
+        if (value && (value.operation !== 'validate' || !isDeepStrictEqual(signature, value.signature) ||
+            coupon.code !== value.couponCode || coupon.enterpriseCode !== value.vendor ||
+            coupon.tenant !== value.staff.tenant || !this.admitted(value.staff))) this.fail();
+        const staff = value ? value.staff : r;
+        if (staff.authData?.principalType !== 'human') return false;
+        const participation = await SERVICE.DefaultCouponRedeemerParticipationService.authorizeRedemption(staff, coupon);
+        if (participation.redeemerEnterpriseCode !== staff.enterpriseCode ||
+            participation.storeCode !== r.storeCode || participation.storeRevision !== r.storeRevision ||
+            !this.staffRecordingSelected() || !isDeepStrictEqual(signature, this.signature(r)) ||
+            !isDeepStrictEqual(snapshot, this.recordSnapshot(coupon)) || value && !this.admitted(value.staff)) this.fail();
+        return true;
     },
     /** Resolves only an exact in-flight original benefit command, rechecking staff, source, receipt and purchase on every receiver call. No public amount/reversal input is accepted. @param {Object} command Opaque owner handoff. @param {string} type Fixed accounting action. @returns {Promise<Object>} Detached original benefit coordinates. */
     resolveBudgetRequest: async function (command, type) {

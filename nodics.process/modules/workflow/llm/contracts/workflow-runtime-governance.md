@@ -426,6 +426,24 @@ keeps explicit connection selection, remote-only dispatch and one attempt.
 `process.remoteActions.maximumExecutionAgeMs` defaults to 30 seconds; target
 connections and timeouts remain later-layer configuration.
 
+Actions that require a completed task restore the unique authoritative predecessor
+from the pinned graph before either a local adapter's top-level declaration or a
+remote adapter's remote declaration runs. Remote handles bind to that restored task
+code, so a governed retry at the ACTION node reuses the original decision and actor
+rather than searching for a task named after the action or accepting replacement
+decision data from the retry request.
+
+Cross-enterprise remote actions are default-disabled by the Workflow-owned
+`process.remoteActions.runtimeEnterpriseScope` policy. A deployment may select a
+bounded, unique list of enterprise codes. Admission then requires the authenticated
+human enterprise and immutable Process instance `context.enterpriseCode` to match
+the same selected code. The Process service credential remains bound to its own
+runtime enterprise; this selection does not mint another identity, grant target
+permissions or replace the target owner's independent enterprise authorization.
+Malformed, empty, duplicate or oversized selections fail closed. Framework
+defaults and validation remain in Workflow; deployments contribute only reviewed
+enterprise selections through the effective runtime-role profile.
+
 `POST /instances/:instanceCode/actions/claim` is an internal Workflow capability
 operation under `moduleInternal`, service-token authentication and the existing
 internal route permission. Its body identifies `executionCode`, `actionKey` and
@@ -444,6 +462,16 @@ not silently reissued. A governed retry creates a fresh handle. Domains retain
 idempotency against their own committed effects when a response is lost.
 Process instance/task and immutable version schemas expose generic read/search
 only; owning lifecycle and publication services retain their internal writes.
+
+An exhausted incident remains `DEAD_LETTER` by default. Workflow owns an inert
+`process.runtime.deadLetterRequeue` policy. When a deployment explicitly enables
+it, an authorized retry may set `requeueDeadLetter: true` with the exact inspected
+attempt and a bounded operator reason. Workflow atomically records one configured
+requeue cycle and its audit evidence before spending a fresh bounded retry budget.
+It never deletes the incident, task, decision or earlier failure history, and it
+does not permit an unbounded retry loop. If the requeue transition commits but
+the response is interrupted before retry claim, the next exact retry records a
+`process.incident.requeueResumed` audit before continuing from attempt zero.
 
 The focused `test/processRemoteActionAdapter.test.js` invokes the real lifecycle,
 claim boundary and Editorial decision service over isolated persistence. It

@@ -18,7 +18,7 @@ module.exports = {
       read: {
         secured: true,
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.order.own.read",
         apiExposure: "commerceCustomer",
         key: "/orders/:orderCode",
@@ -29,7 +29,7 @@ module.exports = {
       listOwnOrders: {
         secured: true,
         authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
+        accessGroups: ["customerUserGroup", "employeeUserGroup"],
         permission: "commerce.order.own.read",
         apiExposure: "commerceCustomer",
         key: "/orders",

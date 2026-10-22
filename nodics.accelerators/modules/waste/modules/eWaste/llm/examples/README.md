@@ -40,10 +40,8 @@ module.exports = {
       propertyCatalogueCode: "EWASTE_REWARD_PROPERTIES",
       bandSetCode: "PARTNER_EWASTE_REWARD_BANDS",
       loyaltyProgramCode: "partner-program",
-      rewardScale: 2,
     },
     marketplace: {
-      autoPublishListings: false,
       orderCodePrefix: "PARTNER_ORDER_",
     },
     conversation: {

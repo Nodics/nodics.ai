@@ -23,6 +23,7 @@ const repositoryRoot = path.resolve(__dirname, "../../../..");
 const cmsCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService"))
   .getCapability();
 const mediaConfiguration = require(path.join(repositoryRoot, "nodics.wcms/modules/media/config/properties"));
+const mediaLibrary = require(path.join(repositoryRoot, "nodics.wcms/modules/media/data/backoffice/mediaLibraryWorkspaceData"));
 const previousConfiguration = global.CONFIG;
 let mediaCapability;
 try {
@@ -82,12 +83,14 @@ for (const id of ["media", "media-library"]) {
   const entry = findNavigation(mediaCapability, id);
   assert(entry, id + " governed Media library must exist");
   assert.equal(entry.workbenchTarget, undefined);
-  assert.deepStrictEqual(entry.backendWorkspace, mediaConfiguration.media.library.workspace);
+  assert.deepStrictEqual(entry.backendWorkspace, mediaLibrary.workspace);
 }
 assert.deepStrictEqual(
   findNavigation(mediaCapability, "media-publication-requests").backendWorkspace,
-  mediaConfiguration.media.library.publicationWorkspace,
+  mediaLibrary.publicationWorkspace,
 );
+assert.deepStrictEqual(mediaConfiguration.media.library, { workspace: {}, publicationWorkspace: {} },
+  "Property defaults select no duplicate workspace definition");
 
 function findNavigation(capability, id) {
   return (capability.navigation || []).find((item) => item.id === id);

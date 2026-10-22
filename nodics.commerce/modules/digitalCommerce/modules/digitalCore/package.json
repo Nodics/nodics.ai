@@ -18,6 +18,7 @@
       "controller",
       "facade",
       "service",
+      "interceptor",
       "test",
       "llm",
       "utility"

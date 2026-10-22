@@ -13,9 +13,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { runGuidedInitializationAcceptance } from '../src/service/acceptance/defaultGuidedInitializationAcceptanceService.mjs';
 
-function fixture({ denyApproval = false, onlineImportAllowed = false, badNoOp = false } = {}) {
+function fixture({ denyApproval = false, onlineImportAllowed = false, badNoOp = false,
+  withMediaDependency = false, baselineAlreadyOnline = false, omitMediaPublicationCode = false } = {}) {
   const calls = [];
-  let installs = 0, approved = false;
+  let installs = 0, approved = baselineAlreadyOnline, mediaApproved = false;
   const profile = () => ({ profileCode: 'partnerFoundation', destinationRole: 'WCMS_STAGED', status: installs ? 'CURRENT' : 'AVAILABLE',
     steps: ['init', 'core'].map(dataType => ({ dataType, releases: [{ status: 'CURRENT' }] })) });
   const options = {
@@ -45,12 +46,55 @@ function fixture({ denyApproval = false, onlineImportAllowed = false, badNoOp = 
       if (route.endsWith('/run/history')) return Response.json([{ dataType: 'core' }]);
       if (route.endsWith('/init')) return Response.json([{ releaseCode: 'cms:cmsPublicationApproval', version: '1.0.0', status: 'CURRENT' }]);
       if (route.endsWith('/partnerSite/initialization')) return Response.json(approved ? {
-        readiness: 'READY', publication: { code: 'publication', state: 'ONLINE' },
+        readiness: withMediaDependency && !mediaApproved ? 'UNAVAILABLE' : 'READY',
+        publication: { code: 'publication', state: 'ONLINE' },
         lineage: { publication: { transitions: [{ toState: 'PENDING_APPROVAL' }] } },
+        mediaDependencies: withMediaDependency && !mediaApproved ? { qualified: false, dependencies: [{
+          mediaCode: 'partnerHero', versionId: 2, checksum: 'a'.repeat(64),
+          ...(omitMediaPublicationCode ? {} : { publicationCode: 'media-partner-hero' }),
+          status: 'NOT_ACTIVATED', qualified: false,
+        }] } : { qualified: true, dependencies: [] },
       } : { readiness: 'NOT_READY' });
+      if (route.endsWith('/initialization/prepare')) return Response.json({
+        ...(baselineAlreadyOnline ? {
+          readiness: withMediaDependency && !mediaApproved ? 'UNAVAILABLE' : 'READY',
+          publication: { code: 'publication', state: 'ONLINE' },
+          lineage: { publication: { transitions: [{ toState: 'PENDING_APPROVAL' }] } },
+          mediaDependencies: withMediaDependency && !mediaApproved ? { qualified: false, dependencies: [{
+            mediaCode: 'partnerHero', versionId: 2, checksum: 'a'.repeat(64),
+            ...(omitMediaPublicationCode ? {} : { publicationCode: 'media-partner-hero' }),
+            status: 'NOT_ACTIVATED', qualified: false,
+          }] } : { qualified: true, dependencies: [] },
+        } : { readiness: 'NOT_IMPORTED' }),
+        preparation: { status: 'CURRENT' },
+        preparationOperation: { operation: 'applicationInitialization.prepareCapability',
+          attempted: true, changed: true, stepCount: 2 },
+      });
       if (route.endsWith('/initialization/initiate')) return Response.json({ publication: { code: 'publication', state: 'PENDING_APPROVAL' } });
-      if (route.endsWith('/instances')) return Response.json({ items: [{ code: 'instance', definitionCode: 'cmsPublicationApproval', context: { publicationCode: 'publication' }, status: 'WAITING' }] });
-      if (route.endsWith('/tasks')) return Response.json({ items: [{ code: 'task', instanceCode: 'instance', nodeCode: 'publicationReview', status: 'OPEN' }] });
+      if (route.endsWith('/publication/requests')) {
+        const body = JSON.parse(request.body);
+        assert.equal(body.mediaCode, 'partnerHero');
+        assert.equal(body.versionId, 2);
+        assert.equal(body.expectedChecksum, 'a'.repeat(64));
+        if (omitMediaPublicationCode) assert.match(body.publicationCode, /^media-[a-f0-9]{64}$/);
+        else assert.equal(body.publicationCode, 'media-partner-hero');
+        return Response.json({ publicationCode: body.publicationCode, state: 'PENDING_APPROVAL' });
+      }
+      if (route.endsWith('/instances')) {
+        const media = approved && withMediaDependency && !mediaApproved;
+        const expectedPublicationCode = omitMediaPublicationCode
+          ? calls.find(call => call.url.pathname.endsWith('/publication/requests')) &&
+            JSON.parse(calls.find(call => call.url.pathname.endsWith('/publication/requests')).request.body).publicationCode
+          : 'media-partner-hero';
+        return Response.json({ items: [{ code: media ? 'media-instance' : 'instance',
+          definitionCode: media ? 'mediaPublicationApproval' : 'cmsPublicationApproval',
+          context: { publicationCode: media ? expectedPublicationCode : 'publication' }, status: 'WAITING' }] });
+      }
+      if (route.endsWith('/tasks')) {
+        const media = url.searchParams.get('instanceCode') === 'media-instance';
+        return Response.json({ items: [{ code: media ? 'media-task' : 'task', instanceCode: media ? 'media-instance' : 'instance',
+          nodeCode: media ? 'mediaReview' : 'publicationReview', status: 'OPEN' }] });
+      }
       if (route.endsWith('/claim')) return Response.json({});
       if (route.endsWith('/complete')) {
         const { decision } = JSON.parse(request.body);
@@ -59,7 +103,8 @@ function fixture({ denyApproval = false, onlineImportAllowed = false, badNoOp = 
         assert.equal(decision.approved, true);
         assert.equal(typeof decision.reason, 'string');
         if (denyApproval) return Response.json({ message: 'approval denied' }, { status: 403 });
-        approved = true;
+        if (route.includes('media-task')) mediaApproved = true;
+        else approved = true;
         return Response.json({ instance: { status: 'COMPLETED' } });
       }
       if (route.endsWith('/delivery/pages/resolve')) {
@@ -78,13 +123,37 @@ test('suite import is inert and both execution and publication approval require 
     await assert.rejects(runGuidedInitializationAcceptance({ ...flags, fetch: () => assert.fail('no request') }), /Explicit/);
 });
 
+test('CMS-owned timeout policy rejects unsafe project overrides before any request', async () => {
+  for (const acceptance of [{ requestTimeoutMs: 999 }, { initializationTimeoutMs: 600001 }])
+    await assert.rejects(runGuidedInitializationAcceptance({
+      execute: true, approvePublications: true, acceptance,
+      configuration: {}, fetch: () => assert.fail('no request'),
+    }), /between 1000 and 600000 milliseconds/);
+});
+
 test('partner-specific inputs consume canonical initialization, denial and publication assertions', async () => {
-  const f = fixture();
+  const f = fixture({ withMediaDependency: true });
   const evidence = await runGuidedInitializationAcceptance(f.options);
   assert.equal(evidence.profileCode, 'partnerFoundation');
   assert.equal(evidence.repeatedInstall, 'SKIPPED_CURRENT');
   assert.equal(evidence.onlineDataImport, 'DISABLED');
   assert.equal(evidence.onlineDelivery, 'AVAILABLE');
+  assert.deepEqual(evidence.mediaPublicationEvidence, [{ applicationCode: 'partnerSite', mediaCode: 'partnerHero',
+    publicationCode: 'media-partner-hero', sourceVersion: 2 }]);
+  assert.deepEqual(evidence.capabilityPreparationEvidence,
+    [{ code: 'partnerSite', attempted: true, changed: true, stepCount: 2 }]);
+  assert(f.calls.findIndex(c => c.url.pathname.endsWith('/initialization/prepare')) <
+    f.calls.findIndex(c => c.url.pathname.endsWith('/initialization/initiate')));
+  assert.equal(f.calls.filter(c => c.url.pathname.endsWith('/authenticate')).length, 2);
+});
+
+test('an existing Online baseline proceeds directly to exact Media approval', async () => {
+  const f = fixture({ withMediaDependency: true, baselineAlreadyOnline: true, omitMediaPublicationCode: true });
+  const evidence = await runGuidedInitializationAcceptance(f.options);
+  assert.equal(evidence.onlineDelivery, 'AVAILABLE');
+  assert(!f.calls.some(c => c.url.pathname.endsWith('/initialization/initiate')));
+  assert.equal(f.calls.filter(c => c.url.pathname.endsWith('/publication/requests')).length, 1);
+  assert.match(evidence.mediaPublicationEvidence[0].publicationCode, /^media-[a-f0-9]{64}$/);
 });
 
 test('normal approval rejection propagates without emergency retry or delivery', async () => {

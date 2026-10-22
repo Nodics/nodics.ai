@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "evidenceQualification": {
+    "mechanism": "nodics.docs/scripts/semantic-review-contract.mjs:qualifySemanticReview",
+    "status": "closed-with-evidence",
+    "expected": true,
+    "sourceAndSupportingHashes": "ALL_CURRENT_AT_FINAL_CHECK",
+    "validatorHashes": "UNCHANGED",
+    "scope": "Eight independent in-memory scoped bundles; shared aggregate not edited. Open release-guide scope intentionally rejects closure."
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVALIDATION",
+  "item": "NMS runtime monitoring",
+  "requestedAction": "Document node monitoring, topology, health checks, runtime evidence, and operator recovery.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "rationale": "Read the complete NMS article against the exact one-line Cron configuration addition and its existing consumer. cronjob.processRetrySleepTime now has its implementing owner's 2000ms default; it governs Cron processing retries, not NMS nodePingTimeout or peer status. nodePingableModules.cronjob remains disabled, runOnStartup remains false, and no new recovery operation is introduced. The article's volatile state, initial-unknown behavior, inactive-peer skipping, sender/stop-handler gaps and separation from real readiness remain accurate; none is closed by a retry default.",
+  "readiness": {
+    "mode": "AUTHORIZED_FRAMEWORK_MAINTAINER_REVIEW",
+    "writeOwner": "nodics.docs/test/evidence",
+    "outcome": "Requalify exact stale editorial scopes without weakening validators or claiming runtime acceptance.",
+    "method": "Recovered matching historical source bytes where stated, read actual deltas/current named methods and cited article blocks, compare authority/failure/override claims, reuse only byte-identical prior source reviews.",
+    "excluded": "No runtime startup, E2E, import, publication, credentials, source/manifest rewrite, generated context, commits or shared aggregate edits."
+  },
+  "historicalBaseline": {
+    "aggregate": "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "aggregateSha256AtRead": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+    "previousSourceRevalidation": null
+  },
+  "items": [
+    {
+      "item": "NMS runtime monitoring",
+      "requestedAction": "Document node monitoring, topology, health checks, runtime evidence, and operator recovery.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Read the complete NMS article against the exact one-line Cron configuration addition and its existing consumer. cronjob.processRetrySleepTime now has its implementing owner's 2000ms default; it governs Cron processing retries, not NMS nodePingTimeout or peer status. nodePingableModules.cronjob remains disabled, runOnStartup remains false, and no new recovery operation is introduced. The article's volatile state, initial-unknown behavior, inactive-peer skipping, sender/stop-handler gaps and separation from real readiness remain accurate; none is closed by a retry default.",
+      "evidence": [
+        {
+          "documentId": "foundation.nms-runtime-monitoring",
+          "anchors": [
+            "foundationNmsRuntimeMonitoring-2-monitoring-model",
+            "foundationNmsRuntimeMonitoring-3-health-contract",
+            "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+            "foundationNmsRuntimeMonitoring-6-common-mistakes",
+            "foundationNmsRuntimeMonitoring-7-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js",
+        "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js",
+        "nodics.foundation/modules/nNms/src/router/routers.js",
+        "nodics.foundation/modules/nNms/config/properties.js",
+        "nodics.foundation/nodics.js",
+        "nodics.foundation/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService.js",
+        "nodics.process/modules/cronjob/config/properties.js"
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "foundation.nms-runtime-monitoring": {
+      "owner": "nodics.foundation/modules/nNms",
+      "componentFile": "nodics.foundation/modules/nNms/data/docs-v001/records/documentation/nmsDocumentationComponentData.js",
+      "articleBlocksSha256": "d17fe306cd582bffe8700361cc221676dc8450a431516a97ddc6492af839ffd7"
+    }
+  },
+  "priorCanonicalDocuments": {
+    "foundation.nms-runtime-monitoring": {
+      "owner": "nodics.foundation/modules/nNms",
+      "componentFile": "nodics.foundation/modules/nNms/data/docs-v001/records/documentation/nmsDocumentationComponentData.js",
+      "articleBlocksSha256": "d17fe306cd582bffe8700361cc221676dc8450a431516a97ddc6492af839ffd7",
+      "sections": [
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-2-monitoring-model",
+          "title": "Monitoring model"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-3-health-contract",
+          "title": "Health contract"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-6-common-mistakes",
+          "title": "Common mistakes"
+        },
+        {
+          "anchor": "foundationNmsRuntimeMonitoring-7-verification",
+          "title": "Verification"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js": "7448fb8528bd3e1dc6ccd67ec95e2c0346e254b83520a9b20a5ea8e00c3e8a27",
+    "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js": "c6e770e91319c3cf6a5b9b621dfa73c92a35adf67838e2e5b1742b7bb3a58331",
+    "nodics.foundation/modules/nNms/src/router/routers.js": "0ab4c670f6b5f1b552e17eb321936829ecfae6ec99a1c1aa7201a547b0c10733",
+    "nodics.foundation/modules/nNms/config/properties.js": "2c306fbdda9bf716f4aeb1c021993aace542b9195ebecbdd3737ab3677e2f99e",
+    "nodics.foundation/nodics.js": "7f733e41d1e53ce2a10d49339675229082b9129a0db60d2f89d5d33cee3cd6d7",
+    "nodics.foundation/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService.js": "0e00b292eb59355d217cc0ef6e467ed6ae4ef12c1f4df18e34013a651f751ce1",
+    "nodics.process/modules/cronjob/config/properties.js": "852d9eb26b2189838138f6d47346199cb8b7a414929a02b23a82e6e9d9253ed7"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js",
+      "previousSha256": "7448fb8528bd3e1dc6ccd67ec95e2c0346e254b83520a9b20a5ea8e00c3e8a27",
+      "sha256": "7448fb8528bd3e1dc6ccd67ec95e2c0346e254b83520a9b20a5ea8e00c3e8a27",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js",
+      "previousSha256": "c6e770e91319c3cf6a5b9b621dfa73c92a35adf67838e2e5b1742b7bb3a58331",
+      "sha256": "c6e770e91319c3cf6a5b9b621dfa73c92a35adf67838e2e5b1742b7bb3a58331",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nNms/src/router/routers.js",
+      "previousSha256": "0ab4c670f6b5f1b552e17eb321936829ecfae6ec99a1c1aa7201a547b0c10733",
+      "sha256": "0ab4c670f6b5f1b552e17eb321936829ecfae6ec99a1c1aa7201a547b0c10733",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nNms/src/router/routers.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nNms/config/properties.js",
+      "previousSha256": "2c306fbdda9bf716f4aeb1c021993aace542b9195ebecbdd3737ab3677e2f99e",
+      "sha256": "2c306fbdda9bf716f4aeb1c021993aace542b9195ebecbdd3737ab3677e2f99e",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nNms/config/properties.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/nodics.js",
+      "previousSha256": "7f733e41d1e53ce2a10d49339675229082b9129a0db60d2f89d5d33cee3cd6d7",
+      "sha256": "7f733e41d1e53ce2a10d49339675229082b9129a0db60d2f89d5d33cee3cd6d7",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/nodics.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService.js",
+      "previousSha256": "0e00b292eb59355d217cc0ef6e467ed6ae4ef12c1f4df18e34013a651f751ce1",
+      "sha256": "0e00b292eb59355d217cc0ef6e467ed6ae4ef12c1f4df18e34013a651f751ce1",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.process/modules/cronjob/config/properties.js",
+      "previousSha256": "24b417ca4def09d245b1f17ffc67427e27ed0cb3bf669eb0745cdeb74427136c",
+      "sha256": "852d9eb26b2189838138f6d47346199cb8b7a414929a02b23a82e6e9d9253ed7",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.process/modules/cronjob/config/properties.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Recovered 3f5ab7b57 bytes match prior hash. Only cronjob.processRetrySleepTime:2000 was added. Current DefaultCronJobService consumer reads CONFIG.get('cronjob').processRetrySleepTime; nearest Cron AGENTS explicitly separates it from EMS retry timing. NMS flags and callbacks are unchanged."
+    }
+  ],
+  "correctnessAndCoverageLimitations": [
+    "Documented NMS sender-method and stop-handler gaps remain recorded, not fixed or qualified by this evidence.",
+    "No timers, health probes, responsibility transfer, Cron execution or multi-node recovery were started."
+  ],
+  "tests": [
+    {
+      "command": "Exact changed-default inspection and scoped semantic evidence validation",
+      "status": "STATIC_ONLY"
+    }
+  ],
+  "evidenceValidatorRegression": {
+    "command": "node --test --test-name-pattern='manual review closure binds' nodics.docs/test/semanticReviewContract.test.mjs",
+    "passed": 1,
+    "failed": 0
+  },
+  "unchangedValidatorSha256": {
+    "nodics.docs/test/semanticReviewContract.test.mjs": "89fa7fc0f9b23eee170f04aa4023f21054226eb274642614297d6a48d1c12457",
+    "nodics.docs/scripts/semantic-review-contract.mjs": "5ebe473c28ed21de599d5cd6d5ea96eaddc6d1ed6d548a543afd060442f57f0e"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "integration": {
+    "aggregateWriter": "Heisenberg",
+    "aggregateEditedByThisReview": false,
+    "instruction": "Verify current article/source hashes, merge only this scope's sourceFileSha256 bindings and reasoned sourceRevalidation into the existing aggregate; preserve original action, historical findings/limits and unrelated scopes. Changed inputs reopen review."
+  },
+  "supportingSourceEvidence": {
+    "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobService.js": "02ddf15169ea77b858591c805abd9a209da222b8a2682395be5bd3b6bcd22b02"
+  }
+}

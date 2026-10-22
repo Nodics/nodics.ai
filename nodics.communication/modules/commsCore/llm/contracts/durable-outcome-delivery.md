@@ -1,5 +1,64 @@
 # Durable outcome delivery
 
+## Source Eligibility
+
+Source-dependent notifications use this same durable Communication intent. The
+framework definition `communication.dispatchEligibilityOwners` defaults to `{}`;
+an implementing domain module contributes a fixed source-module/source-type to
+service-name mapping in its framework properties. No payload selects a handler.
+A matching mapping automatically freezes `requiresSourceEligibility: true` in
+new intent identity. A trusted command can also require the check explicitly;
+missing qualified code then refuses. Removing a mapping never downgrades an
+already checked intent. Ordinary unrelated intent hashes remain unchanged.
+
+The fixed owner implements `isDispatchEligible(input)`. Input contains only
+`tenant`, runtime `authData`, `intentCode`, `sourceModule`, `sourceType`,
+`sourceCode`, `recipientId`, `recipientAddressReference`, `purpose`, `channel`,
+`idempotencyKey` and `expiresAt`, not rendered content, template variables or
+contact addresses. Return `{eligible, tenant, sourceCode, recipientId,
+recipientAddressReference}` exactly bound to the requested source and recipient.
+The domain rereads its canonical source and current rights. It cannot rewrite
+the frozen recipient, content, expiry or template during retry.
+
+Checks run before lease claim and again immediately before provider execution.
+Explicit ineligibility suppresses the intent without a send. Unconfirmed evidence
+before claim leaves the original intent unchanged; after claim it records
+`RETRY_PENDING` with `SOURCE_ELIGIBILITY_UNCONFIRMED`, proving no provider call.
+Actual transport ambiguity retains the existing UNCERTAIN/reconciliation rules.
+No scheduler is installed and no delivery outcome reverses domain value movement.
+
+The existing private service API is `POST /internal/communications` on commsApi;
+retry is `POST /internal/communications/:intentCode/retry`. Source inspection
+uses `POST /internal/communications/:intentCode/inspect` with an empty object.
+The API independently requires service principal, matching tenant, exact source
+and commsApi module scopes, `communication.request` and private capture protection.
+Requests carry `sourceModule`, `sourceType`, `sourceCode`, `templateCode`,
+`recipientId`, `recipientAddressReference`, `purpose`, `channel`, `locale`,
+`idempotencyKey`, `variables`, and optional `expiresAt`/`correlationId`/the check
+bit. One tenant-scoped key retains immutable content; altered payloads conflict.
+
+Recipient references must come from Profile's source-proven recipient owner.
+The existing Commerce recipient route only proves PURCHASED/REFUNDED customer
+orders; it is not an enterprise, Wallet transfer or expiry-recipient contract.
+Profile now implements typed CUSTOMER/ENTERPRISE source-proof wrappers for
+transfers, coupon expiry, auctions and whole gifts. All use its shared current
+identity, persisted permission, allow/DENY and explicit opt-in selector. Customer
+owners retain their own inbox; explicitly selected authorized Enterprise Employees
+use `profile-employee:<code>` in the existing inbox, not fake Customer identities.
+Keep actors separate from owners and never retain contacts in Wallet. Exact routes
+and the delivery/recovery matrix are in the owner-maintained
+[v002 CMS article](../../data/docs-v002/records/documentation/communicationDurableOutcomesDocumentationComponentData.js).
+Transfer sender/recipient use distinct deterministic keys on the original
+committed transfer, not a second delivery outbox. Source pointer recovery and
+delivery retries remain separate from value movement.
+
+The runtime unit suite covers source suppression, missing owners, a revocation
+between claim and send, foreign recipient proofs and pre-send source failure.
+Cross-owner unit suites now compose actual Profile wrappers and domain sources
+with Communication intents/inbox, including current permission withdrawal and
+gift stale-pending suppression. Isolated storage/credential ports do not qualify
+installed runtime identity, schedules, provider activation or live delivery.
+
 ## Non-HTTP Private Delivery Entry
 
 Telegram acknowledgements that decode to null, primitives or arrays return
@@ -28,11 +87,11 @@ provider. The existing request-privacy qualification remains false by default;
 unqualified workers fail before intent reads/claims/sends. Sender credentials,
 source grants, templates and provider enablement remain separately governed.
 The [private worker fixtures](../../test/communicationPrivateWorkerDelivery.test.js)
-and updated runtime fixtures are deferred, NOT RUN. Real SDK/APM suppression and
+and runtime fixtures pass in isolation. Real SDK/APM suppression and
 provider acceptance require the joint deployment session; direct legacy sandbox
 injection is not claimed to be a qualified production delivery path.
 
-`DefaultCommunicationRuntimeService` binds existing Communication schemas and Core primitives to generated repositories and configured provider adapters. Internal requests require service authentication and `communication.request`; trusted source-module policy and active versioned templates are mandatory. Stable idempotency identity is hashed; replay with a different payload is rejected. Inbox rows belong to canonical Profile customer codes, and customer reads resolve that code before querying.
+`DefaultCommunicationRuntimeService` binds existing Communication schemas and Core primitives to generated repositories and configured provider adapters. Internal requests require service authentication and `communication.request`; trusted source-module policy and active versioned templates are mandatory. Stable idempotency identity is hashed; replay with a different payload is rejected. Inbox rows use canonical Profile Customer codes or the existing `profile-employee:<code>` namespace for genuinely selected Employees. Self-reads resolve the original authenticated identity before querying; Enterprise ownership never manufactures a Customer identity.
 
 Intent and delivery attempt records are the delivery authority. Revisioned leases serialize sends. Web IN_APP delivery uses an idempotent inbox key. Telegram resolves a currently eligible Profile link immediately before sending, validates the configured logical bot credential reference through runtime configuration and sends literal text. Successful delivery evidence stores provider reference, never secret credentials. Suppression is evaluated before sending.
 

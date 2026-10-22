@@ -678,6 +678,7 @@ module.exports = {
             delete options.allowCmsAssociationReplacement;
             delete options.replaceAllMatchesByQuery;
             delete options.replaceArraysOnVersionMerge;
+            delete options.governedVersionedImport;
             const cms = header.options.moduleName === 'cms' && typeof NODICS.getModule === 'function' && NODICS.getModule('cms');
             const ownsCmsTarget = header.options.moduleName === 'cms' &&
                 cms && cms.rawSchema && cms.rawSchema[header.options.schemaName] === header.rawSchema;
@@ -688,7 +689,7 @@ module.exports = {
             }
             if (this.isGovernedContentPackRun(request)) {
                 if (header.rawSchema && header.rawSchema.isVersionedEnabled === true) {
-                    options.versionedImport = true;
+                    options.governedVersionedImport = true;
                 }
             }
             return new Promise((resolve, reject) => {
@@ -1074,7 +1075,11 @@ module.exports = {
      * @param {Object} request Active import request.
      * @param {Object} schemaService Owning generated schema service.
      * @param {Object[]} models Normalized release records.
-     * @returns {Promise<Object[]>} Records carrying the expected next revision.
+     * The selected current revision is carried to persistence. The versioned
+     * provider returns an identical replay unchanged or advances a changed
+     * governed record exactly once after rechecking that revision.
+     *
+     * @returns {Promise<Object[]>} Records carrying the selected current revision.
      */
     reconcileContentPackVersions: function (request, schemaService, models) {
         let header = request.header || {};
@@ -1101,7 +1106,7 @@ module.exports = {
             }).then(response => {
                 let existing = response && Array.isArray(response.result) ? response.result[0] : undefined;
                 if (existing && Number.isInteger(existing.versionId)) {
-                    model.versionId = existing.versionId + 1;
+                    model.versionId = existing.versionId;
                 }
                 return model;
             });

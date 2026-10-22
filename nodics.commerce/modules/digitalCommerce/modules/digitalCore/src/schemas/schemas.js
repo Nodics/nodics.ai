@@ -23,6 +23,46 @@ const common = {
 };
 
 module.exports = { digitalCore: {
+    digitalBundleListingContext: { super: 'base', model: true, schemaPolicies: ['listingContext'], service: { enabled: true },
+        router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+        backoffice: { operations: ['search', 'read', 'create', 'update'], concurrency: { managed: true, field: 'revision' } },
+        definition: {
+            code: { type: 'string', required: true, description: 'Governed bundle listing selection identity, not a Product or price authority.' },
+            tenant: { type: 'string', required: true, description: 'Tenant partition.' },
+            enterpriseCode: { type: 'string', required: true, description: 'Participant namespace permitted to discover this binding; not the Store merchant namespace.' },
+            name: { type: 'string', required: true, description: 'Business-selected label for this exact listing combination.' },
+            status: { type: 'string', required: true, enum: ['DRAFT', 'ACTIVE', 'INACTIVE'], description: 'Explicit governance state; only active records are projected.' },
+            revision: { type: 'int', required: true, description: 'Managed optimistic concurrency counter.' },
+            storeCode: { type: 'string', required: true, description: 'Canonical Store selection; placement is independently re-read from Product.' },
+            categoryCodes: { type: 'array', required: true, description: 'Explicit Product category references, including an intentional empty selection.' },
+            currency: { type: 'string', required: true, description: 'Explicit Pricing currency reference.' },
+            priceBookCode: { type: 'string', required: true, description: 'Canonical Pricing book reference; never an inline price.' },
+            reward: { type: 'object', required: true, description: 'Explicit Loyalty programCode and rewardTypeCode only; precision is derived from exact Loyalty owner evidence.' }
+        }
+    },
+    digitalBundleManifest: { super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false }, definition: { ...common,
+        ownerRef: { type: 'object', required: true, description: 'Canonical Profile owner; separate from acting principal.' },
+        components: { type: 'array', required: true, description: 'Immutable ordered certificate and realized-carbon component selections.' },
+        digest: { type: 'string', required: true, description: 'Exact manifest content fingerprint.' },
+        composition: { type: 'object', required: false, description: 'Immutable reviewed follow-on gift/listing instruction; no credentials or client authority.' },
+        compositionDigest: { type: 'string', required: false, description: 'Fingerprint of the original reviewed follow-on instruction.' }
+    } },
+    digitalBundleOperation: { super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false }, definition: { ...common,
+        manifestCode: { type: 'string', required: true, description: 'Retained nonempty bundle manifest.' },
+        manifestRevision: { type: 'int', required: true, description: 'Original immutable contents revision.' },
+        ownerRef: { type: 'object', required: true, description: 'Original canonical owner.' },
+        recipientRef: { type: 'object', required: false, description: 'Selected existing recipient or purchasing owner.' },
+        purpose: { type: 'string', required: true, description: 'Listing, quantity-one purchase obligation, or pending-acceptance gift purpose.' },
+        deadline: { type: 'date', required: false, description: 'Retained framework-derived gift deadline.' },
+        checkpoints: { type: 'object', required: true, description: 'Confirmed owner receipts per component and phase.' },
+        commandDigest: { type: 'string', required: true, description: 'Immutable original command fingerprint.' }
+    } },
+    digitalBundleOwnerPolicy: { super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false }, definition: { ...common,
+        ownerRef: { type: 'object', required: true, description: 'Canonical Enterprise selecting gift and receipt policy.' },
+        giftingEnabled: { type: 'boolean', required: true, description: 'Admission of new outgoing gifts only.' },
+        receivingEnabled: { type: 'boolean', required: true, description: 'Admission of new incoming gifts only.' },
+        couponPurchasingEnabled: { type: 'boolean', required: true, description: 'Admission of new coupon starts only; never redemption or original recovery.' }
+    } },
     digitalProductBinding: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
         productCode: { type: 'string', required: true , description: 'Stores the product code used to classify, link, or resolve this record.'},
         variantCode: { type: 'string', required: false , description: 'Stores the variant code used to classify, link, or resolve this record.'},
@@ -33,6 +73,8 @@ module.exports = { digitalCore: {
         providerReference: { type: 'object', required: true , description: 'Stores provider-specific reference data needed to resolve this record.'}
     }) }),
     digitalEntitlement: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
+        participantEnterpriseCode: { type: 'string', required: false, description: 'Original purchasing participant Enterprise; distinct from merchant storage partition.' },
+        ownerRef: { type: 'object', required: false, description: 'Typed CUSTOMER or ENTERPRISE purchasing owner retained for version-2 coupon rights.' },
         orderCode: { type: 'string', required: true , description: 'Stores the order code used to classify, link, or resolve this record.'},
         orderEntryCode: { type: 'string', required: false , description: 'Stores the order entry code used to classify, link, or resolve this record.'},
         cartCode: { type: 'string', required: false , description: 'Stores the cart code used to classify, link, or resolve this record.'},
@@ -70,4 +112,21 @@ module.exports = { digitalCore: {
 } };
 
 module.exports.digitalCore.digitalEntitlement.backoffice = { operations: ['search', 'read'], description: 'Customer-owned digital product entitlement.' };
+for (const name of ['digitalBundleManifest', 'digitalBundleOperation']) {
+    module.exports.digitalCore[name].backoffice = { mutationMode: 'READ_ONLY', concurrency: { managed: true, field: 'revision' } };
+}
 module.exports.digitalCore.digitalDelivery.backoffice = { operations: ['search', 'read'], description: 'Digital delivery evidence.' };
+
+module.exports.digitalCore.digitalParticipationCommand = { super: 'base', model: true, schemaPolicies: ['operational'],
+    service: { enabled: true }, router: { enabled: false }, definition: { ...common,
+        commandDigest: { type: 'string', required: true, description: 'Immutable original settings or new-start command fingerprint.' }
+    } };
+for (const name of ['digitalBundleOwnerPolicy', 'digitalParticipationCommand']) {
+    Object.assign(module.exports.digitalCore[name], {
+        transaction: { enabled: true, sideEffects: 'none' },
+        cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+        readProtection: { owner: 'DefaultDigitalParticipationService' },
+        indexes: { individual: { participationIdentity: { name: 'code', enabled: true, options: { unique: true } } } },
+        backoffice: { operations: [], mutationMode: 'READ_ONLY' },
+    });
+}

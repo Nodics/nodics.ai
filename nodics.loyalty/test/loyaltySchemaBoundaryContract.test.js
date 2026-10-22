@@ -14,6 +14,8 @@ const assert = require('assert');
 const path = require('path');
 
 const moduleRoot = path.resolve(__dirname, '..');
+const privateSchemas = new Set(['rewardTransferOperation', 'rewardTransferUsage', 'rewardTransferPolicy',
+    'loyaltyPartnerRewardIntegration', 'loyaltyPartnerRewardAccount', 'loyaltyPartnerRewardConversionRecord', 'rewardTestCreditOperation']);
 const schemaFiles = [
     'modules/loyaltyCore/src/schemas/schemas.js',
     'modules/loyaltyProgram/src/schemas/schemas.js',
@@ -27,19 +29,19 @@ const schemaFiles = [
 const schemaEntries = schemaFiles.flatMap(file => {
     const contributed = require(path.join(moduleRoot, file));
     return Object.keys(contributed).flatMap(moduleName => Object.keys(contributed[moduleName]).map(schemaName => ({
-        moduleName, schemaName, schema: contributed[moduleName][schemaName], exposed: true
+        moduleName, schemaName, schema: contributed[moduleName][schemaName], exposed: !privateSchemas.has(schemaName)
     })));
 });
-const schemas = schemaEntries.map(entry => entry.schema);
-
-schemas.forEach(schema => {
+schemaEntries.forEach(({schema, exposed}) => {
     const definition = schema.definition || {};
     assert.strictEqual(definition.tenant, undefined, 'Loyalty data schemas must derive tenant/schema from runtime context');
     assert.strictEqual(definition.enterpriseCode, undefined, 'Loyalty data schemas must not store enterpriseCode as ordinary data');
     assert.strictEqual(schema.service.enabled, true, 'Loyalty schemas retain generated service capability');
-    assert.strictEqual(schema.router.enabled, true, 'Loyalty schemas opt into governed schema operations');
-    assert.deepStrictEqual(schema.router.groups, { schemaOperations: true }, 'Loyalty schemas must not enable broad CRUD route groups');
+    assert.strictEqual(schema.router.enabled, exposed, 'Only explicitly public Loyalty schemas expose governed operations');
+    assert.deepStrictEqual(schema.router.groups, exposed ? { schemaOperations: true } : undefined,
+        'Private operational evidence and policies must not expose generic CRUD');
 });
+assert.deepStrictEqual(new Set(schemaEntries.filter(entry => !entry.exposed).map(entry => entry.schemaName)), privateSchemas);
 
 const walletSchemas = require(path.join(moduleRoot, 'modules/loyaltyWallet/src/schemas/schemas.js')).loyaltyWallet;
 const walletDefinition = walletSchemas.loyaltyWallet.definition;

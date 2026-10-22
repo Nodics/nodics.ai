@@ -1,5 +1,16 @@
 # Loyalty Reward Provider Agent Contract
 
+Enterprise wallet admission must apply wildcard capability scopes equally to
+allow and deny, preserve tenant/Enterprise qualifiers and let denial win.
+Use effective service members for scope matching and original-context checks;
+never export private authority. Preserve the real nRouter-backed regression in
+`test/loyaltyRewardWalletAuthorization.test.js`.
+
+Preserve the sanitized auction commitment and original signed owner/actor through
+Payment execution. The auction adapter must use real protected Loyalty APIs, exact
+original hold receipts and Checkout terminal proof; never generic reserve/refund
+fallback. Provider paths/defaults remain in this module's config/properties.js.
+
 Follow the parent contract: `../../AGENTS.md`.
 Follow global guidance: `../../../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
@@ -22,7 +33,8 @@ ports or sample products in the suite. Keep the command protected with
 Require explicit `--execute`, a funded isolated test wallet and already authorized
 credentials. Never grant permissions, manufacture service identities, seed ledger
 or wallet rows, or repair a denial from acceptance. Use the existing Loyalty and
-Commerce APIs. Import and help must remain inert. API projection evidence does not
-prove persisted-row invariants or independent reservation/payment/delivery records;
-report these gaps explicitly and do not turn partial evidence into qualification.
+Commerce APIs. Import and help must remain inert. Require Loyalty's exact reservation
+and redemption evidence, Payment's exact journey transaction evidence and Digital's
+current-owner delivery evidence. Keep persisted-row context exclusion in the owning
+native persistence suite; do not infer it from API projections.
 Keep injected success, denial, correlation, amount and customer-adoption tests.

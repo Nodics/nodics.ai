@@ -747,7 +747,8 @@ const employeeServiceSource = read(
 const profileEmployeeData = read(
   "nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData.js",
 );
-const cmsEmployeeData = read(
+const retiredCmsEmployeePath = path.join(
+  repositoryRoot,
   "nodics.wcms/modules/cms/data/init-v001/records/user/defaultCmsEmployeeData.js",
 );
 const auditService = require("../src/service/audit/defaultAuthAuditService");
@@ -756,8 +757,7 @@ assert.ok(!coreProperties.includes("jwtSecretKey: 'nodics'"));
 assert.ok(!coreProperties.includes("apiKey: '944515ac"));
 assert.ok(!profileEmployeeData.includes("password: 'profile"));
 assert.ok(!profileEmployeeData.includes("apiKey: '944515ac"));
-assert.ok(!cmsEmployeeData.includes("password: 'content"));
-assert.ok(!cmsEmployeeData.includes("apiKey: '944515ac"));
+assert.strictEqual(fs.existsSync(retiredCmsEmployeePath), false);
 assert.ok(!authProviderSource.includes("|| 'nodics'"));
 assert.ok(
   !securedPipelineSource.includes(

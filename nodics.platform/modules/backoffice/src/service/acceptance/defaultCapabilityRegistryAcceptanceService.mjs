@@ -24,6 +24,9 @@ export async function runCapabilityRegistryAcceptance({
   if (!execute) throw new Error('Explicit --execute is required for mutating acceptance');
   const environmentProfile = configuration || readProjectEnvironmentConfiguration(projectRoot, environment.ENV || '');
   const config = environmentProfile.acceptance?.capabilityRegistry || {};
+  const requestTimeoutMs = config.requestTimeoutMs;
+  assert(Number.isSafeInteger(requestTimeoutMs) && requestTimeoutMs >= 1000 && requestTimeoutMs <= 300000,
+    'Capability Registry acceptance request timeout must be an integer from 1000 to 300000 milliseconds');
   const technicalModules = config.technicalModules;
   assert(Array.isArray(technicalModules) && technicalModules.length > 0 &&
     technicalModules.every(name => typeof name === 'string' && name.length > 0),
@@ -47,7 +50,7 @@ export async function runCapabilityRegistryAcceptance({
 
   async function request(path, token, options = {}) {
     const response = await fetchRequest(new URL(path, platformUrl), {
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(requestTimeoutMs),
       ...options,
       headers: {
         Accept: 'application/json',

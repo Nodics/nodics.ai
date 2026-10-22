@@ -333,6 +333,12 @@ module.exports = {
     this.store().revision(draft, request.expectedRevision);
     const centre = await this.assertArrival(request, draft);
     const queue = this.settings().reviewAssignment;
+    const instruction = this.settings().depositInstruction;
+    if (typeof instruction !== "string" || !instruction.trim())
+      this.fail(
+        "ERR_EWASTE_JOURNEY_UNAVAILABLE",
+        "The collection journey is temporarily unavailable.",
+      );
     const label =
       typeof centre.name === "string"
         ? centre.name
@@ -348,10 +354,7 @@ module.exports = {
                 assignedAt: new Date(this.now()).toISOString(),
               }
             : { status: "PENDING" },
-        depositInstruction: (
-          this.settings().depositInstruction ||
-          "Follow the collection centre's deposit instructions."
-        ).replace("{centreName}", label),
+        depositInstruction: instruction.replace("{centreName}", label),
       }),
     });
     return this.domain().confirm(

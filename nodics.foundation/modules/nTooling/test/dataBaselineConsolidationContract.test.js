@@ -120,14 +120,15 @@ function sourceFiles(directory) {
     });
 }
 
-test('initial production release folders use v001 and every declared file matches its checksum', () => {
+test('production release folders match declared manifest versions and every file checksum', () => {
     const found = manifests(root);
     assert(found.length > 20);
     for (const file of found) {
         const directory = path.dirname(file), manifest = JSON.parse(fs.readFileSync(file));
-        for (const entry of fs.readdirSync(directory)) {
-            if (/^(docs|init|core|sample|project)-v\d{3}$/.test(entry)) assert.match(entry, /-v001$/, file + ': ' + entry);
-        }
+        const declaredRoots = new Set(Object.values(manifest.sections || {}).flatMap(section =>
+            [section.sourceRoot, section.contentPath].filter(value => typeof value === 'string')));
+        for (const declaredRoot of declaredRoots)
+            assert(fs.existsSync(path.join(directory, declaredRoot)), file + ': missing declared root ' + declaredRoot);
         for (const section of Object.values(manifest.sections || {})) {
             if (['DATA_RELEASE', 'CONTENT_PACK'].includes(section.kind)) {
                 assert.match(section.version, /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/, file + ': numeric semantic release version');
@@ -158,9 +159,9 @@ test('documentation is a separate optional pack and never part of a business sec
         const docs = manifest.sections?.documentation;
         if (!docs) continue;
         assert.equal(docs.kind, 'CONTENT_PACK', file);
-        assert.equal(docs.contentPath, 'docs-v001', file);
+        assert.match(docs.contentPath, /^docs-v\d{3}$/, file);
         assert.equal(docs.installationPolicy, 'OPTIONAL_AXIS_INITIATED', file);
-        for (const relative of Object.keys(docs.generatedHashes || {})) assert(relative.startsWith('docs-v001/'), file + ': ' + relative);
+        for (const relative of Object.keys(docs.generatedHashes || {})) assert(relative.startsWith(docs.contentPath + '/'), file + ': ' + relative);
         if (!Object.values(manifest.sections).some(section => section.kind === 'DATA_RELEASE')) {
             const owner = { name: manifest.module, path: path.dirname(path.dirname(file)) };
             const harness = require('../../nData/nImport/import/test/helpers/releaseExecution')({ modules: { [owner.name]: owner } });
@@ -182,8 +183,16 @@ test('Profile Init pins module-owned identity prerequisites instead of legacy gr
     assert.equal(prerequisites.size, init.prerequisites.length, 'Prerequisites cannot repeat');
     // Section codes are manifest keys; do not infer domain participation from a filename.
     const identitySections = [...sections].filter(([key]) => /:(permissionCatalogue|accessGroups|enterpriseRoles|businessAccessGroups|businessAccessRoles)$/.test(key));
+    const laterOptionalOwners = new Set(['commercialAgreement:permissionCatalogue', 'wasteCarbon:permissionCatalogue', 'wasteReward:permissionCatalogue']);
     assert(identitySections.length > 20);
+    for (const key of laterOptionalOwners) {
+        const section = sections.get(key)?.section;
+        assert(section, `Optional owner ${key} must declare its permission catalogue`);
+        assert.equal(section.selectionPolicy, 'EXPLICIT', key);
+        assert.equal(prerequisites.has(key), false, `${key} must not become an implicit bootstrap grant`);
+    }
     for (const [key, { section }] of identitySections) {
+        if (laterOptionalOwners.has(key)) continue;
         const ref = prerequisites.get(key);
         assert(ref, `Profile Init must pin ${key}`);
         assert.equal(ref.version, section.version, key);

@@ -532,6 +532,42 @@ module.exports = {
         return request.schemaModel[method](request);
     },
     /**
+     * Returns a fixed diagnostic category for an unsupported insert-only request.
+     * The category contains no model or selector values and does not weaken any
+     * admission rule.
+     * @param {Object} request Prepared generated save request.
+     * @returns {string|undefined} Rejection category, or undefined when admitted.
+     */
+    resolveInsertOnlyAdmissionFailure: function (request) {
+        const model = request.schemaModel;
+        const query = request.query || {};
+        if (!_.isPlainObject(request.model)) return 'model-shape';
+        if (!_.isPlainObject(query)) return 'query-shape';
+        if (model.versioned) return 'versioned-model';
+        if (SERVICE.DefaultModelConcurrencyService?.getField(model.rawSchema))
+            return 'managed-concurrency';
+        if (typeof model.compareAndSetItem !== 'function')
+            return 'atomic-create-capability';
+        if (request.options?.replaceAllMatchesByQuery === true)
+            return 'replace-all';
+        if (request.options?.recursive === true) return 'recursive-save';
+        if (
+            Object.entries(query).some(
+                ([key, value]) =>
+                    key.startsWith('$') ||
+                    key.includes('.') ||
+                    value === undefined ||
+                    !_.isEqual(value, request.model[key]) ||
+                    (typeof value === 'object' &&
+                        value !== null &&
+                        !(value instanceof Date) &&
+                        typeof value.toHexString !== 'function'),
+            )
+        )
+            return 'query-constraint';
+        return undefined;
+    },
+    /**
      * Inserts once through the existing atomic adapter primitive after save authorization and validators.
      * Query constraints must exactly describe the new model; operators and mismatches fail closed.
      * Managed/versioned schemas retain their own lifecycle and cannot opt into this path.
@@ -540,7 +576,6 @@ module.exports = {
      */
     insertModel: async function (request) {
         const model = request.schemaModel;
-        const query = request.query || {};
         const capability =
             request.internalPersistence !== undefined
                 ? model.persistenceCapabilities?.()
@@ -562,29 +597,12 @@ module.exports = {
                 'Qualified durable journal persistence required',
             );
         }
-        if (
-            !_.isPlainObject(request.model) ||
-            !_.isPlainObject(query) ||
-            model.versioned ||
-            SERVICE.DefaultModelConcurrencyService?.getField(model.rawSchema) ||
-            typeof model.compareAndSetItem !== 'function' ||
-            request.options?.replaceAllMatchesByQuery === true ||
-            request.options?.recursive === true ||
-            Object.entries(query).some(
-                ([key, value]) =>
-                    key.startsWith('$') ||
-                    key.includes('.') ||
-                    value === undefined ||
-                    !_.isEqual(value, request.model[key]) ||
-                    (typeof value === 'object' &&
-                        value !== null &&
-                        !(value instanceof Date) &&
-                        typeof value.toHexString !== 'function'),
-            )
-        ) {
+        const admissionFailure = this.resolveInsertOnlyAdmissionFailure(request);
+        if (admissionFailure) {
             throw new CLASSES.NodicsError(
                 'ERR_SAVE_00003',
-                'Insert-only save requires supported model and exact constraints',
+                'Insert-only save requires supported model and exact constraints: ' +
+                    admissionFailure,
             );
         }
         return model.compareAndSetItem({

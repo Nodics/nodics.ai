@@ -100,6 +100,253 @@ async function validated() {
     const result = await merchant.validate(employee({ couponToken: 'CUSTOMER-CODE' }));
     return employee({ expectedRevision: result.revision, validationCode: result.validationCode, validationExpiresAt: result.validationExpiresAt });
 }
+test('v2 accepted participant gets only exact purchased stock admission, independent of mutable seller consent, with current outlet denial enforced', async () => {
+    const rules = require('../src/service/defaultCouponOfferService');
+    const participation = require('../src/service/defaultCouponRedeemerParticipationService');
+    const properties = require('../config/properties').promotion;
+    const originalConfig = CONFIG.get;
+    CONFIG.get = key => key === 'promotion' ? { ...originalConfig(key), couponOffers: properties.couponOffers } : originalConfig(key);
+    SERVICE.DefaultCouponOfferService = rules;
+    SERVICE.DefaultCouponRedeemerParticipationService = participation;
+    coupon.soldAt = '2026-01-01T00:00:00.000Z'; coupon.validFrom = coupon.soldAt;
+    coupon.purchasePolicy = { version: 2, promotionCode: 'promotion', promotionRevision: 2, purchasedAt: coupon.soldAt,
+        actions: {}, conditions: {}, issuerEnterpriseRef: ref('issuer'), vendorEnterpriseRef: ref('vendor'),
+        originalOwnerRef: { type: 'CUSTOMER', code: 'customer' }, finality: { refundable: false, transferable: false, singleUse: true },
+        couponOffer: { version: 1, supply: { mode: 'UNLIMITED' }, expiry: { mode: 'NONE' }, requirements: { type: 'REWARDS', priceRef: 'price' }, terms: [] },
+        participation: [{ enterpriseCode: 'partner', issuerEnterpriseCode: 'issuer', scope: { mode: 'SELECTED', storeCodes: ['outlet'] }, agreementRevision: 4 }] };
+    item.purchasePolicy = clone(coupon.purchasePolicy);
+    SERVICE.DefaultDigitalCommerceMerchantService = { ...merchant, withStore: async (r, m) => ({ ...m,
+        store: { code: 'outlet', enterpriseCode: r.enterpriseCode, revision: 2 } }) };
+    const profile = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async r => r.apiName === '/identity/scopes/me'
+        ? { data: { principalCode: 'employee', scopes: [{ scopeType: 'ENTERPRISE', scopeCode: 'partner' }, { scopeType: 'STORE', scopeCode: 'outlet' }],
+            deniedScopes: denial ? [{ scopeType: 'ENTERPRISE', scopeCode: 'partner' }] : [] } }
+        : profile(r);
+    campaign.sellerAuthorizations = [];
+    const r = employee(); r.enterpriseCode = 'partner'; r.authData.enterpriseCode = 'partner';
+    assert.equal(await bridge.admit(r, { entitlementCode: item.code }), true);
+    assert.equal((await bridge.execute(r, 'coupon', { item })).code, coupon.code);
+    await assert.rejects(bridge.execute({ ...r }, 'coupon', { item }));
+    denial = true; await assert.rejects(bridge.execute(r, 'coupon', { item }));
+    assert.equal(writes, 0);
+});
+
+/** Composes the P09 staff-recording path with issuer-owned stock and retained participant rights. */
+function participantRecording(actor = 'partner') {
+    const defaults = require('../config/properties').promotion, get = CONFIG.get;
+    const merchantDefaults = require('../../../../digitalCommerce/modules/digitalCore/config/properties').digitalCore.merchantRedemption;
+    CONFIG.get = key => key === 'promotion' ? { ...get(key), couponOffers: defaults.couponOffers,
+        merchantBenefits: { ...defaults.merchantBenefits, enabled: false } } :
+        key === 'digitalCore' ? { merchantRedemption: { ...merchantDefaults, enabled: true, storeScope: { enabled: true, qualified: true },
+            presentation: { storeLabel: 'Outlet' } } } : get(key);
+    SERVICE.DefaultCouponOfferService = require('../src/service/defaultCouponOfferService');
+    SERVICE.DefaultCouponRedeemerParticipationService = require('../src/service/defaultCouponRedeemerParticipationService');
+    SERVICE.DefaultPromotionMerchantBenefitService = require('../src/service/defaultPromotionMerchantBenefitService');
+    SERVICE.DefaultPromotionItemBenefitService = require('../src/service/defaultPromotionItemBenefitService');
+    const forbidden = () => { throw Error('P09 must not execute monetary or external benefit operations'); };
+    SERVICE.DefaultPromotionPricedTransactionAdapterService = { evaluate: forbidden };
+    SERVICE.DefaultDigitalCommercePricedMerchantProviderService = { confirm: forbidden };
+    SERVICE.DefaultPromotionCouponBudgetService = { consume: forbidden };
+    SERVICE.DefaultPromotionBudgetMutationService = { mutateCoupon: forbidden };
+    SERVICE.DefaultDigitalCommerceItemMerchantProviderService = { confirm: forbidden };
+    SERVICE.DefaultFulfillmentItemSimulationService = { assertSelected: forbidden, evaluate: forbidden };
+    SERVICE.DefaultFulfillmentItemEvidenceService = { evaluate: forbidden };
+    coupon.enterpriseCode = 'issuer'; coupon.enterpriseRef = ref('issuer'); coupon.vendorEnterpriseRef = ref('issuer');
+    coupon.active = true; coupon.soldAt = '2026-01-01T00:00:00.000Z'; coupon.validFrom = coupon.soldAt;
+    delete coupon.sellerAuthorizationProof;
+    Object.assign(batch, { enterpriseCode: 'issuer', enterpriseRef: ref('issuer'), vendorEnterpriseRef: ref('issuer') });
+    delete batch.secureIssuance.command.issuanceAuthority;
+    coupon.purchasePolicy = { version: 2, promotionCode: 'promotion', promotionRevision: 2, purchasedAt: coupon.soldAt,
+        actions: { discountAmount: '5' }, conditions: {}, issuerEnterpriseRef: ref('issuer'), vendorEnterpriseRef: ref('issuer'),
+        originalOwnerRef: { type: 'CUSTOMER', code: 'customer' }, finality: { refundable: false, transferable: false, singleUse: true },
+        couponOffer: { version: 1, supply: { mode: 'UNLIMITED' }, expiry: { mode: 'NONE' },
+            requirements: { type: 'REWARDS', priceRef: 'price' }, terms: [] },
+        participation: [{ enterpriseCode: actor, issuerEnterpriseCode: 'issuer',
+            scope: { mode: 'SELECTED', storeCodes: ['outlet'] }, agreementRevision: 4 }] };
+    item.enterpriseCode = 'issuer'; item.purchasePolicy = clone(coupon.purchasePolicy);
+    campaign.sellerAuthorizations = [];
+    campaign.active = false;
+    const profile = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async r => {
+        if (r.moduleName === 'pricing') return forbidden();
+        return r.apiName === '/identity/scopes/me' ? { data: { principalCode: 'employee',
+            scopes: [{ scopeType: 'ENTERPRISE', scopeCode: actor }, { scopeType: 'STORE', scopeCode: 'outlet' }],
+            deniedScopes: denial ? [{ scopeType: 'ENTERPRISE', scopeCode: actor }] : [] } } : profile(r);
+    };
+    SERVICE.DefaultStoreContextService = { resolveMerchantStore: async (r, enterpriseCode) => {
+        assert.equal(r.authData.enterpriseCode, actor);
+        assert.equal(enterpriseCode, actor);
+        return { code: r.payload?.storeCode || 'outlet', enterpriseCode: actor, enterpriseRef: ref(actor),
+            active: true, status: 'ACTIVE', revision: 2 };
+    }, merchantStores: async () => [{ code: 'outlet', name: 'Partner outlet', revision: 2 }] };
+    if (actor === 'issuer') SERVICE.DefaultCouponService.get = async r => {
+        assert.equal(r.authData.principalType, 'service');
+        return { code: 'SUC_READ', result: equal(r.query, coupon) ? [clone(coupon)] : [],
+            count: equal(r.query, coupon) ? 1 : 0 };
+    };
+    SERVICE.DefaultCouponService.update = async r => {
+        if (actor !== 'issuer') assert.equal(r.authData.isSystem, true);
+        assert.equal(r.query.enterpriseCode, 'issuer');
+        assert.equal(r.query.code, coupon.code); assert.equal(r.query.revision, coupon.revision);
+        coupon = { ...coupon, ...clone(r.model) }; writes++;
+        return { code: 'SUC_UPDATE', result: { acknowledged: true, matchedCount: 1 } };
+    };
+    SERVICE.DefaultDigitalEntitlementService.update = async r => {
+        if (actor !== 'issuer') assert.equal(r.authData.isSystem, true);
+        assert.equal(r.query.enterpriseCode, 'issuer');
+        assert.equal(r.query.code, item.code); assert.equal(r.query.revision, item.revision);
+        item = { ...item, ...clone(r.model) }; writes++;
+        return { code: 'SUC_UPDATE', result: { acknowledged: true, matchedCount: 1 } };
+    };
+    SERVICE.DefaultDigitalDeliveryService.save = async r => {
+        assert.equal(r.model.enterpriseCode, 'issuer');
+        receipts.set(r.model.code, clone(r.model)); writes++;
+        return { code: 'SUC_SAVE', result: clone(r.model) };
+    };
+    Object.assign(SERVICE.DefaultPromotionOperationService, {
+        validateMerchantCoupon: operation.validateMerchantCoupon,
+        claimPurchasedCouponCode: operation.claimPurchasedCouponCode,
+        redeemClaimedCouponCode: operation.redeemClaimedCouponCode,
+    });
+    return payload => { const r = employee({ storeCode: 'outlet', ...payload });
+        r.enterpriseCode = actor; r.authData.enterpriseCode = actor; return r; };
+}
+
+function itemRecordingTerms(scope = 'SELECTED') {
+    coupon.purchasePolicy.actions = { benefitType: 'ITEM', items: [{ sku: 'gift', quantity: 1, unit: 'EACH' }] };
+    coupon.purchasePolicy.participation[0].scope = scope === 'SELECTED' ? { mode: scope, storeCodes: ['outlet'] } : { mode: scope };
+    item.purchasePolicy = clone(coupon.purchasePolicy);
+}
+
+for (const [benefit, actor, scope] of [['MONETARY', 'partner', 'SELECTED'], ['ITEM', 'partner', 'SELECTED'],
+    ['ITEM', 'issuer', 'SELECTED'], ['ITEM', 'partner', 'ALL_ELIGIBLE']]) {
+test(`P09 ${benefit} ${actor} ${scope} staff endpoint records once without Pricing, budget or provider fulfillment`, async t => {
+    const request = participantRecording(actor), beforeOwner = item.ownerId;
+    if (benefit === 'ITEM') itemRecordingTerms(scope);
+    const controller = require('../../../../digitalCommerce/modules/digitalCore/src/controller/defaultDigitalCommerceMerchantController');
+    const priorFacade = global.FACADE;
+    t.after(() => { if (priorFacade === undefined) delete global.FACADE; else global.FACADE = priorFacade; });
+    global.FACADE = { DefaultDigitalCommerceMerchantFacade:
+        require('../../../../digitalCommerce/modules/digitalCore/src/facade/defaultDigitalCommerceMerchantFacade') };
+    SERVICE.DefaultLoggerService.assertSensitiveRequest = () => {};
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy = () => {};
+    const endpoint = async (action, r) => (await controller[action]({ tenant: r.tenant, authData: r.authData,
+        httpRequest: { params: { code: r.code }, body: r.payload,
+            headers: { authorization: r.authorization, 'idempotency-key': r.idempotencyKey } } })).data;
+    const validated = await endpoint('validate', request({ couponToken: 'CUSTOMER-CODE' }));
+    assert.equal(validated.eligible, true); assert.equal(validated.conditions.benefit, undefined);
+    assert.equal(writes, 0);
+    const r = request({ expectedRevision: validated.revision, validationCode: validated.validationCode,
+        validationExpiresAt: validated.validationExpiresAt });
+    const result = await endpoint('confirm', r);
+    assert.equal(result.claimStatus, 'REDEEMED');
+    assert.equal(coupon.status, 'REDEEMED'); assert.equal(item.ownerId, beforeOwner);
+    assert.equal(r.authData.enterpriseCode, actor); assert.equal(r.enterpriseCode, actor);
+    assert.equal(item.evidence.merchantRedemption.merchantCode, actor);
+    assert.equal(item.evidence.merchantRedemption.storeRef.code, 'outlet');
+    assert.equal(item.evidence.merchantRedemption.pricedBenefit, undefined);
+    assert.equal(receipts.size, 1);
+    const count = writes;
+    assert.equal((await endpoint('confirm', r)).receiptCode, result.receiptCode);
+    assert.equal(writes, count);
+    assert.equal((await merchant.validate(request({ couponToken: 'CUSTOMER-CODE' }))).eligible, false);
+});
+}
+
+test('P09 staff or outlet revocation after validation refuses confirmation before mutation', async () => {
+    const request = participantRecording();
+    itemRecordingTerms();
+    const validated = await merchant.validate(request({ couponToken: 'CUSTOMER-CODE' }));
+    const r = request({ expectedRevision: validated.revision, validationCode: validated.validationCode,
+        validationExpiresAt: validated.validationExpiresAt });
+    denial = true;
+    await assert.rejects(merchant.confirm(r));
+    denial = false;
+    r.payload.storeCode = 'foreign';
+    await assert.rejects(merchant.confirm(r));
+    assert.equal(writes, 0); assert.equal(receipts.size, 0);
+});
+
+test('P09 ITEM staff recording never relaxes the direct integrated evidence contract', async () => {
+    const request = participantRecording();
+    itemRecordingTerms();
+    const owner = SERVICE.DefaultPromotionItemBenefitService;
+    assert.throws(() => owner.assertPolicy(coupon.purchasePolicy), { code: 'ERR_PROMOTION_BENEFIT_UNCONFIRMED' });
+    await assert.rejects(owner.validate(request(), coupon.purchasePolicy, coupon),
+        { code: 'ERR_PROMOTION_BENEFIT_UNCONFIRMED' });
+    const get = CONFIG.get;
+    CONFIG.get = key => key === 'promotion' ? { ...get(key), merchantBenefits: {
+        ...get(key).merchantBenefits, enabled: true, qualified: false,
+        evidenceService: 'IntegratedMerchantEvidence' } } : get(key);
+    await assert.rejects(merchant.validate(request({ couponToken: 'CUSTOMER-CODE' })),
+        { code: 'ERR_PROMOTION_BENEFIT_UNCONFIRMED' });
+    assert.equal(writes, 0); assert.equal(receipts.size, 0);
+});
+
+test('P09 ITEM private staff admission cannot be copied onto a system request', async () => {
+    const request = participantRecording();
+    itemRecordingTerms();
+    const validate = SERVICE.DefaultPromotionOperationService.validateMerchantCoupon;
+    SERVICE.DefaultPromotionOperationService.validateMerchantCoupon = async function (r) {
+        assert.equal(r.authData.principalType, 'service');
+        assert.equal(await bridge.staffRecording({ ...r, staffRecording: true }, coupon), false);
+        return validate.call(this, r);
+    };
+    assert.equal((await merchant.validate(request({ couponToken: 'CUSTOMER-CODE' }))).eligible, true);
+    assert.equal(writes, 0);
+});
+
+for (const missing of ['policy', 'provider']) {
+    test('P09 ITEM missing effective Digital ' + missing + ' refuses staff recording without fallback', async () => {
+        const request = participantRecording();
+        itemRecordingTerms();
+        assert.equal(bridge.staffRecordingSelected(), true);
+        const get = CONFIG.get, digitalConfig = clone(get('digitalCore'));
+        if (missing === 'policy') delete digitalConfig.merchantRedemption;
+        else delete digitalConfig.merchantRedemption.providerService;
+        CONFIG.get = key => key === 'digitalCore' ? digitalConfig : get(key);
+        assert.equal(bridge.staffRecordingSelected(), false);
+        assert.equal(await bridge.staffRecording(request(), coupon), false);
+        await assert.rejects(merchant.validate(request({ couponToken: 'CUSTOMER-CODE' })),
+            { code: missing === 'policy' ? 'ERR_DIGITAL_MERCHANT_INVALID' : 'ERR_PROMOTION_BENEFIT_UNCONFIRMED' });
+        assert.equal(writes, 0); assert.equal(receipts.size, 0);
+    });
+}
+
+test('P09 ITEM selected integrated provider still requires independent delivery evidence', async () => {
+    const request = participantRecording();
+    itemRecordingTerms();
+    coupon.purchasePolicy.conditions = { storeCodes: ['outlet'] };
+    item.purchasePolicy = clone(coupon.purchasePolicy);
+    const get = CONFIG.get;
+    CONFIG.get = key => key === 'promotion' ? { ...get(key), merchantBenefits: {
+        ...get(key).merchantBenefits, enabled: true, qualified: true,
+        evidenceService: 'IntegratedMerchantEvidence', itemEvidenceService: 'IndependentItemDelivery' } } : get(key);
+    let reads = 0;
+    SERVICE.IndependentItemDelivery = { evaluate: async () => { reads++; return undefined; } };
+    await assert.rejects(merchant.validate(request({ couponToken: 'CUSTOMER-CODE' })),
+        { code: 'ERR_PROMOTION_BENEFIT_UNCONFIRMED' });
+    assert.equal(reads, 1);
+    assert.equal(writes, 0); assert.equal(receipts.size, 0);
+});
+
+for (const reason of ['staff', 'outlet', 'participation', 'expiry', 'terms']) {
+    test('P09 other-Enterprise recording rejects changed ' + reason + ' before mutation', async () => {
+        const request = participantRecording();
+        itemRecordingTerms();
+        if (reason === 'staff') denial = true;
+        if (reason === 'participation') coupon.purchasePolicy.participation = [];
+        if (reason === 'expiry') {
+            coupon.validTo = '2026-01-02T00:00:00.000Z';
+            coupon.purchasePolicy.couponOffer.expiry = { mode: 'FIXED', at: coupon.validTo };
+        }
+        if (reason === 'terms') coupon.purchasePolicy.actions.items[0].quantity = 0;
+        item.purchasePolicy = clone(coupon.purchasePolicy);
+        await assert.rejects(merchant.validate(request({ couponToken: 'CUSTOMER-CODE',
+            ...(reason === 'outlet' ? { storeCode: 'foreign' } : {}) })));
+        assert.equal(writes, 0); assert.equal(receipts.size, 0);
+    });
+}
 test('issuer validation compares detached BSON entitlement snapshots without dropping purchase fields', async () => {
     const { ObjectId } = require('mongodb');
     const id = '0123456789abcdef01234567';

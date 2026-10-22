@@ -75,6 +75,7 @@ async function create(t, moduleName = 'promotion') {
         createModelName: value => value, isObject: _.isPlainObject };
     const hooks = moduleName === 'promotion' ? require('../../src/interceptors/interceptors') : {};
     global.SERVICE = {
+        DefaultCouponOfferService: require('../../src/service/defaultCouponOfferService'),
         DefaultDatabaseTransactionService: transactions,
         DefaultMongodbDatabaseConnectionHandlerService: connectionOwner,
         DefaultMongodbDatabaseModelHandlerService: { ...provider, LOG: quiet },

@@ -539,7 +539,7 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         assert.equal(plan.prerequisiteReferences.length, pinned.length);
         assert.equal(plan.releases.length, pinned.length + 1);
         assert.equal(plan.releases.at(-1).releaseCode, 'profile:init-v001');
-        assert.equal(plan.releases.at(-1).version, '0.0.3');
+        assert.equal(plan.releases.at(-1).version, '0.0.8');
         const cart = plan.releases.find(release => release.moduleName === 'cart');
         assert(cart, 'the real absent Cart prerequisite is resolved without loading Cart');
         const cartRequest = f.service.createImportRequest(request, { ...plan, releases: [cart] }, false);
@@ -556,11 +556,14 @@ test('actual Profile graph resolves absent owners from restricted Platform roots
         assert(Object.values(cartRequest.data.headers).every(header =>
             header.options.moduleName === 'profile' && Object.values(header.dataFiles).every(file => file.selectionFiles.length > 0)));
         const positions = new Map(plan.releases.map((item, index) => [item.releaseCode, index]));
-        assert(plan.releases.slice(0, catalogue.length).every(item => item.sectionCode === 'permissionCatalogue'),
+        const dependentIdentityReleases = plan.releases.filter(item =>
+            /(accessGroups|enterpriseRoles|businessAccessGroups|businessAccessRoles|specialAccessGroups|specialAccessRoles)$/.test(item.sectionCode));
+        assert(catalogue.every(permission => dependentIdentityReleases.every(dependent =>
+            positions.get(permission.releaseCode) < positions.get(dependent.releaseCode))),
             'all independent permission catalogues precede every dependent group or role');
         for (const release of plan.releases) {
             assert.equal(release.dataType, 'init');
-            assert.equal(release.sourceRoot, 'init-v001');
+            assert.match(release.sourceRoot, /^init-v\d{3}$/);
             for (const prerequisite of release.prerequisites)
                 assert(positions.get(prerequisite.moduleName + ':' + prerequisite.sectionCode) < positions.get(release.releaseCode));
         }

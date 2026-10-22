@@ -2,10 +2,43 @@
   "contractVersion": 2,
   "module": "promotion",
   "sections": {
-    "permissionCatalogue": {
+    "couponOfferPresentation": {
+      "kind": "SOURCE_CONTRIBUTION",
+      "version": "0.0.0",
+      "description": "Promotion-owned coupon workspace presentation source; not an executable import.",
+      "sourceRoot": "backoffice",
+      "files": {
+        "backoffice/promotionCouponOfferPresentationData.js": "29c5e3e0a81aba8db9a1dd70c21d94d289ab75a61005948ea9460db725b260e9"
+      }
+    },
+    "acquisitionRefreshSchedule": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "version": "0.0.1",
+      "displayName": "Inactive acquisition report refresh schedule",
+      "description": "Explicit inactive Cron definition; channel and deployment selections require operator review.",
+      "owningDomain": "promotion",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "CRON",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/records/jobs/promotionAcquisitionRefreshJobData.js": "9c60fa20a71edcd8bb532a8221f2b5bb345f4935a41098825c5747a0c3732ba6",
+        "init-v002/headers/jobs/promotionAcquisitionRefreshJobHeader.js": "52821dc3b990d695cfc82d0bad44c9302455c31c05fca395f689b7cc3c9a88d7"
+      }
+    },
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
       "displayName": "promotion permissionCatalogue",
       "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "promotion",
@@ -29,7 +62,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.4",
       "displayName": "promotion enterpriseRoles",
       "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "promotion",
@@ -53,16 +86,16 @@
         {
           "moduleName": "promotion",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "5cb91f339856a26c4d864eed4918c318318d50061792a357c045737c8c26ee4c"
+          "version": "0.0.4",
+          "checksum": "3b68a10257f64335fba1cfb77597860bd51754bc3d2ca97a18679f405e295844"
         }
       ]
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v001",
+      "contentPath": "docs-v002",
       "pack": "promotion",
-      "version": "0.0.1",
+      "version": "0.0.3",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -76,7 +109,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sourceAuthority": "data/docs-v002/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -84,16 +117,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "e971e54a07121687aeca3f2846a247ee9847d027b54089b6b99c8dbaab39b410",
+      "releaseChecksum": "94c3bbc8624973b1ac1a2330dbe209d8e2613ea837e12f058b7e580617600ff5",
       "generatedHashes": {
-        "docs-v001/records/documentation/promotionDocumentationComponentData.js": "f0357eb5eef2faa3ae23ee96f2d97fde14be6ca28c995fd225f8f5afc9c52060",
-        "docs-v001/records/documentation/promotionDocumentationNodeData.js": "a498ccdb42950e78c79906bab4ab7bf09abcbc5f21a1c8f6dfa164e0930ec60e",
-        "docs-v001/records/documentation/promotionDocumentationPageData.js": "bad8ea9fb6aa86a39da8c18974ea489a11cb4985aa3e8591eb8f8ffccd3a99cd",
-        "docs-v001/records/documentation/promotionDocumentationPageMetadataData.js": "bd54e8a7f0fdb83feee20bb1f4d53dff28e8b6b975a0d719b28388a642a44eda",
-        "docs-v001/records/documentation/promotionDocumentationPublicationStateData.js": "8e9ef43b70eeac0e2bc083db86221b5ff40d20ded0ebaa7fc09dd6bfdfabe5dc",
-        "docs-v001/records/documentation/promotionDocumentationRouteData.js": "c341337bfdf4d72abc413a6ef4a79800f5c50b8cca109c5746b964b9aa77c46a",
-        "docs-v001/records/documentation/promotionDocumentationSearchMetadataData.js": "1ed472150f09c36280d3621d09100e2e9ac76b2c4b0558adc43ceca61acc0c6f",
-        "docs-v001/headers/100_promotionDocumentationContentPackHeader.js": "bcfa4311885656fddb5b5d52ae7dd3c869199c6137102ea4efd381ac29142c58"
+        "docs-v002/records/documentation/promotionDocumentationRelease003NodeData.js": "cbecdaff8f193a36f1d99c88528853568319ed872782a042844941f75666aab9",
+        "docs-v002/records/documentation/promotionDocumentationRelease003PageMetadataData.js": "bb76f8531898198d1e030945a59dad5a3e92c46b3b7c2ced06ab2cd4a89c8fab",
+        "docs-v002/records/documentation/promotionDocumentationRelease003SearchMetadataData.js": "b92e92f82f7dc6c2dc2b933c6ac086904c16cf6e622081991a939abdb1a6cc9f",
+        "docs-v002/records/documentation/promotionDocumentationRelease003ComponentData.js": "956bd3366ae32747d98eb05a72fa4e590b0279ce66b3074e9645a7bca62d4ca3",
+        "docs-v002/records/documentation/promotionDocumentationRelease003PageData.js": "aecc25e90613da55fd644c230556b109d9204a2a145a921cfd616ce2d69c989c",
+        "docs-v002/records/documentation/promotionDocumentationRelease003RouteData.js": "8589314cf9db9f3f961aa3baa5da2df8bf657603c9e27a6efce1d372322e958b",
+        "docs-v002/records/documentation/promotionDocumentationRelease003PublicationStateData.js": "210ddf56bbcf306a3a53de94d64bdf2a39d889669550b7bc8428d76106f61078",
+        "docs-v002/headers/100_promotionDocumentationRelease003ContentPackHeader.js": "c795ae53745e1d77f410a36cdbd9f688fdbf8693668cc419bceb4d65138e1666"
       },
       "includes": [
         {
@@ -172,7 +205,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.4",
       "displayName": "promotion accessGroups",
       "description": "Explicit promotion identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "promotion",
@@ -217,8 +250,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
         },
         {
           "moduleName": "profile",
@@ -230,7 +263,7 @@
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
           "partition": "DEFAULT"
         }
@@ -239,7 +272,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Promotions business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "promotion",
@@ -263,8 +296,8 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         },
         {
           "moduleName": "profile",
@@ -276,7 +309,7 @@
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
           "partition": "DEFAULT"
         }
@@ -285,7 +318,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Promotions business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "promotion",
@@ -309,8 +342,8 @@
         {
           "moduleName": "promotion",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.1",
-          "checksum": "66a5e6ee1a6ab25e076c1bfe6beecb6c9b318fcf451a775ad051f42ad086e7a0"
+          "version": "0.0.2",
+          "checksum": "9ae3f64a7c93ebc2ee1a36b982ea4afba9440b7d99d8836f34b1b7df967658cf"
         }
       ]
     }

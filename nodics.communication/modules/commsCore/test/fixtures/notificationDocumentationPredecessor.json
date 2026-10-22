@@ -1,0 +1,49 @@
+{
+  "kind": "CONTENT_PACK",
+  "contentPath": "docs-v001",
+  "pack": "commsCore",
+  "version": "0.0.1",
+  "owningDomain": "documentation",
+  "lifecycle": "PUBLISHABLE",
+  "destinationRole": "WCMS_STAGED",
+  "environmentScope": [
+    "ALL"
+  ],
+  "sensitivity": "PUBLIC",
+  "versioningPolicy": "IMMUTABLE",
+  "publicationPolicy": "REQUIRED",
+  "initialPublicationPolicy": "ADMIN_INITIATED",
+  "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+  "removalPolicy": "UNPUBLISH_OR_RETIRE",
+  "sourceMode": "cms-records",
+  "sourceAuthority": "data/docs-v001/records/documentation",
+  "sites": [
+    "nodicsDocumentationSite"
+  ],
+  "accessMode": "PUBLIC",
+  "pages": 3,
+  "components": 3,
+  "routes": 3,
+  "releaseChecksum": "eca67da21cfc5b4348378738f9eb202208c7421eef0b6b170c91360c9c35d580",
+  "generatedHashes": {
+    "docs-v001/records/documentation/commsCoreDocumentationNodeData.js": "fb922e196017cb49933dea75f8327c12b8cc2492892ff4a6f6dff24c3b11635d",
+    "docs-v001/records/documentation/commsCoreDocumentationPageMetadataData.js": "e98c3086b5b4ef3af403a9e09fca1de5e17219ee46eba3389886e3e0f1b31641",
+    "docs-v001/records/documentation/commsCoreDocumentationPublicationStateData.js": "e9481318c9697294a521b3b9cbd2f92b6672df8c192430376a4cc568a0f4459d",
+    "docs-v001/records/documentation/commsCoreDocumentationSearchMetadataData.js": "2aed4be3a0143ce7c0c9a9b09b4d6699a33efb86b2b156b50c9c3241171f48bd",
+    "docs-v001/records/documentation/commsCoreDocumentationComponentData.js": "f8e01c8260578f56bb83658b87f3ae6691bcd827ecee590c6f3c2457ce7b26a0",
+    "docs-v001/records/documentation/commsCoreDocumentationPageData.js": "1b2895411a0072032013a88b4b48474a88e820a0327a18d532ed88c06252184a",
+    "docs-v001/records/documentation/commsCoreDocumentationRouteData.js": "6bfe3df2a826eaf9d637578cd8541472aa7a82a6d6551a77f27c2438b484bf70",
+    "docs-v001/headers/100_commsCoreDocumentationContentPackHeader.js": "d3ecc04912da3a4638ed284b71bd03ecea18306acb8c3c960ec91a2ba1b5dab3"
+  },
+  "includes": [
+    {
+      "manifestPack": "nodics.docs",
+      "source": {
+        "type": "LOCAL_SIBLING",
+        "repositoryName": "nodics.ai",
+        "manifestPath": "nodics.docs/data/manifest.json",
+        "manifestSection": "foundation"
+      }
+    }
+  ]
+}

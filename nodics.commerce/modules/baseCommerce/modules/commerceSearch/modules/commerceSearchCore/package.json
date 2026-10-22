@@ -5,6 +5,9 @@
   "private": true,
   "main": "nodics.js",
   "description": "Commerce Search Core capability.",
+  "requiredModules": [
+    "commercialAgreement"
+  ],
   "nodics": {
     "kind": "capability",
     "displayName": "Commerce Search Core",
@@ -17,6 +20,7 @@
       "controller",
       "facade",
       "service",
+      "interceptor",
       "search",
       "test",
       "llm",

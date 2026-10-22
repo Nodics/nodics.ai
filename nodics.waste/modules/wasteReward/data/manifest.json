@@ -1,0 +1,119 @@
+{
+  "contractVersion": 2,
+  "module": "wasteReward",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "wasteReward capability permissions",
+      "description": "Explicit owner permission definitions; preserve existing Profile-managed assignments.",
+      "owningDomain": "wasteReward",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wasteRewardPermissionHeader.js": "3572a2ece39bdeef6b1782d622fb8876a1909abe1de282368a3af7bad9086d63",
+        "init-v001/records/identity/wasteRewardPermissionData.js": "9595115503b6b02ff76c0e9e238e2547e32d85bee6f5f75777b0fc042c65476a"
+      }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "wasteReward",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "8cb4176049f6767e9d938071a4a561a259c994e44c09640d3e663d077279b3cc",
+      "generatedHashes": {
+        "docs-v001/headers/100_wasteRewardDocumentationContentPackHeader.js": "ec157e376c80b098edaa7edba03a3bccbd81e2a8030d2a83d5841339199f9555",
+        "docs-v001/records/documentation/wasteRewardDocumentationComponentData.js": "81ca158db0ffcc138f23415424ec577f37d7e86b19231b243ed6950d02459137",
+        "docs-v001/records/documentation/wasteRewardDocumentationNodeData.js": "930a4bc5a9f798da588ee99435e6014a32991329adbc90c94b048bb1239eee31",
+        "docs-v001/records/documentation/wasteRewardDocumentationPageData.js": "68f08019f67f9c0acb7261092f7f78aaabb4776e5f1210655049e8507e88733f",
+        "docs-v001/records/documentation/wasteRewardDocumentationPageMetadataData.js": "9049da0998860074425d94ffb5a9a38abc5dda61de1ab5c17f9392e24694edc6",
+        "docs-v001/records/documentation/wasteRewardDocumentationPublicationStateData.js": "aede52bcd855d429b85bc2fc6ec009f2c503f3961e8e59d6747bf075a9d45401",
+        "docs-v001/records/documentation/wasteRewardDocumentationRouteData.js": "ed1cba3d914c8a2dd9fa1dc23957040e98f9ba632cc6221de51fe2c969d7416a",
+        "docs-v001/records/documentation/wasteRewardDocumentationSearchMetadataData.js": "dbeb03ece591f1fafd4fa7643f0dfd1bd76367d6aa740a4cd82834246ceb2da8"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    },
+    "participantAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v002",
+      "version": "0.0.1",
+      "displayName": "Waste material-value participant access groups",
+      "description": "Customer participation group for owned material-value entitlements",
+      "owningDomain": "wasteReward",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v002/headers/identity/wasteMaterialValueParticipantUserGroupHeader.js": "de4068785758018a060ee89014223ce017d225903412855150960d05cbb9c23a",
+        "init-v002/records/identity/wasteMaterialValueParticipantUserGroupData.js": "c5219cd1de63602141385839fbb7338c713a35176cd4b28c975f97ae1727849c"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteReward",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "7f10365d6fdc95a42c8893a9d05e885d88b4d924a2b7b12e32860b61ecfb4777",
+          "partition": "DEFAULT"
+        }
+      ]
+    }
+  }
+}

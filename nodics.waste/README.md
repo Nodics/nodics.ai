@@ -5,6 +5,13 @@ provides generic waste-domain contracts for taxonomy, collection points,
 accepted material rules, submissions, evidence links, verification, receipt,
 impact, downstream movement, and compliance evidence.
 
+`wasteCarbon` owns qualified waste-derived carbon lots, original-beneficiary
+allocations and persisted holding reservations/transfers. `wasteReward` owns
+separate recycler material-value assessments and a payment-gated handoff to
+Loyalty earning. Their evidence providers default to unqualified/unavailable;
+module composition does not establish issuance, payment or live readiness.
+See the child README/contracts for API and qualification boundaries.
+
 The group is intentionally independent of accelerators and partner projects.
 Waste accelerators can package e-waste, recycling, circular-economy, ESG, and
 collection-program presets above this common layer. A partner project such as
@@ -36,14 +43,17 @@ the resulting product, listing, bid, order, and payment lifecycle; Waste stores
 only the projection reference and advances asset status when Commerce confirms,
 cancels, fails, expires, or sells the listing.
 
-Commerce sale callbacks then reserve, complete, cancel, or reverse Waste asset
-ownership through policy-driven `wasteAssetTransferPolicy` rules. Reward points
-and carbon credits are emitted as Wallet/Loyalty settlement references, never as
-embedded balances or ledger mutations inside Waste.
+Commerce sale callbacks reserve, complete or cancel Waste asset ownership
+through policy-driven `wasteAssetTransferPolicy` rules. Completed digital sales
+remain final; historical reversal receipts do not authorize new mutations. Reward points
+remain Loyalty-owned; qualified carbon holdings remain `wasteCarbon`-owned.
+Certificates reference those owners and never embed spendable balances. Legacy
+`wallet/carbonSettlementIntent` references are not evidence of issued holdings.
 
 Customer-to-customer gifts use the same policy model without Commerce
 involvement: Waste moves assets through `GIFT_PENDING` and `GIFTED`, while
-reward and carbon movement remains Wallet/Loyalty-owned settlement work.
+reward accounting remains Loyalty-owned and explicit eligible carbon selection
+uses the separate `wasteCarbon` component contract through Digital orchestration.
 
 Donation/recycling uses `DONATE` transfer policies to move assets through
 `DONATION_PENDING` and policy-configured completion states such as `DONATED`

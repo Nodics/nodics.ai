@@ -1,0 +1,1 @@
+Gift {{giftReference}} is pending acceptance until {{deadline}}. Opening this message does not accept it.

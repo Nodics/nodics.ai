@@ -18,6 +18,7 @@ const facade = require("../src/facade/customer/DefaultCustomerFacade");
 const controller = require("../src/controller/customer/DefaultCustomerController");
 const routes = require("../src/router/routers");
 const bidding = require("../../../../nodics.commerce/modules/bidding/src/service/defaultBiddingIdentityService");
+const biddingDefaults = require("../../../../nodics.commerce/modules/bidding/config/properties");
 let customer, reads, verified, request;
 test.beforeEach(() => {
   customer = {
@@ -183,13 +184,22 @@ test("current actor revocation, failed storage, duplicate rows and inactive or m
     );
   }
 });
-test("Commerce forwards the original customer proof and validates Profile placement without generic queries", async () => {
+test("Commerce forwards the original customer proof and validates Profile placement without generic queries", async (t) => {
+  const originalConfig = Object.getOwnPropertyDescriptor(global, "CONFIG");
+  t.after(() => {
+    if (originalConfig) Object.defineProperty(global, "CONFIG", originalConfig);
+    else delete global.CONFIG;
+  });
+  const config = structuredClone(biddingDefaults);
+  global.CONFIG = { get: (key) => config[key] };
   SERVICE.DefaultModuleService = {
     invokeModule: async (r) => {
       assert.equal(r.apiName, "/customer/identity");
       assert.equal(r.methodName, "GET");
       assert.equal(r.header.Authorization, "Bearer artificial");
       assert.equal(r.requestBody, undefined);
+      for (const [key, value] of Object.entries(config.bidding.profileTransport))
+        assert.deepEqual(r[key], value);
       return controller.currentIdentity(request);
     },
   };

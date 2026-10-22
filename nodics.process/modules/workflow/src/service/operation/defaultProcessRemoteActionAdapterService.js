@@ -44,7 +44,7 @@ module.exports = {
     },
 
     /** Revalidates the current service credential without re-admitting an already-running workflow. */
-    runtimeAuthorization: async function (request) {
+    runtimeAuthorization: async function (request, execution) {
         const token = NODICS.getInternalAuthToken(request.tenant);
         if (!token)
             throw new CLASSES.NodicsError(
@@ -58,12 +58,24 @@ module.exports = {
             { tenant: request.tenant, authData: verified && verified.result },
             'workflow',
         );
+        const callerEnterprise = request.authData && request.authData.entCode;
+        const crossEnterprise = callerEnterprise && callerEnterprise !== auth.entCode;
+        const scope = this.getPolicy().runtimeEnterpriseScope;
+        const selectedEnterprises = scope && scope.enterpriseCodes;
+        const contextEnterprise = execution && execution.instance &&
+            execution.instance.context && execution.instance.context.enterpriseCode;
+        const crossEnterpriseAdmitted = crossEnterprise && scope?.enabled === true &&
+            Array.isArray(selectedEnterprises) && selectedEnterprises.length > 0 &&
+            selectedEnterprises.length <= 100 && new Set(selectedEnterprises).size === selectedEnterprises.length &&
+            selectedEnterprises.every(code => typeof code === 'string' &&
+                /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,191}$/.test(code)) &&
+            selectedEnterprises.includes(callerEnterprise) && contextEnterprise === callerEnterprise;
         if (
             auth.runtimeInstanceId !== SERVICE.DefaultModuleRegistrationAgentService.getInstanceId() ||
             auth.runtimeScope.projectCode !== NODICS.getEnvironmentName() ||
             auth.runtimeScope.environmentCode !== NODICS.getSelectedEnvironmentName() ||
             auth.runtimeScope.serverCode !== NODICS.getServerName() ||
-            (request.authData && request.authData.entCode && request.authData.entCode !== auth.entCode)
+            (crossEnterprise && !crossEnterpriseAdmitted)
         ) {
             throw new CLASSES.NodicsError(
                 'ERR_PROCESS_00019',
@@ -121,7 +133,9 @@ module.exports = {
         let task;
         if (declaration.requiresCompletedTask) {
             const query =
-                previous && previous.nodeCode === node.code && previous.taskCode
+                execution.completedTask && execution.completedTask.code
+                    ? { code: execution.completedTask.code, instanceCode: instance.code, status: 'COMPLETED' }
+                    : previous && previous.nodeCode === node.code && previous.taskCode
                     ? { code: previous.taskCode, instanceCode: instance.code, status: 'COMPLETED' }
                     : { instanceCode: instance.code, nodeCode: instance.currentNode, status: 'COMPLETED' };
             const result = await lifecycle.taskService().get(
@@ -191,7 +205,7 @@ module.exports = {
         ) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Remote process action target is unavailable');
         }
-        const authorization = await this.runtimeAuthorization(request);
+        const authorization = await this.runtimeAuthorization(request, execution);
         const started = await this.begin(request, execution, declaration, authorization.auth);
         const handle = started.active;
         let status = 'FAILED';

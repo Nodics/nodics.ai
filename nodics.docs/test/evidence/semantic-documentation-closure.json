@@ -17,7 +17,22 @@
     "semantic-documentation-local-item-simulation-review-2026-10-09.json",
     "semantic-documentation-frozen-source-revalidation-2026-10-09.json",
     "semantic-documentation-axis-setup-successor-review-2026-10-09.json",
-    "semantic-documentation-cms-navigation-source-review-2026-10-09.json"
+    "semantic-documentation-cms-navigation-source-review-2026-10-09.json",
+    "semantic-documentation-axis-owner-contract-revalidation-2026-10-20.json",
+    "semantic-documentation-comms-engagement-revalidation-2026-10-20.json",
+    "semantic-documentation-cms-source-map-revalidation-2026-10-20.json",
+    "semantic-documentation-publishing-runbook-revalidation-2026-10-20.json",
+    "semantic-documentation-module-registry-revalidation-2026-10-20.json",
+    "semantic-documentation-localization-revalidation-2026-10-20.json",
+    "semantic-documentation-nms-revalidation-2026-10-20.json",
+    "semantic-documentation-workflow-bpm-revalidation-2026-10-20.json",
+    "semantic-documentation-service-precedence-revalidation-2026-10-20.json",
+    "semantic-documentation-release-upgrade-revalidation-2026-10-20.json",
+    "semantic-documentation-commerce-authoring-revalidation-2026-10-20.json",
+    "semantic-documentation-commerce-search-revalidation-2026-10-20.json",
+    "semantic-documentation-payment-provider-revalidation-2026-10-20.json",
+    "semantic-documentation-internal-classification-revalidation-2026-10-20.json",
+    "semantic-documentation-source-citation-revalidation-2026-10-20.json"
   ],
   "boundary": "Manual source-editorial review only. The audit independently reopens stale canonical sections or source bytes. This artifact grants no publication approval and does not certify browser, provider or business acceptance.",
   "items": [
@@ -70,11 +85,13 @@
         "invoke preserves false/empty selection metadata before BEFORE/CMS/Media admission and true/bounded metadata afterward, including honest empty selectable lists. Selected AFTER ignores CMS forceRefresh, never writes BEFORE/Media/CMS approvals and retains receipts through a fresh full status invocation without automatic write retry.",
         "mediaPreparationStatus returns SOURCE_READY for fresh persisted CURRENT metadata with storedBytesVerified:false; preparationStatus/sharedPreparationObservation admit that BEFORE Media state into preparation.status CURRENT. CMS READY/ONLINE and exact Media qualified=true remain a separate gate. Required AFTER steps must be CURRENT, never merely SOURCE_READY.",
         "setupObservation validates complete effective profile before/after fixed exact-plan service reads; observeForeignPreparation compares SOURCE/TARGET/SOURCE publication operation/digests and exact installation/source bytes. Disabled-by-default adoption, minimal bounded evidence, no cached foreign proof and no local/financial mutation authority are correctly explained.",
-        "Existing capabilityBusinessStatus and user-safe message/diagnostic distinctions remain intact. New diagrams, worked request shape, rejection cases and fresh recovery instructions do not assert browser execution or provider acceptance."
+        "Existing capabilityBusinessStatus and user-safe message/diagnostic distinctions remain intact. New diagrams, worked request shape, rejection cases and fresh recovery instructions do not assert browser execution or provider acceptance.",
+        "2026-10-20 bounded re-review recovered both prior contract hashes exactly at commit 3f5ab7b57 and read their complete current contents and diff. The new Project Context Ownership section gives PLATFORM defaults to BackOffice, using trusted nConfig project context and explicit override precedence; it supplies no profile, target connection, install, grant or approval. The unchanged guide's project-owned profile example remains a deliberate application selection, not permission to copy framework defaults.",
+        "The setup-observation contract now locates publish.setup.observe vocabulary in the nPublish-owned Profile data contribution, not an nAuth configuration catalogue. The actual secured route and authorize method still require the original verified service principal, explicit signed permission, exact allowlisted deployment and checksummed plan. The canonical guide makes no obsolete configuration-catalogue ownership claim and explicitly separates disabled implementation, permission recognition, deployment adoption and live qualification."
       ],
       "correctnessAndCoverageLimitations": [
         "Backend projection accuracy does not prove a deployed Axis screen renders or enforces the contract; browser and permission acceptance remain separate.",
-      "Authored shared navigation scaffold bytes remain unchanged. The frozen CMS reachable-article publication projection is SOURCE_QUALIFIED to derive current title/summary/searchKeywords/searchText from exact active canonical articles and localization dependencies within Site/locale/channel/access scope; this is a publication-time projection, not a scaffold rewrite or qualification supplied by the BackOffice successor alone. A fresh revision-pinned validation/Process approval/publication cycle and independent native equality check against canonical article.searchText remain required. Axis navigation searches delivered component properties locally and retains browser text bounds; CMS governance search separately uses canonical SearchMetadata. Browser search remains NOT_EXECUTED.",
+        "Authored shared navigation scaffold bytes remain unchanged. The frozen CMS reachable-article publication projection is SOURCE_QUALIFIED to derive current title/summary/searchKeywords/searchText from exact active canonical articles and localization dependencies within Site/locale/channel/access scope; this is a publication-time projection, not a scaffold rewrite or qualification supplied by the BackOffice successor alone. A fresh revision-pinned validation/Process approval/publication cycle and independent native equality check against canonical article.searchText remain required. Axis navigation searches delivered component properties locally and retains browser text bounds; CMS governance search separately uses canonical SearchMetadata. Browser search remains NOT_EXECUTED.",
         "Exact installed-release observation is not current budget, consent, spending, issuance, payment, shipment or business end-to-end qualification."
       ],
       "liveAcceptance": {
@@ -82,12 +99,16 @@
         "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
       },
       "sourceRevalidation": {
-        "reviewDate": "2026-10-09",
-        "artifact": "semantic-documentation-axis-setup-successor-review-2026-10-09.json",
+        "reviewDate": "2026-10-20",
+        "artifact": "semantic-documentation-axis-owner-contract-revalidation-2026-10-20.json",
+        "previousReviewArtifact": "semantic-documentation-axis-setup-successor-review-2026-10-09.json",
         "previousDisposition": "OPEN_CONTENT_GAP",
         "previousGapArtifact": "semantic-documentation-frozen-source-revalidation-2026-10-09.json",
-        "canonicalArticleBytes": "CORRECTED_IN_IMMUTABLE_0.0.2_SUCCESSOR",
-        "changedSourceFiles": [],
+        "canonicalArticleBytes": "UNCHANGED_IMMUTABLE_0.0.2_SUCCESSOR_REVIEWED_AGAIN",
+        "changedSourceFiles": [
+          "nodics.platform/modules/backoffice/llm/contracts/governed-application-setup.md",
+          "nodics.foundation/modules/nPublish/llm/contracts/setup-observation.md"
+        ],
         "manuallyReviewedSourceFiles": [
           "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
           "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
@@ -114,7 +135,7 @@
         "cache": "COVERED_INVALIDATION_AND_OPTIONAL_CACHE_ABSENCE",
         "documentationGovernance": "COVERED_VALIDATION_PROJECTION_HANDOFF_BOUNDARY"
       },
-      "rationale": "Manually re-read all eight actual canonical CMS source-map sections and the current frozen manifest, delivery, dependency and localization owners. The article's authoring/delivery/manifest/migration/cache/governance separation remains accurate; no canonical article blocks changed. The new documentationNavigationProperties branch derives navigation metadata only from active reachable documentation articles in the exact preloaded Site/locale/channel/access scope, rejects absent/redirected/ambiguous identities, matches canonical code and route and uses only frozen localization variants. It performs no reads, imports, persistence, permission changes or approval. Existing manifest integrity, exact-version dependency loading and delivery pointer authority remain intact. Source-level projection rules are now explicit in the owning publication-manifest contract; this source-editorial pass does not assert the canonical overview contains a detailed new navigation tutorial or qualify native/browser behavior.",
+      "rationale": "Re-read all eight canonical source-map sections against the exact recovered source delta. Explicit human access-token admission, STAGED write/delete permissions, retained enterprise/Catalog/Site identity, scoped generated saves and inactive-version retirement tighten the existing Designer path; they do not create a second store, approval path or delivery authority. The article names the real operations, warns of sequential partial saves, and separates authoring, delivery, immutable manifest publication, migration rollback, optional cache invalidation and documentation validation. Exact single-site baseline root derivation remains conditional on the selected immutable pack. No cited statement promises generic human CRUD, hard deletion or automatic publication, so this bounded action is satisfied without rewriting the article.",
       "evidence": [
         {
           "documentId": "wcms.cms-source-map-authoring-contract",
@@ -157,16 +178,13 @@
         "Existing immutable manifests and authored/shared release bytes are not rewritten. A newly reviewed publication snapshot gains the projection through the normal revision-pinned validation/Process approval path; the current Online pointer remains authoritative until ordinary publication succeeds."
       ],
       "correctnessAndCoverageLimitations": [
-        "Optional nCache absence can return success without invalidating a cache; external CDN/browser freshness requires target evidence.",
-        "Migration rollback and publication pointer rollback are distinct recovery operations.",
-        "Projection qualification is source/local-fixture only. Native delivery must independently demonstrate newly approved exact manifest scope and navigation searchText equals the canonical article. A browser still applies its own bounded item-text filter, so source full-text projection is not proof every late-position keyword is discoverable.",
-        "The helper consumes already admitted frozen dependencies and canonical route access classifications; source.owner is provenance, not an independent access grant. Existing publication, identity, localization and delivery authorities remain required.",
-        "Large-site maximum-bound performance and browser search behavior were not benchmarked or accepted by this review."
+        "This rereview closes the requested source-map separation, not a new exhaustive employee retirement tutorial.",
+        "Native Designer persistence, browser retirement interaction, publication, cache freshness and retained Media delivery were not exercised."
       ],
       "remediation": [],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": "P0",
       "sourceRevalidation": {
@@ -186,7 +204,7 @@
           "nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js",
           "nodics.wcms/modules/cms/llm/contracts/publication-manifest-contract.md"
         ],
-      "boundary": "Manual CMS source/security and canonical source-map review only. Existing immutable data/config/releases remain unchanged. No native publication, Process decision, import, financial mutation, browser or provider acceptance. Other editorial findings are preserved; the Axis aggregate navigation limitation alone is corrected to reference this newly source-qualified projection without changing its historical review. Seven independently verified comment-only files are not mapped to any semantic scope and require no fingerprint refresh."
+        "boundary": "Manual CMS source/security and canonical source-map review only. Existing immutable data/config/releases remain unchanged. No native publication, Process decision, import, financial mutation, browser or provider acceptance. Other editorial findings are preserved; the Axis aggregate navigation limitation alone is corrected to reference this newly source-qualified projection without changing its historical review. Seven independently verified comment-only files are not mapped to any semantic scope and require no fingerprint refresh."
       }
     },
     {
@@ -357,7 +375,7 @@
         "fulfillmentEvidence": "COVERED_PHYSICAL_OWNER_RECEIPTS_REAL_ITEM_REFUSAL_AND_DISTINCT_LOCAL_UNVERIFIED_SIMULATION",
         "browserProof": "COVERED_SCENARIOS_EXECUTION_REMAINS_SEPARATE"
       },
-      "rationale": "Re-read the five canonical Commerce authoring/Promotion/Digital/Fulfillment articles against changed Pricing, Digital merchant, Digital ownership and Promotion lifecycle sources and the ownership contract. Retained publication remains separate from operational stock; original merchant receipts and exact ownership readback remain required. Unselected ownership availability is bounded unavailable supply, selected faults still refuse, and lifecycle CAS preserves original encrypted issuance. Current articles accurately retain private confirmation, original-sale refund, exact millisecond identity, simulated/unverified ITEM labels, unavailable real ITEM delivery and disabled used-benefit inverse limits. No financial, native or provider qualification follows.",
+      "rationale": "Product/Pricing/operational Inventory and physical reversal remain source-backed. Corrected all four simulation guides to effective SIMULATION plus canonical selected-environment allowlist independent of deployment class, with unverified/nonimmutable evidence and historical receipt preservation. The final Digital reread additionally corrected historical original-sale refund prose: current eWaste phases refuse completed ownership refunds; only original incomplete Checkout recovery remains. Source review does not claim browser, provider or deployed acceptance. The adjacent persisted ownership contract is now also corrected: no current eWaste original-sale reversal instructions, with separately preserved generic Commerce recovery and historical evidence.",
       "evidence": [
         {
           "documentId": "commerce.data-authoring-fulfillment",
@@ -440,51 +458,53 @@
         "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/merchant-redemption-contract.md",
         "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js",
         "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js",
-        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js"
+        "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js",
+        "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js"
       ],
       "sourceFindings": [
-        "Inventory rejects stock mutation in COMMERCE_STAGED/STAGED and direct operational snapshots for balance/movement/reservation in OPERATIONAL_VERSIONED mode.",
-        "balanceAction replay identity does not make sequential balance/movement writes a proven cross-worker transaction.",
-        "Product listing creation is gated specialized DIGITAL/DIGITAL_COMMERCE behavior with source/owner/listing identity, not general Axis product CRUD.",
-        "Carrier sandbox execute requires enabled sandboxOnly policy, references and injected ports; liveQualified:true is refused, not certified.",
-        "Pricing createGoverned uses retained capture and shared publication authority, not operational inventory or frontend approval.",
-        "Inventory requireReturnAuthority lines 96-100 rejects RETURN/return or payload.actionCode RETURN. operationDelta and balanceAction both invoke it; balanceAction does so before balance/idempotency validation and generated owner reads/writes.",
-        "Pricing prepareSetup delegates to createGoverned, validateSetup checks retained membership/version and trusted scope, and isSetupReceiptCommitted checks applied tenant/enterprise/fingerprint/previous-version evidence. rootCodesByStore requires exact configured Store mappings; it does not fall back to Staged authoring.",
-        "inventoryReturnAuthorityContract.test.js asserts zero reads/writes for RETURN with caller-claimed receipt/disposition/quantity. Parent-reported ongoing Order/Payment reverse-safety work is not certified by this snapshot.",
-        "The corrected authoring guide distinguishes sequential RECEIVE/ADJUST authoring, atomic opening receipts and Checkout reservations, and reviewed physical owner reversals. Generic Inventory RETURN remains refused. Original owner-issued SHIPPED quantities are not customer delivery: retained receipt and accepted inspection/disposition are required before return settlement. Typed references delegate physical authority and original-capture offline Payment details to their canonical owners. Publication and search freshness remain independently qualified.",
-        "Targeted 2026-10-09 sidecar review: the unchanged cross-framework authoring anchors still separate Staged authoring/publication/search from operational stock and physical completion. Supplemental canonical owner sections now distinguish original issuer staff from exact vendor persistence, Digital private confirmation phases and original secure coupon/batch/consent membership; no general vendor/issuer-management grant is inferred.",
-        "Coupon-bound monetary COMMIT is integrated through exact original merchant receipt and explicit ISSUED_COUPON_BENEFIT_V1 purpose. Qualified Promotion transaction fences unused CLAIMED coupon revision, ledger insert and issuer counter CAS; REDEEMED recovery requires the actual original COMMIT. RELEASE receiver exists, but resolveBudgetRequest admits COMMIT only: no canonical RELEASE caller or used-benefit inverse workflow is supplied.",
-        "Fulfillment ITEM evaluate validates bounded detached selectors then always refuses ERR_FULFILLMENT_ITEM_DELIVERY_UNCONFIRMED; available:false names absent authenticated Shipment allocation receipt source. Manual handover, generic DELIVERED, returned-package inspection, sandbox and caller receipt/flags cannot qualify delivered ITEM benefits.",
-        "Original-sale ownership refund is source-implemented for one complete quantity-one wasteCore/DIGITAL_OWNERSHIP entry only: retained before-onward-transfer policy, original Order approval/paymentAuthority, Waste lock, original seller EARN reversal, Payment buyer original-capture refund and terminal owner readback. Physical custody, relisting, fee/carbon, generic entitlement refund and coupon refund policy remain separate. Source fixtures and pack validation are not installed/native E2E.",
-        "Final 2026-10-09 lifecycle-guard re-review: commitLifecycleCoupon rejects supplied changes/clearing of original protectedToken, secureIssuance and secureIssuanceCode; unchanged originals are omitted from generated mutation. Existing private seller and secure guards, exact scoped revision/status CAS and successor readback remain. Actual guarded claim/redemption regression passes, and generic encrypted-record writes remain fenced. This source correction does not qualify monetary/native execution or provide canonical RELEASE.",
-        "Final frozen private-readback review: commitLifecycleCoupon first rejects supplied protected-field changes, then requires typeof secure.read and secure.privateOperation to be function when supplied original protected values need verification, before any CAS write. Only lifecycle patch fields enter mutation and normal redacted successor readback.",
-        "Protected original values are independently read inside secure.privateOperation using secure.read with exact tenant, enterprise and coupon selectors, maximum one row, matching successor revision and deep equality of original protected fields. Secure read checks successful envelope, bounded unique rows and every equality selector; it returns detached private evidence while generic providerResult remains redacted.",
-        "The frozen 54-case merchant contract passes, including five absent/non-callable-owner prewrite refusals and seven private readback failures (error, missing, revision, tenant and each protected field). Postwrite failures leave one already-written original transition but never confirm it; encrypted issuance remains unchanged. No generic guard relaxation, monetary/native qualification, new RELEASE caller or CMS edit follows.",
-        "2026-10-09 LOCAL_SIMULATION re-review: DefaultFulfillmentItemSimulationService requires package-derived LOCAL class, exact selected-environment allowlist, strict enabled values and matching Promotion mode/service before and after context canonicalization. Its detached SKU-sorted context adds the merchant-observed positive Store revision and exact SIM: handle; no persistence, inventory, carrier or physical-receipt work occurs in this evaluator.",
-        "Raw simulation proof is explicitly simulated:true, verified:false, immutable:false, SIMULATED / ITEM_SIMULATION / SIMULATED_ITEMS, sourceRevision:0 and no deliveredAt. SHA-256 of ITEM_SIMULATION_V1 plus canonical context provides deterministic correlation only, not authentication, immutable storage or durable physical-delivery replay protection.",
-        "Promotion ItemBenefit rechecks actual simulator admission and mode across the evaluator await and requires exact original tenant/vendor/issuer/buyer/coupon/Product/campaign/revision/outlet/target, bundle, reference and source integrity. It refuses promoted verified/immutable flags, real delivery status/stage, deliveredAt and changed outlet revision. Its bound benefit retains simulated/unverified ITEM tags but does not project the raw immutable field or infer money.",
-        "Digital ITEM provider reuses the exact pricedAuthority object through validateCoupon, preserving private issuer admission. Existing canonical confirmation phases, current signed human/Profile/Store/consent, original vendor-owned encrypted stock, target, benefit binding and protected coordination receipt are unchanged. ITEM skips monetary COMMIT. Confirmation/queue and original pending/completed receipt inspection retain simulated:true, deliveryVerified:false, evidenceMode:LOCAL_SIMULATION.",
-        "Digital MERCHANT_RECEIPT generic DELIVERED status and deliveredAt derived from original marker.confirmedAt are workflow coordination metadata, not Fulfillment simulator proof, physical delivery or carrier authentication. Only the simulator is non-mutating; the existing merchant journey can claim/redeem disposable original records. Original exact receipt/key replay and failed/ambiguous readback remain authoritative.",
-        "The real DefaultFulfillmentItemDeliveryEvidenceService remains available:false and always refuses absent authenticated original Shipment allocation receipt admission. VERIFIED mode and independently qualified real receipt requirements are unchanged. Human-approved LOCAL simulation does not establish real delivery, installed persistence, current native acceptance or monetary qualification.",
-        "Already-redeemed benefit inverses are intentionally disabled in the approved scope: MerchantScope.resolveBudgetRequest admits COMMIT only, including when tested with a genuine in-flight COMMIT object. No RELEASE caller, budget replenishment, used-coupon refund or automatic compensation is supplied. Existing unused-purchase and original-sale DIGITAL_OWNERSHIP refunds remain independent.",
-        "Four canonical owner articles were re-read against those sources: Promotion owns retained ITEM rights/mode and disabled inverse; Fulfillment owns selection, exact SIM grammar/nonimmutable evidence and real-source refusal; Digital owns exact private dispatch, protected receipt/recovery and public labels; the Fulfillment source map references these owners. Existing central authoring/publication/search/browser-proof anchors remain accurate and unchanged.",
-        "Focused source contracts pass 200/200; owning CMS references/composition tests pass 16/16. All three optional documentation releases pass canonical validation; docs:check and validate pass 176 pages. The separate inspected project test passes 2/2, including all 29 unchanged exact ITEM promises and native-vs-Docker selection. These checks exercise source/configuration with isolated owner ports, not installed/native/browser or real delivery acceptance.",
-        "Copilot ITEM preparation/mutation remains unsupported; read-only consumer projection work is a separate source review, not authority to execute that path.",
-        "Final frozen SIM-handle review: only Digital Merchant confirm and original receipt inspection generic receipt character classes now admit @, preserving their existing bounds and all original key/outlet/marker/staff/receipt checks. Fulfillment still enforces the stricter canonical ^SIM:[A-Za-z0-9_.:@-]{1,115}$ grammar; this does not admit a wrong prefix, slash, whitespace or oversized simulation. Actual integrated private MerchantScope fixture now validates, confirms, redeems, replays, inspects the original receipt and reads queue with SIM:original@outlet, retaining issuer authority, vendor storage, original encrypted stock and unverified labels. Its 55/55 source cases pass. No auth/policy, real delivery qualification, monetary or inverse authority changed.",
-        "Pricing prepareSetup/createGoverned/validateSetup retain exact source capture and shared nPublish authority. authorizeTarget rereads stored intent; legacyCasRecovery requires exact operation/scope/root/source and reason/approver/reference, refuses competing history and does not activate from caller approval flags.",
-        "Digital confirmation retains original staff/outlet revision, receipt/key and pricedBinding, protected receipt readback before redeem and exact completed-receipt replay. MERCHANT_RECEIPT deliveredAt is a Date for original marker.confirmedAt; it remains workflow coordination, not physical delivery, as the current article explains.",
-        "Digital ownership timestamp/verifyRecord compare Date and ISO instants with milliseconds, require one exact current owner row and verify entitlement/delivery after save. The canonical refund section explicitly rejects lossy coercion and one-millisecond drift.",
-        "Ownership availability returns bounded unavailable supply only when unselected/unqualified. Selected integration configuration, retained pins and owner evidence still refuse faults; reserve/write/refund remain strict. The current non-data contract describes this without allocation or financial qualification.",
-        "Promotion commitLifecycleCoupon rejects changed/cleared protectedToken/secureIssuance/secureIssuanceCode, excludes issuance from lifecycle writes, checks acknowledged revision CAS/exact patch readback and privately verifies retained supplied protected fields. Canonical private phase, original rights and simulated ITEM limits remain accurate."
-      ],
-      "correctnessAndCoverageLimitations": [
-        "No atomic transaction spans catalog publication, Inventory, carrier and Payment.",
-        "Browser sellability, live carrier support and settled refunds require separate operational evidence.",
-        "LOCAL simulation source/configuration tests and deterministic hashes are not authenticated/immutable delivery, installed private persistence, native/browser acceptance or used-benefit reversal authority. Only the Fulfillment evaluator is non-mutating; the merchant journey can change disposable original coupon/entitlement state."
+        {
+          "id": "DOC-COMMERCE-SIMULATION-SELECTOR",
+          "severity": "P1",
+          "documentIds": [
+            "promotion.campaigns-coupon-issuance",
+            "digital.purchase-delivery-reveal",
+            "fulfillment.shipping-management",
+            "commerce.fulfillment-core-source-map"
+          ],
+          "anchors": [
+            "promotion-local-item-simulation",
+            "digital-local-item-simulation",
+            "digital-simulation-recovery",
+            "fulfillment-local-item-simulation",
+            "fulfillment-simulation-recovery",
+            "commerceFulfillmentCoreSourceMap-2-source-map"
+          ],
+          "actualSource": "Fulfillment assertSelected checks SIMULATION, the exact evaluator, enabled flags and canonical selected-environment allowlist; it never reads environment.class. Digital public projections emit SIMULATION. Retired LOCAL_SIMULATION refuses. Historical ITEM_SIMULATION/SIMULATED_ITEMS hashes and receipts remain readable.",
+          "contradiction": "Fulfillment guide requires environment.class exactly LOCAL and LOCAL_SIMULATION selection; Digital requires LOCAL_SIMULATION response tags; Promotion and source map describe the current evaluator as LOCAL-only.",
+          "regression": "fulfillmentItemSimulationContract.test.js rejects retired mode and admits explicit selected environments independently of LOCAL/PRODUCTION/STAGING/QA/undefined class.",
+          "correction": "Forward-correct all four articles and derived metadata/search projections to SIMULATION and explicit deployment allowlist. Preserve stable anchors, frozen historical releases, unverified/nonimmutable/no-delivery labels and current staff recording as a separate flow. Do not restore a class gate or enable a deployment.",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "resolution": "Forward-correct all four articles and derived metadata/search projections to SIMULATION and explicit deployment allowlist. Preserve stable anchors, frozen historical releases, unverified/nonimmutable/no-delivery labels and current staff recording as a separate flow. Do not restore a class gate or enable a deployment."
+        },
+        {
+          "id": "DOC-DIGITAL-RETIRED-REFUND-GUIDANCE",
+          "severity": "P1",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "documentIds": [
+            "digital.purchase-delivery-reveal"
+          ],
+          "anchors": [
+            "digital-original-sale-ownership-refund"
+          ],
+          "contradiction": "The article described a supported original-sale refund bridge although current eWaste phases refuse it.",
+          "actualSource": "Digital rejects bundle refunds; eWaste returns final-sale ineligibility at preview and throws on mutation phases.",
+          "resolution": "Marked retained policy/phase records historical only, replaced execution diagram with final-sale/original-command-recovery boundary, preserved stable anchor and provider qualification limits."
+        }
       ],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
       },
       "sourceRevalidation": {
         "reviewDate": "2026-10-09",
@@ -506,7 +526,9 @@
           "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js"
         ],
         "boundary": "Manual source-editorial review only. Shared hash renewal for a passing scope cannot close an OPEN_CONTENT_GAP scope. No CMS/config/runtime/native writes or financial/provider acceptance."
-      }
+      },
+      "remediation": [],
+      "previousRationale": "Product/Pricing/operational Inventory, exact physical reversal, version-2 coupon finality and staff-attestation boundaries remain source-backed. But four Commerce/Fulfillment articles still require LOCAL_SIMULATION and LOCAL class while current owners select SIMULATION via explicit deployment allowlist independent of class. Hash refresh would conceal a real editorial contradiction."
     },
     {
       "item": "Documentation publishing runbook",
@@ -523,7 +545,7 @@
         "rollback": "COVERED_CONCRETE_SHARED_CMS_BASELINE_PROCEDURE",
         "rendering": "COVERED_POST_ROLLBACK_ARTICLE_NAVIGATION_ACCESS_SEARCH_MEDIA_CHECKS"
       },
-      "rationale": "Re-read the documentation publishing runbook and delegated CMS rollback section against current BackOffice routes/invoke and CMS baseline actorRequest/rollback. Scoped AFTER_PUBLICATION selection changes optional business setup, not independent documentation CONTENT_PACK selection, explicit composition, Staged review, CMS/Media approval or immutable Online rollback. Documentation install/prepare/reconcile/rollback retain runtime-admin boundaries; baseline rollback requires current ONLINE lineage and passes the owner's current revision to nPublish. The publication runbook remains accurate despite the separate Axis setup content gap.",
+      "rationale": "Read the complete current publishing runbook plus the delegated CMS running-example rollback procedure against baseline descriptor/status/rollback and the full history-capacity test. Root derivation only removes duplicated root metadata for an explicitly selected exact single-site pack; it neither selects/imports that pack nor approves or publishes it. Invalid derived releases report INVALID_RELEASE. Rollback still requires ONLINE lineage and previousOnlineVersion and forwards the current revision to nPublish. Bounded distinct-identity dependency reads preserve complete frozen publication graphs instead of mistaking repeated historical versions for distinct dependencies. The requested optional selection, Staged review, immutable Online activation, recovery and rendering boundaries remain accurate. Reread complete selected publishing runbook and exact added source-evidence resolver. Recovered pre-change contract bytes match the prior reviewed SHA256 exactly after removing only the added URL import and resolver. Existing catalogue, manifest generation, composition, CMS references, lifecycle and publication behavior are unchanged. New local validation proves the underlying file and decoded Markdown ATX section outside fenced examples; unknown fragments and missing files still fail. This implements the runbook requirement for real source evidence without treating filesystem fragments as CMS graph anchors or granting import/publication authority.",
       "evidence": [
         {
           "documentId": "docs.documentation-publishing-runbook",
@@ -575,13 +597,13 @@
         "Exact-plan observations and scoped business stages do not alter CONTENT_PACK includes/referenceCatalogues or independent selection/import/review/publication. Renewing these shared source pins does not close the Axis content gap."
       ],
       "correctnessAndCoverageLimitations": [
-        "Source editing and this evidence do not refresh manifest integrity, install a content pack, approve or publish it.",
-        "A ROLLED_BACK label alone is not browser/Media/cache acceptance; the prior immutable target must be inspected."
+        "Current test rereview substitutes for unavailable historical test bytes, not for any claimed recovered diff.",
+        "No content pack installation, approval, rollback, Online pointer operation, browser rendering or Media delivery was executed."
       ],
       "remediation": [],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": "P0",
       "sourceRevalidation": {
@@ -615,7 +637,7 @@
         "statusProjection": "COVERED",
         "axisVisibility": "COVERED"
       },
-      "rationale": "The guide explains the distinct installation/runtime/registration/activation/data-receipt states rather than treating visibility as activation. It covers required versus optional capabilities, dependency checks, local/remote owner availability, complete paged registry reads, backend action eligibility, activation receipts and revision-conflict recovery. Its Axis walkthrough correctly lets an unavailable target block only its dependent operation and preserves original actor/owner authority. These explanations satisfy the backlog request without asserting the walkthrough was executed in a browser.",
+      "rationale": "Read each cited registry section against the complete register/registerBatch/applicationStatusReport diff and nearest BackOffice contract. Batch registration now settles every sibling before one captured lease snapshot, refreshes persisted partial state on failure, and preserves both original and refresh errors. Single registrations retain independent refresh. Status composition uses at most four request-local workers while retaining input-relative outcomes. These bounded execution changes preserve the documented distinction between observations, human activation, capability availability and API authorization; they do not add a loader or permit a heartbeat to enable a module. No cited article promises transaction-wide rollback, serial profile reads or per-item snapshot publication.",
       "evidence": [
         {
           "documentId": "platform.module-registry-journey",
@@ -644,12 +666,13 @@
         "The selected 0.0.2 component carries these exact unchanged blocks; only source provenance moves. Freshly inspected getAllRecords, reconcileObservation, transition, recordActivationDataCompletion and permission-filtered catalogue projections still support the original eight-anchor explanation."
       ],
       "correctnessAndCoverageLimitations": [
-        "This is a source-editorial pass for the named journey, not certification of every BackOffice capability or UI state. Installed remote failure, concurrency and signed-in browser scenarios remain separate acceptance work."
+        "Four workers is a per-composition implementation bound, not a global capacity or latency guarantee.",
+        "No durable deployment leases, real registration/activation, browser navigation or multi-runtime availability acceptance was performed."
       ],
       "remediation": [],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "Browser, deployed-runtime and live-provider acceptance were not executed; this source editorial disposition neither grants nor denies those separate gates."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": null,
       "sourceRevalidation": {
@@ -679,7 +702,7 @@
         "indexOwnership": "COVERED_NSEARCH_PROVIDER_VS_COMMERCE_RULE_OWNER",
         "storefrontImpact": "COVERED_ORDERING_NO_RULE_AND_AVAILABILITY_BOUNDARIES"
       },
-      "rationale": "The invalid category/top-level boost example is replaced with required code/tenant/name/store/scope/status/revision/actions and CATEGORY/categoryCode/BOOST weight. Earlier exclusions/market/analyzer promises are constrained to explicitly implemented external engines rather than fallback behavior. Intro/source map now distinguish Product discovery, Commerce rule projection/ranking and generic nSearch. Existing detailed scope, deterministic edge cases, bounded publication and sequential partial-failure sections remain intact, and stock/browser acceptance remain separate.",
+      "rationale": "The current guide accurately separates Product candidate ownership, nSearch indexing and Commerce rule selection. Current source validates complete bounded rule scans and complete candidate ranking before pagination on the selected catalogue path, preserving explicit sorts/zero weights and half-open timing. Agreement benefits resolve through canonical Promotion membership under the original caller. Immutable snapshot replay and sequential non-atomic publication are accurately limited.",
       "evidence": [
         {
           "documentId": "commerce.search-guide",
@@ -695,7 +718,9 @@
             "commerce-search-guide-source-depth-1",
             "commerce-search-guide-source-depth-2",
             "commerce-search-guide-source-depth-3",
-            "commerce-search-guide-source-depth-4"
+            "commerce-search-guide-source-depth-4",
+            "commerce-search-guide-complete-set-timing",
+            "commerce-search-guide-agreement-benefits"
           ]
         }
       ],
@@ -703,21 +728,17 @@
         "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js",
         "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js",
         "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js",
-        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js"
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchBenefitService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPolicyService.js",
+        "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/config/properties.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductCatalogueQueryService.js"
       ],
-      "sourceFindings": [
-        "The complete DRAFT rule is authoring data, not a CURRENT published projection; actions use productCode/actionType/weight.",
-        "loadRules/applies/actionScore/ranked/rank implement the documented fallback PIN/BOOST/BURY behavior, not exclusion or arbitrary analyzer support.",
-        "Publication checks the bounded rule set before sequential projection/index writes; partial publication is not globally atomic."
-      ],
-      "correctnessAndCoverageLimitations": [
-        "No live index rebuild, storefront query or provider acceptance was executed.",
-        "A ranked/discoverable item does not establish current operational stock or checkout eligibility."
-      ],
+      "sourceFindings": [],
       "remediation": [],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
       },
       "remediationPriority": "P0"
     },
@@ -735,7 +756,7 @@
         "importData": "COVERED_OWNER_HEADERS_RECORDS_AND_UI_CONTRIBUTION_ENVELOPE",
         "apiBoundary": "COVERED_PUBLIC_BUNDLE_VS_SECURED_MANAGEMENT_WITH_SCOPE_LIMITATIONS"
       },
-      "rationale": "The universal fallback diagram is replaced with distinct CMS, Product and UI bundle algorithms. Worked policy cases explain exact/fallback selection, partial variants, missing values and owner-specific unsupported-locale behavior. Schema-shaped developer headers/records include lifecycle fields; UI contribution/value/release/pointer are separately explained without seeding approval. Public bundle route, trusted tenant versus query filters, namespace/exposure/key bounds, immutable release validation/checksum/ETag and secured author/review/build/publish/rollback operations are explicit, including service-level scope/locale guard limitations.",
+      "rationale": "Read all current localization article blocks against both exact schema diffs. CMS adds owner-pinned authoringScope, enterprise-bound Sites, read-only generic business Workbench operations and scoped-command write admission; Product adds optional signed enterpriseCode to product/variant localization records and unrelated root authoring/listing metadata. Neither diff changes the documented CMS selected-variant/shared-property merge, Product READY fallback/no-base-merge policy, UI APPROVED immutable bundle construction, localized record keys or publication boundaries. The examples explicitly use governed developer import headers, not ordinary employee schema CRUD, so tighter human admission does not contradict them.",
       "evidence": [
         {
           "documentId": "localization.runtime-authoring",
@@ -772,13 +793,13 @@
         "Public bundle request validation is bounded but does not itself prove requested locale/channel equals every loaded release field; pointer/repository isolation must be qualified."
       ],
       "correctnessAndCoverageLimitations": [
-        "Translation quality, public pointer isolation, browser locale behavior and external cache freshness need separate acceptance.",
-        "Schema declarations/valid import shapes do not grant approval or install a published UI bundle."
+        "Commerce Product inspection is dependency-only, not a substitute for the Commerce owner's product-authoring review.",
+        "Unchanged UI/message, CMS and Product resolver hashes reuse prior semantic evidence. No locale import, Online bundle, browser or translation-quality acceptance was run."
       ],
       "remediation": [],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": "P1"
     },
@@ -794,7 +815,7 @@
         "reconciliation": "COVERED_READBACK_AMBIGUITY_AND_ABSENT_REAL_SETTLEMENT_WORKER",
         "safeCustomerPayloads": "COVERED_DECLARED_ALLOWLIST_AND_PRIVATE_RECEIPT_REDACTION"
       },
-      "rationale": "The owner guide explains fresh bound offline captures, retained tenant/enterprise/buyer/Order/amount/currency/original-key authority, guarded tokenless full refunds and stable financial replay keys. Payment and adapter both validate original authority and remaining refundable value; ambiguous outcomes retain recovery evidence without redispatch. Historical unbound captures, real CARD settlement, partial/split refunds and real provider reconciliation remain explicitly unsupported. Offline deterministic receipts are not external money movement.",
+      "rationale": "Payment execution retains credential-free participant/auction evidence without granting provider authority and binds replay to original participant/capture. Loyalty reward preparation remains separate from provider accounting calls. The unchanged article accurately describes safe projections, original-capture guarded refunds, offline sandbox limits and reconciliation uncertainty. Method configuration and provider acknowledgements are not real settlement qualification.",
       "evidence": [
         {
           "documentId": "commerce.payment-provider-boundaries",
@@ -817,31 +838,21 @@
         "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
         "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
         "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
-        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js"
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/llm/contracts/README.md",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js"
       ],
-      "sourceFindings": [
-        "Card prepare accepts opaque tok_ descriptors; offline Stripe simulation does not call a gateway. Provider package names do not establish integration.",
-        "execute uses tenant:key in-flight dedupe and sequential repository find -> adapter execution -> record; no multi-worker exactly-once guarantee follows.",
-        "Only REFUND_DELAYED/REFUND_FAILED/REFUND_RECONCILIATION_REQUIRED set reconciliationRequired; unknown adapter statuses are not automatically normalized safely.",
-        "Non-successful refunds require ACTION_REQUIRED or PENDING_PROVIDER_CONFIRMATION evidence through the generated reconciliation owner, with exact original-intent readback; a missing owner or failed persistence refuses. No external settlement worker is supplied.",
-        "refundOrder supports exact full original Loyalty captures and fresh original-bound LOCAL_SANDBOX_DEMO CARD captures under persisted Order approval and remaining-authority preflight. Stable original financial identity is retained; real CARD, historical unbound captures and partial/split refunds remain unavailable.",
-        "transactionModel retains provider code/reference and adapter-reported status; it generates no request hash and imposes no provider-status length bound. The corrected safe-payload paragraph distinguishes internal evidence from independently enforced customer projection.",
-        "The owner guide explains fresh bound offline captures, retained tenant/enterprise/buyer/Order/amount/currency/original-key authority, guarded tokenless full refunds and stable financial replay keys. Payment and adapter both validate original authority and remaining refundable value; ambiguous outcomes retain recovery evidence without redispatch. Historical unbound captures, real CARD settlement, partial/split refunds and real provider reconciliation remain explicitly unsupported. Offline deterministic receipts are not external money movement.",
-        "2026-10-09 sidecar re-review: canonical safe-payload and original-capture paragraphs are unchanged; transactionModel retains adapter status without request-hash/length claims. Derived article/search text, headings, body SHA-256 and word counts now match current canonical blocks. recordReconciliation returns null for REFUND_SUCCEEDED; otherwise it requires the generated reconciliation owner and exact original-intent save/readback. Loyalty full-original-capture and bound LOCAL_SANDBOX_DEMO CARD remain distinct supported paths, not external settlement qualification."
-      ],
-      "correctnessAndCoverageLimitations": [
-        "Readiness declaration validation is not independent live certification, signed-callback execution or production traffic approval evidence.",
-        "A safe-field declaration is not proof every channel response enforces it; provider tokens/raw evidence/secrets must remain private."
-      ],
+      "sourceFindings": [],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "This disposition closes the named source-editorial explanation only. No runtime, browser, provider, native import, approval, publication or production acceptance is claimed; accurately documented unsupported/absent behavior is not hidden as implementation."
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
       },
       "sourceRevalidation": {
         "reviewDate": "2026-10-09",
         "artifact": "semantic-documentation-commerce-sidecar-revalidation-2026-10-09.json",
         "boundary": "Current Payment execution/refund source and unchanged named article blocks reviewed; metadata-only repair. No native/provider acceptance; historical liveAcceptance unchanged."
-      }
+      },
+      "remediation": []
     },
     {
       "item": "Shopping List Commerce boundary",
@@ -853,7 +864,7 @@
         "shoppingIntentBaseCommerceOwnership": "COVERED",
         "profileOwnership": "COVERED"
       },
-      "rationale": "The guide directly answers the requested boundary: wishlists, compare and save-for-later carry product/SKU/store shopping intent and belong to Base Commerce; Profile owns customer identity, authentication and enterprise access rather than a second list store. It explains stable owner/tenant keys, explicit store context, Commerce permission ownership, migration without dual authority and customer-safe service access. The current source enforces owner-scoped routes and operations. The pass is for that exact ownership request, not a blanket endorsement of every customization example in the article.",
+      "rationale": "The guide directly answers the requested boundary: wishlists, compare and save-for-later carry product/SKU/store shopping intent and belong to Base Commerce; Profile owns customer identity, authentication and enterprise access rather than a second list store. It explains stable owner/tenant keys, explicit store context, Commerce permission ownership, migration without dual authority and customer-safe service access. The current source enforces owner-scoped routes and operations. The pass is for that exact ownership request, not a blanket endorsement of every customization example in the article. Final source-citation rereview: the Profile group source formerly named in the guide is absent. Current owner init-v001/records/identity/profileUserGroupData.js contains commerce.shoppingList.own in the genuine customerUserGroup. Replaced only that citation and its source-map table cell in a new 0.0.2/docs-v002 successor. Exact structured comparison proves all other blocks, headings, routes and source evidence unchanged; all previously reviewed controller/service/router hashes still match. Profile remains permission authority, Shopping List remains shopping-intent owner, and no installed groups or permissions changed. Prior bounded customization limitation remains explicit.",
       "evidence": [
         {
           "documentId": "commerce.shopping-list-commerce-boundary",
@@ -898,7 +909,7 @@
         "runtimeEvidence": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
         "operatorRecovery": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
       },
-      "rationale": "Compared NMS manager/configuration/router behavior with startup activation and node event handling. The guide now distinguishes volatile peer topology/default-active state from health/readiness, states monitoring admission and inactive-peer behavior, and documents actual sender/router and stop-handler defects instead of offering an unsupported automatic recovery or dashboard claim.",
+      "rationale": "Read the complete NMS article against the exact one-line Cron configuration addition and its existing consumer. cronjob.processRetrySleepTime now has its implementing owner's 2000ms default; it governs Cron processing retries, not NMS nodePingTimeout or peer status. nodePingableModules.cronjob remains disabled, runOnStartup remains false, and no new recovery operation is introduced. The article's volatile state, initial-unknown behavior, inactive-peer skipping, sender/stop-handler gaps and separation from real readiness remain accurate; none is closed by a retry default.",
       "evidence": [
         {
           "documentId": "foundation.nms-runtime-monitoring",
@@ -927,9 +938,8 @@
         "Node up/down handlers emit events; an inactive event is not a durable distributed lease or proof that another node safely completed work."
       ],
       "correctnessAndCoverageLimitations": [
-        "NMS_RUNTIME_GAPS: notification method mismatch and undefined stop variable require owner implementation/qualification before recovery guarantees.",
-        "Volatile topology does not establish readiness, BackOffice/dashboard availability, automatic peer revival or durable exactly-once ownership.",
-        "No runtime, outage, multinode or browser qualification was executed."
+        "Documented NMS sender-method and stop-handler gaps remain recorded, not fixed or qualified by this evidence.",
+        "No timers, health probes, responsibility transfer, Cron execution or multi-node recovery were started."
       ],
       "remediation": [
         "Added exact monitoring gates, node state behavior and secured route table.",
@@ -937,7 +947,7 @@
       ],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": "P1",
       "reviewedSourceAnchors": [
@@ -970,7 +980,7 @@
         "overrides": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
         "extensionSafety": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
       },
-      "rationale": "Reread service generation/loading, artifact contribution tracking, grouped hooks and vService read initialization. Replaced the metadata-only override illustration with real same-filename CommonJS exports, documented member-wise merging and inherited members, and corrected the cited precedence article. The evidence concerns local resolution, not an invented remote/mock vService path.",
+      "rationale": "Final nConfig rereview distinguishes live contribution ordering from offline explicit caller policy. Live selected inactive-owner defaults apply after framework contributions and before project/environment/server/node overrides, with framework descendants excluded from the project boundary. Offline defaults are merged below caller-supplied inheritedProperties, preserving explicit null and replace-empty collections, before authored layers apply. This restores the original bounded offline precedence rather than adding runtime behavior. The release article's cited effective-runtime section remains unchanged; service identity, generated-before-authored composition, memberOrigins and overrideTrace are unaffected. Owner contract, guidance and focused tests agree; runtime acceptance remains unexecuted.",
       "evidence": [
         {
           "documentId": "foundation.service-runtime-overrides",
@@ -1017,9 +1027,8 @@
         "vService initializes version-aware CURRENT/HISTORY/exact-version reads and safety checks; it is not a remote or development fallback service."
       ],
       "correctnessAndCoverageLimitations": [
-        "The two-layer JavaScript exports were statically reviewed, not installed into a selected server.",
-        "Existing Profile/bootstrap and remote-runtime material remains a separate unchanged contract, not live acceptance by this review.",
-        "Actual overlays require selected-server generation/restart, hook counts and member-origin qualification; parent handles shared-guide integration."
+        "No actual server was generated, started, restarted or used to inspect loaded memberOrigins.",
+        "Current initializer hash is bound to this review; another concurrent edit reopens it."
       ],
       "remediation": [
         "Added base and overlay implementations plus expected retained validate and winning describe member.",
@@ -1028,7 +1037,7 @@
       ],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": "P1",
       "reviewedSourceAnchors": [
@@ -1375,13 +1384,15 @@
         "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js"
       ],
       "sourceFindings": [
-        "Communication runtime owns persisted attempt/lease/outcome projection; resolveUncertain requires current expectedRevision, explicit confirmation/reason/operator and MARK_DELIVERED/AUTHORIZE_RESEND/CANCEL.",
+        "Communication runtime owns persisted attempt/lease/outcome projection. A new resolveUncertain decision requires current expectedRevision, explicit confirmation/reason/operator and MARK_DELIVERED/AUTHORIZE_RESEND/CANCEL; exact original revision/action/reason/operator replay is read-only and never sends or appends a second decision.",
+        "Configured source eligibility is frozen into intent identity and rechecked read-only before claim and before transport using bound tenant/source/recipient evidence. Template resources now also support TELEGRAM/IN_APP without changing the guide's EMAIL/SMS behavior.",
         "Retry uses persisted state and refuses uncertain or exhausted sends; delivery failure does not reset an owning domain operation.",
         "Template service validates owner-contained resources, declared typed variables, locale fallback, bounded content and safe HTML/URL rendering.",
         "SMTP has controlled Nodemailer transport plus injected sandbox mode; SMS uses injected transport with bounded UTF-8 text and rejects HTML, not an implemented live carrier."
       ],
       "correctnessAndCoverageLimitations": [
         "The SMS maximumContentBytes prose has a malformed range/list break, leaving its upper bound unclear; repair that small presentation defect against the provider's 65536-byte configuration ceiling. This does not negate the requested implemented-mode/retry/security explanation.",
+        "The guide is not an exhaustive state/replay protocol: runtime intent expiry is CANCELLED while the table groups expiry with suppression prevention; exact lost-ack replay and source eligibility are detailed in owner contracts and focused tests.",
         "No emails/SMS were sent and no provider credentials, endpoint behavior, deliverability or signed-in operator flow was accepted in this review."
       ],
       "remediation": [],
@@ -1436,6 +1447,7 @@
         "nodics.engagement/modules/engagementApi/src/facade/defaultEngagementApiFacade.js"
       ],
       "sourceFindings": [
+        "Revalidated 2026-10-20: six Contact and twenty-one Core schemas change only router configuration to enabled:false. Fields, states and indexes remain identical. The guide already requires dedicated engagementApi/owner commands and rejects raw-CRUD activation.",
         "Submit creates the Contact record then a separate handoff; initial adapter dispatch may precede persistence. No domain/process atomicity or external exactly-once promise follows.",
         "Public acknowledgement exposes referenceCode/duplicate/verificationRequired, not internal Contact/handoff contents.",
         "Recoverable work is PENDING/due RETRY_PENDING/expired-lease IN_PROGRESS; repository claims/completions require matching revisions and leases.",
@@ -1467,7 +1479,7 @@
         "history": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
         "operatorVisibility": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
       },
-      "rationale": "Compared nbpm generic schema workflow dispatch with Process definition/instance/task/adapter/callback ownership and the CMS approval request boundary. The guide maps to real Process sections, uses the actual declarative cms.applyPublicationDecision action and bounded callback transport, and distinguishes stored completed-task decision authority from a caller-supplied approval flag or direct content mutation.",
+      "rationale": "Read the complete nbpm source-map article and all cited Process runtime/action-adapter sections against the exact Workflow properties diff and the matching removal from composition-only nodics.process/config/properties.js. The same adapter defaults, safe noop allowlist, disabled native designer/BPMN settings and PROCESS_DEFINITION installer move to the implementing Workflow owner. Completed-task CMS decision enforcement and domain ownership remain unchanged. The guide already distinguishes declarative definitions from grants, explicit effective allowlisting from registered adapter definitions, immutable versions from draft editing, and Process callbacks from actual CMS publication.",
       "evidence": [
         {
           "documentId": "process.workflow-bpm-source-map",
@@ -1515,9 +1527,8 @@
         "Operator failure recovery uses Process detail/incidents and domain outcome inspection; retry cannot replace the original stored decision or guarantee compensation of business effects."
       ],
       "correctnessAndCoverageLimitations": [
-        "Process/CMS source was inspected read-only; no edits to their articles, implementation, approvals or publication state were made.",
-        "A canonical source map and owner API contracts do not establish browser task queues or production callback availability.",
-        "No workflow instance, task decision, callback, retry, CMS request or browser action was executed."
+        "No workflow definition import, instance start, task decision, callback, retry, incident operation or browser task queue was executed.",
+        "Existing source-map and action-adapter operating guarantees are preserved; relocation is not proof that any deployment selected or qualified them."
       ],
       "remediation": [
         "Mapped exact nbpm, Process, callback, domain and publication sources and canonical Process anchors.",
@@ -1526,7 +1537,7 @@
       ],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": "P1",
       "reviewedSourceAnchors": [
@@ -1673,7 +1684,7 @@
         "generatedManifestPolicy": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES",
         "customerExtensionCompatibility": "SOURCE_EXPLAINED_WITH_EXPLICIT_BOUNDARIES"
       },
-      "rationale": "Rechecked the pinned article against current preparePlan, catalogue/install states, validateUpgradePolicy, isDevelopmentRelease, forward-manifest planning and rollback boundaries. Source still reserves mutability for version0.0.0, refuses nondevelopment same-version checksum drift and unauthorized downgrade, uses exact releaseCodes/expectedReleases versions, skips CURRENT and waits for RUNNING without timeout takeover. Detached contribution reads add identity/checksum/containment and 8 MiB/1 MiB bounds. Declared CONTENT_PACK roots are excluded from accidental business discovery, not implicitly selected. The freeze, forward-release, retained-root and separate-recovery explanations remain correct. Historical pinned release-service bytes were not recovered from inspected git history: this is current named-method review against unchanged prose, not a claimed recovered historical code diff.",
+      "rationale": "Manually reviewed the authorized nTooling docs-v002/version0.0.2 correction against current executablePlan, qualifyZeroWorkRecoveries, isZeroWorkRecovery, recordInstallation and the exact nImport manifest-path contract. The upgrade-flow now distinguishes ordinary immutable CURRENT skipping from explicitly requested version0.0.0 policy and narrowly proven LOCAL false-CURRENT zero-work recovery. It names all six required numeric-zero counters, exact durable run and unchanged release identity, custom-installer/non-Local/prior-work/ambiguous-history exclusions, prerequisite-reference replay refusal, private original-run/revision proof and the fenced claim. New NO_DATA or zero-success imports cannot establish CURRENT. The added prerequisite paragraph accurately separates exact pinned dependency ordering from receipt-only foreign DEFAULT references and operator-selected existing Init migration. No runtime behavior changed. All eight predecessor files retain their exact hashes; the other nine article bodies, all article identities and heading anchors are preserved. The successor is only Staged, with original authors retained and no future approval or Online evidence.",
       "evidence": [
         {
           "documentId": "framework.release-upgrade-compatibility",
@@ -1694,7 +1705,8 @@
         "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
         "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
         "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md",
-        "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+        "nodics.foundation/modules/nData/nImport/import/config/properties.js",
+        "nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js"
       ],
       "sourceFindings": [
         "isDevelopmentRelease identifies version0.0.0 only; installed nondevelopment same-version checksum drift rejects, while downgrade requires explicit allowDowngrade and is not rollback.",
@@ -1707,18 +1719,14 @@
         "Current validateUpgradePolicy/isDevelopmentRelease and preparePlan retain version0.0.0 mutability, nondevelopment freeze, allowDowngrade opt-in and version-only expectedReleases checks."
       ],
       "correctnessAndCoverageLimitations": [
-        "H1/H2/Hdev1/Hdev2 are explicitly symbolic explanatory values, not fabricated checksum evidence or executed receipt history.",
-        "No tooling generation, hash refresh, import, release execution, runtime rebuild, publication or rollback was performed.",
-        "Parent owns the pending preserve-v001/forward-content-release decision and browser/approval/publication acceptance. This metadata review neither makes that decision nor edits any manifest or frozen bytes."
+        "This closes the named source-editorial discrepancy only; no native import, installed recovery, workflow approval, publication, browser or provider acceptance was performed.",
+        "The prior source snapshot was not recovered for defaultDataReleaseService; current-method review and the previously documented historical-diff limits remain explicit in priorReview.",
+        "Composed docs validation has an independently owned Digital draft-route failure; this owner correction does not weaken or close that gate."
       ],
-      "remediation": [
-        "Corrected baseline, freeze, drift/downgrade and retained-root policy.",
-        "Added concrete installed1.0.0-to1.1.0 selection/checkpoints and partial recovery distinctions.",
-        "Separated recovery surfaces and retained customer override/API/security/provider compatibility detail."
-      ],
+      "remediation": [],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "Manual source/editorial review and static data/syntax/hash checks only. No application startup, provider operation, browser acceptance, lifecycle change, approval or publication."
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
       },
       "remediationPriority": "P1",
       "reviewedSourceAnchors": [
@@ -1770,7 +1778,7 @@
         "broaderOwnerMapping": "COMPLETE_REAL_OWNER_DOCUMENT_ANCHOR_REASON_AND_REMAINING_GAP",
         "sourceBasedClassification": "MANUALLY_REVIEWED_IMPLEMENTATION_AND_CONTRACTS_NOT_SCORE"
       },
-      "rationale": "Re-read the complete active eWaste 0.0.3 operations article and the current Loyalty Reservation/Redemption schemas. The article blocks and all three mapped role/reward/downstream anchors are byte-identical to the reviewed 0.0.2 article. Both schemas add only inert transaction participation metadata to the previously reviewed bytes: their fields, router declarations, disabled cache/events and owner classification remain unchanged. This does not activate a transaction provider, introduce a business operation or prove installed settlement. Existing classification decisions, broader owner mappings and residual limits remain accurate without promotion to orchestration, financial or live acceptance.",
+      "rationale": "The register now classifies WasteReward as an implemented assessment and payment-covered release coordinator while retaining BROADER_GUIDE placement. The linked Circa guide describes original contributor allocation, qualified actual-payment coverage, frozen CREDIT_PENDING, exact original-key Loyalty ledger readback and uncertain-credit recovery. Certificates and realized carbon are independently selected holdings, not attached automatic value; historical participation, future carbon and material-value entitlements remain with the original contributor. Other reviewed classifications retain their bounded source evidence; provider and installed transaction acceptance remain explicitly unproven.",
       "evidence": [
         {
           "documentId": "reference.internal-source-boundary-register",
@@ -1796,7 +1804,8 @@
           "anchors": [
             "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
             "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
-            "circa-downstream-waste-owner-boundaries"
+            "circa-downstream-waste-owner-boundaries",
+            "acceleratorsCircaOperationsRewards-3-assets-receipt-and-ownership"
           ]
         },
         {
@@ -1947,36 +1956,50 @@
         "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js",
         "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js",
         "nodics.foundation/modules/nSetup/package.json",
-        "nodics.foundation/modules/nSetup/AGENTS.md"
+        "nodics.foundation/modules/nSetup/AGENTS.md",
+        "nodics.waste/modules/wasteReward/llm/contracts/material-value.md",
+        "nodics.waste/modules/wasteReward/src/service/defaultWasteMaterialValueSettlementService.js",
+        "nodics.waste/modules/wasteReward/AGENTS.md",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/bundle-holdings-and-gifts.md"
       ],
       "sourceFindings": [
-        "Audit score weights counted schema/service/controller/router/data/test signals and classify uses mentions/thresholds for triage; there is no facade signal in the score. Current audit-source-coverage.mjs bytes, including the parent's corrected nPublish sourceAreas, are bound below.",
-        "Discovery field policy, ranking, source registry and query builder are implemented shared helpers. Domain projections, provider admission and authorization remain with consumers; all four receive distinct reasons and residual limits.",
-        "Loyalty Program, Redemption, Reservation and RewardType are schema-defined business contracts, not internal-only retirement. Loyalty reward method preparation and provider owner-API execution are distinct, with ledger authority preserved.",
-        "Rules operators and property/outcome registries implement generic extension contracts, not consumer-specific property semantics or side-effect execution.",
-        "Waste API secured routes/facade are implemented contracts rather than proof of persisted submissions. Waste reward assessment persistence is distinct from settlement; recycling handoff intents are not transport, outbox delivery, certification or physical completion.",
-        "Waste Receipt, Movement and Compliance retain their three existing SCHEMA_DEFINED owner-reviewed-reference mappings and explicit custody/logistics/legal limits.",
-        "Communication verification implements transient and stored challenges, bound one-use proofs, revision/readback and consumed receipts, not identity/business authority. SMS is injected sandbox-only; SMTP has controlled test transport; local delivery is simulation.",
-        "Engagement's source implements a one-way communication bridge despite stale scaffold wording in its local AGENTS. The register records that mismatch and leaves guidance reconciliation and durable retry acceptance to its owner.",
-        "Ollama/OpenAI/Claude/Gemini have real adapters and retain their four existing owner-reviewed-reference mappings. Request/response and stream limitations remain explicit; mockProvider is only an in-process test double.",
-        "Payment method preparation is not gateway execution. Callback HMAC/freshness/replay helpers require production store qualification; Stripe is offline sandbox code. CyberSource, PayPal and Visa packages have no source adapters and remain reserved scaffolds.",
-        "nFacade contains a generation template plus concrete cache/validator facades; its score of zero is not absence of capability. nSetup is deliberately non-runtime governance. nexusCore contributes inert initialization/acceptance descriptors rather than importing/publishing content itself.",
-        "All 40 table decisions link existing owner-qualified canonical heading anchors. Their residual guide-depth/implementation gaps are not silently certified by classification closure; sibling customer deployment guidance is described separately and not counted.",
-        "The bounded 40-candidate classification register retains existing owner classifications and promotion rules. Its Stripe entry now links the implemented original-capture offline contract: explicit bound sandbox capture, guarded tokenless full refund, exact readback and recovery. The broader guide classification does not qualify real provider lookup, refunds, callback security, settlement or finance reconciliation. Other owner classifications and evidence anchors are preserved, not promoted by hash renewal.",
-        "readDataCatalogue selects eWasteDocumentationRelease003ComponentData.js. The complete operations article was re-read and its blocks remain byte-identical to 0.0.2, including all three mapped role/reward/downstream anchors and CLAIM -> verify -> QUEUE -> reread -> CLAIM -> decision. Only the separate source-inventory article expands; classification scope is unchanged.",
-        "Reservation and Redemption schema changes are exactly one appended transaction enabled/sideEffects none declaration each. Removing those additions reproduces the previous reviewed source hashes. All fields, owner boundaries, operational schema policies and disabled cache/event/search declarations remain unchanged; no provider or native settlement is qualified by schema eligibility.",
-        "Secured Waste API routes declare separate permission/group/token boundaries, not proof of installed routing or persisted generic submissions. The register retains that limit.",
-        "Receipt/Movement schemas retain custody observations, quantity/discrepancy and batch/source/target/operator/evidence. Enums/idempotency/revision fields alone do not enforce transitions, logistics or legal certification; the successor article/register retain these limits."
-      ],
-      "correctnessAndCoverageLimitations": [
-        "Scope is the requested 40-candidate classification register, not source-depth certification for all 203 modules, all related guide prose or the 179 mention-based-triage rows.",
-        "Broader guide sections sometimes supply ownership/context rather than full module-specific runbooks; each row explicitly retains that gap. No capability-body guide or sourceCoverage/sourceOwnership declaration is added or changed.",
-        "All remaining implementation, provider, generated-operation enforcement, physical-world and installed-runtime gaps remain exactly separate from this owner-authorized editorial decision.",
-        "Concurrent edits to any bound canonical blocks or inspected source bytes require refreshed evidence before parent aggregation. Parent-owned hashes, projections, integrity and release work were not performed."
+        {
+          "id": "DOC-INTERNAL-WASTE-REWARD-MATURITY",
+          "severity": "P2",
+          "documentIds": [
+            "reference.internal-source-boundary-register",
+            "accelerators.circa-operations-rewards"
+          ],
+          "anchors": [
+            "referenceInternalSourceBoundaryRegister-3-register",
+            "acceleratorsCircaOperationsRewards-5-rewards-and-settlement"
+          ],
+          "contradiction": "wasteReward row remains SCHEMA_DEFINED and assessment-only; linked reward section omits its implemented material-value assessment/release workflow.",
+          "actualSource": "WasteReward material-value policy/batch/claims and release coordinator validate recycler-payment allocation coverage, freeze CREDIT_PENDING, call original-key Loyalty earning and require matching ledger for COMPLETED. They never execute recycler payment or directly mutate balances.",
+          "correction": "Retain BROADER_GUIDE but update row maturity/source paths and linked guide to the implemented payment-evidence-gated original-contributor workflow. Preserve governed rates, pending same-key recovery, Loyalty-only accounting and separate qualified-provider/installed-transaction acceptance.",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "resolution": "Retain BROADER_GUIDE but update row maturity/source paths and linked guide to the implemented payment-evidence-gated original-contributor workflow. Preserve governed rates, pending same-key recovery, Loyalty-only accounting and separate qualified-provider/installed-transaction acceptance."
+        },
+        {
+          "id": "DOC-INTERNAL-CARBON-OWNERSHIP",
+          "severity": "P1",
+          "documentIds": [
+            "accelerators.circa-operations-rewards"
+          ],
+          "anchors": [
+            "acceleratorsCircaOperationsRewards-3-assets-receipt-and-ownership"
+          ],
+          "blockIndex": 13,
+          "contradiction": "Attached illustrative carbon can move with an asset while historical approval rewards remain with the original contributor.",
+          "actualSource": "Digital bundle contract keeps certificate and realized-carbon components independently selected under component owners. Transfers do not move original contributor history, future allocations or material-value entitlements.",
+          "correction": "Forward-correct coupled ownership to independently selected certificate/realized-carbon holdings; preserve original contributor entitlements. Do not imply projected carbon is transferable or realized/certified impact.",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "resolution": "Forward-correct coupled ownership to independently selected certificate/realized-carbon holdings; preserve original contributor entitlements. Do not imply projected carbon is transferable or realized/certified impact."
+        }
       ],
       "liveAcceptance": {
         "status": "NOT_EXECUTED",
-        "boundary": "No browser, runtime startup, credentials, database, import, publication, provider calls or business acceptance were performed. This source editorial classification neither bypasses nor grants eligibility, auth, private-capture, approval or lifecycle gates."
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
       },
       "sourceRevalidation": {
         "reviewDate": "2026-10-09",
@@ -1992,7 +2015,9 @@
           "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js"
         ],
         "boundary": "Manual source-editorial review of unchanged operations blocks and inert schema eligibility only. No classification promotion, native financial acceptance or documentation publication."
-      }
+      },
+      "remediation": [],
+      "previousRationale": "Changed Program/Reservation schemas remain schema owners, WasteApi an implemented API, Nexus inert configuration and nSetup governance. Unchanged exact-byte classifications retain prior bounded evidence. WasteReward now implements payment-gated material-value release but its whole-module row remains SCHEMA_DEFINED/assessment-only. The linked Circa guide also wrongly couples carbon with asset ownership. These are editorial gaps, not runtime acceptance blockers."
     }
   ],
   "canonicalDocuments": {
@@ -2317,7 +2342,7 @@
     },
     "commerce.data-authoring-fulfillment": {
       "owner": "nodics.docs",
-      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
       "componentCode": "nodicsDocsComponentcommerceDataAuthoringFulfillment",
       "route": "/docs/framework/commerce-data-authoring-fulfillment",
       "blocksha256": "8ec3483ca29f64fdc79db00cfa4e971b3ee203f7c1196eb252d8724d067c4ac7",
@@ -2443,8 +2468,8 @@
     },
     "commerce.fulfillment-core-source-map": {
       "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
-      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
-      "articleBlocksSha256": "ef763053ea50378fd68c5823b49395c34a3890633d070dcaaae8b083b60467c2",
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "c3b98334c84fb8e0568f847ddf6983b2a8044c0cef2bd60cd5a9e3b783156687",
       "sections": [
         {
           "anchor": "commerceFulfillmentCoreSourceMap-1-business-problem",
@@ -2490,7 +2515,7 @@
     },
     "docs.documentation-publishing-runbook": {
       "owner": "nodics.docs",
-      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
       "componentCode": "nodicsDocsComponentdocsDocumentationPublishingRunbook",
       "route": "/docs/framework/docs-documentation-publishing-runbook",
       "blocksha256": "56ab6500193080aeff8a264fd3e500e721f37e579a8677117ce0471f65730a69",
@@ -2624,11 +2649,11 @@
     },
     "commerce.search-guide": {
       "owner": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore",
-      "componentFile": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v001/records/documentation/commerceSearchCoreDocumentationComponentData.js",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/data/docs-v002/records/documentation/commerceSearchCoreDocumentationComponentData.js",
       "componentCode": "nodicsDocsComponentcommerceSearchGuide",
       "route": "/docs/framework/commerce-search-guide",
       "blocksha256": "ad0de7201a30578ed21f77356b925a6ea50844d154cde9f643700ad160c560e8",
-      "articleBlocksSha256": "18b3c5e27107dadab5f1e813beb9c159701c8a9af767395a2ea49f51b75d1c55",
+      "articleBlocksSha256": "3170738781a7af9ebb579988b5549536dca85c53435130dc98872ac457ec3df6",
       "sections": [
         {
           "anchor": "commerceSearchGuide-1-source-map",
@@ -2794,8 +2819,8 @@
     },
     "commerce.shopping-list-commerce-boundary": {
       "owner": "nodics.commerce/modules/baseCommerce/modules/shoppingList",
-      "componentFile": "nodics.commerce/modules/baseCommerce/modules/shoppingList/data/docs-v001/records/documentation/shoppingListDocumentationComponentData.js",
-      "articleBlocksSha256": "72a2fb910da46fa3ade5581678b11b1ddd6fcc8f048f6be1f98feaa84d115515",
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/shoppingList/data/docs-v002/records/documentation/shoppingListDocumentationComponentData.js",
+      "articleBlocksSha256": "7ccf3cd74742e556d270a84125d11e28c53d8761de5c76191df20dfc3785b380",
       "sections": [
         {
           "anchor": "commerceShoppingListCommerceBoundary-2-ownership-model",
@@ -2897,8 +2922,8 @@
     },
     "framework.release-upgrade-compatibility": {
       "owner": "nodics.foundation/modules/nTooling",
-      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
-      "articleBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "1ee44414aae228283ad5f47d29308426aae06e123d93f6519332588f237ab529",
       "sections": [
         {
           "anchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
@@ -3051,7 +3076,7 @@
     },
     "communication.provider-runbooks": {
       "owner": "nodics.communication/modules/commsCore",
-      "componentFile": "nodics.communication/modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v002/records/documentation/commsCoreDocumentationComponentData.js",
       "articleBlocksSha256": "2d9df8c1c8e267e669e7665a9438e9c31fde23b4a47299d033fbac7b873d8dff",
       "sections": [
         {
@@ -3232,8 +3257,8 @@
     },
     "reference.internal-source-boundary-register": {
       "owner": "nodics.docs",
-      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
-      "articleBlocksSha256": "8cb2320d0ac5eeb125c0873fc37d4b4a40cb920e77b88f7ef3df4cf6deefbde4",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "e1c3bcd2c00194b3149f7e7e0c6374c9e8aed866c073bc9e946c8b9c4c16db4e",
       "sections": [
         {
           "anchor": "referenceInternalSourceBoundaryRegister-1-business-problem",
@@ -3282,8 +3307,8 @@
     },
     "accelerators.circa-operations-rewards": {
       "owner": "nodics.accelerators/modules/waste/modules/eWaste",
-      "componentFile": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease003ComponentData.js",
-      "articleBlocksSha256": "7443c6afb0364b76037a7165dba449a46fa68707062c9114360a943edc2914fd",
+      "componentFile": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
+      "articleBlocksSha256": "1bba40b7ca9186cd83e5489ae4e563ee683ba77012833b26d8161faa8c51c392",
       "sections": [
         {
           "anchor": "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
@@ -3301,8 +3326,8 @@
     },
     "loyalty.wallets-rewards-ledger": {
       "owner": "nodics.loyalty/modules/loyaltyWallet",
-      "componentFile": "nodics.loyalty/modules/loyaltyWallet/data/docs-v001/records/documentation/loyaltyWalletDocumentationComponentData.js",
-      "articleBlocksSha256": "33cb33f51c1d1aa2c30e6bc9337ce6b31fdc9687cdf250bddc97d8a49244e9a9",
+      "componentFile": "nodics.loyalty/modules/loyaltyWallet/data/docs-v002/records/documentation/loyaltyWalletDocumentationComponentData.js",
+      "articleBlocksSha256": "c1225f824ecd9c235f81c5815d7fbca3bba88686add878528ba548bb7ccdb59f",
       "sections": [
         {
           "anchor": "loyaltyWalletsRewardsLedger-3-source-map",
@@ -3339,7 +3364,7 @@
     },
     "communication.overview": {
       "owner": "nodics.communication/modules/commsCore",
-      "componentFile": "nodics.communication/modules/commsCore/data/docs-v001/records/documentation/commsCoreDocumentationComponentData.js",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v002/records/documentation/commsCoreDocumentationComponentData.js",
       "articleBlocksSha256": "62e23d5681f376f3f14b500b64482f3535efc55cd0893a29b4c7deec15573b6d",
       "sections": [
         {
@@ -3380,7 +3405,7 @@
     },
     "foundation.overview": {
       "owner": "nodics.docs",
-      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
       "articleBlocksSha256": "2075439784ccd8c3c65ebdfa3a8a9dfd6837e23a55dc328d3640f50ba9bdf22c",
       "sections": [
         {
@@ -3395,7 +3420,7 @@
     },
     "reference.source-backed-documentation-coverage-audit": {
       "owner": "nodics.docs",
-      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
       "articleBlocksSha256": "01a5c9fd5e1a6820744e8f645ac82f0ae7ec2dd267147c8b16ed94af5712e632",
       "sections": [
         {
@@ -3406,7 +3431,7 @@
     },
     "reference.documentation-gap-backlog": {
       "owner": "nodics.docs",
-      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationComponentData.js",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
       "articleBlocksSha256": "1d0348d48232b50cc6bcc1cb36ff80c10ee0aae20d174aea0ec2a1ea4cfcd060",
       "sections": [
         {
@@ -3417,7 +3442,7 @@
     },
     "framework.local-quick-start": {
       "owner": "nodics.foundation/modules/nTooling",
-      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationComponentData.js",
       "articleBlocksSha256": "24b59a834157ebd8ad30692ca9a0ddda6679e4327db36530f62b73e95dad90b9",
       "sections": [
         {
@@ -3428,25 +3453,25 @@
     },
     "promotion.campaigns-coupon-issuance": {
       "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
-      "componentFile": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v001/records/documentation/promotionDocumentationComponentData.js",
-      "articleBlocksSha256": "52cffc7dc618cfea146269e2a12e37c18cf91d97f449cc1d1f5cef5c01f0d085"
+      "componentFile": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003ComponentData.js",
+      "articleBlocksSha256": "876fbd7fdd8a70c2cc7b930b464fd53586941e1f1c5de9717f3ee0f4dfa8ffb1"
     },
     "digital.purchase-delivery-reveal": {
       "owner": "nodics.commerce/modules/digitalCommerce/modules/digitalCore",
-      "componentFile": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v001/records/documentation/digitalCoreDocumentationComponentData.js",
-      "articleBlocksSha256": "5c0579db80d532476f5e740270f55669f44b67d78637354a522fcf90e1385ced"
+      "componentFile": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003ComponentData.js",
+      "articleBlocksSha256": "4d8489bafb96afd501d82d2436441246929f9e72fd276013ec6720b970b43a9f"
     },
     "fulfillment.shipping-management": {
       "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
-      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js",
-      "articleBlocksSha256": "5a6ca17cce7ca188c2308fbb4887b17425c6c2096aaa0b37057c244428d60db0"
+      "componentFile": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "18e1af46191ca9382c5c0b4c619fc743c79598a4341fef1afb910f5ec245b2c2"
     }
   },
   "sourceFileSha256": {
-    "nodics.wcms/modules/cms/llm/contracts/publication-manifest-contract.md": "d7af2206a347915d910cbaeb49c49be8ce606b739aeb6cc06340c260e4287b1d",
+    "nodics.wcms/modules/cms/llm/contracts/publication-manifest-contract.md": "728577e8e2b54066d854f15c6467b7a169dd4a7d56e0aa759dcb4c5501d58eaf",
     "nodics.platform/modules/backoffice/src/controller/defaultBackofficeApplicationInitializationController.js": "7be3674991ed455f9248a6a3ddc27a049df8a7e7ceb14871b843f8d9a116bb23",
-    "nodics.platform/modules/backoffice/llm/contracts/governed-application-setup.md": "2ce85fc858451e4cab1330eee8df9d76b7ca34ac9806ca311a8b70a42cb2cc6c",
-    "nodics.foundation/modules/nPublish/llm/contracts/setup-observation.md": "119e4c8016ad8035d2d427960b360201f26932760bb4a9709c19b22c9a011271",
+    "nodics.platform/modules/backoffice/llm/contracts/governed-application-setup.md": "6de60d86fd2c19e2ed09d88c44470505754f5cabdc043d139e7cf996371f6534",
+    "nodics.foundation/modules/nPublish/llm/contracts/setup-observation.md": "647b52468f19300fcb69e111740e9fc233675601a4107ee85e48b0cc8a6036bf",
     "nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js": "c77bbf60c8135a175324e7a27c107f04c342a064a7b41afb431428f36f3b21b5",
     "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js": "cedcb9c16ba45322ccf13e278a3218c57df773fba98666eb733905c2db8d7bf1",
     "nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js": "94b9b20470c1144e65ab0f6bdda35bbc8ecc8664d00ffc3b27732b712cefbbd8",
@@ -3467,25 +3492,25 @@
     "nodics.foundation/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService.js": "e51088c4dfe34366a347e11e22d0f2c2979128ba1136e77b7a9072611267bdf9",
     "nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js": "4cc3e29444502ce4e670625c90c004cba33f4430cd9bc27ab84744e1c70198cd",
     "nodics.foundation/modules/nData/nExport/excelExport/src/service/defaultExcelExportRenderService.js": "fe5af5c5a583bc34f98d062dab3f61e3826f043969b775bd022b355eb047487a",
-    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js": "2b7f151865e2ffdfdf6367e7f67cb04d33793521d4d23d8df49dc2271f99a18d",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductListingAuthoringService.js": "09028b4d8b020695eca68f784ff3891d00e1920b10094fa10b50bc3f259ace93",
     "nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultInventoryOperationService.js": "563b947a3840375db0b830c25e65d81906cecdd02eec3458f6dbffd925f048a7",
-    "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js": "ea96a97b35865d39bca8d6132aa1b8e9bcaabdf7c0e0b83ef67dfae0806672a6",
+    "nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultPricingPublicationService.js": "fb7f3f81a24f990c50e8766cc55bf06152452867ec3e0c4facae6db7f02b163e",
     "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js": "e2115c39f7e6b5e9c445c8fe1243a823c63b7d0196ebd5eecd3752e86e571350",
     "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js": "9a876aa08d93ee52818b432345388d581c078be56eeb93a862b5e356991155a9",
-    "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "5997873b7acf8d1feddb62f747787d0f4ea70ee94a25e6fb0876ffda6e200388",
+    "nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js": "aac2dbf65bf27205113100af55ada425be972f24b7e0ef70b5300e6f2999ee2e",
     "nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService.js": "5e0f4c724a149af662121a09c55b22762f4917dd0778d3c08b0aa8148b0652bc",
-    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "406446bfd139172108ebf8f41598b0460ba03f1e0c875706cb64f3d0d40a83c6",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService.js": "e3eb2122fbf984db335948def37c3e663d40ab4a7cbe6d9035288d2778222a3f",
     "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
     "nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js": "350e200059cd7ccdbaf92f32700d0afaa51d4f210b2a01f85bbb0f69c6d94f24",
-    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js": "71abc36501b5ecffe4aa743288103880fddb1735389ef4cfe4061f9a69a7d757",
-    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js": "03ad3aa2c914e3f3fd3a0940b122b3c956e0e8dddae7e19f7c127680caff7b24",
-    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js": "a14b9eec909b350847c321a4b9fcc88e89310c12e9c6d938eb151a577ac9fbf3",
-    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js": "2e031108e1c4044f4e6ffb0998b7b91545054d2101d6e09caa99dfae9104041c",
+    "nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js": "bd56f030562ab6d7ba0da834cb7aa179eef20c4cda9ef7500053a0d65c8a93da",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/schemas/schemas.js": "be38fa2bd54ed9ddd6080a17dcfef50e94481ae11f26635d1880b4d4b1c587e9",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchRankingService.js": "c2c58264dd46c371eb1a7df7b475ea0aac057160d0bfab59ca2a928c3582be68",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPublicationService.js": "2c59b310020b969bf26232e25f1fb5545bec5ea13c09fb44667213226e17b30c",
     "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js": "27bd59b64b2c0b09ae88013d0f7d26d613c90cda1560f5e55acbdc0561742c28",
     "nodics.localization/modules/localizationApi/src/router/routers.js": "d04ffcf0db95e0c4758a3b44c9f3b10e80386029040c758d44e6ae31a3ee03bc",
     "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js": "f4103e4ba53736843d81072b916436d20308f4579eb751ad7c0761e93d13ed5e",
     "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js": "fcc0b54f9e034d013bb200821ee3cf3df685ba2da5b002ec0c434974e733fb04",
-    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js": "582bd237034b34aa34c59e038f166153ef3b25796af56817e2242732d370205d",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js": "dcf6615ea4a37cf71ed14b338fc9b35bbb8b8d01fbf0bc7e31931c9501c40e6e",
     "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js": "6c6300618962f854777695767b30da5129c2d89f8d1cc0a2a2ba562f4dd50602",
     "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js": "45fdcd1f4b182c083c2644af30b65d80a726e7dcd8ae17c4d0003370a963cda2",
     "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
@@ -3497,7 +3522,7 @@
     "nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js": "c6e770e91319c3cf6a5b9b621dfa73c92a35adf67838e2e5b1742b7bb3a58331",
     "nodics.foundation/modules/nNms/src/router/routers.js": "0ab4c670f6b5f1b552e17eb321936829ecfae6ec99a1c1aa7201a547b0c10733",
     "nodics.foundation/modules/nNms/config/properties.js": "2c306fbdda9bf716f4aeb1c021993aace542b9195ebecbdd3737ab3677e2f99e",
-    "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js": "58047c2664c51d479083450197cd3ab763486838427715d939fdbc1a4b649e56",
+    "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js": "4e6ccc9fd027942987fa7a20fc1f190db3a117b08923ff19357e67d329665d69",
     "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
     "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
     "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
@@ -3520,15 +3545,15 @@
     "nodics.foundation/modules/nToken/src/service/DefaultTokenService.js": "65f70e60a0f5ceef1898d6d24e5462f5b4b2fff6de261e6376e26b62aba2f9c6",
     "nodics.foundation/modules/nToken/src/service/pipelines/defaultValidateTokenPipelineService.js": "804ab997383dc8eb581b27ea3fd59a108be1320eb26ef32ee85928d10ce8419f",
     "nodics.foundation/modules/nToken/config/properties.js": "64211c73b0277595fcf10d4291e31418e29373d472e7a775da55ab8a2eaaedd8",
-    "nodics.communication/modules/commsCore/src/service/defaultCommunicationRuntimeService.js": "4251e5a6a50604a3572190e52689f4fb9869d56ef76e25ab9759a0c7985db28e",
-    "nodics.communication/modules/commsCore/src/service/defaultCommunicationTemplateService.js": "f199879a8400080f83fade094f31a3a11a9276bb37e42e0a03935beb7a86ae5c",
+    "nodics.communication/modules/commsCore/src/service/defaultCommunicationRuntimeService.js": "43bf0e72165bd5d3a708bc1ce4dc9cae5a61285c060e6d76d0ab6127cf927d0f",
+    "nodics.communication/modules/commsCore/src/service/defaultCommunicationTemplateService.js": "a43c57c44af7613fbd9947fc986eafb292c35c84c8ff816992ec4a3c911d8f19",
     "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js": "0d957ed6e175e06164c608dd7f6713d32a0bdb7b8ee45ab3ca29ced402437d84",
     "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js": "669ec9adde7acafcfbc3cc12ecebb117e1560d1dde2e1f287412da56b0e0d1ed",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactSubmissionOperationService.js": "0595ea5aeb87b7206f7bc7f5c0561e2a556e53a2c934502c027e6968873f0513",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactRoutingService.js": "aa82a1ad4a31e106d4794a79f7cf3e9fdb87fc03219a0f6fff7c241d4d103930",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRecoveryService.js": "cc39324f4aa72d70215013156882335f423238822befdb31fe4d48bcd01888dc",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactOperatorService.js": "103147e012208f44fd3567ca2da83cb911972de4a0d2fb7e47eb0b37b50dc8cc",
-    "nodics.engagement/modules/contactSubmission/src/schemas/schemas.js": "d4afedcff636529f003a2955ee18f9759bffcc7e61a3ad46172211ba25f562c7",
+    "nodics.engagement/modules/contactSubmission/src/schemas/schemas.js": "f9c86abbe308ddaddefce9da8877df99b38d7067690e789425a398117f092821",
     "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js": "ae3010057215a7936f39293402028fddc84c08199aff644a844257dfd0a367dc",
     "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js": "c2fd2ae6a1c208951e2b60aaedd96c705b61bbdd5c9230eb7856344e1d422482",
     "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js": "a17dc3de5c1e0cf2da23fd094c008a31f58837215020b2592ac38dfeb15096ff",
@@ -3537,38 +3562,38 @@
     "nodics.process/modules/cronjob/src/schemas/schemas.js": "665cfbdbbbfef05f99e0c4853410c5586ae57913fb7942b49a17f8da7f241525",
     "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobRuntimeService.js": "4709cc35631842fb7a422c1f913346add326da06a5e24373b9c84aff4fefd224",
     "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleDraftService.js": "89a707ec51f610704cb1b353035b9d7070d8b32e03be6a83c668d4c704a71992",
-    "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "24449557d20223bbae0aab8d64053b396845f2b49ac6ac1c7214d7b3199070e3",
+    "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "74335af1f44153369315cea0330dae72959ccb8a9dc40d6951e117ae4dbab492",
     "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
     "nodics.docs/scripts/audit-source-coverage.mjs": "e8b354af5c7f56aa657fd020d7b1b5841b0b9b3c7580572764535a55cdcd982a",
     "nodics.discovery/modules/discoveryMapping/package.json": "55599977e8f5d3a50269a7ef161cb94ac468562394457e32db70fbd83a86b556",
     "nodics.platform/modules/backoffice/src/router/routers.js": "955bf8cd357859e16394ab66f425820fd2f76577e1139cf2b92086373c518a25",
-    "nodics.wcms/modules/cms/src/service/designer/defaultCmsDesignerCompositionService.js": "d4820dc01d9a0b327cbbb1f6146d1715c9d42f57fc01c5d3084b0313ba6b9218",
-    "nodics.wcms/modules/cms/src/router/routers.js": "bc87484f3fc5010f7cbc3a8385d122f758e0966832bd9f5047c4ae49da1549fe",
+    "nodics.wcms/modules/cms/src/service/designer/defaultCmsDesignerCompositionService.js": "4803506404e6d2a762e46510d4947cae8fd172a67cf1b7b7fc8fc1227d28d975",
+    "nodics.wcms/modules/cms/src/router/routers.js": "3ab034fcce325249e980bae0835dcaddd6bca74d822ee07f580eb3902ab5a9b7",
     "nodics.wcms/modules/media/src/service/storage/provider/defaultLocalMediaStorageProviderService.js": "60c6c343f6de27734bdcc63a80da4446cc17bd5bda28229ebf2ad9246388baa2",
     "nodics.wcms/modules/media/src/service/storage/provider/defaultNasMediaStorageProviderService.js": "2f381a69cc919bb11770c6e7776ae45609a7e6e4981ab2c89f2c8540a4ed62a1",
     "nodics.wcms/modules/media/src/service/storage/defaultMediaDeliveryService.js": "2632a33b3928240f1d8cd0c3d8becd29d156a6debac60f81cf2cace91c82d6b5",
     "nodics.wcms/modules/media/src/service/storage/defaultMediaImportSourceResolverService.js": "9f87a2ff9df6adf9cae4c13066e30d4b31f97711e8a64efa3110680523a22eb3",
-    "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js": "90f49f1136d1fdb59ad3215a5a14a78c87b8c88e8a0c8674d88a21d9c54cfbaa",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/router/routers.js": "fa6678e2e77a792c51e7cd4a7fe49848851573678bbe04f3eb3bd52c796bac35",
     "nodics.commerce/modules/baseCommerce/modules/inventory/src/router/routers.js": "738e99cb171af61029b2488937232b6059a2c56e1dc0a43f17e5c14249f41fb7",
-    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js": "9556c3a906c26cbccd1d1380d298d138160fc468357a2d2e0851e97277d4d013",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js": "5dd09694cf304d032627fad69d428317b063b8c2ed9d570922651f11e3164ece",
     "nodics.localization/modules/localizationCore/src/schemas/schemas.js": "a4aedf375f00edb951960f7de9947ca1c4ce81e1ada74a3837e4e2f64db5109c",
-    "nodics.wcms/modules/cms/src/schemas/schemas.js": "cefbfa61ff6f1d828ef87e4b32ba5aadee154231574d32574899710502684ed1",
-    "nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js": "47e9c222f5cd56402dfc97af0feab9534f7a03eae5746d288b8a575fe2349c1e",
+    "nodics.wcms/modules/cms/src/schemas/schemas.js": "26706c1998677a486a7099be608fa16bfd2c37c507ec53d794e27f512096d2d2",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js": "db30e74d2dbf22a554974cac079a885c1e7b936f4528d0c86d4d5718d8dd80a6",
     "nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js": "d29513415baff52cf1f38467281de7586700c7e2541227e7c87aa822c7294bc5",
     "nodics.localization/modules/localizationCore/src/service/defaultLocalizationImportExportService.js": "ea93b1be8d4e70e748ad2afaa86ef8105748a6768f8c5fae8caca5532f77abc8",
     "nodics.localization/modules/localizationCore/src/service/defaultLocalizationReleaseManagementService.js": "080e56e01d7ac4b4658c2049e15b4d7265fbdb2dee7edb2ec9bc893c1112fedc",
     "nodics.localization/modules/localizationApi/src/controller/defaultLocalizationApiController.js": "3617b35a1d5a025d7c38ba27b17ad36e6807d3d4e3bbb83eba4a9d9cd808bb68",
     "nodics.localization/modules/localizationApi/src/facade/defaultLocalizationApiFacade.js": "4c547a55fbccd02857a9a34af7f1f16d71d56ee45b562be35f90144356d54b25",
-    "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js": "b452d6e9569ffe67d7d4f4566974c5140e4a62338ce4deef1b82121dc1f36696",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js": "5742ab7416ea29f2b1676d5d8a5ee6b833bab5db2748d5f886b785e0e1d8c541",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactValidationService.js": "12dccdb44358abfa5760e649f32218e5d97ad84f3845f5781898af0ff487d6fd",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactFormQueryService.js": "f3c8f5959f407890858925c9178f0a0530664d66b5847b71a8d6cf733569e76a",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffDispatchService.js": "b4e20fcf689c767dc18f33da140050c2703c33b4ea944512da19c7362e9188cb",
     "nodics.engagement/modules/contactSubmission/src/service/defaultContactHandoffRepositoryService.js": "959fdd44632f7baf87dece4d11d0a2d1935d3cf81d7e37d74f215a06da969a4a",
-    "nodics.engagement/modules/engagementCore/src/schemas/schemas.js": "85695ccc73836cde44418b53bd978b84ff964aaac54f4ec8c5274ad247d3223d",
+    "nodics.engagement/modules/engagementCore/src/schemas/schemas.js": "6f7156762a33cb94d953713ca1069cc50cd96c93b854b1cb15fbfa9138e4507f",
     "nodics.engagement/modules/engagementApi/src/router/routers.js": "b049c3876823bbc023147bb11c54e705f1dd3f4d1935760ea663b603cb38b549",
     "nodics.engagement/modules/engagementApi/src/facade/defaultEngagementApiFacade.js": "d6438b0bc4b13b48e779f83f6af760e0164fbbf08dc508119cd850d5facd43f9",
     "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationAdapterService.js": "3d6a32d4fe32f8835b24e309310df5e413ea718e0158ee5eac176f96599adc90",
-    "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js": "c84793cec04b6000e88e5f8bde862ac984f67ca4319565e44695e139508ca917",
+    "nodics.wcms/modules/cms/test/cmsPublicationHistoryCapacity.test.js": "facb6a6744301f2451b25a1b32d4990095e5ff462a9ffe4f5ad9c6d4ebd019c5",
     "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTargetService.js": "71cec959d5a7a58b2c0afad2d57313b59d5bd656aca4099dd238c4964e626043",
     "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationModuleTransportService.js": "3c08a1f92ca52b0cc6cacadcd97a95fb71570fa5fe9ffc05342e96f350efef58",
     "nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationVersionProviderService.js": "bfa3b18b627f19d99f023134852a0c7a8e0398ecd7b62e422c9051a897fa18ee",
@@ -3578,8 +3603,8 @@
     "nodics.foundation/modules/nData/nImport/import/config/properties.js": "ce6bbd1acad90a805070fbae2a95aa87ab5c7300bef55dfcca822fc2d3284f8b",
     "nodics.foundation/nodics.js": "7f733e41d1e53ce2a10d49339675229082b9129a0db60d2f89d5d33cee3cd6d7",
     "nodics.foundation/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService.js": "0e00b292eb59355d217cc0ef6e467ed6ae4ef12c1f4df18e34013a651f751ce1",
-    "nodics.process/modules/cronjob/config/properties.js": "24b417ca4def09d245b1f17ffc67427e27ed0cb3bf669eb0745cdeb74427136c",
-    "nodics.foundation/modules/nConfig/src/utils/utils.js": "0f78e4f4c645a281a0ba3d21fb8c0541665d3c0afa404530a0d3ce63275e124c",
+    "nodics.process/modules/cronjob/config/properties.js": "852d9eb26b2189838138f6d47346199cb8b7a414929a02b23a82e6e9d9253ed7",
+    "nodics.foundation/modules/nConfig/src/utils/utils.js": "af6c7350571b04ee50a916f434ff8b15c4a2241b5ee6df3eff34b7d6d3a12eef",
     "nodics.foundation/modules/nCache/cache/config/properties.js": "1bd8e2b3f445cdc67da4748c6188fd529769a7100637b68882c7ee90ef765f8a",
     "nodics.foundation/modules/nCache/hazelcastCache/src/service/engine/defaultHazelcastCacheEngineService.js": "b4f98e002cca61055275bd4dee38734f35def214a11eff7d8ee4d55f2c6cab76",
     "nodics.foundation/modules/nDatabase/database/src/service/config/defaultDatabaseConfigurationService.js": "5e6a216bd733c2047d95de85c55bb90787fe3b624412b63df45d7d1e0e321328",
@@ -3589,7 +3614,7 @@
     "nodics.foundation/modules/nToken/src/service/pipelines/defaultGenerateTokenPipelineService.js": "5df64b488d386c421cdf4ef0cb496337d946c3a54f4acddc9e584e3006df5a73",
     "nodics.foundation/modules/nOtp/README.md": "b02cc69ae88469fd7a41dec28b9b7691ed2aeb812ebb8156f0c859909b9574a3",
     "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js": "1c4b5a6465cc23879513657175273e4a850121ca50296a019cfda5fe95ee8aec",
-    "nodics.process/modules/workflow/config/properties.js": "21b4f6b7982190a261ed1c4c1fee5ea816d060f69b4649fe6baf73236d2d66c1",
+    "nodics.process/modules/workflow/config/properties.js": "7d0d1c572e78d82f17c04da308b959eb15e490086e8fc46949fbfd1c6447469b",
     "nodics.process/modules/cronjob/src/lib/cronJob.js": "518c57fb370c0afe947eed27474741220d3d80e66ab0264b779081f713e292ce",
     "nodics.process/modules/cronjob/src/utils/enums.js": "532cea8161f27421aca701afe39a62cb52735e0481221a932520bd0fd7a8f451",
     "nodics.process/modules/cronjob/src/service/trigger/defaultCronJobTriggerHandlerService.js": "7804a476784408478d7338875969046f8492af224ce6e3a12eedfaa919ed97ad",
@@ -3598,23 +3623,23 @@
     "nodics.process/modules/cronjob/src/service/cronjob/defaultCronJobScheduleLifecycleService.js": "0f04d1781a84597ebe8fd4b632022e4570a3dc7254bf40ad975873d98682f82a",
     "nodics.process/modules/cronjob/llm/contracts/inactive-schedule-drafts.md": "746612f580367fff462267e261c7b95d619e7c41b40cc2a447783d12c141aca2",
     "nodics.foundation/modules/nDatabase/database/src/schemas/schemas.js": "a69e2ebf25b553b8a4d7bd06977c66ba76203e6e25986bec1459fe0f56b8390b",
-    "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "e167190eaa0265ef59f5956370e3f5ccc11006c2f54e012159c74c21742e1f71",
+    "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "1064b513aa60067da79dcb1233fbc1f4c748076be73f689b4cd6b6a0bc982d02",
     "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js": "a19f16a4bbfc16c620baf01a66f62cbe768080273f9a9798eceb84d47efabd1c",
     "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js": "d9650330503109f99d401dafde3b34e4241c86313824e32d9715d03aa2bd450d",
     "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js": "76161f4a6739694191ef30108d5c8eab0f4830dac3bba6256ba079d6a5388648",
-    "nodics.waste/modules/wasteApi/src/router/routers.js": "4d7bff94086e182a7c44a550bed155cb997670317877f4c65b8acb067385e2df",
+    "nodics.waste/modules/wasteApi/src/router/routers.js": "1268799e250be91d5bed87a577507c367f315509b774e07b8d2b0bc3e106c8f3",
     "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js": "f668d766a9210446c92f8556c0e771f490be13c3758135f6c40139601a473c6b",
     "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js": "f4b5739c9a72d99f940601e34433f13f0463b5d5469e57d6e8cde366a3f85cd7",
-    "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js": "cb5ca2db5cc227045b5f73ecd649044493b0964a2ee62aa441783cab22d4dec3",
+    "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js": "d784bde82cf5695b85b30824053350d60f345871407c85c07e46b0dc8f301750",
     "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js": "22743131c279f0a17251ceca6ddd1939ad5a920243fd5d20bf01a36d719a778d",
-    "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js": "254addf3434ab62457fd91600ea7a4b764e65c33c06d77825e6425e57b8170d1",
+    "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js": "23c2de0de9fe9c9d1c62c9a6591f6a6bd7a1bc99236378b2ee5ac12511df88cb",
     "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js": "6e6870fc78f7babb12acf1e04f079caa19ca68a410676932e5834ad6d7b8f216",
     "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js": "46c6ad2537bcb03ec0a4db18e02394ee2266e5ebee8d1e2091fe0c59968ca752",
     "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js": "44985be4001faee9f6a8a2f42296377417e074b2588d918abc939ba97f8eb326",
     "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js": "0194664fa957dea6539c9c169bdba2105ab098fb3e4b5b89e8260f1e2df03c2d",
-    "nodics.waste/modules/wasteReward/src/schemas/schemas.js": "bbe8c94935088d59fe9267a436f24893243ef7dd0e9737b34b89e23f1ab2c7bc",
+    "nodics.waste/modules/wasteReward/src/schemas/schemas.js": "002f5c96c45acac24e8f32463d9f31e126da4a0668f5240b1818cc68f9012c78",
     "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js": "6582d85ece6a5f7721098980623818a21a9b36398e73c26bb1f896b18925515a",
-    "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js": "34dfb6abfa74a7d8f5ba87eb3176a6e0fbb56fd832c9365414e8380a5ae51cef",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js": "537da8f6eb7ac9ebd38f18f1dc16bca77798ff4d577bb4e543c2751f4830deea",
     "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js": "4233684db10ba846b70c647e88261d3e60dd833418e0d5e62cbedeef4031e98f",
     "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js": "78797613577acb984461600864cd4ac0f902ff350791edf944b69e7e9dc4c07e",
     "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md": "779921aba4d3f9cf93cc61b6274e0a7d38e1439261f472179ec12d9b1d3dc982",
@@ -3641,7 +3666,7 @@
     "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md": "01f39a4a1cf19fbe17b307f49ffcbe1b35e46e3d65bbe8ffa0b1e314e2b70530",
     "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js": "cdb42d7206d15310f00d369c4c2b8ba0ac81beaf269bc0dfb35126e713036a9e",
     "nodics.accelerators/modules/nexus/modules/nexusCore/package.json": "94f6e1187ee0c89370e59d41fc3f5a0041b4058f8637e15a1c503c897ff63f32",
-    "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js": "028cdc8aac418cba071e5df2ad056a1e993f3d374ac227bde64accf8adb83685",
+    "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js": "79fa668ffcb42985499b51ca6de22c5687a5271e60262f200e27db28d350992e",
     "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md": "ef80c3a66903efb4878e865e94357a782a79bdb059840ed87074b6ade114e912",
     "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json": "191fc0704b6e78a9786887e3a2d3bab0b77805bd67f9096b9714be34faba66e2",
     "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md": "203b8ae0d092f03860c6b86bbcd5ad74e6fe29a149d3c61207de2486af187aca",
@@ -3656,30 +3681,42 @@
     "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js": "ea9dbdb7c2ed6bae23f2540fbd0b07441819a675824daa87c22958e0c02225ee",
     "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js": "61d90ec5a6373fef9f9a9cc8b90ad99283b8f9532edae48164efeb7ad732c1d9",
     "nodics.foundation/modules/nSetup/package.json": "89c196e15dd81342ae20224c57242fa95c915a54a530c6d1a4740e7cf74b9288",
-    "nodics.foundation/modules/nSetup/AGENTS.md": "7d0036dfb73f0278b435e20dfeb3a34aa7791a9ae186b2439e41b94c7bba3494",
-    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultPhysicalOrderReversalService.js": "f122c8ec842496681a15d9473b5bbe6e369e333aec8aa5cc8c2de678659e43a2",
-    "nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderRefundRecoveryService.js": "2f6be914f20b57c1336bd8aa2aedf3ce17231dd4eac7889eb0fc39ebfb802e53",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionMerchantScopeService.js": "62b40e67b7efb25eada43cc3c0e6030d80cd44bf62592b26ae0f9f8322f4ec35",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionCouponBudgetService.js": "5a9b88cb3846c42357cf82e7176e30d7b9c6f0b6995453c9ab225951759a54b3",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/issuer-merchant-stock-admission.md": "42879959de62ec87ba0b7eb2aa491e60f2c405ffb710178ed0cac091f954142a",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-bound-issuer-budget.md": "c11865e5fa681eec108c4534335a27c5e4a4d620f7c2611181d95470582b0412",
-    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js": "277ed37f4fdf155a9500d73f0ee9e1014e391ccee1a0b67c1a70221bafa7ede4",
-    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService.js": "2a52d1b154a7d943fb730fb57b46d5be839fc3945771db6849347f0b46923bb2",
-    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceRefundService.js": "dc6c84a2a9b2d524727ea0187783189235be1a2b3fbf8af40a6d99c73e73cc14",
-    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md": "8a5854e8b88d23561e827e4c134476caee433f1b3a30c0164b60c680c6b606f8",
+    "nodics.foundation/modules/nSetup/AGENTS.md": "f9763f6ff20ee6a902df8a034fd49ab0db15b41eb834f4c2955544864e99adfe",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultPhysicalOrderReversalService.js": "7c5b631f072f8dc73271c8d0c26e11393014abc5d67613dec5fff9f18207e4e2",
+    "nodics.commerce/modules/checkout/modules/order/src/service/defaultOrderRefundRecoveryService.js": "976fc60d6b25a1dda6f495bb99ed9adc569a37eacd17a4128265a9a2fcd56240",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionMerchantScopeService.js": "df6a53c45ddafdd155bc55dd4fb7efcc478f93ec06008fac9b1831115606d1b6",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionCouponBudgetService.js": "37cf7c0078d003c5951a92217a4b8a7dc3d749f2cb142a7a62c7bbc20bb372dc",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/issuer-merchant-stock-admission.md": "e3627f022adc465918745c14319e685d22ba130be945787dda8f53174a2f435e",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-bound-issuer-budget.md": "c27dc84991e5656dd03e08c2f41d202574b8caa44bcf8eb43df204602507ecc4",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceMerchantService.js": "722448d11d0127ae4eecd94b79e7d2b3c4c85db1b217c69c0c38405f8c610f53",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService.js": "072d7d592deb93fbfdd7aeebc6a56dbf9cd512612f4d8f3f8d62d0957ef515bd",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceRefundService.js": "ea677fe93d679bf8ee47143455ac735ad3e7ce251c204eaa809aea2190a952fb",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md": "5f4dfc88291956a67f6c05c89f25adae99fff8b801c004d42a3b995ddca978f3",
     "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemDeliveryEvidenceService.js": "719c6cf5e30d31a5a0006df35aaea0dc38674e1697245eb946f56acbc4822af6",
-    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md": "43622d176764bad15588857765c5b0bbea78bc5d1bfd56512d23d3d79ce119ee",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js": "9eedb9c7ddba49769550fc21a94f0e9dfb0ab1502d9d511f15a5eafbe3966f62",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "f56e90f1323d0888b768f6f3b45664799250459cc967b442019e0eb94d3ad864",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionItemBenefitService.js": "ba324e00efc822256f8b94c7a78599cd91c41cadd7750a7d8bde72f1b71216f8",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md": "4261486e75b583f224e04e7afaefaa1bc029b5f78eaf11bbbd4a853dd4742bb7",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js": "1ea6fbbd9287dfefdbd0caeb491ce48ed45d01861274de71b94370f7fc542804",
-    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js": "30916f6ebfcc21e9fea0243bee960421b2425b6987d3e7e62b8f414ada2c7b25",
-    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceItemMerchantProviderService.js": "d4067b8bba05111c9b5610a75d554024d85cb0d8b7216b8affb73ba76b61aff6",
-    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/merchant-redemption-contract.md": "bbf398f85a7d29a711e3d3918f5530960a328bb383d3f9ed3589abb7d147be54",
-    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js": "ab015a2fd29c1f9b8ed2ef87ebafa89b8bb3ddbc453380da1d6035fdf2028b7a",
-    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js": "fe6325d7b34bb5a65007b5c5bb599dfafd873b6b4b499caf52cae922a5692540",
-    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js": "a40c51e5a1cc910b91a3f3768cc3da81efc6781956dde8231d71d7d9c888885b"
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/llm/contracts/verified-item-delivery.md": "68c341494ae97e6571240627220105aadae95f968a4a47ee012af52053d90caf",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js": "a1fd87a2331cae7216eb8e01bee2c118357c006b1028212acdd18f6a97c8a093",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js": "b98bce5ddf0925fb12bc3413d61a2852dd078e3bf72a7a3e46b06abae80317fe",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionItemBenefitService.js": "8847ac809611c302dfea3a035d23ca3d5a99415143d6433dd75d35e9cb7d4c05",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/verified-item-benefits.md": "1399f509f3e14e2b6c0194fe1f7916a77ee87a7757af2caae9d8a6ffdd4995f5",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js": "69748335ee71bc5e18482706af3efd1a8b7ee9bf855ac283c4f6a328702b0edb",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js": "40a30dce5e41e010b982fe4a38b0f3b11588df2079198fd9f378136cda7e379b",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceItemMerchantProviderService.js": "e2f866983af01aa3e6fae2c538635ef1cb7c51d20ad9c1423c40c4896fd92fd2",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/merchant-redemption-contract.md": "728c3456576e8b3cb5d5a8f361196a22bff452d0151e4e1f7d20e9a58237830d",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js": "660da729e9af23f95c4e33ac0d8cc9f384298c32b1bc5daaf2e3afc4bde2726d",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentItemSimulationService.js": "e0a73632719b6979efaa512c35228ddf3088e6e2cc02973a8852db2c496082bd",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js": "8efb2772375c1e984c6e15713f4e9350478282c7ee011a05a3be1938e107cbea",
+    "nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js": "c268885e24837aa306dac3f13df0152330929b0ac6ec0fd18254f246b3dd18b8",
+    "nodics.accelerators/modules/waste/modules/eWaste/src/service/defaultEwasteDigitalSaleService.js": "6d77dae0ba1e4a03a7980295a43a657ef719a9e5592ef2e90498f86a6f534838",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchBenefitService.js": "3a37eeee573a13153c211a97b1c4b338d244b7fb6c70fc85fa22f154ca71ddc7",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchPolicyService.js": "fdb24c94f4900d7326b5f4b4f409f86f8537cc199a6df0a47498420896df4317",
+    "nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/config/properties.js": "8673b82e53e428f29bdc2bc8251e2c428a958266c5df5870abed0585bbf5af7a",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductCatalogueQueryService.js": "43469d60beaa04ded01054786c325660c3f285227d521fc46be6abb31c104e43",
+    "nodics.commerce/modules/payment/modules/paymentCore/llm/contracts/README.md": "7b67f0789c2e866dbfb8b7862e0372590f763d8bb44933db4c5aeabf07e41431",
+    "nodics.waste/modules/wasteReward/llm/contracts/material-value.md": "248590b88635368299be88738876139ea1571f6ad88f5f72f083314297004d9d",
+    "nodics.waste/modules/wasteReward/src/service/defaultWasteMaterialValueSettlementService.js": "94d0d1dfff7f8d4b55c8e85cee074dd23676ecefc4ce9d9ce937e24c0541ca50",
+    "nodics.waste/modules/wasteReward/AGENTS.md": "0fbb56151c537e6d0b35c298a821a33bb9d81f0f73c7b26f1fde70c383a06f18",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/bundle-holdings-and-gifts.md": "5fe67ffa5f8ccfcc14f000c91282dcc64566f5e951a01b1323d41086301d24e2",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js": "019b7cb5af024751bfc12e646f606e03539e08f87e0085e2e457ca8895e96742"
   },
   "summary": {
     "totalItems": 22,

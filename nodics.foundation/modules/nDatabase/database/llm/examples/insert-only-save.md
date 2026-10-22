@@ -47,6 +47,8 @@ const response = await SERVICE.DefaultOwnedRecordService.save({
    solely of exact field values matching the submitted model. Operators, dotted
    predicates, mismatches, recursive saves, replacement mode and unsupported
    adapters fail closed. Managed/versioned records retain their own lifecycle.
+   Rejections append only a fixed contract category to `ERR_SAVE_00003`; they do
+   not expose model values, selectors, credentials, or other request data.
 6. The existing atomic `compareAndSetItem` create operation performs insertion.
    MongoDB never uses `findOneAndUpdate` on this path and rejects ambiguous or
    partial insert acknowledgements. Opaque transaction context is preserved.

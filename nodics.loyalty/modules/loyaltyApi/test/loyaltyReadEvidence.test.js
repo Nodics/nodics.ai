@@ -11,6 +11,7 @@
 
 /* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
 "use strict";
+require("./../../loyaltyWallet/test/helpers/runtimeEnums.js")();
 /** @module loyaltyApi/test/loyaltyReadEvidence @description Source-only owner-generated evidence and original groupless runtime-context tests. No JWT issuance, native provider or live acceptance claim. @layer test @owner loyaltyApi */
 const test = require("node:test"), assert = require("node:assert/strict");
 const evidence = require("../../loyaltyWallet/src/service/defaultLoyaltyReadEvidenceService");
@@ -27,19 +28,28 @@ function fixture(t) {
   const authData = { tokenType: "service", principalType: "service", serviceId: "runtime", principalId: "runtime", tenant: "tenant",
     entCode: "enterprise", runtimeInstanceId: "instance", runtimeScope: { projectCode: "project", environmentCode: "local",
       serverCode: "waste", instanceCode: "instance", assignmentCode: "grant" }, modules: ["loyaltyApi"], permissions: ["loyalty.wallet.read"], userGroups: [], groups: [] };
-  const p = { customerCode: "customer", programCode: "program", rewardTypeCode: "points" };
+  const p = { ownerType: "CUSTOMER", ownerCode: "customer", programCode: "program", rewardTypeCode: "points" };
   const record = value => ({ tenant: "tenant", active: true, revision: 1, ...value });
   const rows = {
+    DefaultLoyaltyProgramService: [record({ code: 'program', status: 'ACTIVE', spendEnabled: true, defaultRewardTypeCode: 'points' })],
+    DefaultLoyaltyRewardTypeService: [record({ code: 'points', status: 'ACTIVE', precision: 3 })],
     DefaultLoyaltyWalletService: [record({ code: "wallet", ownerType: "CUSTOMER", ownerCode: "customer", status: "OPEN", metadata: { private: true } })],
     DefaultLoyaltyWalletRewardBalanceService: [record({ code: "balance", walletCode: "wallet", programCode: "program", rewardTypeCode: "points", available: "118.00", reserved: "0.00" })],
     DefaultRewardLedgerEntryService: [record({ code: "capture", walletCode: "wallet", programCode: "program", rewardTypeCode: "points",
-      entryType: "CAPTURE", amount: "16.00", sourceType: "PAYMENT", sourceCode: "order", targetType: "ORDER", targetCode: "order", idempotencyKey: "checkout:payment:capture" }),
+      entryType: "CAPTURE", amount: "16.00", sourceType: "PAYMENT", sourceCode: "order", targetType: "ORDER", targetCode: "order",
+      reservationCode: "reservation", redemptionCode: "redemption", idempotencyKey: "checkout:payment:capture" }),
     record({ code: "refund", walletCode: "wallet", programCode: "program", rewardTypeCode: "points", entryType: "REVERSE", amount: "16.00",
       sourceType: "PAYMENT", sourceCode: "order", reversalOfEntryCode: "capture", idempotencyKey: "original-refund" })],
+    DefaultRewardReservationService: [record({ code: "reservation", walletCode: "wallet", programCode: "program", rewardTypeCode: "points",
+      amount: "16.00", status: "CAPTURED", sourceType: "PAYMENT", sourceCode: "order", targetType: "ORDER", targetCode: "order",
+      ledgerEntryCodes: ["reserve", "capture"], idempotencyKey: "checkout:payment:authorize", correlationId: "checkout" })],
+    DefaultRewardRedemptionService: [record({ code: "redemption", walletCode: "wallet", programCode: "program", rewardTypeCode: "points",
+      amount: "16.00", status: "CAPTURED", targetType: "ORDER", targetCode: "order", reservationCode: "reservation",
+      captureLedgerEntryCode: "capture", idempotencyKey: "checkout:payment:capture", correlationId: "checkout" })],
   };
   const reads = [], state = { truncate: false, foreign: false };
   global.CONFIG = { get: key => key === "authSecurity" ? { internalToken: { runtimeAccessGroups: ["serviceAccountUserGroup"] } } : undefined };
-  global.SERVICE = { DefaultServiceTokenService: runtime, DefaultLoyaltyRewardOperationService: operations, DefaultLoyaltyReadEvidenceService: evidence,
+  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"), DefaultServiceTokenService: runtime, DefaultLoyaltyRewardOperationService: operations, DefaultLoyaltyReadEvidenceService: evidence,
     DefaultLoggerService: { hasPrivateCaptureProtection: () => true } };
   global.FACADE = { DefaultLoyaltyInternalFacade: facade };
   for (const name of Object.keys(rows)) SERVICE[name] = {
@@ -65,6 +75,49 @@ test("original groupless runtime receives one existing wallet/balance through th
   f.rows.DefaultLoyaltyWalletRewardBalanceService = [];
   assert.equal((await evidence.walletEvidence(f.request({ ...f.p, walletCode: "wallet" }))).balance, null);
 });
+test('exact reward-unit evidence derives precision from active canonical records without reading or creating a wallet', async t => {
+  const f = fixture(t), auth = structuredClone(f.authData), before = structuredClone(f.rows);
+  f.rows.DefaultLoyaltyWalletService = [];
+  let cache;
+  const result = await controller.rewardUnitEvidence({ tenant: 'tenant', authData: f.authData,
+    httpRequest: { body: { programCode: 'program', rewardTypeCode: 'points' } },
+    httpResponse: { setHeader: (name, value) => { assert.equal(name, 'Cache-Control'); cache = value; } } });
+  assert.deepEqual(result.data, { contractVersion: 1, tenant: 'tenant', enterpriseCode: 'enterprise', programCode: 'program',
+    rewardTypeCode: 'points', scale: 3, programRevision: 1, rewardTypeRevision: 1 });
+  assert.equal(cache, 'no-store'); assert.deepEqual(f.authData, auth);
+  assert.deepEqual(f.reads.map(r => r.name), ['DefaultLoyaltyProgramService', 'DefaultLoyaltyRewardTypeService',
+    'DefaultLoyaltyProgramService', 'DefaultLoyaltyRewardTypeService']);
+  assert.deepEqual(f.rows.DefaultLoyaltyProgramService, before.DefaultLoyaltyProgramService);
+  assert.equal(routes.rewardUnitEvidence.key, '/reward-unit-evidence');
+  assert.deepEqual(routes.rewardUnitEvidence.authTokenTypes, ['service']);
+  assert.equal(routes.rewardUnitEvidence.permission, 'loyalty.wallet.read');
+});
+test('reward-unit evidence refuses missing precision, inactive program/type, invalid windows and incomplete provider counts', async t => {
+  for (const change of [f => { delete f.rows.DefaultLoyaltyRewardTypeService[0].precision; },
+    f => { f.rows.DefaultLoyaltyRewardTypeService[0].precision = 9; },
+    f => { f.rows.DefaultLoyaltyRewardTypeService[0].active = false; },
+    f => { f.rows.DefaultLoyaltyProgramService[0].spendEnabled = false; },
+    f => { f.rows.DefaultLoyaltyProgramService[0].status = 'PAUSED'; },
+    f => { f.rows.DefaultLoyaltyProgramService[0].startsAt = '2999-01-01'; },
+    f => { f.rows.DefaultLoyaltyProgramService[0].endsAt = '2000-01-01'; },
+    f => { f.rows.DefaultLoyaltyProgramService[0].endsAt = 'invalid'; },
+    f => { f.state.omitCount = true; }, f => { f.state.truncate = true; }, f => { f.state.foreign = true; }]) {
+    const f = fixture(t); change(f);
+    await assert.rejects(evidence.rewardUnitEvidence(f.request({ programCode: 'program', rewardTypeCode: 'points' })));
+  }
+});
+test('reward-unit evidence refuses foreign selectors, changed precision and runtime identity drift', async t => {
+  const f = fixture(t), payload = { programCode: 'program', rewardTypeCode: 'points' };
+  for (const p of [{ ...payload, scale: 2 }, { ...payload, ownerCode: 'customer' }, { ...payload, programCode: { $ne: null } }])
+    await assert.rejects(evidence.rewardUnitEvidence(f.request(p)), /unavailable/);
+  assert.equal(f.reads.length, 0);
+  const get = SERVICE.DefaultLoyaltyRewardTypeService.get; let first = true;
+  SERVICE.DefaultLoyaltyRewardTypeService.get = async input => { const value = await get(input);
+    if (first) { first = false; f.rows.DefaultLoyaltyRewardTypeService[0].precision = 4; } return value; };
+  await assert.rejects(evidence.rewardUnitEvidence(f.request(payload)), /unavailable/);
+  SERVICE.DefaultLoyaltyRewardTypeService.get = async input => { const value = await get(input); f.authData.permissions = []; return value; };
+  await assert.rejects(evidence.rewardUnitEvidence(f.request(payload)), /unavailable/);
+});
 test("tenant-scoped generated reads project runtime tenant onto canonical rows without persisting it", async t => {
   const f = fixture(t);
   const schemas = require("../../loyaltyWallet/src/schemas/schemas").loyaltyWallet;
@@ -86,7 +139,8 @@ test("optional walletCode resolves one existing exact CUSTOMER owner without ope
   SERVICE.DefaultLoyaltyWalletOperationService = { open: () => assert.fail("No wallet opening"), projection: () => assert.fail("No wallet projection") };
   const result = await evidence.walletEvidence(f.request(f.p));
   assert.equal(result.wallet.code, "wallet"); assert.equal(result.wallet.tenant, "tenant");
-  assert.equal(result.customerCode, "customer"); assert.equal(result.programCode, "program"); assert.equal(result.rewardTypeCode, "points");
+  assert.equal(result.ownerType, "CUSTOMER"); assert.equal(result.ownerCode, "customer");
+  assert.equal(result.programCode, "program"); assert.equal(result.rewardTypeCode, "points");
   assert.deepEqual(f.reads[0].input.query, { ownerType: "CUSTOMER", ownerCode: "customer" });
   assert.deepEqual(f.reads[1].input.query, { walletCode: "wallet", programCode: "program", rewardTypeCode: "points" });
   assert.deepEqual(f.rows, before); assert.deepEqual(f.authData, auth);
@@ -110,8 +164,9 @@ test("exact owner lookup rejects missing, ambiguous, foreign, inactive or closed
 test("optional exact owner selection does not accept a general query or malformed explicit walletCode", async t => {
   const f = fixture(t);
   for (const payload of [{ ...f.p, walletCode: undefined }, { ...f.p, walletCode: null }, { ...f.p, walletCode: "" },
-    { ...f.p, query: {} }, { ...f.p, ownerType: "CUSTOMER" }, { ...f.p, customerCode: ["customer"] },
-    { customerCode: "customer", rewardTypeCode: "points" }, { customerCode: "customer", programCode: "program" }]) {
+    { ...f.p, query: {} }, { ...f.p, ownerType: "EMPLOYEE" }, { ...f.p, ownerCode: ["customer"] },
+    { ownerType: "CUSTOMER", ownerCode: "customer", rewardTypeCode: "points" },
+    { ownerType: "CUSTOMER", ownerCode: "customer", programCode: "program" }]) {
     await assert.rejects(evidence.walletEvidence(f.request(payload)), /unavailable/); assert.equal(f.reads.length, 0);
   }
   assert.equal((await evidence.walletEvidence(f.request({ ...f.p, walletCode: "wallet" }))).wallet.code, "wallet");
@@ -177,7 +232,7 @@ test("generated read tenant drift refuses even when returned domain rows carry n
 });
 test("canonical route and controller admit the original groupless principal without assigning token groups", async t => {
   const f = fixture(t);
-  for (const route of [routes.walletEvidence, routes.ledgerEvidence]) {
+  for (const route of [routes.walletEvidence, routes.ledgerEvidence, routes.reservationEvidence, routes.redemptionEvidence]) {
     assert.equal(route.secured, true); assert.deepEqual(route.authTokenTypes, ["service"]);
     assert.equal(route.permission, "loyalty.wallet.read"); assert.equal(route.cache.enabled, false);
     assert.equal(route.requestPrivacy.sensitive, true);
@@ -187,6 +242,46 @@ test("canonical route and controller admit the original groupless principal with
   const result = await controller.walletEvidence({ tenant: "tenant", authData: f.authData,
     httpRequest: { body: { ...f.p, walletCode: "wallet" } } });
   assert.equal(result.data.balance.available, "118.00"); assert.deepEqual(f.authData.userGroups, []);
+});
+test("exact reservation and redemption evidence independently bind captured records to the typed wallet owner", async t => {
+  const f = fixture(t), before = structuredClone(f.rows), auth = structuredClone(f.authData);
+  const reservation = await controller.reservationEvidence({ tenant: "tenant", authData: f.authData,
+    httpRequest: { body: { ...f.p, reservationCode: "reservation" } } });
+  assert.equal(reservation.data.reservation.status, "CAPTURED");
+  assert.equal(reservation.data.reservation.walletCode, "wallet");
+  assert.equal(reservation.data.reservation.targetCode, "order");
+  const redemption = await controller.redemptionEvidence({ tenant: "tenant", authData: f.authData,
+    httpRequest: { body: { ...f.p, redemptionCode: "redemption" } } });
+  assert.equal(redemption.data.redemption.status, "CAPTURED");
+  assert.equal(redemption.data.redemption.reservationCode, "reservation");
+  assert.equal(redemption.data.redemption.captureLedgerEntryCode, "capture");
+  assert.equal(routes.reservationEvidence.key, "/reward-reservation-evidence");
+  assert.equal(routes.redemptionEvidence.key, "/reward-redemption-evidence");
+  assert.deepEqual(f.rows, before); assert.deepEqual(f.authData, auth);
+});
+test("reservation and redemption evidence refuse foreign owners, malformed selectors, ambiguity and lifecycle read drift", async t => {
+  for (const kind of ["reservation", "redemption"]) {
+    const codeField = kind + "Code", serviceName = kind === "reservation" ? "DefaultRewardReservationService" : "DefaultRewardRedemptionService";
+    const method = evidence[kind + "Evidence"];
+    for (const mutate of [
+      f => { f.rows[serviceName][0].walletCode = "missing"; },
+      f => { f.rows[serviceName].push({ ...f.rows[serviceName][0], code: f.rows[serviceName][0].code }); },
+      f => { f.rows.DefaultLoyaltyWalletService[0].ownerCode = "foreign"; },
+      f => { f.rows[serviceName][0].active = false; },
+    ]) {
+      const f = fixture(t); mutate(f);
+      await assert.rejects(method.call(evidence, f.request({ ...f.p, [codeField]: kind })), /unavailable/);
+    }
+    const f = fixture(t);
+    for (const payload of [{ ...f.p, [codeField]: { $ne: null } }, { ...f.p, [codeField]: kind, walletCode: "wallet" },
+      { ...f.p, [codeField]: kind, ownerType: "EMPLOYEE" }]) {
+      await assert.rejects(method.call(evidence, f.request(payload)), /unavailable/);
+      assert.equal(f.reads.length, 0);
+    }
+    const request = f.request({ ...f.p, [codeField]: kind }), get = SERVICE[serviceName].get;
+    SERVICE[serviceName].get = async input => { const result = await get(input); request.payload.ownerCode = "foreign"; return result; };
+    await assert.rejects(method.call(evidence, request), /unavailable/);
+  }
 });
 test("exact original Order capture and its exact source-scoped reversal retain native identities, with no ledger history enumeration", async t => {
   const f = fixture(t), source = { ...f.p, sourceType: "PAYMENT", sourceCode: "order" };
@@ -207,7 +302,7 @@ test("wrong tenant, enterprise aliases, runtime instance, module, token and perm
 });
 test("query operators, body scope, provider overrides, array selectors and ambiguous selectors refuse before reads", async t => {
   const f = fixture(t), payload = { ...f.p, entryCode: "capture", sourceType: "PAYMENT", sourceCode: "order" };
-  for (const extra of [{ query: {} }, { tenant: "foreign" }, { customerCode: { $ne: null } }, { sourceCode: ["order"] },
+  for (const extra of [{ query: {} }, { tenant: "foreign" }, { ownerCode: { $ne: null } }, { sourceCode: ["order"] },
     { reversalOfEntryCode: "capture" }, { serviceName: "DefaultCustomerService" }]) {
     await assert.rejects(evidence.ledgerEvidence(f.request({ ...payload, ...extra })));
     assert.equal(f.reads.length, 0);
@@ -215,7 +310,7 @@ test("query operators, body scope, provider overrides, array selectors and ambig
 });
 test("foreign customer, program, reward type, Order source or suspended wallet never discloses entries", async t => {
   const f = fixture(t), payload = { ...f.p, entryCode: "capture", sourceType: "PAYMENT", sourceCode: "order" };
-  for (const extra of [{ customerCode: "foreign" }, { programCode: "foreign" }, { rewardTypeCode: "foreign" }, { sourceCode: "foreign-order" }])
+  for (const extra of [{ ownerCode: "foreign" }, { ownerType: "ENTERPRISE" }, { programCode: "foreign" }, { rewardTypeCode: "foreign" }, { sourceCode: "foreign-order" }])
     await assert.rejects(evidence.ledgerEvidence(f.request({ ...payload, ...extra })), /unavailable/);
   f.rows.DefaultLoyaltyWalletService[0].status = "SUSPENDED";
   await assert.rejects(evidence.ledgerEvidence(f.request(payload)), /unavailable/);
@@ -241,7 +336,48 @@ test("mid-read signed identity drift and copied unadmitted owner contexts refuse
   const f = fixture(t), original = SERVICE.DefaultLoyaltyWalletService.get;
   SERVICE.DefaultLoyaltyWalletService.get = async request => { const value = await original(request); f.authData.entCode = "foreign"; return value; };
   await assert.rejects(evidence.walletEvidence(f.request({ ...f.p, walletCode: "wallet" })), /unavailable/);
-  assert.deepEqual(Object.keys(evidence).sort(), ["ledgerEvidence", "walletEvidence"]);
+  assert.throws(() => evidence.authorize(f.request(f.p)), /unavailable/);
+  await assert.rejects(evidence.rows({ tenant: "tenant", authData: f.authData }, "DefaultLoyaltyWalletService", {}), /unavailable/);
+});
+test("effective read helpers dispatch through the selected owner while captured contexts expire outside the public call", async t => {
+  const f = fixture(t), request = f.request({ ...f.p, walletCode: "wallet" });
+  let context, projections = 0;
+  const customized = { ...evidence,
+    authorize(input) { context = evidence.authorize.call(this, input); return context; },
+    project(record, fields) { projections++; return evidence.project.call(this, record, fields); }
+  };
+  const before = structuredClone(request);
+  assert.equal((await customized.walletEvidence(request)).wallet.code, "wallet");
+  assert.equal(projections, 2);
+  assert.deepEqual(request, before);
+  const count = f.reads.length;
+  await assert.rejects(customized.rows(context, "DefaultLoyaltyWalletService", { code: "wallet" }), /unavailable/);
+  await assert.rejects(customized.rows({ ...context }, "DefaultLoyaltyWalletService", { code: "wallet" }), /unavailable/);
+  assert.equal(f.reads.length, count);
+});
+test("detached continuations cannot retain private invocation authority after the public read completes", async t => {
+  const f = fixture(t), request = f.request({ ...f.p, walletCode: "wallet" });
+  let resume, continuation;
+  const gate = new Promise(resolve => { resume = resolve; });
+  const customized = { ...evidence, authorize(input) {
+    const context = evidence.authorize.call(this, input);
+    continuation = gate.then(() => this.rows(context, "DefaultLoyaltyWalletService", { code: "wallet" }));
+    return context;
+  } };
+  await customized.walletEvidence(request);
+  const count = f.reads.length;
+  resume();
+  await assert.rejects(continuation, /unavailable/);
+  assert.equal(f.reads.length, count);
+});
+test("wallet lifecycle comparisons use the effective enum while preserving the canonical wire key", async t => {
+  const f = fixture(t), original = ENUMS.LoyaltyWalletStatus;
+  let reads = 0;
+  global.ENUMS.LoyaltyWalletStatus = { OPEN: { get key() { reads++; return original.OPEN.key; } } };
+  t.after(() => { global.ENUMS.LoyaltyWalletStatus = original; });
+  const result = await evidence.walletEvidence(f.request({ ...f.p, walletCode: "wallet" }));
+  assert.equal(result.wallet.status, "OPEN");
+  assert.ok(reads > 0);
 });
 test("provider errors remain content-free and cannot expose private rows or credentials", async t => {
   const f = fixture(t);
@@ -320,4 +456,62 @@ test("earning absence never accepts failed, truncated, foreign or drifting evide
   const request = f.request(payload), get = SERVICE.DefaultRewardLedgerEntryService.get;
   SERVICE.DefaultRewardLedgerEntryService.get = async input => { const result = await get(input); request.payload.sourceCode = "foreign"; return result; };
   await assert.rejects(evidence.ledgerEvidence(request), /unavailable/);
+});
+
+test("Enterprise exact wallet, capture, reversal and earning evidence never selects a same-code Customer", async t => {
+  const f = fixture(t), customer = structuredClone(f.rows.DefaultLoyaltyWalletService[0]);
+  f.rows.DefaultLoyaltyWalletService[0].ownerType = "ENTERPRISE";
+  f.rows.DefaultLoyaltyWalletService.push({ ...customer, code: "customer-wallet" });
+  const p = { ...f.p, ownerType: "ENTERPRISE" }, source = { ...p, sourceType: "PAYMENT", sourceCode: "order" };
+  const before = structuredClone(f.rows), auth = structuredClone(f.authData);
+  for (const walletCode of [undefined, "wallet"]) {
+    const value = await evidence.walletEvidence(f.request({ ...p, ...(walletCode ? { walletCode } : {}) }));
+    assert.equal(value.wallet.code, "wallet"); assert.equal(value.ownerType, "ENTERPRISE");
+    assert.equal(value.ownerCode, "customer"); assert.equal(value.customerCode, undefined);
+  }
+  const capture = await controller.ledgerEvidence({ tenant: "tenant", authData: f.authData,
+    httpRequest: { body: { ...source, entryCode: "capture" } } });
+  assert.equal(capture.data.entries[0].code, "capture"); assert.equal(capture.data.wallet.ownerType, "ENTERPRISE");
+  assert.equal((await evidence.ledgerEvidence(f.request({ ...source, reversalOfEntryCode: "capture" }))).entries[0].code, "refund");
+  assert.deepEqual((await evidence.ledgerEvidence(f.request({ ...source, earningIdempotencyKey: "earning-key" }))).entries, []);
+  await assert.rejects(evidence.ledgerEvidence(f.request({ ...source, ownerType: "CUSTOMER", entryCode: "capture" })), /unavailable/);
+  await assert.rejects(evidence.walletEvidence(f.request({ ...p, walletCode: "customer-wallet" })), /unavailable/);
+  assert.deepEqual(f.rows, before); assert.deepEqual(f.authData, auth);
+});
+
+test("typed evidence refuses fabricated customer aliases, incomplete owners and nonparticipant types before reads", async t => {
+  const f = fixture(t);
+  for (const payload of [{ customerCode: "customer", programCode: "program", rewardTypeCode: "points" },
+    { ...f.p, customerCode: "customer" }, { ...f.p, ownerType: undefined }, { ...f.p, ownerCode: undefined },
+    { ...f.p, ownerType: "enterprise" }, { ...f.p, ownerType: "SYSTEM" }, { ...f.p, ownerType: "EMPLOYEE" },
+    { ...f.p, ownerType: ["ENTERPRISE"] }, { ...f.p, ownerCode: { $ne: null } }]) {
+    await assert.rejects(evidence.walletEvidence(f.request(payload)), /unavailable/);
+    await assert.rejects(evidence.ledgerEvidence(f.request({ ...payload, entryCode: "capture", sourceType: "PAYMENT", sourceCode: "order" })), /unavailable/);
+    assert.equal(f.reads.length, 0);
+  }
+});
+
+test("Enterprise exact ledger admission retains every original runtime grant coordinate and owner selector", async t => {
+  const f = fixture(t), get = CONFIG.get;
+  f.rows.DefaultLoyaltyWalletService[0].ownerType = "ENTERPRISE";
+  const grant = { tenant: "tenant", principalEnterpriseCode: "enterprise", enterpriseCode: "business",
+    serviceId: "runtime", ...f.authData.runtimeScope }, policy = { runtimeRole: "LOYALTY", callers: [grant] };
+  global.CONFIG = { get: key => key === "loyalty" ? { api: { readEvidence: policy } } : key === "runtimeRole" ? { code: "LOYALTY" } : get(key) };
+  global.NODICS = { getSelectedEnvironmentName: () => "local" };
+  const request = f.request({ ...f.p, ownerType: "ENTERPRISE", enterpriseCode: "business", entryCode: "capture", sourceType: "PAYMENT", sourceCode: "order" });
+  const original = structuredClone(f.authData);
+  const value = await evidence.ledgerEvidence(request);
+  assert.equal(value.enterpriseCode, "business"); assert.equal(value.ownerType, "ENTERPRISE");
+  assert.deepEqual(f.authData, original);
+  for (const key of Object.keys(grant)) {
+    const saved = grant[key], count = f.reads.length; grant[key] = "foreign";
+    await assert.rejects(evidence.ledgerEvidence(request), /unavailable/);
+    assert.equal(f.reads.length, count); grant[key] = saved;
+  }
+  policy.callers.push(structuredClone(grant));
+  await assert.rejects(evidence.ledgerEvidence(request), /unavailable/); policy.callers.pop();
+  const read = SERVICE.DefaultRewardLedgerEntryService.get;
+  SERVICE.DefaultRewardLedgerEntryService.get = async r => { const result = await read(r); request.payload.ownerType = "CUSTOMER"; return result; };
+  await assert.rejects(evidence.ledgerEvidence(request), /unavailable/);
+  assert.deepEqual(f.authData, original);
 });

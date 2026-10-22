@@ -23,3 +23,10 @@ Deployment selection, environment and tenant checks, confirmation and required s
 
 Consumer registration retry timing is emsClient.processRetrySleepTime, owned here
 and independent of Cronjob. Do not restore the obsolete global retry property.
+
+`test/activeEmsPublisher.test.js` is live acceptance, not a unit test. Require
+direct execution with the exact `--require-live` flag and reject Node test-runner
+discovery even with that flag. Keep runtime imports, startup, provider access and
+cleanup behind admission; environment variables alone cannot opt in. The isolated
+`activeEmsPublisherGuard.test.js` proves zero runtime loading without exercising
+the enabled path. Default NOT EXECUTED output is not live acceptance.

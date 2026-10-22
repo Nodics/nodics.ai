@@ -47,7 +47,8 @@ test('current dashboard composition belongs to the Axis baseline during pre-prod
     assert.equal(route.page, 'axisDashboardPage');
     assert.equal(page.template, 'axisDashboardWorkspaceTemplate');
     assert.deepEqual(page.cmsComponents, [
-        { target: 'axisFrameworkDashboardWorkspaceComponent', slot: 'workspace', index: 10, active: true }
+        { target: 'axisFrameworkDashboardWorkspaceComponent', slot: 'workspace', index: 10, active: true,
+            authoringScope: { enterpriseCode: 'default', catalogCode: 'axisContentCatalog', siteCode: 'axisCmsSite' } }
     ]);
 });
 

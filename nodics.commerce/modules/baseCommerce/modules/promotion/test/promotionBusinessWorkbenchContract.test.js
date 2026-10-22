@@ -130,16 +130,36 @@ for (const group of groups) test(group.code + " discovers and searches own campa
     await assert.rejects(SERVICE.DefaultPromotionService.get({ tenant: "runtime", authData: f.request.authData, query: { code: "campaign" } }));
 });
 
-test("both implemented contributions use owner discovery; specialist pages remain disabled", t => {
+test("ordinary workbenches and coupon native workspaces retain exact owner discovery; other specialist pages remain disabled", t => {
     fixture(t);
-    const navigation = contribution.getCapability().navigation;
+    const capability = contribution.getCapability();
+    const contract = require(path.join(root, "nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService"));
+    assert.equal(contract.validateBackofficeMetadata(capability), true);
+    const navigation = capability.navigation;
+    assert.equal(contract.validateNavigation(navigation), true);
     const active = navigation.filter(item => item.featureState !== "DISABLED");
-    assert.equal(active.length, 2);
-    for (const item of active) {
+    assert.equal(active.length, 4);
+    for (const item of active.filter(item => item.workbenchTarget)) {
         assert.deepEqual(item.workbenchTarget, { moduleName: "promotion", schemaName: "promotion" });
         assert.deepEqual(item.workbenchPresentation.schemaDiscovery, { path: "/business/promotions/schemas", apiVersion: "v0" });
         assert.equal(require(path.join(root, "nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService"))
             .validateNavigationWorkbenchPresentation(item.workbenchPresentation), true);
+    }
+    const native = active.filter(item => item.backendWorkspace);
+    assert.equal(native.length, 2);
+    assert.deepEqual(native.map(item => [item.backendWorkspace.workspaceCode, item.backendWorkspace.viewCode,
+        item.backendWorkspace.ownerSelector]), [
+        ['promotion.couponOffers', 'authoring', { runtimeRoleCode: 'COMMERCE_STAGED', publicationRole: 'STAGED' }],
+        ['promotion.couponAcquisition', 'reporting', { runtimeRoleCode: 'COMMERCE', publicationRole: 'ONLINE' }],
+    ]);
+    for (const item of native) {
+        assert.equal(contract.validateNavigationHelp(item.help), true);
+        const missingHelp = structuredClone(capability);
+        missingHelp.navigation.find(entry => entry.id === item.id).help = {};
+        assert.equal(contract.validateBackofficeMetadata(missingHelp), false);
+        assert.equal(item.backendWorkspace.renderer, 'axis.workspace.native');
+        assert.deepEqual(item.requiredPermissions, ['commerce.promotion.read']);
+        assert.equal(item.workbenchTarget, undefined);
     }
     assert.equal(navigation.filter(item => item.featureState === "DISABLED").length, 8);
     assert(Object.values(routes).every(route => ["commerce.promotion.read", "commerce.promotion.draft.write"].includes(route.permission) && route.secured &&

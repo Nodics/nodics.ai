@@ -325,7 +325,8 @@ test("outgoing listing and all sale/refund phases retain default runtime authori
     tenant: claims.tenant, principalEnterpriseCode: claims.entCode, enterpriseCode: "GREENPERKS_ONLINE", serviceId: claims.serviceId,
     ...claims.runtimeScope, permissions: runtimeScope.permissions,
   }] } } };
-  f.config.digitalCore.digitalOwnership = { enabled: true, qualified: true, owner: { moduleName: "eWaste", connectionName: "waste",
+  f.config.digitalCore.digitalOwnership = { ...require("../config/properties").digitalCore.digitalOwnership,
+    enabled: true, qualified: true, owner: { moduleName: "eWaste", connectionName: "waste",
     targetAuthority: "WASTE", apiPrefix: "/internal/digital-sales" } };
   SERVICE.DefaultSecuredRequestPipelineService = pipeline;
   // Transport and domain dispatch are isolated; actual Profile claims, private provenance and eWaste admission execute.

@@ -66,6 +66,13 @@ propagates with no automatic rebase/retry. A bulk insert may partially succeed
 without a transaction; operators must inspect stored outcomes before retrying.
 These guards do not supply migration checkpoints, a write fence, an atomic
 multi-resource publication snapshot, or complete versioned-save qualification.
+
+A governed immutable nImport save may carry `governedVersionedImport: true` only
+after nImport has stripped caller input and admitted the effective versioned target.
+The generated save query pins the candidate's current revision. A changed candidate
+at that exact revision appends one successor; an identical candidate remains a
+no-op, and a missing or stale query pin rejects. This admission does not enable CMS
+association replacement or array replacement, and it is stripped from nested saves.
 The optional isolated MongoDB test also verifies deduplicated update and stale
 exact-version rejection against actual installed fixture indexes.
 

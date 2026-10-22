@@ -225,7 +225,9 @@ module.exports = {
     },
 
     /**
-     * Activates schema-generated, common, and module-specific routers for a module.
+     * Activates module-specific, schema-generated, and common routers for a module.
+     * Explicit capability routes bind first so generic schema or cross-module
+     * parameter routes cannot intercept an owned resource path.
      *
      * @param {Object} moduleRouter Express router for the module.
      * @param {Object} moduleObject Runtime module definition containing metadata and effective schema.
@@ -240,6 +242,25 @@ module.exports = {
             return;
         }
         let urlPrefix = moduleObject.metaData.prefix || moduleName;
+        // Bind explicit owner routes before generated and generic fallbacks.
+        if (!UTILS.isBlank(routers[moduleName])) {
+            _.each(routers[moduleName], function (group, groupName) {
+                if (groupName !== 'options') {
+                    _.each(group, function (routerDef, routerName) {
+                        if (routerName !== 'options' && _self.validateRouterDefinition(routerName, routerDef)) {
+                            _self.prepareRouter({
+                                groupName: groupName,
+                                routerName: routerName,
+                                routerDef: routerDef,
+                                urlPrefix: urlPrefix,
+                                moduleName: moduleName,
+                                moduleRouter: moduleRouter
+                            });
+                        }
+                    });
+                }
+            });
+        }
         if (routers.default) {
             _.each(moduleObject.rawSchema, (schemaObject, schemaName) => {
                 if (schemaObject.service && schemaObject.service.enabled &&
@@ -285,24 +306,7 @@ module.exports = {
                     _.each(group, function (routerDef, routerName) {
                         if (routerName !== 'options' && _self.validateRouterDefinition(routerName, routerDef)) {
                             _self.prepareRouter({
-                                routerName: routerName,
-                                routerDef: routerDef,
-                                urlPrefix: urlPrefix,
-                                moduleName: moduleName,
-                                moduleRouter: moduleRouter
-                            });
-                        }
-                    });
-                }
-            });
-        }
-        // Register all module specific routers here
-        if (!UTILS.isBlank(routers[moduleName])) {
-            _.each(routers[moduleName], function (group, groupName) {
-                if (groupName !== 'options') {
-                    _.each(group, function (routerDef, routerName) {
-                        if (routerName !== 'options' && _self.validateRouterDefinition(routerName, routerDef)) {
-                            _self.prepareRouter({
+                                groupName: groupName,
                                 routerName: routerName,
                                 routerDef: routerDef,
                                 urlPrefix: urlPrefix,
@@ -385,6 +389,7 @@ module.exports = {
      * Creates a configured common or module-specific router definition.
      *
      * @param {Object} options Router preparation options.
+     * @param {string} options.groupName Owning configured route group.
      * @param {string} options.routerName Router name from configuration.
      * @param {Object} options.routerDef Router definition from effective configuration.
      * @param {string} options.urlPrefix Module URL prefix.
@@ -401,7 +406,7 @@ module.exports = {
         definition.active = (definition.active === undefined) ? true : definition.active;
         definition.moduleName = options.moduleName;
         definition.prefix = options.routerName;
-        definition.routerName = options.moduleName + '_' + options.routerName;
+        definition.routerName = options.moduleName + '_' + options.groupName + '_' + options.routerName;
         definition.routerName = definition.routerName.toLowerCase();
         NODICS.addRouter(definition.routerName, definition, options.moduleName);
         SERVICE.DefaultRouterOperationService[definition.method](options.moduleRouter, definition);

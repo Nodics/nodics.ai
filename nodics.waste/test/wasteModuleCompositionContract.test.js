@@ -28,6 +28,7 @@ const expectedModules = [
     ['wasteReceipt', '82.60'],
     ['wasteImpact', '82.70'],
     ['wasteReward', '82.75'],
+    ['wasteCarbon', '82.78'],
     ['wasteMovement', '82.80'],
     ['wasteCompliance', '82.85'],
     ['wasteApi', '82.90']

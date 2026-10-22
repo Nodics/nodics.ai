@@ -29,7 +29,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.3",
+      "version": "0.0.4",
       "displayName": "cms accessGroups",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -53,8 +53,8 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         },
         {
           "moduleName": "cms",
@@ -73,8 +73,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
         },
         {
           "moduleName": "publish",
@@ -88,7 +88,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "displayName": "cms enterpriseRoles",
       "description": "Explicit cms identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "cms",
@@ -112,17 +112,17 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         }
       ]
     },
     "init-v001": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "displayName": "CMS Foundation",
-      "description": "Content Management init data",
+      "description": "Content Management local foundation data; identity and Process definitions remain separate owner releases.",
       "owningDomain": "cms",
       "lifecycle": "REFERENCE",
       "destinationRole": "WCMS_STAGED",
@@ -137,12 +137,8 @@
       "files": {
         "init-v001/records/content/defaultCmsSiteData.js": "9fd567518f9585a68c56e513d7d6d5baa33abcaeb2613f28cff82f103503a147",
         "init-v001/records/content/defaultCmsTypeCodeData.js": "6217613834024e68f12622b15d55915c3f322231c06d5ceab6f43b12b0db63d3",
-        "init-v001/records/user/defaultCmsEmployeeData.js": "3563e19ba2e01a222b9a259b8d75d38fa87c647974208944accd1eb8b5e80330",
-        "init-v001/records/user/defaultCmsUserGroupsData.js": "966496a646545d0d44941b4c8c89e1e083f705f64611db0a7a9f1ec62357e602",
         "init-v001/headers/content/defaultCmsSiteDataHeader.js": "8b200a816cb4370e6aae385b1aafb2e8fe4b734339100dbe7b5091bdd23dddbd",
-        "init-v001/headers/content/defaultCmsTypeCodeDataHeader.js": "118d8888cf51c1d34b5e58abd72fb20142500736b744cf229b0a5768dba65814",
-        "init-v001/headers/user/defaultCmsEmployeeDataHeader.js": "49774b4827e46141b8227d2b1cd8c62792be5d4bd704da2fae91720d4a084550",
-        "init-v001/headers/user/defaultCmsUserGroupsDataHeader.js": "62d0ac582f8e1907fa5e89a94c7c2a799feeaf503f88cf901257fc98ff673e7d"
+        "init-v001/headers/content/defaultCmsTypeCodeDataHeader.js": "118d8888cf51c1d34b5e58abd72fb20142500736b744cf229b0a5768dba65814"
       },
       "sourceRoot": "init-v001"
     },
@@ -263,7 +259,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "displayName": "Content business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "cms",
@@ -287,8 +283,8 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         },
         {
           "moduleName": "profile",
@@ -309,7 +305,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "displayName": "Content business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "cms",
@@ -333,8 +329,8 @@
         {
           "moduleName": "cms",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.2",
-          "checksum": "be5a7371aedb52a518a3a245d3db7b23375042a4acaf373b33a3e9a8394f3167"
+          "version": "0.0.3",
+          "checksum": "2bfc1a803738f9e129be1b815e297505b2bf2482008e27c5b6f8f81bf3d219c9"
         }
       ]
     }

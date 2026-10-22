@@ -104,7 +104,8 @@ module.exports = {
       if (existing[index]) continue;
       this.assertBootstrapImport(request, schemaName);
       const saved = await service.save({ tenant: request.tenant, authData: request.authData,
-        model: structuredClone(models[index]), options: { insertOnly: true } });
+        model: structuredClone(models[index]),
+        options: { insertOnly: true, recursive: false, returnModified: false } });
       this.assertBootstrapImport(request, schemaName);
       if (!/^SUC_/.test(saved?.code || "") ||
           saved.success !== undefined && saved.success !== true ||

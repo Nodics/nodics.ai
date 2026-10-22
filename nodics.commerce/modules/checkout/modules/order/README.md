@@ -1,5 +1,10 @@
 # Order
 
+Own-order reads resolve the current Profile customer/Enterprise participant and
+check retained typed owner evidence before reading the original Order's entries
+and lifecycle. Merchant storage and signed purchaser context remain distinct;
+see [Checkout participant context](../checkoutCore/llm/contracts/auction-checkout.md).
+
 Order is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
 
 Customer manual reviews follow [the purchase review contract](llm/contracts/manual-purchase-review-contract.md).

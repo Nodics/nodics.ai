@@ -1,0 +1,16 @@
+{
+  "formatVersion": 1,
+  "code": "DIGITAL_COUPON_EXPIRING_IN_APP",
+  "ownerModule": "digitalCore",
+  "version": 1,
+  "status": "ACTIVE",
+  "purpose": "DIGITAL_COUPON_EXPIRING",
+  "sourceModules": ["digitalCore"],
+  "channel": "IN_APP",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "entitlementReference": { "type": "string", "required": true, "maximumLength": 128 },
+    "expiresAt": { "type": "string", "required": true, "maximumLength": 128, "presentation": "date-time" }
+  }
+}

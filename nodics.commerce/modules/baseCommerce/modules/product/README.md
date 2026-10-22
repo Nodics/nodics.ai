@@ -1,5 +1,10 @@
 # Product
 
+Held Digital bundles have a separate default-disabled automatic publication
+policy with actual nPublish audit and exact Online receipt checks. Human approval
+remains unchanged. See [automatic bundle publication](llm/contracts/automatic-bundle-publication.md)
+for persisted recovery, explicit dates and owner boundaries.
+
 Ordinary Product access now has owner-scoped root reads, Staged create/update
 and a separate Full control archive command. The existing Workbench consumes
 Product's scoped descriptor and routes; generic schema ACLs remain unchanged.
@@ -152,6 +157,12 @@ checkout still resolves price, tax, stock and payment through their owners.
 
 ## Selective source authoring APIs
 
+The owner CMS guide in `data/docs-v002` extends the unchanged `docs-v001` release
+with automatic held-bundle publication, dates, auction projection and recovery.
+It is Staged content, not an installed or approved publication. See
+[automatic bundle publication](llm/contracts/automatic-bundle-publication.md)
+and `test/productBundleDocumentation.test.js` for source and checksum evidence.
+
 `GET /product/capabilities`, `POST /product/safe-search`, `PUT /product` and
 `PATCH /product` reuse the generated schema controllers. Broad generated CRUD,
 delete and bulk routes remain disabled. Source create/update requires Staged;
@@ -165,3 +176,19 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+## Public Coupon Requirements
+
+Product cards and detail preserve Promotion's canonical `acquisitionRequirements`
+inside `availability`. The safe REWARDS/CERTIFICATES/BOTH DTO excludes priceRef,
+stock and campaign evidence. Missing policy is explicit null and unavailable;
+localized attributes are not an alternative authority. See
+[public coupon browsing](llm/contracts/README.md#public-coupon-browsing).
+
+`acceptance:coupon-catalogue-availability --execute` is Product's read-only E08
+acceptance. It requires reviewed available and sold-out Product codes, verifies
+each sold-out detail has canonical `OUT_OF_STOCK` availability, and proves the
+code is absent from the complete `AVAILABLE_SHOP` result. It accepts no entitlement
+identifiers and calls no Digital or Checkout API: already purchased coupon rights
+remain entirely with their owning capability and are not cancelled by catalogue
+omission.

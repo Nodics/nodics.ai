@@ -1,5 +1,26 @@
 # Promotion Agent Contract
 
+For acquisition projection invocation, follow [refresh admission and coverage](llm/contracts/acquisition-report-refresh.md).
+Keep Cron scheduling separate from Promotion projection ownership, retain original
+runtime credentials, and never advance coverage after an incomplete scan. All
+refresh defaults and bounds belong in owner properties; business channel selection
+belongs in the inactive governed Cron record. Do not activate or normalize sealed
+releases while changing source. Query/dimension changes remain independently scoped.
+
+Native BackOffice workspace contributions must include bounded owner-authored
+summaries. Validate the full `getCapability()` result with the real BackOffice
+contract service; valid workspace selectors alone do not establish discoverable
+navigation when help metadata is missing.
+
+Read [coupon offers and acquisition](llm/contracts/coupon-offers-and-acquisition.md)
+for immutable offers, fixed/NONE retained rights, lifetime canonical-owner caps,
+transactional supply, bilateral redemption participation and protected reporting.
+Private acquisition records use generated persistence with installed guards and
+qualified transactions, never generic CRUD or process-local counters. Digital
+owns consideration, finality, entitlement delivery and staff confirmation. Keep
+these mandatory owner ports fail-closed; isolated fixtures are not integrated
+checkout, cross-enterprise redemption, reminder or database acceptance.
+
 The module owns explicit ordinary business access definitions in
 `data/manifest.json` sections `businessAccessGroups` and `businessAccessRoles`.
 Keep mappings on persisted Profile roles and user groups; never infer grants from
@@ -40,6 +61,11 @@ and preserve the real-owner admission/transport regressions in the same suite.
 
 For trusted service/public Product supply reads, follow
 [explicit distribution admission](llm/contracts/trusted-distribution-read-admission.md).
+Search issuer membership uses `couponIssuerMemberships(request, productCodes)`:
+return only complete canonical Product/issuer pairs, preserve original public
+auth, and never use capped mutable campaign enumeration as membership evidence.
+The own-issuer receiver admits only the exact private canonical Product command
+and rereads applied retained publication; it grants no general public root read.
 Keep private request identity Product-bound and short-lived; root/coupon/budget
 reads and mutations receive no public grant. Preserve original signed authority,
 use Product's pinned retained visibility rather than caller projections, and
@@ -107,6 +133,13 @@ the exact code and active flag; preserve original signed runtime authority and
 the separate human issuer/scope checks.
 For exact ITEM promises, follow [verified item benefits](llm/contracts/verified-item-benefits.md).
 Item descriptions and staff confirmation never establish delivered goods.
+The disabled-integration standard merchant-screen flow may record external ITEM
+use as staff attestation only, after fresh signed staff and retained version-2
+participation/outlet checks. Keep exact term/expiry/single-use guards and the
+original Digital receipt/replay path. Return no delivery benefit proof, invoke
+no simulator, and never downgrade an integrated selection or existing evidence.
+Preserve issuer and accepted other-Enterprise endpoint regressions in
+`test/promotionMerchantScopeContract.test.js`; no separate receipt authority.
 The separate `SIMULATION` mode requires the actual Fulfillment simulator's
 explicit selected-environment admission, never `qualified: true` or LOCAL class.
 Retired LOCAL_SIMULATION selection refuses; historical simulated evidence stays
@@ -255,3 +288,24 @@ COMMERCE_STAGED contributes approval/version wiring. Keep installed qualificatio
 connections, signed caller scopes and explicit deployment differences separate.
 Use publicationConfigurationOwnership.test.js in the Commerce group for the
 shared role-isolation matrix, alongside this owner's behavioral regressions.
+
+## Public Coupon Requirements
+
+Offer authoring inspection/prefill must include inactive current drafts through
+the scoped generated owner, with before/after employee admission. Active-sales
+campaign reads cannot serve this authoring contract. Preserve the inactive,
+foreign-row and scope-drift regressions in `couponOfferAcquisitionContract.test.js`.
+
+Keep acquisition requirements in the canonical CouponOffer owner. Public supply
+projects only type and bounded certificate criteria; never priceRef or inventory
+evidence. Missing canonical policy is explicit null and unavailable, never an
+implicit REWARDS default. Product and accelerators consume this live read DTO,
+not copied Product attributes. Preserve private admission and before/after checks.
+
+Coupon workspace copy/options belong to the declared
+`data/backoffice/promotionCouponOfferPresentationData.js` source contribution,
+resolved through the effective BackOffice provider. Preserve the workspace DTO;
+keep policy bounds in configuration and authorization in runtime owner services.
+Unlimited on-demand issuance is own-issuer only. Do not advertise or allocate
+delegated unlimited supply until issuer-root receipt provenance and repeated
+issuance discovery are implemented together; seller consent alone is not that proof.

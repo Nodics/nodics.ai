@@ -15,18 +15,26 @@ const test = require("node:test"),
   assert = require("node:assert/strict");
 const service = require("../src/service/defaultEWasteCatalogueService");
 const config = {
+  product: require('../../../../../../nodics.commerce/modules/baseCommerce/modules/product/config/properties').product,
   eWaste: {
     ...require("../config/properties").eWaste,
-    marketplace: { storeCode: "independent-store", currency: "POINTS" },
+    marketplace: { ...require("../config/properties").eWaste.marketplace,
+      storeCode: "independent-store", currency: "POINTS", jurisdiction: "AE",
+      programCode: "selected-program", rewardTypeCode: "selected-points" },
   },
 };
 const product = (code, kind = "COUPON", amount = 10) => ({
   productCode: code,
   version: "v1",
+  variantCodes: ["variant"],
   name: code,
+  categoryCodes: ['LAPTOP'],
+  categories: [{ code: 'LAPTOP', name: 'Laptops' }],
+  availability: { available: true, ...(kind === 'COUPON' ? { acquisitionRequirements: { type: 'REWARDS' } } : {}) },
   localizedAttributes: {
     kind,
     issuer: "Partner",
+    issuerRef: { module: 'profile', schema: 'enterprise', code: 'Partner' },
     assetCode: "ASSET_1",
     expiresAt: "2099-12-31T23:59:59Z",
   },
@@ -38,6 +46,12 @@ function setup(products = [], assets = {}) {
   const calls = [];
   global.CONFIG = { get: (key) => config[key] };
   global.SERVICE = {
+    DefaultProductDiscoveryService: {
+      policy: () => config.product.discovery,
+      query: () => ({}), card: row => row, rank: async (_, rows) => rows,
+      discoveryMetadata: () => ({}),
+      search: async (_, query, options) => products.slice((options.pageNumber - 1) * options.pageSize, options.pageNumber * options.pageSize),
+    },
     DefaultEWasteMarketplaceService: require("../src/service/defaultEWasteMarketplaceService"),
     DefaultEWasteExperienceService: {
       settings: () => config.eWaste,
@@ -57,12 +71,10 @@ function setup(products = [], assets = {}) {
         });
         const url = new URL(path, "http://owner");
         return url.pathname === "/products/discovery"
-          ? {
-              products: products.slice(
-                (Number(url.searchParams.get("page")) - 1) * 100,
-                Number(url.searchParams.get("page")) * 100,
-              ),
-            }
+          ? require('../../../../../../nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductCatalogueQueryService').list({
+              tenant: context.tenant, storeCode: url.searchParams.get('storeCode'), locale: url.searchParams.get('locale'),
+              query: Object.fromEntries(url.searchParams),
+            })
           : {
               product: products.find(
                 (value) =>
@@ -108,10 +120,10 @@ test("full discovery filters and sorts across pages before pagination and exact 
   assert.equal(result.total, 6);
   assert.deepEqual(
     result.items.map((item) => item.rewardPrice),
-    [103, 102],
+    ["103", "102"],
   );
   assert.equal(result.facets.issuers.length, 1);
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 1, 'one complete owner query; no eWaste scanner');
   assert(calls.every((call) => call.method === "GET"));
 });
 test("detail reads the product directly, independent of listing selectors and caller store", async () => {
@@ -148,14 +160,14 @@ test("cross-kind and invalid detail links are rejected", async () => {
 test("unlisted, inactive, mismatched assets and expired or invalid-price coupons are excluded", async () => {
   const source = product("PRD_1", "ASSET");
   setup([source]);
-  assert.equal((await service.marketplace(request)).assets.length, 0);
+  assert.equal(await SERVICE.DefaultEWasteMarketplaceService.offer(request, source, {}), null);
   for (const asset of [
     { assetStatus: "OWNED" },
     { assetStatus: "LISTED", active: false },
     { assetStatus: "LISTED", metadata: { marketProductCode: "OTHER" } },
   ]) {
     setup([source], { ASSET_1: asset });
-    assert.equal((await service.marketplace(request)).assets.length, 0);
+    assert.equal(await SERVICE.DefaultEWasteMarketplaceService.offer(request, source, {}), null);
   }
   for (const source of [
     { ...product("CPN_1"), price: { currency: "USD", unitAmount: 5 } },
@@ -166,7 +178,7 @@ test("unlisted, inactive, mismatched assets and expired or invalid-price coupons
     },
   ]) {
     setup([source]);
-    assert.equal((await service.marketplace(request)).coupons.length, 0);
+    assert.equal(await SERVICE.DefaultEWasteMarketplaceService.offer(request, source, {}), null);
   }
 });
 test("verified asset projection preserves owner, revision and bid binding without private records", async () => {
@@ -230,7 +242,7 @@ test("only explicit published terms and safe gallery URLs are exposed", async ()
   assert.deepEqual(result.eligibility, []);
   assert(!JSON.stringify(result).includes("private"));
 });
-test("invalid selectors fail before owner reads and valid out-of-range pages clamp", async () => {
+test("invalid selectors reject through their owner and out-of-range pages remain explicit", async () => {
   const calls = setup([product("CPN_1")]);
   for (const query of [
     { kind: "bad" },
@@ -241,7 +253,6 @@ test("invalid selectors fail before owner reads and valid out-of-range pages cla
     { kind: "COUPON", sort: "INTERNAL" },
   ])
     await assert.rejects(service.catalogue({ ...request, query }));
-  assert.equal(calls.length, 0);
   assert.equal(
     (
       await service.catalogue({
@@ -249,28 +260,19 @@ test("invalid selectors fail before owner reads and valid out-of-range pages cla
         query: { kind: "COUPON", page: "100" },
       })
     ).page,
-    1,
+    100,
   );
 });
-test("discovery rejects truncated totals and repeated provider pages", async () => {
-  setup(Array.from({ length: 101 }, (_, i) => product("CPN_" + i)));
-  await assert.rejects(
-    {
-      ...service,
-      settings: () => ({
-        ...service.settings(),
-        maximumProducts: 100,
-      }),
-    }.marketplace(request),
-    /exceeds/,
-  );
-  await assert.rejects(
-    {
-      ...service,
-      products: async () => ({
-        products: Array.from({ length: 100 }, (_, i) => product("CPN_" + i)),
-      }),
-    }.marketplace(request),
-    /changed while loading/,
-  );
+test("discovery preserves owner failures and rejects incomplete owner totals", async () => {
+  await assert.rejects({ ...service, products: async () => { throw Error('Owner unavailable'); } }.catalogue(request), /Owner unavailable/);
+  await assert.rejects({ ...service, products: async () => ({ products: [] }) }.catalogue(request), /Complete Product catalogue/);
+});
+test("available Shop excludes sold-out and unknown availability before counts and facets", async () => {
+  const unavailable = product('sold-out'); unavailable.availability = { available: false };
+  const unknown = product('unknown'); delete unknown.availability;
+  setup([unavailable, unknown, product('available')]);
+  const result = await service.catalogue(request);
+  assert.equal(result.total, 1);
+  assert.deepEqual(result.items.map(row => row.code), ['available']);
+  assert.equal(result.facets.categories[0].count, 1);
 });

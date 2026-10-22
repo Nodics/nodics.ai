@@ -1,0 +1,735 @@
+{
+  "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+  "section": {
+    "kind": "CONTENT_PACK",
+    "contentPath": "docs-v001",
+    "pack": "eWaste",
+    "version": "0.0.7",
+    "owningDomain": "documentation",
+    "lifecycle": "PUBLISHABLE",
+    "destinationRole": "WCMS_STAGED",
+    "environmentScope": [
+      "ALL"
+    ],
+    "sensitivity": "PUBLIC",
+    "versioningPolicy": "IMMUTABLE",
+    "publicationPolicy": "REQUIRED",
+    "initialPublicationPolicy": "ADMIN_INITIATED",
+    "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+    "removalPolicy": "UNPUBLISH_OR_RETIRE",
+    "sourceMode": "cms-records",
+    "sourceAuthority": "data/docs-v001/records/documentation",
+    "sites": [
+      "nodicsDocumentationSite"
+    ],
+    "accessMode": "PUBLIC",
+    "pages": 12,
+    "components": 12,
+    "routes": 12,
+    "releaseChecksum": "b1fd075b7089f2bfeacf3fcdb209d0dbc8c8d880481c3fc415db65fef5568519",
+    "generatedHashes": {
+      "docs-v001/records/documentation/eWasteDocumentationPageData.js": "b2a2445166e63de59910b8d46f495cf091684d075a5562a04214c52346568826",
+      "docs-v001/records/documentation/eWasteDocumentationRouteData.js": "7a4952a6c95ae7d1a9ccb70003a976aa29bc18464cac47937f9afcda063c161d",
+      "docs-v001/records/documentation/eWasteDocumentationMediaData.js": "94b36113e804aca304ea35630fbb07de2d426a5fa3a7ae63e08b119cb2c6ced1",
+      "docs-v001/assets/documentation/files/images/circa-architecture.png": "8a863434057ea442ca58bae03f235c9fe72f022fe8ba5d2abd07f903ba68f67b",
+      "docs-v001/assets/documentation/files/images/circa-coupon.png": "d7e3133701b51b866ebc288b35e93847aec0f637cb02ca196e4fe94e4f434b4c",
+      "docs-v001/assets/documentation/files/images/circa-layers.png": "761e5c607da7b3952ab0688486f2d706b1fcf217ad19b78f9ac7ccac1c387099",
+      "docs-v001/assets/documentation/files/images/circa-notification-authority.png": "e3ee17309744359228b0ac4aacee771a6f83cb057b5f7c088e2e89897f3c5c69",
+      "docs-v001/assets/documentation/files/images/circa-record-network.png": "04cc18321002883fc61a7d995c773e4ab41b2213b4f8b2e74581e67f792f54a3",
+      "docs-v001/assets/documentation/files/images/circa-submission.png": "fa3273ca875807769edfe105d75c172c7854e7df5751935cf2e34a47de6d5518",
+      "docs-v001/assets/documentation/files/diagrams/README.md": "9275c4a7b5191158d57981c00b224d9e1818968833c3a44e00c1e78a9f1f3f36",
+      "docs-v001/assets/documentation/files/diagrams/circa-architecture.dot": "24564c7320b82d9e9142483a60af536850a6745c1181e32c9db1b822c9ba8b6c",
+      "docs-v001/assets/documentation/files/diagrams/circa-coupon.dot": "1698d77f0ff05a9bf197acb59a0a47c8f3548f64c2562ba05b29f336e32ebc5e",
+      "docs-v001/assets/documentation/files/diagrams/circa-layers.dot": "f61eb4f2032f13245e0ee666d811d8a677ba902aaa7ac6a5873334d00e4f6ba7",
+      "docs-v001/assets/documentation/files/diagrams/circa-notification-authority.dot": "4047aef061ffaf43b91189ee52a13b2c501a9ad772418ee30aa4432567dfaede",
+      "docs-v001/assets/documentation/files/diagrams/circa-record-network.dot": "169012cb095d4bb539d1b9d03f46d4be2607d9546b5a3efb585b355b322c9dad",
+      "docs-v001/assets/documentation/files/diagrams/circa-submission.dot": "943945139f1af85ccfb3bc7de1192f9134d233163a5184989ab707208edc6ce8",
+      "docs-v001/assets/documentation/files/images/circa-architecture.svg": "175ecb79857001cb8d117f9d4cf2388a4008a1eeba865f657e9c5c2e577a797c",
+      "docs-v001/assets/documentation/files/images/circa-coupon.svg": "0106542c34f2f14cf882e1db60360567a80d86a3a170d57914c3ae2b30ff49fa",
+      "docs-v001/assets/documentation/files/images/circa-layers.svg": "6290712ff115b9612f00dd3e53fb19672c5002dd2c2f541b99ec7a98d717a535",
+      "docs-v001/assets/documentation/files/images/circa-notification-authority.svg": "6df1bb6b8d0a3a7b2b6c6716cc8c31a6f51b8855b82fbfd8b5c9106b32ac3f43",
+      "docs-v001/assets/documentation/files/images/circa-record-network.svg": "38de130b5605c374a58e6f0db2d7bbb4f58339c9fbb48817210cc20be88e61c9",
+      "docs-v001/assets/documentation/files/images/circa-submission.svg": "a460135ceba159518a6325d129b4774ea33ce9fab32b611e4f1c572aee1298cd",
+      "docs-v001/assets/documentation/eWasteDocumentationAssetManifest.js": "ff625a27a0eabc7409d0613cc414a662e0a25f4e93835a892d5fb6fc5e1db09e",
+      "docs-v001/records/documentation/eWasteDocumentationRelease004NodeData.js": "d3195bfd0a455ef5e475b034eb2f5fdfcdd2c0c17bbbd01bb8241d378407849f",
+      "docs-v001/records/documentation/eWasteDocumentationRelease007ComponentData.js": "fb26871a6c9d01f56685b215eb6586efd4662dd8e331cad63c39aa26ecf9a708",
+      "docs-v001/records/documentation/eWasteDocumentationRelease007PageMetadataData.js": "d8b159e3bfc29fb28101952376606a2e9df95917f1070a080872494045a86c53",
+      "docs-v001/records/documentation/eWasteDocumentationRelease007SearchMetadataData.js": "9a95a75f299ad9a8730e6451d96545cb9806aa2170fa4cdcf5cdded01daae052",
+      "docs-v001/records/documentation/eWasteDocumentationRelease007PublicationStateData.js": "55fdc1068eb5cec2f0be304418e0cc850c29979c44d3d1a82d0c59ba718b54dc",
+      "docs-v001/headers/103_eWasteDocumentationRelease007ContentPackHeader.js": "5e4cee1b468e724685222f7ca35094999002dafe52997248d9945d8935dbbfe6"
+    },
+    "includes": [
+      {
+        "manifestPack": "nodics.docs",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.docs/data/manifest.json",
+          "manifestSection": "foundation"
+        }
+      }
+    ]
+  },
+  "successorVersion": "0.0.8",
+  "successorChecksum": "2ec152fd9be5b18340ead79283739f84825b5f475a5f050c397c72ddff9087a4",
+  "previousArticles": [
+    {
+      "id": "accelerators.circa-collection-reference",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaCollectionReference",
+      "blocksSha256": "00fa129411f2451d7f237bad213b3dd46becbb84a7f1b2796f13be83ab351edd",
+      "headings": [
+        {
+          "text": "How many collection points exist in source?",
+          "anchor": "acceleratorsCircaCollectionReference-1-how-many-collection-points-exist-in-source",
+          "level": 2
+        },
+        {
+          "text": "Original three Circa points",
+          "anchor": "acceleratorsCircaCollectionReference-2-original-three-circa-points",
+          "level": 2
+        },
+        {
+          "text": "Accepted category metadata and policy",
+          "anchor": "acceleratorsCircaCollectionReference-3-accepted-category-metadata-and-policy",
+          "level": 2
+        },
+        {
+          "text": "Shared 17-point network",
+          "anchor": "acceleratorsCircaCollectionReference-4-shared-17-point-network",
+          "level": 2
+        },
+        {
+          "text": "Sunmarke contribution",
+          "anchor": "acceleratorsCircaCollectionReference-5-sunmarke-contribution",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaCollectionReference-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaCollectionReference-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaCollectionReference-8-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/collection-reference"
+    },
+    {
+      "id": "accelerators.circa-enterprise-reference",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaEnterpriseReference",
+      "blocksSha256": "80ec3a616e678a251a1e2404ce3b083dae7ee8c826044de8845662d19f5c0b58",
+      "headings": [
+        {
+          "text": "Which enterprises are referenced?",
+          "anchor": "acceleratorsCircaEnterpriseReference-1-which-enterprises-are-referenced",
+          "level": 2
+        },
+        {
+          "text": "Operator and infrastructure-owner capabilities",
+          "anchor": "acceleratorsCircaEnterpriseReference-2-operator-and-infrastructure-owner-capabilities",
+          "level": 2
+        },
+        {
+          "text": "Seven operational sample employees",
+          "anchor": "acceleratorsCircaEnterpriseReference-3-seven-operational-sample-employees",
+          "level": 2
+        },
+        {
+          "text": "Scope and enterprise alignment checks",
+          "anchor": "acceleratorsCircaEnterpriseReference-4-scope-and-enterprise-alignment-checks",
+          "level": 2
+        },
+        {
+          "text": "Hierarchy and platform authority",
+          "anchor": "acceleratorsCircaEnterpriseReference-5-hierarchy-and-platform-authority",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaEnterpriseReference-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaEnterpriseReference-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaEnterpriseReference-8-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/enterprise-reference"
+    },
+    {
+      "id": "accelerators.circa-source-inventory",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaSourceInventory",
+      "blocksSha256": "79d7514486ec994b9405479086f2e2e111d77f34ab5b09a37a9c4a20b67a0e44",
+      "headings": [
+        {
+          "text": "Manifest sections and destinations",
+          "anchor": "acceleratorsCircaSourceInventory-1-manifest-sections-and-destinations",
+          "level": 2
+        },
+        {
+          "text": "Profile, Location and operational files",
+          "anchor": "acceleratorsCircaSourceInventory-2-profile-location-and-operational-files",
+          "level": 2
+        },
+        {
+          "text": "Waste transaction and reference files",
+          "anchor": "acceleratorsCircaSourceInventory-3-waste-transaction-and-reference-files",
+          "level": 2
+        },
+        {
+          "text": "Loyalty files",
+          "anchor": "acceleratorsCircaSourceInventory-4-loyalty-files",
+          "level": 2
+        },
+        {
+          "text": "Commerce files",
+          "anchor": "acceleratorsCircaSourceInventory-5-commerce-files",
+          "level": 2
+        },
+        {
+          "text": "Content, assets and account composition",
+          "anchor": "acceleratorsCircaSourceInventory-6-content-assets-and-account-composition",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaSourceInventory-7-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaSourceInventory-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaSourceInventory-9-verification",
+          "level": 2
+        },
+        {
+          "text": "Issuer-specific setup and publication",
+          "anchor": "acceleratorsCircaSourceInventory-10-issuer-setup-and-publication",
+          "level": 2
+        },
+        {
+          "text": "Original asset policy selection",
+          "anchor": "acceleratorsCircaSourceInventory-11-original-asset-policy-selection",
+          "level": 2
+        },
+        {
+          "text": "Bounded local-demo POINTS credit and human roles",
+          "anchor": "acceleratorsCircaSourceInventory-12-optional-local-demo-points-credit",
+          "level": 2
+        },
+        {
+          "text": "Fictional monetary outlet goods and first intake",
+          "anchor": "acceleratorsCircaSourceInventory-monetary-outlet-goods",
+          "level": 2
+        },
+        {
+          "text": "Historical unused-coupon refund exception",
+          "anchor": "acceleratorsCircaSourceInventory-original-unused-refund-exception",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/source-inventory"
+    },
+    {
+      "id": "accelerators.circa-catalogue-reference",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaCatalogueReference",
+      "blocksSha256": "bbb0cad847fdff3f48f367e06f80a0043865bbba76df14001a6437e8243f4b09",
+      "headings": [
+        {
+          "text": "Store, warehouse and price book",
+          "anchor": "acceleratorsCircaCatalogueReference-1-store-warehouse-and-price-book",
+          "level": 2
+        },
+        {
+          "text": "Legacy eight-product subset and prices",
+          "anchor": "acceleratorsCircaCatalogueReference-2-all-eight-source-products-and-prices",
+          "level": 2
+        },
+        {
+          "text": "Inventory and coupon pool",
+          "anchor": "acceleratorsCircaCatalogueReference-3-inventory-and-coupon-pool",
+          "level": 2
+        },
+        {
+          "text": "Legacy promotion actions versus current additions",
+          "anchor": "acceleratorsCircaCatalogueReference-4-promotion-actions-versus-title-claims",
+          "level": 2
+        },
+        {
+          "text": "What is not configured by this source catalogue",
+          "anchor": "acceleratorsCircaCatalogueReference-5-what-is-not-configured-by-this-source-catalogue",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaCatalogueReference-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaCatalogueReference-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaCatalogueReference-8-verification",
+          "level": 2
+        },
+        {
+          "text": "Approved budgets and owner selections",
+          "anchor": "acceleratorsCircaCatalogueReference-9-approved-budgets-and-owner-selections",
+          "level": 2
+        },
+        {
+          "text": "Digital bundle sale and finality",
+          "anchor": "acceleratorsCircaCatalogueReference-10-original-asset-sale-and-refund",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/catalogue-reference"
+    },
+    {
+      "id": "accelerators.circa-configuration-reference",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaConfigurationReference",
+      "blocksSha256": "9b7d62b9e1b24633117aea56750ec05e0d8df3988a1109beb8397e12073f7b7b",
+      "headings": [
+        {
+          "text": "Application and journey settings",
+          "anchor": "acceleratorsCircaConfigurationReference-1-application-and-journey-settings",
+          "level": 2
+        },
+        {
+          "text": "Marketplace, rewards and review policy",
+          "anchor": "acceleratorsCircaConfigurationReference-2-marketplace-rewards-and-review-policy",
+          "level": 2
+        },
+        {
+          "text": "Full top-level configuration ownership index",
+          "anchor": "acceleratorsCircaConfigurationReference-3-full-top-level-configuration-ownership-index",
+          "level": 2
+        },
+        {
+          "text": "Providers, communication and secrets",
+          "anchor": "acceleratorsCircaConfigurationReference-4-providers-communication-and-secrets",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaConfigurationReference-5-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaConfigurationReference-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaConfigurationReference-7-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/configuration-reference"
+    },
+    {
+      "id": "accelerators.circa-overview",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaOverview",
+      "blocksSha256": "5987d786f143f2941d7fa77e4fe0c83df37b53afcc9109aa2fb7a5c9165625c8",
+      "headings": [
+        {
+          "text": "Detailed reference pages",
+          "anchor": "acceleratorsCircaOverview-1-detailed-reference-pages",
+          "level": 2
+        },
+        {
+          "text": "Product capability map",
+          "anchor": "acceleratorsCircaOverview-2-product-capability-map",
+          "level": 2
+        },
+        {
+          "text": "Repository and authority map",
+          "anchor": "acceleratorsCircaOverview-3-repository-and-authority-map",
+          "level": 2
+        },
+        {
+          "text": "Customer navigation and screen flow",
+          "anchor": "acceleratorsCircaOverview-4-customer-navigation-and-screen-flow",
+          "level": 2
+        },
+        {
+          "text": "Environmental and commercial limitations",
+          "anchor": "acceleratorsCircaOverview-5-environmental-and-commercial-limitations",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaOverview-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaOverview-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaOverview-8-verification",
+          "level": 2
+        },
+        {
+          "text": "Reviewed source readiness",
+          "anchor": "acceleratorsCircaOverview-9-reviewed-source-readiness",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa"
+    },
+    {
+      "id": "accelerators.circa-data-network",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaDataNetwork",
+      "blocksSha256": "66dcd7fc69a496b00ac13dc710b0fa7b7958131950135f3dd40b64b03910c592",
+      "headings": [
+        {
+          "text": "Data ownership and record relationships",
+          "anchor": "acceleratorsCircaDataNetwork-1-data-ownership-and-record-relationships",
+          "level": 2
+        },
+        {
+          "text": "Enterprises and employee access",
+          "anchor": "acceleratorsCircaDataNetwork-2-enterprises-and-employee-access",
+          "level": 2
+        },
+        {
+          "text": "Collection-centre configuration",
+          "anchor": "acceleratorsCircaDataNetwork-3-collection-centre-configuration",
+          "level": 2
+        },
+        {
+          "text": "Store and catalogue configuration",
+          "anchor": "acceleratorsCircaDataNetwork-4-store-and-catalogue-configuration",
+          "level": 2
+        },
+        {
+          "text": "Releases, inheritance and preservation",
+          "anchor": "acceleratorsCircaDataNetwork-5-releases-inheritance-and-preservation",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaDataNetwork-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaDataNetwork-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaDataNetwork-8-verification",
+          "level": 2
+        },
+        {
+          "text": "Signed business data sequence",
+          "anchor": "acceleratorsCircaDataNetwork-7-signed-business-data-sequence",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/data-network"
+    },
+    {
+      "id": "accelerators.circa-submission-journey",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaSubmissionJourney",
+      "blocksSha256": "43c3be045243eafc21c715fbad94ca30ef9ac6bbdf8dc285b375f9b29176cf50",
+      "headings": [
+        {
+          "text": "Sign-in, intent and channels",
+          "anchor": "acceleratorsCircaSubmissionJourney-1-sign-in-intent-and-channels",
+          "level": 2
+        },
+        {
+          "text": "Locate a centre and prove arrival",
+          "anchor": "acceleratorsCircaSubmissionJourney-2-locate-a-centre-and-prove-arrival",
+          "level": 2
+        },
+        {
+          "text": "Prepare the photo without an empty submission",
+          "anchor": "acceleratorsCircaSubmissionJourney-3-prepare-the-photo-without-an-empty-submission",
+          "level": 2
+        },
+        {
+          "text": "Review, correction and confirmation",
+          "anchor": "acceleratorsCircaSubmissionJourney-4-review-correction-and-confirmation",
+          "level": 2
+        },
+        {
+          "text": "Account workspace and customer outcomes",
+          "anchor": "acceleratorsCircaSubmissionJourney-5-account-workspace-and-customer-outcomes",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaSubmissionJourney-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaSubmissionJourney-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaSubmissionJourney-8-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/submission"
+    },
+    {
+      "id": "accelerators.circa-operations-rewards",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaOperationsRewards",
+      "blocksSha256": "74da3b9f9cad09e5c9ae1a5c279f2f20f8df710ed3508e1c1fccdcb46d6a513e",
+      "headings": [
+        {
+          "text": "Staff roles and resource boundaries",
+          "anchor": "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+          "level": 2
+        },
+        {
+          "text": "Review and decision screen flow",
+          "anchor": "acceleratorsCircaOperationsRewards-2-review-and-decision-screen-flow",
+          "level": 2
+        },
+        {
+          "text": "Assets, receipt and ownership",
+          "anchor": "acceleratorsCircaOperationsRewards-3-assets-receipt-and-ownership",
+          "level": 2
+        },
+        {
+          "text": "Environmental assessments and history",
+          "anchor": "acceleratorsCircaOperationsRewards-4-environmental-assessments-and-history",
+          "level": 2
+        },
+        {
+          "text": "Rewards and settlement",
+          "anchor": "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaOperationsRewards-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaOperationsRewards-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaOperationsRewards-8-verification",
+          "level": 2
+        },
+        {
+          "text": "Downstream Waste owner boundaries",
+          "anchor": "circa-downstream-waste-owner-boundaries",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/operations"
+    },
+    {
+      "id": "accelerators.circa-coupons-commerce",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaCouponsCommerce",
+      "blocksSha256": "3af09e238f188770c53a659153af7340d80c65b00f821ff4032e1a16001067ee",
+      "headings": [
+        {
+          "text": "October 2026 Owner Integration Update",
+          "anchor": "acceleratorsCircaCouponsCommerce-1-october-2026-owner-integration-update",
+          "level": 2
+        },
+        {
+          "text": "Published browsing and offer content",
+          "anchor": "acceleratorsCircaCouponsCommerce-2-published-browsing-and-offer-content",
+          "level": 2
+        },
+        {
+          "text": "Purchase screen flow and owner sequence",
+          "anchor": "acceleratorsCircaCouponsCommerce-3-purchase-screen-flow-and-owner-sequence",
+          "level": 2
+        },
+        {
+          "text": "Offer, batch, code and entitlement",
+          "anchor": "acceleratorsCircaCouponsCommerce-4-offer-batch-code-and-entitlement",
+          "level": 2
+        },
+        {
+          "text": "Purchased rights and historical expiry evidence",
+          "anchor": "acceleratorsCircaCouponsCommerce-5-expiry-and-retained-purchase-rights",
+          "level": 2
+        },
+        {
+          "text": "Claim, outlet fulfillment and customer refresh",
+          "anchor": "acceleratorsCircaCouponsCommerce-6-claim-outlet-fulfillment-and-customer-refresh",
+          "level": 2
+        },
+        {
+          "text": "Finality, failed-purchase recovery and historical refunds",
+          "anchor": "acceleratorsCircaCouponsCommerce-7-cancellation-refunds-and-failure-recovery",
+          "level": 2
+        },
+        {
+          "text": "Native Priced Basket And Merchant Confirmation",
+          "anchor": "acceleratorsCircaCouponsCommerce-8-native-priced-basket-and-merchant-confirmation",
+          "level": 2
+        },
+        {
+          "text": "Committed Notifications And Recipient Authority",
+          "anchor": "acceleratorsCircaCouponsCommerce-9-committed-notifications-and-recipient-authority",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaCouponsCommerce-10-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaCouponsCommerce-11-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaCouponsCommerce-12-verification",
+          "level": 2
+        },
+        {
+          "text": "Digital bundle final-sale boundary",
+          "anchor": "acceleratorsCircaCouponsCommerce-13-original-asset-refund-source-boundary",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/coupons-commerce"
+    },
+    {
+      "id": "accelerators.circa-customization",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaCustomization",
+      "blocksSha256": "185a88ab31132a25c35e37c15d2c18b163077e69abbd7cba2354ef883063e224",
+      "headings": [
+        {
+          "text": "Choose the owning layer",
+          "anchor": "acceleratorsCircaCustomization-1-choose-the-owning-layer",
+          "level": 2
+        },
+        {
+          "text": "Project file layout",
+          "anchor": "acceleratorsCircaCustomization-2-project-file-layout",
+          "level": 2
+        },
+        {
+          "text": "Worked presentation and arrival example",
+          "anchor": "acceleratorsCircaCustomization-3-worked-presentation-and-arrival-example",
+          "level": 2
+        },
+        {
+          "text": "Focused service overrides and trusted mapping",
+          "anchor": "acceleratorsCircaCustomization-4-focused-service-overrides-and-trusted-mapping",
+          "level": 2
+        },
+        {
+          "text": "Data and publication customization",
+          "anchor": "acceleratorsCircaCustomization-5-data-and-publication-customization",
+          "level": 2
+        },
+        {
+          "text": "EMAIL/SMS customization",
+          "anchor": "acceleratorsCircaCustomization-6-email-sms-customization",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaCustomization-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaCustomization-8-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/customization"
+    },
+    {
+      "id": "accelerators.circa-deployment-verification",
+      "componentCode": "nodicsDocsComponentacceleratorsCircaDeploymentVerification",
+      "blocksSha256": "d86ebf11db01d3ca781a883b89944098f0be7fe091c653fa68d0627d20c8de8a",
+      "headings": [
+        {
+          "text": "Runtime topology and prerequisites",
+          "anchor": "acceleratorsCircaDeploymentVerification-1-runtime-topology-and-prerequisites",
+          "level": 2
+        },
+        {
+          "text": "Prepare data and publish separately",
+          "anchor": "acceleratorsCircaDeploymentVerification-2-prepare-data-and-publish-separately",
+          "level": 2
+        },
+        {
+          "text": "Development commands and test boundaries",
+          "anchor": "acceleratorsCircaDeploymentVerification-3-development-commands-and-test-boundaries",
+          "level": 2
+        },
+        {
+          "text": "Joint acceptance matrix",
+          "anchor": "acceleratorsCircaDeploymentVerification-4-joint-acceptance-matrix",
+          "level": 2
+        },
+        {
+          "text": "Troubleshooting and recovery",
+          "anchor": "acceleratorsCircaDeploymentVerification-5-troubleshooting-and-recovery",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "acceleratorsCircaDeploymentVerification-6-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsCircaDeploymentVerification-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsCircaDeploymentVerification-8-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/accelerators/circa/deployment-verification"
+    }
+  ],
+  "corrections": [
+    {
+      "id": "accelerators.circa-operations-rewards",
+      "previousBlocksSha256": "74da3b9f9cad09e5c9ae1a5c279f2f20f8df710ed3508e1c1fccdcb46d6a513e",
+      "articleBlocksSha256": "1bba40b7ca9186cd83e5489ae4e563ee683ba77012833b26d8161faa8c51c392"
+    }
+  ]
+}

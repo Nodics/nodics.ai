@@ -296,6 +296,47 @@ function listingRuntimeRequest(f, payload, operation) {
   return request;
 }
 
+test('automatic held-bundle preparation uses original private runtime and real versioned Product writes', async t => {
+  const f = humanFixture(t), automatic = require('../src/service/defaultProductBundlePublicationService');
+  f.configuration.product.marketplaceAuthoring.bundlePublication = structuredClone(properties.product.marketplaceAuthoring.bundlePublication);
+  f.configuration.product.marketplaceAuthoring.bundlePublication.enabled = true;
+  SERVICE.DefaultProductBundlePublicationService = automatic;
+  SERVICE.DefaultProductListingAuthoringService = owner;
+  const operationCode = 'bundle-operation:' + 'a'.repeat(64);
+  const proof = { confirmed: true, tenant: 'tenant-a', enterpriseCode: 'enterprise-a', operationCode,
+    ownerRef: { module: 'profile', schema: 'enterprise', code: 'seller-enterprise' }, termsDigest: 'b'.repeat(64),
+    manifest: { code: 'bundle:' + 'c'.repeat(64), revision: 0, digest: 'd'.repeat(64) },
+    terms: { storeCode: 'store-a', name: 'Original bundle', saleMode: 'AUCTION',
+      startsAt: '2999-01-01T00:00:00.000Z', endsAt: null, categoryCodes: [] }, product: null, price: null, release: null };
+  const invoke = SERVICE.DefaultModuleService.invokeModule;
+  SERVICE.DefaultModuleService.invokeModule = async input => input.apiName === '/internal/bundle-listings/proof'
+    ? { data: structuredClone(proof) } : invoke(input);
+  const r = listingRuntimeRequest(f, { operationCode, storeCode: 'store-a' }, 'bundleListingprepare');
+  r.authData.permissions.push('commerce.product.publish');
+  const before = structuredClone(r);
+  const result = await automatic.execute(r, 'prepare');
+  assert.equal(result.confirmed, true); assert.equal(result.versionId, 0); assert.equal(f.inserts.length, 6);
+  const localized = f.records.get('DefaultProductLocalizationService:' + result.productCode + '-en');
+  assert.deepEqual(localized.attributes.listingWindow, { startsAt: proof.terms.startsAt, endsAt: null });
+  assert.equal(localized.attributes.commerceBidding.mode, 'AUCTION');
+  assert.equal(localized.attributes.commerceBidding.publicationCode, operationCode);
+  assert.deepEqual(localized.attributes.commerceBidding.sellerRef, proof.ownerRef);
+  assert.deepEqual(r, before); assert.equal(automatic.admission(r), undefined);
+  assert.deepEqual(await automatic.execute(r, 'prepare'), result); assert.equal(f.inserts.length, 6);
+  await assert.rejects(automatic.execute({ ...r }, 'prepare'), /authority/);
+  proof.terms.name = 'Changed';
+  await assert.rejects(automatic.execute(r, 'prepare'), /idempotency conflict/);
+});
+
+test('Product dates remain explicit in discovery and invalid calendar normalization is rejected', () => {
+  const discovery = require('../src/service/defaultProductDiscoveryService');
+  const card = discovery.card.call({ ...discovery, media: () => ({}), price: value => value, availability: value => value },
+    { productCode: 'p', payload: { localizedAttributes: { listingWindow: { startsAt: '2999-01-01T00:00:00.000Z', endsAt: null } } } });
+  assert.equal(card.startDate, '2999-01-01T00:00:00.000Z'); assert.equal(card.endDate, null);
+  assert.throws(() => owner.listingTerms({ listingWindow: { startsAt: '2026-02-30T00:00:00Z', endsAt: null } }), /real UTC/);
+  assert.throws(() => discovery.card({ payload: { localizedAttributes: { listingWindow: { startsAt: null } } } }), /window/);
+});
+
 test('fixed runtime Store context returns only bounded placement/configuration and cannot grant human membership', async t => {
   const f = humanFixture(t), request = listingRuntimeRequest(f, { contractVersion: 1, storeCode: 'store-a' }, 'listingStoreContext');
   f.store.enterpriseRef.code = 'foreign-enterprise';

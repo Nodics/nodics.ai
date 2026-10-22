@@ -39,13 +39,14 @@ function recordsOf(filePath) {
 }
 
 function assertDocumentationSection(moduleRoot, moduleName, section) {
+    const release = moduleName === 'loyaltyWallet' ? 'docs-v002' : 'docs-v001';
     assert.equal(section.kind, 'CONTENT_PACK');
     assert.equal(section.owningDomain, 'documentation');
     assert.equal(section.destinationRole, 'WCMS_STAGED');
-    assert.equal(section.contentPath, 'docs-v001');
+    assert.equal(section.contentPath, release);
     assert.equal(section.pack, moduleName);
     assert.equal(section.sourceMode, 'cms-records');
-    assert.equal(section.sourceAuthority, 'data/docs-v001/records/documentation');
+    assert.equal(section.sourceAuthority, `data/${release}/records/documentation`);
     assert.equal(section.lifecycle, 'PUBLISHABLE');
     assert.equal(section.versioningPolicy, 'IMMUTABLE');
     assert.equal(section.publicationPolicy, 'REQUIRED');
@@ -53,15 +54,15 @@ function assertDocumentationSection(moduleRoot, moduleName, section) {
     assert.equal(section.installationPolicy, 'OPTIONAL_AXIS_INITIATED');
     assert.equal(section.files, undefined, 'Documentation must not share the business file inventory');
     const files = Object.keys(section.generatedHashes).sort();
-    const actualFiles = fs.readdirSync(path.join(moduleRoot, 'data/docs-v001'), { recursive: true, withFileTypes: true })
+    const actualFiles = fs.readdirSync(path.join(moduleRoot, 'data', release), { recursive: true, withFileTypes: true })
         .filter(entry => entry.isFile())
         .map(entry => path.relative(path.join(moduleRoot, 'data'), path.join(entry.parentPath, entry.name)))
         .sort();
     assert.deepEqual(files, actualFiles, `${moduleName} documentation inventory must cover every release file`);
-    assert(files.some(file => file.startsWith('docs-v001/headers/')));
-    assert(files.some(file => file.startsWith('docs-v001/records/documentation/')));
+    assert(files.some(file => file.startsWith(`${release}/headers/`)));
+    assert(files.some(file => file.startsWith(`${release}/records/documentation/`)));
     files.forEach(file => {
-        assert(/^docs-v001\/(headers|records\/documentation|assets)\//.test(file), `${moduleName} documentation file must stay in its own release`);
+        assert(new RegExp(`^${release}/(headers|records/documentation|assets)/`).test(file), `${moduleName} documentation file must stay in its own release`);
         assert.equal(sha256(path.join(moduleRoot, 'data', file)), section.generatedHashes[file], `${moduleName} documentation hash drift for ${file}`);
     });
     assert.equal(documentation.releaseChecksum(section.generatedHashes), section.releaseChecksum);
@@ -84,16 +85,18 @@ dataModules.forEach(moduleName => {
             return;
         }
         assert.equal(section.kind, 'DATA_RELEASE');
-        assert.equal(section.owningDomain, 'loyalty');
+        const identity = ['permissionCatalogue', 'transferPermissions', 'transferNotificationPermission', 'specialAccessGroups', 'specialAccessRoles'].includes(sectionName);
+        const workspace = sectionName === 'participationWorkspace';
+        assert.equal(section.owningDomain, identity || workspace ? moduleName : 'loyalty');
         const targetsProfileEnterprise = Object.keys(section.files || {}).some(relativeFile => relativeFile.includes('/profile/'));
-        assert.equal(section.destinationRole, targetsProfileEnterprise ? 'PLATFORM' : 'LOYALTY');
+        assert.equal(section.destinationRole, identity || targetsProfileEnterprise ? 'PLATFORM' : workspace ? 'WCMS_STAGED' : 'LOYALTY');
         Object.entries(section.files).forEach(([relativeFile, expectedHash]) => {
             const absoluteFile = path.join(moduleRoot, 'data', relativeFile);
             assert.equal(sha256(absoluteFile), expectedHash, `${moduleName} manifest hash drift for ${relativeFile}`);
             if (relativeFile.includes('/records/')) {
                 recordsOf(absoluteFile).forEach(record => {
                     const targetsProfileEnterpriseRecord = relativeFile.includes('/records/profile/');
-                    if (!targetsProfileEnterpriseRecord) {
+                    if (!targetsProfileEnterpriseRecord && !workspace && !identity) {
                         assert.equal(record.tenant, undefined, `${moduleName}.${record.code} must not store tenant as Loyalty business data`);
                     }
                     assert.equal(record.enterpriseCode, undefined, `${moduleName}.${record.code} must not store enterpriseCode`);

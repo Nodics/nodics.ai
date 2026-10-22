@@ -1,0 +1,41 @@
+{
+  "formatVersion": 1,
+  "code": "bidding.auction.unsold",
+  "ownerModule": "bidding",
+  "version": 1,
+  "status": "ACTIVE",
+  "purpose": "AUCTION_UNSOLD",
+  "sourceModules": [
+    "bidding"
+  ],
+  "channel": "IN_APP",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "roundCode": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 200
+    },
+    "kind": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 64
+    },
+    "bidCode": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 200
+    },
+    "amount": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 128
+    },
+    "currency": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 64
+    }
+  }
+}

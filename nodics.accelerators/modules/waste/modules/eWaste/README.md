@@ -1,5 +1,26 @@
 # eWaste
 
+Marketplace binding defaults are framework-owned: required Store, currency,
+jurisdiction and reward program/type identities start null; locale defaults to en.
+Deployment overrides select the real binding. Incomplete bindings do not produce
+actionable offers, and source defaults do not activate listing or sale integration.
+
+New certificate listings and gifts use [common bundle Commerce](llm/contracts/common-bundle-commerce.md).
+Digital owns purchase/proceeds coordination; eWaste does not debit a buyer or
+credit a seller. Public bundle offers display ASSET while retaining exact bundle
+and Commerce bindings. Gifts wait for recipient acceptance.
+Purchases, original-command replay and recovery use common Cart/Checkout;
+the obsolete eWaste marketplace purchase mutation route is removed.
+
+Private account `GET /bids` consumes complete bounded Bidding auction projections
+with the original signed Customer or Enterprise authority and governed Store.
+Framework `marketplace.auctionHistory` owns bounds and timeout defaults. The old
+Circa negotiation mutation routes are closed; selected buyers continue with the
+existing immutable Cart through Checkout. Generic Bidding negotiations remain
+unchanged. See [common bundle Commerce](llm/contracts/common-bundle-commerce.md)
+and `test/eWasteBiddingBoundaryContract.test.js` for privacy, failure and replay
+boundaries; no live settlement acceptance is claimed by these source tests.
+
 The [evidence-only rejection contract](llm/contracts/e-waste-domain.md#evidence-only-rejection)
 lets an assigned, scoped human reject unusable original evidence with a public
 reason and durable audit. It delegates to Waste Verification and notifies the
@@ -7,10 +28,12 @@ customer without physical verification, custody, asset or reward effects.
 Normal approval guards remain unchanged; isolated source tests do not establish
 native Telegram/Axis acceptance.
 
-The [original digital-sale refund contract](llm/contracts/digital-ownership-sale.md#original-sale-refund)
-coordinates approved Order phases with original seller proceeds, original buyer
-Payment and Waste ownership. It remains source-only and disabled without exact
-retained reviewed policy; physical custody and approval rewards never reverse.
+Original one-asset evidence remains available for explicit recovery/inspection.
+New legacy sale admission and completed ownership refunds are closed; physical
+custody and original contributor entitlements never move with a certificate sale.
+The obsolete Order reversal adapter, controller and route are removed. Historical
+receipts remain intact; marketplace configuration no longer supplies reward/carbon
+precision or a refund enablement switch.
 
 Canonical accelerator guidance belongs to this implementing module. The optional
 `referenceDocumentation` pack retains stable Circa guide identities and references
@@ -41,7 +64,7 @@ is disabled by default. Public website
 composition, registration/contact forms, branding and sample policy belong in a
 customer backend module. A separate application-named accelerator is unnecessary.
 
-Saved listing source preparation preserves original intent and Staged Product
+Historical saved listing source preparation preserves original intent and Staged Product
 references; it does not activate a trade listing. Qualified human publication,
 Pricing delivery membership and digital-listing admission remain explicit owner
 requirements. Legacy pending commands require reconciliation, never policy
@@ -49,23 +72,11 @@ backfill or mutable restoration. See the
 [saved listing boundary](llm/contracts/e-waste-domain.md#saved-listing-publication-boundary).
 
 The disabled [retained listing handoff](llm/contracts/listing-handoff.md) exposes
-a Store-scoped moderator queue/detail and least-privilege private intent proof.
-eWaste validates the complete original price and settlement intent, then sends
-Product only bounded authoring evidence and the unchanged opaque intent digest.
-Price/policy references remain in the eWaste operator DTO, not Product's proof.
-Electronics advertises workspace `waste.listing`, view `ewaste.listingRequests`.
-`GET /listing-workspace` supplies its admitted, allowlisted presentation labels
-and listing-state names from the owning Waste runtime; Platform only discovers
-the existing navigation descriptor. The same human moderator permission applies.
-Optional `presentation.authoring` supplies seven allowlisted confirmation and
-result-inspection strings from that same view configuration. Later layers can
-override copy; absent copy preserves read-only compatibility. Copy confers no
-authoring authority, enablement or automatic retry. See the handoff contract.
-Only fresh owner evidence can advertise source authoring; reads never approve or
-publish. New requests retain exact policy hashes and seller-approved presentation.
-Pending completion requires the exact reviewed Product, individually approved
-original price row and genuine DigitalCore plan binding before Waste CAS to LISTED.
-Historical missing intent remains reconciliation-required without backfill.
+a Store-scoped moderator queue and private intent proof. The contract owns
+the exact DTO, presentation allowlist, original-intent checks and fresh
+Product/Pricing/DigitalCore evidence required before Waste CAS to LISTED.
+Reads and configurable copy never authorize authoring or publication.
+Missing historical intent requires reconciliation, not backfill.
 The default-disabled [audited request withdrawal](llm/contracts/listing-handoff.md#audited-legacy-request-withdrawal)
 records a durable hold without asserting economic cancellation or permitting relisting.
 
@@ -78,22 +89,13 @@ application-neutral composition, governed reward assessment and conversation che
 See [the contract](llm/contracts/e-waste-domain.md) and
 [customization example](llm/examples/README.md).
 
-Draft-media retention has a disabled, read-only inspection executor at
-`POST /nodics/eWaste/v0/internal/draft-media/retention/inspect`. The existing Cron
-internal handler can target it after deployment-owned scheduling and scoped
-runtime authorization. It distinguishes unsubmitted draft observations, rejected
-submissions and replaced photos, protects every referenced/accepted item, and
-returns a continuation cursor without saving candidates or deleting anything.
-Retention periods remain undecided (`null`); execution/deletion stay unsupported
-even when configuration flags are changed. See
+Draft-media retention is disabled and read-only; configuration cannot enable
+deletion. Retention periods remain undecided (`null`). See
 [protected draft-media retention](llm/contracts/e-waste-domain.md#protected-draft-media-retention)
-for coverage, recovery, customization and the exact Media contract blocker.
-READ-12 remains policy/demo-preservation blocked. Demo-required media and sample
-data are permanent respective-owner `/data` packs, never cleanup targets or
-runtime-generated demo fixtures. Origin cannot currently be proven by scoped
-Waste records, so every observation remains protected and is not asserted to be
-a user-created abandoned draft. Retention approval and scheduler activation are
-reported separately from the implemented read-only capability.
+for the inspection route, Cron admission, protected evidence, continuation,
+recovery and Media contract blocker. READ-12 remains policy/demo-preservation
+blocked: demo packs are permanent, unknown provenance stays protected, and
+inspection does not establish retention approval or scheduler activation.
 
 Implementation partners change their own backend/frontend projects. Nodics owns
 changes to this accelerator and the Waste framework; reusable improvements use
@@ -122,7 +124,10 @@ Electronics navigation and keyed review-view properties are contributed by eWast
 The Electronics navigation anchor opens its scoped dashboard. Its operational
 children are Submissions and Review queue; no duplicate Overview link is published.
 
-WARM electronics is an optional provider over Waste Impact; see `llm/contracts/e-waste-domain.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.
+The optional [WARM electronics provider](llm/contracts/e-waste-domain.md#warm-electronics-assessment-adapter)
+retains versioned factors, ranges and prospective-treatment assumptions.
+Waste owns history, reassessment and acceptance; provider changes never overwrite
+old assessments or rewards.
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
@@ -131,19 +136,10 @@ Canonical customer resolution forwards the authenticated customer bearer for its
 Profile self-query. Never replace it with a service token or accept identity from
 request bodies. Owner-only operations keep their scoped internal transport.
 
-WARM v2 adds independently sourced energy savings and prospective recycling input
-mass/count. Preserve input and energy ranges and never equate input mass with
-completed diversion. See the sourced-energy section in the domain contract.
-
-Small-charger reference scenarios must remain explicitly labelled proxies with
-saved version, sources and weight assumptions; never promote them to validated
-charger factors or achieved recycling outcomes. See the domain contract.
-
-Provider v4 preserves available recycling-input mass/count as INPUT_ONLY when carbon coverage or weight is absent (warm.allowPartialAssessment). Preserve assessmentLimitation; never apply mixed-load factors to an unidentified individual item. See the domain contract.
-
-Provider v5 adds a configurable, disclosed bundle reference comparison using total eligible mass once. It does not establish the bundle composition or issue credits. See the bundle reference comparison contract.
-
-Submission assessment is mandatory in eWaste: automatic preparation and a Waste confirmation guard enforce it. Catalogue coverage tests distinguish numerical coverage from explicit partial assessments; see the mandatory submission assessment contract.
+[Sourced energy, partial coverage and bundle comparison](llm/contracts/e-waste-domain.md#sourced-energy-and-prospective-input-metrics)
+retain their distinct estimate/proxy limitations, never achieved recycling or
+issued credits. [Submission assessment](llm/contracts/e-waste-domain.md#mandatory-submission-assessment)
+is mandatory; an explicit partial assessment is not numerical coverage.
 
 Approval evaluates the effective published Rules policy and persists one
 `wasteRewardAssessment` with `assessmentType: CONFIRMED`. Settlement accepts only
@@ -178,5 +174,14 @@ request bodies never choose services or channel provenance.
 
 `eWaste.rewardValuation` supplies optional application-selected valuation inputs
 to `DefaultEWasteWeightRewardValuationService`. No branded policy or reward IDs
-are framework defaults. `eWaste.marketplace.catalogueDiscovery` explicitly selects
-the catalogue projection for marketplace reads. Domain admission remains unchanged.
+are framework defaults. Product owns catalogue querying, pagination, facets and
+availability; eWaste adapts domain selectors and safe presentation only.
+
+## Coupon Purchase Requirements
+
+Marketplace list/detail expose `acquisitionRequirements` from Product's live
+Promotion-backed availability, never localized attributes. Known types are
+REWARDS, CERTIFICATES and BOTH with canonical certificate criteria. Unknown or
+malformed requirements become explicit null and unavailable; no reward fallback
+or fake payment is allowed. See the Product owner CMS guide and
+[Promotion's DTO](../../../../../nodics.commerce/modules/baseCommerce/modules/promotion/llm/contracts/coupon-offers-and-acquisition.md#public-acquisition-requirements).

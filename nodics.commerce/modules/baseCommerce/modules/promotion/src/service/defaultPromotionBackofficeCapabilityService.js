@@ -28,6 +28,14 @@ module.exports = {
      */
     postInit: function () { return Promise.resolve(true); },
     /**
+     * Resolves the owner-local coupon workspace source contribution without importing records.
+     * @returns {Object} Detached labels and option descriptors, never permissions or policy limits.
+     * @override Later-loaded providers may customize presentation while retaining the workspace DTO contract.
+     */
+    couponOfferPresentationData: function () {
+        return structuredClone(require('../../data/backoffice/promotionCouponOfferPresentationData'));
+    },
+    /**
      * Executes `getCapability` as a loader-visible operation owned by this module.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
@@ -42,6 +50,16 @@ module.exports = {
             category: 'commerce',
             icon: 'commerce',
             navigation: [
+                d.nativeWorkspace({ id: 'coupon-offer-authoring', label: 'Coupon Offers', moduleName: 'promotion',
+                    route: '/commerce/coupon-offers', order: 1315, permission: 'commerce.promotion.read', featureState: 'ACTIVE',
+                    summary: 'Author governed coupon offers with immutable benefits, supply, purchase requirements and retained terms.',
+                    backendWorkspace: { contractVersion: 1, renderer: 'axis.workspace.native', workspaceCode: 'promotion.couponOffers',
+                        viewCode: 'authoring', title: 'Coupon Offers', ownerSelector: { runtimeRoleCode: 'COMMERCE_STAGED', publicationRole: 'STAGED' } } }),
+                d.nativeWorkspace({ id: 'coupon-acquisition-reporting', label: 'Coupon Acquisition', moduleName: 'promotion',
+                    route: '/commerce/coupon-acquisition', order: 1316, permission: 'commerce.promotion.read', featureState: 'ACTIVE',
+                    summary: 'Review aggregate coupon acquisition and redemption outcomes without exposing purchasing-owner identities.',
+                    backendWorkspace: { contractVersion: 1, renderer: 'axis.workspace.native', workspaceCode: 'promotion.couponAcquisition',
+                        viewCode: 'reporting', title: 'Coupon Acquisition', ownerSelector: { runtimeRoleCode: 'COMMERCE', publicationRole: 'ONLINE' } } }),
                 d.workbench({
                     id: 'promotions',
                     label: 'Promotion Workspace',

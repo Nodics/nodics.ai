@@ -15,7 +15,9 @@
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const owner = require("../src/service/maintenance/defaultRedisLocalResetMaintenanceService");
+const properties = require("../config/properties");
 const namespace = "auth_acmeLocalRuntimeAuth_";
+global.CONFIG = { get: key => properties[key] };
 const options = () => ({ environment: "acmeLocal", namespace, exclusiveDeployment: true, writersExcluded: true,
   engine: { enabled: true, options: { prefix: "acmeLocalRuntimeAuth", host: "127.0.0.1", port: 6379 } } });
 const fixture = (count = 2) => {
@@ -48,6 +50,31 @@ test("foreign key or bounded inventory overflow refuses without deletion", async
     const held = owner.bind(options(), f.client);
     await assert.rejects(held.inspect()); assert.equal(f.state.deletes.length, 0);
   }
+});
+test("layered owner policy can raise a bounded deployment inventory without changing deletion semantics", async () => {
+  const previous = global.CONFIG;
+  global.CONFIG = { get: key => key === "redisLocalResetMaintenance" ? {
+    ...properties.redisLocalResetMaintenance,
+    maximumKeys: 1200,
+    maximumKeyBytes: 2097152,
+  } : undefined };
+  try {
+    const f = fixture(1100), held = owner.bind(options(), f.client);
+    assert.deepEqual(await held.inspect(), { keyCount: 1100 });
+    assert.deepEqual(await held.clear(), { removedCount: 1100 });
+  } finally { global.CONFIG = previous; }
+});
+test("missing, non-positive and unsafe deployment maintenance bounds refuse before provider use", () => {
+  const previous = global.CONFIG;
+  try {
+    for (const selected of [{}, { ...properties.redisLocalResetMaintenance, maximumKeys: 0 },
+      { ...properties.redisLocalResetMaintenance, maximumKeys: 100001 }]) {
+      global.CONFIG = { get: () => selected };
+      const f = fixture();
+      assert.throws(() => owner.bind(options(), f.client), /RESET_REDIS_POLICY_INVALID/);
+      assert.equal(f.state.deletes.length, 0);
+    }
+  } finally { global.CONFIG = previous; }
 });
 test("malformed cursor and cursor-cycle budget refuse without effects", async () => {
   for (const response of [{ cursor: "unknown", keys: [] }, { cursor: 1, keys: [] }]) {

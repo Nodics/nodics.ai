@@ -106,7 +106,11 @@ function fixture(kind, rows = []) {
     },
     save: async request => {
       assert.equal(request.query, undefined);
-      assert.deepEqual(request.options, { insertOnly: true });
+      assert.deepEqual(request.options, {
+        insertOnly: true,
+        recursive: false,
+        returnModified: false,
+      });
       assert.equal(request.authData, authData);
       writes.push(structuredClone(request));
       const model = { versioned: false, rawSchema: {},

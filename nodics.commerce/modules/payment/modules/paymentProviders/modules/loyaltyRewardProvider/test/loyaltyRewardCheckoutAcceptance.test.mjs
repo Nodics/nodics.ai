@@ -14,7 +14,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { runLoyaltyRewardCheckoutAcceptance } from "../src/service/acceptance/defaultLoyaltyRewardCheckoutAcceptanceService.mjs";
+import {
+  loyaltyRewardCheckoutAcceptanceArgument,
+  runLoyaltyRewardCheckoutAcceptance,
+  selectLoyaltyRewardCheckoutAcceptance,
+} from "../src/service/acceptance/defaultLoyaltyRewardCheckoutAcceptanceService.mjs";
 
 const fixture = {
   customerCode: "partner-customer",
@@ -132,8 +136,12 @@ function harness(mode = "") {
             "/nodics/checkoutCore/v0/checkouts/{orderCode}",
             "/nodics/order/v0/orders/{orderCode}",
             "/nodics/digitalCore/v0/entitlements",
+            "/nodics/digitalCore/v0/entitlements/delivery-evidence",
+            "/nodics/paymentCore/v0/internal/evidence/query",
             "/nodics/loyaltyApi/v0/wallets/{walletCode}",
             "/nodics/loyaltyApi/v0/wallet-projections",
+            "/nodics/loyaltyApi/v0/reward-reservation-evidence",
+            "/nodics/loyaltyApi/v0/reward-redemption-evidence",
             "/nodics/loyaltyApi/v0/reward-reservations",
             "/nodics/loyaltyApi/v0/reward-reservations/{reservationCode}/capture",
           ].map((key) => [key, {}]),
@@ -181,6 +189,9 @@ function harness(mode = "") {
                 rewardTypeCode: fixture.rewardTypeCode,
                 targetCode:
                   mode === "correlation" ? "another-order" : orderCode,
+                targetType: "ORDER",
+                sourceType: "PAYMENT",
+                sourceCode: "payment-test",
                 amount: mode === "ledger-amount" ? "1.00" : "5.00",
                 reservationCode: "reservation-test",
                 redemptionCode:
@@ -189,6 +200,82 @@ function harness(mode = "") {
       };
       if (mode === "context")
         result.balances[0].authData = { token: "must-not-leak" };
+    } else if (route.endsWith("/reward-reservation-evidence")) {
+      result = {
+        wallet,
+        reservation: {
+          code: body.reservationCode,
+          walletCode: fixture.walletCode,
+          programCode: fixture.programCode,
+          rewardTypeCode: fixture.rewardTypeCode,
+          amount: mode === "reservation-evidence" ? "4.00" : "5.00",
+          status: "CAPTURED",
+          sourceType: "PAYMENT",
+          sourceCode: "payment-test",
+          targetType: "ORDER",
+          targetCode: orderCode,
+        },
+      };
+    } else if (route.endsWith("/reward-redemption-evidence")) {
+      result = {
+        wallet,
+        redemption: {
+          code: body.redemptionCode,
+          walletCode: fixture.walletCode,
+          programCode: fixture.programCode,
+          rewardTypeCode: fixture.rewardTypeCode,
+          amount: "5.00",
+          status: "CAPTURED",
+          reservationCode: "reservation-test",
+          captureLedgerEntryCode: mode === "redemption-evidence" ? "foreign" : "CAPTURE",
+          targetType: "ORDER",
+          targetCode: orderCode,
+        },
+      };
+    } else if (route.endsWith("/internal/evidence/query")) {
+      result = {
+        contractVersion: 1,
+        orderCode,
+        cartCode,
+        ownerId: fixture.customerCode,
+        transactions: [
+          {
+            code: "payment-authorize",
+            operation: "AUTHORIZE",
+            methodCode: "LOYALTY_REWARD",
+            providerCode: fixture.providerCode,
+            providerReference: "reservation-test",
+            walletCode: fixture.walletCode,
+            programCode: fixture.programCode,
+            rewardTypeCode: fixture.rewardTypeCode,
+            totalAmount: mode === "payment-evidence" ? "4.00" : "5.00",
+          },
+          {
+            code: "payment-capture",
+            operation: "CAPTURE",
+            methodCode: "LOYALTY_REWARD",
+            providerCode: fixture.providerCode,
+            providerReference: "redemption-test",
+            walletCode: fixture.walletCode,
+            programCode: fixture.programCode,
+            rewardTypeCode: fixture.rewardTypeCode,
+            totalAmount: "5.00",
+          },
+        ],
+      };
+    } else if (route.endsWith("/entitlements/delivery-evidence")) {
+      result = {
+        contractVersion: 1,
+        entitlementCode: body.entitlementCode,
+        delivery: {
+          code: mode === "delivery-evidence" ? "foreign-delivery" : "delivery-test",
+          status: "DELIVERED",
+          orderCode,
+          deliveryType: "COUPON_CODE",
+          providerOwner: "promotion",
+          providerCode: "coupon-test",
+        },
+      };
     } else if (route === "/nodics/cart/v0/carts") {
       result = { cart: { code: cartCode } };
     } else if (route.endsWith("/entries")) {
@@ -258,14 +345,18 @@ function harness(mode = "") {
   };
 }
 
-test("uses partner fixtures, scoped API credentials and exact balance deltas without claiming full storage acceptance", async () => {
+test("uses partner fixtures, scoped credentials and independent owner evidence for full API acceptance", async () => {
   const { run, calls } = harness();
   const result = await run();
-  assert.equal(result.status, "API_CHECKS_PASSED");
-  assert.equal(result.fullAcceptance, false);
-  assert.equal(result.evidenceGaps.length, 3);
+  assert.equal(result.status, "PASSED");
+  assert.equal(result.fullAcceptance, true);
+  assert.deepEqual(result.evidenceGaps, []);
   assert.equal(result.amount, "5.00");
   assert.deepEqual(result.ledgerCodes, ["RESERVE", "CAPTURE"]);
+  assert.equal(result.reservationEvidenceCode, "reservation-test");
+  assert.equal(result.redemptionEvidenceCode, "redemption-test");
+  assert.deepEqual(result.paymentTransactionCodes, ["payment-authorize", "payment-capture"]);
+  assert.deepEqual(result.deliveryReferences, ["delivery-test"]);
   assert.ok(
     calls
       .filter(
@@ -276,9 +367,14 @@ test("uses partner fixtures, scoped API credentials and exact balance deltas wit
   assert.ok(
     calls
       .filter(
-        (call) => call.role === "19001" && !call.route.endsWith("/openapi"),
+        (call) => call.role === "19001" && !call.route.endsWith("/openapi") &&
+          !call.route.endsWith("/internal/evidence/query"),
       )
       .every((call) => call.headers.Authorization === "Bearer customer-token"),
+  );
+  assert.equal(
+    calls.find((call) => call.route.endsWith("/internal/evidence/query")).headers.Authorization,
+    "Bearer service-token",
   );
   assert.ok(
     calls.every(
@@ -311,6 +407,69 @@ test("execution and credential prerequisites reject before API activity", async 
   }
 });
 
+test("selects a bounded acceptance profile while preserving the default", () => {
+  const acceptance = {
+    loyaltyRewardCheckout: { productCode: "default-product" },
+    partnerRewardCheckout: { productCode: "selected-product" },
+  };
+  assert.equal(
+    selectLoyaltyRewardCheckoutAcceptance(acceptance).productCode,
+    "default-product",
+  );
+  assert.equal(
+    selectLoyaltyRewardCheckoutAcceptance(
+      acceptance,
+      "partnerRewardCheckout",
+    ).productCode,
+    "selected-product",
+  );
+  assert.equal(
+    loyaltyRewardCheckoutAcceptanceArgument(["--execute"]),
+    "loyaltyRewardCheckout",
+  );
+  assert.equal(
+    loyaltyRewardCheckoutAcceptanceArgument([
+      "--execute",
+      "--acceptance=partnerRewardCheckout",
+    ]),
+    "partnerRewardCheckout",
+  );
+});
+
+test("rejects absent, unbounded and prototype acceptance selections", () => {
+  for (const acceptanceName of [
+    "missingFixture",
+    "../loyaltyRewardCheckout",
+    "constructor",
+    "a".repeat(129),
+  ]) {
+    assert.throws(
+      () =>
+        selectLoyaltyRewardCheckoutAcceptance(
+          { loyaltyRewardCheckout: fixture },
+          acceptanceName,
+        ),
+      /acceptance|profile/,
+    );
+  }
+  assert.throws(
+    () =>
+      loyaltyRewardCheckoutAcceptanceArgument([
+        "--acceptance=partnerRewardCheckout",
+        "--acceptance=loyaltyRewardCheckout",
+      ]),
+    /accepts one/,
+  );
+  assert.throws(
+    () =>
+      loyaltyRewardCheckoutAcceptanceArgument([
+        "--execute",
+        "--fixture-selection=partnerRewardCheckout",
+      ]),
+    /Unsupported reward checkout argument/,
+  );
+});
+
 for (const [mode, pattern] of [
   ["denied", /HTTP 403/],
   ["checkout-denied", /HTTP 403/],
@@ -324,6 +483,10 @@ for (const [mode, pattern] of [
   ["checkpoint", /PAYMENT_CAPTURED/],
   ["provider", /Order payment evidence/],
   ["entitlement", /entitlement is missing/],
+  ["reservation-evidence", /reservation evidence mismatch/],
+  ["redemption-evidence", /redemption evidence mismatch/],
+  ["payment-evidence", /Payment transaction evidence mismatch/],
+  ["delivery-evidence", /Digital delivery evidence mismatch/],
   ["over-limit", /spending limit/],
 ])
   test(
@@ -364,5 +527,6 @@ test("module import and CLI help are inert without project configuration or cred
     encoding: "utf8",
   });
   assert.match(help, /--execute/);
-  assert.match(help, /exit 2/);
+  assert.match(help, /--acceptance=<name>/);
+  assert.doesNotMatch(help, /exit 2/);
 });

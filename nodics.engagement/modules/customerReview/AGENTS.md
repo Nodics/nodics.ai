@@ -16,6 +16,11 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 ## Boundary rules
 
+- Keep generic schema routing disabled in both capability metadata and each
+  internal schema. A module router toggle must not bypass dedicated Engagement
+  API commands. Owner permission/documentation data remains manifest-governed;
+  boundary tests must validate its authority rather than require an empty data tree.
+
 - Treat review, authenticity, moderation, response, abuse, appeal, and migration contracts as active framework behavior.
 - Do not copy archived CRES or gNotify implementation into this package.
 - Keep generated schema routers disabled and use dedicated `engagementApi` operations.

@@ -27,14 +27,30 @@ module.exports = {
         let contributions = (instances || []).map(instance => instance.backoffice)
             .filter(metadata => metadata && metadata.enabled !== false);
         if (contributions.length === 0) return undefined;
-        let canonical = JSON.stringify(contributions[0]);
-        if (contributions.some(metadata => JSON.stringify(metadata) !== canonical)) {
+        let comparable = metadata => structuredClone(metadata);
+        let normalized = contributions.map(metadata => {
+            let value = comparable(metadata);
+            for (let item of value.navigation || []) {
+                for (let action of item.lifecycleActions || []) delete action.featureState;
+            }
+            return value;
+        });
+        let canonical = JSON.stringify(normalized[0]);
+        if (normalized.some(metadata => JSON.stringify(metadata) !== canonical)) {
             throw new CLASSES.NodicsError('ERR_BOF_00000',
                 'Inconsistent BackOffice capability providers for module ' + moduleName);
         }
         // Registration is the fail-closed contract-validation boundary. Re-validating
         // projected leases here would create a second, potentially divergent authority.
-        return contributions[0];
+        let selected = comparable(contributions[0]);
+        for (let itemIndex = 0; itemIndex < (selected.navigation || []).length; itemIndex++) {
+            for (let actionIndex = 0; actionIndex < (selected.navigation[itemIndex].lifecycleActions || []).length; actionIndex++) {
+                let states = contributions.map(metadata => metadata.navigation[itemIndex].lifecycleActions[actionIndex].featureState);
+                selected.navigation[itemIndex].lifecycleActions[actionIndex].featureState =
+                    states.includes('ACTIVE') ? 'ACTIVE' : states.includes('DISABLED') ? 'DISABLED' : 'HIDDEN';
+            }
+        }
+        return selected;
     },
 
     /** Permission-filters one navigation tree and removes newly orphaned descendants. */

@@ -11,7 +11,7 @@
 "use strict";
 /**
  * @module commsCore/service/defaultCommunicationRuntimeService
- * @description Binds Communication intents to generated storage, optimistic delivery claims and configured transports. Rendered content remains private; retries never invoke source-domain decisions.
+ * @description Binds Communication intents to generated storage, delivery claims and configured transports. Optional read-only source checks precede dispatch; retries never repeat domain mutations or rendering.
  * @owner commsCore @layer service
  * @override Deployments configure templates, transports and recipient resolvers. Preserve tenant isolation, immutable command identity and uncertain-send handling.
  */
@@ -186,6 +186,10 @@ module.exports = {
       core = SERVICE.DefaultCommunicationCoreService;
     if (!(policy.trustedSourceModules || []).includes(command.sourceModule))
       throw new Error("Communication source is not configured");
+    if (command.requiresSourceEligibility !== undefined && command.requiresSourceEligibility !== true)
+      throw new Error('Communication source eligibility selection is invalid');
+    if (policy.dispatchEligibilityOwners?.[command.sourceModule]?.[command.sourceType])
+      command = { ...command, requiresSourceEligibility: true };
     for (const key of [
       "sourceType",
       "sourceCode",
@@ -221,6 +225,7 @@ module.exports = {
       command.channel,
       command.locale,
       command.variables,
+      ...(command.requiresSourceEligibility === true ? [{ requiresSourceEligibility: true }] : []),
     ]);
     let existing = await this.read(request, code);
     if (existing) {
@@ -326,6 +331,7 @@ module.exports = {
       attempt: 0,
       revision: 0,
       correlationId: command.correlationId || code,
+      ...(command.requiresSourceEligibility === true ? { requiresSourceEligibility: true } : {}),
     };
     try {
       await this.create("CommsIntent", request, intent);
@@ -407,6 +413,8 @@ module.exports = {
       return this.project(
         await this.update(request, current, { status: "DEAD_LETTER" }),
       );
+    if (!await this.sourceEligible(request, current, policy))
+      return this.project(await this.update(request, current, { status: 'SUPPRESSED' }));
     current = await this.update(request, current, {
       status: "DELIVERING",
       attempt: (current.attempt || 0) + 1,
@@ -416,8 +424,14 @@ module.exports = {
     });
     let outcome,
       providerCode = "in-app";
+    // A pre-transport read failure proves no send occurred; preserve provider uncertainty separately.
     try {
-      if (current.channel === "IN_APP") {
+      if (!await this.sourceEligible(request, current, policy)) outcome = { status: 'SUPPRESSED', responseCode: 'SOURCE_INELIGIBLE' };
+    } catch (_) { outcome = { status: 'RETRY_PENDING', responseCode: 'SOURCE_ELIGIBILITY_UNCONFIRMED' }; }
+    try {
+      if (outcome) {
+        // Keep the frozen command and record the known pre-send outcome below.
+      } else if (current.channel === "IN_APP") {
         const inboxCode = "INBOX_" + current.code,
           found = (
             await this.list(
@@ -525,6 +539,24 @@ module.exports = {
           : {}),
       }),
     );
+  },
+  /** Calls only a framework-contributed read-only owner using original frozen intent coordinates, never content or caller handlers. */
+  sourceEligible: async function (request, intent, policy) {
+    const ownerName = policy.dispatchEligibilityOwners?.[intent.sourceModule]?.[intent.sourceType];
+    if (!intent.requiresSourceEligibility && ownerName === undefined) return true;
+    if (typeof ownerName !== 'string' || !/^Default[A-Za-z0-9]+Service$/.test(ownerName) ||
+        typeof SERVICE[ownerName]?.isDispatchEligible !== 'function' || intent.tenant !== request.tenant)
+      throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
+    const evidence = await SERVICE[ownerName].isDispatchEligible({ tenant: request.tenant,
+      authData: structuredClone(request.authData), intentCode: intent.code, sourceModule: intent.sourceModule,
+      sourceType: intent.sourceType, sourceCode: intent.sourceCode, recipientId: intent.recipientId,
+      recipientAddressReference: intent.recipientAddressReference, purpose: intent.purpose, channel: intent.channel,
+      idempotencyKey: intent.idempotencyKey, expiresAt: intent.expiresAt });
+    if (!evidence || typeof evidence.eligible !== 'boolean' || evidence.tenant !== intent.tenant ||
+        evidence.sourceCode !== intent.sourceCode || evidence.recipientId !== intent.recipientId ||
+        evidence.recipientAddressReference !== intent.recipientAddressReference)
+      throw new Error('COMMUNICATION_SOURCE_ELIGIBILITY_UNCONFIRMED');
+    return evidence.eligible;
   },
   /** Records an explicit operator decision on an uncertain send without silently retrying it. */
   resolveUncertain: async function (request, code, decision) {

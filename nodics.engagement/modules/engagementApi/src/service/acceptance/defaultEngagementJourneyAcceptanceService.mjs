@@ -25,11 +25,12 @@ export async function runEngagementJourneyAcceptance(options = {}) {
       subject: 'Functional acceptance', message: correlation, anonymous: true }),
   });
   if (submitted?.status !== 'RECEIVED' || !submitted.code) throw new Error('Feedback intake did not return a received reference');
-  let revision = submitted.revision;
-  if (!Number.isSafeInteger(revision) || revision < 0) throw new Error('Feedback revision is missing');
   const secured = { ...headers, 'x-correlation-id': correlation };
   const records = await request('ENGAGEMENT', `/nodics/engagement/v0/operator/feedback?code=${encodeURIComponent(submitted.code)}&limit=1`, { headers: secured });
-  if (!Array.isArray(records) || !records.some(record => record.code === submitted.code)) throw new Error('Operator queue omitted the submitted feedback');
+  const feedback = Array.isArray(records) && records.find(record => record.code === submitted.code);
+  if (!feedback) throw new Error('Operator queue omitted the submitted feedback');
+  let revision = feedback.revision;
+  if (!Number.isSafeInteger(revision) || revision < 0) throw new Error('Feedback revision is missing');
   for (const [action, status] of [['TRIAGE', 'TRIAGED'], ['ASSIGN', 'ASSIGNED'], ['START', 'IN_PROGRESS'], ['RESOLVE', 'RESOLVED'], ['CONFIRM', 'CLOSED']]) {
     const updated = await request('ENGAGEMENT', `/nodics/engagement/v0/operator/feedback/${encodeURIComponent(submitted.code)}/actions/${action}`, {
       method: 'POST', headers: secured, body: JSON.stringify({ expectedRevision: revision, reason: 'Framework feedback lifecycle acceptance' }),
@@ -38,9 +39,10 @@ export async function runEngagementJourneyAcceptance(options = {}) {
     if (!Number.isSafeInteger(updated.revision) || updated.revision <= revision) throw new Error('Feedback action did not advance its revision: ' + action);
     revision = updated.revision;
   }
-  const testimonials = await request('ENGAGEMENT', '/nodics/engagement/v0/public/testimonials');
+  const publicHeaders = { 'x-correlation-id': correlation };
+  const testimonials = await request('ENGAGEMENT', '/nodics/engagement/v0/public/testimonials', { headers: publicHeaders });
   if (!Array.isArray(testimonials)) throw new Error('Public Engagement projections returned an invalid contract');
-  const reviews = await request('ENGAGEMENT', '/nodics/engagement/v0/public/reviews');
+  const reviews = await request('ENGAGEMENT', '/nodics/engagement/v0/public/reviews', { headers: publicHeaders });
   if (!Array.isArray(reviews?.items)) throw new Error('Public Engagement projections returned an invalid contract');
   return { feedbackCode: submitted.code, revision, state: 'PASSED' };
 }

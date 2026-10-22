@@ -16,6 +16,13 @@
 8. Axis renders backend-owned metadata and APIs without becoming lifecycle or aggregate authority.
 9. Archived CRES and gNotify are migration evidence only; generated Core residue is not authority.
 10. Configuration may disable experiences but must not mutate the required package graph.
+11. Internal domain schemas keep `router.enabled: false` as well as router-disabled
+    capability metadata. Enabling a module router must not expose generic CRUD that
+    bypasses dedicated Engagement API lifecycle, consent or tenant checks. Verify
+    this through the actual nRouter activation consumer, not metadata alone.
+12. Domain-owned permission and documentation releases belong to the implementing
+    capability's manifest. Their presence is not API activation or a runtime grant;
+    boundary tests validate explicit selection and owner identity.
 
 ## Capability limit
 

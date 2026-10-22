@@ -9,73 +9,114 @@
 
  */
 
-/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
-/** @module checkoutCore/src/facade/defaultCheckoutCustomerFacade @description Enforces customer tenant and ownership context for placement. @layer facade @owner checkoutCore */
+/**
+ * @module checkoutCore/facade/defaultCheckoutCustomerFacade
+ * @description Admits personal and represented Enterprise owners through the existing Commerce
+ * participant boundary, preserving original credentials.
+ * @layer facade
+ * @owner checkoutCore
+ * @remarks Checkout facade re-resolves Profile participant and retained merchant scope before every
+ * owner command. OwnerRef, actorRef and participant namespace remain distinct from merchant
+ * persistence.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: context, commandStatus, recoverCompensation, resumeBundle, status, place.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
-    /** Uses only original signed customer identity and consistent routed scope; never changes bearer claims or infers legacy enterprise. */
-    commandStatus: function (request) {
-        return Promise.resolve().then(() => {
-            const auth = request.authData || {}, ownerId = auth.principalId || auth.code || auth.loginId;
-            const tenant = auth.tenant || request.tenant, enterpriseCode = auth.enterpriseCode || auth.entCode;
-            if (auth.principalType !== 'customer' || !ownerId || !tenant || !enterpriseCode ||
-                [auth.tenant, request.tenant].some(value => value !== undefined && value !== tenant) ||
-                [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode,
-                    request.httpRequest?.headers?.['x-enterprise-code']].some(value => value !== undefined && value !== enterpriseCode))
-                throw new Error('Authenticated original Checkout scope is required');
-            return SERVICE.DefaultCheckoutOperationService.commandStatus({ ...request, tenant, enterpriseCode, ownerId });
-        });
-    },
-    /** Requires signed original customer scope before the bounded compensation operation. */
-    recoverCompensation: function (request) {
-        return Promise.resolve().then(() => {
-            const auth = request.authData || {};
-            if (!(auth.principalId || auth.code || auth.loginId) || !(auth.tenant || request.tenant) ||
-                !(auth.enterpriseCode || auth.entCode)) throw new Error('Authenticated original Checkout scope is required');
-            return SERVICE.DefaultCheckoutOperationService.recoverCompensation(this.applyContext(request));
-        });
+    /**
+     * Uses current Profile evidence; caller fields cannot supply purchasing identity or groups.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Promise<Object>} Fresh participant context with independently retained merchant placement.
+     * @remarks Effects: Reads Profile and existing Cart/checkpoint scope; does not grant replacement
+     * credentials.
+     * Failure behavior: Rejects denied, foreign, missing or changed participant/merchant bindings.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
+    context: async function (request) {
+        const participant = await FACADE.DefaultCartCustomerFacade.resolveContext(request, 'commerce.checkout.place');
+        return SERVICE.DefaultCheckoutMerchantScopeService.resolve(participant);
     },
     /**
-     * Resolves enterprise-owned business context and derived runtime tenant.
-     * @param {*} request Value defined by the owning module contract.
-     * @returns {*} Enterprise and tenant context.
-     * @override Later-loaded modules may replace this member through the standard merge contract.
+     * Reads the original owner's command, including processing and recovery evidence.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Promise<Object>} Result of the corresponding Checkout operation after fresh owner
+     * admission.
+     * @remarks Effects: Reads retained command/completion evidence only.
+     * Failure behavior: Propagates participant denial, retained binding drift and original owner-operation
+     * failures.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
      */
-    enterpriseContext: function (request) {
-        const auth = request.authData || {}, payload = request.payload || {};
-        const enterpriseCode = auth.enterpriseCode || auth.entCode || request.enterpriseCode || request.entCode || payload.enterpriseCode || payload.entCode;
-        const tenants = (typeof CONFIG !== 'undefined' && CONFIG.get && (CONFIG.get('commerce') || {}).enterpriseTenants) || {};
-        return { enterpriseCode, tenant: auth.tenant || request.tenant || tenants[enterpriseCode] };
+    commandStatus: async function (request) {
+        return SERVICE.DefaultCheckoutOperationService.commandStatus(await this.context(request));
     },
     /**
-     * Executes `applyContext` as a loader-visible operation owned by this module.
-     * @param {*} request Value defined by the owning module contract.
-     * @returns {*} Result defined by the owning module contract.
-     * @override Later-loaded modules may replace this member through the standard merge contract.
+     * Reconciles only the original authorized command.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Promise<Object>} Result of the corresponding Checkout operation after fresh owner
+     * admission.
+     * @remarks Effects: Delegates only the requested existing placement/recovery workflow and its owner
+     * effects.
+     * Failure behavior: Propagates participant denial, retained binding drift and original owner-operation
+     * failures.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
      */
-    applyContext: function (request) {
-        const auth = request.authData || {};
-        if (!auth.userGroups && Array.isArray(auth.groups)) auth.userGroups = auth.groups;
-        if (!auth.userGroups && (auth.principalId || auth.code || auth.loginId || request.ownerId)) auth.userGroups = ['customerUserGroup'];
-        if (!auth.groups && Array.isArray(auth.userGroups)) auth.groups = auth.userGroups;
-        auth.principalType = auth.principalType || 'customer';
-        request.authData = auth;
-        const context = this.enterpriseContext(request);
-        request.enterpriseCode = context.enterpriseCode;
-        request.tenant = context.tenant;
-        request.ownerId = auth.principalId || auth.code || auth.loginId || request.ownerId;
-        request.correlationId = request.correlationId || request.requestId;
-        if (!request.tenant || !request.ownerId) throw new Error('Authenticated tenant and customer are required');
-        return request;
+    recoverCompensation: async function (request) {
+        return SERVICE.DefaultCheckoutOperationService.recoverCompensation(await this.context(request));
     },
     /**
-     * Executes `place` as a loader-visible operation owned by this module.
-     * @param {*} request Value defined by the owning module contract.
-     * @returns {*} Result defined by the owning module contract.
-     * @override Later-loaded modules may replace this member through the standard merge contract.
+     * Reauthorizes the owner before original-key forward recovery.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Promise<Object>} Result of the corresponding Checkout operation after fresh owner
+     * admission.
+     * @remarks Effects: Delegates only the requested existing placement/recovery workflow and its owner
+     * effects.
+     * Failure behavior: Propagates participant denial, retained binding drift and original owner-operation
+     * failures.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
      */
-    /** Reads a customer-owned completed checkout. */
-    status:function(request){return SERVICE.DefaultCheckoutOperationService.status(this.applyContext(request));},
-    /** Applies customer ownership context before invoking the loader-composed Checkout placement operation. */
-    place: function (request) { return Promise.resolve().then(() => SERVICE.DefaultCheckoutOperationService.place(this.applyContext(request))); }
+    resumeBundle: async function (request) {
+        return SERVICE.DefaultCheckoutOperationService.resumeBundle(await this.context(request));
+    },
+    /**
+     * Reads an owner-scoped completed checkout.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Promise<Object>} Result of the corresponding Checkout operation after fresh owner
+     * admission.
+     * @remarks Effects: Reads retained command/completion evidence only.
+     * Failure behavior: Propagates participant denial, retained binding drift and original owner-operation
+     * failures.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
+    status: async function (request) {
+        return SERVICE.DefaultCheckoutOperationService.status(await this.context(request));
+    },
+    /**
+     * Preserves canonical owner and separate actor through common placement.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Promise<Object>} Result of the corresponding Checkout operation after fresh owner
+     * admission.
+     * @remarks Effects: Delegates only the requested existing placement/recovery workflow and its owner
+     * effects.
+     * Failure behavior: Propagates participant denial, retained binding drift and original owner-operation
+     * failures.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
+    place: async function (request) {
+        return SERVICE.DefaultCheckoutOperationService.place(await this.context(request));
+    },
 };

@@ -1,0 +1,1 @@
+Your offer {{bidCode}} of {{amount}} {{currency}} was selected for auction {{roundCode}}. Open your bids to continue the original purchase. Selection is not payment confirmation.

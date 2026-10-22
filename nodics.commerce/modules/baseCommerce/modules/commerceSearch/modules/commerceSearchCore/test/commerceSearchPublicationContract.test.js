@@ -72,8 +72,13 @@ test.beforeEach(() => {
     indexed = [];
     global.CONFIG = { get: key => key === 'commerceSearch' ? properties.commerceSearch : undefined };
     global.SERVICE = {
+        DefaultCommerceSearchPolicyService: require('../src/service/defaultCommerceSearchPolicyService'),
         DefaultCommerceSearchPublicationService: publication,
         DefaultCommerceSearchProjectionBuilderService: builder,
+        DefaultCommerceSearchRuleVersionService: {
+            get: async () => ({ result: [] }),
+            save: async request => { publication.protectHistory(request); return { result: request.model }; }
+        },
         DefaultCommerceSearchRuleService: {
             get: async request => {
                 readRequests.push(request);
@@ -131,4 +136,39 @@ test('Commerce Search contributes provider-neutral rule projection index', () =>
     assert.equal(definition.tenantPropertyName, 'tenant');
     assert.deepEqual(definition.partitionProperties, ['tenant', 'storeCode', 'locale']);
     assert.equal(definition.properties.actions.type, 'object');
+});
+
+test('snapshot replay and lost insert acknowledgement use effective validation without exporting write authority', async () => {
+    const request = { tenant: 'tenant-a', authData: { tenant: 'tenant-a' } };
+    const rule = { code: 'rule-a', revision: 1 };
+    const projection = { sourceHash: 'original-source' };
+    const row = { tenant: request.tenant, ruleCode: rule.code, sourceHash: projection.sourceHash };
+    let checks = 0;
+    const effective = { ...publication, assertSnapshotSource: function (...args) {
+        checks++;
+        return publication.assertSnapshotSource.apply(this, args);
+    } };
+    for (const recovered of [false, true]) {
+        let reads = 0, inserted;
+        SERVICE.DefaultCommerceSearchRuleVersionService = {
+            get: async () => ({ result: recovered && reads++ === 0 ? [] : [row] }),
+            save: async command => {
+                inserted = command;
+                publication.protectHistory(command);
+                throw new Error('Insert acknowledgement lost');
+            }
+        };
+        await effective.snapshot(request, rule, projection);
+        if (recovered) assert.throws(() => publication.protectHistory(inserted), /publication owner/);
+    }
+    assert.equal(checks, 2);
+    assert.throws(() => publication.protectHistory({ ...request, model: row }), /publication owner/);
+    for (const patch of [{ tenant: 'foreign' }, { ruleCode: 'foreign' }, { sourceHash: 'foreign' }]) {
+        SERVICE.DefaultCommerceSearchRuleVersionService.get = async () => ({ result: [{ ...row, ...patch }] });
+        await assert.rejects(effective.snapshot(request, rule, projection), /conflicts/);
+    }
+    const stricter = { ...effective, assertSnapshotSource: () => { throw new Error('Later-layer evidence rejected'); } };
+    await assert.rejects(stricter.snapshot(request, rule, projection), /Later-layer evidence rejected/);
+    assert.equal(saved.length, 0);
+    assert.equal(indexed.length, 0);
 });

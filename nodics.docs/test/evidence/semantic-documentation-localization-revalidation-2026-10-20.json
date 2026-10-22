@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "evidenceQualification": {
+    "mechanism": "nodics.docs/scripts/semantic-review-contract.mjs:qualifySemanticReview",
+    "status": "closed-with-evidence",
+    "expected": true,
+    "sourceAndSupportingHashes": "ALL_CURRENT_AT_FINAL_CHECK",
+    "validatorHashes": "UNCHANGED",
+    "scope": "Eight independent in-memory scoped bundles; shared aggregate not edited. Open release-guide scope intentionally rejects closure."
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVALIDATION",
+  "item": "Localization depth",
+  "requestedAction": "Document locale records, fallback behavior, content and product localization, import data, and API boundary.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "rationale": "Read all current localization article blocks against both exact schema diffs. CMS adds owner-pinned authoringScope, enterprise-bound Sites, read-only generic business Workbench operations and scoped-command write admission; Product adds optional signed enterpriseCode to product/variant localization records and unrelated root authoring/listing metadata. Neither diff changes the documented CMS selected-variant/shared-property merge, Product READY fallback/no-base-merge policy, UI APPROVED immutable bundle construction, localized record keys or publication boundaries. The examples explicitly use governed developer import headers, not ordinary employee schema CRUD, so tighter human admission does not contradict them.",
+  "readiness": {
+    "mode": "AUTHORIZED_FRAMEWORK_MAINTAINER_REVIEW",
+    "writeOwner": "nodics.docs/test/evidence",
+    "outcome": "Requalify exact stale editorial scopes without weakening validators or claiming runtime acceptance.",
+    "method": "Recovered matching historical source bytes where stated, read actual deltas/current named methods and cited article blocks, compare authority/failure/override claims, reuse only byte-identical prior source reviews.",
+    "excluded": "No runtime startup, E2E, import, publication, credentials, source/manifest rewrite, generated context, commits or shared aggregate edits."
+  },
+  "historicalBaseline": {
+    "aggregate": "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "aggregateSha256AtRead": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+    "previousSourceRevalidation": null
+  },
+  "items": [
+    {
+      "item": "Localization depth",
+      "requestedAction": "Document locale records, fallback behavior, content and product localization, import data, and API boundary.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Read all current localization article blocks against both exact schema diffs. CMS adds owner-pinned authoringScope, enterprise-bound Sites, read-only generic business Workbench operations and scoped-command write admission; Product adds optional signed enterpriseCode to product/variant localization records and unrelated root authoring/listing metadata. Neither diff changes the documented CMS selected-variant/shared-property merge, Product READY fallback/no-base-merge policy, UI APPROVED immutable bundle construction, localized record keys or publication boundaries. The examples explicitly use governed developer import headers, not ordinary employee schema CRUD, so tighter human admission does not contradict them.",
+      "evidence": [
+        {
+          "documentId": "localization.runtime-authoring",
+          "anchors": [
+            "localizationRuntimeAuthoring-1-source-map",
+            "localizationRuntimeAuthoring-2-resolution-model",
+            "localizationRuntimeAuthoring-3-authoring-contract",
+            "localizationRuntimeAuthoring-4-customization-and-extension-guidance",
+            "localizationRuntimeAuthoring-5-implementation-handoff",
+            "localizationRuntimeAuthoring-6-evidence-checklist",
+            "localizationRuntimeAuthoring-7-common-mistakes",
+            "localizationRuntimeAuthoring-8-verification"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js",
+        "nodics.localization/modules/localizationApi/src/router/routers.js",
+        "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js",
+        "nodics.localization/modules/localizationCore/src/schemas/schemas.js",
+        "nodics.wcms/modules/cms/src/schemas/schemas.js",
+        "nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js",
+        "nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js",
+        "nodics.localization/modules/localizationCore/src/service/defaultLocalizationImportExportService.js",
+        "nodics.localization/modules/localizationCore/src/service/defaultLocalizationReleaseManagementService.js",
+        "nodics.localization/modules/localizationApi/src/controller/defaultLocalizationApiController.js",
+        "nodics.localization/modules/localizationApi/src/facade/defaultLocalizationApiFacade.js"
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "localization.runtime-authoring": {
+      "owner": "nodics.localization/modules/localizationCore",
+      "componentFile": "nodics.localization/modules/localizationCore/data/docs-v001/records/documentation/localizationCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "4a9399da9acd9c9e1e0bd8b9abfc1e9573ba1c3fc57ca984c4bd4ed709371e7d"
+    }
+  },
+  "priorCanonicalDocuments": {
+    "localization.runtime-authoring": {
+      "owner": "nodics.localization/modules/localizationCore",
+      "componentFile": "nodics.localization/modules/localizationCore/data/docs-v001/records/documentation/localizationCoreDocumentationComponentData.js",
+      "componentCode": "nodicsDocsComponentlocalizationRuntimeAuthoring",
+      "route": "/docs/framework/localization-runtime-authoring",
+      "blocksha256": "18a858ab69d0d7f2af24c495df7db088193926feb1df21256c75a02ce5a92f5a",
+      "articleBlocksSha256": "4a9399da9acd9c9e1e0bd8b9abfc1e9573ba1c3fc57ca984c4bd4ed709371e7d",
+      "sections": [
+        {
+          "anchor": "localizationRuntimeAuthoring-1-source-map",
+          "title": "Source map",
+          "headingLevel": 2,
+          "blockIndex": 1
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-2-resolution-model",
+          "title": "Resolution model",
+          "headingLevel": 2,
+          "blockIndex": 3
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-3-authoring-contract",
+          "title": "Authoring contract",
+          "headingLevel": 2,
+          "blockIndex": 7
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-4-customization-and-extension-guidance",
+          "title": "Customization and extension guidance",
+          "headingLevel": 2,
+          "blockIndex": 12
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-5-implementation-handoff",
+          "title": "Implementation handoff",
+          "headingLevel": 2,
+          "blockIndex": 14
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-6-evidence-checklist",
+          "title": "Evidence checklist",
+          "headingLevel": 2,
+          "blockIndex": 17
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-7-common-mistakes",
+          "title": "Common mistakes",
+          "headingLevel": 2,
+          "blockIndex": 19
+        },
+        {
+          "anchor": "localizationRuntimeAuthoring-8-verification",
+          "title": "Verification",
+          "headingLevel": 2,
+          "blockIndex": 21
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js": "27bd59b64b2c0b09ae88013d0f7d26d613c90cda1560f5e55acbdc0561742c28",
+    "nodics.localization/modules/localizationApi/src/router/routers.js": "d04ffcf0db95e0c4758a3b44c9f3b10e80386029040c758d44e6ae31a3ee03bc",
+    "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js": "f4103e4ba53736843d81072b916436d20308f4579eb751ad7c0761e93d13ed5e",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js": "fcc0b54f9e034d013bb200821ee3cf3df685ba2da5b002ec0c434974e733fb04",
+    "nodics.localization/modules/localizationCore/src/schemas/schemas.js": "a4aedf375f00edb951960f7de9947ca1c4ce81e1ada74a3837e4e2f64db5109c",
+    "nodics.wcms/modules/cms/src/schemas/schemas.js": "26706c1998677a486a7099be608fa16bfd2c37c507ec53d794e27f512096d2d2",
+    "nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js": "db30e74d2dbf22a554974cac079a885c1e7b936f4528d0c86d4d5718d8dd80a6",
+    "nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js": "d29513415baff52cf1f38467281de7586700c7e2541227e7c87aa822c7294bc5",
+    "nodics.localization/modules/localizationCore/src/service/defaultLocalizationImportExportService.js": "ea93b1be8d4e70e748ad2afaa86ef8105748a6768f8c5fae8caca5532f77abc8",
+    "nodics.localization/modules/localizationCore/src/service/defaultLocalizationReleaseManagementService.js": "080e56e01d7ac4b4658c2049e15b4d7265fbdb2dee7edb2ec9bc893c1112fedc",
+    "nodics.localization/modules/localizationApi/src/controller/defaultLocalizationApiController.js": "3617b35a1d5a025d7c38ba27b17ad36e6807d3d4e3bbb83eba4a9d9cd808bb68",
+    "nodics.localization/modules/localizationApi/src/facade/defaultLocalizationApiFacade.js": "4c547a55fbccd02857a9a34af7f1f16d71d56ee45b562be35f90144356d54b25"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js",
+      "previousSha256": "27bd59b64b2c0b09ae88013d0f7d26d613c90cda1560f5e55acbdc0561742c28",
+      "sha256": "27bd59b64b2c0b09ae88013d0f7d26d613c90cda1560f5e55acbdc0561742c28",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationApi/src/service/defaultLocalizationBundleService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.localization/modules/localizationApi/src/router/routers.js",
+      "previousSha256": "d04ffcf0db95e0c4758a3b44c9f3b10e80386029040c758d44e6ae31a3ee03bc",
+      "sha256": "d04ffcf0db95e0c4758a3b44c9f3b10e80386029040c758d44e6ae31a3ee03bc",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationApi/src/router/routers.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+      "previousSha256": "f4103e4ba53736843d81072b916436d20308f4579eb751ad7c0761e93d13ed5e",
+      "sha256": "f4103e4ba53736843d81072b916436d20308f4579eb751ad7c0761e93d13ed5e",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js",
+      "previousSha256": "fcc0b54f9e034d013bb200821ee3cf3df685ba2da5b002ec0c434974e733fb04",
+      "sha256": "fcc0b54f9e034d013bb200821ee3cf3df685ba2da5b002ec0c434974e733fb04",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductLocalizationPolicyService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.localization/modules/localizationCore/src/schemas/schemas.js",
+      "previousSha256": "a4aedf375f00edb951960f7de9947ca1c4ce81e1ada74a3837e4e2f64db5109c",
+      "sha256": "a4aedf375f00edb951960f7de9947ca1c4ce81e1ada74a3837e4e2f64db5109c",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationCore/src/schemas/schemas.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/src/schemas/schemas.js",
+      "previousSha256": "cefbfa61ff6f1d828ef87e4b32ba5aadee154231574d32574899710502684ed1",
+      "sha256": "26706c1998677a486a7099be608fa16bfd2c37c507ec53d794e27f512096d2d2",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/src/schemas/schemas.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Recovered 3f5ab7b57 bytes match the prior hash. Read the complete diff and applicable Designer access contract: all model schemas expose generic read-only business operations with owner-managed authoringScope; cmsSite gains optional enterpriseCode. cmsComponentLocalization locale/properties/status and content resolver remain unchanged. Trusted import examples confer no human write grant."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js",
+      "previousSha256": "47e9c222f5cd56402dfc97af0feab9534f7a03eae5746d288b8a575fe2349c1e",
+      "sha256": "db30e74d2dbf22a554974cac079a885c1e7b936f4528d0c86d4d5718d8dd80a6",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Read-only cross-owner dependency review, confined to localization article implications. Recovered 3f5ab7b57 bytes match prior hash. Optional enterpriseCode is added only to productLocalization/productVariantLocalization; root businessAuthoring and listingAuthoring fields do not alter localization resolution. No Commerce source or article changed by this review."
+    },
+    {
+      "path": "nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js",
+      "previousSha256": "d29513415baff52cf1f38467281de7586700c7e2541227e7c87aa822c7294bc5",
+      "sha256": "d29513415baff52cf1f38467281de7586700c7e2541227e7c87aa822c7294bc5",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.localization/modules/localizationCore/src/service/defaultLocalizationImportExportService.js",
+      "previousSha256": "ea93b1be8d4e70e748ad2afaa86ef8105748a6768f8c5fae8caca5532f77abc8",
+      "sha256": "ea93b1be8d4e70e748ad2afaa86ef8105748a6768f8c5fae8caca5532f77abc8",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationImportExportService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.localization/modules/localizationCore/src/service/defaultLocalizationReleaseManagementService.js",
+      "previousSha256": "080e56e01d7ac4b4658c2049e15b4d7265fbdb2dee7edb2ec9bc893c1112fedc",
+      "sha256": "080e56e01d7ac4b4658c2049e15b4d7265fbdb2dee7edb2ec9bc893c1112fedc",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationReleaseManagementService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.localization/modules/localizationApi/src/controller/defaultLocalizationApiController.js",
+      "previousSha256": "3617b35a1d5a025d7c38ba27b17ad36e6807d3d4e3bbb83eba4a9d9cd808bb68",
+      "sha256": "3617b35a1d5a025d7c38ba27b17ad36e6807d3d4e3bbb83eba4a9d9cd808bb68",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationApi/src/controller/defaultLocalizationApiController.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.localization/modules/localizationApi/src/facade/defaultLocalizationApiFacade.js",
+      "previousSha256": "4c547a55fbccd02857a9a34af7f1f16d71d56ee45b562be35f90144356d54b25",
+      "sha256": "4c547a55fbccd02857a9a34af7f1f16d71d56ee45b562be35f90144356d54b25",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.localization/modules/localizationApi/src/facade/defaultLocalizationApiFacade.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    }
+  ],
+  "correctnessAndCoverageLimitations": [
+    "Commerce Product inspection is dependency-only, not a substitute for the Commerce owner's product-authoring review.",
+    "Unchanged UI/message, CMS and Product resolver hashes reuse prior semantic evidence. No locale import, Online bundle, browser or translation-quality acceptance was run."
+  ],
+  "tests": [
+    {
+      "command": "Current schema/source hash comparison and qualifySemanticReview against scoped evidence",
+      "status": "SOURCE_AND_EVIDENCE_CHECK_ONLY"
+    }
+  ],
+  "evidenceValidatorRegression": {
+    "command": "node --test --test-name-pattern='manual review closure binds' nodics.docs/test/semanticReviewContract.test.mjs",
+    "passed": 1,
+    "failed": 0
+  },
+  "unchangedValidatorSha256": {
+    "nodics.docs/test/semanticReviewContract.test.mjs": "89fa7fc0f9b23eee170f04aa4023f21054226eb274642614297d6a48d1c12457",
+    "nodics.docs/scripts/semantic-review-contract.mjs": "5ebe473c28ed21de599d5cd6d5ea96eaddc6d1ed6d548a543afd060442f57f0e"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "integration": {
+    "aggregateWriter": "Heisenberg",
+    "aggregateEditedByThisReview": false,
+    "instruction": "Verify current article/source hashes, merge only this scope's sourceFileSha256 bindings and reasoned sourceRevalidation into the existing aggregate; preserve original action, historical findings/limits and unrelated scopes. Changed inputs reopen review."
+  }
+}

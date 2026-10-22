@@ -12,15 +12,29 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import contribution from '../data/backoffice/wasteCoreBackofficeCapabilityData.js';
+import capabilityProvider from '../src/service/defaultWasteBackofficeCapabilityService.js';
+import capabilityDefinitionService from '../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService.js';
+import capabilityDataService from '../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDataService.js';
 import { runWasteBackofficeAcceptance, validateWasteBootstrap, main } from '../src/service/acceptance/defaultWasteBackofficeAcceptanceService.mjs';
 /** @module wasteCore/test/wasteBackofficeAcceptance @description Verifies framework discovery invariants and denied states with no grant mutation. @layer test @owner wasteCore */
+function effectiveCapability() {
+  const originalService = globalThis.SERVICE;
+  try {
+    globalThis.SERVICE = {
+      ...(originalService || {}),
+      DefaultBackofficeCapabilityDefinitionService: capabilityDefinitionService,
+      DefaultBackofficeCapabilityDataService: capabilityDataService,
+    };
+    return capabilityProvider.getCapability();
+  } finally {
+    globalThis.SERVICE = originalService;
+  }
+}
 function bootstrap() {
-  const navigation = contribution.navigation.map(item => ({ ...item, route: item.route || '/waste/' + item.id,
-    requiredPermissions: ['waste.backoffice.view'], featureState: item.featureState || 'ACTIVE', group: contribution.defaults.group,
-    workbenchTarget: { moduleName: item.moduleName || 'wasteCore', schemaName: item.schemaName } }));
-  return { catalogue: { wasteCore: { ...contribution.capability, activeModuleLeases: 1, navigation } },
-    effectiveNavigationComposition: { groups: [contribution.defaults.group],
+  const capability = effectiveCapability();
+  const group = capability.navigation.find(item => item.id === 'waste-management').group;
+  return { catalogue: { wasteCore: { ...capability, activeModuleLeases: 1 } },
+    effectiveNavigationComposition: { groups: [group],
       navigation: [{ moduleName: 'wasteCore', id: 'waste-management', routeOwner: { ownerType: 'WORKBENCH' } }] } };
 }
 function registration() {
@@ -52,6 +66,11 @@ test('missing navigation and permission filtering reject', () => {
   const denied = bootstrap();
   denied.catalogue.wasteCore.requiredPermissions = [];
   assert.throws(() => validateWasteBootstrap(denied), /must require/);
+});
+test('submission navigation rejects the physical schema owner instead of the secured Waste API workbench', () => {
+  const data = bootstrap();
+  data.catalogue.wasteCore.navigation.find(item => item.id === 'waste-submissions').workbenchTarget.moduleName = 'wasteSubmission';
+  assert.throws(() => validateWasteBootstrap(data), /generic Waste submission schema workbench/);
 });
 test('authorization error propagates', async () => {
   await assert.rejects(runWasteBackofficeAcceptance({ project: 'partner', observedServer: 'server',

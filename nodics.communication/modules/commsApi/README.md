@@ -1,5 +1,10 @@
 # commsApi
 
+Employee inbox reads are available at `/employee/communications`, using Profile's
+fresh own-identity proof and the original bearer, without a personal Customer
+account. This shares existing inbox persistence and safe source projections.
+See [Employee inbox identity](llm/contracts/README.md#employee-inbox-identity).
+
 Secured Communication HTTP contract. This module follows the active `nodics.communication` ownership contract. Read `AGENTS.md` and `llm/contracts/README.md`; verify through focused tests and the effective server build.
 
 Customer inbox reads retain the admitted customer's bearer for canonical Profile
@@ -11,6 +16,16 @@ Source-authorized service integrations may inspect an existing intent through
 `POST /internal/communications/:intentCode/inspect` with body `{}`. Only
 intentCode, persisted status and revision are returned; no delivery action occurs.
 See [source-scoped inspection](llm/contracts/source-scoped-intent-authority.md#read-only-intent-inspection).
+
+`acceptance:communication-source-delivery --execute` proves the Communication
+owner path for a reviewed source binding: one durable delivery, exact replay
+deduplication, suppression and one governed retry. Run the same command with
+`--phase=inspect` after restarting Communication to prove persisted intent
+inspection without another send. Projects contribute only stable scenario
+selections under `tooling.acceptance.communicationSourceDelivery`; the signed
+service bearer remains in `NODICS_COMMUNICATION_ACCEPTANCE_TOKEN`. Source-domain
+eligibility is resolved through the normal configured source binding and is not
+reimplemented by this module.
 
 For retained uncertainty, the separate source-authorized
 `POST /internal/communications/:intentCode/diagnostic` accepts exactly

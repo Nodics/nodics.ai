@@ -5,7 +5,7 @@
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "product permissionCatalogue",
       "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "product",
@@ -29,7 +29,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.5",
       "displayName": "product enterpriseRoles",
       "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "product",
@@ -53,14 +53,14 @@
         {
           "moduleName": "product",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "6476e85ce43cd1b70c206b45af8c8516fac8140f7904c057f15d7e5c8e6550ce"
+          "version": "0.0.4",
+          "checksum": "b0465d025065192f3abd1492de958223557a04e361fd5d76b2b8937bfad6a987"
         },
         {
           "moduleName": "publish",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "cfa73ab9a7aa7e54922b1858e8976ad196818899841dcf6596c09b9290a6e937"
+          "version": "0.0.4",
+          "checksum": "28cb993e9e0921c36eb54be7e89548a3ebb2cb691e805b32f1b56904223f49ba"
         }
       ]
     },
@@ -119,9 +119,9 @@
     },
     "documentation": {
       "kind": "CONTENT_PACK",
-      "contentPath": "docs-v001",
+      "contentPath": "docs-v002",
       "pack": "product",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -135,7 +135,7 @@
       "installationPolicy": "OPTIONAL_AXIS_INITIATED",
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "cms-records",
-      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sourceAuthority": "data/docs-v002/records/documentation",
       "sites": [
         "nodicsDocumentationSite"
       ],
@@ -143,16 +143,16 @@
       "pages": 1,
       "components": 1,
       "routes": 1,
-      "releaseChecksum": "654e1d3117fe84bd88da3db502462d42df48de6bb13dfe4ae1b77165a9acd40a",
+      "releaseChecksum": "80d386e8c7d2cbfecdb3a60b3ad9640d15ae4be3bccbfcfbbcad68e013d19f2a",
       "generatedHashes": {
-        "docs-v001/records/documentation/productDocumentationNodeData.js": "47971cedf8b5f012434e9782af37b76bf3907f8ce86783351b857560b8833965",
-        "docs-v001/records/documentation/productDocumentationPageMetadataData.js": "9768ea4422345b072370d5eec8e74a208680a088c06b8b8e84d30528f9b0073d",
-        "docs-v001/records/documentation/productDocumentationPublicationStateData.js": "3de04a4fb4e564272188457f53804f565f09a35e66f5665bb0128c08354ac67c",
-        "docs-v001/records/documentation/productDocumentationSearchMetadataData.js": "76dd38991b5023321ab773823c3a017fd0f2530902c90970bf837e3c432b2b26",
-        "docs-v001/records/documentation/productDocumentationComponentData.js": "9b284a05b20c66f9f92fbf939a9e87d718b91dc1ef895d5b6c6b3ca866f5eb53",
-        "docs-v001/records/documentation/productDocumentationPageData.js": "0b84361256a34893756272411e7bdd3dc790fabf6d735fb4d84e5bbcd5d194a0",
-        "docs-v001/records/documentation/productDocumentationRouteData.js": "bf1b25d8c93f6a1b52f30731ab088db34fad8055206ffcbff8dc455ac20e6e6c",
-        "docs-v001/headers/100_productDocumentationContentPackHeader.js": "7d976c38451f6ea2969538394673d4c5fb245d6eaa4aeaf1393c16fed1387c36"
+        "docs-v002/records/documentation/productDocumentationComponentData.js": "ebf6d7e838b40f6bb992b891a7ab70b5ae2353b48843c4ac3023ea80ae448d52",
+        "docs-v002/records/documentation/productDocumentationPageMetadataData.js": "10be4552a5f84f6cbcc2eeb50972d452203078a68fac72f0754fff6fc6317c8a",
+        "docs-v002/records/documentation/productDocumentationNodeData.js": "61b5bbb04b81e74f89c7cb0995f9d8023aac060b8f18d71e837f83892b6f7add",
+        "docs-v002/records/documentation/productDocumentationSearchMetadataData.js": "5c2f1948e48a1402c04695758890c00c38903fa3e56bab9062ff01bf14ee435b",
+        "docs-v002/records/documentation/productDocumentationPageData.js": "c8c6395ecdc11286a01c99badc44dc6f8158e616c4af30915e43f77a7c66a2bd",
+        "docs-v002/records/documentation/productDocumentationRouteData.js": "8c802f6c24e671662a99a80adf1ad6a98a8e4d4778f2778f9664aa9dd819136a",
+        "docs-v002/records/documentation/productDocumentationPublicationStateData.js": "28f2f80e70c974cdd4a15fe9affcf590857cff9942d00658fb5d59c63ff5348a",
+        "docs-v002/headers/100_productDocumentationContentPackHeader.js": "67d32ef7820a459069f9913c759b720daf533c2c8f6ae3dc493fc7dfd9cc43e3"
       },
       "includes": [
         {
@@ -169,7 +169,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.4",
       "displayName": "product accessGroups",
       "description": "Explicit product identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "product",
@@ -207,15 +207,15 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
         },
         {
           "moduleName": "profile",
@@ -227,7 +227,7 @@
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
           "partition": "DEFAULT"
         },
@@ -243,7 +243,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Products business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "product",
@@ -267,8 +267,8 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         },
         {
           "moduleName": "profile",
@@ -280,7 +280,7 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         }
@@ -289,7 +289,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Products business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "product",
@@ -313,8 +313,8 @@
         {
           "moduleName": "product",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.1",
-          "checksum": "e2e534f79f0bcebf82f68466e661be46839c18846c2ffd61463c37d569e154b7"
+          "version": "0.0.2",
+          "checksum": "169cfa0e8a6d055dcb28d1a0581e4646271b7a06890bc5472bc32dee99def2c0"
         }
       ]
     }

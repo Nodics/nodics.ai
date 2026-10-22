@@ -1,0 +1,257 @@
+{
+  "owner": "nodics.commerce/modules/digitalCommerce/modules/digitalCore",
+  "section": {
+    "kind": "CONTENT_PACK",
+    "contentPath": "docs-v002",
+    "pack": "digitalCore",
+    "version": "0.0.2",
+    "owningDomain": "documentation",
+    "lifecycle": "PUBLISHABLE",
+    "destinationRole": "WCMS_STAGED",
+    "environmentScope": [
+      "ALL"
+    ],
+    "sensitivity": "PUBLIC",
+    "versioningPolicy": "IMMUTABLE",
+    "publicationPolicy": "REQUIRED",
+    "initialPublicationPolicy": "ADMIN_INITIATED",
+    "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+    "removalPolicy": "UNPUBLISH_OR_RETIRE",
+    "sourceMode": "cms-records",
+    "sourceAuthority": "data/docs-v002/records/documentation",
+    "sites": [
+      "nodicsDocumentationSite"
+    ],
+    "accessMode": "PUBLIC",
+    "pages": 2,
+    "components": 2,
+    "routes": 2,
+    "releaseChecksum": "e1811e063cf592ffe31f18e238c19b425c1588fe1b8341310b8d311d151bf7da",
+    "generatedHashes": {
+      "docs-v002/headers/100_digitalCoreDocumentationContentPackHeader.js": "1c0e645747ca6ac7c5cf782088f5b3119d82402938b7851226d461edc6e28cf6",
+      "docs-v002/records/documentation/digitalCoreDocumentationComponentData.js": "fd7ed4f833f851e32e5b174944483a0f0a228e6482f27e334c377c66a25ec5ec",
+      "docs-v002/records/documentation/digitalCoreDocumentationNodeData.js": "c33b846927ed970a6f6008fe54b19042b6ecf7880ae63f67c1c14570ab3f9486",
+      "docs-v002/records/documentation/digitalCoreDocumentationPageData.js": "0ec1eba877f8f96c49ea29018d0a6dfc9a7a797d3b6e39764572ba62b859458d",
+      "docs-v002/records/documentation/digitalCoreDocumentationPageMetadataData.js": "08d3919f148bbbdffc8cd970cfe206a3ba9738d7786fed903e57bfca5b2aa2fa",
+      "docs-v002/records/documentation/digitalCoreDocumentationPublicationStateData.js": "bcf651ec20fbae7069be8796acfcf7719316e715054fbbf1fc4ecbcfcb44766c",
+      "docs-v002/records/documentation/digitalCoreDocumentationRouteData.js": "e01c292706ca7c4a1a7e882c0a2398dcc5130aeb1c6ed4fef11085dedc2d100f",
+      "docs-v002/records/documentation/digitalCoreDocumentationSearchMetadataData.js": "7e05ee0f7f9ec2daf4170067298e8a58e8729460d0c9e94b3d813ba536d1f923"
+    },
+    "includes": [
+      {
+        "manifestPack": "nodics.docs",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.docs/data/manifest.json",
+          "manifestSection": "foundation"
+        }
+      }
+    ],
+    "referenceCatalogues": [
+      {
+        "manifestPack": "nodics.docs",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.docs/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "promotion",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "cart",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "fulfillmentCore",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      }
+    ]
+  },
+  "successorVersion": "0.0.3",
+  "successorChecksum": "4a38621da07c0e7af00baa79d81775c09888eea8c53e57697b213885f992c63d",
+  "previousArticles": [
+    {
+      "id": "digital.bundle-holdings-gifts",
+      "componentCode": "nodicsDocsComponentdigitalBundleHoldingsGifts",
+      "blocksSha256": "1693a7cfae47e552470393279ca528630664b44829af5dc0d6a3cde94710b377",
+      "headings": [
+        {
+          "level": 2,
+          "text": "Purpose and ownership",
+          "anchor": "digitalBundleHoldingsGifts-purpose-and-ownership"
+        },
+        {
+          "level": 2,
+          "text": "Participant bundle composition and listing destinations",
+          "anchor": "digitalBundleHoldingsGifts-composition-context"
+        },
+        {
+          "level": 2,
+          "text": "Gift lifecycle and participant decisions",
+          "anchor": "digitalBundleHoldingsGifts-gift-lifecycle-and-participant-decisions"
+        },
+        {
+          "level": 2,
+          "text": "Postcommit notifications",
+          "anchor": "digitalBundleHoldingsGifts-postcommit-notifications"
+        },
+        {
+          "level": 2,
+          "text": "Notification-only recovery and configuration",
+          "anchor": "digitalBundleHoldingsGifts-notification-only-recovery-and-configuration"
+        },
+        {
+          "level": 2,
+          "text": "Fixed-price purchase and proceeds",
+          "anchor": "digitalBundleHoldingsGifts-fixed-price-purchase-and-proceeds"
+        },
+        {
+          "level": 2,
+          "text": "Customization and operator recovery",
+          "anchor": "digitalBundleHoldingsGifts-customization-and-operator-recovery"
+        },
+        {
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "digitalBundleHoldingsGifts-common-mistakes"
+        },
+        {
+          "level": 2,
+          "text": "Verification",
+          "anchor": "digitalBundleHoldingsGifts-verification"
+        }
+      ],
+      "route": "/docs/framework/digital-bundle-holdings-gifts"
+    },
+    {
+      "id": "digital.purchase-delivery-reveal",
+      "componentCode": "nodicsDocsComponentdigitalPurchaseDeliveryReveal",
+      "blocksSha256": "6c10ea3b6480b309620ba63780709f8af6d98691a42f4c262cbd6b40b8c8919f",
+      "headings": [
+        {
+          "text": "Governed coupon acquisition and final rights",
+          "anchor": "digital-governed-coupon-acquisition",
+          "level": 2
+        },
+        {
+          "text": "Current-owner coupon expiry delivery",
+          "anchor": "digital-coupon-expiry-reminders",
+          "level": 2
+        },
+        {
+          "text": "Coupon source verification and adoption",
+          "anchor": "digital-coupon-source-verification",
+          "level": 2
+        },
+        {
+          "text": "Business context and reader paths",
+          "anchor": "digital-business-context",
+          "level": 2
+        },
+        {
+          "text": "Lifecycle and ownership",
+          "anchor": "digital-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "Pinned Product and pool availability",
+          "anchor": "digital-pinned-availability",
+          "level": 2
+        },
+        {
+          "text": "Original line identity and checkout allocation",
+          "anchor": "digital-allocation",
+          "level": 2
+        },
+        {
+          "text": "Payment, sale, entitlement and delivery evidence",
+          "anchor": "digital-delivery",
+          "level": 2
+        },
+        {
+          "text": "Private purchased reveal",
+          "anchor": "digital-private-reveal",
+          "level": 2
+        },
+        {
+          "text": "Expiry, claims and reviewed refunds",
+          "anchor": "digital-reversal",
+          "level": 2
+        },
+        {
+          "text": "Exact issuer merchant confirmation and private phases",
+          "anchor": "digital-issuer-merchant-confirmation",
+          "level": 2
+        },
+        {
+          "text": "LOCAL ITEM confirmation is simulated, not delivered goods",
+          "anchor": "digital-local-item-simulation",
+          "level": 2
+        },
+        {
+          "text": "Simulation recovery, projections and excluded reversals",
+          "anchor": "digital-simulation-recovery",
+          "level": 2
+        },
+        {
+          "text": "Original-sale DIGITAL_OWNERSHIP refund",
+          "anchor": "digital-original-sale-ownership-refund",
+          "level": 2
+        },
+        {
+          "text": "Notifications are separate from finance",
+          "anchor": "digital-notifications",
+          "level": 2
+        },
+        {
+          "text": "Failure and recovery matrix",
+          "anchor": "digital-recovery",
+          "level": 2
+        },
+        {
+          "text": "Customization and source map",
+          "anchor": "digital-customization",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "digital-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "digital-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/digital-purchase-delivery-reveal"
+    }
+  ],
+  "corrections": [
+    {
+      "id": "digital.purchase-delivery-reveal",
+      "previousBlocksSha256": "6c10ea3b6480b309620ba63780709f8af6d98691a42f4c262cbd6b40b8c8919f",
+      "articleBlocksSha256": "4d8489bafb96afd501d82d2436441246929f9e72fd276013ec6720b970b43a9f"
+    }
+  ]
+}

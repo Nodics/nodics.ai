@@ -16,6 +16,7 @@ const assert = require("node:assert/strict");
 const journey = require("../src/service/defaultEWasteJourneyService");
 
 const policy = {
+  ...require("../config/properties").eWaste.journey,
   arrivalRadiusMetres: 75,
   maximumPositionAgeMs: 60000,
   captureTimeoutMs: 12000,
@@ -131,6 +132,11 @@ test("framework journey defaults preserve the approved radius and validate deplo
   assert.equal(defaults.maximumPositionAgeMs, 60000);
   assert.equal(defaults.captureTimeoutMs, 12000);
   assert.equal(defaults.nearestCentreCount, 3);
+  assert.equal(defaults.reviewAssignment, null);
+  assert.equal(
+    defaults.depositInstruction,
+    "Follow the collection centre's deposit instructions.",
+  );
   assert.deepEqual(service.validateSettings(defaults), defaults);
   const selected = { ...defaults, arrivalRadiusMetres: 150, captureTimeoutMs: 18000 };
   assert.deepEqual(service.validateSettings(selected), selected);
@@ -217,6 +223,7 @@ test("confirmation rechecks coordinates, preserves revisions, and replays withou
     idempotencyKey: "confirm",
   });
   assert.equal(result.metadata.reviewAssignment.status, "PENDING");
+  assert.equal(result.metadata.depositInstruction, policy.depositInstruction);
   const count = calls.length;
   centres = [];
   service.now = () => 999999;
@@ -225,6 +232,48 @@ test("confirmation rechecks coordinates, preserves revisions, and replays withou
     result,
   );
   assert.equal(calls.length, count);
+});
+
+test("confirmation consumes later assignment and instruction overrides", async () => {
+  service.settings = () => ({
+    ...policy,
+    reviewAssignment: { queueCode: "PARTNER_REVIEW", label: "Partner reviewers" },
+    depositInstruction: "Deposit at {centreName}.",
+  });
+  await service.arrival({
+    expectedRevision: 4,
+    payload: { position: observation },
+  });
+  const result = await service.confirm({
+    expectedRevision: 5,
+    idempotencyKey: "confirm",
+  });
+  assert.deepEqual(result.metadata.reviewAssignment, {
+    queueCode: "PARTNER_REVIEW",
+    label: "Partner reviewers",
+    status: "ASSIGNED",
+    assignedAt: new Date(100000).toISOString(),
+  });
+  assert.equal(result.metadata.depositInstruction, "Deposit at Centre.");
+  assert.equal(policy.reviewAssignment, null);
+});
+
+test("confirmation rejects missing or invalid instructions without fallback or writes", async () => {
+  await service.arrival({
+    expectedRevision: 4,
+    payload: { position: observation },
+  });
+  const saved = structuredClone(draft);
+  const count = calls.length;
+  for (const depositInstruction of [undefined, null, "", " ", 12, {}]) {
+    service.settings = () => ({ ...policy, depositInstruction });
+    await assert.rejects(
+      service.confirm({ expectedRevision: 5, idempotencyKey: "confirm" }),
+      { code: "ERR_EWASTE_JOURNEY_UNAVAILABLE" },
+    );
+    assert.deepEqual(draft, saved);
+    assert.equal(calls.length, count);
+  }
 });
 
 test("analysis advances with returned revisions and propagates assessment failure", async () => {

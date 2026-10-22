@@ -29,7 +29,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "displayName": "wasteCore accessGroups",
       "description": "Explicit wasteCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "wasteCore",
@@ -53,8 +53,8 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         },
         {
           "moduleName": "digitalCore",
@@ -80,15 +80,15 @@
         {
           "moduleName": "product",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "9445bba8f5f3bb3a2d068efeeeb09b7e554ff88216377e81e75a56a522fa2af9",
           "partition": "DEFAULT"
         },
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
         },
         {
           "moduleName": "profile",
@@ -100,7 +100,7 @@
         {
           "moduleName": "promotion",
           "sectionCode": "permissionCatalogue",
-          "version": "0.0.1",
+          "version": "0.0.2",
           "checksum": "4a6f14f8deea41e2d29d41c7e909cb49debb6d1bfba1f9a7f676f6ce3de998d5",
           "partition": "DEFAULT"
         },
@@ -151,7 +151,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "displayName": "wasteCore enterpriseRoles",
       "description": "Explicit wasteCore identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "wasteCore",
@@ -175,8 +175,8 @@
         {
           "moduleName": "wasteCore",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "1156bde7100b70b330c0bde1654a290967f88a1f0b09f9e020b75216b4db6e3a"
+          "version": "0.0.3",
+          "checksum": "fbe2a4e68099b38f8ade8d09dff1327e79dbfca95ec0b9efa864a141b606b10f"
         }
       ]
     },
@@ -215,7 +215,7 @@
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Waste business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "wasteCore",
@@ -239,8 +239,8 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         },
         {
           "moduleName": "profile",
@@ -261,7 +261,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Waste business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "wasteCore",
@@ -285,8 +285,8 @@
         {
           "moduleName": "wasteCore",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.1",
-          "checksum": "583ee5ba002ab291a8c0d7590eebf5af0df9c0655839ba945dac2b72163d388e"
+          "version": "0.0.2",
+          "checksum": "6dc6023c41878b7d2d803a4e6801256c8473f707efdd611e6d363897a51d52d5"
         }
       ]
     }

@@ -908,7 +908,7 @@ test("receipt rejects unavailable persistence rather than declaring an unconsume
 
 // Actual API controller -> facade -> bounded adapter -> verification source.
 // Reuses this suite's generated-storage fixture; no HTTP server or token verifier is simulated as passed.
-const verificationApi = require("../../commsApi/src/service/defaultCommunicationVerificationApiService");
+const verificationApi = require("../../commsApi/src/service/defaultCommunicationVerificationOperationService");
 const verificationFacade = require("../../commsApi/src/facade/defaultCommunicationApiFacade");
 const verificationController = require("../../commsApi/src/controller/defaultCommunicationApiController");
 const verificationRoute = require("../../commsApi/src/router/routers").commsApi
@@ -937,7 +937,7 @@ function rpcSetup() {
       return context;
     },
   };
-  global.SERVICE.DefaultCommunicationVerificationApiService = {
+  global.SERVICE.DefaultCommunicationVerificationOperationService = {
     ...verificationApi,
   };
   global.FACADE = { DefaultCommunicationApiFacade: { ...verificationFacade } };
@@ -1146,7 +1146,7 @@ test("RPC supports an authenticated runtime serviceId without trusting body prin
 });
 test("RPC requires exact private admission before owner storage-context projection", async () => {
   rpcSetup();
-  await assert.rejects(global.SERVICE.DefaultCommunicationVerificationApiService.execute({
+  await assert.rejects(global.SERVICE.DefaultCommunicationVerificationOperationService.execute({
     ...request, payload: { ...command, operation: "ISSUE" }, requestPrivacy: { sensitive: true },
   }), codeIs("ERR_COMMS_VERIFY_CONTEXT"));
   assert.equal(rpcStorageContexts.length, 0);

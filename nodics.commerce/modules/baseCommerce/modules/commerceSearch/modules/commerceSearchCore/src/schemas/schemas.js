@@ -55,3 +55,10 @@ module.exports = { commerceSearchCore: {
     } })
 } };
 module.exports.commerceSearchCore.commerceSearchRule.backoffice = { operations: ['search', 'read', 'create', 'update'], description: 'Commerce-specific product discovery ranking rules.' };
+module.exports.commerceSearchCore.commerceSearchRule.definition.benefitRef = { type: 'object', required: false, description: 'Canonical commercialAgreement agreementCode, enterpriseCode and benefitCode; not payment proof.' };
+module.exports.commerceSearchCore.commerceSearchRuleVersion.indexes = { individual: { searchRuleVersionIdentity: { name: 'code', enabled: true, options: { unique: true } } } };
+Object.assign(module.exports.commerceSearchCore.commerceSearchRuleProjection.definition, {
+    validFrom: { type: 'date', required: false, description: 'Inclusive independent ranking start.' },
+    validTo: { type: 'date', required: false, description: 'Exclusive independent ranking end.' },
+    benefitRef: { type: 'object', required: false, description: 'Agreement benefit identity revalidated before every eligible-set ranking.' }
+});

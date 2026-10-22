@@ -320,7 +320,7 @@ module.exports = {
             principalType: 'human',
             loginId: requestedBy,
             principalId: requestedBy,
-            userGroups: ['runtimeConfigAdminUserGroup'],
+            userGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
             permissions: [...new Set([].concat(serviceAuth.permissions || [], permissions))],
             delegatedBy: serviceAuth.principalId || serviceAuth.code || serviceAuth.serviceId
         }), reason: input.reason || defaultReason,

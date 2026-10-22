@@ -12,6 +12,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { fileURLToPath, pathToFileURL } = require('url');
 const releasePolicy = require('../../../nData/nImport/import/src/service/release/defaultDataReleaseService');
 const contentPack = require('../../../nData/nImport/import/src/service/contentPack/defaultContentPackService');
 
@@ -89,6 +90,46 @@ const ALLOWED_VISUAL_REQUIREMENTS = new Set([
  * @override Projects may narrow catalogue and release policy through a later tooling service while preserving path containment, immutable checksums, optional Axis administration, and Staged-to-Online publication.
  */
 module.exports = {
+    /** Resolves a local source citation and validates optional Markdown ATX heading evidence without executing it. */
+    validateSourceEvidence: function (ownerRoot, evidence) {
+        let reference, sourcePath, anchor;
+        try {
+            reference = new URL(evidence, pathToFileURL(path.resolve(ownerRoot) + path.sep));
+            if (reference.protocol !== 'file:' || reference.search) throw new Error('Local file citation required');
+            sourcePath = path.resolve(fileURLToPath(reference));
+            anchor = decodeURIComponent(reference.hash.slice(1));
+        } catch {
+            this.fail('ERR_TOOL_DOC_00011', 'Invalid local source evidence: ' + evidence);
+        }
+        if (!fs.existsSync(sourcePath)) this.fail('ERR_TOOL_DOC_00011', 'Missing source evidence: ' + evidence);
+        if (anchor) {
+            if (!fs.statSync(sourcePath).isFile() || !/\.(?:md|mdown|markdown)$/i.test(sourcePath)) {
+                this.fail('ERR_TOOL_DOC_00011', 'Source section evidence requires a Markdown file: ' + evidence);
+            }
+            const anchors = new Set();
+            let fence;
+            for (const line of fs.readFileSync(sourcePath, 'utf8').split(/\r?\n/)) {
+                const delimiter = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+                if (fence) {
+                    if (delimiter && delimiter[1][0] === fence[0] &&
+                        delimiter[1].length >= fence.length && !delimiter[2].trim()) fence = undefined;
+                    continue;
+                }
+                if (delimiter) { fence = delimiter[1]; continue; }
+                const heading = /^ {0,3}#{1,6}[ \t]+(.+?)\s*$/.exec(line);
+                if (!heading) continue;
+                const slug = heading[1].replace(/[ \t]+#+[ \t]*$/, '').toLowerCase()
+                    .replace(/<[^>]*>/g, '').replace(/!?\[([^\]]+)\]\([^)]*\)/g, '$1')
+                    .replace(/[^\p{L}\p{N}_\-\t ]/gu, '').replace(/[ \t]/g, '-');
+                let unique = slug, duplicate = 0;
+                while (anchors.has(unique)) unique = slug + '-' + (++duplicate);
+                anchors.add(unique);
+            }
+            if (!anchors.has(anchor)) this.fail('ERR_TOOL_DOC_00011', 'Missing source section anchor: ' + evidence);
+        }
+        return Object.freeze({ path: sourcePath, anchor });
+    },
+
     /** Reads documentation from the same governed CMS records that nImport consumes. */
     readDataCatalogue: function (ownerRoot, sectionName) {
         const root = path.resolve(ownerRoot);

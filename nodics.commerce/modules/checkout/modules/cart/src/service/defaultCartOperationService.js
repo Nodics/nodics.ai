@@ -12,7 +12,24 @@
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
 const crypto = require('node:crypto');
-/** @module cart/src/service/defaultCartOperationService @description Owns Cart domain operations and authoritative calculation evidence across caller contexts. @layer service @owner cart */
+/**
+ * @module cart/src/service/defaultCartOperationService
+ * @description Owns Cart domain operations and authoritative calculation evidence across caller
+ * contexts.
+ * @layer service
+ * @owner cart
+ * @remarks Cart storage follows typed participant admission while retaining original employee claims.
+ * Private generated persistence remains owner-controlled and is never returned as a client credential.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: unwrap, redactCustomerCalculation, policy, storeCode, accessDeniedError,
+ * serviceAuthData, persistenceAuthData, assertOwner, cartCode, cartModel, resolveSku,
+ * resolveSkuFromSearchProjection, entryModel, findCart, loadCart, loadEntries, response, cartSnapshot,
+ * calculationPayload, responseWithValidationAndCalculation, create, read, addEntry, updateEntry,
+ * removeEntry, calculate, validateDirect, calculateDirect.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
     /** Unwraps generated service responses. @param {*} response Service response. @returns {*} Unwrapped value. */
     unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
@@ -51,11 +68,61 @@ module.exports = {
         return Object.assign({}, request.authData || {}, {
             tenant: request.tenant,
             enterpriseCode: request.enterpriseCode,
+            entCode: request.enterpriseCode,
             loginId: 'cartSkuResolution',
             principalType: 'service',
             userGroups: ['serviceAccountUserGroup'],
             groups: ['serviceAccountUserGroup']
         });
+    },
+    /**
+     * Keeps employee bearer claims intact while admitting scoped generated Cart persistence behind
+     * participant commands.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Object} Authentication context appropriate to already admitted scoped persistence.
+     * @remarks Effects: Derives an internal context or preserves the original; does not mutate signed
+     * claims.
+     * Failure behavior: Propagates invalid original participant or private persistence admission.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
+    persistenceAuthData: function (request) {
+        if ((request.auctionFunds || request.merchantScope) && request.ownerRef?.schema === 'customer') {
+            const auth = request.authData || {};
+            if (auth.principalType !== 'customer' || auth.tokenType !== 'access' || auth.tenant !== request.tenant ||
+                request.ownerRef.module !== 'profile' || request.actorRef?.code !== request.ownerId ||
+                request.actorRef?.loginId !== auth.loginId) throw this.accessDeniedError();
+            return this.serviceAuthData(request);
+        }
+        if (request.ownerRef?.schema !== 'enterprise') return request.authData;
+        const auth = request.authData || {}, enterprise = auth.enterpriseCode || auth.entCode;
+        const security = SERVICE.DefaultSecuredRequestPipelineService;
+        if (auth.principalType !== 'human' || auth.tokenType !== 'access' || auth.tenant !== request.tenant || auth.isSystem ||
+            request.ownerRef.module !== 'profile' || request.ownerRef.code !== enterprise || request.ownerId !== enterprise ||
+            request.actorRef?.loginId !== auth.loginId || !security ||
+            !['commerce.cart.own', 'commerce.checkout.place'].some(permission => security.isPermissionGranted(permission, security.getGrantedPermissions(request), {})))
+            throw this.accessDeniedError();
+        return this.serviceAuthData(request);
+    },
+    /**
+     * Typed owners cannot access records belonging to another owner kind even when their textual IDs
+     * match.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @param {Object} cart Persisted Cart including retained typed owner and participant evidence.
+     * @returns {Object} The unchanged Cart after typed owner continuity is established.
+     * @remarks Effects: Read-only comparison; no Cart rebinding or migration.
+     * Failure behavior: Rejects foreign owner kind/code or mismatched retained participant evidence.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
+    assertOwner: function (request, cart) {
+        if (cart && (request.ownerRef?.schema === 'enterprise' || cart.ownerRef) &&
+            !require('node:util').isDeepStrictEqual(request.ownerRef, cart.ownerRef)) throw this.accessDeniedError();
+        if (cart && request.merchantScope && (!require('node:util').isDeepStrictEqual(request.merchantScope, cart.merchantScope) ||
+            cart.participantEnterpriseCode !== request.participantEnterpriseCode)) throw this.accessDeniedError();
+        return cart;
     },
 
     /** Creates a stable cart code. @param {Object} request Request. @returns {string} Cart code. */
@@ -72,6 +139,10 @@ module.exports = {
             tenant: request.tenant,
             enterpriseCode: request.enterpriseCode || payload.enterpriseCode,
             ownerId: request.ownerId,
+            ownerRef: request.ownerRef,
+            actorRef: request.actorRef,
+            participantEnterpriseCode: request.participantEnterpriseCode,
+            merchantScope: request.merchantScope,
             storeCode: storeCode,
             channelCode: payload.channelCode || policy.defaultChannelCode || 'web',
             locale: payload.locale || request.locale || policy.defaultLocale || 'en',
@@ -89,7 +160,8 @@ module.exports = {
         let payload = request.payload || {};
         const reader = SERVICE.DefaultProductDiscoveryService;
         if ((payload.variantCode || payload.sku) && reader && typeof reader.resolveVariantSku === 'function') {
-            const scopeRequest = { ...request, query: {}, productCode: payload.productCode, variantCode: payload.variantCode, sku: payload.sku };
+            const scopeRequest = { ...request, query: {}, entCode: request.enterpriseCode, authData: this.serviceAuthData(request),
+                productCode: payload.productCode, variantCode: payload.variantCode, sku: payload.sku };
             if (await reader.activeSelection(scopeRequest) !== undefined) {
                 const sku = await reader.resolveVariantSku(scopeRequest);
                 if (payload.sku && payload.sku !== sku) throw new CLASSES.NodicsError('ERR_CART_PRODUCT_UNAVAILABLE');
@@ -153,6 +225,9 @@ module.exports = {
             tenant: request.tenant,
             enterpriseCode: request.enterpriseCode || payload.enterpriseCode,
             ownerId: request.ownerId,
+            ownerRef: request.ownerRef,
+            actorRef: request.actorRef,
+            participantEnterpriseCode: request.participantEnterpriseCode,
             cartCode: request.cartCode,
             productCode: payload.productCode,
             variantCode: payload.variantCode,
@@ -170,9 +245,9 @@ module.exports = {
     findCart: async function (request) {
         let query = { tenant: request.tenant, code: request.cartCode, ownerId: request.ownerId };
         if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
-        let response = await SERVICE.DefaultCartService.get({ tenant: request.tenant, authData: request.authData, query, pageSize: 1 });
+        let response = await SERVICE.DefaultCartService.get({ tenant: request.tenant, authData: this.persistenceAuthData(request), query, pageSize: 1 });
         let result = this.unwrap(response);
-        return Array.isArray(result) ? result[0] : result;
+        return this.assertOwner(request, Array.isArray(result) ? result[0] : result);
     },
 
     /** Loads an owned Cart and rejects conflicting store references before operations. @param {Object} request Request. @returns {Promise<Object>} Cart. */
@@ -188,7 +263,7 @@ module.exports = {
     loadEntries: async function (request) {
         let query = { tenant: request.tenant, cartCode: request.cartCode, ownerId: request.ownerId, status: 'ACTIVE' };
         if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
-        let response = await SERVICE.DefaultCartEntryService.get({ tenant: request.tenant, authData: request.authData, query, pageSize: 500 });
+        let response = await SERVICE.DefaultCartEntryService.get({ tenant: request.tenant, authData: this.persistenceAuthData(request), query, pageSize: 500 });
         let result = this.unwrap(response);
         return Array.isArray(result) ? result : result ? [result] : [];
     },
@@ -234,13 +309,15 @@ module.exports = {
 
     /** Creates or replaces an owned Cart shell without rebinding an existing cart to another store. @param {Object} request Request. @returns {Promise<Object>} Cart response. */
     create: async function (request) {
+        if (request.auctionFunds) throw new Error('Selected auction Cart is immutable');
         let model = this.cartModel(request);
         let existing = await this.findCart(Object.assign({}, request, { cartCode: model.code }));
         if (existing) {
             this.storeCode({ storeCode: existing.storeCode });
             this.storeCode(request, existing.storeCode);
         }
-        let saved = await SERVICE.DefaultCartService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
+        let saved = await SERVICE.DefaultCartService.save({ tenant: request.tenant, authData: this.persistenceAuthData(request), model,
+            options: { insertOnly: !existing } }).then(this.unwrap);
         return this.response(Object.assign({}, request, { cartCode: saved.code }), saved);
     },
 
@@ -251,36 +328,39 @@ module.exports = {
 
     /** Adds an active entry to an owned Cart. @param {Object} request Request. @returns {Promise<Object>} Cart response. */
     addEntry: async function (request) {
+        if (request.auctionFunds) throw new Error('Selected auction Cart is immutable');
         let cart = await this.loadCart(request);
         request.storeCode = request.storeCode || cart.storeCode;
         request.locale = request.locale || cart.locale;
         let entry = await this.entryModel(request);
-        await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: request.authData, model: entry }).then(this.unwrap);
+        await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: this.persistenceAuthData(request), model: entry }).then(this.unwrap);
         return this.responseWithValidationAndCalculation(request);
     },
 
     /** Updates quantity for an active owned Cart entry. @param {Object} request Request. @returns {Promise<Object>} Cart response. */
     updateEntry: async function (request) {
+        if (request.auctionFunds) throw new Error('Selected auction Cart is immutable');
         let payload = request.payload || {};
         if (!request.entryCode || !payload.quantity) throw new Error('Entry code and quantity are required');
         await this.loadCart(request);
         let model = { tenant: request.tenant, enterpriseCode: request.enterpriseCode, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode, quantity: String(payload.quantity), status: 'ACTIVE', active: true };
         let query = { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode };
         if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
-        if (SERVICE.DefaultCartEntryService.update) await SERVICE.DefaultCartEntryService.update({ tenant: request.tenant, authData: request.authData, query, model }).then(this.unwrap);
-        else await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
+        if (SERVICE.DefaultCartEntryService.update) await SERVICE.DefaultCartEntryService.update({ tenant: request.tenant, authData: this.persistenceAuthData(request), query, model }).then(this.unwrap);
+        else await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: this.persistenceAuthData(request), model }).then(this.unwrap);
         return this.responseWithValidationAndCalculation(request);
     },
 
     /** Marks an owned Cart entry removed. @param {Object} request Request. @returns {Promise<Object>} Cart response. */
     removeEntry: async function (request) {
+        if (request.auctionFunds) throw new Error('Selected auction Cart is immutable');
         if (!request.entryCode) throw new Error('Entry code is required');
         await this.loadCart(request);
         let model = { tenant: request.tenant, enterpriseCode: request.enterpriseCode, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode, status: 'REMOVED', active: true };
         let query = { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode };
         if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
-        if (SERVICE.DefaultCartEntryService.update) await SERVICE.DefaultCartEntryService.update({ tenant: request.tenant, authData: request.authData, query, model }).then(this.unwrap);
-        else await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
+        if (SERVICE.DefaultCartEntryService.update) await SERVICE.DefaultCartEntryService.update({ tenant: request.tenant, authData: this.persistenceAuthData(request), query, model }).then(this.unwrap);
+        else await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: this.persistenceAuthData(request), model }).then(this.unwrap);
         return this.responseWithValidationAndCalculation(request);
     },
 
@@ -303,13 +383,14 @@ module.exports = {
     calculateDirect: async function (request) {
         const cartQuery = { tenant: request.tenant, code: request.cartCode, ownerId: request.ownerId };
         if (request.enterpriseCode) cartQuery.enterpriseCode = request.enterpriseCode;
-        const carts = await SERVICE.DefaultCartService.get({ tenant: request.tenant, authData: request.authData, query: cartQuery, pageSize: 1 }).then(this.unwrap);
+        const carts = await SERVICE.DefaultCartService.get({ tenant: request.tenant, authData: this.persistenceAuthData(request), query: cartQuery, pageSize: 1 }).then(this.unwrap);
         const cart = Array.isArray(carts) ? carts[0] : carts;
         if (!cart) throw this.accessDeniedError();
         if (request.payload.expectedRevision !== undefined && Number(request.payload.expectedRevision) !== Number(cart.revision)) throw new Error('Cart revision conflict');
         const entryQuery = { tenant: request.tenant, cartCode: cart.code, ownerId: request.ownerId, status: 'ACTIVE' };
         if (request.enterpriseCode) entryQuery.enterpriseCode = request.enterpriseCode;
-        const entriesResponse = await SERVICE.DefaultCartEntryService.get({ tenant: request.tenant, authData: request.authData, query: entryQuery, pageSize: 500 }).then(this.unwrap);
+        this.assertOwner(request, cart);
+        const entriesResponse = await SERVICE.DefaultCartEntryService.get({ tenant: request.tenant, authData: this.persistenceAuthData(request), query: entryQuery, pageSize: 500 }).then(this.unwrap);
         const entries = Array.isArray(entriesResponse) ? entriesResponse : [];
         const defaults = require('../../config/properties').cart.limits;
         const limits = (CONFIG.get('cart') || {}).limits || defaults;
@@ -327,7 +408,7 @@ module.exports = {
         const sourceHash = crypto.createHash('sha256').update(JSON.stringify(result)).digest('hex');
         const calculationCode = request.payload.calculationCode || ['calc', cart.code, cart.revision].join('-');
         const model = Object.assign({}, result, { code: calculationCode, ownerId: request.ownerId, cartRevision: cart.revision, status: 'CURRENT', active: true, revision: 0, sourceHash, calculatedAt: new Date() });
-        const saved = await SERVICE.DefaultCartCalculationService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
+        const saved = await SERVICE.DefaultCartCalculationService.save({ tenant: request.tenant, authData: this.persistenceAuthData(request), model }).then(this.unwrap);
         return request.internalUse === true ? saved : this.redactCustomerCalculation(saved);
     }
 };

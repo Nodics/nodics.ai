@@ -30,6 +30,7 @@ module.exports = { cart: {
         quantity: { type: 'string', required: true , description: 'Stores the quantity value used by this record.'}, status: { type: 'string', required: true, enum: ['ACTIVE', 'REMOVED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'}
     }) }),
     cartCalculation: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, evidence, {
+        entries: { type: 'array', required: true, description: 'Exact calculated entries including Pricing-owned priceDecision and priceRowCode; retained as acquisition consideration evidence.' },
         cartRevision: { type: 'int', required: true , description: 'Stores the cart revision value used by this record.'}, currency: { type: 'string', required: true , description: 'Stores the currency code used for monetary amounts on this record.'},
         subtotal: { type: 'string', required: true , description: 'Stores the subtotal value used by this record.'}, discountAmount: { type: 'string', required: true , description: 'Stores the discount amount used for calculation, reporting, or settlement.'},
         taxAmount: { type: 'string', required: true , description: 'Stores the tax amount used for calculation, reporting, or settlement.'}, totalAmount: { type: 'string', required: true , description: 'Stores the total amount used for calculation, reporting, or settlement.'},
@@ -44,6 +45,12 @@ module.exports = { cart: {
     }) })
 } };
 module.exports.cart.cart.backoffice = { operations: ['search', 'read'], description: 'Customer cart evidence; mutations require Cart-owned operations.' };
+for (const name of ['cart', 'cartEntry']) {
+    module.exports.cart[name].definition.ownerRef = { type: 'object', required: false, description: 'Canonical Profile customer or Enterprise purchasing owner, separate from actor.' };
+    module.exports.cart[name].definition.actorRef = { type: 'object', required: false, description: 'Original signed actor creating this owner record; never wallet ownership.' };
+    module.exports.cart[name].definition.participantEnterpriseCode = { type: 'string', required: false, description: 'Signed purchasing namespace, separate from merchant storage.' };
+}
+module.exports.cart.cart.definition.merchantScope = { type: 'object', required: false, description: 'Retained canonical Store placement: contractVersion, storeCode, enterpriseCode and revision. Never accepted from HTTP input.' };
 
 /** Only a server-issued quote reference is accepted from the cart client; Pricing resolves every binding. */
 module.exports.cart.cartEntry.definition.priceQuoteCode = {type:"string",required:false,description:"Pricing-owned private quote reference bound to this buyer, product, quantity, cart and order."};

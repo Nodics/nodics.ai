@@ -13,6 +13,12 @@
 module.exports = {
   commsApi: {
     customer: {
+      listEmployeeInbox: {
+        secured: true, authTokenTypes: ["access"], accessGroups: ["employeeUserGroup"],
+        permission: "communication.customer.read", apiExposure: "communicationCustomer",
+        key: "/employee/communications", method: "GET", requestPrivacy: { sensitive: true }, cache: { enabled: false },
+        controller: "DefaultCommunicationApiController", operation: "listInbox",
+      },
       listInbox: {
         secured: true,
         authTokenTypes: ["access"],

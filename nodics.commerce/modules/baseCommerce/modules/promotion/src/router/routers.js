@@ -63,6 +63,18 @@ module.exports = {
       },
     },
     backoffice: {
+      couponWorkspace: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.read', apiExposure: 'commerceManagement',
+        key: '/promotions/coupon-offers/workspace', method: 'GET', controller: 'DefaultPromotionController',
+        operation: 'couponWorkspace', cache: { enabled: false },
+      },
+      inspectCouponOffer: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.read', apiExposure: 'commerceManagement',
+        key: '/promotions/:promotionCode/coupon-offer', method: 'GET', controller: 'DefaultPromotionController',
+        operation: 'inspectCouponOffer', cache: { enabled: false },
+      },
       inspectSellers: {
         secured: true,
         authTokenTypes: ["access"],
@@ -219,6 +231,24 @@ module.exports = {
         controller: "DefaultPromotionController",
         operation: "analytics",
       },
+      couponParticipation: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.coupon.seller.manage', apiExposure: 'commerceManagement',
+        key: '/promotions/:promotionCode/redeemer-participation', method: 'POST',
+        controller: 'DefaultPromotionController', operation: 'couponParticipation',
+      },
+      acquisitionReport: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.read', apiExposure: 'commerceManagement',
+        key: '/promotions/:promotionCode/acquisition-report', method: 'POST',
+        controller: 'DefaultPromotionController', operation: 'acquisitionReport',
+      },
+      couponPrefill: {
+        secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+        permission: 'commerce.promotion.draft.write', apiExposure: 'commerceManagement',
+        key: '/promotions/:promotionCode/prefill', method: 'GET',
+        controller: 'DefaultPromotionController', operation: 'couponPrefill',
+      },
     },
   },
 };
@@ -236,6 +266,14 @@ module.exports.promotion.policyPublicationAuthoring = {
     method: "POST",
     controller: "DefaultPromotionPublicationTargetController",
     operation: "createGoverned",
+  },
+};
+module.exports.promotion.acquisitionRefresh = {
+  refresh: {
+    secured: true, authTokenTypes: ["service"], accessGroups: ["userGroup"],
+    permission: "commerce.promotion.analytics", apiExposure: "commerceManagement",
+    key: "/internal/acquisition-report/refresh", method: "POST",
+    controller: "DefaultCouponAcquisitionRefreshController", operation: "refresh",
   },
 };
 module.exports.promotion.policyPublicationTarget = {

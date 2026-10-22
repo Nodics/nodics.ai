@@ -19,6 +19,11 @@ The framework layer is intentionally focused:
 - `loyaltyRedemption` records captured reward usage.
 - `loyaltyApi` reserves the API boundary for service-to-service integrations.
 
+Platform runtimes that explicitly declare `nodics.loyalty` as a discovery root
+can observe the Loyalty Core Enterprise reference and Loyalty Wallet
+`specialAccessRoles` releases. The owning manifests and prerequisite graph remain
+authoritative; discovery does not activate Loyalty, install data or assign roles.
+
 Commerce integrations such as buying a coupon with points are modeled outside
 Loyalty as payment providers. Those providers should call Loyalty reservation,
 capture, release, and reversal contracts rather than moving balances directly.

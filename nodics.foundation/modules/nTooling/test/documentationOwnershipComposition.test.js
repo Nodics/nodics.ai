@@ -20,9 +20,22 @@ const importer = require('../../nData/nImport/import/src/service/contentPack/def
 const framework = path.resolve(__dirname, '../../../..');
 const docs = path.join(framework, 'nodics.docs');
 
+/** Derives exact staging expectations from the selected immutable composition, not predecessor filenames. */
+function selectedDocumentationRecordFiles(selection) {
+    const files = new Set();
+    const visit = release => {
+        (release.children || []).forEach(visit);
+        for (const file of Object.keys(release.manifest.generatedHashes)) {
+            if (file.includes('/records/documentation/') && file.endsWith('.js')) files.add(path.basename(file));
+        }
+    };
+    visit(selection);
+    return [...files].sort();
+}
+
 test('the full library composes canonical capability records rather than retaining central copies', () => {
     const catalogue = contract.validateDataRelease(docs);
-    assert.equal(catalogue.documents.length, 176);
+    assert.equal(catalogue.documents.length, 179);
     assert.equal(catalogue.documents.filter(document => document.ownerRoot === docs).length, 29);
     assert.equal(fs.existsSync(path.join(framework, 'nodics.foundation/modules/nSetup/data')), false);
     for (const document of catalogue.documents) {
@@ -32,7 +45,7 @@ test('the full library composes canonical capability records rather than retaini
         assert.equal(document.functionalModule, path.relative(framework, document.ownerRoot).split(path.sep)[0], document.id);
         for (const reference of document.references || []) assert(reference.owner, document.id);
     }
-    assert.equal(contract.validateReferenceGraph([catalogue]).documents, 176);
+    assert.equal(contract.validateReferenceGraph([catalogue]).documents, 179);
     const headerNames = new Set(), headerFiles = new Set();
     const inspectHeaders = selection => {
         (selection.children || []).forEach(inspectHeaders);
@@ -58,6 +71,14 @@ test('the full library composes canonical capability records rather than retaini
     }
     const families = Object.fromEntries(['Component', 'Page', 'Route', 'SearchMetadata', 'PublicationState'].map(suffix =>
         [suffix, contract.readReleaseRecords(catalogue.releaseComposition, suffix)]));
+    const navigation = families.Component.records.find(record => record.renderer === 'documentation.component.navigation');
+    for (const item of navigation.properties.items) {
+        const article = families.Component.records.find(record =>
+            record.properties?.code === item.code && Array.isArray(record.properties.blocks));
+        assert(article, item.code + ': navigation must resolve to the canonical selected article');
+        for (const field of ['searchText', 'maturityState', 'implementationState', 'summary', 'title', 'lifecycleState'])
+            assert.equal(item[field], article.properties[field], item.code + ': stale navigation ' + field);
+    }
     for (const page of metadata.records) {
         const owner = metadata.origins.get(page.code).root;
         for (const [family, key] of [['Component', 'articleComponent'], ['Page', 'targetPage'], ['Route', 'targetRoute']]) {
@@ -100,41 +121,37 @@ test('module-only selection stages its articles and shared foundation without un
         source: { type: 'LOCAL_SIBLING', repositoryName: 'nodics.ai', manifestPath: path.relative(framework, path.join(owner, 'data/manifest.json')), manifestSection: 'documentation' } };
     const staged = service.prepareStaging(context, service.inspectRelease(context), 'selected');
     const files = fs.readdirSync(path.join(staged.inputPath, 'records/documentation'));
-    assert(files.includes('electronicsProductDocumentationComponentData.js'));
-    assert(files.includes('nodicsDocumentationComponentData.js'));
-    assert(!files.includes('apparelProductDocumentationComponentData.js'));
+    assert.deepEqual(files.sort(), selectedDocumentationRecordFiles(catalogue.releaseComposition),
+        'staging must contain exactly the selected owner and shared foundation record files');
     assert(!fs.existsSync(path.join(staged.inputPath, 'core-v001')));
     assert(!fs.existsSync(path.join(staged.inputPath, 'sample-v001')));
 });
 
 test('Commerce workflow guides are canonical optional packs and never pull business records or reference-only articles into staging', t => {
     const selections = [
-        ['promotion', 'nodics.commerce/modules/baseCommerce/modules/promotion', 'promotion.campaigns-coupon-issuance'],
-        ['cart', 'nodics.commerce/modules/checkout/modules/cart', 'cart.customer-intent-calculation'],
-        ['digitalCore', 'nodics.commerce/modules/digitalCommerce/modules/digitalCore', 'digital.purchase-delivery-reveal']
+        ['promotion', 'nodics.commerce/modules/baseCommerce/modules/promotion', ['promotion.campaigns-coupon-issuance']],
+        ['cart', 'nodics.commerce/modules/checkout/modules/cart', ['cart.customer-intent-calculation']],
+        ['digitalCore', 'nodics.commerce/modules/digitalCommerce/modules/digitalCore', ['digital.bundle-holdings-gifts', 'digital.purchase-delivery-reveal']]
     ];
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-commerce-docs-'));
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
     global.NODICS = { getServerPath: () => root, getNodicsHome: () => path.join(framework, 'nodics.foundation') };
     global.CONFIG = { get: () => ({ dataDirName: 'temp' }) };
-    for (const [pack, relative, id] of selections) {
+    for (const [pack, relative, ids] of selections) {
         const owner = path.join(framework, relative), catalogue = contract.validateDataRelease(owner);
-        assert.equal(catalogue.documents.filter(document => document.ownerRoot === owner).length, 1);
-        assert(catalogue.documents.some(document => document.id === id));
-        assert.equal(catalogue.documents.length, 30);
-        for (const [, , other] of selections) if (other !== id)
-            assert(!catalogue.documents.some(document => document.id === other), id + ': validation references became imported content');
+        assert.deepEqual(catalogue.documents.filter(document => document.ownerRoot === owner).map(document => document.id).sort(), ids);
+        assert.equal(catalogue.documents.length, 29 + ids.length);
+        for (const [, , others] of selections) for (const other of others) if (!ids.includes(other))
+            assert(!catalogue.documents.some(document => document.id === other), pack + ': validation references became imported content');
         const context = { enabled: true, configuration: { allowedContractVersions: [2] }, pack: { manifestPack: pack },
             source: { type: 'LOCAL_SIBLING', repositoryName: 'nodics.ai', manifestPath: relative + '/data/manifest.json', manifestSection: 'documentation' } };
         const service = Object.assign({}, importer), release = service.inspectRelease(context);
         const staged = service.prepareStaging(context, release, pack);
         const files = fs.readdirSync(path.join(staged.inputPath, 'records/documentation'));
-        assert(files.includes(pack + 'DocumentationComponentData.js'));
-        assert(files.includes('nodicsDocumentationComponentData.js'));
+        assert.deepEqual(files.sort(), selectedDocumentationRecordFiles(catalogue.releaseComposition),
+            pack + ': staging must contain exactly the selected owner and shared foundation record files');
         assert(!fs.existsSync(path.join(staged.inputPath, 'sample-v001')));
         assert(!fs.existsSync(path.join(staged.inputPath, 'core-v001')));
-        for (const [other] of selections) if (other !== pack)
-            assert(!files.includes(other + 'DocumentationComponentData.js'));
     }
 });
 

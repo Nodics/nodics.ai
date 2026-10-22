@@ -1,5 +1,10 @@
 # Operational Release Admission
 
+Acquisition projections have an explicit inactive [Cron refresh binding](llm/contracts/acquisition-report-refresh.md).
+It invokes the secured exact-channel Promotion endpoint and commits coverage only
+after complete Digital evidence. Source registration does not enable reporting,
+import a job, grant runtime access or activate a schedule.
+
 Public coupon catalogue browsing uses an internal Product-bound availability
 batch with fresh bounded Profile references before and after work. Each Product
 retains canonical visibility, installed guards, receipt/policy/consent and stock
@@ -25,6 +30,17 @@ terms, grants, tokens or activation flags and does not authorize replay of
 single-use stock during a failed release repair.
 
 ## Promotion
+
+The shared owner now exposes immutable `couponOffer` creation, fixed/no-expiry
+retained rights, transactional LIMITED/UNLIMITED supply and lifetime purchasing
+owner allowances, bilateral redeemer participation and privacy-protected
+acquisition projections. See [the owner contract](llm/contracts/coupon-offers-and-acquisition.md)
+for commands, exact Digital integration ports and remaining integration boundaries.
+Reporting defaults inactive; no live schedules, imports or providers are enabled.
+Search consumes `DefaultPromotionOperationService.couponIssuerMemberships` for
+complete public-safe canonical issuer association. The
+[membership contract](llm/contracts/trusted-distribution-read-admission.md#public-coupon-issuer-membership)
+specifies public/customer admission, own/delegated evidence and refusal semantics.
 
 The existing Promotion Workspace and Promotions pages use
 [owner-scoped campaign discovery and search](llm/contracts/promotion-lifecycle-and-publication.md#ordinary-business-browsing).
@@ -73,6 +89,25 @@ used-benefit RELEASE admission is absent and remains disabled in the approved
 local-demo scope.
 
 Promotion owns tenant-scoped promotion and coupon policy plus immutable discount-decision evidence. Its simulation service explains status, date, subtotal, customer-group, product, budget, priority, exclusion, and exclusive-stacking outcomes without mutating coupon or campaign state. Archived gComm is reference-only.
+
+Public coupon browsing exposes Promotion-validated acquisition requirements,
+never copied Product attributes. Unknown policy is explicit null and unavailable;
+known REWARDS, CERTIFICATES or BOTH rules exclude private price and stock references.
+See [the exact read DTO](llm/contracts/coupon-offers-and-acquisition.md#public-acquisition-requirements).
+
+`acceptance:coupon-acquisition-report --execute` invokes the selected private
+refresh owner, then reads the employee-authorized aggregate and requires one exact
+`dataUpdatedThrough` watermark. Framework timeout defaults remain in Promotion;
+the project contributes only reviewed channel/campaign scope and original tokens.
+The runner does not activate Cron, create events or expose customer attribution.
+
+`acceptance:coupon-offer-lifecycle --execute` owns E08 policy assertions for one
+reviewed two-unit offer and one participation-withdrawal offer. A project-owned
+adapter invokes the canonical authoring, allocation and retained-rights APIs; the
+framework runner proves immutable benefit terms, one shared supply pool, lifetime
+purchasing-owner allowance, fixed expiry and that withdrawal blocks only new
+purchases. The adapter may hold runtime sessions, but cannot replace these owner
+assertions or contribute defaults, persistence, identities, offers or stock.
 
 Promotion contributes the read-only nImport target validator
 `DefaultPromotionOperationService.validateImportTarget`. Staged authoring

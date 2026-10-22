@@ -102,7 +102,7 @@ module.exports = {
   /** Delegates sensitive service verification commands to the existing Communication owner boundary. */
   executeVerification: function (request) {
     this.requirePrivateEntry(request, "ERR_COMMS_VERIFY_CONTEXT");
-    return SERVICE.DefaultCommunicationVerificationApiService.execute(request);
+    return SERVICE.DefaultCommunicationVerificationOperationService.execute(request);
   },
   /** Resolves only an explicitly confirmed recorded uncertainty. */ resolveDelivery:
     async function (request) {
@@ -214,6 +214,7 @@ module.exports = {
    * @override Later layers may enrich projections, never replace bearer admission or recipient isolation.
    */ listInbox:
     async function (request) {
+      if (request.authData?.principalType === "human") return this.listEmployeeInbox(request);
       const auth = request.authData;
       const authorization = request.authorization;
       const bearer =
@@ -270,10 +271,46 @@ module.exports = {
             Number(profileResponse.responseCode) >= 300))
       )
         throw new Error("Customer identity unavailable");
+      return this.listRecipientInbox(request, customer.code);
+    },
+  /** Reads an Employee's canonical own inbox with the original bearer; no Customer account or purchaser fallback. */
+  listEmployeeInbox: async function (request) {
+    const { isDeepStrictEqual: same } = require("node:util");
+    const auth = request.authData, p = CONFIG.get("communicationApi")?.employeeInbox;
+    const bearer = typeof request.authorization === "string" && request.authorization.match(/^Bearer[ \t]+([A-Za-z0-9._~+/-]+=*)$/i);
+    if (auth?.principalType !== "human" || auth.tokenType !== "access" || auth.isSystem || !auth.loginId || !auth.entCode ||
+        auth.tenant !== request.tenant || !bearer || bearer[0] !== request.authorization ||
+        request.auth?.type !== "bearer" || request.auth.credential !== bearer[1] ||
+        !p || !/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(p.profileConnectionName || "") ||
+        !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < 1 || p.timeoutMs > 60000 ||
+        !Number.isSafeInteger(p.maxResponseBytes) || p.maxResponseBytes < 1) throw new Error("Employee context required");
+    const pin = structuredClone({ auth, credential: request.auth, tenant: request.tenant, authorization: request.authorization, policy: p });
+    const bound = () => {
+      if (!same(pin.auth, request.authData) || !same(pin.credential, request.auth) || pin.tenant !== request.tenant || pin.authorization !== request.authorization ||
+          !same(pin.policy, CONFIG.get("communicationApi")?.employeeInbox) ||
+          [request.entCode, request.enterpriseCode, auth.enterpriseCode].some(v => v !== undefined && v !== auth.entCode))
+        throw new Error("Employee identity unavailable");
+    };
+    bound();
+    const response = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: "profile", connectionName: p.profileConnectionName,
+      targetAuthority: { runtimeRole: "PLATFORM" }, apiName: "/employee/inbox-identity", methodName: "GET",
+      tenant: request.tenant, request: { tenant: request.tenant }, header: { Authorization: request.authorization, "X-Enterprise-Code": auth.entCode },
+      maxAttempts: 1, timeoutMs: p.timeoutMs, maxResponseBytes: p.maxResponseBytes, followRedirects: false });
+    bound();
+    const identity = response?.data;
+    if (!/^SUC_/.test(response?.code || "") || response.success === false || response.error ||
+        response.responseCode !== undefined && (!Number.isFinite(Number(response.responseCode)) || Number(response.responseCode) < 200 || Number(response.responseCode) >= 300) ||
+        response.errors !== undefined && (!Array.isArray(response.errors) || response.errors.length) ||
+        identity?.contractVersion !== 1 || identity.tenant !== request.tenant || identity.enterpriseCode !== auth.entCode ||
+        !/^profile-employee:[A-Za-z0-9_.:@|-]{1,128}$/.test(identity.recipientId || "")) throw new Error("Employee identity unavailable");
+    const result = await this.listRecipientInbox(request, identity.recipientId); bound(); return result;
+  },
+  /** Queries only a canonical recipient resolved by this facade's private authenticated identity paths. */
+  listRecipientInbox: async function (request, recipientId) {
       const result = await SERVICE.DefaultCommunicationRuntimeService.list(
         "CommsInboxMessage",
         request,
-        { recipientId: customer.code },
+        { recipientId },
         Math.min(
           Math.max(Number((request.query && request.query.limit) || 25), 1),
           100,
@@ -290,7 +327,7 @@ module.exports = {
             request,
             {
               code: { $in: codes },
-              recipientId: customer.code,
+              recipientId,
               channel: "IN_APP",
             },
             codes.length,

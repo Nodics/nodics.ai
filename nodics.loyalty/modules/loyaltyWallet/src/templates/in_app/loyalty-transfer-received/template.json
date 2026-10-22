@@ -1,0 +1,18 @@
+{
+  "formatVersion": 1,
+  "code": "LOYALTY_TRANSFER_RECEIVED_IN_APP",
+  "ownerModule": "loyaltyWallet",
+  "version": 1,
+  "status": "ACTIVE",
+  "purpose": "LOYALTY_TRANSFER_COMPLETED",
+  "sourceModules": ["loyaltyWallet"],
+  "channel": "IN_APP",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "transferReference": { "type": "string", "required": true, "maximumLength": 200 },
+    "amount": { "type": "string", "required": true, "maximumLength": 128 },
+    "feeAmount": { "type": "string", "required": true, "maximumLength": 128 },
+    "rewardTypeCode": { "type": "string", "required": true, "maximumLength": 200 }
+  }
+}

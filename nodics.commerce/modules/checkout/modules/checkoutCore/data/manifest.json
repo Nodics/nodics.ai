@@ -2,6 +2,152 @@
   "contractVersion": 2,
   "module": "checkoutCore",
   "sections": {
+    "enterpriseSpendingAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "Purchase-limit access groups",
+      "description": "Explicit business-area definition only. No employee assignments or runtime activation.",
+      "owningDomain": "checkoutCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/checkoutSpendAccessGroupHeader.js": "65abaa3de0b11c43d5ad77842f14667cb7bb55c8c4ec0025257c4ffcdb398267",
+        "init-v002/records/identity/checkoutSpendAccessGroupData.js": "0702c808f689fc4d94dc8c007d9e60abcb0cdd0d6f83c320ec901e65a196b268"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.2",
+          "checksum": "d8e66433a75b9be46ef429aebe4aead6720ccd447628e3928f50605002d63b29",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "checkoutCore",
+          "sectionCode": "enterpriseSpendingPermission",
+          "version": "0.0.2",
+          "checksum": "8bc129fbaff0f7f48b9354e420ab14df5956fc6166622e03788de6475f562b65",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "enterpriseSpendingAccessRoles": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "Purchase-limit access roles",
+      "description": "Explicit business-area definition only. No employee assignments or runtime activation.",
+      "owningDomain": "checkoutCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/checkoutSpendAccessRoleHeader.js": "efa25138321f0bf6c6c09cf861bef72452213a36419d6fbff68f47f7f04e38bf",
+        "init-v002/records/identity/checkoutSpendAccessRoleData.js": "9edcf08dea426ea6c30e3802a9e845877ef068862b97d7f8c560fa178796e0e2"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "checkoutCore",
+          "sectionCode": "enterpriseSpendingAccessGroups",
+          "version": "0.0.2",
+          "checksum": "a27052a4e098ee93374c9b37003939804580099b1a44ee7a023bf2357c279608",
+          "partition": "DEFAULT"
+        }
+      ]
+    },
+    "enterpriseSpendWorkspace": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "displayName": "Employee purchase-limit presentation",
+      "description": "CMS text for the existing Enterprise business-access employee panel; no spending selections or grants.",
+      "owningDomain": "checkoutCore",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "core-v001",
+      "publicationReview": {
+        "title": "Publish employee purchase-limit copy",
+        "summary": "Use the existing Axis template.",
+        "sourceRole": "WCMS_STAGED",
+        "targetRole": "WCMS_ONLINE",
+        "siteCode": "axisCmsSite",
+        "catalogCode": "axisContentCatalog",
+        "impactMessage": "Presentation only; no access, policy or funds change.",
+        "rollbackMessage": "Restore previous governed CMS presentation.",
+        "entities": [
+          {
+            "type": "cmsComponent",
+            "label": "Purchase-limit copy",
+            "total": 1,
+            "added": 1,
+            "updated": 0,
+            "unchanged": 0,
+            "removed": 0
+          }
+        ]
+      },
+      "files": {
+        "core-v001/headers/workspace/checkoutEnterpriseSpendHeader.js": "7cd84f468795c18a80b9298ba4b2bec3be5f926461e6c9c54aa74e06c067feca",
+        "core-v001/records/workspace/checkoutEnterpriseSpendCmsComponentData.js": "392119a1d40d66e1f6f7762e1e7538d9ef0550cdf8fb89b38e1a8f09cca3d47b",
+        "core-v001/records/workspace/checkoutEnterpriseSpendCmsPageData.js": "c9482b207ffeecec16847d9fa77dcece418495fe2e9fcbe46eacff78da6e9bef",
+        "core-v001/records/workspace/checkoutEnterpriseSpendCmsRendererData.js": "7af8fc6e5818acde518fcad414d2defea9043cc2e716b032b48b869f5cffa91d",
+        "core-v001/records/workspace/checkoutEnterpriseSpendCmsRouteData.js": "53cb037322b3d4a5f50a7dabf8970b1dd5f08a014ba53fe0a042826475162554",
+        "core-v001/records/workspace/checkoutEnterpriseSpendCmsTypeData.js": "e19cfcd9e5fac75ba87e60ffa285bb65fccdc6271bf7987c1b646c25f07b9910"
+      }
+    },
+    "enterpriseSpendingPermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "Enterprise purchase limit permission",
+      "description": "Defines spending administration permission only; no employee grants or operational activation.",
+      "owningDomain": "checkoutCore",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/checkoutSpendPermissionHeader.js": "0240b8debe3aa84aa17b4f8c1326e9b5156183f2fe2f991a16d305c860d9f94e",
+        "init-v002/records/identity/checkoutSpendPermissionData.js": "811ce8c2093b944093c786a3354970aedb0ad4397b86ba3e2927cb141b21fdd7"
+      }
+    },
     "permissionCatalogue": {
       "kind": "DATA_RELEASE",
       "dataType": "init",

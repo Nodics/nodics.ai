@@ -50,17 +50,9 @@ module.exports = {
   couponMerchants: function (request) {
     return SERVICE.DefaultEWasteMarketplaceService.couponMerchants(request);
   },
-  /** Returns customer bids from the owning Commerce negotiation service. */
+  /** Returns private Customer/Enterprise auction history from Bidding without converting identity. */
   bids: function (request) {
     return SERVICE.DefaultEWasteMarketplaceService.bids(request);
-  },
-  /** Sends a confirmed published-offer bid to Commerce. */
-  placeBid: function (request) {
-    return SERVICE.DefaultEWasteMarketplaceService.placeBid(request);
-  },
-  /** Sends the participant's reviewed bid action to Commerce. */
-  decideBid: function (request) {
-    return SERVICE.DefaultEWasteMarketplaceService.decideBid(request);
   },
 
   /** Returns effective application configuration. */
@@ -389,10 +381,6 @@ module.exports = {
   /** Reads published available marketplace offers. */
   marketplace: function (request) {
     return SERVICE.DefaultEWasteMarketplaceService.list(request);
-  },
-  /** Delegates a confirmed purchase to Commerce. */
-  purchase: function (request) {
-    return SERVICE.DefaultEWasteMarketplaceService.purchase(request);
   },
   /** Reads customer purchase history. */
   purchases: function (request) {

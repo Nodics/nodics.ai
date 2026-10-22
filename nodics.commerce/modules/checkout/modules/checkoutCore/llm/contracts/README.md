@@ -1,5 +1,10 @@
 # Checkout Core Contracts
 
+Fixed-price commands follow [merchant and participant scope](../../../cart/llm/contracts/merchant-scope.md).
+Only Cart creation requires explicit Store selection. Owner-validated retained
+Cart/checkpoint evidence resolves merchant scope thereafter; command status returns
+validated original Cart/Order bindings without frontend namespace selectors.
+
 The separate [private coupon HTTP journey](coupon-journey-http-acceptance.md)
 purchases existing coupon Products, privately reveals them, checks exact LOCAL
 ITEM simulation and refunds one unused purchase under original owner approvals.
@@ -297,3 +302,50 @@ concurrent claims, strict receipts, preserved legacy audit and effect-free repla
 Later-layer overrides must retain these qualification/fencing boundaries. Native
 cleanup and any separately approved continuation require independent acceptance;
 source tests do not assert live coupon, wallet or financial completion.
+# Governed Coupon Consideration
+
+Irreversible input COMMIT now uses the common
+[forward purchase recovery](forward-purchase-recovery.md) status/action and
+confirmed original-key endpoint. Positive RELEASE_ALLOWED disposition is required
+before the compensation flow below; consumed/possibly consumed inputs can never
+enter Payment reversal or partial coupon release.
+
+Checkout delegates certificate eligibility, holding and consumption to Digital's
+coupon acquisition owner. After actual Promotion reservations, it reloads each
+allocation through `commandForCoupon`/`allocation`. Only a complete basket of
+CERTIFICATES allocations with an exact zero total omits Payment. Zero total or a
+browser payment-method selector alone cannot establish this exemption. There is
+no synthetic zero-value authorization, capture or Payment transaction. Order
+evidence records `considerationType:CERTIFICATES`; completed phases omit
+AUTHORIZED/PAYMENT_CAPTURED. REWARDS/BOTH retain ordinary real reward Payment.
+
+Cart's persisted calculation schema retains its exact `entries`, including each
+Pricing-owned `priceDecision` and `priceRowCode`. Order entry evidence copies that
+decision rather than inventing another price source. Digital checks original
+Order/calculation and captured consideration before certificate consumption and
+coupon sale. No usable coupon is manufactured by Checkout.
+
+Governed acquisition compensation persists the original failure, typed owner,
+actor, participant Enterprise, unit identities and Payment reversal intent/result
+before calling Digital `releaseReservations`. Digital then runs `releaseInputs`
+and Promotion's retained failure checks. Unknown authorization is retained as
+`couponAcquisitionRecovery.paymentAttemptUnconfirmed:true`; absence of a Payment
+row does not prove that an external authorization had no effect.
+
+The existing compensation recovery endpoint recognizes this retained evidence.
+It reads the four original Payment operation keys, requires exact terminal
+VOID/REFUND evidence when Payment was used, persists that evidence and claims a
+revision before Digital release. It never redispatches Payment or accepts supplied
+replacement units. Missing/failed receipts remain COMPENSATION_REQUIRED. A RUNNING
+claim is not stolen. Successful recovery repeats only its retained result.
+Unknown financial attempts require owner reconciliation, not a false no-payment
+receipt. Consumed certificates remain irreversible and cannot be released by this
+path. Full mixed-consideration admission remains subject to Digital's retained
+offer/Order rules, not a Checkout bypass.
+
+`test/checkoutCouponConsideration.test.js` exercises actual placement ports,
+Digital acquisition readers/phases and Payment execution against isolated
+generated storage, Promotion and certificate transport doubles. It covers a
+complete certificate-only placement, rejected partial/nonzero consideration,
+failure-before-Order release, BOTH reversal-before-release and unknown Payment
+retention. This is unit/source evidence, not deployed end-to-end qualification.

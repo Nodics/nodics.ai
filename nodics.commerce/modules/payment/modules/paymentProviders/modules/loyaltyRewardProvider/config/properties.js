@@ -24,14 +24,17 @@ module.exports = {
         }
     },
     loyaltyRewardProvider: {
+        auctionPaths: { inspect: '/auction-funds/inspect', capture: '/auction-funds/capture', release: '/auction-funds/release' },
         enabled: true,
         providerCode: 'loyalty-reward-points',
         maturity: 'INTERNAL_CONFORMANCE',
         programCode: 'default',
         rewardTypeCode: 'points',
+        profileTarget: { moduleName: 'profile', connectionName: 'profile', apiVersion: 'v0', targetAuthority: { runtimeRole: 'PLATFORM' }, timeoutMs: 3000, maxAttempts: 1 },
         loyaltyTarget: {
             moduleName: 'loyaltyApi',
             connectionName: 'loyaltyServer',
+            connectionType: 'abstract',
             apiVersion: 'v0',
             targetAuthority: { runtimeRole: 'LOYALTY' },
             timeoutMs: 3000,

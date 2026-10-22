@@ -308,11 +308,15 @@ async function verifyNestedAssociationIdentity() {
         return expected && expected.$in ? expected.$in.includes(model[key]) : model[key] === expected;
     });
     const deliverySearchOptions = [];
+    const deliveryAuthData = [];
+    const systemAuthData = { isSystem: true, userGroups: ['systemUserGroup'], permissions: [] };
     const service = list => ({ get: request => {
         deliverySearchOptions.push(request.searchOptions);
+        deliveryAuthData.push(request.authData);
         return Promise.resolve({ result: list.filter(model => matches(model, request.query)) });
     } });
     global.SERVICE = {
+        DefaultIdentityGovernanceService: { getSystemAuthData: () => systemAuthData },
         DefaultCmsPageRouteService: service(data.routes),
         DefaultCmsPageService: service(data.pages),
         DefaultCmsPageTemplateService: service(data.templates),
@@ -328,10 +332,13 @@ async function verifyNestedAssociationIdentity() {
     delete require.cache[require.resolve(deliveryPath)];
     const delivery = require(deliveryPath);
     deliverySearchOptions.length = 0;
+    deliveryAuthData.length = 0;
     let response = await delivery.resolvePage({ tenant: 'tenant-a', authData: {}, options: {}, router: { publicAccess: true }, delivery: { site: 'site', path: '/home', locale: 'en', channel: 'web' } });
     assert(deliverySearchOptions.length > 0);
     deliverySearchOptions.forEach(options => assert.strictEqual(options.pageSize, 4,
         'CMS delivery reads must use the configured graph bound instead of the database default page size'));
+    deliveryAuthData.forEach(authData => assert.strictEqual(authData, systemAuthData,
+        'CMS delivery must use the framework system principal for private persistence reads'));
     assert.strictEqual(response.result.contractVersion, 1);
     assert.strictEqual(response.result.page.renderer, 'page.home');
     assert.strictEqual(response.result.page.rendererContractVersion, 1);

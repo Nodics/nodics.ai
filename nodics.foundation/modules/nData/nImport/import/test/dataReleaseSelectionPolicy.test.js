@@ -63,6 +63,21 @@ test('explicit releases stay discoverable but require exact selection; existing 
     const startup = { ...service, executePreparedPlan: async (request, plan) => plan };
     const startupPlan = await startup.installStartupReleases({});
     assert.deepEqual(startupPlan.releases.map(release => release.releaseCode), ['example:baseline']);
+    service.configuration().initializationProfiles.selected = {
+        enabled: true, label: 'Selected authority', description: 'Install one reviewed authority pack.',
+        completionMessage: 'Reviewed authority installed.',
+        steps: [{ dataType: 'init', releaseCodes: ['example:optional'] }]
+    };
+    service.configuration().types.init.startupProfileSelections = [{
+        environmentCode: 'testEnvironment', runtimeRole: 'PROCESS', profileCodes: ['selected']
+    }];
+    const selectedStartupPlan = await startup.installStartupReleases({});
+    assert.deepEqual(selectedStartupPlan.releases.map(release => release.releaseCode),
+        ['example:baseline', 'example:optional']);
+    service.configuration().initializationProfiles.selected.steps.push({ dataType: 'core', releaseCodes: ['example:optional'] });
+    await assert.rejects(startup.installStartupReleases({}), /Init releases only/);
+    service.configuration().types.init.startupProfileSelections[0].profileCodes = ['missing'];
+    await assert.rejects(startup.installStartupReleases({}), /profile is unavailable/);
     assert.equal(fixture.imports.length, 0);
     fixture.runtimeRole = 'WCMS_STAGED';
     await assert.rejects(service.preparePlan({ releaseRequest: { dataType: 'init', releaseCodes: ['example:optional'] } }), /destination/);

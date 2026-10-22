@@ -1,0 +1,593 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-20T11:28:37.952Z",
+  "scope": "Commerce authoring, Commerce Search, Payment Core/provider, internal classification; bounded canonical editorial and selected-release metadata corrections.",
+  "status": "SCOPED_SOURCE_EDITORIAL_COMPLETE",
+  "coordination": "Heisenberg exclusively owns central manifest/config/final aggregate integration. No source/runtime or shared aggregate edits in this closeout. Final owner seals and sidecars sent directly.",
+  "sourceFreeze": true,
+  "releases": [
+    {
+      "owner": "nodics.docs",
+      "previousVersion": "0.0.1",
+      "currentVersion": "0.0.2",
+      "previousReleaseChecksum": "4180ccd532b3f55fb564b9a194b2ff9d475e15124499eeee49fdf1fdd685e301",
+      "releaseChecksum": "b307ce55bf1d38127db28f19e1942853f97b3ef77d948f936e171e63c4af3839",
+      "predecessorFilesVerified": 38,
+      "corrections": [
+        {
+          "id": "reference.internal-source-boundary-register",
+          "previousBlocksSha256": "8cb2320d0ac5eeb125c0873fc37d4b4a40cb920e77b88f7ef3df4cf6deefbde4",
+          "articleBlocksSha256": "e1c3bcd2c00194b3149f7e7e0c6374c9e8aed866c073bc9e946c8b9c4c16db4e"
+        }
+      ]
+    },
+    {
+      "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
+      "previousVersion": "0.0.2",
+      "currentVersion": "0.0.3",
+      "previousReleaseChecksum": "fb30a32a498d9dae866bfff5067b3e2fc95cb16f83132afec4c5e7abf14a7eeb",
+      "releaseChecksum": "94c3bbc8624973b1ac1a2330dbe209d8e2613ea837e12f058b7e580617600ff5",
+      "predecessorFilesVerified": 8,
+      "corrections": [
+        {
+          "id": "promotion.campaigns-coupon-issuance",
+          "previousBlocksSha256": "31eb14faeb35fa1eb2a885561e53dd02683e36807836d3e3a287ba73ccbcbd16",
+          "articleBlocksSha256": "876fbd7fdd8a70c2cc7b930b464fd53586941e1f1c5de9717f3ee0f4dfa8ffb1"
+        }
+      ]
+    },
+    {
+      "owner": "nodics.commerce/modules/digitalCommerce/modules/digitalCore",
+      "previousVersion": "0.0.2",
+      "currentVersion": "0.0.3",
+      "previousReleaseChecksum": "e1811e063cf592ffe31f18e238c19b425c1588fe1b8341310b8d311d151bf7da",
+      "releaseChecksum": "4a38621da07c0e7af00baa79d81775c09888eea8c53e57697b213885f992c63d",
+      "predecessorFilesVerified": 8,
+      "corrections": [
+        {
+          "id": "digital.purchase-delivery-reveal",
+          "previousBlocksSha256": "6c10ea3b6480b309620ba63780709f8af6d98691a42f4c262cbd6b40b8c8919f",
+          "articleBlocksSha256": "4d8489bafb96afd501d82d2436441246929f9e72fd276013ec6720b970b43a9f"
+        }
+      ]
+    },
+    {
+      "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "previousVersion": "0.0.1",
+      "currentVersion": "0.0.2",
+      "previousReleaseChecksum": "7b78d3ec733edad14eec9173b0aecd8853d2cb54405d5b46bce5cb712a9151cd",
+      "releaseChecksum": "18c6150b622561da65367c707494a88b9213eebff895cd6b24b874cf2a0c58ba",
+      "predecessorFilesVerified": 8,
+      "corrections": [
+        {
+          "id": "fulfillment.shipping-management",
+          "previousBlocksSha256": "5a6ca17cce7ca188c2308fbb4887b17425c6c2096aaa0b37057c244428d60db0",
+          "articleBlocksSha256": "18e1af46191ca9382c5c0b4c619fc743c79598a4341fef1afb910f5ec245b2c2"
+        },
+        {
+          "id": "commerce.fulfillment-core-source-map",
+          "previousBlocksSha256": "ef763053ea50378fd68c5823b49395c34a3890633d070dcaaae8b083b60467c2",
+          "articleBlocksSha256": "c3b98334c84fb8e0568f847ddf6983b2a8044c0cef2bd60cd5a9e3b783156687"
+        }
+      ]
+    },
+    {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "previousVersion": "0.0.7",
+      "currentVersion": "0.0.8",
+      "previousReleaseChecksum": "b1fd075b7089f2bfeacf3fcdb209d0dbc8c8d880481c3fc415db65fef5568519",
+      "releaseChecksum": "2ec152fd9be5b18340ead79283739f84825b5f475a5f050c397c72ddff9087a4",
+      "predecessorFilesVerified": 29,
+      "corrections": [
+        {
+          "id": "accelerators.circa-operations-rewards",
+          "previousBlocksSha256": "74da3b9f9cad09e5c9ae1a5c279f2f20f8df710ed3508e1c1fccdcb46d6a513e",
+          "articleBlocksSha256": "1bba40b7ca9186cd83e5489ae4e563ee683ba77012833b26d8161faa8c51c392"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002NodeData.js",
+      "finalSha256": "53c5619d57cda08e0eafdaea9238229f5997460140d269ce9c404ef6ae2e3051",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves navigation ownership and IDs; DRAFT retained. Digital bundle maturity uses CMS IMPLEMENTED without claiming runtime/provider acceptance."
+    },
+    {
+      "path": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002PageMetadataData.js",
+      "finalSha256": "85f18ca6b73bb34d67540f0f273ece8755a80a898b552307c56b34c8756c5eea",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Projects exact canonical headings, checksums, source paths and word counts; Digital bundle uses legal CMS maturity and retains DRAFT."
+    },
+    {
+      "path": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002SearchMetadataData.js",
+      "finalSha256": "bfd0fa883ba8d49aedaae0c82dc3c8f70e2281210bac2dfd22d73456b8d15a3f",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Derived article text stays aligned with selected owner content; Digital editorial maturity stays nTooling partial."
+    },
+    {
+      "path": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "finalSha256": "4b7c66ac83a0674721006e868e014b1abed36cb2f43b69a31fd0390d53f02dd9",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Reviewed canonical editorial corrections; stable identities/anchors retained, derived search and source metadata aligned. Historical source remains unchanged."
+    },
+    {
+      "path": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002PageData.js",
+      "finalSha256": "5f3d63461c024141ed8609d88babba5814bb50491f1e323ab10a396930890d7c",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Retains renderer/page binding and normal Staged delivery; no Online activation."
+    },
+    {
+      "path": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002RouteData.js",
+      "finalSha256": "ea7518ac53425aca27b886cf794a01416c5bc4b4ac26c1f7849ffd408a3e1448",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves route identity; Digital DRAFT bundle public route is inactive, not promoted or replaced by a compatibility endpoint."
+    },
+    {
+      "path": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002PublicationStateData.js",
+      "finalSha256": "aa6d03c35dc7c1a86f8603f5c655a9026cade2ac02c0e33f62acd0be7fb795d3",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Exact selected target seals and staged version; no invented approval, actor, audit trail or Online evidence."
+    },
+    {
+      "path": "nodics.docs/data/docs-v001/headers/000_nodicsDocumentationRelease002ContentPackHeader.js",
+      "finalSha256": "f01da2e0e2db624ec2c55f12d2f26b9bb694f3753ce6ee1fd0cb026df8d57735",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "New immutable filename retains existing dispatch order, schema/query ownership and selects only successor records."
+    },
+    {
+      "path": "nodics.docs/data/manifest.json",
+      "finalSha256": "da0ca54d55aabf5ca6d439b853c1dc8cf03689e3dce39e7b9e7968874da8608b",
+      "disposition": "UPDATED_SELECTION",
+      "rationale": "Advanced documentation and foundation together to identical successor filenames to avoid duplicate composition. Shared ownership transferred to Heisenberg; this hash is an integration snapshot."
+    },
+    {
+      "path": "nodics.docs/test/fixtures/documentationSemanticPredecessor.json",
+      "finalSha256": "5b1c3ad5d80da6fef3ae9a5adb1679c778c980be22843d27bcdbd887d0a0efe4",
+      "disposition": "ADDED_FROZEN_PREDECESSOR_EVIDENCE",
+      "rationale": "Freezes immediately previous selected record hashes and exact article block digests. Successor pins derive from reviewed final bytes; predecessor is independently verified."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003NodeData.js",
+      "finalSha256": "cbecdaff8f193a36f1d99c88528853568319ed872782a042844941f75666aab9",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves navigation ownership and IDs; DRAFT retained. Digital bundle maturity uses CMS IMPLEMENTED without claiming runtime/provider acceptance."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003PageMetadataData.js",
+      "finalSha256": "bb76f8531898198d1e030945a59dad5a3e92c46b3b7c2ced06ab2cd4a89c8fab",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Projects exact canonical headings, checksums, source paths and word counts; Digital bundle uses legal CMS maturity and retains DRAFT."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003SearchMetadataData.js",
+      "finalSha256": "b92e92f82f7dc6c2dc2b933c6ac086904c16cf6e622081991a939abdb1a6cc9f",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Derived article text stays aligned with selected owner content; Digital editorial maturity stays nTooling partial."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003ComponentData.js",
+      "finalSha256": "956bd3366ae32747d98eb05a72fa4e590b0279ce66b3074e9645a7bca62d4ca3",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Reviewed canonical editorial corrections; stable identities/anchors retained, derived search and source metadata aligned. Historical source remains unchanged."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003PageData.js",
+      "finalSha256": "aecc25e90613da55fd644c230556b109d9204a2a145a921cfd616ce2d69c989c",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Retains renderer/page binding and normal Staged delivery; no Online activation."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003RouteData.js",
+      "finalSha256": "8589314cf9db9f3f961aa3baa5da2df8bf657603c9e27a6efce1d372322e958b",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves route identity; Digital DRAFT bundle public route is inactive, not promoted or replaced by a compatibility endpoint."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003PublicationStateData.js",
+      "finalSha256": "210ddf56bbcf306a3a53de94d64bdf2a39d889669550b7bc8428d76106f61078",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Exact selected target seals and staged version; no invented approval, actor, audit trail or Online evidence."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/headers/100_promotionDocumentationRelease003ContentPackHeader.js",
+      "finalSha256": "c795ae53745e1d77f410a36cdbd9f688fdbf8693668cc419bceb4d65138e1666",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "New immutable filename retains existing dispatch order, schema/query ownership and selects only successor records."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+      "finalSha256": "78e6ab36c5717d674e9dca7e81fb7576ea1dff43b1234635cd4756cc0b308a61",
+      "disposition": "UPDATED_SELECTION",
+      "rationale": "Selects new forward version and exact generated hashes/release seal while retaining predecessor files and independent business sections."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/test/fixtures/documentationSemanticPredecessor.json",
+      "finalSha256": "acf83e84199dfccd422f1e8463e4fd57ea9fd5fe4976ef160078f38aedffd239",
+      "disposition": "ADDED_FROZEN_PREDECESSOR_EVIDENCE",
+      "rationale": "Freezes immediately previous selected record hashes and exact article block digests. Successor pins derive from reviewed final bytes; predecessor is independently verified."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003NodeData.js",
+      "finalSha256": "bee395fa1f3b7d21460220136c6c431b75b5aa5e44c00d8bfb48921d52236864",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves navigation ownership and IDs; DRAFT retained. Digital bundle maturity uses CMS IMPLEMENTED without claiming runtime/provider acceptance."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003PageMetadataData.js",
+      "finalSha256": "de7044875a7f5d4e9124c31ef275b2292a4d5448eaeea8ca0ffcc2ce992250d7",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Projects exact canonical headings, checksums, source paths and word counts; Digital bundle uses legal CMS maturity and retains DRAFT."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js",
+      "finalSha256": "bf457042cd67520c3cd3cb41ec0c2dca7ebc6b1fa090fece294a88dd58fc4fc0",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Derived article text stays aligned with selected owner content; Digital editorial maturity stays nTooling partial."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003ComponentData.js",
+      "finalSha256": "12e80c2b16fcda8002482a5987a98aeb1821a65c070ae18d5b49decfa52e5eaa",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Reviewed canonical editorial corrections; stable identities/anchors retained, derived search and source metadata aligned. Historical source remains unchanged."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003PageData.js",
+      "finalSha256": "9f2485cdb58717e2dca9f43db0be0f1f789a4a0a074391e9efeabc26b3585b0e",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Retains renderer/page binding and normal Staged delivery; no Online activation."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003RouteData.js",
+      "finalSha256": "35a9c5f624afad6ba75341cc6348f1736109ca2a792714cb7095313136a134a4",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves route identity; Digital DRAFT bundle public route is inactive, not promoted or replaced by a compatibility endpoint."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003PublicationStateData.js",
+      "finalSha256": "38ebb4660ad2dbd941db662d34aa048470cb1683067fa260bf66f66a6c73b4b7",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Exact selected target seals and staged version; no invented approval, actor, audit trail or Online evidence."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/headers/100_digitalCoreDocumentationRelease003ContentPackHeader.js",
+      "finalSha256": "eefe405174cdf5d1de99e5e7946702da132bb08447a07e7df1f43608076280b3",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "New immutable filename retains existing dispatch order, schema/query ownership and selects only successor records."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/manifest.json",
+      "finalSha256": "7b7e91c9d009045ed83f0301f4b4106aa364afa338d85a9b9a7beab074a1c0cc",
+      "disposition": "UPDATED_SELECTION",
+      "rationale": "Selects new forward version and exact generated hashes/release seal while retaining predecessor files and independent business sections."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/fixtures/documentationSemanticPredecessor.json",
+      "finalSha256": "5b47f075d99f459f7a74dc173692c5c0bd44d3db3f6f20819ca71d4e12029f43",
+      "disposition": "ADDED_FROZEN_PREDECESSOR_EVIDENCE",
+      "rationale": "Freezes immediately previous selected record hashes and exact article block digests. Successor pins derive from reviewed final bytes; predecessor is independently verified."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002NodeData.js",
+      "finalSha256": "b341447fe4996b212c919629ce3413376c96ba21a1bba5f640e9b1b5a911cd1e",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves navigation ownership and IDs; DRAFT retained. Digital bundle maturity uses CMS IMPLEMENTED without claiming runtime/provider acceptance."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PageMetadataData.js",
+      "finalSha256": "a97cb88a3c4ad6566968edff8f3234f52974a65e0a93beb465163504c0bda413",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Projects exact canonical headings, checksums, source paths and word counts; Digital bundle uses legal CMS maturity and retains DRAFT."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002SearchMetadataData.js",
+      "finalSha256": "4fb160a9beba5f0af0631599a7e4112c6b5c9e02f6aeae9a9d4fc9f7fc38b628",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Derived article text stays aligned with selected owner content; Digital editorial maturity stays nTooling partial."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+      "finalSha256": "a57aae78030abf91fb77566c280e339395f755d2e3d3c8a25cd9d8bf3008d4ae",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Reviewed canonical editorial corrections; stable identities/anchors retained, derived search and source metadata aligned. Historical source remains unchanged."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PageData.js",
+      "finalSha256": "09c19ffaad2b29957e85849b486fa3721cfcd9fd0973d80e45c0fd7c529b8b0e",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Retains renderer/page binding and normal Staged delivery; no Online activation."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002RouteData.js",
+      "finalSha256": "5062310f1f88ea564860ca8dc61df1c1f2f99450901736717c5ca0ba18b693d4",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves route identity; Digital DRAFT bundle public route is inactive, not promoted or replaced by a compatibility endpoint."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PublicationStateData.js",
+      "finalSha256": "5c791736f6baa22d08f33ab38b09712532effea263277db7806df9326fb9e749",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Exact selected target seals and staged version; no invented approval, actor, audit trail or Online evidence."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/headers/100_fulfillmentCoreDocumentationRelease002ContentPackHeader.js",
+      "finalSha256": "29636299e0967027608c0ce050c31593753c4ee0b22d1b6a8208336243d485da",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "New immutable filename retains existing dispatch order, schema/query ownership and selects only successor records."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+      "finalSha256": "b5874e6d7a9604939d4980f2f0aa36c69993c91a3822583e44bc611942aeeefb",
+      "disposition": "UPDATED_SELECTION",
+      "rationale": "Selects new forward version and exact generated hashes/release seal while retaining predecessor files and independent business sections."
+    },
+    {
+      "path": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fixtures/documentationSemanticPredecessor.json",
+      "finalSha256": "15dd555331e23610c0f0500d93c905de96ccfa7de2889db04baa602dfd3b2082",
+      "disposition": "ADDED_FROZEN_PREDECESSOR_EVIDENCE",
+      "rationale": "Freezes immediately previous selected record hashes and exact article block digests. Successor pins derive from reviewed final bytes; predecessor is independently verified."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008NodeData.js",
+      "finalSha256": "d3195bfd0a455ef5e475b034eb2f5fdfcdd2c0c17bbbd01bb8241d378407849f",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves navigation ownership and IDs; DRAFT retained. Digital bundle maturity uses CMS IMPLEMENTED without claiming runtime/provider acceptance."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008PageMetadataData.js",
+      "finalSha256": "7d60c19985e2094b309304917cabf02c827d12bfa450960a0c4ccc8de5463234",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Projects exact canonical headings, checksums, source paths and word counts; Digital bundle uses legal CMS maturity and retains DRAFT."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008SearchMetadataData.js",
+      "finalSha256": "11960634aadaf7b606ed7e02e027efd90bd1f031a4b1d5ffaec44eaf095b751b",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Derived article text stays aligned with selected owner content; Digital editorial maturity stays nTooling partial."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
+      "finalSha256": "69aebd43e247d09d724afe1fed8d17e593e5870418d9b912b3209bb286243e9c",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Reviewed canonical editorial corrections; stable identities/anchors retained, derived search and source metadata aligned. Historical source remains unchanged."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008PageData.js",
+      "finalSha256": "b2a2445166e63de59910b8d46f495cf091684d075a5562a04214c52346568826",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Retains renderer/page binding and normal Staged delivery; no Online activation."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008RouteData.js",
+      "finalSha256": "a5bc6b9ee930579dce88d7610362c1b66bd9d055e5ca79c71050fd4563871a56",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Preserves route identity; Digital DRAFT bundle public route is inactive, not promoted or replaced by a compatibility endpoint."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008PublicationStateData.js",
+      "finalSha256": "e0b0af6e382b11b20ac55ab8b20fdf3e6ee4929dd60d16e292f0f614fe5c8a63",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "Exact selected target seals and staged version; no invented approval, actor, audit trail or Online evidence."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/103_eWasteDocumentationRelease008ContentPackHeader.js",
+      "finalSha256": "b6c7baa2bac7fbfbdfa6a620beffcaf4c20493da238d872b768fbf16c866baef",
+      "disposition": "ADDED_IMMUTABLE_SUCCESSOR",
+      "rationale": "New immutable filename retains existing dispatch order, schema/query ownership and selects only successor records."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/data/manifest.json",
+      "finalSha256": "9f5ea7c29311aac3f13a794f2c7657ee1fe203683cf7303b953521ff298e0452",
+      "disposition": "UPDATED_SELECTION",
+      "rationale": "Selects new forward version and exact generated hashes/release seal while retaining predecessor files and independent business sections."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/test/fixtures/documentationSemanticPredecessor.json",
+      "finalSha256": "3318db4806471d40d9a05873c219e7d2ca0eaf33cac79db323a0edb2659cd26c",
+      "disposition": "ADDED_FROZEN_PREDECESSOR_EVIDENCE",
+      "rationale": "Freezes immediately previous selected record hashes and exact article block digests. Successor pins derive from reviewed final bytes; predecessor is independently verified."
+    },
+    {
+      "path": "nodics.docs/config/properties.js",
+      "finalSha256": "765fe7a2057cdbda7b4cbdfeb7593da206f97a20382e0554c07059b61325bc99",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Advanced only owned exact documentation release baselines, including shared foundation and eWaste. Transferred exclusive publication-selector ownership to Heisenberg."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/AGENTS.md",
+      "finalSha256": "1912065c2ac34f82aa97e31025fc62a540f9bd58bb74ce08e486320286cba47c",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Current documentation selector is0.0.8; referenceDocumentation remains0.0.4. No relaxed immutable-release rule."
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js",
+      "finalSha256": "e17638bc4b37fabaf5ebe6e98d1586068caa0aebe37fda7daeeac53f84a7ea1c",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Current selector/header/sourcePath assertions target008; all predecessor/history assertions retained."
+    },
+    {
+      "path": "nodics.commerce/modules/baseCommerce/modules/promotion/test/documentationForwardPackaging.test.js",
+      "finalSha256": "8ca4d93ee93a9b2cdd16c7c8c5fffea6ff1475b5c17e22f4d884d0d5b35da71d",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Original packaging transition now reads frozen002 section; its exact historical block/source assertions retained. New successor integration gate independently verifies003."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/documentationForwardPackaging.test.js",
+      "finalSha256": "e55692745cf33c1e4951c41caea3b64645f31bb14d6d3d0fc4a00379fbcb7017",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Original packaging transition now reads frozen002 section; historical block assertions retained. Current validateDataRelease still executes, with003 additionally covered by successor integration tests."
+    },
+    {
+      "path": "nodics.docs/test/commerceSemanticSuccessors.test.mjs",
+      "finalSha256": "580fc51ed98e3dda16bf50b4289781f3422566ead6dc7cc197ceb321631d62ac",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Cross-owner integration gate tests frozen bytes, exact successors, stable IDs/anchors, metadata/projections, target seals, maturity enum, inactive DRAFT route, simulation admission, independent holdings/material-payment gates and retired refund refusal wording."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md",
+      "finalSha256": "5f4dfc88291956a67f6c05c89f25adae99fff8b801c004d42a3b995ddca978f3",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Reread complete contract and removed executable retired eWaste original-sale reversal instructions. Separates current common Commerce recovery, final Circa/eWaste sales and immutable historical evidence; no runtime or compatibility restoration."
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js",
+      "finalSha256": "019b7cb5af024751bfc12e646f606e03539e08f87e0085e2e457ca8895e96742",
+      "previousReviewedSha256": "10f32daa302bc96bd70b691dae2d69bfe21c29e811850feef44df42f208dc9f6",
+      "disposition": "UPDATED_OR_ADDED_SOURCE_REGRESSION",
+      "rationale": "Added owner-local regression for final-sale/refund wording, retained historical provenance, independent generic Commerce recovery and resolvable current owner-document anchors. Post-freeze copyright gate correction adds exactly one blank line before the opening license comment terminator. Removing only that line reproduces previousReviewedSha256 exactly, proving no test logic or documentation assertion changed; both owner tests passed again."
+    },
+    {
+      "path": "nodics.docs/test/evidence/semantic-documentation-commerce-authoring-revalidation-2026-10-20.json",
+      "finalSha256": "e44e219b6bebdf1bff53a961c1752fe828f1a797f5c3f0a8f152270af7f1c756",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "rationale": "Genuine source/editorial review with scoped per-file rationales; known discrepancies corrected in immutable successors, then exact source/article digests qualified without weakening gate."
+    },
+    {
+      "path": "nodics.docs/test/evidence/semantic-documentation-commerce-search-revalidation-2026-10-20.json",
+      "finalSha256": "db9a6a4a5ba32c0d15166527eb335f430eebbb0d9b22650b06d419d5ddcff00c",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "rationale": "Genuine source/editorial review with scoped per-file rationales; known discrepancies corrected in immutable successors, then exact source/article digests qualified without weakening gate."
+    },
+    {
+      "path": "nodics.docs/test/evidence/semantic-documentation-payment-provider-revalidation-2026-10-20.json",
+      "finalSha256": "fb991464c8efbbebe5622d5333aaf26cfca272939c4834987a8614968fc20d2a",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "rationale": "Genuine source/editorial review with scoped per-file rationales; known discrepancies corrected in immutable successors, then exact source/article digests qualified without weakening gate."
+    },
+    {
+      "path": "nodics.docs/test/evidence/semantic-documentation-internal-classification-revalidation-2026-10-20.json",
+      "finalSha256": "164882c2c58623ee11fa95301e5074ea32dab6b2ab3778b1ea882a92d9b4c725",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "rationale": "Genuine source/editorial review with scoped per-file rationales; known discrepancies corrected in immutable successors, then exact source/article digests qualified without weakening gate."
+    }
+  ],
+  "deletedFiles": [],
+  "addedFiles": [
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002NodeData.js",
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002PageMetadataData.js",
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002SearchMetadataData.js",
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002PageData.js",
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002RouteData.js",
+    "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002PublicationStateData.js",
+    "nodics.docs/data/docs-v001/headers/000_nodicsDocumentationRelease002ContentPackHeader.js",
+    "nodics.docs/test/fixtures/documentationSemanticPredecessor.json",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003NodeData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003PageMetadataData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003SearchMetadataData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003ComponentData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003PageData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003RouteData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/records/documentation/promotionDocumentationRelease003PublicationStateData.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/data/docs-v002/headers/100_promotionDocumentationRelease003ContentPackHeader.js",
+    "nodics.commerce/modules/baseCommerce/modules/promotion/test/fixtures/documentationSemanticPredecessor.json",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003NodeData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003PageMetadataData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003SearchMetadataData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003ComponentData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003PageData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003RouteData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/records/documentation/digitalCoreDocumentationRelease003PublicationStateData.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/docs-v002/headers/100_digitalCoreDocumentationRelease003ContentPackHeader.js",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/fixtures/documentationSemanticPredecessor.json",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002NodeData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PageMetadataData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002SearchMetadataData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PageData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002RouteData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PublicationStateData.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/docs-v001/headers/100_fulfillmentCoreDocumentationRelease002ContentPackHeader.js",
+    "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fixtures/documentationSemanticPredecessor.json",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008NodeData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008PageMetadataData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008SearchMetadataData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008PageData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008RouteData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008PublicationStateData.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/headers/103_eWasteDocumentationRelease008ContentPackHeader.js",
+    "nodics.accelerators/modules/waste/modules/eWaste/test/fixtures/documentationSemanticPredecessor.json",
+    "nodics.docs/test/commerceSemanticSuccessors.test.mjs",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js"
+  ],
+  "validations": [
+    {
+      "command": "node --test nodics.docs/test/commerceSemanticSuccessors.test.mjs nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/documentationForwardPackaging.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/documentationForwardPackaging.test.js nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js",
+      "passed": 42,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-successor-tests.log"
+    },
+    {
+      "command": "node --test nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalBundleSettlement.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js",
+      "passed": 62,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-final-source-tests.log"
+    },
+    {
+      "command": "node nodics.docs/scripts/generate-content-pack.mjs --check",
+      "status": "PASS",
+      "log": "/tmp/commerce-semantic-pack-check.log"
+    },
+    {
+      "command": "node nodics.docs/scripts/validate.mjs",
+      "status": "OUT_OF_SCOPE_INTEGRATION_FAILURE_HANDED_OFF",
+      "failure": "Documentation page metadata must preserve visual requirements: profile.notification-recipients",
+      "log": "/tmp/commerce-semantic-docs-validation.log",
+      "owner": "Heisenberg"
+    },
+    {
+      "command": "qualifySemanticReview for all four sidecars against current canonical catalogue",
+      "closed": 4,
+      "open": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "node --test nodics.docs/test/commerceSemanticSuccessors.test.mjs nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/documentationForwardPackaging.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalOwnershipDocumentationContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/documentationForwardPackaging.test.js nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDocumentationForwardRelease.test.js",
+      "passed": 44,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-final-doc-contract-tests.log"
+    },
+    {
+      "command": "node --test nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDigitalOwnershipBridge.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalBundleSettlement.test.js",
+      "passed": 56,
+      "failed": 0,
+      "log": "/tmp/commerce-final-ownership-recovery-tests.log"
+    },
+    {
+      "command": "npm run quality:docs",
+      "status": "PASS",
+      "log": "/tmp/commerce-final-quality-docs.log",
+      "qualification": "Configured public-navigation gate explicitly skipped; no visual/publication acceptance claimed."
+    }
+  ],
+  "residualFindings": [],
+  "resolvedFollowups": [
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/persisted-digital-ownership.md",
+      "section": "Completed Sales And Historical Refund Evidence",
+      "disposition": "RESOLVED_SOURCE_CONTRACT_WORDING",
+      "rationale": "User authorized closing adjacent contract. Removed executable reversal instructions, current-support claims and dead anchor; generic Commerce recovery remains independently governed, Circa/eWaste completed sales final, historical keys/policies/checkpoints preserved without mutation authority."
+    },
+    {
+      "disposition": "RESOLVED_EXACT_SEARCH_PROJECTIONS",
+      "rationale": "Promotion, two Digital and two Fulfillment article projections now exactly match article.properties.searchText in all ten PAGE/NODE search records. Target seals/owner manifests/fixtures derived again; no article blocks or predecessors changed. Heisenberg owns central projection and aggregate integration."
+    }
+  ],
+  "acceptance": {
+    "source": "Reviewed and locally tested within this scope.",
+    "runtime": "NOT_EXECUTED",
+    "publication": "NOT_EXECUTED",
+    "exclusions": [
+      "No full suite rerun",
+      "No browser/E2E",
+      "No server/live/provider calls",
+      "No imports/credentials",
+      "No commits",
+      "No context regeneration",
+      "No fabricated approval or Online release",
+      "No shared aggregate edits"
+    ]
+  }
+}

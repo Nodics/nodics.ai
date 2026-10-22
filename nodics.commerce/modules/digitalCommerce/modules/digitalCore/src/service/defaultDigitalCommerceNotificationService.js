@@ -12,7 +12,25 @@
 /* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
 "use strict";
 const crypto = require("node:crypto");
-/** @module digitalCore/service/defaultDigitalCommerceNotificationService @description Requests purchase/refund notifications only from fresh committed Commerce owner evidence, reusing Communication's durable immutable intents. @layer service @owner digitalCore @override Later layers select templates, recipient owners and transport; preserve owner evidence, stable event identities, no caller recipients and uncertainty handling. */
+/**
+ * @module digitalCore/service/defaultDigitalCommerceNotificationService
+ * @description Requests purchase/refund notifications only from fresh committed Commerce owner
+ * evidence, reusing Communication's durable immutable intents.
+ * @layer service
+ * @owner digitalCore
+ * @override Later layers select templates, recipient owners and transport; preserve owner evidence,
+ * stable event identities, no caller recipients and uncertainty handling.
+ * @remarks Digital notification presentation derives original purchase consideration and explicit
+ * retained validity. It neither invents Payment nor creates coupon/recipient authority; Communication
+ * remains the delivery owner.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: policy, fail, recipientSource, one, purchaseConsideration, validityPresentation,
+ * evidence, key, invoke, provePurchasedInspection, proveRefundedInspection, inspectionSources,
+ * inspect, request, operatorContext, workspacePresentation, workspaceCommands, workspace, operate.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
   /** Resolves inert transport policy; only new requests require recipient selection. @param {boolean} requireRecipient Require a recipient adapter for new intents. @returns {Object|undefined} Qualified policy. */
   policy: function (requireRecipient = true) {
@@ -142,6 +160,68 @@ module.exports = {
     if (rows.length !== 1) this.fail();
     return rows[0];
   },
+  /**
+   * Distinguishes an original all-certificate order from captured consideration using persisted atomic
+   * acquisition receipts, not a zero amount alone.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} order Persisted original Order and owner binding.
+   * @param {Object[]} items Original persisted purchased items.
+   * @param {Object[]} captures Verified original Payment capture evidence.
+   * @returns {Promise<boolean>} True when original captured or certificate-only purchase evidence is
+   * qualified.
+   * @remarks Effects: Reads retained atomic acquisition receipts and supplied verified captures; no
+   * financial effects.
+   * Failure behavior: Rejects contradictory/incomplete purchase proof or fabricated zero-payment
+   * inference.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  purchaseConsideration: async function (r, order, items, captures) {
+    const acquisition = SERVICE.DefaultDigitalCommerceCouponAcquisitionService;
+    const proofs = [];
+    for (const item of items) {
+      if (item.purchasePolicy?.version !== 2) { proofs.push(undefined); continue; }
+      const proof = await acquisition.purchasedCompletion(r, item);
+      if (!require("node:util").isDeepStrictEqual(acquisition.typedOwner(order.evidence?.ownerRef), proof.ownerRef)) this.fail();
+      proofs.push(proof);
+    }
+    if (proofs.length && proofs.every(p => p?.requirementsType === "CERTIFICATES")) {
+      const payments = await acquisition.rows("DefaultPaymentTransactionEntryService", r,
+        { orderCode: order.code, ownerId: r.ownerId }, 2);
+      if (captures.length || payments.count !== 0 || payments.result.length || !SERVICE.DefaultExactAmountService ||
+          SERVICE.DefaultExactAmountService.compare(String(order.totalAmount), "0") !== 0) this.fail();
+      return true;
+    }
+    if (proofs.some(Boolean) && (captures[0]?.enterpriseCode !== acquisition.paymentEnterprise(order) ||
+        captures[0]?.enterpriseCode !== r.enterpriseCode &&
+        !require('node:util').isDeepStrictEqual(captures[0]?.evidence?.participant?.ownerRef, order.evidence?.ownerRef))) this.fail();
+    if (captures.length !== 1 || captures[0].tenant !== r.tenant || captures[0].orderCode !== order.code ||
+        captures[0].ownerId !== r.ownerId || captures[0].evidence?.operation !== "CAPTURE" || captures[0].status !== "CAPTURED" ||
+        captures[0].currency !== order.currency || !SERVICE.DefaultExactAmountService ||
+        SERVICE.DefaultExactAmountService.compare(String(captures[0].totalAmount), String(order.totalAmount)) !== 0 ||
+        proofs.some(p => p?.rewardCaptureReference && p.rewardCaptureReference !== captures[0].code)) this.fail();
+    return false;
+  },
+  /**
+   * Formats explicit retained NONE rights without fabricating an expiry date; presentation remains
+   * framework-owned.
+   * @param {Object} item Original bound item/coupon evidence.
+   * @returns {string} Configured no-expiry label or normalized retained expiry timestamp.
+   * @remarks Effects: Formats existing validity only; no coupon lifecycle changes.
+   * Failure behavior: Rejects missing owner presentation/default or malformed retained validity.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  validityPresentation: function (item) {
+    if (item.purchasePolicy?.version === 2 && SERVICE.DefaultDigitalCommerceEntitlementService.couponWindow(item).mode === "NONE") {
+      const label = CONFIG.get("digitalCore")?.notifications?.presentation?.noExpiry;
+      if (typeof label !== "string" || !label.trim() || label.length > 128 || /[<>\u0000-\u001f]/.test(label)) this.fail();
+      return label;
+    }
+    if (!Number.isFinite(Date.parse(item.validTo))) this.fail();
+    return new Date(item.validTo).toISOString();
+  },
   /** Resolves committed order/unit evidence; pending payment or partial reversal can never trigger a message. @param {Object} r Trusted owner context. @param {string} kind Event. @returns {Promise<Object>} Bound committed evidence. */
   evidence: async function (r, kind) {
     if (
@@ -189,13 +269,16 @@ module.exports = {
         SERVICE.DefaultCheckoutCheckpointService,
         r,
         {
-          code: order.code,
+          orderCode: order.code,
+          status: "COMPLETED",
           enterpriseCode: r.enterpriseCode,
           ownerId: r.ownerId,
         },
       );
-      const captures =
-        await SERVICE.DefaultDigitalCommerceEntitlementService.readRecords(
+      const captures = items.every(item => item.purchasePolicy?.version === 2)
+        ? (await SERVICE.DefaultDigitalCommerceCouponAcquisitionService.rows('DefaultPaymentTransactionEntryService', r,
+          { orderCode: order.code, ownerId: order.ownerId, 'evidence.operation': 'CAPTURE' }, 3)).result
+        : await SERVICE.DefaultDigitalCommerceEntitlementService.readRecords(
           SERVICE.DefaultPaymentTransactionEntryService,
           r,
           {
@@ -206,23 +289,14 @@ module.exports = {
           },
         );
       if (
-        checkpoint.code !== order.code || checkpoint.tenant !== r.tenant ||
+        checkpoint.orderCode !== order.code || checkpoint.tenant !== r.tenant ||
         checkpoint.enterpriseCode !== r.enterpriseCode || checkpoint.ownerId !== r.ownerId ||
         checkpoint.status !== "COMPLETED" ||
         checkpoint.evidence?.orderCode !== order.code ||
-        !["PLACED", "COMPLETED", "FULFILLED"].includes(order.status) ||
-        captures.length !== 1 ||
-        captures[0].tenant !== r.tenant || captures[0].orderCode !== order.code || captures[0].ownerId !== r.ownerId ||
-        captures[0].evidence?.operation !== 'CAPTURE' ||
-        captures[0].status !== "CAPTURED" ||
-        captures[0].currency !== order.currency ||
-        !SERVICE.DefaultExactAmountService ||
-        SERVICE.DefaultExactAmountService.compare(
-          String(captures[0].totalAmount),
-          String(order.totalAmount),
-        ) !== 0
+        !["PLACED", "COMPLETED", "FULFILLED"].includes(order.status)
       )
         this.fail();
+      await this.purchaseConsideration(r, order, items, captures);
       const codes = checkpoint.evidence.digitalDeliveryCodes;
       if (
         !Array.isArray(codes) ||
@@ -233,7 +307,9 @@ module.exports = {
             !codes.includes(i.providerCode) ||
             i.status !== "ACTIVE" ||
             !Number.isFinite(Date.parse(i.purchasedAt)) ||
-            !Number.isFinite(Date.parse(i.validTo)),
+            (i.purchasePolicy?.version === 2
+              ? SERVICE.DefaultDigitalCommerceEntitlementService.couponWindow(i).expired
+              : !Number.isFinite(Date.parse(i.validTo))),
         )
       )
         this.fail();
@@ -434,7 +510,8 @@ module.exports = {
       SERVICE.DefaultCheckoutCheckpointService,
       r,
       {
-        code: order.code,
+        orderCode: order.code,
+        status: "COMPLETED",
         enterpriseCode: r.enterpriseCode,
         ownerId: r.ownerId,
       },
@@ -451,17 +528,10 @@ module.exports = {
         },
       );
     const codes = checkpoint.evidence?.digitalDeliveryCodes;
+    await this.purchaseConsideration(r, order, items, captures);
     if (
       checkpoint.status !== "COMPLETED" ||
       checkpoint.evidence?.orderCode !== order.code ||
-      captures.length !== 1 ||
-      captures[0].status !== "CAPTURED" ||
-      captures[0].currency !== order.currency ||
-      !SERVICE.DefaultExactAmountService ||
-      SERVICE.DefaultExactAmountService.compare(
-        String(captures[0].totalAmount),
-        String(order.totalAmount),
-      ) !== 0 ||
       !Array.isArray(codes) ||
       codes.length !== items.length ||
       new Set(codes).size !== codes.length ||
@@ -469,7 +539,9 @@ module.exports = {
         (i) =>
           !codes.includes(i.providerCode) ||
           !Number.isFinite(Date.parse(i.purchasedAt)) ||
-          !Number.isFinite(Date.parse(i.validTo)),
+          (i.purchasePolicy?.version === 2
+            ? !SERVICE.DefaultDigitalCommerceEntitlementService.couponWindow(i)
+            : !Number.isFinite(Date.parse(i.validTo))),
       )
     )
       this.fail();
@@ -760,7 +832,7 @@ module.exports = {
               )
                 this.fail();
               variables.offerName = item.purchasePolicy.name;
-              variables.validUntil = new Date(item.validTo).toISOString();
+              variables.validUntil = this.validityPresentation(item);
             }
             outcome = await this.invoke(r, p, "/internal/communications", {
               sourceModule: "digitalCore",

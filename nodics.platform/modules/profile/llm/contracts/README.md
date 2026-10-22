@@ -17,8 +17,14 @@ Source availability does not establish qualification or live acceptance.
 - [Enterprise tenant provisioning and durable namespace admission](enterprise-tenant-provisioning.md)
 
 - [Private notification and verification transport](private-notification-transport.md)
+- [Shared source-proven notification recipients](notification-recipient-projections.md)
+- [Coupon notification recipients](coupon-notification-recipients.md)
+- [Auction notification recipients](auction-notification-recipients.md)
+- [Whole-gift notification recipients](gift-notification-recipients.md)
+- [Transfer notification recipients](transfer-notification-recipients.md)
 
 - [Enterprise delegation](enterprise-delegation.md)
+- [Enterprise actor and owner acceptance](enterprise-actor-owner-acceptance.md)
 - [Explicit consent commands and held hierarchy changes](administration-consent-commands.md)
 - [Canonical identity and membership](enterprise-membership.md)
 - [Account access journeys and historical review retirement](account-access-journeys.md)

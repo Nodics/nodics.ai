@@ -250,7 +250,11 @@ function fixture(guarded = true) {
         };
       },
     };
-  global.NODICS = { getModels: () => models, getModule: () => undefined };
+  global.NODICS = {
+    getModels: () => models,
+    getModule: () => undefined,
+    getSelectedEnvironmentName: () => "local",
+  };
   global.SERVICE = {
     DefaultLoggerService: {
       inheritRequestPrivacy() {},

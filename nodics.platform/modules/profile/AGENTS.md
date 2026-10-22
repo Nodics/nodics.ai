@@ -1,5 +1,70 @@
 # profile Agent Contract
 
+Successor documentation technical summaries must reference their selected
+sourcePath, not the sealed predecessor. Keep dependent publication/manifest
+checksums and owner-local successor tests aligned without rewriting history.
+
+Participant discovery must retain every original body/transport alias through
+the controller, pin selectors and policy across reads, and redact dependency
+failures to the existing authentication error. Employee inbox self-identity must
+revalidate the original actor after private reads and redact their failures too.
+Keep these regressions in the directory and coupon-recipient owner tests.
+
+Notification source-response size defaults live in each Profile notification
+property's `maxResponseBytes`. Validate a positive safe integer and pass the
+effective value to transport. Missing policy fails closed; customer layers
+provide only intentional overrides. Preserve source admission, one attempt and
+redirect refusal. Cover inherited, overridden and invalid bounds in owner tests.
+
+Whole-gift recipients use the exact Digital event/side callback, independent gift
+notification consent and current bundle permission/scope. Reuse the shared
+selector; never convert an Employee to a Customer or couple messages to gift
+decisions. Read `llm/contracts/gift-notification-recipients.md`. Canonical public
+guidance is selected through the v002 CMS documentation successor; preserve
+sealed v001 bytes, stable identities and unapproved Staged publication state.
+
+Coupon expiry recipients follow [their source-bound contract](llm/contracts/coupon-notification-recipients.md).
+Recheck Digital source, explicit Enterprise Employee roster, persisted Digital
+read permission AND current allow/DENY scopes through the shared selector, and
+each recipient preference. No purchaser/admin/Customer-account or
+contact fallback. Preserve the separate original-bearer Employee inbox identity.
+
+Auction recipients follow [their private source contract](llm/contracts/auction-notification-recipients.md).
+Reuse Bidding's persisted-event callback and the shared Profile selector, never
+caller-provided owner/contact facts. Preserve the exact source digest, typed
+participant versus Store issuer distinction, runtime admission and request pins.
+Current Bidding permission and scope both apply to selected Employees. Defaults
+stay off and unqualified; schema fields do not opt in or grant access. Run the
+actual Bidding/Profile composition in `test/profileNotificationRecipients.test.js`.
+
+Transfer recipient resolution must independently prove the committed Wallet
+source, preserve genuine runtime-token admission and return only canonical inbox
+references through the [shared selector](llm/contracts/notification-recipient-projections.md).
+Require Enterprise and Employee opt-in, explicit employeeCode roster, current
+canonical identity, persisted permission and allow/DENY scope evidence. Customer
+owners retain their own inbox; no actor, Customer mapping or contact fallback.
+Keep source proof and address-reference hashing in each domain wrapper. Reuse this proof
+for Communication pre-dispatch eligibility; never install another outbox.
+See `llm/contracts/transfer-notification-recipients.md` and the cross-owner unit
+contract `nodics.loyalty/modules/loyaltyWallet/test/loyaltyTransferNotifications.test.js`.
+
+Native platform-administrator evidence uses the original human PASSWORD access
+context, fresh Employee/security-stamp and persisted reserved-group/permission
+checks. Never substitute broad administrator helpers, scopes or service credentials.
+Preserve read-only nonce projection, bounded ancestry, tenant isolation and final
+actor revalidation. See `llm/contracts/platform-administrator-evidence.md` and run
+`test/profilePlatformAdministratorEvidence.test.js` with participant-directory tests.
+
+Existing-participant lookup is owned by `DefaultProfileParticipantDirectoryService`.
+Search and exact resolution retain fresh original Customer/Employee authority,
+bounded name-prefix/exact-code selectors and same-tenant targets. Return only typed
+owner references and display names, never login/contact/credential fields or balances.
+Enterprise storage is read in its authority partition but filtered to the caller's
+tenant. Search is not authority to gift, transfer or transact; consuming owners
+revalidate identity and their own eligibility. Definitions/defaults remain in
+Profile's `config/properties.js`; consumers must not copy these settings.
+See [existing participant directory](llm/contracts/participant-directory.md).
+
 Business access presentation comes from fresh `enterpriseRole` metadata, with
 explicit owner-defined `userGroup` permission mappings. See the business access
 section of `llm/contracts/identity-access-lifecycle.md`. A business selector is
@@ -63,6 +128,13 @@ existing credentials and groups untouched, reject key conflicts/inactive or
 linked identities, retain caller authorization on fresh reads and insert-only
 generated saves, and return code-only acknowledgements. This is not employee
 onboarding, membership activation or password-reset authority.
+
+Runtime service credential scope adoption uses the separate private
+`DefaultEmployeeService.adoptRuntimeServiceScopesAll` owner. Admit it only from
+an exact authority-partition Init release, require explicit expected-before and
+desired-after permission lists, and preserve the API-key digest, groups and all
+other credential fields. Drift rejects; projects contribute reviewed selection
+data rather than copying this mutation service or broadening framework defaults.
 
 Explicit application reference-role instructions use
 `DefaultEmployeeService.addReferenceGroupsAll`, never partial employee saveAll.

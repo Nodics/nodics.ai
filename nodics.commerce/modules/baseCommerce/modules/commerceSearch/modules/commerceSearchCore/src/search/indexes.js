@@ -23,7 +23,7 @@ module.exports = {
             idPropertyName: 'code',
             tenantPropertyName: 'tenant',
             partitionProperties: ['tenant', 'storeCode', 'locale'],
-            cache: { enabled: true, ttl: 300 },
+            cache: { enabled: false },
             properties: {
                 storeCode: { enabled: true, type: 'keyword' },
                 locale: { enabled: true, type: 'keyword' },
@@ -33,7 +33,10 @@ module.exports = {
                 status: { enabled: true, type: 'keyword' },
                 actions: { enabled: true, type: 'object' },
                 priority: { enabled: true, type: 'integer' },
-                sourceHash: { enabled: true, type: 'keyword' }
+                sourceHash: { enabled: true, type: 'keyword' },
+                validFrom: { enabled: true, type: 'date' },
+                validTo: { enabled: true, type: 'date' },
+                benefitRef: { enabled: true, type: 'object' }
             }
         }
     }

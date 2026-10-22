@@ -9,7 +9,13 @@
 
  */
 
-/** @module cms/controller/DefaultCmsPublicationBaselineController @description Maps internal Platform baseline requests to the CMS-owned baseline service. */
+/**
+ * @module cms/controller/DefaultCmsPublicationBaselineController
+ * @description Maps authenticated BackOffice application-baseline requests to CMS-local authority.
+ * @layer controller
+ * @owner cms
+ * @override Projects may narrow request mapping while retaining exact BackOffice runtime verification and CMS-local authority.
+ */
 module.exports = {
     /** Normalizes a bounded route code and optional initiation payload. */
     /** Executes the documented bounded module operation. */
@@ -23,8 +29,13 @@ module.exports = {
     /** Bridges one baseline operation to the optional callback contract. */
     /** Executes the documented bounded module operation. */
     invoke: function (operation, request, callback) {
-        this.prepare(request);
-        let promise = SERVICE.DefaultCmsPublicationBaselineService[operation](request.baselineCode, request)
+        SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'backoffice');
+        let cmsRequest = Object.assign({}, request, {
+            authData: Object.assign({}, request.authData,
+                SERVICE.DefaultIdentityGovernanceService.getSystemAuthData())
+        });
+        this.prepare(cmsRequest);
+        let promise = SERVICE.DefaultCmsPublicationBaselineService[operation](cmsRequest.baselineCode, cmsRequest)
             .then(data => ({ code: 'SUC_CMS_00000', data: data }));
         if (!callback) return promise;
         promise.then(result => callback(null, result)).catch(callback);

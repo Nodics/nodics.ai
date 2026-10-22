@@ -87,9 +87,14 @@ node nodics.foundation/modules/nEms/emsClient/test/emsClientServiceContract.test
 node nodics.foundation/modules/nEms/emsClient/test/emsMessageProcessContract.test.js
 node nodics.foundation/modules/nEms/emsClient/test/emsClientRouteContract.test.js
 node nodics.foundation/modules/nEms/emsClient/test/messageTenantResolution.test.js
-node nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisher.test.js
+node --test nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisherGuard.test.js
 npm run quality:docs
 ```
+
+`activeEmsPublisher.test.js` is separately authorized live acceptance: direct
+execution requires `--require-live` and may start the configured runtime and
+publish to its provider. Generic test discovery and imports remain inert.
+`NOT EXECUTED` is not a passing live-provider result.
 
 ## What To Avoid
 

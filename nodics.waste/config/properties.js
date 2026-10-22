@@ -27,6 +27,18 @@ module.exports = {
               "sections": [
                 "sample-profile-addresses"
               ]
+            },
+            {
+              "moduleName": "wasteCarbon",
+              "sections": [
+                "participantAccessGroups"
+              ]
+            },
+            {
+              "moduleName": "wasteReward",
+              "sections": [
+                "participantAccessGroups"
+              ]
             }
           ]
         },

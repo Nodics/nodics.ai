@@ -24,6 +24,7 @@ const schemaFiles = [
     'modules/wasteVerification/src/schemas/schemas.js',
     'modules/wasteReceipt/src/schemas/schemas.js',
     'modules/wasteImpact/src/schemas/schemas.js',
+    'modules/wasteCarbon/src/schemas/schemas.js',
     'modules/wasteReward/src/schemas/schemas.js',
     'modules/wasteMovement/src/schemas/schemas.js',
     'modules/wasteCompliance/src/schemas/schemas.js'
@@ -51,12 +52,15 @@ schemas.forEach(function (entry) {
     if (entry.schemaCode === 'wasteRewardAssessment') {
         assert.deepStrictEqual(entry.schema.router, { enabled: false }, 'immutable reward assessments remain service-only');
         assert.deepStrictEqual(entry.schema.backoffice, { mutationMode: 'READ_ONLY', operations: ['search', 'read'] });
-        assert.strictEqual(require('../modules/wasteReward/package.json').nodics.runtime.router, false);
+        assert.strictEqual(require('../modules/wasteReward/package.json').nodics.runtime.router, true,
+            'explicit material-value commands require runtime routing without enabling generic schema writes');
     } else if (entry.exposed) {
         assert.strictEqual(entry.schema.router.enabled, true, entry.schemaCode + ' opts into governed schema operations');
         assert.deepStrictEqual(entry.schema.router.groups, { schemaOperations: true }, entry.schemaCode + ' must not enable broad CRUD route groups');
     } else {
-        assert.strictEqual(entry.schema.router?.enabled, undefined, entry.schemaCode + ' remains service-only without route configuration');
+        assert([undefined, false].includes(entry.schema.router?.enabled), entry.schemaCode + ' must not expose generic routes');
+        if (entry.schema.router?.enabled === false)
+            assert.deepStrictEqual(entry.schema.router, { enabled: false }, entry.schemaCode + ' explicitly disables schema HTTP');
     }
 });
 
@@ -153,10 +157,10 @@ assert(creationPolicy.assetCodeStrategy.enum.includes('SOURCE_SUBMISSION'));
 assert(creationPolicy.settlementReferenceFailureMode.enum.includes('LOCK_ASSET'));
 
 const asset = wasteCore.wasteAsset.definition;
-assertReference(wasteCore.wasteAsset, 'ownerRef', 'profile', 'customer');
-assertReference(wasteCore.wasteAsset, 'originalOwnerRef', 'profile', 'customer');
-assertReference(wasteCore.wasteAsset, 'physicalOwnerRef', 'profile', 'customer');
-assertReference(wasteCore.wasteAsset, 'digitalOwnerRef', 'profile', 'customer');
+for (const field of ['ownerRef', 'originalOwnerRef', 'physicalOwnerRef', 'digitalOwnerRef']) {
+    assert.strictEqual(wasteCore.wasteAsset.definition[field].type, 'object');
+    assert.strictEqual(wasteCore.wasteAsset.refSchema[field], undefined, field + ' must preserve typed Profile descriptors');
+}
 assertReference(wasteCore.wasteAsset, 'verificationRef', 'wasteVerification', 'wasteVerification');
 assertReference(wasteCore.wasteAsset, 'receiptRef', 'wasteReceipt', 'wasteReceipt');
 assertReference(wasteCore.wasteAsset, 'impactRef', 'wasteImpact', 'wasteImpactResult');
@@ -210,8 +214,10 @@ assert.strictEqual(marketplaceProjection.bidRules, undefined, 'Waste marketplace
 assert.strictEqual(marketplaceProjection.paymentAmount, undefined, 'Waste marketplace projection must not own payment amounts');
 
 const ownershipEvent = wasteCore.wasteAssetOwnershipEvent.definition;
-assertReference(wasteCore.wasteAssetOwnershipEvent, 'fromOwnerRef', 'profile', 'customer');
-assertReference(wasteCore.wasteAssetOwnershipEvent, 'toOwnerRef', 'profile', 'customer');
+for (const field of ['fromOwnerRef', 'toOwnerRef']) {
+    assert.strictEqual(wasteCore.wasteAssetOwnershipEvent.definition[field].type, 'object');
+    assert.strictEqual(wasteCore.wasteAssetOwnershipEvent.refSchema[field], undefined, field + ' must not force customer ownership');
+}
 assertReference(wasteCore.wasteAssetOwnershipEvent, 'commerceProjectionRef', 'wasteCore', 'wasteAssetMarketplaceProjection');
 assertReference(wasteCore.wasteAssetOwnershipEvent, 'commerceOrderRef', 'order', 'commerceOrder');
 assertReference(wasteCore.wasteAssetOwnershipEvent, 'paymentRef', 'paymentCore', 'paymentTransaction');

@@ -13,8 +13,17 @@
 "use strict";
 const { isDeepStrictEqual } = require("node:util");
 const admissions = new WeakMap();
+const draftWrites = new WeakMap();
 /** @module promotion/service/defaultPromotionDraftService @description Owns ordinary scoped draft metadata commands over qualified CURRENT versioned persistence. No policy, financial, issuance or publication authority. @layer service @owner promotion */
 module.exports = {
+    /** Supplies the authorized original root only to the exact generated write's immutable-offer hook. */
+    couponOfferWriteState: function (request) {
+        const context = draftWrites.get(request);
+        if (!context) return undefined;
+        this.admitted(context.token);
+        if (!isDeepStrictEqual(request.model, context.model) || !isDeepStrictEqual(request.query, context.query)) this.fail();
+        return { current: structuredClone(context.current) };
+    },
     /** Refuses ambiguous authority or persistence evidence; a failed response never becomes a local model. */
     fail: function () { throw new CLASSES.NodicsError("ERR_PROMOTION_DRAFT_UNCONFIRMED"); },
     /** Requires original signed employee scope and the distinct ordinary draft grant. */
@@ -65,10 +74,16 @@ module.exports = {
     },
     /** Normalizes only fields exposed by the owner form. */
     model: function (input, creating) {
-        this.object(input, this.writableFields());
+        this.object(input, creating && input?.couponOffer ? [...this.writableFields(), 'couponOffer', 'actions', 'conditions'] : this.writableFields());
         const model = {};
         for (const [name, value] of Object.entries(input)) {
             if (name === "code") model.code = this.code(value);
+            else if (name === 'couponOffer') model.couponOffer = SERVICE.DefaultCouponOfferService.validate(value);
+            else if (['actions', 'conditions'].includes(name)) {
+                if (!value || Object.getPrototypeOf(value) !== Object.prototype ||
+                    Buffer.byteLength(JSON.stringify(value)) > SERVICE.DefaultCouponOfferService.settings().maximumPolicyBytes) this.fail();
+                model[name] = structuredClone(value);
+            }
             else if (name === "name") {
                 if (typeof value !== "string" || !value.trim() || value.length > 256 || /[\u0000-\u001f\u007f]/.test(value)) this.fail();
                 model.name = value.trim();
@@ -102,6 +117,11 @@ module.exports = {
             command = { query: { ...input.query }, model: this.model(input.model, false) };
         }
         if (request.promotionCode !== undefined && request.promotionCode !== (command.query?.code || command.model.code)) this.fail();
+        if (command.model.couponOffer) {
+            const security = SERVICE.DefaultSecuredRequestPipelineService;
+            if (!command.model.actions || !command.model.conditions || !security.isPermissionGranted('commerce.promotion.manage',
+                security.getGrantedPermissions({ tenant: scope.tenant, authData: request.authData }), {})) this.fail();
+        }
         admissions.set(token, { request, scope, storage, schema: structuredClone(storage.schema),
             role: structuredClone(CONFIG.get("runtimeRole")), publication: structuredClone(SERVICE.DefaultPromotionPublicationService.publicationSettings()) });
         try { return await this.write(token, operation, command); } finally { admissions.delete(token); }
@@ -170,14 +190,26 @@ module.exports = {
             current.revision === Number.MAX_SAFE_INTEGER || current.budgetAdmission !== undefined || current.sellerAuthorizations !== undefined ||
             command.model.code !== undefined && command.model.code !== code) this.fail();
         const model = creating ? { ...command.model, tenant: scope.tenant, enterpriseCode: scope.enterpriseCode, status: "DRAFT",
-            active: false, conditions: {}, actions: {}, priority: command.model.priority ?? 0,
+            active: false, conditions: command.model.conditions || {}, actions: command.model.actions || {}, priority: command.model.priority ?? 0,
+            ...(command.model.couponOffer ? { issuerEnterpriseRef: { moduleName: 'profile', schemaName: 'enterprise', code: scope.enterpriseCode },
+                vendorEnterpriseRef: { moduleName: 'profile', schemaName: 'enterprise', code: scope.enterpriseCode } } : {}),
             versionId: 0, revision: 0, createdBy: scope.actorId, updatedBy: scope.actorId } :
             { ...command.model, revision: current.revision + 1, updatedBy: scope.actorId };
         const expected = structuredClone({ ...current, ...model, versionId: creating ? 0 : current.versionId + 1 });
         if (expected.validFrom && expected.validTo && new Date(expected.validFrom) >= new Date(expected.validTo)) this.fail();
         const query = { tenant: scope.tenant, enterpriseCode: scope.enterpriseCode, code,
             ...(creating ? {} : { versionId: current.versionId, revision: current.revision, status: "DRAFT" }) };
-        const response = await storage.service[creating ? "save" : "update"]({ ...this.local(token), query, model });
+        const writeRequest = { ...this.local(token), query, model };
+        if (creating) {
+            writeRequest.schemaModel = storage.model;
+            await new Promise((resolve, reject) => SERVICE.DefaultModelSaveInitializerService.applyDefaultValues(writeRequest, {}, {
+                nextSuccess: resolve, error: (_request, _response, error) => reject(error),
+            }));
+        }
+        draftWrites.set(writeRequest, { token, current: structuredClone(current), query: structuredClone(query), model: structuredClone(model) });
+        let response;
+        try { response = await storage.service[creating ? "save" : "update"](writeRequest); }
+        finally { draftWrites.delete(writeRequest); }
         this.admitted(token);
         const result = this.outcome(this.envelope(response, creating ? "SUC_SAVE_00000" : "SUC_UPD_00000"));
         if (creating) {

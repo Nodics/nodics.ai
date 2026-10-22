@@ -139,8 +139,7 @@ module.exports = {
                 "dataType": "init",
                 "releaseCodes": [
                   "axis:axisBaseline",
-                  "cms:init-v001",
-                  "wcms:init-v001"
+                  "cms:init-v001"
                 ]
               }
             ]

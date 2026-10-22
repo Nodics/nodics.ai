@@ -1,5 +1,16 @@
 # Cart
 
+Fixed-price creation resolves the merchant through canonical Store placement;
+later commands recover it from the owner-validated Cart without another frontend
+Store selector. Read [merchant scope](llm/contracts/merchant-scope.md) for retained
+fields, Store deployment admission, recovery and source-level tests.
+
+Customer and Enterprise employee APIs resolve purchasing identity through signed
+Profile context. Owner and actor are distinct, and typed ownership is retained on
+Cart/entries. Selected auction carts are immutable and use only Checkout's retained
+merchant partition; browser owner/Enterprise selectors are not authority. See
+[auction and participant context](../checkoutCore/llm/contracts/auction-checkout.md).
+
 Activated policy rollout may be scoped by the owning domains' delivery.storeCodes.
 Calculation ports delegate this selection to each owner using the persisted Cart
 storeCode, never a calculation-body override. Unselected stores retain existing
@@ -35,9 +46,9 @@ carts are read and mutated by their saved ID using their persisted store;
 contradictory input is rejected. Existing explicit-store ID formats are retained.
 An explicit create/replace cannot rebind an existing owned ID to another store.
 
-Identifier validation is not a Store master-record lookup or an authorization
-grant. Existing owner/tenant/enterprise and selling-context validation remain
-with their authorities. See [the context contract](llm/contracts/store-defaults.md)
+The identifier helper alone is not a Store master-record lookup or authorization
+grant. The public creation facade additionally requires canonical Store placement.
+See [the context contract](llm/contracts/store-defaults.md)
 and [request examples and migration](llm/examples/store-defaults.md).
 
 Run `node --test test/cartCustomerApiContract.test.js` from this module. Tests

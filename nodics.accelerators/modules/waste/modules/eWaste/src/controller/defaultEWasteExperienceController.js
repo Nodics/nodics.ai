@@ -75,29 +75,15 @@ module.exports = {
       callback,
     );
   },
-  /** Reads the customer's incoming and outgoing Commerce bids. */
+  /** Preserves signed Customer/Enterprise authority for the private Bidding history adapter; no Customer conversion. */
   bids: function (request, callback) {
-    return SERVICE.DefaultEWasteRequestService.invoke(
-      "bids",
-      request,
-      callback,
-    );
-  },
-  /** Forwards reviewed offer terms using trusted customer context. */
-  placeBid: function (request, callback) {
-    return SERVICE.DefaultEWasteRequestService.invoke(
-      "placeBid",
-      request,
-      callback,
-    );
-  },
-  /** Forwards an explicit participant decision. */
-  decideBid: function (request, callback) {
-    return SERVICE.DefaultEWasteRequestService.invoke(
-      "decideBid",
-      request,
-      callback,
-    );
+    request.httpResponse?.setHeader?.('Cache-Control', 'no-store');
+    const http = request.httpRequest || {};
+    const promise = Promise.resolve().then(() => SERVICE.DefaultEWasteExperienceService.bids({ ...request,
+      authorization: http.headers?.authorization || request.authorization,
+      payload: http.body || {}, query: http.query || {} })).then(data => ({ data }));
+    if (!callback) return promise;
+    promise.then(result => callback(null, result)).catch(callback);
   },
 
   /** Uses one trusted request mapper for domain routes. */
@@ -147,10 +133,6 @@ module.exports = {
   /** Maps marketplace composition. */
   marketplace: function (request, callback) {
     return this.invoke("marketplace", request, callback);
-  },
-  /** Maps a confirmed purchase. */
-  purchase: function (request, callback) {
-    return this.invoke("purchase", request, callback);
   },
   /** Maps purchase history. */
   purchases: function (request, callback) {

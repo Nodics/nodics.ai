@@ -144,8 +144,11 @@ source-Product/Store policy and generated-batch resolution; request quantity,
 batch and promotion selectors never reach that owner. Promotion currently has a
 single-Product pool operation, so different digital Products require distinct
 owner calls; repeated rows do not. No per-row catalogue lookup is added.
-An eligible coupon returns `{available: true, status: 'IN_STOCK'}`; exhausted,
-sold or reserved supply returns false/OUT_OF_STOCK. All counts, batch/promotion
+An eligible coupon returns `{available: true, status: 'IN_STOCK', acquisitionRequirements}`;
+requirements are Promotion's public REWARDS/CERTIFICATES/BOTH DTO. Missing canonical
+policy returns explicit null and false/OUT_OF_STOCK; copied Product attributes never
+substitute for it. Exhausted, sold or reserved supply returns false/OUT_OF_STOCK
+while retaining known requirements. All counts, priceRef, batch/promotion
 references and protected fields are discarded. Missing/failed owners, malformed
 availability and conflicting physical/digital rows reject without indexed or
 warehouse fallback. Only DigitalCore's typed ERR_DIGITAL_AVAILABILITY_METADATA

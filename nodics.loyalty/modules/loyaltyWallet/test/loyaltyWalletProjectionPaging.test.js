@@ -10,6 +10,7 @@
  */
 
 "use strict";
+require("./helpers/runtimeEnums.js")();
 /** @module loyaltyWallet/test/loyaltyWalletProjectionPaging @description Verifies recent ledger projection paging and owner isolation through generated reads. @layer test @owner loyaltyWallet */
 const assert = require("node:assert/strict");
 const walletService = require("../src/service/defaultLoyaltyWalletOperationService");
@@ -31,7 +32,7 @@ async function main() {
     authData: { principalType: "service" },
     payload: { ownerType: "CUSTOMER", ownerCode: "customer-a" },
   };
-  global.SERVICE = {
+  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
     DefaultLoyaltyRewardOperationService: operations,
     DefaultLoyaltyWalletService: {
       get: async (request) => {

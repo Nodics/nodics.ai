@@ -23,7 +23,7 @@ const crypto = require('node:crypto');
 const profile = require('../src/service/enterprise/defaultEnterpriseManagementService');
 const journey = require('../src/service/enterprise/defaultEnterpriseRegistrationService');
 const verifierSource = require('../../../../nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService');
-const rpcSource = require('../../../../nodics.communication/modules/commsApi/src/service/defaultCommunicationVerificationApiService');
+const rpcSource = require('../../../../nodics.communication/modules/commsApi/src/service/defaultCommunicationVerificationOperationService');
 const clone = value => structuredClone(value);
 const matches = (row, query) => Object.entries(query).every(([key, value]) => {
   const actual = key.split('.').reduce((o, k) => o && o[k], row);

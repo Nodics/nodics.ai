@@ -85,6 +85,7 @@ module.exports = {
         init: {
           enabled: true,
           startupExecution: true,
+          startupProfileSelections: [],
           operatorExecution: true,
         },
         core: {

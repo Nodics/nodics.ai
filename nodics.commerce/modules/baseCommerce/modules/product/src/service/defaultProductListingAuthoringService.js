@@ -15,8 +15,85 @@ const { isDeepStrictEqual } = require("node:util");
 // Only verified handoff can mint exact-request graph admission; inspect mode never writes.
 const humanAdmissions = new WeakMap();
 const handoffReads = new WeakMap();
-/** @module product/service/defaultProductListingAuthoringService @description Authors a source-referenced listing using Product-owned records without taking ownership of prices or inventory. @layer service @owner product */
+/**
+ * @module product/service/defaultProductListingAuthoringService
+ * @description Authors a source-referenced listing using Product-owned records without taking
+ * ownership of prices or inventory.
+ * @layer service
+ * @owner product
+ * @remarks Product owns immutable listing identity and governed source proof. Listing terms never
+ * replace Pricing validity, and private automatic publication capabilities cannot be supplied by HTTP
+ * selectors.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: listingDate, listingTerms, sourceEvidence, listingPublicationEvidence, storeContext,
+ * requestState, humanScope, proofSelectors, readStore, readIntentProof, validateIntentProof,
+ * createHuman, scope, runtimeScope, create.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
+  /**
+   * Validates and normalizes one optional Product listing-window UTC timestamp.
+   * @param {string|null} value Exact UTC timestamp, or null/empty string for an unbounded endpoint.
+   * @returns {string|null} Millisecond-normalized UTC timestamp or null.
+   * @throws {Error} If the input is not an exact real UTC date.
+   * @sideEffects None; this member neither reads nor changes owner records.
+   * @override Customize through the effective Product member; preserve strict date validation
+   * and leave Pricing validity and private publication authority with their existing owners.
+   */
+  listingDate: function (value) {
+    if (value === null || value === '') return null;
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value) ||
+        !Number.isFinite(Date.parse(value))) throw new Error('Listing dates must be UTC timestamps');
+    const normalized = new Date(value).toISOString();
+    if (normalized !== value.replace(/Z$/, value.includes('.') ? 'Z' : '.000Z'))
+      throw new Error('Listing dates must name a real UTC date');
+    return normalized;
+  },
+  /**
+   * Normalizes owner-selected publication windows without confusing price validity with listing
+   * availability.
+   * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
+   * grant authority.
+   * @returns {Object} Normalized explicit listing sale mode and optional date window.
+   * @remarks Effects: Pure validation; no Product or Pricing mutation.
+   * Failure behavior: Rejects unsupported modes or malformed/inverted listing windows.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  listingTerms: function (input) {
+    const result = {};
+    if (input.listingWindow !== undefined) {
+      const window = input.listingWindow;
+      if (!window || Object.keys(window).sort().join(',') !== 'endsAt,startsAt') throw new Error('Exact listing window is required');
+      result.listingWindow = { startsAt: this.listingDate(window.startsAt), endsAt: this.listingDate(window.endsAt) };
+      if (result.listingWindow.startsAt && result.listingWindow.endsAt && result.listingWindow.endsAt <= result.listingWindow.startsAt)
+        throw new Error('Listing end must follow start');
+    }
+    if (input.categoryCodes !== undefined) {
+      if (!Array.isArray(input.categoryCodes) || input.categoryCodes.length > 100 ||
+          input.categoryCodes.some(code => typeof code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(code)) ||
+          new Set(input.categoryCodes).size !== input.categoryCodes.length) throw new Error('Invalid Product category selection');
+      result.categoryCodes = [...input.categoryCodes].sort();
+    }
+    if (input.bundleRef !== undefined) {
+      const ref = input.bundleRef;
+      if (ref?.module !== 'digitalCore' || ref.schema !== 'digitalBundleManifest' || typeof ref.code !== 'string' || !ref.code ||
+          !Number.isSafeInteger(ref.revision) || ref.revision < 0 || !/^[a-f0-9]{64}$/.test(ref.digest || '') ||
+          input.sourceRef?.module !== ref.module || input.sourceRef?.schema !== ref.schema || input.sourceRef?.code !== ref.code)
+        throw new Error('Exact retained bundle reference is required');
+      result.bundleRef = { module: ref.module, schema: ref.schema, code: ref.code, revision: ref.revision, digest: ref.digest };
+    }
+    if (input.publicationCode !== undefined || input.saleMode !== undefined) {
+      if (!result.bundleRef || !result.listingWindow || !['FIXED', 'AUCTION'].includes(input.saleMode) ||
+          typeof input.publicationCode !== 'string' || !/^[A-Za-z0-9._:-]{1,180}$/.test(input.publicationCode) ||
+          input.biddingEnabled !== (input.saleMode === 'AUCTION')) throw new Error('Exact bundle publication terms are required');
+      result.saleMode = input.saleMode;
+      result.publicationCode = input.publicationCode;
+    }
+    return result;
+  },
   /** Reads only the independently proven original graph and genuine sealed publication evidence, without authoring or repair. */
   sourceEvidence: async function (request) {
     if (humanAdmissions.has(request) || handoffReads.has(request)) throw new Error('Listing request is already admitted');
@@ -266,7 +343,18 @@ module.exports = {
     }
     return this.validateIntentProof(response, selectors, request.tenant);
   },
-  /** Checks only bounded Product authoring evidence; the source owner qualifies its own business terms behind the opaque intent digest. */
+  /**
+   * Checks only bounded Product authoring evidence; the source owner qualifies its own business terms
+   * behind the opaque intent digest.
+   * @param {Object} proof Owner-issued retained source proof, checked against exact selectors.
+   * @param {Object} selectors Exact original publication/source coordinates.
+   * @param {string} tenant Signed tenant identifier.
+   * @returns {Object} Detached validated bounded source-intent proof.
+   * @remarks Effects: Reads only the supplied owner proof and selectors; grants no runtime authority.
+   * Failure behavior: Rejects tenant, selector, digest or source-evidence mismatch.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   validateIntentProof: function (proof, selectors, tenant) {
     const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(value);
     const reference = value => value && Object.keys(value).sort().join(',') === 'code,module,schema' &&
@@ -278,7 +366,7 @@ module.exports = {
         proof.listingKey !== selectors.listingKey || proof.intentDigest !== selectors.intentDigest ||
         !Number.isSafeInteger(proof.requestRevision) || proof.requestRevision < 1 || proof.requestRevision > proof.assetRevision ||
         !reference(proof.sourceRef) || proof.sourceRef.code !== selectors.assetCode || !reference(proof.ownerRef) ||
-        proof.ownerRef.module !== 'profile' || proof.ownerRef.schema !== 'customer' ||
+        proof.ownerRef.module !== 'profile' || !['customer', 'enterprise'].includes(proof.ownerRef.schema) ||
         Object.keys(proof.storeContext || {}).sort().join(',') !== 'code,enterpriseCode,revision' ||
         proof.storeContext.code !== selectors.storeCode || !identifier(proof.storeContext.enterpriseCode) ||
         !Number.isSafeInteger(proof.storeContext.revision) || proof.storeContext.revision < 1 ||
@@ -289,13 +377,14 @@ module.exports = {
         proof.authoringContext.locales.some(locale => typeof locale !== 'string' || !/^[A-Za-z0-9_-]{1,32}$/.test(locale)))
       throw new Error('Exact retained listing proof is invalid');
     const p = proof.productCommand;
-    const allowed = ['sourceRef', 'ownerRef', 'name', 'description', 'issuer', 'imageUrl', 'biddingEnabled', 'sample', 'idempotencyKey'];
+    const allowed = ['sourceRef', 'ownerRef', 'name', 'description', 'issuer', 'imageUrl', 'biddingEnabled', 'sample', 'idempotencyKey', 'listingWindow', 'categoryCodes', 'bundleRef', 'saleMode', 'publicationCode'];
     if (!p || Object.keys(p).some(key => !allowed.includes(key)) ||
         !isDeepStrictEqual(p.sourceRef, proof.sourceRef) || !isDeepStrictEqual(p.ownerRef, proof.ownerRef) ||
         p.idempotencyKey !== selectors.listingKey || typeof p.name !== 'string' || !p.name.trim() || p.name.length > 180 ||
         ['description', 'issuer', 'imageUrl'].some(key => p[key] !== undefined && (typeof p[key] !== 'string' || p[key].length > 2000)) ||
         ['biddingEnabled', 'sample'].some(key => p[key] !== undefined && typeof p[key] !== 'boolean'))
       throw new Error('Retained listing Product command is invalid');
+    this.listingTerms(p);
     return structuredClone(proof);
   },
   /** Authors only the independent original intent in the authenticated Store enterprise; approval/activation remain separate. */
@@ -327,8 +416,19 @@ module.exports = {
       return { ...result, locales: [...settings.locales].sort(), sourceProof: structuredClone(binding), publicationRequired: true };
     } finally { humanAdmissions.delete(request); handoffReads.delete(request); }
   },
-  /** Admits only the original private Staged runtime request in its signed tenant and enterprise. */
+  /**
+   * Admits only the original private Staged runtime request in its signed tenant and enterprise.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Object} Privately admitted tenant/Enterprise scope.
+   * @remarks Effects: Consults original private capture or the existing runtime scope owner; no writes.
+   * Failure behavior: Rejects missing, mutated or foreign runtime authority.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   scope: function (request) {
+    const automatic = SERVICE.DefaultProductBundlePublicationService?.admission(request);
+    if (automatic) return automatic.scope;
     const admitted = humanAdmissions.get(request);
     if (admitted) { admitted.check(); return { ...admitted.scope }; }
     return this.runtimeScope(request);
@@ -349,16 +449,29 @@ module.exports = {
       throw new Error("Scoped Product listing authority is required");
     return { tenant: auth.tenant, enterpriseCode: auth.entCode };
   },
-  /** Authors immutable listing identity after a trusted application confirmed its source asset. */
+  /**
+   * Authors immutable listing identity after a trusted application confirmed its source asset.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Original product/variant/SKU/version references, or exact inspection
+   * result.
+   * @remarks Effects: Authors the immutable graph through existing owners after source proof; does not
+   * settle holdings.
+   * Failure behavior: Rejects invalid source, changed identity, unauthorized scope or uncertain
+   * persistence.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   create: async function (request) {
     const scope = this.scope(request);
     const policy = (CONFIG.get("product") || {}).marketplaceAuthoring || {},
-      original = humanAdmissions.get(request)?.command || request.payload || {},
+      original = SERVICE.DefaultProductBundlePublicationService?.admission(request)?.command || humanAdmissions.get(request)?.command || request.payload || {},
       p = structuredClone(original),
       originalBody = structuredClone(request.payload || {}),
       auth = structuredClone(request.authData),
       pinnedPolicy = structuredClone(policy),
       runtime = structuredClone(CONFIG.get("runtimeRole"));
+    const listingTerms = this.listingTerms(p);
     const storage = [];
     if (policy.enabled !== true)
       throw new Error("Marketplace authoring is not enabled on this runtime");
@@ -472,6 +585,7 @@ module.exports = {
         sourceRef: p.sourceRef, ownerRef: p.ownerRef, name: p.name.trim(),
         description: String(p.description || "").slice(0, 2000), issuer: p.issuer || "Community asset",
         imageUrl: p.imageUrl, biddingEnabled: p.biddingEnabled === true, sample: p.sample === true,
+        ...listingTerms,
         catalogVersion: policy.catalogVersion, locales: policy.locales || ["en"],
         ...(humanAdmissions.has(request) ? { sourceProof: humanAdmissions.get(request).binding } : {}) }),
     });
@@ -480,12 +594,14 @@ module.exports = {
       productType: "DIGITAL",
       digitalDeliveryType: "DIGITAL_OWNERSHIP",
       inventoryStrategy: "DIGITAL_COMMERCE",
-      kind: "ASSET",
-      assetCode: p.sourceRef.code,
+      kind: listingTerms.bundleRef ? "BUNDLE" : "ASSET",
+      ...(listingTerms.bundleRef ? { bundleRef: listingTerms.bundleRef } : { assetCode: p.sourceRef.code }),
+      ...(listingTerms.listingWindow ? { listingWindow: listingTerms.listingWindow } : {}),
       sourceRef: p.sourceRef,
       ownerRef: p.ownerRef,
       ...(p.biddingEnabled === true
-        ? { commerceBidding: { enabled: true, sellerRef: p.ownerRef } }
+        ? { commerceBidding: { enabled: true, sellerRef: p.ownerRef,
+          ...(listingTerms.saleMode === 'AUCTION' ? { mode: 'AUCTION', publicationCode: listingTerms.publicationCode } : {}) } }
         : {}),
       issuer: p.issuer || "Community asset",
       imageUrl: p.imageUrl,
@@ -508,6 +624,7 @@ module.exports = {
         slug: code.toLowerCase(),
         attributes,
         status: "READY",
+        ...(listingTerms.categoryCodes ? { classificationValues: { categoryCodes: listingTerms.categoryCodes } } : {}),
       });
       graph.push({ service: SERVICE.DefaultProductLocalizationService, modelName: "ProductLocalizationModel", model: localization });
       const variantLocalization = Object.assign({}, base, {
@@ -523,7 +640,7 @@ module.exports = {
     // Version zero uses the canonical immutable writer, never ordinary upsert or insertOnly bypass.
     for (const entry of graph) {
       const wrapper = NODICS.getModels("product", scope.tenant)?.[entry.modelName];
-      if (!wrapper || !wrapper.rawSchema || humanAdmissions.has(request) && wrapper.versioned !== true ||
+      if (!wrapper || !wrapper.rawSchema || (humanAdmissions.has(request) || SERVICE.DefaultProductBundlePublicationService?.admission(request)) && wrapper.versioned !== true ||
         wrapper.versioned === true && (wrapper.primaryKey !== "code" ||
           wrapper.rawSchema.versionedReadMode !== "CURRENT" ||
           typeof wrapper.getCurrentVersionItems !== "function" ||
@@ -567,7 +684,7 @@ module.exports = {
       matches(entry, await read(entry));
     }
     let versionId;
-    if (humanAdmissions.has(request)) {
+    if (humanAdmissions.has(request) || SERVICE.DefaultProductBundlePublicationService?.admission(request)) {
       const root = await read(graph[0]); matches(graph[0], root); versionId = root.versionId;
     }
     return {

@@ -19,6 +19,20 @@ module.exports = {
         handler: '@nTooling/node-script',
         script: 'src/service/acceptance/defaultCommerceJourneyAcceptanceService.mjs',
       },
+      'acceptance:coupon-acquisition': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultCouponJourneyHttpAcceptanceService.mjs',
+        arguments: ['--journey=ACQUISITION'],
+      },
+      'acceptance:coupon-redemption': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultCouponJourneyHttpAcceptanceService.mjs',
+        arguments: ['--journey=REDEMPTION'],
+      },
     },
   },
   // Inert inventory; an allowed local server must explicitly select this capability.
@@ -37,7 +51,14 @@ module.exports = {
     },
   },
 
-  checkoutCore: { enabled: true },
+  checkoutCore: { enabled: true,
+    couponAcceptance: { requestTimeoutMs: 30000, maximumCases: 12,
+      checkpointDirectory: '.nodics/acceptance/checkout-coupon' },
+    auction: { purchaseValiditySeconds: 86400,
+    validation: { purchaseValiditySeconds: { minimum: 1, maximum: 31536000 } } },
+    bundleRecovery: { leaseMs: 60000 },
+    participantSpend: { perPurchaseLimit: null,
+      profile: { connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, timeoutMs: 10000 } } },
   schemaPolicies: {
     checkoutCore: {
       operational: {

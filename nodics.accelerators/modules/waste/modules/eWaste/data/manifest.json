@@ -57,7 +57,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "eWaste",
-      "version": "0.0.6",
+      "version": "0.0.8",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -79,10 +79,8 @@
       "pages": 12,
       "components": 12,
       "routes": 12,
-      "releaseChecksum": "7ab938bd4215eda83e9ba16b2f833abb0884145d4eedb41e66f06bf23f86e2b2",
+      "releaseChecksum": "df5d7ec0d3649497bfad41892668f0e51e2660d39011e1b48933cadbefd589cc",
       "generatedHashes": {
-        "docs-v001/records/documentation/eWasteDocumentationPageData.js": "b2a2445166e63de59910b8d46f495cf091684d075a5562a04214c52346568826",
-        "docs-v001/records/documentation/eWasteDocumentationRouteData.js": "7a4952a6c95ae7d1a9ccb70003a976aa29bc18464cac47937f9afcda063c161d",
         "docs-v001/records/documentation/eWasteDocumentationMediaData.js": "94b36113e804aca304ea35630fbb07de2d426a5fa3a7ae63e08b119cb2c6ced1",
         "docs-v001/assets/documentation/files/images/circa-architecture.png": "8a863434057ea442ca58bae03f235c9fe72f022fe8ba5d2abd07f903ba68f67b",
         "docs-v001/assets/documentation/files/images/circa-coupon.png": "d7e3133701b51b866ebc288b35e93847aec0f637cb02ca196e4fe94e4f434b4c",
@@ -104,12 +102,14 @@
         "docs-v001/assets/documentation/files/images/circa-record-network.svg": "38de130b5605c374a58e6f0db2d7bbb4f58339c9fbb48817210cc20be88e61c9",
         "docs-v001/assets/documentation/files/images/circa-submission.svg": "a460135ceba159518a6325d129b4774ea33ce9fab32b611e4f1c572aee1298cd",
         "docs-v001/assets/documentation/eWasteDocumentationAssetManifest.js": "ff625a27a0eabc7409d0613cc414a662e0a25f4e93835a892d5fb6fc5e1db09e",
-        "docs-v001/records/documentation/eWasteDocumentationRelease004NodeData.js": "d3195bfd0a455ef5e475b034eb2f5fdfcdd2c0c17bbbd01bb8241d378407849f",
-        "docs-v001/records/documentation/eWasteDocumentationRelease006ComponentData.js": "137318041cc30bb83ede149234eb8785a24fab55780bc0544274c468e6e2579b",
-        "docs-v001/records/documentation/eWasteDocumentationRelease006PageMetadataData.js": "c46fdfcc4841be4fced9fd7402c4943b1530fb904aa967dc5d61f3784644b21b",
-        "docs-v001/records/documentation/eWasteDocumentationRelease006SearchMetadataData.js": "da0c8e486eba17160712786402ae4c6a49c0a8f0bf28db2f1edec04ec67f6102",
-        "docs-v001/records/documentation/eWasteDocumentationRelease006PublicationStateData.js": "38e6efed84e4f55dd427839207c94b769567a6273660ba3d580f6cb6d77c388a",
-        "docs-v001/headers/103_eWasteDocumentationRelease006ContentPackHeader.js": "a81e30f5b08fe2f98970c524ec4b9e600d7ad164f132a5e0d4c20ce306390b6f"
+        "docs-v001/records/documentation/eWasteDocumentationRelease008NodeData.js": "d3195bfd0a455ef5e475b034eb2f5fdfcdd2c0c17bbbd01bb8241d378407849f",
+        "docs-v001/records/documentation/eWasteDocumentationRelease008PageMetadataData.js": "1f442eec8c9eae8963007bce6c01522332dc64f9f636085cdfe417c60c25cf10",
+        "docs-v001/records/documentation/eWasteDocumentationRelease008SearchMetadataData.js": "47f720faeaa3db79a8bd73c111a5cc46b114d805e6121dc4d63e0590de000e6f",
+        "docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js": "d58c10781e2f9e30a9dfaeefbd0d5db253fa9ffbaeb2f61158138a9bbe201072",
+        "docs-v001/records/documentation/eWasteDocumentationRelease008PageData.js": "b2a2445166e63de59910b8d46f495cf091684d075a5562a04214c52346568826",
+        "docs-v001/records/documentation/eWasteDocumentationRelease008RouteData.js": "a5bc6b9ee930579dce88d7610362c1b66bd9d055e5ca79c71050fd4563871a56",
+        "docs-v001/records/documentation/eWasteDocumentationRelease008PublicationStateData.js": "e02a1ed94c3678260795b89f37832a0735601c4cc927ee7de7166aa639e788f0",
+        "docs-v001/headers/103_eWasteDocumentationRelease008ContentPackHeader.js": "b6c7baa2bac7fbfbdfa6a620beffcaf4c20493da238d872b768fbf16c866baef"
       },
       "includes": [
         {
@@ -127,7 +127,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "eWaste",
-      "version": "0.0.3",
+      "version": "0.0.4",
       "owningDomain": "eWaste",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -160,7 +160,7 @@
       "pages": 4,
       "components": 5,
       "routes": 4,
-      "releaseChecksum": "f6e1b7b5b52e6331a4a4f339a224be59513477dc50b62dba423c75e8c58fdd7c",
+      "releaseChecksum": "820f22ac09eaa7b41e8b0ff5e60150fe7cc6cb65217b4122c5a6ec2cbfe56954",
       "generatedHashes": {
         "docs-v001/records/documentation/circaDocumentationSiteData.js": "709889ce61cbc23538aaa3321bc2be89b584b5a11393ab856ec3221068852ce1",
         "docs-v001/records/documentation/circaDocumentationProductData.js": "1557a5771d7fcd0bddabca7cf5bbd9b0999d1520a2e5a7398973e2790a3b1a54",
@@ -175,11 +175,11 @@
         "docs-v001/records/documentation/circaDocumentationTemplateData.js": "16288f09d3b50c26c2df4dbc0a946a83108c487cfc78b116c53ca2d6a3393d93",
         "docs-v001/records/documentation/circaDocumentationPageData.js": "0f8c3e99bc74aa87e9b6800fc8bb68a0a0300dac907d23b67b5c5ddee759e965",
         "docs-v001/records/documentation/circaDocumentationRouteData.js": "f746046d5a3479585650c2921204af3781eaddfc277af83797e8513795e77176",
-        "docs-v001/records/documentation/circaDocumentationRelease003ComponentData.js": "eb109772263bb67fe8cd43b5db283e19a2b92bc441c11514a008456eaf313806",
-        "docs-v001/records/documentation/circaDocumentationRelease003PageMetadataData.js": "448c22d4d4c65e96dfc051d52c0aa572c8a500128e85b551644e59e8abfe3b39",
-        "docs-v001/records/documentation/circaDocumentationRelease003SearchMetadataData.js": "edb621107a688b4b692dde864ee747632e2d038beee8cf4a63cb84d831e8c91b",
-        "docs-v001/records/documentation/circaDocumentationRelease003PublicationStateData.js": "72ef3b2b5c1f99bd42d2fe5c6b4aebdb961ac0ffe1614a0068d0c81a263ff0a0",
-        "docs-v001/headers/circaDocumentationRelease003ContentPackHeader.js": "6efab0f4fbebd160f598879ea02008db03640b8289fb969c3bef0a82f1e5d89a"
+        "docs-v001/records/documentation/circaDocumentationRelease004ComponentData.js": "d3977de0117bf056884afe53dd0ee2008cafaf476ba1d3b375cd32e46318dc9f",
+        "docs-v001/records/documentation/circaDocumentationRelease004PageMetadataData.js": "9ae0a35cd5c640b5cb84037f0d2c89c93fe4af71aa3cb567ab8eeb21e15e8914",
+        "docs-v001/records/documentation/circaDocumentationRelease004SearchMetadataData.js": "f7bb53f10a5814076ac322aa88d0a14195ac614d09e0ca2a91e3bad146aa890b",
+        "docs-v001/records/documentation/circaDocumentationRelease004PublicationStateData.js": "021329c0ff659027d83d1b7b36b3789a97fbe7caa72de4648496a5ca66c97ce7",
+        "docs-v001/headers/circaDocumentationRelease004ContentPackHeader.js": "dc84c92d1228fffc9c561a3284317e51ebbbaf2a27358634133b3c3df226e647"
       }
     },
     "permissionCatalogue": {

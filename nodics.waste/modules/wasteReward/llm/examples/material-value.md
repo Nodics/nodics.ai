@@ -1,0 +1,9 @@
+# Material Value Examples
+
+A confirmed batch of 100.00 has one individually valued contribution of 40.00 and two pooled contributions with recorded basis weights 1:2. Their attributed values are 40.00, 20.00 and 40.00. A governed one-half contributor share and three reward units per currency unit produce 60.00, 30.00 and 60.00 rewards at scale 2. These numbers are examples only; no program or rate defaults exist.
+
+A recycler receipt of 40.00 that explicitly covers only the first allocation permits only its credit. Covering the entire batch with that receipt rejects. An invoice or PARTIAL/PENDING payment result cannot release. A successful Loyalty credit followed by a failed batch update remains CREDIT_PENDING; retrying the same release reconciles the original earning rather than creating another credit.
+
+Override valuationProviderService/paymentProviderService and qualificationRef through normal CONFIG after qualification. Registered adapters must return exact source evidence and respect AbortSignal. An Enterprise original contributor receives its Enterprise wallet credit, regardless of the certificate's later owner; acting employees and parent groups receive nothing automatically.
+
+A customer or represented Enterprise posts {} to /waste/material-value/allocations with its original access credential. The response distinguishes confirmed valuation awaiting payment, payment confirmed with credit reconciliation pending, and completed credit with a Loyalty ledger reference. No projected amount is a spendable balance. A foreign ownerRef, missing current scope or explicit deny fails closed. Operators use the service-only lookup/release contract, never a public paid checkbox. Intentional Profile transport overrides belong to the framework-defined profile property; rates, shares and reward program selection remain governed policy records.

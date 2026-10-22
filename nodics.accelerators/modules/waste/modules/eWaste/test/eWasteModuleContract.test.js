@@ -82,7 +82,7 @@ assert.deepEqual(routes.review.accessGroups, [
 ]);
 assert.equal(routes.review.permission, "waste.review.approve");
 assert.equal(routes.createDraft.permission, "waste.submission.create");
-assert.equal(routes.purchase.permission, "waste.asset.own.read");
+assert.equal(routes.purchase, undefined, "Purchases use common Commerce checkout");
 for (const folder of ["src", "config"]) {
   for (const entry of fs.readdirSync(path.join(__dirname, "..", folder), {
     recursive: true,

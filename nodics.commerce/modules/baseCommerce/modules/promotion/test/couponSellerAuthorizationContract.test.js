@@ -192,6 +192,7 @@ function guardedFixture(t) {
   const ordered = Object.values(hooks).filter(item => item.item === "promotion" &&
     item.trigger === "preUpdate" && [true, "true"].includes(item.active)).sort((a, b) => a.index - b.index);
   SERVICE.DefaultCouponSellerAuthorizationService = owner;
+  SERVICE.DefaultCouponOfferService = require('../src/service/defaultCouponOfferService');
   SERVICE.DefaultPromotionOperationService = operation;
   SERVICE.DefaultPromotionBudgetAdmissionService = admission;
   SERVICE.DefaultPromotionPublicationService = publication;
@@ -306,6 +307,7 @@ test("consent does not require monetary pricing or completed journeys, but write
 test("ordered budget and seller guards admit only issuer consent CAS while retaining spend and opening receipt", async t => {
   const f = guardedFixture(t), original = structuredClone(f.state.row);
   assert.deepEqual(f.ordered.map(item => item.handler), [
+    'DefaultCouponOfferService.protect',
     "DefaultPromotionBudgetAdmissionService.protect", "DefaultCouponSellerAuthorizationService.protect",
     "DefaultPromotionPublicationService.validateSourceAuthoring", "DefaultPromotionOperationService.validatePolicyAuthoring",
   ]);

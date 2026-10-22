@@ -14,6 +14,22 @@ Never duplicate product identities in properties or read tenant content during
 synchronous capability registration. Existing initialization profiles supply
 publication bindings; CMS records and delivery retain content/access authority.
 
+The CMS publication decision callback accepts only the fixed Process workflow
+runtime principal and its deterministic publication/revision identity. Apply
+target-local system authority only after those checks; never broaden schema
+groups, trust a submitted decision without Process evidence, or place this
+elevation in a customer/runtime property file.
+
+CMS Online publication target routes likewise require the calling `cms` runtime
+principal before constructing a target-local system request. The elevation is
+limited to the existing target operation and must never be accepted from a
+submitted payload or moved into deployment configuration.
+
+CMS Staged application-baseline routes require the calling `backoffice` runtime
+principal before constructing a CMS-local system request. Keep delegated human
+approval evidence in the baseline service; neither the transport identity nor a
+submitted payload may provide CMS schema authority.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -62,6 +78,18 @@ must not be replaced with an inferred runtime or implicit approval. Keep these
 defaults out of cmsStaged and server overlays when unchanged.
 
 CMS owns the complete canonical `acceptance:guided-initialization` suite.
+Its reusable ordinary-request and long-initialization timeout defaults remain
+separate in CMS tooling configuration. Customer projects supply only intentional
+deployment overrides; do not patch the runner or duplicate those defaults.
+When the operator explicitly supplies both execution and publication-approval
+intent, the suite first invokes BackOffice capability preparation, then submits
+the CMS publication and completes each reported exact Media dependency through the
+existing Media request and Process approval APIs before asserting READY. This is
+acceptance-only orchestration; runtime status reads and application publication
+must never activate Media implicitly.
+Capability preparation may change Profile authority records. Reauthenticate the
+same human afterward and continue only with the newly stamped token; never replay
+a denied command or weaken stale-token rejection.
 Documentation navigation derives current reader metadata only from reachable,
 active canonical articles in the exact frozen Site/locale/channel/access scope.
 Never read latest content, mutate shared release scaffolding, or reuse stale

@@ -30,21 +30,9 @@ function article(id) {
 }
 
 const allowedAccessModes = new Set(['PUBLIC', 'AUTHENTICATED', 'ROLE_BASED', 'GROUP_BASED', 'PERMISSION_BASED', 'RESTRICTED']);
-const expectedGeneratedFiles = [
-  'data/docs-v001/records/documentation/nodicsDocumentationSiteData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationProductData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationAccessPolicyData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationNavigationData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationDashboardData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationNodeData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationPageMetadataData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationPublicationStateData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationSearchMetadataData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationComponentData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationPageData.js',
-  'data/docs-v001/records/documentation/nodicsDocumentationRouteData.js',
-  'data/docs-v001/headers/000_nodicsDocumentationContentPackHeader.js'
+const expectedGeneratedFamilies = [
+  'Site', 'Product', 'AccessPolicy', 'Navigation', 'Dashboard', 'LegacyNavigationCleanup',
+  'Node', 'PageMetadata', 'PublicationState', 'SearchMetadata', 'Component', 'Page', 'Route'
 ];
 const requiredCoverageTerms = [
   'Product Catalog and Discovery',
@@ -171,10 +159,18 @@ function assertCatalogueShape() {
 function assertGeneratedData() {
   const manifest = JSON.parse(readFileSync(join(docsRoot, 'data/manifest.json'), 'utf8'));
   const hashes = (((manifest.sections || {}).documentation || {}).generatedHashes) || {};
-  for (const file of expectedGeneratedFiles) {
-    if (!existsSync(join(docsRoot, file))) fail(`Missing generated data file: ${file}`);
-    const manifestKey = file.startsWith('data/') ? file.slice('data/'.length) : file;
-    if (!hashes[manifestKey]) fail(`Generated data file missing manifest checksum: ${file}`);
+  const selectedFiles = Object.keys(hashes);
+  for (const family of expectedGeneratedFamilies) {
+    if (!selectedFiles.some(file => file.includes('/records/documentation/') && file.endsWith(family + 'Data.js')))
+      fail(`Selected documentation release lacks required record family: ${family}`);
+  }
+  if (!selectedFiles.some(file => file.includes('/headers/') && file.endsWith('ContentPackHeader.js')))
+    fail('Selected documentation release lacks its content-pack header');
+  for (const [file, expected] of Object.entries(hashes)) {
+    const absolute = join(docsRoot, 'data', file);
+    if (!existsSync(absolute)) fail(`Missing selected generated data file: ${file}`);
+    if (documentationContract.sha256(readFileSync(absolute)) !== expected)
+      fail(`Selected generated data file checksum mismatch: ${file}`);
   }
   const nodes = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationNodeData.js');
   const dashboards = loadGeneratedRecords('data/docs-v001/records/documentation/nodicsDocumentationDashboardData.js');
@@ -230,8 +226,11 @@ function assertSourceEvidence() {
   for (const document of catalogue.documents || []) {
     for (const evidence of document.sourceEvidence || []) {
       if (/^https?:\/\//.test(evidence)) continue;
-      const resolved = resolve(document.ownerRoot || docsRoot, evidence);
-      if (!existsSync(resolved)) fail(`Missing source evidence for ${document.id}: ${evidence}`);
+      try {
+        documentationContract.validateSourceEvidence(document.ownerRoot || docsRoot, evidence);
+      } catch (error) {
+        fail(`Invalid source evidence for ${document.id}: ${evidence}: ${error.message}`);
+      }
     }
   }
 }
@@ -276,21 +275,52 @@ function assertAgoraReferences() {
   }
 }
 
+/** Require a real link to a Component record in the owner's currently selected pack. */
+export function assertReadmeDocumentationLink(root, relative, owner) {
+  const body = readFileSync(join(root, relative), 'utf8');
+  const section = body.split(/^## Documentation[ \t]*$/m)[1]?.split(/^## /m)[0];
+  if (!section) fail(`README missing Documentation section: ${relative}`);
+  const manifest = JSON.parse(readFileSync(join(root, owner, 'data/manifest.json'), 'utf8'));
+  const selected = manifest.sections?.documentation;
+  if (selected?.sourceMode !== 'cms-records') fail(`README owner has no CMS documentation selection: ${owner}`);
+  const components = Object.entries(selected.generatedHashes || {})
+    .filter(([file]) => file.endsWith('ComponentData.js'));
+  if (!components.length) fail(`README owner has no selected documentation Component: ${owner}`);
+  const targets = new Set();
+  const markdownLinks = /\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+  for (const match of section.matchAll(markdownLinks)) {
+    if (/^[a-z]+:/i.test(match[1])) continue;
+    targets.add(resolve(root, dirname(relative), decodeURIComponent(match[1].split('#')[0])));
+  }
+  // Existing READMEs also use repository-relative code paths; link labels are not targets.
+  const codePaths = section.replace(markdownLinks, '').matchAll(/`([^`\n]+)`/g);
+  for (const match of codePaths) targets.add(resolve(root, match[1]));
+  for (const [file, checksum] of components) {
+    const target = resolve(root, owner, 'data', file);
+    if (!targets.has(target)) continue;
+    if (!existsSync(target) || !statSync(target).isFile())
+      fail(`README selected documentation is missing: ${target}`);
+    if (documentationContract.sha256(readFileSync(target)) !== checksum)
+      fail(`README selected documentation checksum mismatch: ${target}`);
+    return target;
+  }
+  fail(`README missing manifest-selected documentation link: ${relative} (${selected.version})`);
+}
+
 function assertReadmeThinness() {
   const readmes = walk(repoRoot, file => file.endsWith('/README.md'));
   const requiredDeepDocLinks = new Map([
-    ['nodics.foundation/modules/nCache/cache/README.md', 'nodics.foundation/modules/nCache/cache/data/docs-v001/records/documentation/cacheDocumentationComponentData.js'],
-    ['nodics.foundation/modules/nConfig/README.md', 'nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js'],
-    ['nodics.foundation/modules/nData/nImport/import/README.md', 'nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js'],
-    ['nodics.foundation/modules/nDatabase/database/README.md', 'nodics.foundation/modules/nDatabase/database/data/docs-v001/records/documentation/databaseDocumentationComponentData.js'],
-    ['nodics.foundation/modules/nRouter/README.md', 'nodics.foundation/modules/nRouter/data/docs-v001/records/documentation/routerDocumentationComponentData.js'],
-    ['nodics.platform/modules/profile/README.md', 'nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js'],
-    ['nodics.wcms/modules/cms/README.md', 'nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js'],
-    ['nodics.wcms/modules/media/README.md', 'nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js'],
-    ['nodics.wcms/modules/media/llm/contracts/README.md', 'nodics.wcms/modules/media/data/docs-v001/records/documentation/mediaDocumentationComponentData.js']
+    ['nodics.foundation/modules/nCache/cache/README.md', 'nodics.foundation/modules/nCache/cache'],
+    ['nodics.foundation/modules/nConfig/README.md', 'nodics.foundation/modules/nConfig'],
+    ['nodics.foundation/modules/nData/nImport/import/README.md', 'nodics.foundation/modules/nData/nImport/import'],
+    ['nodics.foundation/modules/nDatabase/database/README.md', 'nodics.foundation/modules/nDatabase/database'],
+    ['nodics.foundation/modules/nRouter/README.md', 'nodics.foundation/modules/nRouter'],
+    ['nodics.platform/modules/profile/README.md', 'nodics.platform/modules/profile'],
+    ['nodics.wcms/modules/cms/README.md', 'nodics.wcms/modules/cms'],
+    ['nodics.wcms/modules/media/README.md', 'nodics.wcms/modules/media'],
+    ['nodics.wcms/modules/media/llm/contracts/README.md', 'nodics.wcms/modules/media']
   ]);
   const oversized = readmes
-    .filter(file => !file.endsWith('/README.md') || true)
     .filter(file => {
       const relative = file.slice(repoRoot.length + 1);
       if (relative.includes('/llm/')) return false;
@@ -298,25 +328,24 @@ function assertReadmeThinness() {
       return wordCount(readFileSync(file, 'utf8')) > 1500;
     });
   if (oversized.length) fail(`README thinness contract failed: ${oversized.map(file => file.slice(repoRoot.length + 1)).join(', ')}`);
-  for (const [relative, deepDoc] of requiredDeepDocLinks.entries()) {
-    const body = readFileSync(join(repoRoot, relative), 'utf8');
-    if (!body.includes('## Documentation')) fail(`README missing Documentation section: ${relative}`);
-    if (!body.includes(deepDoc)) fail(`README missing deep documentation link ${deepDoc}: ${relative}`);
-  }
+  for (const [relative, owner] of requiredDeepDocLinks)
+    assertReadmeDocumentationLink(repoRoot, relative, owner);
   return [];
 }
 
-assertCatalogueShape();
-assertGeneratedData();
-assertValidationReports();
-assertSourceEvidence();
-assertCoverageMap();
-assertUnsafeContent();
-assertAgoraReferences();
-const oversizedReadmes = assertReadmeThinness();
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  assertCatalogueShape();
+  assertGeneratedData();
+  assertValidationReports();
+  assertSourceEvidence();
+  assertCoverageMap();
+  assertUnsafeContent();
+  assertAgoraReferences();
+  const oversizedReadmes = assertReadmeThinness();
 
-console.log('Documentation hardening audit passed');
-console.log(`Documents: ${catalogue.documents.length}`);
-console.log(`Navigation sections: ${catalogue.navigationSections.length}`);
-console.log(`Coverage rows: ${requiredCoverageTerms.length}`);
-console.log(`Oversized non-exempt READMEs observed: ${oversizedReadmes.length}`);
+  console.log('Documentation hardening audit passed');
+  console.log(`Documents: ${catalogue.documents.length}`);
+  console.log(`Navigation sections: ${catalogue.navigationSections.length}`);
+  console.log(`Coverage rows: ${requiredCoverageTerms.length}`);
+  console.log(`Oversized non-exempt READMEs observed: ${oversizedReadmes.length}`);
+}

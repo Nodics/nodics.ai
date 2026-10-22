@@ -1,5 +1,34 @@
 # profile
 
+Canonical notification guidance is now the selected
+[v002 CMS recipient article](data/docs-v002/records/documentation/profileNotificationRecipientsDocumentationComponentData.js).
+The successor preserves sealed v001 records and remains Staged, not installed or
+published. [Whole-gift recipients](llm/contracts/gift-notification-recipients.md)
+join transfer, coupon and auction wrappers on the existing shared selector.
+
+[Coupon reminder recipients](llm/contracts/coupon-notification-recipients.md) use
+Digital source proof, current preferences and explicit authorized Enterprise staff
+selections. Self-only Employee inbox identity supports Communication without a
+personal Customer account. Defaults remain off; no permissions are assigned.
+
+[Auction outcome recipients](llm/contracts/auction-notification-recipients.md)
+resolve Bidding's exact committed event through the same current permission,
+scope and preference checks. Enterprise participants receive messages only in
+explicitly selected genuine Employee inboxes, separate from the Store issuer.
+The private endpoint is implemented; activation and qualification remain off.
+
+The [shared recipient selector](llm/contracts/notification-recipient-projections.md)
+reuses current canonical identity, persisted permission groups, scope denials and
+preferences. Typed transfer notifications address Customer owners or explicitly
+configured, authorized Enterprise Employees in the existing Communication inbox. See
+[transfer notification recipients](llm/contracts/transfer-notification-recipients.md).
+The private endpoint is default-off; it does not expose contacts or assign recipients.
+
+Native platform-administrator evidence is a read-only Profile command with fresh
+persisted identity, group and permission checks. See
+[platform administrator evidence](llm/contracts/platform-administrator-evidence.md).
+It does not grant access, activate Wallet test funding or replace consumer admission.
+
 Permission vocabulary and enterprise role definitions are persisted Profile
 `permission` and `enterpriseRole` records in the default-tenant authority store.
 Owner packs seed them insert-only; authorized Platform administrators manage them
@@ -57,6 +86,13 @@ for default, enforced-policy, import and failure behavior.
 
 Parent relationships never grant access automatically. Preserve exact-target authority, canonical credentials, private application evidence, proof-bound onboarding and independent platform authority. Documented qualification gates remain unchanged.
 
+Profile also owns the opt-in
+[`acceptance:enterprise-actor-owner`](llm/contracts/enterprise-actor-owner-acceptance.md)
+command. It verifies existing membership, effective scopes, tenant isolation,
+explicit related-Enterprise authority and disposable-member revocation through
+canonical Profile APIs. It requires reviewed record selections and runtime-only
+tokens, creates no authority, and does not treat hierarchy as permission.
+
 Detailed material is preserved in the adjacent [implementation and operations guide](profile-identity-onboarding-guide.md). This README is the discovery index, not a replacement authority or evidence that runtime qualification passed.
 
 Read [owner guidance](AGENTS.md) before changing behavior. Customize through the established later-loaded configuration, services, providers, schemas and runtime layers described in the guide; do not copy framework owners or bypass their invariants. Verification commands and their limits are retained in the guide. This documentation-only reorganization runs no behavioral tests or operations.
@@ -75,9 +111,9 @@ See [Documentation](profile-identity-onboarding-guide.md#documentation).
 
 Canonical framework documentation:
 
-- [nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js](data/docs-v001/records/documentation/profileDocumentationComponentData.js)
-- [nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js](data/docs-v001/records/documentation/profileDocumentationComponentData.js)
-- [nodics.platform/modules/profile/data/docs-v001/records/documentation/profileDocumentationComponentData.js](data/docs-v001/records/documentation/profileDocumentationComponentData.js)
+- [Identity and onboarding guide](data/docs-v002/records/documentation/profileDocumentationComponentData.js)
+- [Notification recipients guide](data/docs-v002/records/documentation/profileNotificationRecipientsDocumentationComponentData.js)
+- [Current documentation selection](data/manifest.json)
 
 ## Verification
 

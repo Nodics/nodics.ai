@@ -2156,6 +2156,7 @@ module.exports = {
     )
       fail();
     const task = await this.readTaskTransition(request, tasks.result[0].code);
+    const taskPolicy = this.policyOf(version, this.findNode(graph, taskNode));
     if (
       task.status !== "COMPLETED" ||
       task.instanceCode !== instance.code ||
@@ -2181,7 +2182,9 @@ module.exports = {
       (task.decision.reason !== undefined &&
         (typeof task.decision.reason !== "string" ||
           task.decision.reason.length > 1000)) ||
-      (task.decision.approved === false && !task.decision.reason?.trim())
+      (task.decision.approved === false &&
+        taskPolicy.requireReasonOnReject === true &&
+        !task.decision.reason?.trim())
     )
       fail();
     // Legacy clients retain descriptive labels with the approved decision.
@@ -2190,7 +2193,7 @@ module.exports = {
     if (
       Object.hasOwn(task.decision, "outcome") &&
       (this.taskDecisionContract(
-        this.policyOf(version, this.findNode(graph, taskNode)),
+        taskPolicy,
       ) ||
         typeof task.decision.outcome !== "string" ||
         !task.decision.outcome.trim() ||
@@ -2200,7 +2203,7 @@ module.exports = {
     if (
       Object.hasOwn(task.decision, "action") &&
       (this.taskDecisionContract(
-        this.policyOf(version, this.findNode(graph, taskNode)),
+        taskPolicy,
       ) ||
         task.decision.action !== (task.decision.approved ? "APPROVE" : "REJECT"))
     )
@@ -2230,6 +2233,7 @@ module.exports = {
   /** Retries the failed ACTION of one Process instance under bounded policy. Decision adapters restore original completed-task evidence through the registry. */
   retryInstance: async function (request) {
     let body = this.bodyOf(request);
+    let requeuedInRequest = false;
     let instance = await this.requireInstance(
       request,
       request.instanceCode || body.instanceCode,
@@ -2241,21 +2245,119 @@ module.exports = {
       );
     let incident = await this.requireIncident(request, instance.incidentCode);
     if (
-      !["OPEN", "DEAD_LETTER"].includes(incident.status) ||
-      incident.attempt >= incident.maximumAttempts
-    ) {
-      throw new CLASSES.NodicsError(
-        "ERR_PROCESS_00023",
-        "Process incident retry policy is exhausted",
-      );
-    }
-    if (
       body.expectedAttempt !== undefined &&
       Number(body.expectedAttempt) !== incident.attempt
     ) {
       throw new CLASSES.NodicsError(
         "ERR_PROCESS_00024",
         "Process incident changed; refresh before retrying",
+      );
+    }
+    if (body.requeueDeadLetter === true) {
+      const policy =
+        ((CONFIG.get("process") || {}).runtime || {}).deadLetterRequeue || {};
+      const maximumRequeues = Number(policy.maximumRequeues);
+      const requeueCount = Number(incident.requeueCount || 0);
+      const reason = typeof body.reason === "string" ? body.reason.trim() : "";
+      if (
+        incident.status !== "DEAD_LETTER" ||
+        incident.attempt < incident.maximumAttempts ||
+        policy.enabled !== true ||
+        !Number.isSafeInteger(maximumRequeues) ||
+        maximumRequeues < 1 ||
+        maximumRequeues > 10 ||
+        !Number.isSafeInteger(requeueCount) ||
+        requeueCount < 0 ||
+        requeueCount >= maximumRequeues ||
+        !reason ||
+        reason.length > 1000
+      ) {
+        throw new CLASSES.NodicsError(
+          "ERR_PROCESS_00023",
+          "Process dead-letter requeue is unavailable",
+        );
+      }
+      const requeuedAt = new Date();
+      const requeued = await this.incidentService().update(
+        this.serviceRequest(request, {
+          query: {
+            code: incident.code,
+            status: "DEAD_LETTER",
+            attempt: incident.attempt,
+          },
+          model: {
+            $set: {
+              status: "OPEN",
+              attempt: 0,
+              requeueCount: requeueCount + 1,
+              lastRequeuedAt: requeuedAt,
+              lastRequeueReason: reason,
+              nextRetryAt: undefined,
+            },
+          },
+        }),
+      );
+      let requeuedCount =
+        SERVICE.DefaultModelsUpdateInitializerService.getAffectedCount(requeued);
+      if (requeuedCount !== 1) {
+        throw new CLASSES.NodicsError(
+          "ERR_PROCESS_00024",
+          "Process incident changed; refresh before retrying",
+        );
+      }
+      incident = Object.assign({}, incident, {
+        status: "OPEN",
+        attempt: 0,
+        requeueCount: requeueCount + 1,
+        lastRequeuedAt: requeuedAt,
+        lastRequeueReason: reason,
+      });
+      requeuedInRequest = true;
+      await this.audit(request, {
+        definitionCode: instance.definitionCode,
+        instanceCode: instance.code,
+        eventType: "process.incident.requeued",
+        metadata: {
+          incidentCode: incident.code,
+          requeueCount: incident.requeueCount,
+          reason,
+          correlationId: body.correlationId,
+        },
+      });
+    } else if (incident.status === "DEAD_LETTER") {
+      throw new CLASSES.NodicsError(
+        "ERR_PROCESS_00023",
+        "Process incident retry policy is exhausted",
+      );
+    }
+    if (
+      !requeuedInRequest &&
+      incident.status === "OPEN" &&
+      incident.attempt === 0 &&
+      Number.isSafeInteger(incident.requeueCount) &&
+      incident.requeueCount > 0 &&
+      typeof incident.lastRequeueReason === "string" &&
+      incident.lastRequeueReason.trim()
+    ) {
+      await this.audit(request, {
+        definitionCode: instance.definitionCode,
+        instanceCode: instance.code,
+        eventType: "process.incident.requeueResumed",
+        metadata: {
+          incidentCode: incident.code,
+          requeueCount: incident.requeueCount,
+          reason: incident.lastRequeueReason,
+          correlationId: body.correlationId,
+        },
+      });
+    }
+    if (
+      incident.status !== "OPEN" ||
+      incident.attempt >= incident.maximumAttempts
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_PROCESS_00023",
+        "Process incident retry policy is exhausted",
       );
     }
     let version = await this.requireVersion(

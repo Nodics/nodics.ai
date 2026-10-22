@@ -4,6 +4,21 @@ This provider belongs to Commerce Payment. It may call Loyalty reservation, capt
 
 ## Customer ownership proof
 
+Interactive ownership now supports customers and represented Enterprises. Customer
+proof uses Profile's exact `/customer/identity` self-read, never generic Customer
+CRUD. Employees retain their access bearer and `commerce.checkout.place`
+permission, with matching allowed/denied Enterprise scope evidence. The wallet
+must be open and match the canonical customer or represented Enterprise; employee
+personal balances never substitute for Enterprise balances. Profile/Loyalty
+transport coordinates come solely from this module's property defaults and
+explicit overrides. Missing definitions fail closed, without service-local defaults.
+
+Enterprise allow and deny scopes share the effective `matchesParticipantScope`
+predicate, including wildcard capability and tenant/Enterprise qualifiers.
+Any applicable deny prevents the wallet read. Original participant binding is
+rechecked after each asynchronous read through `assertParticipantBinding`;
+these predicates do not mint persistence or private execution authority.
+
 Reward authorization retains the original customer bearer from Checkout's trusted
 HTTP context through the reward payment method and Payment execution adapter.
 The Profile self-read uses that bearer; the Loyalty wallet read retains its
@@ -63,19 +78,20 @@ owner projection, whose existing implementation can open missing wallets.
 Acceptance checks correlated cart calculation, completed checkout, authorization
 and capture checkpoints, order provider/method, owned active entitlement, exact
 before/after balance deltas, and new reserve/capture entries with matching amount,
-reservation and redemption references. Cross-customer identities, unrelated
+reservation and redemption references. It then independently reads the exact
+Loyalty reservation and redemption, verifies their typed wallet owner, amount,
+captured status, Order target and ledger joins. Cross-customer identities, unrelated
 ledgers, duplicate entries, precision errors, overspending, and denials fail.
 Projection entries are bounded by the owner API (currently 100); use an isolated
 test wallet. Missing evidence fails rather than silently skipping it.
 
-Evidence limits are mandatory: current explicit APIs do not independently expose
-the reservation/redemption statuses and payment transaction entries used by the
-old raw-database check. Digital delivery is proved only by checkpoint references
-and entitlement ownership. Projections cannot establish persisted-row context
-exclusion. Hence the report keeps `fullAcceptance: false`, names these gaps and
-CLI exits 2 even when API checks pass. Closing these gaps needs owner API work or
-separately qualified owner persistence evidence, not generic CRUD or direct DB
-access from the runner. This is not a complete live acceptance or production gate.
+Payment exposes a service-only exact journey transaction projection, and Digital
+exposes a current-participant exact delivery projection. The runner joins those
+records to the Order, checkout checkpoint, Loyalty reservation/redemption and owned
+entitlement, and reports full API acceptance only when every owner agrees.
+Persisted-row context exclusion remains proven by Loyalty's native persistence
+acceptance, not by generic CRUD or direct database access from this runner. Browser
+acceptance and production provider qualification remain separate gates.
 
 Failures do not trigger permission repair, signup retries, manual balance credits,
 refunds, history deletion or cleanup mutations. Operators inspect correlated

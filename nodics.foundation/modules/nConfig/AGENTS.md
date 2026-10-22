@@ -55,6 +55,10 @@ existing discovery/merge boundary, never arbitrary paths or module activation.
 Resolve only the selected role and preserve later collection replacement. Keep
 offline projection independent of global runtime state. See
 [the selector contract](llm/contracts/configuration-inheritance-contract.md#explicit-inactive-owner-configuration).
+Selected inactive-owner defaults follow ordinary framework properties in the
+live loader and precede customer contributions. Offline caller-supplied
+`inheritedProperties` remain explicit input above those defaults, including nulls
+and collection operators. Test both contracts; customer copies do not repair them.
 
 Explicit prerequisite source lookup uses `UTILS.resolveInstalledSourceDescriptor`
 only when an exact owner is absent from selected runtime discovery. It reuses
@@ -105,6 +109,9 @@ project/environment/server/node contributions through the same binding and merge
 sequence. This preserves explicit replacement/keyed semantics for framework-owned
 tooling defaults; never merge defaults back into already-resolved collections.
 This projection does not activate modules or alter runtime startup authority.
+Projection fixtures must supply the selected owners' ordinary property contributions
+before testing role projection. Declared module roots contribute release selectors,
+not missing domain installer defaults; never restore those defaults in nConfig.
 
 Reusable isolated composed-graph projection belongs to
 `DefaultDeploymentConfigurationProjectionService` here; nTooling's historical

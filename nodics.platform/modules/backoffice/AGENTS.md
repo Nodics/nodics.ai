@@ -11,6 +11,8 @@ stage identities, never a duplicated Platform profile or readiness store.
 Narrow Commerce setup groups may use initiate only for an explicit signed-operator
 AFTER stage. Preserve the service guard before owner reads and the existing
 granular route/domain permissions; do not grant normal CMS bootstrap by group admission.
+Exact baseline observation serves status and explicitly selected AFTER work; an
+ordinary unselected initialization must still submit the governed CMS baseline.
 
 ## Inheritance
 
@@ -189,6 +191,10 @@ granular route/domain permissions; do not grant normal CMS bootstrap by group ad
   consolidated/modular topology, and later-loaded override tests as applicable.
 
 Native workspaces use the bounded `backendWorkspace` native variant with stable workspace/view codes, never component imports or executable properties. Cross-module orphan removal must cascade through local grandchildren, and effective cross-provider cycles must be rejected. Follow the global module-owned UI contribution contract.
+
+Workspace tests consume the implementing capability's canonical data and effective
+provider projection. Empty property override defaults are not missing workspace
+definitions; do not copy Media workspace data back into configuration fixtures.
 
 Declarative workspace `rowNavigation` and `readSource` use the strict
 [listing-to-reviewed-source contract](llm/contracts/backoffice-governance-contracts.md#listing-to-reviewed-source-commands).

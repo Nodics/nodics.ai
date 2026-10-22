@@ -1,0 +1,232 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+'use strict';
+
+/** @description Generated authenticated Nodics Axis documentation routes. */
+module.exports = {
+  "record0": {
+    "code": "axisDocsRouteoverview",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageoverview",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record1": {
+    "code": "axisDocsRoutearchitecture",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/architecture",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagearchitecture",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record2": {
+    "code": "axisDocsRoutetechnologystack",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/technology-stack",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagetechnologystack",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record3": {
+    "code": "axisDocsRoutedesignsystem",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/design-system",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagedesignsystem",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record4": {
+    "code": "axisDocsRoutecmsrenderers",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/cms-renderers",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagecmsrenderers",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record5": {
+    "code": "axisDocsRoutedocumentationcontent",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/documentation-content",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagedocumentationcontent",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record6": {
+    "code": "axisDocsRouteemployeeaccess",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/employee-access",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageemployeeaccess",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record7": {
+    "code": "axisDocsRouteassistant",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/assistant",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageassistant",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record8": {
+    "code": "axisDocsRouteschemaworkbench",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/schema-workbench",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageschemaworkbench",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record9": {
+    "code": "axisDocsRoutepagedesigner",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/page-designer",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagepagedesigner",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record10": {
+    "code": "axisDocsRouteexperiencestudio",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/experience-studio",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageexperiencestudio",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record11": {
+    "code": "axisDocsRoutemodulehealth",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/module-health",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagemodulehealth",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record12": {
+    "code": "axisDocsRouteimportsexports",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/imports-exports",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageimportsexports",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record13": {
+    "code": "axisDocsRoutemediamanagement",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/media",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagemediamanagement",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record14": {
+    "code": "axisDocsRoutecustomerengagement",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/customer-engagement",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagecustomerengagement",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record15": {
+    "code": "axisDocsRouteopenapireference",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/openapi-reference",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageopenapireference",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record16": {
+    "code": "axisDocsRoutefeaturedelivery",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/feature-delivery",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagefeaturedelivery",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record17": {
+    "code": "axisDocsRouteimplementationcontract",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/implementation-contract",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageimplementationcontract",
+    "routeType": "PAGE",
+    "deliveryState": "STAGED",
+    "accessMode": "PUBLIC",
+    "active": true
+  }
+};

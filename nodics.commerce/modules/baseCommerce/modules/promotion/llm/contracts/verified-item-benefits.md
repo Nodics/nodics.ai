@@ -25,7 +25,9 @@ An ITEM action permits only `benefitType`, optional `benefitDescription`, `items
 optional `reasonCode` and optional `exclusionGroup`. `benefitType` is exactly
 `ITEM`. `items` contains one to twenty distinct bounded SKU identifiers, each with
 integer `quantity` from one to one hundred and `unit: EACH`. Retained campaign
-conditions must include a nonempty bounded unique `storeCodes` list.
+conditions for the integrated delivery path must include a nonempty bounded
+unique `storeCodes` list. Staff recording uses the retained offer's accepted
+participation/outlet scope; any additional campaign `storeCodes` still applies.
 
 ```json
 {
@@ -47,7 +49,50 @@ action. Such declarations fail before purchase admission. Canonical Product/menu
 definitions and the policy approval belong to the selected business owner, not
 to this example. An item issuance cap is not a monetary campaign budget.
 
-## Independent Receipt Contract
+## Staff Recording Of External Use
+
+The ordinary Axis validate/confirm flow can record an externally fulfilled ITEM
+coupon without Nodics delivering goods or verifying the external transaction.
+This uses the existing merchant-screen receipt, **staff attestation only**.
+It is neither `ITEM_DELIVERY` nor simulation, and grants no financial settlement,
+reimbursement, merchant billing or proof of independent delivery.
+
+This branch requires `promotion.merchantBenefits.enabled: false`, the enabled
+standard Digital merchant-screen provider and an exact version-2 purchased offer.
+Promotion consumes Digital's effective `merchantRedemption.providerService`;
+the exact standard provider name is an attestation qualification invariant, not
+a copied default. Missing policy/provider refuses this branch. Only Digital owns
+the default definition; no Promotion fallback supplies it.
+Promotion rechecks original signed human staff permission through Digital/Profile
+and accepted retained participation through the existing participation owner,
+including the live Store and revision. Issuer-owned stock may be redeemed by the
+issuer or an accepted other Enterprise. Other-Enterprise validation retains the
+private lifecycle admission and original redeemer identity; copied system requests
+or browser flags do not select staff recording.
+
+Exact ITEM terms, expiry and existing campaign conditions still apply. Retained
+SELECTED or ALL_ELIGIBLE participation determines outlet eligibility, independently
+of later mutable sales consent. Promotion returns no `conditions.benefit` or
+delivery proof; Digital's existing explicit confirm persists the staff receipt
+and consumes the original customer coupon once, with the original target and
+same-command replay. Validation alone never consumes a coupon.
+
+Selecting an integrated benefit provider cannot fall back to this branch on
+missing qualification or evidence. Direct Item `assertPolicy`/`validate` retain
+their delivery contract; staff term validation does not qualify publication,
+purchase, a provider, or simulated fulfillment. Existing integrated receipts are
+not rewritten or reclassified.
+
+`promotionMerchantScopeContract.test.js` composes the real Digital controller,
+facade, merchant coordinator and Promotion lifecycle with isolated persistence,
+Profile and Store ports. It covers issuer/participant ITEM recording, exact
+SELECTED/ALL_ELIGIBLE rights, replay, single use, revocation, expired rights,
+malformed terms and copied private requests. Throw-on-call Pricing, budget,
+item-provider and simulation ports prove those executions are absent. Separate
+tests retain direct and selected integrated evidence refusals. These are local
+source regressions, not live staff, persistence or browser acceptance.
+
+## Integrated Independent Receipt Contract
 
 The adapter receives detached tenant, signed merchant enterprise, issuer,
 original buyer, coupon, source Product, campaign/revision, outlet, redemption
@@ -73,7 +118,7 @@ revoked or returned delivery, partial/oversized read and failed envelopes. It mu
 retain the original source hash/time across same-command retries. A `verified`
 boolean without that owner behavior is not independent verification.
 
-## Coordinated Merchant Flow
+## Integrated Merchant Flow
 
 ```mermaid
 sequenceDiagram

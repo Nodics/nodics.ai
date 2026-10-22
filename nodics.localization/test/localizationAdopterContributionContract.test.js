@@ -14,6 +14,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '../..');
 const sources = [
     ['localizationCore', 'nodics.localization/modules/localizationCore/src/service/defaultLocalizationCoreLocalizationContributionService.js'],
+    ['nAuth', 'nodics.foundation/modules/nAuth/src/service/defaultAuthLocalizationContributionService.js'],
     ['commsCore', 'nodics.communication/modules/commsCore/src/service/defaultCommunicationLocalizationContributionService.js'],
     ['profile', 'nodics.platform/modules/profile/src/service/defaultProfileLocalizationContributionService.js'],
     ['workflow', 'nodics.process/modules/workflow/src/service/defaultProcessLocalizationContributionService.js'],

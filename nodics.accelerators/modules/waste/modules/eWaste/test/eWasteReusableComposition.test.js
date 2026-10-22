@@ -15,6 +15,9 @@ const assert = require("node:assert/strict");
 const marketplace = require("../src/service/defaultEWasteMarketplaceService");
 const conversation = require("../src/service/defaultEWasteConversationService");
 const valuation = require("../src/service/defaultEWasteWeightRewardValuationService");
+const marketplaceDefaults = require("../config/properties").eWaste.marketplace;
+const selectedMarketplace = { ...marketplaceDefaults, storeCode: "store", currency: "POINTS", jurisdiction: "AE",
+  programCode: "selected-program", rewardTypeCode: "selected-points" };
 
 test.afterEach(() => {
   delete global.SERVICE;
@@ -22,7 +25,7 @@ test.afterEach(() => {
   delete global.CLASSES;
 });
 
-test("published discovery uses configured store and trusted limits with original context", async () => {
+test("Product discovery receives configured store and original context without accelerator scanning", async () => {
   const request = {
     tenant: "tenant",
     authorization: "Bearer customer",
@@ -32,7 +35,7 @@ test("published discovery uses configured store and trusted limits with original
   const service = {
     ...marketplace,
     experience: () => ({
-      settings: () => ({ marketplace: { storeCode: "configured" } }),
+      settings: () => ({ marketplace: { ...marketplaceDefaults, storeCode: "configured" } }),
       remote: async (context, module, connection, path, method) => {
         assert.equal(context, request);
         assert.equal(module, "product");
@@ -47,13 +50,10 @@ test("published discovery uses configured store and trusted limits with original
     }),
   };
   assert.deepEqual(
-    await service.published(request, {
-      discoveryBatchSize: 1,
-      maximumProducts: 2,
-    }),
-    [{ productCode: "A" }],
+    await service.products(request, "/products/discovery", { view: "AVAILABLE_SHOP", page: 1, pageSize: 1 }),
+    { products: [{ productCode: "A" }] },
   );
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 1);
   assert(
     calls.every(
       (query) =>
@@ -61,30 +61,8 @@ test("published discovery uses configured store and trusted limits with original
         query.get("pageSize") === "1",
     ),
   );
-  await assert.rejects(
-    service.published(
-      { isCancelled: () => true },
-      { discoveryBatchSize: 1, maximumProducts: 2 },
-    ),
-    { statusCode: 499 },
-  );
-  assert.equal(calls.length, 2);
-  await assert.rejects(
-    service.published(
-      request,
-      { discoveryBatchSize: 1, maximumProducts: 2 },
-      async () => ({ products: [{ productCode: "A" }] }),
-    ),
-    /changed while loading/,
-  );
-  await assert.rejects(
-    service.published(
-      request,
-      { discoveryBatchSize: 1, maximumProducts: 2 },
-      async () => ({}),
-    ),
-    { statusCode: 503 },
-  );
+  assert.throws(() => service.products(request, "/products/discovery", { page: [1] }), /Invalid Product query/);
+  assert.equal(calls.length, 1);
 });
 
 test("shared offer composition excludes private evidence and rejects stale asset bindings", async () => {
@@ -100,6 +78,7 @@ test("shared offer composition excludes private evidence and rejects stale asset
     productCode: "PRODUCT",
     name: "Published",
     version: "v2",
+    variantCodes: ["variant"],
     price: { currency: "POINTS", unitAmount: 3 },
     localizedAttributes: {
       kind: "ASSET",
@@ -125,7 +104,7 @@ test("shared offer composition excludes private evidence and rejects stale asset
   const service = {
     ...marketplace,
     experience: () => ({
-      settings: () => ({ marketplace: { currency: "POINTS" } }),
+      settings: () => ({ marketplace: selectedMarketplace }),
       store: () => ({
         one: async (schema, context, code) => {
           assert.equal(schema, "wasteAsset");
@@ -156,7 +135,7 @@ test("shared offer composition excludes private evidence and rejects stale asset
   assert.equal(await service.offer(request, product, {}), null);
 });
 
-test("default marketplace list retains its existing asset and coupon DTO shapes", async () => {
+test("default marketplace list returns the authoritative catalogue pages and totals", async () => {
   const coupon = {
     productCode: "COUPON",
     name: "Coupon",
@@ -188,7 +167,7 @@ test("default marketplace list retains its existing asset and coupon DTO shapes"
     ...marketplace,
     experience: () => ({
       settings: () => ({
-        marketplace: { storeCode: "store", currency: "POINTS" },
+        marketplace: selectedMarketplace,
       }),
       remote: async () => ({ products: [coupon, asset] }),
       store: () => ({
@@ -202,7 +181,13 @@ test("default marketplace list retains its existing asset and coupon DTO shapes"
       }),
     }),
   };
+  SERVICE.DefaultEWasteCatalogueService = {
+    catalogue: async request => ({ items: [{ code: request.query.kind }], pagination: { total: 7 } }),
+  };
   const result = await service.list({});
+  assert.deepEqual(result, { assets: [{ code: "ASSET" }], coupons: [{ code: "COUPON" }],
+    pagination: { assets: { total: 7 }, coupons: { total: 7 } } });
+  const projected = await service.marketplaceOffer({}, coupon, {});
   const expected = {
     code: "COUPON",
     name: "Coupon",
@@ -210,15 +195,19 @@ test("default marketplace list retains its existing asset and coupon DTO shapes"
     kind: "COUPON",
     issuer: "Issuer",
     imageUrl: "/coupon.png",
-    rewardPrice: 8,
+    rewardPrice: "8",
     biddingAvailable: false,
     currency: "POINTS",
     revision: "v3",
     variantCode: "variant",
     expiresAt: undefined,
+    commerce: { storeCode: "store", currency: "POINTS", jurisdiction: "AE", programCode: "selected-program",
+      rewardTypeCode: "selected-points", locale: marketplaceDefaults.locale, variantCode: "variant" },
+    available: false,
+    saleMode: undefined,
   };
-  assert.deepEqual(result.coupons, [expected]);
-  assert.deepEqual(result.assets, [
+  assert.deepEqual(projected, { ...expected, acquisitionRequirements: null });
+  assert.deepEqual([await service.marketplaceOffer({}, asset, {})], [
     {
       ...expected,
       code: "PRODUCT",

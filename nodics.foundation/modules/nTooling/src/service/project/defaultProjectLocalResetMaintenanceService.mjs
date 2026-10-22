@@ -55,12 +55,12 @@ export function refusal(code) {
 /** Parses exact CLI selections. Mutation defaults off; ambiguous, duplicate and wildcard options refuse. */
 export function parseOptions(args) {
   const values = {};
-  const allowed = new Set(['environment', 'project', 'project-code', 'databases', 'registered-tenants', 'auth-namespace', 'search-indexes', 'execute', 'exclusive-deployment', 'writers-excluded', 'discover-registered-tenants']);
+  const allowed = new Set(['environment', 'project', 'project-code', 'databases', 'registered-tenants', 'auth-namespace', 'search-indexes', 'execute', 'exclusive-deployment', 'writers-excluded', 'discover-registered-tenants', 'discover-registered-tenant-targets', 'retire-stale-registered-bindings']);
   for (const argument of args) {
     const match = argument.match(/^--([a-z-]+)(?:=(.*))?$/);
     if (!match || !allowed.has(match[1]) || Object.hasOwn(values, match[1]))
       throw refusal('RESET_SELECTION_INVALID');
-    if (['execute', 'exclusive-deployment', 'writers-excluded', 'discover-registered-tenants'].includes(match[1])) {
+    if (['execute', 'exclusive-deployment', 'writers-excluded', 'discover-registered-tenants', 'retire-stale-registered-bindings'].includes(match[1])) {
       if (match[2] !== undefined) throw refusal('RESET_EXECUTE_FLAG_INVALID');
       values[match[1]] = true;
     } else {
@@ -77,9 +77,19 @@ export function parseOptions(args) {
       throw refusal('RESET_SELECTION_REQUIRED');
   }
   if (values['discover-registered-tenants'] === true) {
-    if (['databases', 'registered-tenants', 'auth-namespace', 'search-indexes', 'execute', 'exclusive-deployment', 'writers-excluded']
+    if (['databases', 'registered-tenants', 'auth-namespace', 'search-indexes', 'execute', 'exclusive-deployment', 'writers-excluded', 'discover-registered-tenant-targets', 'retire-stale-registered-bindings']
       .some(key => Object.hasOwn(values, key))) throw refusal('RESET_DISCOVERY_READ_ONLY_REQUIRED');
     return { environment: values.environment, project: values.project, discoverRegisteredTenants: true, execute: false };
+  }
+  if (values['discover-registered-tenant-targets'] !== undefined) {
+    if (['databases', 'registered-tenants', 'auth-namespace', 'search-indexes', 'execute', 'exclusive-deployment', 'writers-excluded']
+      .some(key => Object.hasOwn(values, key))) throw refusal('RESET_DISCOVERY_READ_ONLY_REQUIRED');
+    const selected = values['discover-registered-tenant-targets'].split(',');
+    if (!selected.length || selected.length > 32 || new Set(selected).size !== selected.length || selected.some(code =>
+      !/^[A-Za-z0-9._-]{1,128}$/.test(code) || ['__proto__', 'prototype', 'constructor'].includes(code)))
+      throw refusal('RESET_TENANT_SELECTION_INVALID');
+    return { environment: values.environment, project: values.project, registeredTenants: selected.sort(),
+      discoverRegisteredTenantTargets: true, retireStaleRegisteredBindings: values['retire-stale-registered-bindings'] === true, execute: false };
   }
   const names = typeof values.databases === 'string' ? values.databases.split(',') : [];
   const tenants = values['registered-tenants']?.split(',') || [];
@@ -95,11 +105,14 @@ export function parseOptions(args) {
   if (indices && (!indices.length || indices.length > maximumTargets || new Set(indices).size !== indices.length ||
       indices.some(index => !/^[a-z0-9][a-z0-9._-]{0,199}$/.test(index)) || tenants.length))
     throw refusal('RESET_SEARCH_SELECTION_INVALID');
+  if (values['retire-stale-registered-bindings'] === true && !tenants.length)
+    throw refusal('RESET_TENANT_SELECTION_INVALID');
   if (values.execute === true && (values['exclusive-deployment'] !== true || values['writers-excluded'] !== true))
     throw refusal('RESET_OPERATOR_ATTESTATION_REQUIRED');
   return { environment: values.environment, project: values.project,
     ...(tenants.length ? { registeredTenants: tenants.sort() } : {}),
     databases: names.sort(), authNamespace: values['auth-namespace'], ...(indices ? { searchIndices: indices.sort() } : {}), execute: values.execute === true,
+    ...(values['retire-stale-registered-bindings'] === true ? { retireStaleRegisteredBindings: true } : {}),
     exclusiveDeployment: values['exclusive-deployment'] === true, writersExcluded: values['writers-excluded'] === true };
 }
 
@@ -152,21 +165,40 @@ export async function consumeRuntime(snapshot, registration, searchBindings) {
         handler: configuration.options.connectionHandler, moduleName: name };
     });
     for (const tenant of tenants) {
-      const candidate = selectedOwner.buildTenantNamespaceBinding(tenant.code);
-      if (!isDeepStrictEqual(candidate.binding, tenant.properties.database.tenantNamespaceBindings[candidate.scopeKey]))
+      const current = selectedOwner.buildTenantNamespaceBinding(tenant.code);
+      const storedBinding = tenant.properties.database.tenantNamespaceBindings[current.scopeKey];
+      const stale = !isDeepStrictEqual(current.binding, storedBinding);
+      if (stale && registration.options.retireStaleRegisteredBindings !== true)
         throw refusal('RESET_TENANT_PIN_CHANGED');
+      const candidate = stale ? { scopeKey: current.scopeKey, binding: storedBinding } : current;
+      try {
+        selectedOwner.validateTenantNamespaceBindingCandidate(candidate, { tenantCode: tenant.code,
+          projectCode: registration.options.project, environmentCode: registration.options.environment,
+          serverCode: registration.server });
+      } catch { throw refusal('RESET_TENANT_PIN_CHANGED'); }
+      if (!stale) selectedOwner.assertTenantNamespaceBinding(tenant.code);
       for (const [moduleName, binding] of Object.entries(candidate.binding.modules)) {
-        selectedOwner.assertTenantNamespaceBinding(tenant.code);
-        const destination = selectedOwner.resolveTenantDatabaseConfiguration(moduleName, tenant.code);
         const base = selectedOwner.resolveTenantDatabaseConfiguration(moduleName, snapshot.properties.defaultTenant || 'default');
-        if (binding.databaseType !== 'mongodb' || destination.slaves && Object.keys(destination.slaves).length)
+        if (binding.databaseType !== 'mongodb' || binding.connectionHandler !== 'DefaultMongodbDatabaseConnectionHandlerService' ||
+            base.slaves && Object.keys(base.slaves).length)
           throw refusal('RESET_TENANT_PROVIDER_UNSUPPORTED');
         for (const channel of Object.keys(binding.channels)) {
-          const configuration = destination[channel];
+          const pin = binding.channels[channel];
+          const baseConfiguration = base[channel];
+          if (!baseConfiguration || baseConfiguration.databaseName !== pin.base.databaseName ||
+              binding.connectionHandler !== pin.base.connectionHandler)
+            throw refusal('RESET_TENANT_PIN_CHANGED');
+          const handler = global.SERVICE?.[binding.connectionHandler];
+          if (typeof handler?.getTenantEndpointFingerprint !== 'function' ||
+              handler.getTenantEndpointFingerprint(baseConfiguration) !== pin.base.endpointFingerprint)
+            throw refusal('RESET_TENANT_PIN_CHANGED');
+          const configuration = { ...baseConfiguration, databaseName: pin.destination.databaseName };
+          if (handler.getTenantEndpointFingerprint(configuration) !== pin.destination.endpointFingerprint)
+            throw refusal('RESET_TENANT_PIN_CHANGED');
           assertNativeEndpoint(configuration.URI, 'mongodb:');
           const target = { name: configuration.databaseName, endpoint: configuration.URI, configuration,
             handler: binding.connectionHandler, moduleName, channel, tenantCode: tenant.code,
-            serverCode: registration.server, candidate, baseConfiguration: base[channel] };
+            serverCode: registration.server, candidate, baseConfiguration };
           registeredTargets.set(target, { project: registration.selectionProject || registration.options.project,
             environment: registration.options.environment, namespaceProject: registration.options.project,
             tenantCode: tenant.code, owner: registration.owner, receipt: registration.receipt });
@@ -571,11 +603,12 @@ export async function readSelection(options, projectRoot) {
 }
 
 /** Loads effective layered owner services without lifecycle hooks, listeners, imports or indexes, then holds only exact validated targets. */
-export async function openOwnerTargets(options, selected, wrapRegistered) {
+export async function openOwnerTargets(options, selected, wrapRegistered, observeStage = () => {}) {
   const projectRoot = process.cwd();
   const variables = { ...require('./defaultProjectLocalRuntimeCredentialService').readExistingEnvironment(projectRoot, options.environment), ...process.env };
   const opened = [], databaseNames = new Set(), searchNames = new Set(), searchTargets = [];
-  let auth;
+  let auth, providerStage = 'CONFIGURATION_RECHECK';
+  observeStage(providerStage);
   try {
     for (const scope of selected.scopes) {
       const runtime = selected.deployment.topology.groups.backends.find(item => item.server === scope.server);
@@ -591,6 +624,8 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
         const input = { project: options.project, environment: options.environment,
           exclusiveDeployment: options.exclusiveDeployment, writersExcluded: options.writersExcluded };
         if (!auth) {
+          providerStage = 'AUTH_OPEN';
+          observeStage(providerStage);
           const target = scope.auth[0], owner = SERVICE[target.handler];
           if (typeof owner?.openLocalResetMaintenance !== 'function') throw refusal('RESET_AUTH_OWNER_UNAVAILABLE');
           auth = await owner.openLocalResetMaintenance({ ...input, namespace: target.namespace, engine: target.engine, moduleName: target.moduleName });
@@ -598,6 +633,8 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
         }
         for (const target of scope.databases) {
           if (databaseNames.has(target.name)) continue;
+          providerStage = target.tenantCode ? 'REGISTERED_DATABASE_OPEN' : 'DATABASE_OPEN';
+          observeStage(providerStage);
           const owner = SERVICE[target.handler];
           if (typeof owner?.openLocalResetMaintenance !== 'function') throw refusal('RESET_DATABASE_OWNER_UNAVAILABLE');
           if (target.tenantCode && typeof wrapRegistered !== 'function') throw refusal('RESET_REGISTERED_PROOF_REQUIRED');
@@ -610,6 +647,8 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
         for (const group of groupSearchBindings(scope.search || [])) {
           const indices = group.indices.filter(index => !searchNames.has(index));
           if (!indices.length) continue;
+          providerStage = 'SEARCH_OPEN';
+          observeStage(providerStage);
           const owner = SERVICE[group.handler];
           if (typeof owner?.openLocalResetMaintenance !== 'function') throw refusal('RESET_SEARCH_OWNER_UNAVAILABLE');
           const held = await owner.openLocalResetMaintenance({ ...input, configuration: group.configuration, indices });
@@ -629,6 +668,8 @@ export async function openOwnerTargets(options, selected, wrapRegistered) {
     let cleanupFailedCount = Number.isSafeInteger(original.cleanupFailedCount) ? original.cleanupFailedCount : 0;
     for (const item of opened.reverse()) { try { await item.close(); } catch { cleanupFailedCount++; } }
     const error = refusal('RESET_PROVIDER_PREFLIGHT_FAILED');
+    const safeCode = [original.code, original.message].find(value => /^RESET_[A-Z0-9_]+$/.test(value || ''));
+    error.ownerFailureCode = safeCode || `RESET_PROVIDER_PREFLIGHT_${providerStage}`;
     error.cleanupFailedCount = cleanupFailedCount;
     throw error;
   }
@@ -639,15 +680,17 @@ export async function run(options, dependencies = {}) {
   // Revalidate exported calls as strictly as CLI input; injected ports are isolated test consumers only.
   options = parseOptions([`--environment=${options.environment}`, `--project-code=${options.project}`,
     ...(options.discoverRegisteredTenants === true ? ['--discover-registered-tenants'] : []),
-    ...(options.discoverRegisteredTenants !== true || options.databases !== undefined ?
+    ...(options.discoverRegisteredTenantTargets === true ? [`--discover-registered-tenant-targets=${Array.isArray(options.registeredTenants) ? options.registeredTenants.join(',') : ''}`] : []),
+    ...(!options.discoverRegisteredTenants && !options.discoverRegisteredTenantTargets || options.databases !== undefined ?
       [`--databases=${Array.isArray(options.databases) ? options.databases.join(',') : ''}`] : []),
-    ...(options.discoverRegisteredTenants !== true || options.authNamespace !== undefined ? [`--auth-namespace=${options.authNamespace}`] : []),
+    ...(!options.discoverRegisteredTenants && !options.discoverRegisteredTenantTargets || options.authNamespace !== undefined ? [`--auth-namespace=${options.authNamespace}`] : []),
     ...(options.execute === true ? ['--execute'] : []),
-    ...(Array.isArray(options.registeredTenants) ? [`--registered-tenants=${options.registeredTenants.join(',')}`] : []),
+    ...(Array.isArray(options.registeredTenants) && !options.discoverRegisteredTenantTargets ? [`--registered-tenants=${options.registeredTenants.join(',')}`] : []),
     ...(options.searchIndices !== undefined ? [`--search-indexes=${Array.isArray(options.searchIndices) ? options.searchIndices.join(',') : ''}`] : []),
+    ...(options.retireStaleRegisteredBindings === true ? ['--retire-stale-registered-bindings'] : []),
     ...(options.exclusiveDeployment === true ? ['--exclusive-deployment'] : []),
     ...(options.writersExcluded === true ? ['--writers-excluded'] : [])]);
-  if ((options.execute || options.discoverRegisteredTenants) && Object.keys(dependencies).length)
+  if ((options.execute || options.discoverRegisteredTenants || options.discoverRegisteredTenantTargets) && Object.keys(dependencies).length)
     throw refusal('RESET_RUNTIME_ADAPTER_OVERRIDE_DENIED');
   const read = dependencies.readSelection || readSelection;
   const check = dependencies.verifyOutage || (async input => {
@@ -660,6 +703,18 @@ export async function run(options, dependencies = {}) {
       if (previous === undefined) delete process.env.ENV; else process.env.ENV = previous;
     }
   });
+  if (options.discoverRegisteredTenantTargets) {
+    const deployment = readProjectEnvironmentConfiguration(process.cwd(), options.environment);
+    const topology = { runtimes: deployment.topology.groups.backends };
+    if (deployment.projectCode !== options.project || deployment.environment !== options.environment)
+      throw refusal('RESET_DEPLOYMENT_MISMATCH');
+    await check(topology);
+    const selected = await read(options, process.cwd());
+    const databases = [...new Set(selected.scopes.flatMap(scope => scope.databases.map(target => target.name)))].sort();
+    return { project: options.project, environment: options.environment, mode: 'READ_ONLY_REGISTERED_TARGET_DISCOVERY',
+      registeredTenants: options.registeredTenants, databases, databaseCount: databases.length, qualified: false,
+      effects: { databasesDropped: 0, authKeysRemoved: 0 } };
+  }
   const selected = await read(options, process.cwd());
   const topology = { runtimes: selected.deployment.topology.groups.backends };
   if (options.discoverRegisteredTenants) {
@@ -700,7 +755,7 @@ export async function run(options, dependencies = {}) {
   };
   const execute = wrap => orchestrateAdmittedMaintenance({ selected, plan, topology,
     readFreshSelection: () => read(options, process.cwd()), verifyOutage: verify,
-    openTargets: () => openOwnerTargets(options, selected, wrap) });
+    openTargets: () => openOwnerTargets(options, selected, wrap, stage => { plan.providerPreflightStage = stage; }) });
   if (!options.registeredTenants?.length) return execute();
   const registration = registeredSelections.get(selected);
   if (!registration) throw refusal('RESET_REGISTERED_PROOF_REQUIRED');
@@ -720,20 +775,24 @@ export async function orchestrateAdmittedMaintenance({ selected, plan, topology,
   let targets, failure, stage = 'PROVIDER_PREFLIGHT';
   try {
     targets = await openTargets();
+    plan.providerPreflightStage = 'OWNER_CONTRACT';
     if (!targets.auth || targets.auth.contractVersion !== 1 || targets.databases?.length !== plan.databaseCount ||
         new Set(targets.databases.map(item => item.name)).size !== plan.databaseCount ||
         targets.databases.some(item => item.contractVersion !== 1 || !plan.databases.includes(item.name)))
       throw refusal('RESET_OWNER_CONTRACT_INVALID');
+    plan.providerPreflightStage = 'DATABASE_INSPECTION';
     let collectionCount = 0;
     for (const target of targets.databases) {
       const inspection = await target.inspect();
       if (!Number.isSafeInteger(inspection.collectionCount) || inspection.collectionCount < 0) throw refusal('RESET_INSPECTION_UNCONFIRMED');
       collectionCount += inspection.collectionCount;
     }
+    plan.providerPreflightStage = 'AUTH_INSPECTION';
     const authInspection = await targets.auth.inspect();
     if (!Number.isSafeInteger(authInspection.keyCount) || authInspection.keyCount < 0) throw refusal('RESET_INSPECTION_UNCONFIRMED');
     plan.providerCounts = { collections: collectionCount, authKeys: authInspection.keyCount };
     if (plan.searchIndices) {
+      plan.providerPreflightStage = 'SEARCH_INSPECTION';
       const names = targets.search?.flatMap(target => target.names);
       if (!names || targets.search.some(target => target.contractVersion !== 1 || typeof target.drop !== 'function' ||
           typeof target.verifyEmpty !== 'function') || !isDeepStrictEqual([...names].sort(), plan.searchIndices))
@@ -748,9 +807,11 @@ export async function orchestrateAdmittedMaintenance({ selected, plan, topology,
       }
       plan.searchProviderCounts = { present, absent };
     }
+    plan.providerPreflightStage = 'CONFIGURATION_CONFIRMATION';
     const fresh = await readFreshSelection();
     if (!isDeepStrictEqual(fresh, selected)) throw refusal('RESET_CONFIGURATION_CHANGED');
     await verifyOutage(topology);
+    delete plan.providerPreflightStage;
     stage = 'DATABASE_DROP';
     for (const target of targets.databases) {
       await verifyOutage(topology);
@@ -795,7 +856,8 @@ export async function orchestrateAdmittedMaintenance({ selected, plan, topology,
     plan.remainingCounts = { collections: 0, authKeys: 0 };
   } catch (error) {
     failure = refusal('RESET_MAINTENANCE_INCOMPLETE');
-    if (/^RESET_[A-Z_]+$/.test(error.code || '')) plan.failedCheck = error.code;
+    const safeCode = [error.ownerFailureCode, error.code, error.message].find(value => /^RESET_[A-Z0-9_]+$/.test(value || ''));
+    if (safeCode) plan.failedCheck = safeCode;
     if (Number.isSafeInteger(error.cleanupFailedCount) && error.cleanupFailedCount >= 0)
       plan.cleanupFailedCount = error.cleanupFailedCount;
     if (stage === 'AUTH_CLEANUP' && Number.isSafeInteger(error.removedCount) && error.removedCount >= 0 &&

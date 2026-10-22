@@ -141,5 +141,69 @@ assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: Object.assign({}, strictCatalogue, { documents: [strictCatalogue.documents[0], Object.assign({}, strictCatalogue.documents[0], { id: 'sample.strict-two', slug: 'sample-strict-two', sourcePath: 'docs/pages/strict.md' })] }), requireNavigationSections: true, requireEnterpriseMetadata: true }), error => error.code === 'ERR_TOOL_DOC_00011');
 assert.throws(() => service.validateReleaseSection(Object.assign({}, section, { destinationRole: 'WCMS_ONLINE' })), error => error.code === 'ERR_TOOL_DOC_00007');
 
+// The owner runbook correction is a forward Staged release, never a rewrite of published history.
+{
+    const owner = path.resolve(__dirname, '..');
+    const manifest = require('../data/manifest.json').sections.documentation;
+    const frozen = {
+        'records/documentation/nToolingDocumentationNodeData.js': '53759a29b6405ee28afd5430bc3183e53f92de41dc0057f43cb2ecada57f8468',
+        'records/documentation/nToolingDocumentationPageMetadataData.js': '7b100466ca27fa28759f7223a69b72363440e10b6feed39ae266c027b351989a',
+        'records/documentation/nToolingDocumentationPublicationStateData.js': 'd42f010383db90923fbce002a6f3b21dcc4115fb83a39e71fbead87d220ab38f',
+        'records/documentation/nToolingDocumentationSearchMetadataData.js': '5ba0ad2c4cd98c666509f031fad702da84de5e78061544b49e01ef803239b59e',
+        'records/documentation/nToolingDocumentationComponentData.js': '8d062258d22f6b92de4db5ae1f3a4cbd508d45af2537cd1003f1a0bb8283d1f7',
+        'records/documentation/nToolingDocumentationPageData.js': '7081a23e8cf0d2f8f2f7dd98b77f5d5cc8928ebda030cf7798d0c1d3700c8a56',
+        'records/documentation/nToolingDocumentationRouteData.js': '0fc0d3ec27bfa41de02e0130176210e4200ae47a1e6cf8ded413c9132a2a5406',
+        'headers/100_nToolingDocumentationContentPackHeader.js': '13efda5c2a7ba01a47b1c042046d15ad6d174bef26c2c09c9b5e5b3ee55da391'
+    };
+    for (const [file, hash] of Object.entries(frozen))
+        assert.strictEqual(service.sha256(fs.readFileSync(path.join(owner, 'data/docs-v001', file))), hash, file);
+    assert.strictEqual(manifest.version, '0.0.2');
+    assert.strictEqual(manifest.contentPath, 'docs-v002');
+    const previous = Object.assign({}, manifest, {
+        version: '0.0.1', contentPath: 'docs-v001',
+        sourceAuthority: 'data/docs-v001/records/documentation',
+        generatedHashes: Object.fromEntries(Object.entries(frozen).map(([file, hash]) => ['docs-v001/' + file, hash]))
+    });
+    previous.releaseChecksum = service.releaseChecksum(previous.generatedHashes);
+    service.validateGeneration(previous, manifest);
+    assert.throws(() => service.validateGeneration(previous, Object.assign({}, manifest, { version: '0.0.1' })),
+        error => error.code === 'ERR_TOOL_DOC_00006');
+    const current = service.validateDataRelease(owner, 'documentation');
+    const article = current.documents.find(document => document.id === 'framework.release-upgrade-compatibility');
+    for (const phrase of ['releaseRequest.forceCurrent:true', 'LOCAL recovery', 'qualifyZeroWorkRecoveries',
+        'validationOnly:false', 'recordsRead', 'recordsFinalized', 'recordsDispatched', 'recordsSucceeded',
+        'recordsFailed', 'recordsSkipped', 'Missing counters are not zero', 'Custom installers',
+        'non-Local deployments', 'Prerequisite-reference releases', 'isZeroWorkRecovery',
+        'original installation runId, revision', 'new NO_DATA or explicit zero-success', 'receipt-only'])
+        assert.ok(article.body.includes(phrase), phrase);
+    assert.ok(!article.body.includes('Do not reset successful writes, force-current, invent receipts'));
+    const oldComponents = require('../data/docs-v001/records/documentation/nToolingDocumentationComponentData');
+    const newComponents = require('../data/docs-v002/records/documentation/nToolingDocumentationComponentData');
+    for (const [key, component] of Object.entries(newComponents)) {
+        assert.strictEqual(component.code, oldComponents[key].code);
+        assert.deepStrictEqual(component.properties.headings, oldComponents[key].properties.headings);
+        if (component.properties.code !== article.id)
+            assert.deepStrictEqual(component.properties.blocks, oldComponents[key].properties.blocks);
+    }
+    const component = Object.values(newComponents).find(row => row.properties.code === article.id).properties;
+    const pages = require('../data/docs-v002/records/documentation/nToolingDocumentationPageMetadataData');
+    const page = Object.values(pages).find(row => row.documentId === article.id);
+    assert.strictEqual(component.source.checksum, service.sha256(article.body));
+    assert.strictEqual(page.sourceChecksum, component.source.checksum);
+    assert.strictEqual(page.sourceWordCount, service.countWords(article.body));
+    assert.ok(component.searchText.includes('Missing counters are not zero'));
+    const oldStates = new Map(Object.values(require('../data/docs-v001/records/documentation/nToolingDocumentationPublicationStateData'))
+        .map(state => [state.code, state]));
+    for (const state of Object.values(require('../data/docs-v002/records/documentation/nToolingDocumentationPublicationStateData'))) {
+        assert.strictEqual(state.lifecycleState, 'STAGED');
+        assert.strictEqual(state.stagedVersion, manifest.version);
+        assert.ok(state.author);
+        assert.strictEqual(state.author, oldStates.get(state.code).author);
+        for (const key of ['onlineVersion', 'actor', 'reviewer', 'approver', 'publisher'])
+            assert.strictEqual(state[key], undefined);
+        assert.deepStrictEqual(state.auditTrail, []);
+    }
+}
+
 fs.rmSync(root, { recursive: true, force: true });
 console.log('Application documentation contract validated');

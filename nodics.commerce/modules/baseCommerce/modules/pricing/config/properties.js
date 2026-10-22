@@ -83,6 +83,7 @@ module.exports = {
 
   pricing: {
     enabled: true,
+    bundleListings: { enabled: false, qualified: false, maximumRecords: 1000, maximumConfiguredBound: 10000 },
     merchantEvidence: {
       qualified: false,
       businessCallers: { enabled: false, runtimeRole: "COMMERCE", callers: [] },

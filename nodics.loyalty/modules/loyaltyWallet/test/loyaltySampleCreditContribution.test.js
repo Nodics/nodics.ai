@@ -11,6 +11,7 @@
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 "use strict";
+require("./helpers/runtimeEnums.js")();
 /** @module loyaltyWallet/test/loyaltySampleCreditContribution @description Verifies qualified nImport credit instructions, exact replay and transactional rollback with real Loyalty amount/posting logic. @layer test @owner loyaltyWallet */
 const test = require("node:test"), assert = require("node:assert/strict");
 const owner = require("../src/service/defaultLoyaltySampleCreditContributionService");
@@ -66,7 +67,7 @@ test.beforeEach(() => {
   global.NODICS = { getSelectedEnvironmentName: () => "exampleLocal", getModels: () => Object.fromEntries(
     ["loyaltyWallet", "loyaltyWalletRewardBalance", "rewardLedgerEntry"].map(name => [name, { versioned: false, dataBase: database,
       compareAndSetItem() {}, rawSchema: { transaction: { enabled: true, sideEffects: "none" }, cache: { enabled: false }, event: { enabled: false } } }])) };
-  global.SERVICE = { DefaultLoyaltyRewardOperationService: operations,
+  global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"), DefaultLoyaltyRewardOperationService: operations,
     DefaultDataReleaseService: { readContributionPayload: async (contribution, installer, basename) => {
       assert.deepEqual(contribution, request.contribution); assert.equal(installer, "LOYALTY_SAMPLE_CREDITS");
       assert.equal(basename, "loyaltyCredits.json"); return clone(payload);

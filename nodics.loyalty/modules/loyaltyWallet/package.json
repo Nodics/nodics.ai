@@ -16,6 +16,7 @@
             "data",
             "schema",
             "service",
+            "utility",
             "test",
             "llm"
         ],

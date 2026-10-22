@@ -121,10 +121,15 @@ Run focused EMS coverage with:
 node nodics.foundation/modules/nEms/emsClient/test/emsClientServiceContract.test.js
 node nodics.foundation/modules/nEms/emsClient/test/emsMessageProcessContract.test.js
 node nodics.foundation/modules/nEms/emsClient/test/messageTenantResolution.test.js
-node nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisher.test.js
+node --test nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisherGuard.test.js
 node nodics.foundation/modules/nEms/kafka/test/kafkaPublishCapabilityBehavior.test.js
 npm run quality:docs
 ```
+
+The active EMS publisher smoke is separate live acceptance. It requires direct
+execution with `--require-live`; ordinary discovery does not boot a runtime or
+publish messages. Do not treat its default `NOT EXECUTED` result as provider
+qualification.
 
 ## What To Avoid
 

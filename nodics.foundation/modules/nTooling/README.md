@@ -8,6 +8,12 @@ nTooling owns reusable project command execution, generation, topology and quali
 
 Commands and imports remain inert until explicitly executed. Preserve owner-contributed canonical acceptance gates, isolated runtime cleanup and the separation between static evidence and deployment qualification.
 
+`acceptance:write-recovery-resilience` composes project-selected canonical owner
+commands with project checkpoint adapters. It requires explicit operation,
+fault-injection and restart approvals, executes each uncertain write once, and
+uses the same stable operation key for bounded restart reconciliation. See the
+[acceptance contract](llm/contracts/write-recovery-resilience-acceptance.md).
+
 The design-principle audit also protects the nSetup
 [default ownership gate](../nSetup/llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate)
 and its coding/review discovery links. This checks contract integrity, not the

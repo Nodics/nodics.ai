@@ -29,10 +29,21 @@ const membershipAuthority = {
 
 /**
  * @module product/service/defaultProductPublicationGraphService
- * @description Resolves an immutable Product-owned catalogue graph through generated versioned services.
+ * @description Resolves an immutable Product-owned catalogue graph through generated versioned
+ * services.
  * @layer service
  * @owner product
- * @override Extend graph validation without weakening exact references, tenant isolation or bounded closure.
+ * @override Extend graph validation without weakening exact references, tenant isolation or bounded
+ * closure.
+ * @remarks Product graph access preserves the private verified-root capability. Query helpers do not
+ * create generic schema authority or broaden the original signed publisher.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: referenceKey, services, policy, publisherScope, persistenceContext,
+ * publisherQuery, assertPublisherRecord, sealRoot, canonical, hash, compareReferences,
+ * assertVersioned, read, current, captureReferences, validateGraph, resolve, projections.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
  */
 module.exports = {
     /** Returns the exact schema/code/version/hash key; overrides must preserve every coordinate. @param {Object} reference Sealed source reference. @returns {string} Stable membership key. */
@@ -45,8 +56,21 @@ module.exports = {
     },
     /** Returns effective owner limits. */
     policy: function () { return (CONFIG.get('product') || {}).publication || {}; },
-    /** Admits only the authenticated publisher's Staged enterprise; never adds schema CRUD groups to that principal. */
+    /**
+     * Admits only the authenticated publisher's Staged enterprise; never adds schema CRUD groups to that
+     * principal.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Object|undefined} Admitted publisher partition, or undefined when this path is not a
+     * publisher.
+     * @remarks Effects: Inspects original capture and private automatic context only; no writes.
+     * Failure behavior: Rejects invalid signed tenant/Enterprise or changed publisher authority.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
     publisherScope: function (request) {
+        const automatic = SERVICE.DefaultProductBundlePublicationService?.admission(request);
+        if (automatic) return automatic.scope;
         const auth = request.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
         if (auth.principalType !== 'human' || !security?.getGrantedPermissions || !security.isPermissionGranted ||
             !security.isPermissionGranted('commerce.product.publish', security.getGrantedPermissions(request), {})) return undefined;
@@ -66,12 +90,27 @@ module.exports = {
         if (!owner?.getSystemAuthData) throw new Error('Product publication persistence owner is unavailable');
         return { tenant: scope.tenant, authData: owner.getSystemAuthData() };
     },
-    /** Binds neutral reads to a privately verified root and exact parent/reference membership. */
+    /**
+     * Binds neutral reads to a privately verified root and exact parent/reference membership.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @param {string} schema Generated schema within the verified Product graph.
+     * @param {Object} query Owner-scoped lookup selectors; never permission authority.
+     * @param {Object} token Private verified-root capability, never deserialized caller data.
+     * @param {Object} reference Exact canonical owner reference to resolve.
+     * @returns {Object} Query constrained to the verified root or exact allowed reference scope.
+     * @remarks Effects: Builds a bounded selector; grants no reusable schema CRUD credential.
+     * Failure behavior: Rejects invalid root token, foreign parent/reference membership or scope drift.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
     publisherQuery: function (request, schema, query, token, reference) {
         const scope = this.publisherScope(request);
         if (!scope) return { ...query, tenant: request.tenant };
         if (schema === 'product') {
             if (typeof query.code !== 'string' || !query.code) throw new Error('Exact publisher Product is required');
+            const automatic = SERVICE.DefaultProductBundlePublicationService?.admission(request);
+            if (automatic && query.code !== automatic.productCode) throw new Error('Automatic publication escaped original Product');
             return { ...query, ...scope };
         }
         const membership = token && memberships.get(token);

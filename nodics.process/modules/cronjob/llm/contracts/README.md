@@ -39,3 +39,15 @@ business context for the target's fresh admission, not new Cron authority.
 Verify `cronJobProcessTriggerContract.test.js` and the Copilot workflow integration
 when extending this handoff. This contract does not provision schedules, stop
 in-flight work, qualify cross-node exclusion or establish physical writer quiescence.
+
+## Scheduled execution acceptance
+
+`acceptance:cronjob-execution` owns only schedule activation and firing proof.
+Its reusable timeouts and command registration belong in this module's
+`config/properties.js`; a project contributes only a reviewed acceptance
+selection and a runtime-supplied operator session. The selected job must already
+be a saved inactive schedule draft. Acceptance uses Cron's lifecycle preview,
+confirmed execute, one-time run and persisted job read APIs. It must observe a
+new start/end pair and `SUCCESS`; an HTTP acknowledgement alone is insufficient.
+Do not add domain records, notification assertions, customer identities or
+credentials here. A downstream owner proves its own source and effects.

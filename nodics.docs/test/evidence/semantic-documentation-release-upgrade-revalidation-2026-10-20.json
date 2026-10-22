@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 1,
+  "evidenceQualification": {
+    "mechanism": "nodics.docs/scripts/semantic-review-contract.mjs:qualifySemanticReview",
+    "status": "closed-with-evidence",
+    "expected": true,
+    "sourceAndSupportingHashes": "ALL_CURRENT_AT_FINAL_CHECK",
+    "validatorHashes": "UNCHANGED",
+    "scope": "Revalidate this exact scope after the authorized forward article correction; aggregate remains Heisenberg-owned.",
+    "result": "PASS"
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVALIDATION",
+  "item": "Release and upgrade compatibility",
+  "requestedAction": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "rationale": "Manually reviewed the authorized nTooling docs-v002/version0.0.2 correction against current executablePlan, qualifyZeroWorkRecoveries, isZeroWorkRecovery, recordInstallation and the exact nImport manifest-path contract. The upgrade-flow now distinguishes ordinary immutable CURRENT skipping from explicitly requested version0.0.0 policy and narrowly proven LOCAL false-CURRENT zero-work recovery. It names all six required numeric-zero counters, exact durable run and unchanged release identity, custom-installer/non-Local/prior-work/ambiguous-history exclusions, prerequisite-reference replay refusal, private original-run/revision proof and the fenced claim. New NO_DATA or zero-success imports cannot establish CURRENT. The added prerequisite paragraph accurately separates exact pinned dependency ordering from receipt-only foreign DEFAULT references and operator-selected existing Init migration. No runtime behavior changed. All eight predecessor files retain their exact hashes; the other nine article bodies, all article identities and heading anchors are preserved. The successor is only Staged, with original authors retained and no future approval or Online evidence.",
+  "readiness": {
+    "mode": "AUTHORIZED_FRAMEWORK_MAINTAINER_REVIEW",
+    "writeOwner": "nodics.docs/test/evidence",
+    "outcome": "Close authorized source-editorial correction through an immutable owner successor and exact semantic evidence.",
+    "method": "Recovered matching historical source bytes where stated, read actual deltas/current named methods and cited article blocks, compare authority/failure/override claims, reuse only byte-identical prior source reviews.",
+    "excluded": "No runtime startup, E2E, native import/publication, credentials, old release rewrite, generated context, commits or shared aggregate edits."
+  },
+  "historicalBaseline": {
+    "aggregate": "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "aggregateSha256AtRead": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+    "previousSourceRevalidation": {
+      "reviewDate": "2026-10-08",
+      "artifact": "semantic-documentation-source-revalidation-2026-10-08.json",
+      "previousDisposition": "PASS_SOURCE_REVIEW",
+      "canonicalArticleBytes": "UNCHANGED",
+      "changedSourceFiles": [
+        "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+        "nodics.foundation/modules/nData/nImport/import/config/properties.js"
+      ],
+      "boundary": "Pinned article and previous findings compared with current source. No frozen edits or runtime/publication acceptance."
+    }
+  },
+  "items": [
+    {
+      "item": "Release and upgrade compatibility",
+      "requestedAction": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Manually reviewed the authorized nTooling docs-v002/version0.0.2 correction against current executablePlan, qualifyZeroWorkRecoveries, isZeroWorkRecovery, recordInstallation and the exact nImport manifest-path contract. The upgrade-flow now distinguishes ordinary immutable CURRENT skipping from explicitly requested version0.0.0 policy and narrowly proven LOCAL false-CURRENT zero-work recovery. It names all six required numeric-zero counters, exact durable run and unchanged release identity, custom-installer/non-Local/prior-work/ambiguous-history exclusions, prerequisite-reference replay refusal, private original-run/revision proof and the fenced claim. New NO_DATA or zero-success imports cannot establish CURRENT. The added prerequisite paragraph accurately separates exact pinned dependency ordering from receipt-only foreign DEFAULT references and operator-selected existing Init migration. No runtime behavior changed. All eight predecessor files retain their exact hashes; the other nine article bodies, all article identities and heading anchors are preserved. The successor is only Staged, with original authors retained and no future approval or Online evidence.",
+      "evidence": [
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "anchors": [
+            "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+            "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+            "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+            "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+            "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+            "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+            "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+        "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+        "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md",
+        "nodics.foundation/modules/nData/nImport/import/config/properties.js",
+        "nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js"
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "framework.release-upgrade-compatibility": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "1ee44414aae228283ad5f47d29308426aae06e123d93f6519332588f237ab529"
+    }
+  },
+  "priorCanonicalDocuments": {
+    "framework.release-upgrade-compatibility": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608",
+      "sections": [
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
+          "title": "Explaining an effective runtime"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+          "title": "Folder contract"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+          "title": "Compatibility rules"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+          "title": "Configuration behavior"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+          "title": "Upgrade flow"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+          "title": "Code and contract compatibility"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+          "title": "Security boundaries under customization"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "74335af1f44153369315cea0330dae72959ccb8a9dc40d6951e117ae4dbab492",
+    "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+    "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+    "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+    "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "1064b513aa60067da79dcb1233fbc1f4c748076be73f689b4cd6b6a0bc982d02",
+    "nodics.foundation/modules/nData/nImport/import/config/properties.js": "ce6bbd1acad90a805070fbae2a95aa87ab5c7300bef55dfcca822fc2d3284f8b",
+    "nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js": "c268885e24837aa306dac3f13df0152330929b0ac6ec0fd18254f246b3dd18b8"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+      "previousSha256": "24449557d20223bbae0aab8d64053b396845f2b49ac6ac1c7214d7b3199070e3",
+      "sha256": "74335af1f44153369315cea0330dae72959ccb8a9dc40d6951e117ae4dbab492",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Pinned prior bytes were not recovered from the last 25 path-history commits. Read current preparePlan, executePreparedPlan, executablePlan, qualifyZeroWorkRecoveries, isZeroWorkRecovery, recordInstallation, validateUpgradePolicy and isDevelopmentRelease, plus full HEAD-parent diff including prerequisite resolution, detached owner provenance and private Init identity admission. The source explicitly supports Local zero-work recovery and rejects new NO_DATA/zero-success installation; generic forceCurrent replay remains prohibited. The authorized forward article now explains this exact contract; prior mismatch and proposed remediation are preserved under priorReview."
+    },
+    {
+      "path": "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+      "previousSha256": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+      "sha256": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+      "previousSha256": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+      "sha256": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+      "previousSha256": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+      "sha256": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md",
+      "previousSha256": "e167190eaa0265ef59f5956370e3f5ccc11006c2f54e012159c74c21742e1f71",
+      "sha256": "1064b513aa60067da79dcb1233fbc1f4c748076be73f689b4cd6b6a0bc982d02",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Recovered commit1953bf3140945e4e972a14c84725d7fb4d92f74b matches pinned prior bytes. Entire delta is Manifest Path Discovery: declared paths before basename grouping; no NO_DATA success; narrowly authorized Local unchanged-release zero-work recovery, original run/revision binding, normal fenced claim and exclusions. The article's absolute force-current prohibition is now stale. The authorized forward article now explains this exact contract; prior mismatch and proposed remediation are preserved under priorReview."
+    },
+    {
+      "path": "nodics.foundation/modules/nData/nImport/import/config/properties.js",
+      "previousSha256": "ce6bbd1acad90a805070fbae2a95aa87ab5c7300bef55dfcca822fc2d3284f8b",
+      "sha256": "ce6bbd1acad90a805070fbae2a95aa87ab5c7300bef55dfcca822fc2d3284f8b",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nData/nImport/import/config/properties.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js",
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js",
+      "sha256": "c268885e24837aa306dac3f13df0152330929b0ac6ec0fd18254f246b3dd18b8",
+      "disposition": "ADDED_OWNER_REGRESSION_TO_EXISTING_TEST",
+      "rationale": "New assertion block manually reviewed and executed; preserves existing validation assertions and runtime-free test behavior."
+    }
+  ],
+  "correctnessAndCoverageLimitations": [
+    "This closes the named source-editorial discrepancy only; no native import, installed recovery, workflow approval, publication, browser or provider acceptance was performed.",
+    "The prior source snapshot was not recovered for defaultDataReleaseService; current-method review and the previously documented historical-diff limits remain explicit in priorReview.",
+    "Composed docs validation has an independently owned Digital draft-route failure; this owner correction does not weaken or close that gate."
+  ],
+  "tests": [
+    {
+      "command": "node nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js",
+      "status": "PASS"
+    },
+    {
+      "command": "node --test --test-reporter=dot nodics.foundation/modules/nData/nImport/import/test/dataReleaseConcurrencyContract.test.js nodics.foundation/modules/nData/nImport/import/test/dataReleasePrerequisites.test.js nodics.docs/test/authoringValidationContract.test.mjs",
+      "status": "PASS",
+      "boundary": "Isolated fixtures and documentation validation only; no application runtime or native imports."
+    },
+    {
+      "command": "node nodics.docs/scripts/validate.mjs",
+      "status": "FAIL_EXTERNAL_SCOPE",
+      "diagnostic": "Draft documentation must not have an active public route: digital.bundle-holdings-gifts",
+      "handoff": "Reported to Heisenberg for main/Commerce owner; nTooling successor STAGED authoring routes are accepted by this rule."
+    }
+  ],
+  "evidenceValidatorRegression": {
+    "command": "node --test --test-name-pattern='manual review closure binds' nodics.docs/test/semanticReviewContract.test.mjs",
+    "passed": 1,
+    "failed": 0
+  },
+  "unchangedValidatorSha256": {
+    "nodics.docs/test/semanticReviewContract.test.mjs": "89fa7fc0f9b23eee170f04aa4023f21054226eb274642614297d6a48d1c12457",
+    "nodics.docs/scripts/semantic-review-contract.mjs": "5ebe473c28ed21de599d5cd6d5ea96eaddc6d1ed6d548a543afd060442f57f0e"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "integration": {
+    "aggregateWriter": "Heisenberg",
+    "aggregateEditedByThisReview": false,
+    "instruction": "Heisenberg must verify current hashes and integrate this PASS disposition, new canonical binding, source hashes and sourceRevalidation while preserving historical provenance and unrelated scopes."
+  },
+  "priorReview": {
+    "disposition": "OPEN_CONTENT_GAP",
+    "rationale": "The immutable-release, version0.0.0, downgrade and separate recovery explanations remain supported, but the current upgrade-flow paragraph categorically says CURRENT releases are skipped and forbids force-current. Current nImport implements explicitly requested Local recovery of a historical false-CURRENT standard release only when unchanged version/checksum, one exact durable NO_DATA run, all six counters explicitly zero and original run/revision proof qualify. This is a genuine source-editorial mismatch, not runtime qualification. Manifest-owned prerequisite planning additionally uses exact version/checksum edges, stable dependency-frontier order and receipt-only DEFAULT-partition references. Do not update the shared aggregate to PASS until an authorized forward owner article correction is reviewed.",
+    "canonicalDocuments": {
+      "framework.release-upgrade-compatibility": {
+        "owner": "nodics.foundation/modules/nTooling",
+        "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+        "articleBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608"
+      }
+    },
+    "sourceFileSha256": {
+      "nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js": "74335af1f44153369315cea0330dae72959ccb8a9dc40d6951e117ae4dbab492",
+      "nodics.foundation/modules/nTooling/src/service/project/defaultProjectDataManifestService.js": "42bb8044b9424854d8bf9b62b5c1be4009a0d504ce6cef9beae04582a46a5f88",
+      "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+      "nodics.foundation/modules/nPublish/src/service/defaultPublicationLifecycleService.js": "ae6deccad2a7733de09132c2c7c63b3696cbecc44aaae527ab710d3b1e8c684b",
+      "nodics.foundation/modules/nData/nImport/import/llm/contracts/README.md": "1064b513aa60067da79dcb1233fbc1f4c748076be73f689b4cd6b6a0bc982d02",
+      "nodics.foundation/modules/nData/nImport/import/config/properties.js": "ce6bbd1acad90a805070fbae2a95aa87ab5c7300bef55dfcca822fc2d3284f8b"
+    },
+    "contentGap": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "manifestFile": "nodics.foundation/modules/nTooling/data/manifest.json",
+      "manifestSha256": "9dacbeed867e78cabe0c104cbe34a141eece902b37ac24e60e1b65c58c8c7089",
+      "documentation": {
+        "kind": "CONTENT_PACK",
+        "contentPath": "docs-v001",
+        "version": "0.0.1",
+        "versioningPolicy": "IMMUTABLE",
+        "releaseChecksum": "4a08f3c5b9c77ab1c9278ad170499e78e576050cabbb29b9baa7f081fa40ce4f"
+      },
+      "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+      "oldParagraph": "A FAILED release retry can re-evaluate successful rows and needs existing generated revision/owner idempotency qualification; it is not guaranteed row-level resume. CURRENT releases are skipped and a RUNNING receipt cannot be taken over merely after a timeout. Do not reset successful writes, force-current, invent receipts or rewrite installed state to clear an incident.",
+      "replacementParagraph": "A FAILED release retry can re-evaluate successful rows and needs existing generated revision/owner idempotency qualification; it is not guaranteed row-level resume. Ordinary immutable CURRENT releases are skipped, and a RUNNING receipt cannot be taken over merely after a timeout. Do not reset successful writes, invent receipts or rewrite installed state to clear an incident. An explicitly requested forceCurrent operation is not a general replay permission: version0.0.0 retains its separate development policy; for a non-development standard release, only LOCAL recovery of a historical false-CURRENT installation can qualify. The owner must prove unchanged version and checksum, one exact durable NO_DATA run with validationOnly:false, all six record counters explicitly zero, matching tenant/type/module/release identity, and the original installation runId and revision. The private proof is rechecked at the normal fenced claim. Custom installers, prerequisite-reference replays, missing or ambiguous history, non-Local deployments and any prior record work are excluded. A new NO_DATA or zero-success run cannot establish CURRENT.",
+      "additionalParagraph": "Manifest-owned prerequisites are exact module/section/version/checksum references, not request-supplied paths or permission to activate optional modules. nImport validates the bounded graph, rejects cycles and conflicting pins, orders dependency frontiers before dependents, and rechecks current exact receipts before claiming each dependent. A DEFAULT-partition dependency outside the inherited tenant is receipt-only: it is never imported, repaired or copied by that request. Existing Init installations with unmet bootstrap prerequisites require an operator-selected migration rather than automatic startup repair.",
+      "requiredAction": "Main-authorized owner-forward CMS release retaining prior immutable bytes, identities and anchors; use existing manifest tooling, preserve original author provenance and STAGED status, then re-review canonical blocks and rerun strict evidence qualification. Heisenberg owns aggregate integration only."
+    }
+  },
+  "forwardCorrection": {
+    "authorization": "User explicitly authorized the existing bounded Local recovery explanation and owner-forward documentation successor.",
+    "owner": "nodics.foundation/modules/nTooling",
+    "predecessor": {
+      "version": "0.0.1",
+      "contentPath": "docs-v001",
+      "preservedFiles": 8,
+      "preservation": "Exact predecessor checksum map verified before/after; executable owner regression pins all eight hashes."
+    },
+    "successor": {
+      "version": "0.0.2",
+      "contentPath": "docs-v002",
+      "releaseChecksum": "ae39359fb8e8dba282ae8fb3e2a3375b81fe2df43caf1f769beebf78ee99a614",
+      "lifecycleState": "STAGED",
+      "pages": 10
+    },
+    "scope": "One article paragraph replaced and three explanatory paragraphs added. Nine other article bodies and all identities/anchors unchanged. Source paths, body checksum/word count, full-text projections and publication target checksums mechanically synchronized using existing owner contract APIs.",
+    "ownerTools": [
+      "DefaultApplicationDocumentationContractService.documentationText",
+      "DefaultApplicationDocumentationContractService.countWords",
+      "DefaultApplicationDocumentationContractService.sha256",
+      "DefaultApplicationDocumentationContractService.buildReleaseSection",
+      "DefaultApplicationDocumentationContractService.validateGeneration",
+      "DefaultApplicationDocumentationContractService.validateDataRelease"
+    ],
+    "changedFiles": [
+      {
+        "path": "nodics.foundation/modules/nTooling/data/manifest.json",
+        "sha256": "a7bed7ab5a94e1694ec9d099cfbe6ff638b74548f8ea3feed79cb5dd8669191b",
+        "disposition": "MODIFIED_OWNER_ARTIFACT",
+        "rationale": "Select the independently governed immutable0.0.2 successor; preserve composition includes and predecessor files."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js",
+        "sha256": "c268885e24837aa306dac3f13df0152330929b0ac6ec0fd18254f246b3dd18b8",
+        "disposition": "MODIFIED_OWNER_ARTIFACT",
+        "rationale": "Existing registered owner test now proves exact frozen bytes, permitted forward generation, same-version rejection, precise recovery explanation, unchanged sibling bodies and original-author/no-future-actor provenance."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationNodeData.js",
+        "sha256": "07649055faa0ff3889746ece6d02d08f2e2b799e1e8164fd3737a7d4efdc616d",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Preserve stable CMS identities; update only successor source/lifecycle or derived article metadata as applicable. No installation or publication."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationPageMetadataData.js",
+        "sha256": "930e948e4703e5158820f8872545827df3b1901dfc595a4fde9479bb7b31af57",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Preserve stable CMS identities; update only successor source/lifecycle or derived article metadata as applicable. No installation or publication."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationPublicationStateData.js",
+        "sha256": "e67ebfd09c3d770cb01606340daea1dffd957ca7af904509bb035c843751f93a",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Retain exact predecessor author, clear future actor/Online evidence, set Staged0.0.2 and recompute exact target checksum."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationSearchMetadataData.js",
+        "sha256": "0b4b3884396b8fd0ae640a001d55434675287e709ee79d54b35745d7ed1daa50",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Preserve stable CMS identities; update only successor source/lifecycle or derived article metadata as applicable. No installation or publication."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationComponentData.js",
+        "sha256": "5fd7f1bdc7271505b79368d1848cef520a131c79578166949561508f5dc49f3c",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Copy canonical records into forward owner path; only release/upgrade prose changes, with synchronized search/source metadata and Staged lifecycle."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationPageData.js",
+        "sha256": "7081a23e8cf0d2f8f2f7dd98b77f5d5cc8928ebda030cf7798d0c1d3700c8a56",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Preserve stable CMS identities; update only successor source/lifecycle or derived article metadata as applicable. No installation or publication."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationRouteData.js",
+        "sha256": "e626cac39e797a0e7f9ddfe908eca59deb752565596e8ae0b756ffe39650ef6e",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Preserve stable CMS identities; update only successor source/lifecycle or derived article metadata as applicable. No installation or publication."
+      },
+      {
+        "path": "nodics.foundation/modules/nTooling/data/docs-v002/headers/100_nToolingDocumentationContentPackHeader.js",
+        "sha256": "13efda5c2a7ba01a47b1c042046d15ad6d174bef26c2c09c9b5e5b3ee55da391",
+        "disposition": "ADDED_FORWARD_SUCCESSOR",
+        "rationale": "Preserve stable CMS identities; update only successor source/lifecycle or derived article metadata as applicable. No installation or publication."
+      }
+    ],
+    "selectorHandoff": {
+      "owner": "Heisenberg",
+      "path": "nodics.docs/config/properties.js",
+      "baseline": "docs-ntooling",
+      "releaseVersion": "0.0.2",
+      "status": "COORDINATED_WITH_AGGREGATE_OWNER"
+    }
+  }
+}

@@ -42,21 +42,32 @@ module.exports = {
     });
     return result.sort((a, b) => a.sku < b.sku ? -1 : a.sku > b.sku ? 1 : 0);
   },
-  /** Requires a qualified delivery owner or independently gated simulator and exact approved policy before sale. @param {Object} campaign Retained campaign. @returns {Array} Canonical purchased rights. */
+  /**
+   * Checks exact promised item terms without asserting delivery or admitting a provider.
+   * @param {Object} campaign Retained campaign.
+   * @returns {Array} Canonical promised rights, not fulfillment evidence.
+   * @throws {NodicsError} ERR_PROMOTION_BENEFIT_UNCONFIRMED for unsupported action fields or malformed ITEM quantities/SKUs.
+   * @override Preserve exact bounded item terms; descriptions, monetary flags and staff confirmation never prove delivery.
+   */
+  assertTerms: function (campaign) {
+    const action = campaign.actions || {};
+    if (action.benefitType !== "ITEM" ||
+        Object.keys(action).some(key => !["benefitType", "benefitDescription", "items", "reasonCode", "exclusionGroup"].includes(key))) this.fail();
+    return this.items(action.items);
+  },
+  /** Requires a qualified delivery owner or independently gated simulator and exact approved policy before integrated use. @param {Object} campaign Retained campaign. @returns {Array} Canonical purchased rights. */
   assertPolicy: function (campaign) {
     const policy = CONFIG.get("promotion")?.merchantBenefits;
-    const action = campaign.actions || {};
+    const items = this.assertTerms(campaign);
     const simulated = this.simulationSelected();
     if (policy?.enabled !== true || !simulated && policy.qualified !== true ||
         !/^[A-Za-z][A-Za-z0-9_]{0,127}$/.test(policy.itemEvidenceService || "") ||
-        typeof SERVICE[policy.itemEvidenceService]?.evaluate !== "function" ||
-        action.benefitType !== "ITEM" ||
-        Object.keys(action).some(key => !["benefitType", "benefitDescription", "items", "reasonCode", "exclusionGroup"].includes(key))) this.fail();
+        typeof SERVICE[policy.itemEvidenceService]?.evaluate !== "function") this.fail();
     const stores = campaign.conditions?.storeCodes;
     if (!Array.isArray(stores) || !stores.length || stores.length > 100 ||
         new Set(stores).size !== stores.length ||
         stores.some(code => typeof code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(code))) this.fail();
-    return this.items(action.items);
+    return items;
   },
   /** Binds qualified delivery or clearly simulated items to original purchased rights and customer/outlet context. @param {Object} request Merchant context. @param {Object} campaign Retained campaign. @param {Object} coupon Purchased unit. @returns {Promise<Object>} Bound ITEM benefit, not money or a delivery command. */
   validate: async function (request, campaign, coupon) {

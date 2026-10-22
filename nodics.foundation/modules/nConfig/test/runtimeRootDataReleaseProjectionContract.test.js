@@ -21,8 +21,22 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const initializer = require("../src/service/DefaultFrameworkInitializerService");
+const bindings = require("../src/service/defaultConfigurationBindingService");
+const workflowProperties = require("../../../../nodics.process/modules/workflow/config/properties");
 const releases = require("../../nData/nImport/import/src/service/release/defaultDataReleaseService");
 const framework = path.resolve(__dirname, "../../../..");
+
+test("generated runtime initialization profiles declare their reusable template", () => {
+  const profile = initializer.defaultInitializationProfileForRole(
+    "WCMS_STAGED",
+    new Set(["init", "core"]),
+  );
+  assert.equal(profile.localWcmsFoundation.template, "foundation");
+  assert.deepEqual(profile.localWcmsFoundation.steps, [
+    { dataType: "init" },
+    { dataType: "core" },
+  ]);
+});
 
 function fixture(t) {
   const root = fs.mkdtempSync(
@@ -55,7 +69,7 @@ function fixture(t) {
       JSON.stringify(metadata),
     );
   }
-  const properties = {
+  const projectProperties = {
     runtimeRole: { code: "PROCESS" },
     data: {
       dataReleases: {
@@ -92,6 +106,8 @@ function fixture(t) {
           }
         : undefined,
   };
+  assert.equal(projectProperties.data.dataReleases.runtimeRoleProfiles.PROCESS.installers, undefined);
+  const properties = bindings.merge(structuredClone(workflowProperties), projectProperties);
   return { root, properties };
 }
 

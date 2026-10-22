@@ -9,7 +9,6 @@
 
  */
 
-/* Nodics. Copyright (c) 2026. Governed by the root LICENSE. */
 "use strict";
 /** @module eWaste/test/eWasteInternalRouteRegistration @description Real nRouter preparation, registry refresh and controller dispatch regressions; no HTTP listener, native authorization or domain mutations. @layer test @owner eWaste */
 const test = require("node:test"), assert = require("node:assert/strict");
@@ -32,7 +31,6 @@ function fixture(t, definitions = routes) {
   global.CONTROLLER = {
     DefaultEWasteDigitalSaleController: require("../src/controller/defaultEWasteDigitalSaleController"),
     DefaultEWasteDigitalListingController: require("../src/controller/defaultEWasteDigitalListingController"),
-    DefaultEWasteOrderReversalController: require("../src/controller/defaultEWasteOrderReversalController"),
     DefaultEWasteDraftMediaRetentionController: require("../src/controller/defaultEWasteDraftMediaRetentionController"),
   };
   const observe = (owner, phase) => async input => { calls.push({ owner, phase, input }); return { owner, phase }; };
@@ -41,7 +39,6 @@ function fixture(t, definitions = routes) {
     DefaultLoggerService: { isSensitiveRequest: () => true, hasPrivateCaptureProtection: () => true },
     DefaultEWasteDigitalSaleService: { invoke: (input, phase) => observe("sale", phase)(input) },
     DefaultEWasteDigitalListingService: { plan: observe("listing", "plan") },
-    DefaultEWasteOrderReversalService: { preview: observe("reversal", "preview") },
     DefaultEWasteDraftMediaRetentionService: { run: observe("retention", "inspect") },
   };
   // Capture real prepared routes without binding sockets or replacing registry behavior.
@@ -55,7 +52,6 @@ function fixture(t, definitions = routes) {
 test("all internal owner routes retain unique identities, controllers and authority through real registry refresh", async t => {
   const f = fixture(t), authData = { tenant: "test", tokenType: "service" };
   const scenarios = [
-    ["/internal/order-reversals/:phase", "ewaste_internalorderreversalinvoke", "DefaultEWasteOrderReversalController", "waste.asset.sale.transfer", "preview", "reversal"],
     ["/internal/digital-sales/:phase", "ewaste_internaldigitalsaleinvoke", "DefaultEWasteDigitalSaleController", "waste.asset.sale.transfer", "evidence", "sale"],
     ["/internal/digital-listings/:phase", "ewaste_internaldigitallistinginvoke", "DefaultEWasteDigitalListingController", "waste.asset.marketplace.project", "plan", "listing"],
   ];
@@ -70,10 +66,8 @@ test("all internal owner routes retain unique identities, controllers and author
         assert.deepEqual(refreshed.authTokenTypes, ["service"]);
         assert.deepEqual(refreshed.accessGroups, ["serviceAccountUserGroup"]);
         assert.equal(refreshed.apiExposure, "wasteInternal");
-        if (owner !== "reversal") {
-          assert.deepEqual(refreshed.requestPrivacy, { sensitive: true });
-          assert.deepEqual(refreshed.cache, { enabled: false });
-        }
+        assert.deepEqual(refreshed.requestPrivacy, { sensitive: true });
+        assert.deepEqual(refreshed.cache, { enabled: false });
         dispatch.handleRequest.call({ LOG: { debug() {} } }, { ...request, router: refreshed }, response,
           { error: (_r, _s, error) => reject(error), nextSuccess: (_r, value) => resolve(value.success) });
       } };
@@ -82,13 +76,13 @@ test("all internal owner routes retain unique identities, controllers and author
     assert.deepEqual(result, { data: { owner, phase } });
     assert.equal(f.calls.at(-1).input.authData, authData);
   }
-  assert.equal(f.calls.length, 3);
+  assert.equal(f.calls.length, 2);
+  assert.equal(f.bound.some(value => value.key.startsWith("/internal/order-reversals")), false);
 });
 
 test("reusing invoke across groups reproduces the overwritten sale controller and permission", t => {
   const definitions = structuredClone(routes);
-  for (const [group, name] of [["internalOrderReversal", "internalOrderReversalInvoke"],
-    ["internalDigitalSale", "internalDigitalSaleInvoke"], ["internalDigitalListing", "internalDigitalListingInvoke"]]) {
+  for (const [group, name] of [["internalDigitalSale", "internalDigitalSaleInvoke"], ["internalDigitalListing", "internalDigitalListingInvoke"]]) {
     definitions[group].invoke = definitions[group][name]; delete definitions[group][name];
   }
   const f = fixture(t, definitions);

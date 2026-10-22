@@ -19,6 +19,11 @@
 module.exports = {
     /** Invokes one target-local publication operation. */
     invoke: function (operation, request, callback) {
+        SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'cms');
+        request = Object.assign({}, request, {
+            authData: Object.assign({}, request.authData,
+                SERVICE.DefaultIdentityGovernanceService.getSystemAuthData())
+        });
         request.cmsPublicationTarget = request.httpRequest && request.httpRequest.body || request.cmsPublicationTarget || {};
         request.correlationId = request.cmsPublicationTarget.correlationId || request.correlationId || request.requestId;
         let promise = SERVICE.DefaultCmsPublicationTargetService[operation](request);

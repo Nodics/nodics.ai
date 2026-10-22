@@ -210,3 +210,42 @@ module.exports.bidding.checkoutBid.definition.sellerId.description =
   "Seller business code retained for existing consumers; sellerRef is the full authorization identity.";
 module.exports.bidding.checkoutBid.definition.status.description =
   "OPEN, ACCEPTING, ACCEPTED, REJECTED or WITHDRAWN; EXPIRED is a time-based projection.";
+
+/** One bounded aggregate makes offer changes, funding intents and selection share the same CAS fence. */
+module.exports.bidding.biddingAuctionRound = {
+  super: "base", model: true, schemaPolicies: ["operational"],
+  service: { enabled: true }, router: { enabled: false },
+  cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+  indexes: { individual: {
+    commandIdentity: { name: "code", enabled: true, options: { unique: true } },
+    listingIdentity: { name: "listingKey", enabled: true, options: { unique: true } },
+  } },
+  definition: {
+    code: { type: "string", required: true, description: "Immutable publication-round identity." },
+    listingKey: { type: "string", required: true, description: "Unique live listing slot; archived only after confirmed reconciliation." },
+    enterpriseCode: { type: "string", required: true, description: "Signed Commerce business partition, independent of buyer/seller owner." },
+    publicationCode: { type: "string", required: true, description: "Product publication revision; never inherited by a fresh round." },
+    productCode: { type: "string", required: true, description: "Product-owned listing." },
+    storeCode: { type: "string", required: true, description: "Published store." },
+    variantCode: { type: "string", required: true, description: "Published quantity-one variant." },
+    currency: { type: "string", required: true, description: "Published price unit." },
+    floor: { type: "string", required: true, description: "Retained published Product price, not an additional seller minimum." },
+    sellerRef: { type: "object", required: true, description: "Canonical Product seller owner." },
+    sourceRef: { type: "object", required: false, description: "Optional Product provenance." },
+    startsAt: { type: "date", required: false, description: "Product intake start; null means immediate." },
+    endsAt: { type: "date", required: false, description: "Product intake end; null means no scheduled close." },
+    graceEndsAt: { type: "date", required: false, description: "Immutable end plus retained framework grace." },
+    policy: { type: "object", required: true, description: "Effective funding timing, grace and bounded admission settings." },
+    status: { type: "string", required: true, description: "OPEN, GRACE, SELECTED, CANCELLED, UNSOLD or FAILED after final Checkout reconciliation. Selected never means paid." },
+    revision: { type: "int", required: true, description: "Generated compare-and-set revision for every conflicting command." },
+    sequence: { type: "int", required: true, description: "Server-assigned successful amount placement ordering." },
+    bids: { type: "object", required: true, description: "Complete bounded offer set with owner, actor, funds, revision and successful order." },
+    commands: { type: "object", required: true, description: "Durable completed command fingerprints for replay conflict detection." },
+    pending: { type: "object", required: false, description: "Durable fenced command intent; never contains access tokens." },
+    selection: { type: "object", required: false, description: "Immutable winner, exact revision/amount, original hold and Checkout/Pricing handoff." },
+    cleanupComplete: { type: "boolean", required: true, description: "All non-winning funds and applicable listing holds have owner-confirmed releases." },
+    notificationEvents: { type: "object", required: false, description: "Immutable private participant event evidence and frozen Communication intent pointers; not a delivery outbox." },
+    notificationPending: { type: "boolean", required: false, description: "Bounded scheduler must retry unresolved Communication handoffs." },
+    createdAt: { type: "date", required: true, description: "Round creation time." },
+  },
+};

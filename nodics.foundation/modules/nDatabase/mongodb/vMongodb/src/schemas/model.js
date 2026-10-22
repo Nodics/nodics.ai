@@ -281,6 +281,27 @@ module.exports = {
                                         idempotentReplay: true,
                                     });
                                 } else if (
+                                    model.versionId === preMoidel.versionId &&
+                                    ((options?.governedVersionedImport === true &&
+                                        query?.versionId === preMoidel.versionId) ||
+                                        (options?.allowCmsAssociationReplacement === true &&
+                                            options?.replaceAllMatchesByQuery === true &&
+                                            options?.replaceArraysOnVersionMerge === true))
+                                ) {
+                                    if (preMoidel.versionId === Number.MAX_SAFE_INTEGER) {
+                                        reject(new CLASSES.NodicsError('ERR_MDL_00004', 'Stored version identity is exhausted'));
+                                        return;
+                                    }
+                                    model.versionId = preMoidel.versionId + 1;
+                                    resolve({
+                                        model: this.mergeNextVersion(
+                                            _.cloneDeep(preMoidel),
+                                            model,
+                                            options,
+                                        ),
+                                        idempotentReplay: false,
+                                    });
+                                } else if (
                                     model.versionId <= preMoidel.versionId
                                 ) {
                                     reject(

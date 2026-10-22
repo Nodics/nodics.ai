@@ -95,10 +95,8 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        ownerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
-        originalOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
-        physicalOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
-        digitalOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        // Typed Profile owner descriptors are validated by the owning operation,
+        // not traversed as customer child records (including nonrecursive saves).
         verificationRef: {"enabled":true,"moduleName":"wasteVerification","schemaName":"wasteVerification","type":"one","propertyName":"code"},
         receiptRef: {"enabled":true,"moduleName":"wasteReceipt","schemaName":"wasteReceipt","type":"one","propertyName":"code"},
         impactRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"},
@@ -161,8 +159,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        fromOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
-        toOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        // Preserve customer/Enterprise descriptors without nested Profile writes.
         commerceProjectionRef: {"enabled":true,"moduleName":"wasteCore","schemaName":"wasteAssetMarketplaceProjection","type":"one","propertyName":"code"},
         commerceOrderRef: {"enabled":true,"moduleName":"order","schemaName":"commerceOrder","type":"one","propertyName":"code"},
         paymentRef: {"enabled":true,"moduleName":"paymentCore","schemaName":"paymentTransaction","type":"one","propertyName":"code"},

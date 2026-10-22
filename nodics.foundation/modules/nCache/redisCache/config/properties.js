@@ -17,5 +17,13 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-
+  redisLocalResetMaintenance: {
+    maximumKeys: 1000,
+    maximumKeyBytes: 1048576,
+    maximumScanPages: 256,
+    inventoryTimeoutMs: 10000,
+    operationTimeoutMs: 5000,
+    scanCount: 100,
+    deleteBatchSize: 100,
+  },
 };

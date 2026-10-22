@@ -9,11 +9,15 @@
 
  */
 
+require("./helpers/runtimeEnums.js")();
 /** @module loyaltyWallet/test/loyaltyRewardOperationContract @description Verifies earn, reserve, capture, release, and reverse wallet operations. @layer test @owner loyaltyWallet */
 const assert = require('assert');
 const operationService = require('../src/service/defaultLoyaltyRewardOperationService');
+global.CONFIG = { get: key => key === 'loyalty' ? { ...require('../../loyaltyCore/config/properties').loyalty,
+    ...require('../../loyaltyReservation/config/properties').loyalty } : undefined };
 
-function createStore() {
+function createStore(options) {
+    options = options || {};
     const rows = [];
     const matches = (row, query) => Object.keys(query || {}).every(key => row[key] === query[key]);
     return {
@@ -25,19 +29,20 @@ function createStore() {
         },
         update: async request => {
             const index = rows.findIndex(row => matches(row, request.query || {}));
+            const previous = index >= 0 ? Object.assign({}, rows[index]) : undefined;
             if (index >= 0) rows[index] = Object.assign({}, rows[index], request.model);
             else rows.push(Object.assign({}, request.model));
-            return { result: Object.assign({}, request.model) };
+            return { result: options.returnPreviousOnUpdate ? previous : Object.assign({}, request.model) };
         }
     };
 }
 
 const balanceStore = createStore();
 const ledgerStore = createStore();
-const reservationStore = createStore();
+const reservationStore = createStore({ returnPreviousOnUpdate: true });
 const redemptionStore = createStore();
 
-global.SERVICE = {
+global.SERVICE = { DefaultLoyaltyAmountService: require("../../loyaltyCore/src/service/defaultLoyaltyAmountService"),
     DefaultLoyaltyWalletRewardBalanceService: balanceStore,
     DefaultRewardLedgerEntryService: ledgerStore,
     DefaultRewardReservationService: reservationStore,

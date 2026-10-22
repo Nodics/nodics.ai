@@ -348,7 +348,7 @@ test("real import / nested generated writer / Mongo preserves admin and seven di
     allowCmsAssociationReplacement: true,
     replaceAllMatchesByQuery: true,
     replaceArraysOnVersionMerge: true,
-    versionedImport: true,
+    governedVersionedImport: true,
     recursive: false,
   };
   const models = Array.from({ length: 7 }, (_, index) => ({
@@ -394,6 +394,7 @@ test("real import / nested generated writer / Mongo preserves admin and seven di
       "allowCmsAssociationReplacement",
       "replaceAllMatchesByQuery",
       "replaceArraysOnVersionMerge",
+      "governedVersionedImport",
     ])
       assert.equal(request.options[key], undefined);
   }
@@ -401,7 +402,7 @@ test("real import / nested generated writer / Mongo preserves admin and seven di
     allowCmsAssociationReplacement: true,
     replaceAllMatchesByQuery: true,
     replaceArraysOnVersionMerge: true,
-    versionedImport: true,
+    governedVersionedImport: true,
     recursive: false,
   });
 });
@@ -411,7 +412,7 @@ test("canonical CMS associations retain replacement but non-CMS children never i
   const root = {
     definition,
     refSchema: {
-      details: { enabled: true, type: "many", schemaName: "componentDetail" },
+      details: { enabled: true, type: "many", schemaName: "componentDetail", propertyName: "code" },
       external: {
         enabled: true,
         type: "one",
@@ -447,7 +448,7 @@ test("canonical CMS associations retain replacement but non-CMS children never i
       allowCmsAssociationReplacement: true,
       replaceAllMatchesByQuery: true,
       replaceArraysOnVersionMerge: true,
-      versionedImport: true,
+      governedVersionedImport: true,
       recursive: false,
     },
   };
@@ -465,7 +466,7 @@ test("canonical CMS associations retain replacement but non-CMS children never i
   assert.deepEqual(observed[1].options, { recursive: false });
   assert.equal(observed[1].query, undefined);
   assert.equal(observed[1].models[0].accessGroups, undefined);
-  assert.equal(request.options.versionedImport, true);
+  assert.equal(request.options.governedVersionedImport, true);
   request.schemaModel.rawSchema = _.cloneDeep(root);
   await nested.saveNestedModels({
     request,
@@ -473,6 +474,61 @@ test("canonical CMS associations retain replacement but non-CMS children never i
     propertiesList: ["details"],
   });
   assert.equal(observed[2].options.replaceAllMatchesByQuery, undefined);
+});
+
+test("canonical versioned CMS children pin current revisions and recover identical partial-run replays", async () => {
+  const detail = {
+    isVersionedEnabled: true,
+    definition: {
+      code: { type: "string", primary: true },
+      versionId: { type: "long" },
+      active: { type: "bool" },
+      title: { type: "string" },
+    },
+  };
+  const page = {
+    definition: { code: { type: "string", primary: true } },
+    refSchema: {
+      details: { enabled: true, type: "many", schemaName: "componentDetail", propertyName: "code" },
+    },
+  };
+  owners({ cms: { rawSchema: { page, componentDetail: detail } } });
+  const wrapper = Object.assign(
+    driver(detail, [{ _id: "detail-v0", code: "detail-one", versionId: 0, active: true, title: "old" }]),
+    versionedAdapter,
+    { moduleName: "cms", schemaName: "componentDetail", primaryKey: "code", versioned: true },
+  );
+  const observed = [];
+  SERVICE.DefaultComponentDetailService = Object.assign(generated(wrapper, observed), {
+    get: (request) => wrapper.getItems(request),
+  });
+  const request = {
+    tenant: "fixture",
+    authData: { userGroups: ["fixture"] },
+    schemaModel: { moduleName: "cms", schemaName: "page", rawSchema: page },
+    options: {
+      allowCmsAssociationReplacement: true,
+      replaceAllMatchesByQuery: true,
+      replaceArraysOnVersionMerge: true,
+      governedVersionedImport: true,
+    },
+  };
+  await nested.saveNestedModels({
+    request,
+    model: { code: "page-one", details: [{ code: "detail-one", active: true, title: "new" }] },
+    propertiesList: ["details"],
+  });
+  assert.equal(wrapper.rows.length, 2);
+  assert.equal(wrapper.rows[1].versionId, 1);
+  assert.equal(wrapper.rows[1].title, "new");
+  await nested.saveNestedModels({
+    request,
+    model: { code: "page-one", details: [{ code: "detail-one", active: true, title: "new" }] },
+    propertiesList: ["details"],
+  });
+  assert.equal(wrapper.rows.length, 2);
+  assert.equal(observed[0].options.governedVersionedImport, undefined);
+  assert.equal(observed[0].options.allowCmsAssociationReplacement, true);
 });
 
 test("Mongo refuses empty, broad, operator and mismatched replacements before driver operations", async () => {
@@ -794,16 +850,22 @@ test("native versioned CMS import uses effective registry and scalar identity/ve
     { code: "fixture-page", active: true, title: "new" },
   ]);
   assert.deepEqual(saveQueries, [
-    { code: "fixture-page", active: true, versionId: 1 },
+    { code: "fixture-page", active: true, versionId: 0 },
   ]);
   assert.equal(observed[0].options.allowCmsAssociationReplacement, true);
-  assert.equal(observed[0].options.versionedImport, true);
+  assert.equal(observed[0].options.governedVersionedImport, true);
   assert.equal(result[0].versionId, 1);
   assert.equal(wrapper.rows.length, 2);
   assert.equal(wrapper.rows[0].title, "old");
   assert.equal(wrapper.rows[0].versionId, 0);
   assert.equal(wrapper.rows[1].title, "new");
   assert.equal(wrapper.calls.updateMany, 0);
+  assert.equal(wrapper.calls.insert, 1);
+  const replay = await context.insertLocalSchemaModel(request, [
+    { code: "fixture-page", active: true, title: "new" },
+  ]);
+  assert.equal(replay[0].versionId, 1);
+  assert.equal(wrapper.rows.length, 2);
   assert.equal(wrapper.calls.insert, 1);
 });
 

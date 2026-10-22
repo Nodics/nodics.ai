@@ -35,6 +35,7 @@ module.exports = {
         },
         acceptance: {
             "capabilityRegistry": {
+                "requestTimeoutMs": 120000,
                 "foundationModule": "nodics.foundation",
                 "retiredModule": "nodics.core",
                 "functionalModule": "nodics.process",

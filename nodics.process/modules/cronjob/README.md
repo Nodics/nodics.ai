@@ -177,6 +177,16 @@ also run `npm run acceptance:local:fresh` from the customer reference project
 when Cron permissions, Process handoff, registry lifecycle, or Axis controls
 change.
 
+`acceptance:cronjob-execution --execute` is the Cron-owned live acceptance for
+one reviewed schedule. A project supplies only a `tooling.acceptance`
+`cronJobExecution` selection containing the approved tenant, Enterprise, job
+code and expected expression; the operator bearer remains in
+`NODICS_CRONJOB_ACCEPTANCE_TOKEN`. The command requires a saved inactive draft,
+performs the existing preview/confirmed activation journey, invokes the normal
+one-time run API and waits for a fresh persisted `SUCCESS` result. It neither
+creates a schedule nor calls the scheduled domain action directly. Source
+eligibility and downstream delivery remain with their respective owners.
+
 Every real job also needs positive, invalid definition, unauthorized,
 cross-tenant, schedule-boundary, manual-run, duplicate/overlap, timeout, retry,
 partial-failure, restart, drain, node-loss, node-return, downstream-recovery,

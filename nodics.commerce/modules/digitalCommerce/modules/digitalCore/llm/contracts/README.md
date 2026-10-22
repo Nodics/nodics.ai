@@ -1,5 +1,10 @@
 # Digital Core Contracts
 
+See [coupon acquisition source](coupon-acquisition-source.md) for v2 checkpoints,
+typed owners, finality/no-expiry, reporting and remaining shared integrations.
+Its [inert expiry sweep](coupon-acquisition-source.md#inert-expiry-sweep) defines
+the exact Cronjob-to-Process source callable and remaining delivery gates.
+
 ## Protected Ownership Evidence
 
 Read [the exact owner API](ownership-evidence-api.md) for group-free signed runtime

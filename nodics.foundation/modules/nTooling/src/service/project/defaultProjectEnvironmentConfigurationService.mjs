@@ -25,7 +25,7 @@ import httpHardening from '../../../../nRouter/src/service/defaultHttpHardeningS
 import configurationBindings from '../../../../nConfig/src/service/defaultConfigurationBindingService.js';
 import configuration from '../../../../nConfig/src/service/DefaultFrameworkInitializerService.js';
 import configurationProbe from './defaultProjectConfigurationProbeService.js';
-import { readProjectManifest, resolveProjectCode, resolveTemplate, selectEnvironmentConfiguration } from './defaultProjectContainerConfigurationService.mjs';
+import { readProjectManifest, readProjectPackage, resolveProjectCode, resolveTemplate, selectEnvironmentConfiguration } from './defaultProjectContainerConfigurationService.mjs';
 
 /** Projects startup/readiness coordinates from actual backend server configuration. @param {string} projectRoot Project root. @param {string} environmentCode Optional selected environment. @returns {Object} Derived tooling inputs, not another persisted configuration authority. */
 export function readProjectEnvironmentConfiguration(projectRoot, environmentCode = '') {
@@ -35,12 +35,15 @@ export function readProjectEnvironmentConfiguration(projectRoot, environmentCode
   const environment = selected.code;
   const properties = selected.properties;
   const environmentRoot = path.join(projectRoot, 'envs', environment);
+  const canonicalProjection = readProjectPackage(projectRoot).nodics?.loadableByNodicsModuleLoader === true;
   const backends = fs.readdirSync(environmentRoot, { withFileTypes: true }).filter(entry => entry.isDirectory()).flatMap(entry => {
     const packageFile = path.join(environmentRoot, entry.name, 'package.json');
     if (!fs.existsSync(packageFile)) return [];
     const metadata = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
     if (metadata.nodics?.kind !== 'server' || metadata.nodics.runtimeModule !== true || metadata.nodics.retired === true) return [];
-    const runtime = configuration.readDeploymentConfiguration({ projectRoot, environmentCode: environment, serverCode: entry.name });
+    const runtime = canonicalProjection
+      ? configurationProbe.read({ projectRoot, environment, server: entry.name, inheritEnvironment: true }).properties
+      : configuration.readDeploymentConfiguration({ projectRoot, environmentCode: environment, serverCode: entry.name });
     const launch = metadata.nodics?.runtimeTooling || {};
     if (launch.enabled === false) return [];
     const endpoint = runtime.servers?.default?.endpoint;

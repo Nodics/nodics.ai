@@ -48,6 +48,7 @@ function setup(role = "WCMS_ONLINE") {
   global.NODICS = {
     getActiveModules: () => Object.keys(modules),
     getRawModule: (name) => modules[name],
+    getSelectedEnvironmentName: () => "local",
   };
   global.CLASSES = {
     NodicsError: class extends Error {

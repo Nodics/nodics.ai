@@ -34,6 +34,10 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   `/employee`, `/operator`, or `/backoffice` in `route.key`; enforce those
   concerns through `secured`, `authTokenTypes`, `accessGroups`, `permission`,
   `permissionConfig`, `apiExposure`, and ownership checks.
+- Preserve route registration precedence: explicit module-owned capability
+  routes bind before schema-generated routes, and shared parameterized routes
+  bind last as fallbacks. Do not repair a collision by renaming the owned API or
+  copying a generic route into the customer layer.
 
 - Reuse `selectDefaultRouterGroups` for runtime and OpenAPI projection. Preserve
   keyed disablement, invalid-group rejection and the `schemaGoverned` contract;

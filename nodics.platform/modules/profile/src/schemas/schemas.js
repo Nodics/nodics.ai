@@ -1800,3 +1800,45 @@ module.exports.profile.customer.backoffice.excludedFields = [
   ...(module.exports.profile.customer.backoffice.excludedFields || []),
   "customerEligibilityDecision",
 ];
+
+// Notification selections remain Profile-owned records; Wallet never owns contacts or recipient membership.
+for (const name of ['customer', 'employee', 'enterprise']) {
+  module.exports.profile[name].definition.giftNotificationPreferences = {
+    type: 'object', required: false,
+    description: 'Explicit gift lifecycle notification consent; IN_APP must be true. Independent of gift-enable settings; absence never opts in.',
+  };
+}
+module.exports.profile.enterprise.definition.giftNotificationRecipients = {
+  type: 'array', required: false,
+  description: 'Explicit Employee references {employeeCode}; current Digital bundle permission, matching Enterprise scope and independent opt-in required. No sender, recipient actor, administrator or contact fallback.',
+};
+for (const name of ['customer', 'employee', 'enterprise']) {
+  module.exports.profile[name].definition.auctionNotificationPreferences = {
+    type: 'object', required: false,
+    description: 'Explicit auction outcome notification channel consent; IN_APP must be true. Absence never opts in.',
+  };
+}
+module.exports.profile.enterprise.definition.auctionNotificationRecipients = {
+  type: 'array', required: false,
+  description: 'Explicit Employee references {employeeCode}; current Bidding permission, Enterprise scope and independent opt-in required. No seller, bidder, administrator or contact fallback.',
+};
+for (const name of ['customer', 'employee', 'enterprise']) {
+  module.exports.profile[name].definition.couponReminderPreferences = {
+    type: 'object', required: false,
+    description: 'Explicit coupon expiry notification channel consent; IN_APP must be true. Absence never opts in.',
+  };
+}
+module.exports.profile.enterprise.definition.couponReminderRecipients = {
+  type: 'array', required: false,
+  description: 'Explicit Employee references {employeeCode} for coupon reminders; Profile rechecks canonical identity, persisted Digital permission, Enterprise scope and preferences before dispatch. No purchaser or administrator fallback.',
+};
+for (const name of ['customer', 'employee', 'enterprise']) {
+  module.exports.profile[name].definition.transferNotificationPreferences = {
+    type: 'object', required: false,
+    description: 'Explicit per-channel transfer completion notification opt-in; IN_APP must be true.',
+  };
+}
+module.exports.profile.enterprise.definition.transferNotificationRecipients = {
+  type: 'array', required: false,
+  description: 'Explicit same-tenant Employee selections {employeeCode}; current identity, permission, Enterprise scope and independent opt-in required. No Customer, actor or contact fallback.',
+};

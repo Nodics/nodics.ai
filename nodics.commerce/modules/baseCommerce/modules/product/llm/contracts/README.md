@@ -25,8 +25,11 @@ Consumer enrichment sends distinct selected public coupon codes to Promotion's
 internal `publicAvailabilityBatch`, preserving original authentication rather
 than synthetic Product service auth. Pass selectors only, never indexed/retained
 rows as admission. Require a complete Map with every selected value containing
-exactly own data fields `available` (Boolean) and its matching `IN_STOCK` or
-`OUT_OF_STOCK` status. Detach those safe fields before further awaits. Undefined,
+exactly own data fields `available` (Boolean), its matching `IN_STOCK` or
+`OUT_OF_STOCK` status, and Promotion-validated `acquisitionRequirements` (safe
+typed DTO or explicit null). Null means unavailable, never REWARDS. Product
+cards and detail preserve this field inside availability, not localized attributes.
+Detach those safe fields before further awaits. Undefined,
 inert, malformed, accessor or extra-field values reject before any Digital call;
 an initially selected Product never falls back when selection changes during
 the batch await. Missing/broken selected ownership rejects without per-item or

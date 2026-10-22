@@ -248,7 +248,7 @@ async function fixture() {
 test("forward Init authority receives human/guest identities while dynamic tenants receive only service identities and groups", async () => {
   const f = await fixture();
   const manifest = require("../data/manifest.json");
-  assert.equal(manifest.sections["init-v001"].version, "0.0.3");
+  assert.equal(manifest.sections["init-v001"].version, "0.0.8");
   assert.equal(manifest.sections["init-v001"].sourceRoot, "init-v001");
   assert.equal(manifest.retainedRoots, undefined);
   releases.validateRetainedRoots(path.resolve(__dirname, "../data"), manifest);
@@ -574,7 +574,7 @@ test("startup owner admits an explicit forward Init version but still rejects ch
   assert.equal(
     f.configuration.identityGovernance.migration.assessment.bootstrapReview
       .sources[0].version,
-    "0.0.3",
+    "0.0.8",
   );
   const reviewSource =
     f.configuration.identityGovernance.migration.assessment.bootstrapReview.sources[0];

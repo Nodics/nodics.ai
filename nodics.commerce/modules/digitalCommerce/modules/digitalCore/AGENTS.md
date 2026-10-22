@@ -1,5 +1,105 @@
 # Digital Core Agents
 
+Keep delivery evidence with the entitlement owner. The customer route must remain
+no-store, exact-entitlement and fresh-owner authorized; read the generated Digital
+delivery owner and never accept caller merchant placement or expose provider secrets.
+
+Bundle CAS readback uses effective `assertSuccessor` for normal acknowledgement
+and recovery from a lost response. Retain exact original code, next revision and
+patch checks without exporting private persistence authority. Publication uses
+only the canonical `/bundle-listings` controller, not a second customer alias.
+
+Coupon read/reveal scope matching uses effective `matchesCouponScope` with
+wildcard capability and tenant/Enterprise qualifiers for both allow and deny.
+Denied owners cannot reach entitlement/token effects. Preserve original bearer,
+private-capture protection and `test/digitalCouponSecureRevealContract.test.js`.
+
+Bundle actor scope matching uses the effective `matchesScope` member. Honor
+Profile wildcard capability DENY and tenant/Enterprise qualifiers before granting
+any action; the predicate never replaces original-token Profile admission.
+Keep the negative and override regressions in `test/digitalBundleAuthority.test.js`.
+
+Gift expiry scheduling follows [the owned Cron binding](llm/contracts/gift-expiry-schedule.md).
+Keep its explicit data contribution inactive and runOnInit false; preserve original
+Cron authority, bounded batches and the secured Digital expiry command. Do not
+add a timer, implicit installation or activation, or body-selected owner scope.
+
+Participant composition uses `DefaultDigitalBundleCompositionService` and governed
+`digitalBundleListingContext` records, not business IDs in config or frontend
+props. Preserve current Profile owner admission before/after the bounded read,
+participant versus Store namespace separation, Product's placement handoff and
+Gift availability independent of listing activation. The selector grants no
+publication authority and writes no records. Read the composition-context section
+in `llm/contracts/bundle-publication.md` before changing its route or records.
+
+Reload-safe composition uses the immutable manifest's reviewed `composition`
+and digest, never a browser instruction/credential snapshot. Keep exact
+`/bundles/commands/query`, confirmed original `/resume` and `/gifts/inspect`
+owner-authorized, count-qualified and no-store. Absence is UNCONFIRMED, never
+replacement authority. Resume existing owner commands only; no parallel journal,
+ledger, silent retry or automatic release. Read the holdings/gifts recovery contract.
+Manifest, gift and listing intake share the effective Bundle `commandKey`
+validator with recovery. Keep the bound only in `bundles.commandRecovery`;
+do not accept an intake key that the configured recovery API cannot query.
+
+Coupon Enterprise lists retain buyer `ownerRef`/`participantEnterpriseCode` apart
+from merchant `enterpriseCode`. Discover only exact persisted owned v2 rights;
+reveal keeps buyer bearer/scope for authorization around token decryption. Never
+accept a client merchant partition or assume issuer equals purchasing Enterprise.
+Coupon input commit/release direction is persisted by Promotion before domain
+effects. Common Checkout must fence compensation before financial reversal and
+forward-recover consumed or uncertain original inputs, not retry placement.
+Coupon failure recovery reads Payment in the retained purchaser namespace while
+keeping the Checkout checkpoint and compensation intent in merchant placement.
+Require matching typed owner/actor evidence before releasing original inputs.
+Closed-Cart coupon continuation must prove the original Order/key, actor, allocation
+COMMIT and retained consideration; it never reopens intake. Completed Checkout
+readers select exact `orderCode` and COMPLETED status, not checkpoint code, because
+common forward recovery completes the failed command record in place. Preserve
+duplicate/foreign rejection and run Checkout's actual coupon recovery composition.
+
+Gift lifecycle delivery follows [whole-gift notifications](llm/contracts/bundle-gift-notifications.md).
+Notify only after complete persisted owner receipts. Keep Profile-selected opt-in
+recipients and original Communication pointers private, freeze keys/content, and
+never re-enter holdings mutation from notification retry. Source proof requires
+explicit runtime-to-business grants. Defaults stay off/unqualified.
+An original send-key replay after a terminal gift returns retained evidence and
+must not re-enter the PENDING notification handoff.
+
+Read [whole bundle settlement](llm/contracts/bundle-settlement.md) for fixed-price
+purchase/proceeds and bounded gift expiry. Retain the seller manifest namespace
+separately from the Store namespace. Checkout must fence compensation before any
+Payment reversal and forward-recover captured/uncertain whole transfers.
+Settlement receipt qualification consumes the effective Payment-method
+`loyaltyRewardPayment.providerCode`; never copy its default into Digital or its
+fixtures. Keep override and foreign-receipt regression coverage owner-local.
+Cross-owner fixtures register actual Loyalty/Waste defaults, amount services and
+runtime enums from their owners; never copy enum values or reusable defaults.
+
+Bundle publication and auction proofs use `DefaultDigitalCommerceAuctionService`;
+read `llm/contracts/bundle-publication.md`. Preserve immutable terms before holds,
+original manifest partition, fixed Product/Pricing ports, actual activation and
+withdrawal receipts, and quantity-one original binding. Do not release while a
+purchase claim is unresolved or because an auction's intake date has passed.
+
+Read [coupon acquisition](llm/contracts/coupon-acquisition-source.md) before v2
+coupon changes. Preserve typed owner/actor separation, original persisted
+consideration, explicit NONE expiry and finality. Never fabricate Payment for
+certificate-only acquisition or release uncertain certificate/supply holds.
+Expiry source discovery uses the inert `DefaultDigitalCommerceCouponReminderService.sweep`
+Process action. Preserve bounded complete reads and original runtime scope. Its
+output is not dispatch authority: Profile independently rechecks the Digital
+source and explicit current recipients before Communication creates/dispatches
+immutable intents. Follow [expiry delivery](llm/contracts/coupon-expiry-reminders.md).
+No purchaser/admin fallback, parallel outbox or schedule activation is permitted.
+
+Read [bundle holdings and gifts](llm/contracts/bundle-holdings-and-gifts.md)
+before bundle changes. Persist the original manifest and operation before side
+effects. Never release uncertain component holds, unlock partially transferred
+bundles, infer recipient authority from a reference, or credit a seller before
+all ownership receipts and original captured payment are confirmed. Generic
+bundle schema CRUD stays disabled. Provider wiring is not provider qualification.
+
 The native priced and ITEM providers must call `Merchant.validateCoupon` using the same
 admitted object returned by `pricedAuthority`. Preserve that private identity
 when attaching checked entitlement/merchant/marker data; a spread/clone or direct
@@ -50,15 +150,13 @@ identity checks without conflating those concepts.
 For DIGITAL_OWNERSHIP, read the [persisted ownership contract](llm/contracts/persisted-digital-ownership.md)
 before editing. Preserve exact retained binding, authoritative Cart locale at
 reserve and original saved locale/key thereafter. Waste owns persisted transfer,
-eWaste owns domain settlement and Payment owns original capture. No second buyer
+Digital owns new bundle settlement and Payment owns original capture. No second buyer
 debit, physical fallback/custody inference, unapproved asset refund or flag-based
 qualification. Verify complete entitlement and terminal delivery readback.
-Original-sale asset refunds use the existing Order approval/paymentAuthority
-phases and eWaste's `refund-*` commands only. Require the retained explicit
-before-onward-transfer policy, exact original capture/seller earning, Waste CAS
-lock and verified seller reversal before Payment. Complete ownership/entitlement
-only after original Payment/Loyalty refund readback. No coupon-policy inheritance,
-caller-supplied ledgers, new buyer debit or general service-token refund grant.
+New bundle purchases and the migrated eWaste sale surface are final-sale.
+Ownership refund phases refuse; historical one-asset evidence is not new refund
+authority. Preserve ordinary Commerce/coupon policies and original incomplete
+purchase recovery; no caller ledger, second debit or broad service refund grant.
 
 Only OwnershipService's non-reserving `availability` may return expected unavailable
 supply when `digitalCore.digitalOwnership.enabled !== true` or `qualified !== true`.

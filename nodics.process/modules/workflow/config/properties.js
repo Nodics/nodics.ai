@@ -38,6 +38,10 @@ module.exports = {
 
   process: {
     runtime: {
+      deadLetterRequeue: {
+        enabled: false,
+        maximumRequeues: 1,
+      },
       internalRetirements: {
         enabled: false,
         allowedDefinitions: [],
@@ -119,6 +123,10 @@ module.exports = {
       maximumExecutionAgeMs: 30000,
       connectionType: "abstract",
       timeoutMs: 10000,
+      runtimeEnterpriseScope: {
+        enabled: false,
+        enterpriseCodes: [],
+      },
       targets: {},
     },
     publicationDecisionCallback: {

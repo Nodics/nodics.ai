@@ -13,6 +13,8 @@
 const assert = require('assert');
 const enums = require('../../loyaltyCore/src/utils/enums');
 const postingService = require('../src/service/defaultLoyaltyLedgerPostingService');
+const defaults = require('../../loyaltyCore/config/properties');
+global.CONFIG = { get: key => defaults[key] };
 
 assert.deepStrictEqual(enums.LoyaltyLedgerEntryType.definition, ['EARN', 'RESERVE', 'CAPTURE', 'RELEASE', 'EXPIRE', 'ADJUST', 'REVERSE']);
 assert.throws(() => postingService.assertAppendOnlyMutation({ operation: 'update' }), /append-only/);

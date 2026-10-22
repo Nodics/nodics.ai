@@ -134,3 +134,16 @@ replay/concurrency, error envelopes and failed persistence using real services a
 isolated owners. paymentCardOriginalCaptureContract.test.js preserves historical/
 real-CARD refusal and legacy simulator compatibility. Payment refund safety tests
 remain mandatory. No isolated proof qualifies native deployment or actual funds.
+
+## Participant Evidence
+
+Payment execution preserves canonical `ownerRef`, separate employee `actorRef`
+and signed `participantEnterpriseCode` when supplied by Commerce. The provider
+must still authenticate the original participant; these fields are not caller
+authority. Stored transaction `evidence.participant` retains only explicit
+identity fields, never authorization headers or bearer credentials. An existing
+or in-flight payment key cannot change its participant. The merchant transaction
+partition and the purchasing Enterprise are separate concepts.
+
+Run `node --test nodics.commerce/modules/payment/modules/paymentCore/test/paymentParticipantContextContract.test.js`
+for typed-owner propagation, private-field stripping and conflicting replay.

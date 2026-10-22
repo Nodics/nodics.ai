@@ -1,0 +1,126 @@
+{
+  "contractVersion": 2,
+  "module": "commercialAgreement",
+  "sections": {
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Commercial agreement permissions",
+      "description": "Capability-owned permission definitions; preserve existing Profile-managed grants.",
+      "owningDomain": "commercialAgreement",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": ["ALL"],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/commercialAgreementPermissionHeader.js": "e9b55a195180a91567c8f1066e8e0d5e528fdf59369bc68d06019b921f5db819",
+        "init-v001/records/identity/commercialAgreementPermissionData.js": "f83b166948651822122c1f05ba5d11a7509e5f4fe1938fc0be9801d0884d07c8"
+      }
+    },
+    "agreementWorkspace": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "displayName": "Commercial agreement workspace presentation",
+      "description": "CMS-owned text for implemented Axis agreement controls; no agreements, access grants or runtime activation.",
+      "owningDomain": "commercialAgreement",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "core-v001",
+      "publicationReview": {
+        "title": "Publish agreement workspace presentation",
+        "summary": "Install agreement copy using the existing Axis Site and template.",
+        "sourceRole": "WCMS_STAGED",
+        "targetRole": "WCMS_ONLINE",
+        "siteCode": "axisCmsSite",
+        "catalogCode": "axisContentCatalog",
+        "impactMessage": "Available authorized agreement workspaces use the published labels; no commercial terms or grants change.",
+        "rollbackMessage": "Restore previously published presentation through the existing CMS publication lifecycle.",
+        "entities": [
+          {
+            "type": "cmsComponent",
+            "label": "Agreement workspace copy",
+            "total": 1,
+            "added": 1,
+            "updated": 0,
+            "unchanged": 0,
+            "removed": 0
+          }
+        ]
+      },
+      "files": {
+        "core-v001/headers/workspace/commercialAgreementWorkspaceHeader.js": "7451b78fa53db13cf284941c2bc7979480214f1790c394fd7b52409644ec8072",
+        "core-v001/records/workspace/commercialAgreementCmsComponentData.js": "57279d365ad67b5634e5c97c5cb2f2bc47c665bb05a954f464ef6faf5e62c624",
+        "core-v001/records/workspace/commercialAgreementCmsPageData.js": "850b75688e79738dc3663cfdf4e8c5c3030a6b26d4a8f4e6ec864ed89719dcef",
+        "core-v001/records/workspace/commercialAgreementCmsRendererData.js": "103eee98a5830c8821d86508d462f98498583a2209c92e99579d521184325425",
+        "core-v001/records/workspace/commercialAgreementCmsRouteData.js": "23d759f4efdbf421416c3f9e1db736147a6d15b16136ab71b6c5e0aa88501ba7",
+        "core-v001/records/workspace/commercialAgreementCmsTypeData.js": "e65d7229efa241358e9deb71494e532352e641ee3fb961e2358682869739923d"
+      }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "commercialAgreement",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "bb92fc43795bfa4de8e3b5f839160c8cb393fdcd1d978161f51d7f967c8ac090",
+      "generatedHashes": {
+        "docs-v001/headers/100_commercialAgreementDocumentationContentPackHeader.js": "45dfa3a704f6e2801e88a3a159372d49890852b2c9850b8a7d0e23cb282eef58",
+        "docs-v001/records/documentation/commercialAgreementDocumentationComponentData.js": "a106d666ab555f2e8d60bdaed53b8044351bcba37f68b7f94cc3eb7845eb8f49",
+        "docs-v001/records/documentation/commercialAgreementDocumentationPageMetadataData.js": "9dcd178cc3f1e3142533b133f912c7625c39ff7b50ab40bc78bd4f62cc724380",
+        "docs-v001/records/documentation/commercialAgreementDocumentationNodeData.js": "5d586f762dee18ee1448f05f306918bf574ec25f4825a22020c4496ad5dfa816",
+        "docs-v001/records/documentation/commercialAgreementDocumentationPageData.js": "8afab1293ba3bc5b5871c256ad117ef7e037ed320f90be768f43f3663f878df2",
+        "docs-v001/records/documentation/commercialAgreementDocumentationRouteData.js": "8e6e98dad9b68c425bf51bfe635d2297dc2c1407ea75f351762935fe85c66746",
+        "docs-v001/records/documentation/commercialAgreementDocumentationSearchMetadataData.js": "dfe2fc1affcf33bd9866a03b93032f5a83f3184f93ed8058e99163a1da1952bd",
+        "docs-v001/records/documentation/commercialAgreementDocumentationPublicationStateData.js": "346644ed4105b094506ed570fc9071fb5139a89fae26a1340a9ccc755edacc92"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    }
+  }
+}

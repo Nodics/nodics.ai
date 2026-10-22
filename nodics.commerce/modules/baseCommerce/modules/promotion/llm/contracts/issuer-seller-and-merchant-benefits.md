@@ -439,7 +439,8 @@ from the original authentication, does not confer signed seller authority.
 Direct service/anonymous calls to this policy bridge remain refused. The separate
 [Distribution admission owner](trusted-distribution-read-admission.md) now admits
 only exact non-reserving Product reads. Public reads require current pinned
-catalogue visibility and return only availability/status. Trusted service handoffs
+catalogue visibility and return availability/status plus Promotion's safe acquisition
+requirements (unknown is null and unavailable). Trusted service handoffs
 retain original signed authority separately, never reconstructing a customer
 from persisted Cart fields. Product and Cart call these fixed helpers before
 authority is lost. A downstream service identity without its genuine original

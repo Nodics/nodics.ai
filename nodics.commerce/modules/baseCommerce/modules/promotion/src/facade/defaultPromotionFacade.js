@@ -13,6 +13,16 @@
 
 /** @module promotion/src/facade/defaultPromotionFacade @description Normalizes authenticated customer promotion API context. @layer facade @owner promotion */
 module.exports = {
+    /** Presents owner-defined form metadata without deriving grants in Axis. */
+    couponWorkspace: function (request) { return SERVICE.DefaultCouponOfferService.workspace(request); },
+    /** Reads one exact offer under original staff scope. */
+    inspectCouponOffer: function (request) { return SERVICE.DefaultCouponOfferService.inspect(request); },
+    /** Keeps bilateral decisions on Promotion while preserving original signed staff scope. */
+    couponParticipation: function (request) { return SERVICE.DefaultCouponRedeemerParticipationService.decide(request); },
+    /** Shares the same protected aggregate with dashboards and exports. */
+    acquisitionReport: function (request) { return SERVICE.DefaultCouponAcquisitionReportingService.query(request); },
+    /** Copying never persists or transfers identity, approvals, participation or inventory. */
+    couponPrefill: function (request) { return SERVICE.DefaultCouponOfferService.prefill(request); },
     /** Captures policy through the fixed owner using authenticated operator scope only. */
     createGoverned: async function (request) {
         const auth = request.authData || {};

@@ -602,6 +602,56 @@ targetReceiptContract: 'v1',
             throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
         return records;
     },
+    /** Reads one exact own-issuer Product policy for a privately admitted Product command. Applied retained roots remain the policy owner; mutable state contributes consumption only. */
+    readOwnProduct: async function (command, includePolicy) {
+        const admission = SERVICE.DefaultPromotionDistributionAdmissionService;
+        const { request, projection } = admission.resolveMembershipRead(command);
+        this.requireTarget();
+        const roots = this.deliveryRoots(request), maximum = this.publicationSettings().maxDependencies;
+        if (!this.deliveryEnabled(request) || !Array.isArray(roots) || !roots.length || !Number.isSafeInteger(maximum) ||
+            maximum < 1 || roots.length > maximum || new Set(roots).size !== roots.length ||
+            request.enterpriseCode !== projection.enterpriseCode || request.productCode !== projection.productCode)
+            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        await SERVICE.DefaultCouponSellerAuthorizationService.activeEnterprise(request, projection.enterpriseCode);
+        const authData = SERVICE.DefaultIdentityGovernanceService?.getSystemAuthData();
+        if (authData?.isSystem !== true) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        const owner = { tenant: request.tenant, enterpriseCode: projection.enterpriseCode, authData };
+        const snapshots = [], policies = [];
+        for (const rootCode of roots) {
+            const root = { rootType: 'promotion', rootCode }, records = await this.readSellerActivated(root, owner);
+            snapshots.push({ root, records });
+            for (const row of records) if (row.schema === 'promotion' && row.policy?.conditions?.sourceProductCode === request.productCode)
+                policies.push(row.policy);
+        }
+        if (policies.length > 1) throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        const policy = policies[0], same = require('node:util').isDeepStrictEqual;
+        const ref = { moduleName: 'profile', schemaName: 'enterprise', code: owner.enterpriseCode };
+        if (policy && (policy.tenant !== owner.tenant || policy.enterpriseCode !== owner.enterpriseCode || policy.status !== 'ACTIVE' ||
+            policy.active === false || !same(policy.issuerEnterpriseRef, ref) || !same(policy.vendorEnterpriseRef, ref)))
+            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        const selected = policy && structuredClone(policy);
+        if (includePolicy && selected?.budget) {
+            const current = await this.readRecord(SERVICE.DefaultPromotionService, selected.code, owner);
+            if (!current || current.tenant !== owner.tenant || current.enterpriseCode !== owner.enterpriseCode ||
+                !current.budget || typeof current.budget.spent !== 'string')
+                throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+            selected.budget.spent = current.budget.spent;
+        }
+        for (const snapshot of snapshots) if (!same(await this.readSellerActivated(snapshot.root, owner), snapshot.records))
+            throw new CLASSES.NodicsError('ERR_PROMOTION_SELLER_UNCONFIRMED');
+        await SERVICE.DefaultCouponSellerAuthorizationService.activeEnterprise(request, projection.enterpriseCode);
+        admission.resolveMembershipRead(command);
+        if (!selected) return undefined;
+        return includePolicy ? selected : { productCode: request.productCode, issuerEnterpriseCode: owner.enterpriseCode };
+    },
+    /** Returns only own-issuer membership for a privately admitted canonical public Product. */
+    readOwnProductIssuer: function (command) {
+        return this.readOwnProduct(command, false);
+    },
+    /** Returns one exact own-issuer policy only to an active Product admission. */
+    readOwnProductPolicy: function (command) {
+        return this.readOwnProduct(command, true);
+    },
     /** Reads only an exact issuer policy and original budget admitted by the Seller bridge's in-flight identity. Constructs a distinct system-owner read context, never a seller impersonating an issuer. No mutation authority is returned. @param {Object} command Exact private bridge envelope. @returns {Promise<Object>} Pure retainedPolicy, consumption-enriched preview policy and safe issuer budget snapshot. */
     readSellerPolicy: async function (command) {
         const bridge = SERVICE.DefaultPromotionSellerPolicyService;
@@ -678,6 +728,7 @@ targetReceiptContract: 'v1',
                 "conditions",
                 "actions",
                 "purchasedCouponPolicy",
+                "couponOffer",
                 "validFrom",
                 "validTo"
         ]
@@ -707,6 +758,7 @@ targetReceiptContract: 'v1',
             throw new Error('Promotion policy escaped its enterprise boundary');
         }
         const policy = {};
+        if (record.couponOffer !== undefined) SERVICE.DefaultCouponOfferService.validate(record.couponOffer);
         for (const field of fields) {
             if (Object.prototype.hasOwnProperty.call(record, field)) policy[field] = structuredClone(record[field]);
         }

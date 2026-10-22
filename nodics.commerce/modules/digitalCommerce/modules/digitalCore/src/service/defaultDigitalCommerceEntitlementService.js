@@ -14,7 +14,26 @@
 const crypto = require("node:crypto");
 const { isDeepStrictEqual } = require('node:util');
 
-/** @module digitalCore/src/service/defaultDigitalCommerceEntitlementService @description Owns Digital Commerce entitlement, delivery, reveal, and revocation evidence. @layer service @owner digitalCore */
+/**
+ * @module digitalCore/src/service/defaultDigitalCommerceEntitlementService
+ * @description Owns Digital Commerce entitlement, delivery, reveal, and revocation evidence.
+ * @layer service
+ * @owner digitalCore
+ * @remarks Entitlement owns buyer-safe coupon access across distinct merchant partitions. Fresh
+ * Profile checks surround private reads/reveal; no caller owner, merchant namespace or missing
+ * historical date creates authority.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: unwrap, serviceAuthData, persistenceModel, assertPersistence, readRecords,
+ * assertSaved, save, update, listEntitlements, publicEntitlement, listOwn, entitlementCode,
+ * createFromCouponSales, recordDeliveries, refuseReveal, couponWindow, couponPurchaseEntryCode,
+ * revealContext, matchesCouponScope, freshCouponOwner, listContext, ownedCustomerCoupons, ownedEnterpriseCoupons,
+ * deliveryEvidence,
+ * couponReadContext, authorizeCouponReveal, reveal, claim, redeem, promotionLifecycle,
+ * revocationPolicy, revokeForOrderLifecycle.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
   /** Unwraps a standard result envelope while preserving raw provider values. */
   unwrap: function (response) {
@@ -105,6 +124,8 @@ module.exports = {
         "tenant",
         "enterpriseCode",
         "ownerId",
+        "ownerRef",
+        "participantEnterpriseCode",
         "orderCode",
         "orderEntryCode",
         "productCode",
@@ -198,18 +219,21 @@ module.exports = {
   /** Builds a customer-safe entitlement summary. @param {Object} entitlement Entitlement model. @returns {Object} Summary. */
   publicEntitlement: function (entitlement) {
     const retained = entitlement.purchasePolicy;
-    const terms = retained?.terms;
+    const terms = retained?.version === 2 ? retained.couponOffer?.terms : retained?.terms;
     if (
       retained &&
-      (retained.version !== 1 ||
+      (![1, 2].includes(retained.version) ||
         !Array.isArray(terms) ||
         terms.length > 30 ||
         terms.some((line) => typeof line !== "string" || line.length > 1000))
     )
       throw new Error("Retained coupon terms are invalid");
+    if (retained?.version === 2) this.couponWindow(entitlement);
     return {
       code: entitlement.code,
       enterpriseCode: entitlement.enterpriseCode,
+      participantEnterpriseCode: entitlement.participantEnterpriseCode,
+      ownerRef: entitlement.ownerRef,
       ownerId: entitlement.ownerId,
       orderCode: entitlement.orderCode,
       orderEntryCode: entitlement.orderEntryCode,
@@ -232,12 +256,12 @@ module.exports = {
   },
   /** Lists customer-owned entitlements without exposing secret provider tokens. @param {Object} request Request. @returns {Promise<Object>} Entitlement response. */
   listOwn: async function (request) {
-    const query = Object.assign({}, request.query || {}, {
-      ownerId: request.ownerId,
-    });
-    // History includes completed redemption and revocation; ownership still scopes every record.
-    const entitlements = await this.listEntitlements(request, query);
-    return { entitlements: entitlements.map(this.publicEntitlement) };
+    if (request.authData?.principalType === 'human') {
+      const r = await this.listContext(request);
+      return { entitlements: (await this.ownedEnterpriseCoupons(r)).map(item => this.publicEntitlement(item)) };
+    }
+    const entitlements = await this.ownedCustomerCoupons(request, request.query || {});
+    return { entitlements: entitlements.map(item => this.publicEntitlement(item)) };
   },
   /** Creates deterministic entitlement code for one provider unit. @param {Object} request Request. @param {Object} unit Unit. @returns {string} Entitlement code. */
   entitlementCode: function (request, unit) {
@@ -263,6 +287,13 @@ module.exports = {
     for (const sale of sales || []) {
       if (!sale.soldAt || !Number.isFinite(Date.parse(sale.soldAt)))
         throw new Error("Original coupon purchase timestamp is required");
+      if (sale.purchasePolicy?.version === 2) {
+        SERVICE.DefaultCouponOfferService.retained(sale);
+        const acquisition = SERVICE.DefaultDigitalCommerceCouponAcquisitionService;
+        const command = await acquisition.commandForCoupon({ ...request, payload: { ...request.payload, orderCode: order.code } }, sale);
+        if (!command) throw new Error("Original coupon acquisition is required");
+        await acquisition.completion(command);
+      }
       const unit = {
         orderCode:
           (order && order.code) ||
@@ -275,6 +306,10 @@ module.exports = {
         tenant: request.tenant,
         enterpriseCode: request.enterpriseCode || sale.enterpriseCode,
         ownerId: request.ownerId || sale.soldTo,
+        ...(sale.purchasePolicy?.version === 2 ? {
+          ownerRef: structuredClone(sale.purchasePolicy.originalOwnerRef),
+          participantEnterpriseCode: request.participantEnterpriseCode || request.authData?.enterpriseCode || request.authData?.entCode,
+        } : {}),
         orderCode: unit.orderCode,
         orderEntryCode: this.couponPurchaseEntryCode(sale),
         cartCode:
@@ -298,7 +333,7 @@ module.exports = {
         },
         purchasedAt: sale.soldAt,
         validTo: sale.validTo,
-        purchasePolicy: sale.purchasePolicy,
+        purchasePolicy: sale.purchasePolicy === undefined ? undefined : structuredClone(sale.purchasePolicy),
         evidence: {
           promotionCode: sale.promotionCode,
           couponBatchCode: sale.batchCode,
@@ -404,6 +439,32 @@ module.exports = {
   },
   /** Rejects without disclosing payment, purchase or secret evidence. @returns {never} Fixed refusal. */
   refuseReveal: function () { throw new CLASSES.NodicsError('ERR_DIGITAL_REVEAL_FORBIDDEN'); },
+  /**
+   * Distinguishes explicit retained no-expiry rights from missing historical dates. Never infers NONE
+   * from absence.
+   * @param {Object} record Persisted owner record; historical missing fields are not synthesized.
+   * @returns {Object} Explicit NONE or normalized FIXED validity with expired state.
+   * @remarks Effects: Pure retained-window interpretation; no expiry mutation.
+   * Failure behavior: Rejects absent/invalid validity rather than inferring no expiry.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  couponWindow: function (record) {
+    const policy = record.purchasePolicy;
+    if (policy?.version === 2) {
+      const offer = SERVICE.DefaultCouponOfferService.validate(policy.couponOffer);
+      if (!isDeepStrictEqual(policy.finality, { refundable: false, transferable: false, singleUse: true }) ||
+          !Number.isFinite(Date.parse(policy.purchasedAt)) ||
+          new Date(record.purchasedAt || record.soldAt).getTime() !== Date.parse(policy.purchasedAt)) this.refuseReveal();
+      if (offer.expiry.mode === 'NONE') {
+        if (record.validTo !== undefined && record.validTo !== null) this.refuseReveal();
+        return { mode: 'NONE', expired: false };
+      }
+      if (!Number.isFinite(Date.parse(record.validTo)) || new Date(record.validTo).toISOString() !== offer.expiry.at) this.refuseReveal();
+    }
+    if (!Number.isFinite(Date.parse(record.validTo))) this.refuseReveal();
+    return { mode: 'FIXED', at: new Date(record.validTo).toISOString(), expired: Date.parse(record.validTo) <= Date.now() };
+  },
   /** Resolves Promotion's original checkout entry identity; an explicit alias must agree rather than override it. @param {Object} coupon Purchased provider unit. @returns {string} Exact original entry. */
   couponPurchaseEntryCode: function (coupon) {
     const entries = [coupon?.entryCode, coupon?.orderEntryCode].filter(
@@ -422,31 +483,275 @@ module.exports = {
     return entries[0];
   },
   /** Snapshots signed customer scope without trusting payload overrides or manufactured privacy flags. @param {Object} request Exact private entry. @returns {Object} Privately inherited trusted context. */
-  revealContext: function (request) {
+  revealContext: function (request, permission = 'commerce.digital.own.reveal', privateRequired = true) {
     const auth = request?.authData || {}, security = SERVICE.DefaultSecuredRequestPipelineService;
-    const enterpriseCode = auth.enterpriseCode || auth.entCode, ownerId = auth.principalId || auth.code || auth.loginId;
+    const enterpriseCode = auth.enterpriseCode || auth.entCode;
+    const ownerId = auth.principalType === 'human' ? enterpriseCode : auth.principalId || auth.code || auth.loginId;
     const role = CONFIG.get('runtimeRole');
     if ((typeof role === 'string' ? role : role?.code) !== 'COMMERCE' ||
-        auth.tokenType !== 'access' || auth.principalType !== 'customer' ||
+        !['commerce.digital.own.read', 'commerce.digital.own.reveal'].includes(permission) ||
+        auth.tokenType !== 'access' || !['customer', 'human'].includes(auth.principalType) || auth.isSystem ||
         [auth.tenant, enterpriseCode, ownerId].some(value => typeof value !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(value)) ||
         [request.tenant, auth.tenant].some(value => value !== undefined && value !== auth.tenant) ||
         [request.enterpriseCode, request.entCode, auth.enterpriseCode, auth.entCode].some(value => value !== undefined && value !== enterpriseCode) ||
         (request.ownerId !== undefined && request.ownerId !== ownerId) ||
-        !security?.isPermissionGranted('commerce.digital.own.reveal', security.getGrantedPermissions(request), {}) ||
-        SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection(request) !== true) this.refuseReveal();
+        !security?.isPermissionGranted(permission, security.getGrantedPermissions(request), {}) ||
+        privateRequired && SERVICE.DefaultLoggerService?.hasPrivateCaptureProtection(request) !== true) this.refuseReveal();
     const r = { ...request, tenant: auth.tenant, enterpriseCode, ownerId, authData: structuredClone(auth),
       payload: structuredClone(request.payload || {}) };
-    SERVICE.DefaultLoggerService.inheritRequestPrivacy(r, request);
+    if (privateRequired) SERVICE.DefaultLoggerService.inheritRequestPrivacy(r, request);
     return r;
+  },
+  /**
+   * Matches an original Profile coupon-access scope without granting reveal authority.
+   * @param {Object} scope Profile allow/deny scope.
+   * @param {Object} r Original signed tenant and represented Enterprise.
+   * @param {string} permission Independently required read/reveal permission.
+   * @returns {boolean} Whether all qualifiers match; no token or persistence effects.
+   * @throws {Error} Profile scope is malformed.
+   * @override Preserve wildcard capability and Enterprise qualifiers for both allow and deny.
+   */
+  matchesCouponScope: function (scope, r, permission) {
+    if (!scope || typeof scope !== 'object') this.refuseReveal();
+    const security = SERVICE.DefaultSecuredRequestPipelineService;
+    if (scope.tenantCode && scope.tenantCode !== r.tenant ||
+        scope.enterpriseCode && scope.enterpriseCode !== r.enterpriseCode ||
+        scope.capabilityCode && !['*', 'digitalCore', 'digitalCommerce'].includes(scope.capabilityCode) ||
+        scope.permissionCode && !security.isPermissionGranted(permission, [scope.permissionCode], {})) return false;
+    return scope.scopeType === 'GLOBAL' && scope.scopeCode === '*' ||
+      scope.scopeType === 'TENANT' && scope.scopeCode === r.tenant ||
+      scope.scopeType === 'ENTERPRISE' && scope.scopeCode === r.enterpriseCode;
+  },
+  /**
+   * Resolves current canonical owner and explicit Enterprise allow/deny scopes using the original
+   * bearer, never employee-as-owner fallback.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {Object} policy Validated effective framework policy.
+   * @param {string} [permission] Independently required owner permission.
+   * @returns {Promise<Object>} Canonical typed CUSTOMER or ENTERPRISE owner after current admission.
+   * @remarks Effects: Calls bounded Profile identity/scopes using original bearer and rechecks original
+   * pins.
+   * Failure behavior: Rejects denial, wildcard DENY, qualifier mismatch, owner ambiguity or authority
+   * drift.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  freshCouponOwner: async function (r, policy, permission = 'commerce.digital.own.reveal') {
+    const auth = r.authData, p = CONFIG.get('digitalCore')?.couponAccess?.profile;
+    const authorization = r.authorization || r.httpRequest?.headers?.authorization || r.httpRequest?.headers?.Authorization;
+    const security = SERVICE.DefaultSecuredRequestPipelineService;
+    if (!authorization || !auth.loginId || !p?.connectionName || !p.targetAuthority ||
+        !Number.isSafeInteger(p.timeoutMilliseconds) || p.timeoutMilliseconds <= 0 || p.timeoutMilliseconds > 60000) this.refuseReveal();
+    const snapshot = structuredClone({ auth, tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, payload: r.payload, p });
+    let value = await SERVICE.DefaultModuleService.invokeModule({ local: false, moduleName: 'profile', connectionName: p.connectionName,
+      targetAuthority: p.targetAuthority, tenant: r.tenant, request: { tenant: r.tenant }, methodName: 'GET',
+      apiName: auth.principalType === 'human' ? '/identity/scopes/me' : '/customer/identity',
+      header: { Authorization: authorization, 'X-Enterprise-Code': r.enterpriseCode }, timeoutMs: p.timeoutMilliseconds, maxAttempts: 1 });
+    for (let n = 0; n < 8 && value; n++) {
+      if (value.error || value.success === false || value.acknowledged === false || /^ERR_/.test(value.code || '') ||
+          value.errors && (!Array.isArray(value.errors) || value.errors.length)) this.refuseReveal();
+      if (value.data !== undefined) value = value.data;
+      else if (value.result !== undefined) value = value.result;
+      else break;
+    }
+    let ownerRef;
+    if (auth.principalType === 'human') {
+      if (value?.principalCode !== auth.loginId || !Array.isArray(value.scopes) || !Array.isArray(value.deniedScopes)) this.refuseReveal();
+      if (!value.scopes.some(scope => this.matchesCouponScope(scope, r, permission)) ||
+          value.deniedScopes.some(scope => this.matchesCouponScope(scope, r, permission))) this.refuseReveal();
+      ownerRef = { type: 'ENTERPRISE', code: r.enterpriseCode };
+    } else {
+      if (value?.contractVersion !== 1 || value.tenant !== r.tenant || value.enterpriseCode !== r.enterpriseCode ||
+          value.customer?.loginId !== auth.loginId || typeof value.customer.code !== 'string' || !value.customer.code) this.refuseReveal();
+      ownerRef = { type: 'CUSTOMER', code: value.customer.code };
+    }
+    if (!isDeepStrictEqual(snapshot, { auth: r.authData, tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId,
+        payload: r.payload, p: CONFIG.get('digitalCore')?.couponAccess?.profile }) ||
+        authorization !== (r.authorization || r.httpRequest?.headers?.authorization || r.httpRequest?.headers?.Authorization) ||
+        !security.isPermissionGranted(permission, security.getGrantedPermissions(r), {}) ||
+        policy && (policy.version !== 2 || !isDeepStrictEqual(policy.originalOwnerRef, ownerRef))) this.refuseReveal();
+    return ownerRef;
+  },
+  /**
+   * Admits owner-scoped listing without requiring reveal permission or manufacturing a privacy context.
+   * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
+   * grant authority.
+   * @returns {Promise<Object>} Fresh owner-scoped read context without reveal authority.
+   * @remarks Effects: Normalizes signed context and performs current Profile admission.
+   * Failure behavior: Rejects spoofed owner/tenant/Enterprise or missing independent read permission.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  listContext: async function (input) {
+    const r = this.revealContext(input, 'commerce.digital.own.read', false);
+    const owner = await this.freshCouponOwner(r, undefined, 'commerce.digital.own.read');
+    return { ...r, ownerId: owner.code, ownerRef: owner };
+  },
+  /**
+   * Discovers a freshly admitted customer's rights across merchant storage partitions.
+   * @param {Object} r Fresh canonical customer context.
+   * @param {Object} selectors Bounded customer-safe entitlement selectors.
+   * @returns {Promise<Object[]>} Complete customer-owned entitlements.
+   * @remarks Merchant Enterprise is operational placement and never replaces canonical customer
+   * ownership. Every returned row is revalidated before projection or merchant narrowing.
+   */
+  ownedCustomerCoupons: async function (r, selectors = {}) {
+    const maximum = CONFIG.get('digitalCore')?.couponAccess?.maximumOwnEntitlements;
+    const allowed = ['code', 'orderCode', 'status'];
+    if (!Number.isSafeInteger(maximum) || maximum < 1 || maximum > 1000 ||
+        r.authData?.principalType !== 'customer' || r.ownerRef?.type !== 'CUSTOMER' || r.ownerRef.code !== r.ownerId ||
+        !selectors || typeof selectors !== 'object' || Array.isArray(selectors) ||
+        Object.keys(selectors).some(key => !allowed.includes(key)) ||
+        Object.values(selectors).some(value => typeof value !== 'string' || !/^[A-Za-z0-9_.:@|\-]{1,192}$/.test(value))) this.refuseReveal();
+    const rows = await this.readRecords(SERVICE.DefaultDigitalEntitlementService, r, {
+      tenant: r.tenant, ownerId: r.ownerId, ...selectors,
+    });
+    if (rows.length > maximum || new Set(rows.map(item => item.code)).size !== rows.length) this.refuseReveal();
+    for (const item of rows) {
+      if (item.tenant !== r.tenant || item.ownerId !== r.ownerId ||
+          typeof item.enterpriseCode !== 'string' || !/^[A-Za-z0-9_.:@-]{1,128}$/.test(item.enterpriseCode) ||
+          item.ownerRef !== undefined && !isDeepStrictEqual(item.ownerRef, r.ownerRef) ||
+          item.purchasePolicy?.version === 2 && !isDeepStrictEqual(item.purchasePolicy.originalOwnerRef, r.ownerRef)) this.refuseReveal();
+    }
+    await this.freshCouponOwner(r, undefined, selectors.code ? 'commerce.digital.own.reveal' : 'commerce.digital.own.read');
+    return rows;
+  },
+  /**
+   * Discovers only this freshly admitted Enterprise's retained coupon rights across merchant partitions.
+   * No caller partition/filter is accepted.
+   * @param {Object} r Original admitted tenant/Enterprise request, preserving authData and private owner
+   * context.
+   * @param {string} code Exact original owner record code.
+   * @returns {Promise<Object[]>} Complete bounded retained v2 coupon entitlements for the admitted
+   * Enterprise.
+   * @remarks Effects: Reads owner-bound rights across merchant partitions; no generic foreign
+   * enumeration.
+   * Failure behavior: Rejects incomplete/duplicate/foreign evidence or exceeded configured bound.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  ownedEnterpriseCoupons: async function (r, code) {
+    const maximum = CONFIG.get('digitalCore')?.couponAccess?.maximumOwnEntitlements;
+    if (!Number.isSafeInteger(maximum) || maximum < 1 || maximum > 1000) this.refuseReveal();
+    if (r.authData?.principalType !== 'human' || r.ownerId !== r.enterpriseCode ||
+        code !== undefined && (typeof code !== 'string' || !/^[A-Za-z0-9_.:@-]{1,192}$/.test(code))) this.refuseReveal();
+    const original = structuredClone({ authData: r.authData, tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, payload: r.payload });
+    const result = await SERVICE.DefaultDigitalCommerceCouponAcquisitionService.rows('DefaultDigitalEntitlementService', r,
+      { ownerId: r.ownerId, participantEnterpriseCode: r.enterpriseCode, 'ownerRef.type': 'ENTERPRISE', 'ownerRef.code': r.ownerId,
+        ...(code ? { code } : {}) }, code ? 2 : maximum + 1);
+    if (maximum !== CONFIG.get('digitalCore')?.couponAccess?.maximumOwnEntitlements ||
+        result.count !== result.result.length || result.result.length > (code ? 1 : maximum) ||
+        new Set(result.result.map(e => e.code)).size !== result.result.length ||
+        !isDeepStrictEqual(original, { authData: r.authData, tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, payload: r.payload })) this.refuseReveal();
+    for (const e of result.result) {
+      if (!/^[A-Za-z0-9_.:@-]{1,128}$/.test(e.enterpriseCode || '') || e.providerOwner !== 'promotion' ||
+          e.digitalDeliveryType !== 'COUPON_CODE' || e.purchasePolicy?.version !== 2 ||
+          !isDeepStrictEqual(e.ownerRef, e.purchasePolicy.originalOwnerRef)) this.refuseReveal();
+    }
+    await this.freshCouponOwner(r, undefined, code ? 'commerce.digital.own.reveal' : 'commerce.digital.own.read');
+    return result.result;
+  },
+  /**
+   * Reads one exact delivery for a currently owned entitlement without granting reveal authority.
+   * @param {Object} input Original private customer or represented-Enterprise request. Payload must contain
+   * only entitlementCode.
+   * @returns {Promise<Object>} Safe entitlement and generated delivery evidence.
+   * @remarks Effects: Performs fresh Profile admission, owner-scoped entitlement discovery, exact delivery
+   * read and post-read owner reauthorization. Merchant Enterprise remains storage placement only.
+   * Failure behavior: Rejects malformed selectors, missing/duplicate/foreign rows, unsupported providers,
+   * changed ownership or incomplete delivery timestamps.
+   * @override Keep participant ownership, generated Digital persistence and safe projection in digitalCore.
+   */
+  deliveryEvidence: async function (input) {
+    const payload = input?.payload;
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload) ||
+        Object.keys(payload).length !== 1 || typeof payload.entitlementCode !== 'string' ||
+        !/^[A-Za-z0-9_.:@-]{1,192}$/.test(payload.entitlementCode)) this.refuseReveal();
+    const r = await this.listContext(input);
+    const rows = r.authData.principalType === 'human'
+      ? await this.ownedEnterpriseCoupons(r)
+      : await this.ownedCustomerCoupons(r, {});
+    const matches = rows.filter(item => item.code === payload.entitlementCode);
+    if (matches.length !== 1) this.refuseReveal();
+    const entitlement = matches[0];
+    if (!['promotion', 'digitalCore', 'wasteCore'].includes(entitlement.providerOwner) ||
+        typeof entitlement.providerCode !== 'string' || !entitlement.providerCode ||
+        typeof entitlement.orderCode !== 'string' || !entitlement.orderCode ||
+        typeof entitlement.enterpriseCode !== 'string' || !entitlement.enterpriseCode) this.refuseReveal();
+    const scoped = { ...r, participantEnterpriseCode: r.enterpriseCode, enterpriseCode: entitlement.enterpriseCode };
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy(scoped, r);
+    const deliveries = await this.readRecords(SERVICE.DefaultDigitalDeliveryService, scoped, {
+      tenant: r.tenant,
+      enterpriseCode: entitlement.enterpriseCode,
+      ownerId: r.ownerId,
+      entitlementCode: entitlement.code,
+      orderCode: entitlement.orderCode,
+      providerCode: entitlement.providerCode,
+    });
+    if (deliveries.length !== 1) this.refuseReveal();
+    const delivery = deliveries[0];
+    if (delivery.tenant !== r.tenant || delivery.enterpriseCode !== entitlement.enterpriseCode ||
+        delivery.ownerId !== r.ownerId || delivery.entitlementCode !== entitlement.code ||
+        delivery.orderCode !== entitlement.orderCode || delivery.providerOwner !== entitlement.providerOwner ||
+        delivery.providerCode !== entitlement.providerCode || delivery.status !== 'DELIVERED' ||
+        typeof delivery.deliveryType !== 'string' || !delivery.deliveryType ||
+        !Number.isFinite(Date.parse(delivery.deliveredAt))) this.refuseReveal();
+    await this.freshCouponOwner(r, undefined, 'commerce.digital.own.read');
+    return {
+      contractVersion: 1,
+      entitlementCode: entitlement.code,
+      ownerRef: structuredClone(r.ownerRef),
+      delivery: {
+        code: delivery.code,
+        status: delivery.status,
+        orderCode: delivery.orderCode,
+        deliveryType: delivery.deliveryType,
+        providerOwner: delivery.providerOwner,
+        providerCode: delivery.providerCode,
+        deliveredAt: delivery.deliveredAt,
+        revision: delivery.revision,
+      },
+    };
+  },
+  /**
+   * Resolves a private coupon's merchant namespace from an exact owner-bound entitlement, retaining
+   * signed buyer authority unchanged.
+   * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
+   * grant authority.
+   * @returns {Promise<Object>} Original buyer context pinned to the single entitlement's merchant
+   * partition.
+   * @remarks Effects: Reads exact buyer-owned entitlement; retains original signed bearer and
+   * participant namespace.
+   * Failure behavior: Rejects absent/ambiguous rights or foreign/changed owner binding.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  couponReadContext: async function (input) {
+    let r = this.revealContext(input);
+    const owner = await this.freshCouponOwner(r);
+    const canonical = { ...r, ownerId: owner.code, ownerRef: owner };
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy(canonical, r);
+    r = canonical;
+    const code = r.entitlementCode || r.payload.entitlementCode;
+    const rows = r.authData.principalType === 'human'
+      ? await this.ownedEnterpriseCoupons(r, code)
+      : await this.ownedCustomerCoupons(r, { code });
+    if (!code || rows.length !== 1 || r.couponCode && r.couponCode !== rows[0].providerCode) this.refuseReveal();
+    const scoped = { ...r, participantEnterpriseCode: r.enterpriseCode, enterpriseCode: rows[0].enterpriseCode };
+    SERVICE.DefaultLoggerService.inheritRequestPrivacy(scoped, r);
+    return scoped;
   },
   /** Reuses committed Checkout/Payment/Order/entitlement/delivery evidence for one current purchased coupon. No notification selection or new authority is introduced. @param {Object} input Private customer context. @param {Object} coupon Current coupon snapshot. @returns {Promise<Object>} Current exact entitlement. */
   authorizeCouponReveal: async function (input, coupon) {
-    const r = this.revealContext(input), entitlementCode = r.entitlementCode || r.payload.entitlementCode;
+    const buyer = this.revealContext(input), r = await this.couponReadContext(input), entitlementCode = r.entitlementCode || r.payload.entitlementCode;
+    if (buyer.authData.principalType === 'human' || coupon?.purchasePolicy?.version === 2)
+      await this.freshCouponOwner(buyer, coupon?.purchasePolicy);
     if (typeof entitlementCode !== 'string' || !/^[A-Za-z0-9_.:@-]{1,192}$/.test(entitlementCode) ||
         !coupon || coupon.code !== r.couponCode || coupon.tenant !== r.tenant || coupon.enterpriseCode !== r.enterpriseCode ||
         coupon.active !== true || coupon.soldTo !== r.ownerId || !['DELIVERED', 'CLAIMED'].includes(coupon.status) ||
         !Number.isFinite(Date.parse(coupon.soldAt)) || !Number.isFinite(Date.parse(coupon.deliveredAt)) ||
-        !Number.isFinite(Date.parse(coupon.validTo)) || Date.parse(coupon.validTo) <= Date.now()) this.refuseReveal();
+        this.couponWindow(coupon).expired) this.refuseReveal();
     const rows = await this.readRecords(SERVICE.DefaultDigitalEntitlementService, r, {
       tenant: r.tenant, enterpriseCode: r.enterpriseCode, ownerId: r.ownerId, code: entitlementCode,
     });
@@ -456,7 +761,7 @@ module.exports = {
         e.active !== true || e.status !== 'ACTIVE' || e.providerOwner !== 'promotion' || e.digitalDeliveryType !== 'COUPON_CODE' ||
         e.providerCode !== coupon.code || e.orderCode !== coupon.orderCode || e.orderEntryCode !== this.couponPurchaseEntryCode(coupon) ||
         e.productCode !== coupon.productCode || Date.parse(e.purchasedAt) !== Date.parse(coupon.soldAt) ||
-        Date.parse(e.validTo) !== Date.parse(coupon.validTo) ||
+        !isDeepStrictEqual(this.couponWindow(e), this.couponWindow(coupon)) ||
         !isDeepStrictEqual(e.purchasePolicy, coupon.purchasePolicy)) this.refuseReveal();
     const evidence = await SERVICE.DefaultDigitalCommerceNotificationService.evidence({ ...r, orderCode: e.orderCode }, 'PURCHASED');
     const committed = evidence.items.filter(item => item.code === e.code);
@@ -466,12 +771,11 @@ module.exports = {
   },
   /** Reveals a delivered entitlement through Promotion's secure owner after private customer admission. @param {Object} request Request. @returns {Promise<Object>} Reveal result. */
   reveal: async function (request) {
-    request = this.revealContext(request);
+    request = await this.couponReadContext(request);
     const payload = request.payload || {};
-    const entitlements = await this.listEntitlements(request, {
-      code: payload.entitlementCode,
-      ownerId: request.ownerId,
-      status: "ACTIVE",
+    const entitlements = await this.readRecords(SERVICE.DefaultDigitalEntitlementService, request, {
+      tenant: request.tenant, enterpriseCode: request.enterpriseCode, code: payload.entitlementCode,
+      ownerId: request.ownerId, status: 'ACTIVE',
     });
     const entitlement = entitlements[0];
     if (entitlements.length !== 1 || !entitlement || entitlement.code !== payload.entitlementCode) this.refuseReveal();
@@ -492,6 +796,7 @@ module.exports = {
       };
     }
     const providerRequest = { ...request,
+      enterpriseCode: request.participantEnterpriseCode || request.authData.enterpriseCode || request.authData.entCode,
       entitlementCode: entitlement.code,
       couponCode: entitlement.providerCode,
     };
@@ -619,6 +924,8 @@ module.exports = {
   },
   /** Calculates digital revocation policy for cancellation, return, or refund. @param {Object} entitlement Entitlement. @param {string} requestType Reversal type. @returns {Object} Policy decision. */
   revocationPolicy: function (entitlement, requestType) {
+    if (entitlement?.purchasePolicy?.version === 2)
+      return { policyDecision: 'BLOCKED', refundable: false, reasonCode: 'DIGITAL_COUPON_PURCHASE_FINAL' };
     if (entitlement?.digitalDeliveryType === "DIGITAL_OWNERSHIP" || entitlement?.providerOwner === "wasteCore")
       return { policyDecision: requestType === "RETURN" ? "BLOCKED" : "MANUAL_REVIEW", refundable: false,
         reasonCode: requestType === "RETURN" ? "DIGITAL_PRODUCTS_DO_NOT_USE_PHYSICAL_RETURN" : "DIGITAL_OWNERSHIP_REFUND_REQUIRES_DOMAIN_OWNER" };

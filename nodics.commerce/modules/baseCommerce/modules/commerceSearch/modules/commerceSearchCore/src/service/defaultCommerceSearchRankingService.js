@@ -37,7 +37,7 @@ module.exports = {
      *
      * @returns {Object} Ranking policy.
      */
-    policy: function () { return (((CONFIG.get('commerceSearch') || {}).ranking) || {}); },
+    policy: function () { return SERVICE.DefaultCommerceSearchPolicyService.policy(); },
 
     /**
      * Builds service-account authorization context for internal rule projection lookup.
@@ -68,7 +68,7 @@ module.exports = {
         if (response && response.data && Array.isArray(response.data)) return response.data;
         let hits = this.findHits(response, 0);
         if (hits) return hits.hits.map(hit => hit._source || hit.source || hit);
-        return [];
+        throw new Error('Commerce Search projection response is invalid');
     },
 
     /**
@@ -96,7 +96,8 @@ module.exports = {
      * @returns {boolean} True when effective.
      */
     effective: function (record, now) {
-        let time = now instanceof Date ? now.getTime() : now ? new Date(now).getTime() : new Date().getTime();
+        let time = now === undefined ? Date.now() : new Date(now).getTime();
+        if (!Number.isFinite(time)) throw new Error('Commerce Search ranking time is invalid');
         return (!record.validFrom || new Date(record.validFrom).getTime() <= time) && (!record.validTo || new Date(record.validTo).getTime() > time);
     },
 
@@ -108,7 +109,7 @@ module.exports = {
      */
     query: function (request) {
         let query = { tenant: request.tenant, storeCode: request.storeCode, status: 'CURRENT' };
-        if (request.locale) query.locale = request.locale;
+        if (request.locale) query.$or = [{ locale: request.locale }, { locale: { $exists: false } }, { locale: null }];
         return query;
     },
 
@@ -121,20 +122,36 @@ module.exports = {
     loadRules: async function (request) {
         if (this.policy().enabled === false) return [];
         if (!SERVICE.DefaultCommerceSearchRuleProjectionService) return [];
-        let maximum = Number(this.policy().maximumRulesPerRequest || 50);
+        let policy = this.policy();
+        let maximum = policy.maximumRulesPerRequest;
         let searchRequest = {
             tenant: request.tenant,
             authData: this.serviceAuthData(request),
             moduleName: 'commerceSearchCore',
-            indexName: this.policy().searchIndexName || 'commerceSearchRuleProjection',
+            indexName: policy.searchIndexName,
             query: this.query(request),
-            searchOptions: { pageSize: maximum + 1, pageNumber: 1 }
+            searchOptions: { pageSize: policy.rulePageSize, limit: policy.rulePageSize, pageNumber: 1, sort: { code: 1 } }
         };
-        let response = typeof SERVICE.DefaultCommerceSearchRuleProjectionService.doSearch === 'function'
-            ? await SERVICE.DefaultCommerceSearchRuleProjectionService.doSearch(searchRequest)
-            : typeof SERVICE.DefaultCommerceSearchRuleProjectionService.get === 'function'
-                ? await SERVICE.DefaultCommerceSearchRuleProjectionService.get(searchRequest) : [];
-        return this.records(response).slice(0, maximum).filter(rule => this.applies(request, rule));
+        const service = SERVICE.DefaultCommerceSearchRuleProjectionService;
+        const method = typeof service.doSearch === 'function' ? 'doSearch' : 'get';
+        if (typeof service[method] !== 'function') throw new Error('Commerce Search projection reader is unavailable');
+        const applicable = [], seen = new Set();
+        for (let scanned = 0; scanned < policy.maximumRuleScan;) {
+            searchRequest.searchOptions.pageNumber = Math.floor(scanned / policy.rulePageSize) + 1;
+            searchRequest.searchOptions.skip = scanned;
+            const rows = this.records(await service[method](searchRequest));
+            if (rows.length > policy.rulePageSize) throw new Error('Commerce Search provider exceeded the requested bound');
+            if (scanned + rows.length > policy.maximumRuleScan) throw new Error('Commerce Search complete rule scan exceeds configured limit');
+            for (const rule of rows) {
+                if (!rule.code || seen.has(rule.code)) throw new Error('Commerce Search rule paging is incomplete');
+                seen.add(rule.code);
+                if (this.applies(request, rule)) applicable.push(rule);
+                if (applicable.length > maximum) throw new Error('Commerce Search applicable rule limit exceeded');
+            }
+            scanned += rows.length;
+            if (rows.length < policy.rulePageSize) return applicable;
+        }
+        throw new Error('Commerce Search complete rule scan exceeds configured limit');
     },
 
     /**
@@ -146,7 +163,7 @@ module.exports = {
      */
     applies: function (request, rule) {
         if (!rule || rule.tenant !== request.tenant || rule.storeCode !== request.storeCode || rule.status !== 'CURRENT') return false;
-        if (rule.locale && request.locale && rule.locale !== request.locale) return false;
+        if (rule.locale && rule.locale !== request.locale) return false;
         if (!this.effective(rule, request.now)) return false;
         if (rule.scopeType === 'GLOBAL') return true;
         if (rule.scopeType === 'CATEGORY') return !!request.query && rule.categoryCode === request.query.categoryCode;
@@ -161,9 +178,9 @@ module.exports = {
      * @returns {number} Score delta.
      */
     actionScore: function (action) {
-        let weights = this.policy().actionWeights || {};
-        if (action.actionType === 'BOOST') return Number(action.weight || weights.BOOST || 1000);
-        if (action.actionType === 'BURY') return Number(action.weight || weights.BURY || -1000);
+        let weights = this.policy().actionWeights;
+        if (action.actionType === 'BOOST') return action.weight === undefined ? weights.BOOST : action.weight;
+        if (action.actionType === 'BURY') return action.weight === undefined ? weights.BURY : action.weight;
         return 0;
     },
 
@@ -175,37 +192,45 @@ module.exports = {
      * @returns {Object[]} Ranked product cards.
      */
     ranked: function (products, rules) {
-        if (SERVICE.DefaultDiscoveryRankingEngineService && typeof SERVICE.DefaultDiscoveryRankingEngineService.apply === 'function') {
-            let actions = [];
-            let priorityRules = (rules || []).slice().sort((left, right) => Number(right.priority || 0) - Number(left.priority || 0));
-            for (let rule of priorityRules) {
-                for (let action of rule.actions || []) {
-                    actions.push(Object.assign({}, action, { targetCode: action.productCode }));
+        const actions = [], pinned = new Set();
+        const priorityRules = (rules || []).slice().sort((left, right) =>
+            SERVICE.DefaultCommerceSearchPolicyService.priority(right) - SERVICE.DefaultCommerceSearchPolicyService.priority(left) ||
+            String(left.code).localeCompare(String(right.code)));
+        for (const rule of priorityRules) {
+            SERVICE.DefaultCommerceSearchPolicyService.validate(rule);
+            for (const action of rule.actions || []) {
+                if (action.actionType === 'PIN') {
+                    if (pinned.has(action.productCode)) continue;
+                    pinned.add(action.productCode);
                 }
+                const score = this.actionScore(action);
+                // Discovery's legacy zero fallback must not change an explicit no-op weight.
+                if (action.actionType !== 'PIN' && score === 0) continue;
+                actions.push({ ...action, targetCode: action.productCode, score });
             }
+        }
+        if (SERVICE.DefaultDiscoveryRankingEngineService && typeof SERVICE.DefaultDiscoveryRankingEngineService.apply === 'function') {
             return SERVICE.DefaultDiscoveryRankingEngineService.apply(products || [], actions, { codeProperty: 'productCode' });
         }
         let original = new Map((products || []).map((product, index) => [product.productCode, index]));
         let scores = new Map();
         let pins = new Map();
-        let priorityRules = (rules || []).slice().sort((left, right) => Number(right.priority || 0) - Number(left.priority || 0));
-        for (let rule of priorityRules) {
-            for (let action of rule.actions || []) {
+        for (let action of actions) {
                 if (!original.has(action.productCode)) continue;
                 if (action.actionType === 'PIN' && Number.isInteger(Number(action.position)) && !pins.has(action.productCode)) {
                     pins.set(action.productCode, Math.max(1, Number(action.position)));
                 }
                 scores.set(action.productCode, (scores.get(action.productCode) || 0) + this.actionScore(action));
-            }
         }
         let sorted = (products || []).slice().sort((left, right) => {
-            let leftPin = pins.get(left.productCode), rightPin = pins.get(right.productCode);
-            if (leftPin && rightPin && leftPin !== rightPin) return leftPin - rightPin;
-            if (leftPin && !rightPin) return -1;
-            if (!leftPin && rightPin) return 1;
             let score = (scores.get(right.productCode) || 0) - (scores.get(left.productCode) || 0);
             if (score !== 0) return score;
             return (original.get(left.productCode) || 0) - (original.get(right.productCode) || 0);
+        });
+        [...pins].sort((left, right) => left[1] - right[1]).forEach(([code, position]) => {
+            const index = sorted.findIndex(product => product.productCode === code);
+            const item = sorted.splice(index, 1)[0];
+            sorted.splice(Math.max(0, position - 1), 0, item);
         });
         return sorted;
     },
@@ -219,8 +244,18 @@ module.exports = {
      */
     rank: async function (request, products) {
         if (!Array.isArray(products) || products.length < 2) return products || [];
+        if (request.query?.sort && !['recommended', 'relevance'].includes(request.query.sort)) return products;
+        if (products.length > this.policy().maximumCandidateProducts) throw new Error('Commerce Search candidate bound exceeded');
+        if (products.some(product => typeof product?.productCode !== 'string' || !product.productCode) ||
+            new Set(products.map(product => product.productCode)).size !== products.length)
+            throw new Error('Commerce Search candidates must have unique Product identities');
+        request = { ...request, now: request.now === undefined ? new Date().toISOString() : request.now };
         let rules = await this.loadRules(request);
         if (rules.length === 0) return products;
+        if (rules.some(rule => rule.benefitRef)) {
+            if (!SERVICE.DefaultCommerceSearchBenefitService) throw new Error('Commercial benefit owner is unavailable');
+            rules = await SERVICE.DefaultCommerceSearchBenefitService.expand(request, products, rules);
+        }
         return this.ranked(products, rules);
     }
 };

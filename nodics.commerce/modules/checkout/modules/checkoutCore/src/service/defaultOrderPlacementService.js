@@ -33,6 +33,11 @@ module.exports = {
       tenant: request.tenant,
       enterpriseCode: request.enterpriseCode,
       ownerId: request.ownerId,
+      ownerRef: request.ownerRef,
+      actorRef: request.actorRef,
+      participantEnterpriseCode: request.participantEnterpriseCode,
+      merchantScope: request.merchantScope,
+      auctionFunds: request.auctionFunds,
       authData: request.authData,
       idempotencyKey: request.idempotencyKey,
       correlationId: request.correlationId,
@@ -50,6 +55,15 @@ module.exports = {
       const calculation = await ports.calculateCart(request);
       checkpoint.results.calculation = calculation;
       checkpoint.completed.push("CALCULATED");
+      if (request.ownerRef?.schema === "enterprise") {
+        if (typeof ports.enforceParticipantSpend !== "function")
+          throw new Error("Enterprise spending admission is unavailable");
+        const spending = await ports.enforceParticipantSpend(request, calculation);
+        if (spending?.confirmed !== true)
+          throw new Error("Enterprise spending admission was not confirmed");
+        checkpoint.results.spending = spending;
+        checkpoint.completed.push("SPENDING_ADMITTED");
+      }
       const reservation = await ports.reserveInventory(request, calculation);
       checkpoint.results.reservation = reservation;
       checkpoint.completed.push("RESERVED");
@@ -58,9 +72,11 @@ module.exports = {
         : [];
       checkpoint.results.digitalReservation = digitalReservation;
       checkpoint.completed.push("DIGITAL_RESERVED");
-      const authorization = await ports.authorizePayment(request, calculation);
+      const paymentRequired = ports.requiresPayment ? await ports.requiresPayment(request, calculation, digitalReservation) : true;
+      checkpoint.results.paymentAttempted = paymentRequired;
+      const authorization = paymentRequired ? await ports.authorizePayment(request, calculation, digitalReservation) : undefined;
       checkpoint.results.authorization = authorization;
-      checkpoint.completed.push("AUTHORIZED");
+      if (authorization) checkpoint.completed.push("AUTHORIZED");
       const order = await ports.createOrder(
         request,
         calculation,
@@ -71,7 +87,7 @@ module.exports = {
       checkpoint.results.order = order;
       checkpoint.completed.push("ORDERED");
       let capture;
-      if (ports.capturePayment) {
+      if (authorization && ports.capturePayment) {
         capture = await ports.capturePayment(request, order, authorization);
         checkpoint.results.capture = capture;
         if (capture) checkpoint.completed.push("PAYMENT_CAPTURED");

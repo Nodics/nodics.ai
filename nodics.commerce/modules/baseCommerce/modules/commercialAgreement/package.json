@@ -1,0 +1,16 @@
+{
+  "name": "commercialAgreement",
+  "version": "0.0.0",
+  "index": "76.15",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Enterprise commercial assignments, descriptive terms, amendments and benefit evidence.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Commercial Agreements",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["configuration", "schema", "router", "controller", "facade", "service", "interceptor", "utility", "test", "llm", "data"],
+    "runtime": { "router": true, "publish": false, "web": false }
+  }
+}

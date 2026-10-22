@@ -89,12 +89,12 @@ export function validateWasteBootstrap(bootstrap) {
     throw new Error("Waste root navigation must point at the generic waste lifecycle policy workbench");
   }
   const submissions = requireNavigation(metadata.navigation || [], "waste-submissions");
-  if (submissions.workbenchTarget?.moduleName !== "wasteSubmission" ||
+  if (submissions.workbenchTarget?.moduleName !== "wasteApi" ||
       submissions.workbenchTarget?.schemaName !== "wasteSubmission") {
     throw new Error("Waste submissions navigation must use the generic Waste submission schema workbench");
   }
   const assets = requireNavigation(metadata.navigation || [], "waste-assets");
-  if (assets.workbenchTarget?.moduleName !== providerModule || assets.workbenchTarget?.schemaName !== "wasteAsset") {
+  if (assets.workbenchTarget?.moduleName !== "wasteApi" || assets.workbenchTarget?.schemaName !== "wasteAsset") {
     throw new Error("Waste assets navigation must use the generic Waste asset schema workbench");
   }
   const assetCreationPolicies = requireNavigation(metadata.navigation || [], "waste-asset-creation-policies");

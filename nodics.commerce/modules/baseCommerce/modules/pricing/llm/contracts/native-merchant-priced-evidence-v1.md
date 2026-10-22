@@ -70,6 +70,13 @@ with groups. The module-private read gate rejects other services, selectors,
 copied contexts and reuse after completion. Generic Pricing publication readers
 gain no service authority, and this path never captures, retains or activates policy.
 
+The permission vocabulary is owned by Pricing's explicit
+`pricing:merchantEvidencePermission` Init release. The release uses Profile's
+create-or-preserve reference operation and grants no user, group, principal or
+deployment. Projects consume it through an exact framework-owned release
+dependency; they must not copy the permission definition into customer
+configuration or a project data pack.
+
 No customer ID, amount, currency or caller proof is admitted. The exported authorize
 helper verifies runtime admission and operational LOCAL pricing/cart/store/promotion
 owners; the existing Promotion Staged guard remains. Remote-only topology refuses

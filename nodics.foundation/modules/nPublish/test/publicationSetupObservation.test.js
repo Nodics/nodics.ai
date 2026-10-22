@@ -38,10 +38,11 @@ function fixture(t) {
     const profile = { code: 'partner', owner: 'partner', baselineCode: 'partner',
         target: { connectionName: 'staged', runtimeRole: 'COMMERCE_STAGED' }, preparation: { steps: [releaseStep, publicationStep] } };
     const fileBytes = Buffer.from('{"source":true}\n');
+    const prerequisites = [{ moduleName: 'foundation', sectionCode: 'reference', version: '1.0.0', checksum: hash('foundation') }];
     const release = { moduleName: 'partner', releaseCode: 'partner:reference', sectionCode: 'reference', dataType: 'core',
-        version: '1.0.0', checksum: hash('core-v001/reference.json:' + hash(fileBytes)), sourceRoot: 'core-v001',
+        version: '1.0.0', checksum: hash('core-v001/reference.json:' + hash(fileBytes) + '|prerequisites:' + JSON.stringify(prerequisites)), sourceRoot: 'core-v001',
         declaredFiles: ['core-v001/reference.json'], lifecycle: 'OPERATIONAL_REFERENCE', destinationRole: 'COMMERCE_STAGED',
-        environmentScope: ['local'] };
+        environmentScope: ['local'], prerequisites };
     const plan = { contractVersion: 1, code: 'partner-reviewed', revision: 1, tenant: 'tenantA', profileCode: 'partner',
         baselineCode: 'partner', profileDigest: service.digest(profile), stages: [
             { code: releaseStep.code, server: 'staged', descriptor: service.stepIdentity(releaseStep), enterpriseCode: 'sharedEnterprise', release: structuredClone(release) },
@@ -336,7 +337,8 @@ test('bootstrap plan needs no final operation pins; shared BEFORE qualifies befo
 test('read-only plan review material derives current prerequisites and sources, never lifecycle receipts or grants', t => {
     const f = fixture(t), draft = f.service.describePlan('partner', 'tenantA', 'review-draft');
     assert.equal(draft.profileDigest, f.service.digest(f.profile)); assert.equal(draft.stages.length, 2);
-    assert.equal(draft.stages[0].release.checksum, f.release.checksum); assert.equal(draft.stages[0].enterpriseCode, null);
+    assert.equal(draft.stages[0].release.checksum, f.release.checksum);
+    assert.deepEqual(draft.stages[0].release.prerequisites, f.release.prerequisites); assert.equal(draft.stages[0].enterpriseCode, null);
     assert.equal(draft.stages[1].publications, undefined); assert.deepEqual(f.reads, []);
     global.SERVICE.DefaultDataReleaseService.discoverReleases = () => [];
     assert.equal(f.service.describePlan('partner', 'tenantA', 'review-draft').stages[0].release, null);
@@ -355,7 +357,17 @@ test('CMS baseline reuses exact owner status, current target pointer and Media q
     const input = { ...f.input(), mode: 'BASELINE', stageCode: 'partner' };
     assert.equal((await f.service.observe(f.request, input)).ready, true);
     pointer = 'changed'; assert.equal((await f.service.observe(f.request, input)).ready, false);
-    pointer = 'digest'; qualified = false; assert.equal((await f.service.observe(f.request, input)).ready, false);
+    pointer = 'digest'; qualified = false;
+    const mediaDependency = { owner: 'media', mediaCode: 'partner-hero', versionId: 3,
+        checksum: 'b'.repeat(64), publicationCode: `cmsMedia_${'a'.repeat(64)}`,
+        status: 'NOT_ACTIVATED', qualified: false };
+    global.SERVICE.DefaultCmsPublicationBaselineService.status = async () => ({ baselineCode: 'partner',
+        readiness: 'MEDIA_DEPENDENCIES_PENDING', releaseStatus: 'CURRENT', publication: structuredClone(f.row),
+        mediaDependencies: { owner: 'media', qualified, status: 'ACTION_REQUIRED', dependencies: [mediaDependency] } });
+    const pending = await f.service.observe(f.request, input);
+    assert.equal(pending.ready, false);
+    assert.equal(pending.authority.readiness, 'MEDIA_DEPENDENCIES_PENDING');
+    assert.deepEqual(pending.authority.mediaDependencies.dependencies, [mediaDependency]);
     descriptor.sourceVersion = 'changed'; await assert.rejects(f.service.observe(f.request, input));
 });
 

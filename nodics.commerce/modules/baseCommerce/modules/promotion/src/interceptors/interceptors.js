@@ -11,6 +11,18 @@
 
 /** @module promotion/src/interceptors/interceptors @description Separates Staged policy authoring from operational mutations. @layer interceptors @owner promotion */
 module.exports = {
+  couponOfferSave: {
+    type: 'schema', item: 'promotion', trigger: 'preSave', active: 'true', index: -70,
+    handler: 'DefaultCouponOfferService.protect',
+  },
+  couponOfferUpdate: {
+    type: 'schema', item: 'promotion', trigger: 'preUpdate', active: 'true', index: -70,
+    handler: 'DefaultCouponOfferService.protect',
+  },
+  couponOfferRemove: {
+    type: 'schema', item: 'promotion', trigger: 'preRemove', active: 'true', index: -70,
+    handler: 'DefaultCouponOfferService.protectRemove',
+  },
   promotionBudgetReceiptSave: {
     type: 'schema', item: 'promotionBudgetLedger', trigger: 'preSave', active: 'true', index: -60,
     handler: 'DefaultPromotionBudgetMutationService.protectSave',
@@ -260,3 +272,10 @@ module.exports = {
     handler: "DefaultPromotionOperationService.requireOperationalRuntime",
   },
 };
+for (const item of ['couponOfferSupply', 'couponOwnerAllowance', 'couponAcquisitionReservation',
+  'couponRedeemerAgreement', 'couponAcquisitionProjection']) {
+  for (const trigger of ['preSave', 'preUpdate', 'preRemove']) module.exports[item + trigger] = {
+    type: 'schema', item, trigger, active: 'true', index: -70,
+    handler: 'DefaultCouponAcquisitionPersistenceService.protect',
+  };
+}

@@ -121,20 +121,42 @@ the existing default installation behavior. Non-publishable releases still use
 installation selection.
 
 An EXPLICIT release remains discoverable and its selection policy is included
-in the catalogue. It is excluded from startup root selection, implicit initialization
-profile steps, unqualified plans and legacy module-wide selection. Operators must
-name its exact `releaseCodes` entry, directly or in a selected initialization
-profile, unless a selected release pins it as a prerequisite below.
+in the catalogue. It is excluded from ordinary startup root selection, implicit
+initialization profile steps, unqualified plans and legacy module-wide selection.
+Operators must name its exact `releaseCodes` entry, directly or in a selected
+initialization profile, unless a selected release pins it as a prerequisite below.
 That selection still requires the existing role, environment, tenant,
 permission, checksum, version and lifecycle checks. Discovery or selection does
 not confer contribution migration authority.
+
+The implementing nImport module defines an inert
+`data.dataReleases.types.init.startupProfileSelections` default. A project module
+may contribute bounded selections containing an exact `environmentCode`,
+`runtimeRole` and non-empty `profileCodes` list when a reviewed Init-only authority
+pack must exist before that runtime can obtain its first internal credential on
+an empty schema. Coordinates must be unique. nImport resolves only the exact
+selected deployment through the same profile validator, admits only `init` steps,
+and then runs the exact release codes through normal startup planning,
+prerequisites, destination checks, create-preserve operations and durable receipts.
+This is a deployment selection, not a reusable default, permission grant,
+configuration-synthesized record or license for mixed Core/Sample startup.
+Existing narrowed, inactive or revoked records remain governed by the selected
+release's owner operation.
+
+An Init header may invoke Profile's `adoptRuntimeServiceScopesAll` only for the
+authority-partition Employee schema and only while the privately bound release
+operation is active. This is not general Employee import authority: the Profile
+owner validates exact expected and desired permission lists and performs the
+generated credential update. Customer projects own only their reviewed release
+records and exact startup-profile selection.
 
 nService projects EXPLICIT releases as `required: false`, `trigger: "USER"`.
 Other required Init/Core packages keep their existing activation contract. The
 metadata does not reroute an optional package to another runtime: use the
 destination owner's explicit nImport selection. `test/dataReleaseSelectionPolicy.test.js`
 covers these contracts using isolated persistence ports and the actual discovery,
-plan, startup and profile builders. It performs no installed-data mutation.
+plan, startup and profile builders, including explicit runtime startup selection.
+It performs no installed-data mutation.
 
 ## Exact release prerequisites
 
@@ -420,6 +442,15 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - Stable-code `saveAll` imports create and update records. Do not claim physical
   removal, catalog activation or publication until composed through CMS,
   Workflow and nPublish authorities.
+- For governed versioned records, pin the current owner revision before save.
+  nImport strips caller-supplied version-import admission and sets the internal
+  `governedVersionedImport` option only after immutable release governance and
+  effective versioned-schema ownership succeed. The generated save query and
+  versioned provider must recheck that exact revision, return an identical replay
+  unchanged, or append one successor for changed content. The option never flows
+  to nested writes. A partial-run retry must not create another version for records
+  already committed by the same immutable source, and concurrent advancement must
+  fail rather than be silently retargeted.
 
 ## Module release manifests
 

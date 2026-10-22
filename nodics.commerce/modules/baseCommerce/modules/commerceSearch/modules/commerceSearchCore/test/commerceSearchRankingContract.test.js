@@ -57,6 +57,7 @@ test.beforeEach(() => {
     ruleRequests = [];
     global.CONFIG = { get: key => key === 'commerceSearch' ? properties.commerceSearch : undefined };
     global.SERVICE = {
+        DefaultCommerceSearchPolicyService: require('../src/service/defaultCommerceSearchPolicyService'),
         DefaultCommerceSearchRuleProjectionService: {
             get: async request => {
                 ruleRequests.push(request);
@@ -95,9 +96,9 @@ test('Commerce Search ranks pinned boosted and buried products for a category sc
 
 test('Commerce Search ignores unpublished non-matching or expired rules and preserves original order', async () => {
     global.SERVICE.DefaultCommerceSearchRuleProjectionService.get = async () => ({ result: [
-        Object.assign({}, rules[0], { categoryCode: 'otherCategory' }),
-        Object.assign({}, rules[0], { status: 'WITHDRAWN' }),
-        Object.assign({}, rules[0], { validTo: '2026-01-01T00:00:00.000Z' })
+        Object.assign({}, rules[0], { code: 'otherScope', categoryCode: 'otherCategory' }),
+        Object.assign({}, rules[0], { code: 'withdrawn', status: 'WITHDRAWN' }),
+        Object.assign({}, rules[0], { code: 'expired', validTo: '2026-01-01T00:00:00.000Z' })
     ] });
 
     let result = await ranking.rank({

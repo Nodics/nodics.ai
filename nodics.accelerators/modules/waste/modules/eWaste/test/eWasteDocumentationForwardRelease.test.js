@@ -25,6 +25,7 @@ const latestPredecessor = require('./fixtures/documentationFrozen003.json');
 const frozen004 = require('./fixtures/documentationFrozen004.json');
 const manifest = require('../data/manifest.json');
 const frozen005 = require('./fixtures/documentationFrozen005.json');
+const frozen006 = require('./fixtures/documentationFrozen006.json');
 function historicalRelease(section) { return { ...release(section), children: [], manifest: frozen005.sections[section] }; }
 function historicalArticle(section, code) { return contract.readReleaseRecords(historicalRelease(section), 'Component').records.find(row => row.code === code).properties; }
 
@@ -106,7 +107,7 @@ test('all frozen 0.0.4 payloads, assets and release seals retain their bytes', (
 test('semantic successors stay in docs-v001 and never overwrite any frozen predecessor', () => {
     for (const [name, previous] of Object.entries(baseline.sections)) {
         const next = manifest.sections[name];
-        assert.equal(next.version, name === 'documentation' ? '0.0.6' : '0.0.3');
+        assert.equal(next.version, name === 'documentation' ? '0.0.8' : '0.0.4');
         assert.equal(next.contentPath, 'docs-v001');
         assert.equal(next.sourceAuthority, 'data/docs-v001/records/documentation');
         assert.equal(next.pack, previous.pack);
@@ -135,14 +136,14 @@ test('forward packs preserve canonical identities and stage exactly one selected
         const selected = release(name);
         const headers = Object.keys(selected.manifest.generatedHashes).filter(file => /\/headers\/.*Headers?\.js$/.test(file));
         assert.equal(headers.length, 1);
-        assert.ok(headers[0].includes(name === 'documentation' ? 'Release006' : 'Release003'));
+        assert.ok(headers[0].includes(name === 'documentation' ? 'Release008' : 'Release004'));
         const selectedFiles = Object.keys(selected.manifest.generatedHashes);
         const header = require(path.join(root, 'data', headers[0]));
         const oldHeaderPath = Object.keys(previous.generatedHashes).find(file => /\/headers\//.test(file));
         const oldHeader = require(path.join(root, 'data', oldHeaderPath));
         const dispatch = input => Object.entries(input).flatMap(([moduleName, entries]) => Object.values(entries).map(entry => ({
             moduleName, schemaName: entry.options.schemaName, operation: entry.options.operation,
-            prefix: entry.options.dataFilePrefix.replace(/Release00[23456]/, ''), query: entry.query
+            prefix: entry.options.dataFilePrefix.replace(/Release00[2345678]/, ''), query: entry.query
         })));
         assert.deepEqual(dispatch(header), dispatch(oldHeader), 'Forward headers must retain owner dispatch order and query semantics');
         for (const entries of Object.values(header)) {
@@ -346,6 +347,7 @@ test('derived source metadata, navigation and article search targets match the c
         const selected = release(name);
         const components = contract.readReleaseRecords({ ...selected, children: [] }, 'Component').records;
         const pages = contract.readReleaseRecords({ ...selected, children: [] }, 'PageMetadata').records;
+        const nodes = contract.readReleaseRecords({ ...selected, children: [] }, 'Node').records;
         const searches = contract.readReleaseRecords({ ...selected, children: [] }, 'SearchMetadata').records;
         const navigation = components.find(record => record.renderer === 'documentation.component.navigation');
         for (const page of pages) {
@@ -356,9 +358,12 @@ test('derived source metadata, navigation and article search targets match the c
             assert.equal(page.sourceWordCount, contract.countWords(body));
             assert.equal(page.wordCount, page.sourceWordCount);
             assert.equal(page.sourcePath, properties.source.sourcePath);
-            assert.ok(page.sourcePath.includes(name === 'documentation' ? 'Release006ComponentData.js' : 'Release003ComponentData.js'));
+            assert.equal(properties.source.path, page.sourcePath);
+            assert.equal(properties.source.wordCount, page.sourceWordCount);
+            assert.ok(page.sourcePath.includes(name === 'documentation' ? 'Release008ComponentData.js' : 'Release004ComponentData.js'));
             assert.deepEqual(page.sourceEvidence, properties.sourceEvidence);
-            for (const search of searches.filter(record => record.targetCode === page.code)) {
+            const searchTargets = new Set([page.code, ...nodes.filter(node => node.targetDocumentationPage === page.code).map(node => node.code)]);
+            for (const search of searches.filter(record => searchTargets.has(record.targetCode))) {
                 assert.equal(search.searchText, properties.searchText);
             }
             if (navigation) {
@@ -415,7 +420,7 @@ test('reviewed deployment adoption selects the exact current successors for both
         assert.equal(descriptor.contentPackCode, packCode);
         assert.equal(pack.source.manifestSection, sectionName);
         assert.equal(descriptor.releaseVersion, manifest.sections[sectionName].version);
-        assert.equal(descriptor.releaseVersion, sectionName === 'documentation' ? '0.0.6' : '0.0.3');
+        assert.equal(descriptor.releaseVersion, sectionName === 'documentation' ? '0.0.8' : '0.0.4');
         contract.validateGeneration(latestPredecessor.sections[sectionName], manifest.sections[sectionName]);
         assert.ok(manifest.sections[sectionName].sites.includes(descriptor.rootCode));
         assert.equal(typeof descriptor.sourceVersion, 'string');
@@ -423,7 +428,7 @@ test('reviewed deployment adoption selects the exact current successors for both
     }
 });
 
- test('ownership successors preserve frozen bytes and remove retired selectors from all current record families', () => {
+test('ownership successors preserve frozen bytes and remove retired selectors from all current record families', () => {
     for (const [name, old] of Object.entries(frozen005.sections)) {
         for (const [file, hash] of Object.entries(old.generatedHashes)) assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
         contract.validateGeneration(old, manifest.sections[name]);
@@ -434,6 +439,129 @@ test('reviewed deployment adoption selects the exact current successors for both
         }
         for (const row of contract.readReleaseRecords({ ...selected, children: [] }, 'Component').records) {
             for (const source of row.properties.sourceEvidence || []) assert.ok(fs.existsSync(path.resolve(root, source)), source);
+        }
+    }
+});
+
+test('final-sale successors freeze both immediate predecessors and preserve every stable article identity and anchor', () => {
+    const seals = {
+        documentation: '7ab938bd4215eda83e9ba16b2f833abb0884145d4eedb41e66f06bf23f86e2b2',
+        referenceDocumentation: 'f6e1b7b5b52e6331a4a4f339a224be59513477dc50b62dba423c75e8c58fdd7c'
+    };
+    for (const [name, previous] of Object.entries(frozen006.sections)) {
+        assert.equal(previous.version, name === 'documentation' ? '0.0.6' : '0.0.3');
+        assert.equal(contract.releaseChecksum(previous.generatedHashes), seals[name]);
+        assert.equal(previous.releaseChecksum, seals[name]);
+        for (const [file, hash] of Object.entries(previous.generatedHashes)) {
+            assert.equal(contract.sha256(fs.readFileSync(path.join(root, 'data', file))), hash, file);
+        }
+        contract.validateGeneration(previous, manifest.sections[name]);
+        const sameVersion = { ...manifest.sections[name], version: previous.version };
+        assert.throws(() => contract.validateGeneration(previous, sameVersion), /Immutable documentation release changed/);
+        const oldRecords = contract.readReleaseRecords({ ...release(name), children: [], manifest: previous }, 'Component').records;
+        const current = contract.readReleaseRecords({ ...release(name), children: [] }, 'Component').records;
+        assert.deepEqual(current.map(row => row.code), oldRecords.map(row => row.code));
+        for (const row of current.filter(row => row.properties.blocks)) {
+            const old = oldRecords.find(old => old.code === row.code);
+            assert.equal(row.properties.route, old.properties.route);
+            assert.deepEqual(row.properties.references, old.properties.references);
+            assert.deepEqual(row.properties.headings.map(heading => heading.anchor), old.properties.headings.map(heading => heading.anchor));
+        }
+        for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata', 'PublicationState']) {
+            const oldFile = Object.keys(previous.generatedHashes).find(file => file.endsWith(suffix + 'Data.js'));
+            assert.equal(manifest.sections[name].generatedHashes[oldFile], undefined, oldFile);
+        }
+    }
+});
+
+test('every successor publication state seals its selected target without claiming Online approval', () => {
+    for (const name of ['documentation', 'referenceDocumentation']) {
+        const selected = release(name);
+        const targets = new Map();
+        for (const file of Object.keys(selected.manifest.generatedHashes).filter(file => /\/records\/.*Data\.js$/.test(file) && !file.endsWith('PublicationStateData.js'))) {
+            for (const row of Object.values(require(path.join(root, 'data', file)))) targets.set(row.code, row);
+        }
+        for (const state of contract.readReleaseRecords({ ...selected, children: [] }, 'PublicationState').records) {
+            assert.ok(targets.has(state.targetCode), state.targetCode);
+            assert.equal(state.checksum, contract.sha256(JSON.stringify(targets.get(state.targetCode))), state.code);
+            assert.equal(state.stagedVersion, selected.manifest.version);
+            assert.equal(state.lifecycleState, 'STAGED');
+            assert.equal(state.workflowRequired, true);
+            assert.deepEqual(state.auditTrail, []);
+            for (const field of ['onlineVersion', 'reviewer', 'approver', 'publisher', 'actor']) assert.equal(state[field], undefined, state.code + ':' + field);
+        }
+    }
+});
+
+test('current final-sale guides use common Digital owners and reject retired reversal evidence across derived families', () => {
+    for (const name of ['documentation', 'referenceDocumentation']) {
+        const selected = release(name);
+        for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata']) {
+            const records = contract.readReleaseRecords({ ...selected, children: [] }, suffix).records;
+            for (const record of records) {
+                assert.doesNotMatch(JSON.stringify(record), /defaultEWasteOrderReversal(?:Service|Controller)|DefaultEWasteOrderReversalService|ORIGINAL_TRANSFER_REVERSAL_ONLY_BEFORE_ONWARD_TRANSFER|refundsEnabled true/, record.code);
+                for (const source of record.sourceEvidence || record.properties?.sourceEvidence || []) {
+                    assert.ok(fs.existsSync(path.resolve(root, source)), source);
+                }
+            }
+        }
+    }
+    for (const [name, code] of [
+        ['documentation', 'nodicsDocsComponentacceleratorsCircaCatalogueReference'],
+        ['documentation', 'nodicsDocsComponentacceleratorsCircaCouponsCommerce'],
+        ['referenceDocumentation', 'circaDocsComponentcircaCustomerJourney']
+    ]) {
+        const properties = article(name, code);
+        const body = contract.documentationText(properties.blocks);
+        assert.match(body, /Completed digital bundle purchases are final sale/);
+        assert.match(body, /refund mutation phases refuse/);
+        assert.match(body, /Digital owns purchase and proceeds coordination/);
+        assert.match(body, /Loyalty alone writes balances/);
+        assert.match(body, /POST \/checkouts\/:commandCode\/recovery\/resume/);
+        assert.match(body, /never a return of a completed sale/);
+        assert.ok(properties.sourceEvidence.includes('llm/contracts/common-bundle-commerce.md'));
+        assert.ok(properties.sourceEvidence.some(source => source.endsWith('/bundle-settlement.md')));
+        assert.ok(properties.sourceEvidence.some(source => source.endsWith('/forward-purchase-recovery.md')));
+    }
+});
+
+test('current Circa coupon guidance requires finality and common Checkout while refund/expiry records remain historical', () => {
+    for (const [section, code] of [
+        ['documentation', 'nodicsDocsComponentacceleratorsCircaCouponsCommerce'],
+        ['documentation', 'nodicsDocsComponentacceleratorsCircaCatalogueReference'],
+        ['referenceDocumentation', 'circaDocsComponentcircaCustomerJourney'],
+        ['referenceDocumentation', 'circaDocsComponentcircaCustomerKnowledge']
+    ]) {
+        const body = contract.documentationText(article(section, code).blocks);
+        assert.match(body, /NON-REFUNDABLE/, code);
+        assert.match(body, /no restoration, no expiry and no partial redemption/, code);
+        assert.match(body, /Common Cart\/Checkout is the sole purchase flow/, code);
+        assert.match(body, /historical.*not current Circa activation/i, code);
+    }
+    const inventory = article('documentation', 'nodicsDocsComponentacceleratorsCircaSourceInventory');
+    assert.equal(inventory.blocks.find(block => block.anchor === 'acceleratorsCircaSourceInventory-original-unused-refund-exception').text,
+        'Historical unused-coupon refund exception');
+    const exception = inventory.blocks.find(block => block.kind === 'table' && block.headers[0] === 'Section')
+        .rows.find(row => row[0] === 'circaLocalUnusedRefundExceptionStaffAssignment');
+    assert.match(exception[4], /HISTORICAL ONLY.*not current Circa refund activation/);
+    for (const section of ['documentation', 'referenceDocumentation']) {
+        for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata']) {
+            for (const record of contract.readReleaseRecords({ ...release(section), children: [] }, suffix).records) {
+                assert.doesNotMatch(JSON.stringify(record), /POST \/nodics\/eWaste\/v0\/marketplace\/:code\/purchase|Ordinary unused-coupon refund policy is a separate Commerce decision|Ordinary coupon refund policy described above remains separate/, record.code);
+            }
+        }
+    }
+});
+
+test('current adoption guidance uses the module graph and pinned release, not removed runtime markers', () => {
+    const configuration = article('documentation', 'nodicsDocsComponentacceleratorsCircaConfigurationReference');
+    const body = contract.documentationText(configuration.blocks);
+    assert.match(body, /selected module graph and the exact pinned circa\.ewaste:waste-policy PROJECT release/);
+    for (const section of ['documentation', 'referenceDocumentation']) {
+        for (const suffix of ['Component', 'PageMetadata', 'SearchMetadata']) {
+            for (const record of contract.readReleaseRecords({ ...release(section), children: [] }, suffix).records) {
+                assert.doesNotMatch(JSON.stringify(record), /waste\.projectOverlay|waste\.accelerator/, record.code);
+            }
         }
     }
 });

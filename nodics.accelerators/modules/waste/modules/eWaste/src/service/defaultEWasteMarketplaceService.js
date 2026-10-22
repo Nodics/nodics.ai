@@ -10,7 +10,6 @@
  */
 
 "use strict";
-const crypto = require("node:crypto");
 /** @module eWaste/service/defaultEWasteMarketplaceService @description Composes Product discovery and customer Commerce checkout with Waste ownership and Loyalty references. @layer service @owner eWaste @override Configured stores and settlement policies remain in later layers. */
 module.exports = {
   /** Rejects incomplete catalogue reads without exposing provider details. */
@@ -20,13 +19,16 @@ module.exports = {
     throw error;
   },
   /** Calls only the configured store's published Product customer API. Caller store/runtime fields are never forwarded. */
-  products: function (request, path, page, policy) {
-    const storeCode = this.settings().storeCode;
-    const query = new URLSearchParams({ storeCode, locale: "en" });
-    if (page) {
-      query.set("page", String(page));
-      query.set("pageSize", String(policy.discoveryBatchSize));
-    }
+  products: function (request, path, selectors) {
+    const { storeCode, locale } = this.settings();
+    if (!this.bindingIdentifier(storeCode) || !this.bindingLocale(locale))
+      this.catalogueFailure("Marketplace discovery binding is unavailable", 503);
+    const query = new URLSearchParams({ storeCode, locale });
+    for (const key of ["view", "filters", "q", "sortCode", "page", "pageSize"])
+      if (selectors?.[key] !== undefined) {
+        if (!["string", "number"].includes(typeof selectors[key])) this.catalogueFailure("Invalid Product query");
+        query.set(key, String(selectors[key]));
+      }
     return this.experience().remote(
       request,
       "product",
@@ -34,48 +36,6 @@ module.exports = {
       path + "?" + query,
       "GET",
     );
-  },
-  /** Reads all published store pages for a consistent facet/count projection; fails explicitly at the configured bound. */
-  published: async function (
-    request,
-    policy,
-    readProducts = this.products.bind(this),
-  ) {
-    const products = [],
-      seen = new Set(),
-      batch = policy.discoveryBatchSize;
-    for (
-      let page = 1;
-      page <= Math.ceil(policy.maximumProducts / batch) + 1;
-      page++
-    ) {
-      if (request.isCancelled?.())
-        this.catalogueFailure("Catalogue request cancelled", 499);
-      const response = await readProducts(
-        request,
-        "/products/discovery",
-        page,
-        policy,
-      );
-      if (!Array.isArray(response.products))
-        this.catalogueFailure("Catalogue is temporarily unavailable", 503);
-      for (const product of response.products) {
-        if (seen.has(product.productCode))
-          this.catalogueFailure(
-            "Catalogue changed while loading. Refresh your results.",
-            503,
-          );
-        seen.add(product.productCode);
-        products.push(product);
-        if (products.length > policy.maximumProducts)
-          this.catalogueFailure(
-            "Catalogue exceeds its configured browsing limit",
-            503,
-          );
-      }
-      if (response.products.length < batch) return products;
-    }
-    this.catalogueFailure("Catalogue is temporarily unavailable", 503);
   },
   /** Projects customer-facing copy only; arbitrary localized attributes are never serialized. */
   copyLines: function (value) {
@@ -93,16 +53,31 @@ module.exports = {
       ? value
       : null;
   },
+  /** Checks only the public transport shape; Promotion remains the requirements authority and Product attributes are never consulted. */
+  acquisitionRequirements: function (product) {
+    const value = product.availability?.acquisitionRequirements;
+    const record = (item, keys) => item && Object.getPrototypeOf(item) === Object.prototype &&
+      Reflect.ownKeys(item).every(key => keys.includes(key) && Object.hasOwn(Object.getOwnPropertyDescriptor(item, key), 'value'));
+    const identifier = item => typeof item === 'string' && /^[A-Za-z0-9_.:@-]{1,256}$/.test(item);
+    if (!record(value, ['type', 'certificates']) || !['REWARDS', 'CERTIFICATES', 'BOTH'].includes(value.type)) return null;
+    if (value.type === 'REWARDS') return Object.keys(value).length === 1 ? { type: value.type } : null;
+    const c = value.certificates;
+    if (!record(c, ['quantity', 'categoryCode', 'milestoneCode', 'brandCodes', 'modelCodes']) ||
+        !Number.isSafeInteger(c.quantity) || c.quantity < 1 || !identifier(c.categoryCode) || !identifier(c.milestoneCode)) return null;
+    for (const key of ['brandCodes', 'modelCodes']) if (Object.hasOwn(c, key) &&
+        (!Array.isArray(c[key]) || !c[key].length || c[key].some(code => !identifier(code)) || new Set(c[key]).size !== c[key].length)) return null;
+    return structuredClone(value);
+  },
   /** Composes a published product with its current listed asset; private Waste evidence and customer details are excluded. */
   offer: async function (request, product, catalogue) {
     const attrs = product.localizedAttributes || {},
       price = product.price;
     if (
-      !["ASSET", "COUPON"].includes(attrs.kind) ||
+      !["ASSET", "BUNDLE", "COUPON"].includes(attrs.kind) ||
       !price ||
       price.currency !== this.settings().currency ||
-      !Number.isFinite(Number(price.unitAmount)) ||
-      Number(price.unitAmount) <= 0
+      !/^(0|[1-9]\d*)(\.\d+)?$/.test(String(price.unitAmount)) ||
+      (attrs.kind !== "COUPON" && !/[1-9]/.test(String(price.unitAmount)))
     )
       return null;
     if (
@@ -111,7 +86,23 @@ module.exports = {
         Date.parse(attrs.expiresAt) <= Date.now())
     )
       return null;
-    let asset, descriptor;
+    const commerce = this.commerceBinding(product);
+    if (!commerce) return null;
+    const acquisitionRequirements = attrs.kind === 'COUPON' ? this.acquisitionRequirements(product) : undefined;
+    let asset, descriptor, auction;
+    if (attrs.kind === 'BUNDLE' && (attrs.saleMode === 'AUCTION' || attrs.commerceBidding?.mode === 'AUCTION')) {
+      const terms = attrs.commerceBidding;
+      if (terms?.enabled !== true || terms.mode !== 'AUCTION' || typeof terms.publicationCode !== 'string')
+        this.catalogueFailure('Published bundle auction terms are unavailable');
+      const source = await this.experience().remote(request, 'bidding', 'commerce', '/internal/auctions/publication', 'POST', {
+        productCode: product.productCode, publicationCode: terms.publicationCode, storeCode: this.settings().storeCode,
+      });
+      if (source?.productCode !== product.productCode || source.publicationCode !== terms.publicationCode ||
+          source.storeCode !== this.settings().storeCode || !(source.roundCode === null || /^AUCTION_[a-f0-9]{64}$/.test(source.roundCode)))
+        this.catalogueFailure('Published bundle auction binding is unconfirmed');
+      auction = { biddingMode: 'AUCTION', biddingAvailable: true,
+        ...(source.roundCode ? { auction: { roundCode: source.roundCode, storeCode: source.storeCode } } : {}) };
+    }
     if (attrs.kind === "ASSET") {
       if (
         typeof attrs.assetCode !== "string" ||
@@ -151,31 +142,29 @@ module.exports = {
             typeof image?.altText === "string" ? image.altText : product.name,
         });
     }
-    const classification = descriptor?.classification?.category;
+    const categoryCode = product.categoryCodes?.[0];
     return {
       code: product.productCode,
-      kind: attrs.kind,
+      kind: attrs.kind === "BUNDLE" ? "ASSET" : attrs.kind,
       name: product.name,
       description: product.description || product.summary,
       issuer: attrs.issuer,
-      rewardPrice: Number(price.unitAmount),
+      rewardPrice: String(price.unitAmount),
       currency: price.currency,
       revision: asset ? asset.revision : product.version,
       variantCode: (product.variantCodes || [])[0],
+      commerce,
+      ...(attrs.ownerRef ? { ownerRef: attrs.ownerRef } : {}),
       imageUrl: gallery[0]?.url,
       gallery,
       expiresAt: attrs.expiresAt,
-      category: classification
-        ? {
-            code: classification.code,
-            label:
-              typeof classification.name === "string"
-                ? classification.name
-                : classification.name?.en || classification.code,
-          }
-        : null,
+      category: categoryCode ? { code: categoryCode, label: product.categories?.find(c => c.code === categoryCode)?.name || categoryCode } : null,
+      categoryCodes: product.categoryCodes || [],
       condition: descriptor?.condition?.value || null,
-      available: product.availability?.available !== false,
+      available: product.availability?.available === true && (attrs.kind !== 'COUPON' || acquisitionRequirements !== null),
+      ...(attrs.kind === "BUNDLE" ? { bundleRef: attrs.bundleRef, listingWindow: attrs.listingWindow } : {}),
+      ...auction,
+      ...(attrs.kind === 'COUPON' ? { acquisitionRequirements } : {}),
       terms: this.copyLines(attrs.terms),
       eligibility: this.copyLines(attrs.eligibility),
       exclusions: this.copyLines(attrs.exclusions),
@@ -219,9 +208,10 @@ module.exports = {
           .slice(offset, offset + 10)
           .map((product) => projectOffer(request, product, catalogue)),
       );
-      for (const offer of offers)
-        if (offer)
-          output[offer.kind === "ASSET" ? "assets" : "coupons"].push(offer);
+      for (const offer of offers) {
+        if (offer?.kind === "ASSET" || offer?.kind === "BUNDLE") output.assets.push(offer);
+        else if (offer?.kind === "COUPON") output.coupons.push(offer);
+      }
     }
     return output;
   },
@@ -258,6 +248,25 @@ module.exports = {
   settings: function () {
     return this.experience().settings().marketplace || {};
   },
+  /** Runtime-specific identities are required selections, never implicit programmes or currencies. */
+  bindingIdentifier: function (value) {
+    return typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,191}$/.test(value);
+  },
+  /** Validates a bounded locale without selecting a replacement language. */
+  bindingLocale: function (value) {
+    return typeof value === "string" && value.length <= 64 && /^[A-Za-z]{2,8}(-[A-Za-z0-9]{1,8})*$/.test(value);
+  },
+  /** Only complete configured bindings with a retained Product variant are actionable. */
+  commerceBinding: function (product) {
+    const settings = this.settings();
+    const binding = Object.fromEntries(["storeCode", "currency", "jurisdiction", "programCode", "rewardTypeCode"]
+      .map(key => [key, settings[key]]));
+    const locale = product.locale ?? settings.locale, variantCode = product.variantCodes?.[0];
+    if (!Object.values(binding).every(value => this.bindingIdentifier(value)) ||
+        !this.bindingLocale(locale) || !this.bindingIdentifier(variantCode) || product.price?.currency !== binding.currency)
+      return null;
+    return { ...binding, locale, variantCode };
+  },
   /** Calls a customer-scoped owner API using the original access token. */
   customerRemote: async function (request, moduleName, path, method, body) {
     const result = await SERVICE.DefaultModuleService.invokeModule({
@@ -283,24 +292,11 @@ module.exports = {
   },
   /** Joins only currently listed Waste assets with published Product prices and safe offer fields. */
   list: async function (request) {
-    if (this.settings().catalogueDiscovery === true)
-      return SERVICE.DefaultEWasteCatalogueService.marketplace(request);
-    const storeCode = this.settings().storeCode;
-    if (!storeCode) return { assets: [], coupons: [] };
-    const catalogue = await this.experience().remote(
-      request,
-      "product",
-      "commerce",
-      "/products/discovery?storeCode=" +
-        encodeURIComponent(storeCode) +
-        "&locale=en&pageSize=100",
-      "GET",
-    );
-    return this.catalogueOffers(
-      request,
-      catalogue.products || [],
-      this.marketplaceOffer.bind(this),
-    );
+    const owner = SERVICE.DefaultEWasteCatalogueService;
+    const assets = await owner.catalogue({ ...request, query: { ...request.query, kind: "ASSET" } });
+    const coupons = await owner.catalogue({ ...request, query: { ...request.query, kind: "COUPON" } });
+    return { assets: assets.items, coupons: coupons.items,
+      pagination: { assets: assets.pagination, coupons: coupons.pagination } };
   },
   /** Retains the domain marketplace DTO while reusing the published-offer safety checks. */
   marketplaceOffer: async function (request, product, catalogue) {
@@ -324,6 +320,13 @@ module.exports = {
       revision: offer.revision,
       variantCode: offer.variantCode,
       expiresAt: offer.expiresAt,
+      commerce: offer.commerce,
+      available: offer.available,
+      saleMode: offer.saleMode,
+      ...(offer.ownerRef ? { ownerRef: offer.ownerRef } : {}),
+      ...(offer.bundleRef ? { bundleRef: offer.bundleRef, listingWindow: offer.listingWindow } : {}),
+      ...(offer.biddingMode === 'AUCTION' ? { biddingMode: 'AUCTION', ...(offer.auction ? { auction: offer.auction } : {}) } : {}),
+      ...(offer.kind === 'COUPON' ? { acquisitionRequirements: offer.acquisitionRequirements } : {}),
       ...(offer.kind === "ASSET"
         ? {
             assetCode: offer.assetCode,
@@ -334,78 +337,52 @@ module.exports = {
         : {}),
     };
   },
-  /** Restricts this domain adapter to Waste asset bids in its configured Commerce store. */
-  isDomainBid: function (bid) {
-    return (
-      bid?.storeCode === this.settings().storeCode &&
-      bid.sourceRef?.module === "wasteCore" &&
-      bid.sourceRef?.schema === "wasteAsset" &&
-      !!bid.sourceRef?.code
-    );
-  },
-  /** Lists the customer's domain bids from the generic Commerce participant API. */
+  /** Collects bounded complete Bidding pages with original signed participant identity and a governed Store. */
   bids: async function (request) {
-    this.experience().store().customer(request);
-    const result = await this.customerRemote(
-      request,
-      "bidding",
-      "/bids",
-      "GET",
-    );
-    return {
-      ...result,
-      bids: (result.bids || []).filter((bid) => this.isDomainBid(bid)),
-    };
-  },
-  /** Submits confirmed terms to the Commerce Bidding owner using the published Product identity. */
-  placeBid: async function (request) {
-    this.experience().store().customer(request);
-    const market = await this.list(request),
-      offer = market.assets.find((item) => item.code === request.code);
-    if (!offer || !offer.biddingAvailable)
-      this.experience()
-        .store()
-        .fail(
-          "ERR_EWASTE_OFFER_UNAVAILABLE",
-          "This offer is no longer available",
-        );
-    return this.customerRemote(request, "bidding", "/bids", "POST", {
-      productCode: offer.code,
-      variantCode: offer.variantCode,
-      storeCode: this.settings().storeCode,
-      amount: String(request.payload.amount),
-      confirmed: request.confirmed,
-      idempotencyKey: request.idempotencyKey,
-    });
-  },
-  /** Delegates seller acceptance or buyer withdrawal without reproducing Commerce permission or quote rules. */
-  decideBid: async function (request) {
-    this.experience().store().customer(request);
-    const bid = await this.customerRemote(
-      request,
-      "bidding",
-      "/bids/" + encodeURIComponent(request.code),
-      "GET",
-    );
-    if (!this.isDomainBid(bid))
-      this.experience()
-        .store()
-        .fail(
-          "ERR_EWASTE_OFFER_UNAVAILABLE",
-          "This bid does not belong to this marketplace",
-        );
-    return this.customerRemote(
-      request,
-      "bidding",
-      "/bids/" + encodeURIComponent(request.code) + "/decisions",
-      "POST",
-      {
-        action: request.payload.action,
-        expectedRevision: request.expectedRevision,
-        confirmed: request.confirmed,
-        idempotencyKey: request.idempotencyKey,
-      },
-    );
+    const same = require('node:util').isDeepStrictEqual;
+    const settings = this.settings(), p = settings.auctionHistory, auth = request.authData;
+    const target = this.experience().settings().targetAuthorities?.commerce;
+    const enterprise = auth?.enterpriseCode || auth?.entCode;
+    if (!p || !Number.isSafeInteger(p.maximumPages) || p.maximumPages < 1 ||
+        !Number.isSafeInteger(p.maximumRounds) || p.maximumRounds < 1 ||
+        !Number.isSafeInteger(p.timeoutMs) || p.timeoutMs < 1 ||
+        !this.bindingIdentifier(settings.storeCode) || target?.runtimeRole !== 'COMMERCE' ||
+        !auth || auth.isSystem || auth.tokenType !== 'access' ||
+        !['customer', 'human'].includes(auth.principalType) || !auth.loginId || !enterprise ||
+        !auth.tenant || auth.tenant !== request.tenant || typeof request.authorization !== 'string' ||
+        !request.authorization.startsWith('Bearer ') ||
+        [auth.entCode, auth.enterpriseCode, request.httpRequest?.headers?.['x-enterprise-code']]
+          .some(value => value !== undefined && value !== enterprise) ||
+        Object.keys(request.payload || {}).length || Object.keys(request.query || {}).length)
+      this.catalogueFailure('Auction history authority or configuration is unavailable', 403);
+    const pin = structuredClone({ auth, authorization: request.authorization, tenant: request.tenant,
+      storeCode: settings.storeCode, policy: p, target: this.experience().settings().targetAuthorities?.commerce });
+    const rounds = [], seen = new Set(); let cursor = null;
+    for (let page = 0; page < p.maximumPages; page++) {
+      const query = new URLSearchParams({ storeCode: pin.storeCode, ...(cursor ? { afterCode: cursor } : {}) });
+      const result = this.experience().unwrap(await SERVICE.DefaultModuleService.invokeModule({
+        local: false, moduleName: 'bidding', connectionName: 'commerce', targetAuthority: pin.target,
+        tenant: pin.tenant, request: { tenant: pin.tenant }, methodName: 'GET', apiName: '/auctions?' + query,
+        header: { Authorization: pin.authorization, 'X-Enterprise-Code': enterprise },
+        timeoutMs: p.timeoutMs, maxAttempts: 1,
+      }));
+      if (!same(pin, { auth: request.authData, authorization: request.authorization, tenant: request.tenant,
+        storeCode: this.settings().storeCode, policy: this.settings().auctionHistory,
+        target: this.experience().settings().targetAuthorities?.commerce }) ||
+        !Array.isArray(result?.rounds) || result.afterCode !== null &&
+        (typeof result.afterCode !== 'string' || !/^AUCTION_[a-f0-9]{64}$/.test(result.afterCode) ||
+          cursor !== null && result.afterCode <= cursor))
+        this.catalogueFailure('Auction history is incomplete');
+      for (const round of result.rounds) {
+        if (!round || !/^AUCTION_[a-f0-9]{64}$/.test(round.code) || round.storeCode !== pin.storeCode ||
+            seen.has(round.code) || !['SELLER', 'BUYER'].includes(round.participantRole) ||
+            rounds.length >= p.maximumRounds) this.catalogueFailure('Auction history is incomplete');
+        seen.add(round.code); rounds.push(round);
+      }
+      cursor = result.afterCode;
+      if (cursor === null) return { auctions: rounds };
+    }
+    this.catalogueFailure('Auction history exceeds its configured bound');
   },
   /** Returns purchase and entitlement history through the customer's owning Commerce APIs. */
   purchases: async function (request) {
@@ -463,234 +440,5 @@ module.exports = {
       "POST",
       { confirmed: true },
     );
-  },
-  /** Confirms one exact published offer, then delegates pricing, reservations, payment and order placement to Commerce. */
-  purchase: async function (request) {
-    const store = this.experience().store(),
-      owner = store.customer(request),
-      settings = this.settings();
-    if (request.confirmed !== true)
-      store.fail(
-        "ERR_EWASTE_CONFIRMATION_REQUIRED",
-        "Review and confirm your purchase",
-      );
-    const key = request.idempotencyKey;
-    if (typeof key !== "string" || key.length < 8 || key.length > 200)
-      store.fail(
-        "ERR_EWASTE_COMMAND_REQUIRED",
-        "A purchase reference is required",
-      );
-    let bid;
-    if (request.payload && request.payload.bidCode) {
-      bid = await this.customerRemote(
-        request,
-        "bidding",
-        "/bids/" + encodeURIComponent(request.payload.bidCode),
-        "GET",
-      );
-      if (
-        !this.isDomainBid(bid) ||
-        bid.buyerCustomerCode !== owner.code ||
-        bid.productCode !== request.code ||
-        bid.storeCode !== settings.storeCode ||
-        bid.currency !== settings.currency ||
-        (bid.status !== "ACCEPTED" && bid.purchaseStatus !== "COMPLETED")
-      )
-        store.fail(
-          "ERR_EWASTE_OFFER_UNAVAILABLE",
-          "This accepted bid is not available for your purchase",
-        );
-      if (key !== bid.code + ":checkout")
-        store.fail(
-          "ERR_EWASTE_COMMAND_CONFLICT",
-          "Use the checkout reference supplied for this accepted bid",
-        );
-    }
-    const orderCode = bid
-      ? bid.orderCode
-      : this.settings().orderCodePrefix +
-        crypto
-          .createHash("sha256")
-          .update(owner.code + ":" + key)
-          .digest("hex")
-          .slice(0, 24)
-          .toUpperCase();
-    const existing = await this.customerRemote(
-      request,
-      "checkoutCore",
-      "/checkouts/" + encodeURIComponent(orderCode),
-      "GET",
-    );
-    if (existing.status === "COMPLETED") {
-      const prior = await this.customerRemote(
-        request,
-        "order",
-        "/orders/" + encodeURIComponent(orderCode),
-        "GET",
-      );
-      if (
-        !prior.entries ||
-        prior.entries.length !== 1 ||
-        prior.entries[0].productCode !== request.code
-      )
-        store.fail(
-          "ERR_EWASTE_COMMAND_CONFLICT",
-          "This purchase reference belongs to a different offer",
-        );
-      const eventCode =
-        SERVICE.DefaultWasteAssetTransferOperationService.eventCode(
-          Object.assign({}, request, { actorRef: owner }),
-        );
-      const event = await store.one(
-        "wasteAssetOwnershipEvent",
-        request,
-        eventCode,
-      );
-      if (event)
-        await SERVICE.DefaultEWasteAssetOperationService.completeSale(
-          Object.assign({}, request, { commerceOrderCode: orderCode }),
-        );
-      return {
-        code: orderCode,
-        message:
-          "This purchase is complete. Its ownership or coupon is available in My Account.",
-      };
-    }
-    const market = await this.list(request);
-    const pendingCode =
-      SERVICE.DefaultWasteAssetTransferOperationService.eventCode(
-        Object.assign({}, request, { actorRef: owner }),
-      );
-    const pending = await store.one(
-      "wasteAssetOwnershipEvent",
-      request,
-      pendingCode,
-    );
-    let offer =
-      market.assets
-        .concat(market.coupons)
-        .find((o) => o.code === request.code) ||
-      (pending &&
-      pending.metadata.offer &&
-      pending.metadata.offer.code === request.code
-        ? pending.metadata.offer
-        : undefined);
-    if (!offer)
-      store.fail(
-        "ERR_EWASTE_OFFER_UNAVAILABLE",
-        "This offer is no longer available",
-      );
-    if (bid) {
-      if (
-        offer.kind !== "ASSET" ||
-        offer.ownerCode !== bid.sellerRef?.code ||
-        bid.sellerRef?.module !== "profile" ||
-        bid.sellerRef?.schema !== "customer"
-      )
-        store.fail("ERR_EWASTE_OFFER_CHANGED", "The asset seller changed");
-      offer = {
-        ...offer,
-        rewardPrice: Number(bid.amount),
-        priceQuoteCode: bid.priceQuoteCode,
-      };
-    }
-    if (offer.ownerCode === owner.code)
-      store.fail("ERR_EWASTE_SELF_PURCHASE", "You already own this asset");
-    if (!pending && offer.revision !== request.expectedRevision)
-      store.fail(
-        "ERR_EWASTE_OFFER_CHANGED",
-        "This offer changed. Reload it and review the current details",
-      );
-    const wallet = await this.experience().wallet(request);
-    const balance = (wallet.balances || []).find(
-      (b) =>
-        b.rewardTypeCode === settings.rewardTypeCode &&
-        b.programCode === settings.programCode,
-    );
-    if (!balance || Number(balance.available) < offer.rewardPrice)
-      store.fail(
-        "ERR_EWASTE_BALANCE_INSUFFICIENT",
-        "You do not have enough available reward points",
-      );
-    if (offer.kind === "ASSET")
-      await SERVICE.DefaultEWasteAssetOperationService.reserveSale(
-        Object.assign({}, request, { offer }),
-      );
-    const cartCode = orderCode + "_CART";
-    const cart = await this.customerRemote(request, "cart", "/carts", "POST", {
-      cartCode: cartCode,
-      storeCode: settings.storeCode,
-      currency: settings.currency,
-      jurisdiction: settings.jurisdiction,
-      locale: "en",
-    });
-    const added = await this.customerRemote(
-      request,
-      "cart",
-      "/carts/" + encodeURIComponent(cartCode) + "/entries",
-      "POST",
-      {
-        productCode: offer.code,
-        variantCode: offer.variantCode,
-        priceQuoteCode: offer.priceQuoteCode,
-        quantity: 1,
-        entryCode: cartCode + "_ENTRY",
-        idempotencyKey: key + ":entry",
-      },
-    );
-    const calculation =
-      (added.calculation && added.calculation.calculation) || added.calculation;
-    if (!calculation || Number(calculation.totalAmount) !== offer.rewardPrice)
-      store.fail(
-        "ERR_EWASTE_OFFER_CHANGED",
-        "The checkout price changed. Reload and review before purchasing",
-      );
-    const checkout = await this.customerRemote(
-      request,
-      "checkoutCore",
-      "/checkouts/place",
-      "POST",
-      {
-        cartCode: cartCode,
-        orderCode: orderCode,
-        expectedCartRevision: added.cart.revision,
-        calculationCode: orderCode + "_CALC",
-        paymentMethod: "LOYALTY_REWARD",
-        walletCode: wallet.wallet.code,
-        programCode: settings.programCode,
-        rewardTypeCode: settings.rewardTypeCode,
-        rewardCurrency: settings.currency,
-        rewardAmount: String(offer.rewardPrice),
-        idempotencyKey: key,
-      },
-    );
-    if (!checkout || checkout.status !== "COMPLETED")
-      store.fail(
-        "ERR_EWASTE_PURCHASE_PENDING",
-        "Your purchase needs confirmation. Keep its reference and check My Account before retrying.",
-      );
-    if (offer.kind === "ASSET") {
-      const settlement =
-        await SERVICE.DefaultEWasteAssetOperationService.completeSale(
-          Object.assign({}, request, {
-            offer: offer,
-            commerceOrderCode: orderCode,
-          }),
-        );
-      return { code: orderCode, message: settlement.message };
-    }
-    const issued = await this.customerRemote(
-      request,
-      "digitalCore",
-      "/entitlements",
-      "GET",
-    );
-    return {
-      code: orderCode,
-      message: "The coupon entitlement has been issued to your account.",
-      entitlementCode: (issued.entitlements || []).find(
-        (e) => e.orderCode === orderCode,
-      )?.code,
-    };
   },
 };

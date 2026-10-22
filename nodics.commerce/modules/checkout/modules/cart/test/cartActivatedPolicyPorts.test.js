@@ -123,10 +123,18 @@ test('missing active receipts and conflicting Cart scope reject without source f
 });
 
 test('Promotion delegates the existing quote owner and negotiated Pricing retains its private authority', async () => {
-    const { ports } = setup();
-    global.SERVICE.DefaultPromotionOperationService = { quote: async request => {
+    setup();
+    const ownerRef = { module: 'profile', schema: 'customer', code: cart.ownerId };
+    const scopedCart = { ...cart, locale: 'en', ownerRef };
+    const ports = portsService.create(scopedCart, { tenant: cart.tenant, enterpriseCode: 'participant', locale: 'en',
+        ownerId: 'signed-actor-not-canonical-owner', ownerRef: { module: 'profile', schema: 'customer', code: 'signed-actor-not-canonical-owner' },
+        authData: { tenant: cart.tenant, enterpriseCode: 'participant', tokenType: 'access', principalType: 'customer', principalId: cart.ownerId } });
+    global.SERVICE.DefaultPromotionOperationService = { trustedQuote: async (original, request) => {
+        assert.equal(original.ownerId, cart.ownerId);
+        assert.deepEqual(original.ownerRef, ownerRef);
         assert.equal(request.enterpriseCode, cart.enterpriseCode);
         assert.equal(request.authData.tenant, cart.tenant);
+        assert.equal(request.authData.principalType, 'service');
         return { discountAmount: '4' };
     } };
     assert.equal((await ports.promotion(input)).discountAmount, '4');
@@ -147,7 +155,7 @@ test('disabled delivery retains legacy reads and synchronous Tax compatibility',
     assert.equal(reads, 3);
 });
 
-test('activated Promotion quote preserves detached original signed authority, not synthetic Cart service auth', async t => {
+test('activated Promotion quote separates detached original authority from seller service auth', async t => {
     const previous = { SERVICE: global.SERVICE, CONFIG: global.CONFIG };
     t.after(() => Object.assign(global, previous));
     const { settings } = setup();
@@ -155,20 +163,22 @@ test('activated Promotion quote preserves detached original signed authority, no
         principalType: 'customer', principalId: cart.ownerId };
     const original = { ...input, ownerId: cart.ownerId, authData: structuredClone(authData) };
     const ports = portsService.create(cart, original), reads = [];
-    SERVICE.DefaultPromotionOperationService = { quote: async request => { reads.push(request); return { discountAmount: '0' }; } };
+    SERVICE.DefaultPromotionOperationService = { trustedQuote: async (source, request) => { reads.push({ source, request }); return { discountAmount: '0' }; },
+        quote: async request => { reads.push({ request }); return { discountAmount: '0' }; } };
     original.authData.enterpriseCode = 'foreign';
     await ports.promotion(input);
-    assert.deepEqual(reads[0].authData, authData);
-    assert.notEqual(reads[0].authData, original.authData);
-    reads[0].authData.enterpriseCode = 'mutated-downstream';
+    assert.deepEqual(reads[0].source.authData, authData);
+    assert.equal(reads[0].request.authData.principalType, 'service');
+    assert.notEqual(reads[0].source.authData, original.authData);
+    reads[0].source.authData.enterpriseCode = 'mutated-downstream';
     await ports.promotion(input);
-    assert.deepEqual(reads[1].authData, authData, 'A quote cannot alter the retained origin for the next call');
-    assert.notEqual(reads[0].authData, reads[1].authData);
+    assert.deepEqual(reads[1].source.authData, authData, 'A quote cannot alter the retained origin for the next call');
+    assert.notEqual(reads[0].source.authData, reads[1].source.authData);
     await assert.rejects(ports.promotion({ ...input, enterpriseCode: 'foreign' }), /scope mismatch/);
     assert.equal(reads.length, 2);
     settings.promotion.publication.delivery.enabled = false;
     await portsService.create(cart, original).promotion({ ...input, authData: { principalType: 'customer' } });
-    assert.equal(reads[2].authData.principalType, 'service', 'Unselected defaults preserve existing internal calculation authority');
+    assert.equal(reads[2].request.authData.principalType, 'service', 'Unselected defaults preserve existing internal calculation authority');
 });
 
 test('row delivery Cart pricing obtains exact owner Product pins and ignores supplied pins', async t => {

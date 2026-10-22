@@ -78,6 +78,20 @@ Runtime exposure and permission checks remain in the existing request owners.
 - Avoid examples: `/customer/carts`, `/customer/products/:productCode`,
   `/operator/products/publication/search`, `/backoffice/promotions/drafts`.
 
+## Route registration precedence
+
+Explicit routes declared by the owning module bind before schema-generated
+routes. Shared common routes with parameter segments bind last and act only as
+fallbacks. For example, `POST /participants/search` must reach Profile's
+participant-directory controller even when nSearch also contributes
+`POST /:indexName/search` to the same runtime.
+
+Keep this precedence in nRouter. Do not rename an owned resource route, disable
+a reusable fallback, or add a customer override to work around registration
+order. A route-precedence change requires a focused registration-order test and
+a fresh-runtime API probe because an already running Express stack retains its
+original binding order.
+
 ## HTTP boundary defaults
 
 `httpHardening.cors.allowedHeaderOverrides` and `exposedHeaderOverrides` default

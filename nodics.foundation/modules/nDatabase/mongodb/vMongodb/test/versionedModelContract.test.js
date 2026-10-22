@@ -123,6 +123,48 @@ async function validateVersionedSaveRejectsChangedStaleReplay() {
     }), /it should be: 1/);
 }
 
+async function validateGovernedVersionedImportAdvancesOnlyThePinnedRevision() {
+    const existing = {
+        code: 'governed-import',
+        name: 'Existing',
+        tags: ['retained', 'tail'],
+        versionId: 2
+    };
+    const schemaModel = modelWithItems([existing]);
+    const saved = await schemaModel.saveVersionedItems({
+        query: { code: existing.code, versionId: 2 },
+        searchOptions: {},
+        model: { code: existing.code, name: 'Changed', tags: ['retained'], versionId: 2 },
+        options: { governedVersionedImport: true }
+    });
+    assert.strictEqual(saved.versionId, 3);
+    assert.strictEqual(saved.name, 'Changed');
+    assert.deepStrictEqual(saved.tags, ['retained', 'tail'],
+        'governed root import must not acquire CMS array-replacement semantics');
+
+    for (const query of [{ code: existing.code }, { code: existing.code, versionId: 1 }]) {
+        const rejected = modelWithItems([existing]);
+        await assert.rejects(rejected.saveVersionedItems({
+            query,
+            searchOptions: {},
+            model: { code: existing.code, name: 'Changed', versionId: 2 },
+            options: { governedVersionedImport: true }
+        }), /it should be: 3/);
+        assert.strictEqual(rejected.inserted, undefined,
+            'missing or stale governed revision pins must not write');
+    }
+
+    const replay = modelWithItems([existing]);
+    const replayed = await replay.saveVersionedItems({
+        query: { code: existing.code, versionId: 2 },
+        searchOptions: {},
+        model: Object.assign({}, existing),
+        options: { governedVersionedImport: true }
+    });
+    assert.strictEqual(replayed.versionId, 2);
+    assert.strictEqual(replay.inserted, undefined, 'identical governed replay remains a no-op');
+}
+
 async function validateVersionedUpdateUsesGetItemsEnvelope() {
     const schemaModel = modelWithItems([{ code: 'item-1', name: 'Old', versionId: 2 }]);
     const updated = await schemaModel.updateVersionedItems({
@@ -406,6 +448,7 @@ validateVersionedSaveUsesGetItemsEnvelope()
     .then(validateVersionedSaveSupportsCurrentMongoInsertResult)
     .then(validateVersionedSaveAcceptsIdenticalReplay)
     .then(validateVersionedSaveRejectsChangedStaleReplay)
+    .then(validateGovernedVersionedImportAdvancesOnlyThePinnedRevision)
     .then(validateVersionedUpdateUsesGetItemsEnvelope)
     .then(validateInvalidVersionIdentityHasNoPersistenceEffects)
     .then(validateMalformedHistoryNeverBecomesEmptyHistory)

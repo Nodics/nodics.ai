@@ -10,6 +10,7 @@
  */
 
 "use strict";
+const composedContexts = new WeakMap();
 
 /**
  * @module loyaltyWallet/src/service/defaultLoyaltyTransactionService
@@ -24,8 +25,49 @@
  */
 module.exports = {
   /**
+   * Identifies active owner-created composition tokens without trusting caller flags.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {boolean} Whether the private transaction token is active for this request.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
+  isComposed: function (request) { return composedContexts.has(request.transactionContext); },
+  /**
+   * Joins only an active Loyalty composition token; callers cannot opt out of transaction admission.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {string|Function|Object} operation Owner-selected operation, transaction callback or persisted operation as described above.
+   * @returns {*} Joins only an active Loyalty composition token; callers cannot opt out of transaction admission.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
+  join: function (request, operation) {
+    const scope = composedContexts.get(request.transactionContext);
+    if (!scope || scope.tenant !== request.tenant || request.authData?.tenant !== scope.tenant)
+      this.fail("ERR_LOYALTY_TRANSACTION_CONTEXT");
+    return operation();
+  },
+
+  /**
+   * Runs a multi-operation Loyalty command atomically; unlike optional run, this refuses disabled transactions.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {string|Function|Object} operation Owner-selected operation, transaction callback or persisted operation as described above.
+   * @returns {Promise<*>} Runs a multi-operation Loyalty command atomically; unlike optional run, this refuses disabled transactions.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
+  compose: async function (request, operation) {
+    this.qualify(request);
+    return this.run(request, async () => {
+      const token = request.transactionContext;
+      composedContexts.set(token, { tenant: request.tenant });
+      try { return await operation(); }
+      finally { composedContexts.delete(token); }
+    });
+  },
+  /**
    * Reads effective optional Loyalty transaction selection without enabling it.
    * @returns {Object} The layered loyalty.transactions policy, or an empty policy.
+   *
+   * @override Preserve private admission, original context and owner side effects.
    */
   policy: function () {
     return ((typeof CONFIG !== "undefined" && CONFIG.get("loyalty")) || {}).transactions || {};
@@ -35,6 +77,7 @@ module.exports = {
    * Throws an owner-defined refusal without exposing provider or request data.
    * @param {string} code Stable ERR_LOYALTY_TRANSACTION code.
    * @returns {never} Always throws a NodicsError, or Error outside the runtime.
+   * @override Preserve private admission, original context and owner side effects.
    */
   fail: function (code) {
     const error = typeof CLASSES !== "undefined" && CLASSES.NodicsError
@@ -54,7 +97,7 @@ module.exports = {
    */
   scope: function (request, policy) {
     const tenant = request.tenant === undefined ? request.authData?.tenant : request.tenant;
-    const moduleName = policy.moduleName === undefined ? "loyaltyWallet" : policy.moduleName;
+    const moduleName = policy.moduleName;
     if (typeof tenant !== "string" || !tenant || tenant !== tenant.trim() ||
         typeof moduleName !== "string" || !moduleName || moduleName !== moduleName.trim() ||
         (request.authData?.tenant !== undefined && request.authData.tenant !== tenant)) {
@@ -125,6 +168,7 @@ module.exports = {
    * work. Work/provider failures propagate unchanged, without bridge retries/fallback.
    * @sideEffects Temporarily defines transactionContext and restores its original
    * property descriptor or absence in finally. Other request fields are untouched.
+   * @override Preserve private admission, original context and owner side effects.
    */
   run: async function (request, operation) {
     if (typeof operation !== "function") this.fail("ERR_LOYALTY_TRANSACTION_OPERATION");

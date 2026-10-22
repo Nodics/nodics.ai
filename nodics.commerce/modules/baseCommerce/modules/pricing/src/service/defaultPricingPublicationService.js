@@ -24,6 +24,23 @@ const targetContext = Symbol('Pricing private target context');
  * @owner pricing
  * @override Extend policy fields through this owner; preserve scope, operational exclusions
  * and nPublish authority. Never implement a second journal or activate through restore.
+ * @remarks Pricing publication consumes existing target adapters and canonical context. Preserve the
+ * original publication transaction and exact scoped reads; these additions do not grant automatic
+ * publication to arbitrary callers.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: executePublicationTarget, checkTargetContext, requirePublicationCaller,
+ * rowEvidence, productReference, productStatus, assertProductStatus, approvedProduct, rowRelease,
+ * prepareSetup, isSetupReceiptCommitted, validateSetup, createGoverned, authorizeTarget,
+ * legacyRecoverySelection, recoverLegacyPointer, deliveryEnabled, deliveryRoots, rowPointers,
+ * rowProductCodes, readConfigured, consumedProduct, selectActivated, publicationSettings,
+ * requireSource, validateSourceAuthoring, requireTarget, fingerprint, scope, sourcePersistenceAuth,
+ * activatedReadAuth, readRecord, targetServices, retain, capture, retainedVersion, getVersion,
+ * resolveDependencies, validate, transport, getOnlineVersion, prepareTarget, pointerCode,
+ * getTargetStatus, observeSetupTarget, settleReceipt, switchTarget, activate, rollback,
+ * reconcileTarget, reconcile, readActivated, policyFields, capturePolicy, restoreOperational.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
  */
 module.exports = {
     /** Executes one fixed, already source-authorized controller target operation with private original-caller continuation. */
@@ -46,8 +63,19 @@ module.exports = {
             return await this.reconcileTarget(input.publication, input.operationKey, context);
         } finally { targetGuards.delete(context); }
     },
-    /** Revalidates an admitted target context; internal non-HTTP provider contexts retain their existing owner contract. */
+    /**
+     * Revalidates an admitted target context; internal non-HTTP provider contexts retain their existing
+     * owner contract.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {void} Completes when the effective target context remains admitted.
+     * @remarks Effects: Calls the target's context checker where configured; no persistence.
+     * Failure behavior: Propagates target admission or context-drift failure.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
     checkTargetContext: function (request) {
+        SERVICE.DefaultPricingBundleListingService?.checkContext?.(request);
         const guard = targetGuards.get(request);
         if (request[targetContext] && !guard) throw new Error('Copied or retired Pricing target context');
         guard?.();
@@ -634,7 +662,19 @@ targetReceiptContract: 'v1',
         if (!owner?.getSystemAuthData) throw new Error('Pricing publication persistence owner is unavailable');
         return owner.getSystemAuthData();
     },
-    /** Reads at most one scoped record through generated services, rejecting malformed or ambiguous results. */
+    /**
+     * Reads at most one scoped record through generated services, rejecting malformed or ambiguous
+     * results.
+     * @param {Object} service Effective generated owner service; not a caller-selected executable.
+     * @param {string} code Exact original owner record code.
+     * @param {Object} request Original owner request with tenant, authData and operation selectors;
+     * payload is not authority.
+     * @returns {Promise<Object|undefined>} The single matching generated owner record, or absence.
+     * @remarks Effects: Performs a bounded generated read; no writes or cache-derived authority.
+     * Failure behavior: Rejects failed, ambiguous, foreign or malformed owner responses.
+     * @override Override through the effective module member; retain the original owner, scope and
+     * evidence checks described above.
+     */
     readRecord: async function (service, code, request) {
         this.checkTargetContext(request);
         const authData = this.publicationSettings().runtimeRole === 'ONLINE'
@@ -643,7 +683,10 @@ targetReceiptContract: 'v1',
             query: { ...this.scope(request), code }, searchOptions: { limit: 2, pageSize: 2 },
             options: { recursive: false, skipItemCache: true } });
         this.checkTargetContext(request);
-        if (!response || !Array.isArray(response.result) || response.result.length > 1) throw new Error('Invalid publication persistence response');
+        if (!response || response.error || response.success === false || response.acknowledged === false ||
+            response.code !== undefined && !/^SUC_/.test(response.code) ||
+            response.errors && (!Array.isArray(response.errors) || response.errors.length) ||
+            !Array.isArray(response.result) || response.result.length > 1) throw new Error('Invalid publication persistence response');
         const item = response.result[0];
         if (item && (item.code !== code || item.tenant !== request.tenant || item.enterpriseCode !== this.scope(request).enterpriseCode)) throw new Error('Publication persistence scope mismatch');
         return item;

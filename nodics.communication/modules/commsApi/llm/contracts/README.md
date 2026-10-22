@@ -1,5 +1,22 @@
 # commsApi contracts
 
+## Employee Inbox Identity
+
+`GET /employee/communications` requires a human access token, employee group and
+existing `communication.customer.read` inbox permission; no grant is auto-assigned.
+Forward the original exact bearer to Profile `/employee/inbox-identity`. Require
+successful current self-identity proof with matching tenant/Enterprise, then query
+the existing inbox and source intents only for that `profile-employee:` recipient.
+No customer account, caller recipient, actor alias or runtime credential fallback.
+`communicationApi.employeeInbox` owns the Profile connection, bounded timeout
+and `maxResponseBytes` (8192 by default). The response bound must be a positive
+safe integer; missing or invalid values refuse before transport. Customer layers
+may supply intentional overrides only. Tests exercise inherited and overridden
+limits, invalid configuration and preserved original-bearer admission.
+The existing Customer endpoint and response projections remain unchanged.
+`communicationInboxSource.test.js` covers both paths and real Profile self-identity
+composition with isolated transport/storage. This is not installed runtime proof.
+
 [Native Telegram inbound launch](../../../commsCore/llm/contracts/telegram-inbound-launch.md)
 uses an authenticated parser on the normal public-provider route, with exact
 private capture and raw JSON method replies. It does not relax service-only
@@ -70,7 +87,7 @@ not an empty inbox or justification to widen a service grant.
 `POST /internal/verification/commands` (under the normal `commsApi` module/version
 prefix) makes the existing Communication challenge owner callable from another
 runtime. It is not a public registration route. `DefaultCommunicationApiController`
-and `DefaultCommunicationApiFacade` delegate to `DefaultCommunicationVerificationApiService`;
+and `DefaultCommunicationApiFacade` delegate to `DefaultCommunicationVerificationOperationService`;
 that adapter only validates the service command and projects the existing owner's
 reply. `DefaultCommunicationVerificationService` still owns all verification,
 expiry, hashing, replay and consumption transitions. Its generated challenge
@@ -203,3 +220,23 @@ installed schemas, generated pipelines, network/storage durability, email and UI
 acceptance remain separate. Run the normal Communication suite and framework
 quality gates in a complete checkout before target enablement. Later-layer
 customisation must retain the allowlist, truthful result and no-fallback invariants.
+
+## Durable source delivery acceptance
+
+`acceptance:communication-source-delivery` is the Comms API-owned live evidence
+runner. Reusable command registration, timeout and polling defaults belong in
+this module's `config/properties.js`. A consuming project supplies reviewed
+delivery, retry and suppression commands as an acceptance selection; it must not
+copy defaults or commit credentials. The runner uses only the secured request,
+retry and source-scoped inspection APIs. Exact replay must retain the same intent
+and revision, suppression must record `SUPPRESSED` without an attempt, and retry
+must advance the existing intent's attempt and revision.
+
+The exercise phase intentionally reports that restart inspection remains due.
+After restarting the Communication runtime, run the inspect phase with the same
+selection. It reconstructs deterministic intent identities from tenant and
+idempotency key, performs only empty-body source-authorized inspections and
+requires the persisted final states. This module never imports a domain reminder
+service, calls a source record directly, creates a parallel outbox or treats a
+configured source name as authority. Digital or another domain owner proves
+eligibility separately through its own normal source binding.

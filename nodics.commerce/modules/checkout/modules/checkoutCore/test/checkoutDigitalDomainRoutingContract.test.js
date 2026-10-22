@@ -64,10 +64,30 @@ test("ownership reservation binds the persisted Cart locale instead of root or b
   const calls = [], cart = { code: "cart", storeCode: "store", locale: "ar" };
   global.SERVICE = { DefaultCartOperationService: { cartSnapshot: async () => cart },
     DefaultDigitalCommerceCheckoutService: { reserveForCheckout: async r => { calls.push(r); return []; } } };
-  const request = { locale: "untrusted-root", payload: { cartCode: "cart", locale: "untrusted-body" } };
+  const request = { ownerId: "buyer-login", ownerRef: { module: "profile", schema: "customer", code: "buyer" },
+    locale: "untrusted-root", payload: { cartCode: "cart", locale: "untrusted-body" } };
   await service.create().reserveDigitalUnits(request, { entries: [asset] });
-  assert.equal(calls[0].locale, "ar"); assert.equal(request.locale, "untrusted-root");
+  assert.equal(calls[0].locale, "ar"); assert.equal(calls[0].ownerId, "buyer"); assert.equal(request.locale, "untrusted-root");
   delete cart.locale;
   await assert.rejects(service.create().reserveDigitalUnits(request, { entries: [asset] }), /Persisted Cart locale/);
+  assert.equal(calls.length, 1);
+});
+
+test("digital confirmation binds the same persisted Cart Store and locale", async t => {
+  const previous = global.SERVICE; t.after(() => { global.SERVICE = previous; });
+  const calls = [], cart = { code: "cart", storeCode: "store", locale: "ar" };
+  global.SERVICE = { DefaultCartOperationService: { cartSnapshot: async () => cart },
+    DefaultDigitalCommerceCheckoutService: { confirmSale: async (r, order, units) => {
+      calls.push({ r, order, units }); return units;
+    } } };
+  const request = { ownerId: "buyer-login", ownerRef: { module: "profile", schema: "customer", code: "buyer" },
+    locale: "untrusted-root", payload: { cartCode: "cart", locale: "untrusted-body" } };
+  const units = [{ code: "coupon" }], order = { code: "order" };
+  assert.deepEqual(await service.create().confirmDigitalSale(request, order, units), units);
+  assert.equal(calls[0].r.storeCode, "store"); assert.equal(calls[0].r.locale, "ar");
+  assert.equal(calls[0].r.ownerId, "buyer");
+  assert.equal(request.locale, "untrusted-root");
+  delete cart.locale;
+  await assert.rejects(service.create().confirmDigitalSale(request, order, units), /Persisted Cart locale/);
   assert.equal(calls.length, 1);
 });

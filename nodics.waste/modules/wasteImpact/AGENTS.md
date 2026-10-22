@@ -5,6 +5,11 @@ Validate each candidate before accepting it, preserve attempt provenance and pro
 mock fallback. See the provider contract; there is no second registry or persistence owner.
 
 Follow the parent contract: `../../AGENTS.md`.
+
+The service-only `evidenceForCarbon` handoff reads persisted assessments with
+`waste.impact.evidence.read`; it must always return
+`creditIssuanceAuthorized: false`, `issuedQuantity: null` and
+`publicClaimAllowed: false`. Carbon lots/allocations belong to wasteCarbon.
 Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
 `wasteImpact` owns reusable metric/profile/result contracts, provider dispatch,
@@ -14,7 +19,7 @@ legal claims, and public messaging remain with their owning accelerator,
 provider, or project policies; no specific customer module is mandatory.
 
 Read [the provider contract](llm/contracts/README.md) and the
-[canonical guide](data/docs-v001/records/documentation/wasteImpactDocumentationComponentData.js)
+[canonical guide](data/docs-v002/records/documentation/wasteImpactDocumentationComponentData.js)
 before modifying dispatch or calculations.
 
 - Resolve selected adapters through `SERVICE`, and effective settings through
@@ -43,3 +48,6 @@ A server must explicitly select it; contributions never enable reset or bypass t
 Provider energy provenance is allowlisted alongside carbon provenance: energy
 factor, source unit, baseline/treatment coefficients, conversion and result bounds.
 The generic dispatcher preserves these scalars; domain providers own their formulas.
+
+Documentation docs-v001 is frozen historical evidence. The selected 0.0.2
+successor in docs-v002 remains STAGED; source checks do not publish it.

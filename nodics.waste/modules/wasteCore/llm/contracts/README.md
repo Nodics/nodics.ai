@@ -2,6 +2,73 @@
 
 Preserve shared Waste source-reference, enum, and lifecycle policy contracts.
 
+## Certificate Coupon Consumption
+
+`DefaultWasteCertificateCouponService` owns `inspect`, `reserve`, `consume` and
+`release` over the existing asset and ownership-event repositories. eWaste's
+private `coupon-*` transport supplies fresh nonserializable service admission.
+Digital remains responsible for coupon acquisition, immutable offer eligibility,
+points consideration, issuance and failed-purchase evidence. Waste independently
+reads the exact Digital source operation before each mutation; request flags are
+not proof. The source read pins the typed owner, order, entry, product, promotion,
+certificate selection, requirements and original operation key.
+
+Inspection projects canonical approved verification facts, current custody
+milestone and beneficial owner. Brand/model eligibility uses verified facts,
+never submitted labels or caller evidence. Reservation sets
+`REDEMPTION_PENDING` with the existing shared asset lock. Consumption fences its
+event, then sets `REDEEMED`, retaining operation/order provenance. It does not
+change physical custody, original contributor, rewards, carbon or material-value
+rights. A consumed certificate cannot be sold, gifted, auctioned or consumed again.
+
+Failure cleanup requires source-proven failed acquisition and cannot reverse a
+consumed certificate. Cleanup before reservation records a tombstone and touches
+the asset revision, fencing delayed acquisition. Lost acknowledgements recover
+only the original event and exact asset successor. Partial multi-certificate
+acquisition stays locked for the same operation; it is not automatically retried
+or silently released. Completed purchases have no refund route.
+
+Complete reusable defaults live at `waste.certificateCoupons` in this module's
+`config/properties.js`. Runtime integration qualification remains explicit; this
+source does not enable any service principal or import permissions. Tests in
+`test/wasteCertificateCoupon.test.js` exercise real generated-owner CAS helpers
+with isolated repositories, not installed database or end-to-end acceptance.
+
+## Certificate Bundle Holdings
+
+Asset ownerRef, originalOwnerRef, physicalOwnerRef and digitalOwnerRef, plus
+event fromOwnerRef/toOwnerRef, retain canonical typed Profile descriptors.
+They deliberately have no static customer refSchema target. The generated
+nested-save pass runs independently of recursive response population; a fixed
+customer target can misclassify an Enterprise reference as a customer to save.
+Component commands validate allowed customer/Enterprise types and fresh
+authority before the existing CAS operation. No generic Profile identity writer
+or automatic reference population is part of the holdings contract.
+
+`DefaultWasteCertificateBundleComponentService` owns certificate-only beneficial
+ownership effects for Digital bundle components. Placement follows the existing
+`DefaultWasteAssetTransferOperationService`: WasteCore already owns the canonical
+asset lock and transfer-event repositories and their inspected generated CAS,
+unique-code and exact readback requirements. Digital owns the bundle coordinator,
+not a second certificate ledger; eWaste owns domain transport admission.
+
+The admitted private phases are `inspect`, `reserve`, `transfer`, `release` and
+`finalize`. Inputs retain the original operation key, wasteAsset reference,
+quantity `1`, expected revision, typed Profile owner and recipient. eWaste
+supplies a nonserializable fresh authority callback; a request Boolean or owner
+reference cannot authorize persistence. Reserve locks the original asset before
+creating its event, preserving enough intent to recover a lost acknowledgement.
+Transfer changes beneficial ownership but retains the lock; finalize unlocks only
+after Digital confirms every bundle component transfer. Release competes with
+transfer at the event revision and cannot reverse a transferred certificate.
+
+Original contributor, physical custody, material proceeds and carbon allocations
+remain unchanged. Uncertain writes retain the original lock and command for
+recovery. `test/wasteCertificateBundleComponent.test.js` covers lock retention,
+lost acknowledgements and conflicting decisions with isolated generated models.
+This is source-level evidence, not installed database qualification or complete
+Product/Checkout settlement. Later adapters must preserve these same invariants.
+
 ## Scoped Business Workbench
 
 The [business read contract](business-workbench.md) fixes the Waste API discovery,
@@ -143,42 +210,16 @@ as Profile `enterprise`. Leaf Waste modules own only capability-specific data.
 
 Operational access is owned by `DefaultWasteOperationalAccessService`. Require exact router permissions and Profile-resolved allow/deny scopes before exposing a submission or its evidence. Scopes remain request-local; missing scope resolution fails closed. Projects configure `waste.operations` and Profile assignments. See `wasteVerification/test/wasteOperationalRolesContract.test.js` in the sibling module for denied-centre, explicit-deny and read-only auditor evidence.
 
-`DefaultWasteAssetReversalOperationService` owns a linked REVERSAL event and an
-optimistic asset lock for an approved completed sale refund. Only the original
-latest buyer-held sale can be reversed automatically. The domain coordinator
-supplies settlement acknowledgements; Waste never writes wallet balances. The
-former digital owner is restored only after the payment refund completes, and
-the original ownership event remains unchanged.
-
 ## Original Digital Sale Refund
 
-The same reversal owner exposes `digitalEligible`, `digitalState`,
-`prepareDigital`, `settleDigital` and `completeDigital` to the secured domain
-coordinator. These are private service operations, not generated CRUD routes or
-new financial authority. eWaste must first verify the exact original Order
-approval and retained before-onward-transfer policy, then supply an immutable
-command containing original sale, asset, entitlement, buyer, case, approval key,
-capture and seller earning. See [the domain contract](../../../../../nodics.accelerators/modules/waste/modules/eWaste/llm/contracts/digital-ownership-sale.md#original-sale-refund).
-
-Only active SOLD assets still held by the exact original buyer, with unchanged
-digital owner, original last-transfer/timestamp and no competing lock qualify.
-Use the transfer owner's inspected unique identity, CAS and exact readback.
-Asset metadata retains `pendingRefundCode/pendingRefundEvent` before inserting
-the linked REVERSAL event, so interrupted insertion recovers the original model.
-The original SELL event remains unchanged. The reversal retains the exact
-command, original physical owner/custody snapshot, seller reversal and Payment
-refund references under `metadata.digitalRefund`; none is a caller success flag.
-
-SETTLE retains only the owner-verified reversal of the sole original seller EARN.
-COMPLETE requires owner-verified original buyer Payment refund, restores owner
-and digital owner to the original seller under LOCKED, marks the linked event
-COMPLETED, then clears only that refund's lock to OWNED. Interrupted steps resume
-from exact owner readback. A failed/uncertain financial write never unlocks or
-re-lists the asset. Changed custody, onward transfer, foreign command/reference,
-missing CAS or malformed owner evidence refuses. Waste never debits/refunds a
-wallet, alters physical custody, rewrites original approval rewards or claims a
-cross-owner transaction. Source fixture coverage lives in eWaste's existing
-`eWasteDigitalOwnershipBridge.test.js`; installed/native qualification is separate.
+Completed-sale automatic reversal is retired with its only domain adapter.
+Historical REVERSAL events, `pendingRefundCode/pendingRefundEvent` and
+`metadata.digitalRefund` references remain readable through existing governed
+inspection; their retention does not authorize a mutation or replay. Do not
+rewrite schemas, delete installed receipts or clear historical locks as part of
+source cleanup. Any installed unresolved refund needs a separately approved
+owner migration. Canonical digital-sales commands continue to refuse completed
+sale refunds. This does not remove the distinct unfenced RESERVED cleanup below.
 
 ## Refunded Unfenced Reservation Cleanup
 

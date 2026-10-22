@@ -104,6 +104,16 @@ module.exports = {
           ),
       }),
     );
+    const participation = SERVICE.DefaultDigitalParticipationService.settings().presentation;
+    capability.navigation.push(d.nativeWorkspace({
+      id: "digital-enterprise-participation", label: participation.navigationLabel,
+      route: "/commerce/enterprise-participation", order: 1340,
+      permission: "commerce.digital.bundle.configure", summary: participation.summary,
+      featureState: CONFIG.get("apiExposure")?.categories?.commerceManagement?.enabled === true ? "ACTIVE" : "DISABLED",
+      backendWorkspace: { contractVersion: 1, renderer: "axis.workspace.native",
+        workspaceCode: "digitalCore.enterpriseParticipation", viewCode: "settings", title: participation.title,
+        description: participation.summary, ownerSelector: { runtimeRoleCode: "COMMERCE", publicationRole: "ONLINE" } },
+    }));
     return capability;
   },
 };

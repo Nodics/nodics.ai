@@ -1,5 +1,13 @@
 # Promotion contracts
 
+## Immutable Offers And Acquisition
+
+Read [coupon offers and acquisition](coupon-offers-and-acquisition.md) for governed
+offer creation, persisted supply/owner counters, retained redemption acceptance,
+privacy-protected reporting and exact Digital handoffs. New offer records do not
+change unrelated version-1 campaigns. No endpoint or isolated test establishes
+installed Digital/Checkout or merchant acceptance.
+
 ## Original Reservation Cleanup
 
 `recoverCouponCodeReservation` is an internal Digital/Checkout handoff, not a new

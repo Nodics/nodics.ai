@@ -16,7 +16,14 @@ import test from 'node:test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { commerceProductPublicationFixtures, readCommercePublicationCatalogue, resolveCommercePublicationFixtures, runCommercePublicationAcceptance } from '../src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs';
+import {
+  commerceProductPublicationFixtures,
+  commercePublicationAcceptanceArgument,
+  readCommercePublicationCatalogue,
+  resolveCommercePublicationFixtures,
+  runCommercePublicationAcceptance,
+  selectCommercePublicationAcceptance,
+} from '../src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs';
 
 const domains = ['product', 'pricing', 'promotion', 'inventory', 'tax', 'media'];
 const bytes = Buffer.from('partner asset');
@@ -128,6 +135,22 @@ test('independent governed partner fixtures cover projections, Online cards/PDP 
 test('execution and approval intent required before resolving a project', async () => {
   await assert.rejects(runCommercePublicationAcceptance(), /--execute --approve-publications/);
   await assert.rejects(runCommercePublicationAcceptance({ execute: true }), /--execute --approve-publications/);
+});
+test('bounded named acceptance selection preserves the existing default and rejects ambiguous profiles', () => {
+  const profiles = { commercePublication: fixture, partnerCommercePublication: { catalogs: [] } };
+  assert.equal(commercePublicationAcceptanceArgument([]), 'commercePublication');
+  assert.equal(commercePublicationAcceptanceArgument(['--acceptance=partnerCommercePublication']), 'partnerCommercePublication');
+  assert.equal(selectCommercePublicationAcceptance(profiles), fixture);
+  assert.equal(selectCommercePublicationAcceptance(profiles, 'partnerCommercePublication'), profiles.partnerCommercePublication);
+  assert.throws(() => commercePublicationAcceptanceArgument(['--acceptance']), /must use 1..128/);
+  assert.throws(() => commercePublicationAcceptanceArgument(['--acceptance=partner-name']), /must use 1..128/);
+  assert.throws(() => commercePublicationAcceptanceArgument([
+    '--acceptance=first', '--acceptance=second',
+  ]), /accepts one/);
+  assert.throws(() => selectCommercePublicationAcceptance(profiles, 'missingCommercePublication'), /unavailable/);
+  assert.throws(() => selectCommercePublicationAcceptance(
+    Object.create({ inheritedCommercePublication: fixture }), 'inheritedCommercePublication',
+  ), /unavailable/);
 });
 test('missing owner prerequisite fails before requests, not reduced coverage', async () => {
   const h = harness();
@@ -316,4 +339,5 @@ test('help is inert without a configured customer project', () => {
   const result = spawnSync(process.execPath, [new URL('../src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs', import.meta.url).pathname, '--help'], { cwd: '/', encoding: 'utf8', env: { PATH: process.env.PATH } });
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /--approve-publications/);
+  assert.match(result.stdout, /--acceptance=<name>/);
 });

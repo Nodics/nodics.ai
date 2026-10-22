@@ -15,13 +15,17 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const method = require('../src/service/defaultLoyaltyRewardPaymentMethodService');
+test.beforeEach(() => {
+    global.CONFIG = { get: key => require('../config/properties')[key] };
+    global.SERVICE = { DefaultExactAmountService: require('../../../../../../../../nodics.foundation/modules/nCommon/src/utils/exactAmount') };
+});
 
 test.afterEach(() => {
     delete global.CONFIG;
+    delete global.SERVICE;
 });
 
 test('Loyalty reward payment method prepares provider-neutral reward evidence', () => {
-    global.CONFIG = { get: key => key === 'loyaltyRewardPayment' ? { providerCode: 'loyalty-reward-points', defaultCurrency: 'POINTS' } : undefined };
     const prepared = method.prepare({
         tenant: 'runtimeTenantFromToken',
         authData: { tenant: 'runtimeTenantFromToken' },
@@ -41,6 +45,18 @@ test('Loyalty reward payment method prepares provider-neutral reward evidence', 
     assert.equal(prepared.walletCode, 'wallet-1');
     assert.equal(prepared.currency, 'POINTS');
     assert.equal(prepared.tenant, 'runtimeTenantFromToken');
+});
+
+test('method preserves participant evidence and rejects inexact high-value overrides and missing defaults', () => {
+    const input = { tenant: 'tenant', walletCode: 'wallet', amount: '9007199254740993.01', currency: 'POINTS',
+        ownerRef: { module: 'profile', schema: 'enterprise', code: 'business' }, actorRef: { code: 'employee' }, authorization: 'Bearer original' };
+    assert.throws(() => method.prepare({ ...input, rewardAmount: '9007199254740993.02' }), /calculated order total/);
+    const prepared = method.prepare(input);
+    assert.deepEqual(prepared.ownerRef, input.ownerRef);
+    assert.deepEqual(prepared.actorRef, input.actorRef);
+    assert.equal(prepared.authorization, input.authorization);
+    CONFIG.get = () => ({ enabled: true });
+    assert.throws(() => method.prepare(input), /Complete Loyalty/);
 });
 
 test('Loyalty reward payment method requires wallet and amount', () => {

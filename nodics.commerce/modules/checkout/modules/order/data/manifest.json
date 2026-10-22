@@ -29,7 +29,7 @@
     "enterpriseRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.4",
       "displayName": "order enterpriseRoles",
       "description": "Explicit order identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "order",
@@ -53,8 +53,8 @@
         {
           "moduleName": "order",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "9956f02f29ce9431e523ca594a7d4ab50603176a2d025e4ee01942c7b70d5aef"
+          "version": "0.0.4",
+          "checksum": "a09781ed3826c4a4809b4313986c90f6e1988e0f074bc154fb48c386aa4a0cf6"
         }
       ]
     },
@@ -110,7 +110,7 @@
     "accessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.2",
+      "version": "0.0.4",
       "displayName": "order accessGroups",
       "description": "Explicit order identity definitions; create missing records and preserve existing Axis-managed authority.",
       "owningDomain": "order",
@@ -162,8 +162,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
         },
         {
           "moduleName": "profile",
@@ -177,7 +177,7 @@
     "specialAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Refund Exception Reviewer Group",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "order",
@@ -201,8 +201,8 @@
         {
           "moduleName": "profile",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "132a503543d94a92162d5f1afe56168814c1df5347b180e03bfe430295a7f9a1"
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f"
         },
         {
           "moduleName": "order",
@@ -216,7 +216,7 @@
     "specialAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Refund Exception Reviewer Role",
       "description": "Explicit advanced owner definitions; never grants business approval or installs assignments.",
       "owningDomain": "order",
@@ -240,15 +240,15 @@
         {
           "moduleName": "order",
           "sectionCode": "specialAccessGroups",
-          "version": "0.0.1",
-          "checksum": "c705e38a2b7883a259cc9e84273336c2417ed2ded478e7e1e0f7b6f3f7f19510"
+          "version": "0.0.2",
+          "checksum": "9513073632ea87b6ce5895878caa14103c24c2e88b7725db9a98165e0fe01747"
         }
       ]
     },
     "businessAccessGroups": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Orders business access groups",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "order",
@@ -272,8 +272,8 @@
         {
           "moduleName": "axis",
           "sectionCode": "accessGroups",
-          "version": "0.0.2",
-          "checksum": "808958627b043a0fbc9b476eab3b1a0df83a851149a9bcd0c96e80e9dec597a2"
+          "version": "0.0.3",
+          "checksum": "36562a0f408e20b9a3e52b5170caa664d0d96292589ff69d7071c19e165adf8d"
         },
         {
           "moduleName": "profile",
@@ -294,7 +294,7 @@
     "businessAccessRoles": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "displayName": "Orders business access roles",
       "description": "Explicit standard View, Edit and Full control definitions; governed imports preserve installed decisions.",
       "owningDomain": "order",
@@ -318,8 +318,8 @@
         {
           "moduleName": "order",
           "sectionCode": "businessAccessGroups",
-          "version": "0.0.1",
-          "checksum": "55e6337ba3e2e8cc27a5f358f5102dbf5953e0f249880a8d4840b3e77d8111af"
+          "version": "0.0.2",
+          "checksum": "f46d06113643a2b5c6f5f3a9e19951617549b2cfc00b51514fcde1175d7bf1a2"
         }
       ]
     }

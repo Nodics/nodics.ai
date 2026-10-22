@@ -1,0 +1,1244 @@
+{
+  "schemaVersion": 1,
+  "validation": {
+    "sourceTests": {
+      "passed": 264,
+      "failed": 0,
+      "logs": [
+        "/tmp/semantic-commerce-internal-tests.log",
+        "/tmp/semantic-commerce-original-evidence-tests.log"
+      ]
+    },
+    "strictGateNegativeContract": {
+      "command": "node --test --test-name-pattern='manual review closure binds scope' nodics.docs/test/semanticReviewContract.test.mjs",
+      "passed": 1,
+      "failed": 0
+    },
+    "sidecarQualification": {
+      "status": "PASS",
+      "method": "Unchanged qualifySemanticReview applied to current canonical catalogue and exact source hashes after editorial correction.",
+      "scopesChecked": 4,
+      "closed": 4,
+      "openContentGap": 0
+    },
+    "concurrentChange": "Initial final check caught nTooling quick-start component relocation to docs-v002. Its article hash was unchanged; corrected the evidence path and reran all four checks successfully.",
+    "integratedAggregate": "Not modified. Heisenberg owns final aggregate/composition integration; runtime/provider/publication acceptance is not executed.",
+    "editorialSuccessorTests": {
+      "passed": 42,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-successor-tests.log"
+    },
+    "finalSourceTests": {
+      "passed": 62,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-final-source-tests.log",
+      "command": "node --test nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalBundleSettlement.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js"
+    }
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "PASS_SOURCE_REVIEW",
+  "coordination": {
+    "aggregateOwner": "Heisenberg",
+    "aggregateEdited": false,
+    "canonicalSourceEdited": true,
+    "handoff": "Final sidecars sent to Heisenberg for exclusive shared-aggregate integration; no aggregate edit here. Recheck exact bytes before merging."
+  },
+  "method": {
+    "baseline": "semantic-documentation-closure.json",
+    "baselineSha256": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "sourceSnapshotAt": "2026-10-20T10:57:55.320Z",
+    "review": "Current source/contracts compared with article assertions; exact-byte prior semantic evidence retained for unchanged files. Matching batch2 ownership records reused. Bounded documentation review, not a new full source audit.",
+    "changedBoundSources": 8,
+    "unchangedReuse": 56,
+    "commsEngagement": "No evolving Communication/Engagement runtime review or edits. Identical referenced bytes retain prior evidence only; future drift invalidates it.",
+    "finalReviewAt": "2026-10-20T11:23:34.793Z",
+    "finalComparison": "Read corrected article assertions against previously inspected unchanged source bytes; preserved exact blocks for unrelated reviewed articles. Six editorial corrections plus Digital historical-refund correction have explicit semantic rationale, not hash-only renewal."
+  },
+  "items": [
+    {
+      "item": "Internal-only classification register",
+      "requestedAction": "Decide which technical modules remain internal and which broader page owns their explanation.",
+      "evidence": [
+        {
+          "documentId": "reference.internal-source-boundary-register",
+          "anchors": [
+            "referenceInternalSourceBoundaryRegister-1-business-problem",
+            "referenceInternalSourceBoundaryRegister-2-classification-flow",
+            "referenceInternalSourceBoundaryRegister-3-register",
+            "referenceInternalSourceBoundaryRegister-4-classification-contract",
+            "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance",
+            "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+            "referenceInternalSourceBoundaryRegister-7-common-mistakes",
+            "referenceInternalSourceBoundaryRegister-8-verification"
+          ]
+        },
+        {
+          "documentId": "discovery.search-indexing",
+          "anchors": [
+            "discoverySearchIndexing-8-current-implementation-coverage"
+          ]
+        },
+        {
+          "documentId": "accelerators.circa-operations-rewards",
+          "anchors": [
+            "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+            "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+            "circa-downstream-waste-owner-boundaries",
+            "acceleratorsCircaOperationsRewards-3-assets-receipt-and-ownership"
+          ]
+        },
+        {
+          "documentId": "loyalty.wallets-rewards-ledger",
+          "anchors": [
+            "loyaltyWalletsRewardsLedger-3-source-map",
+            "loyaltyWalletsRewardsLedger-9-capture",
+            "loyaltyWalletsRewardsLedger-8-reserve",
+            "loyaltyWalletsRewardsLedger-4-owner-model",
+            "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern"
+          ]
+        },
+        {
+          "documentId": "rules.deterministic-evaluation",
+          "anchors": [
+            "rules-evaluation-customize-and-extend-safely"
+          ]
+        },
+        {
+          "documentId": "wcms.publishing-lifecycle",
+          "anchors": [
+            "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
+          ]
+        },
+        {
+          "documentId": "communication.overview",
+          "anchors": [
+            "communicationOverview-6-verification-journey",
+            "communicationOverview-8-engagement-integration"
+          ]
+        },
+        {
+          "documentId": "communication.provider-runbooks",
+          "anchors": [
+            "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+            "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+            "communicationProviderRunbooks-1-implemented-modes-and-limits"
+          ]
+        },
+        {
+          "documentId": "copilot.provider-usage-budgets",
+          "anchors": [
+            "copilot-provider-adapter-contracts",
+            "copilotProviderUsageBudgets-4-verification-and-failure-recovery"
+          ]
+        },
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-2-boundary-model",
+            "commercePaymentProviderBoundaries-3-safe-payload-contract",
+            "commercePaymentProviderBoundaries-5-implementation-handoff"
+          ]
+        },
+        {
+          "documentId": "applications.nexus-data-content-guide",
+          "anchors": [
+            "applicationsNexusDataContentGuide-2-release-layout"
+          ]
+        },
+        {
+          "documentId": "foundation.overview",
+          "anchors": [
+            "foundationOverview-5-request-processing-model",
+            "foundationOverview-8-developer-workflow"
+          ]
+        },
+        {
+          "documentId": "reference.source-backed-documentation-coverage-audit",
+          "anchors": [
+            "referenceSourceBackedDocumentationCoverageAudit-1-audit-method"
+          ]
+        },
+        {
+          "documentId": "reference.documentation-gap-backlog",
+          "anchors": [
+            "referenceDocumentationGapBacklog-2-classification-policy"
+          ]
+        },
+        {
+          "documentId": "framework.local-quick-start",
+          "anchors": [
+            "frameworkLocalQuickStart-1-quick-path"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.docs/scripts/audit-source-coverage.mjs",
+        "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js",
+        "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js",
+        "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js",
+        "nodics.waste/modules/wasteApi/src/router/routers.js",
+        "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js",
+        "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js",
+        "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js",
+        "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js",
+        "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+        "nodics.waste/modules/wasteReward/src/schemas/schemas.js",
+        "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js",
+        "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js",
+        "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js",
+        "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js",
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md",
+        "nodics.waste/modules/wasteCompliance/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteCompliance/AGENTS.md",
+        "nodics.waste/modules/wasteMovement/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteMovement/AGENTS.md",
+        "nodics.waste/modules/wasteReceipt/src/schemas/schemas.js",
+        "nodics.waste/modules/wasteReceipt/AGENTS.md",
+        "nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js",
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/openAiProvider/AGENTS.md",
+        "nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js",
+        "nodics.engagement/modules/engagementComms/src/service/defaultEngagementCommunicationService.js",
+        "nodics.engagement/modules/engagementComms/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+        "nodics.communication/modules/localCommsProvider/src/service/defaultLocalCommunicationProviderService.js",
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/claudeProvider/AGENTS.md",
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js",
+        "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md",
+        "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/package.json",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js",
+        "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/AGENTS.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/README.md",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/AGENTS.md",
+        "nodics.foundation/modules/nFacade/src/facade/common.js",
+        "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js",
+        "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js",
+        "nodics.foundation/modules/nSetup/package.json",
+        "nodics.foundation/modules/nSetup/AGENTS.md",
+        "nodics.waste/modules/wasteReward/llm/contracts/material-value.md",
+        "nodics.waste/modules/wasteReward/src/service/defaultWasteMaterialValueSettlementService.js",
+        "nodics.waste/modules/wasteReward/AGENTS.md",
+        "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/bundle-holdings-and-gifts.md"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "The register now classifies WasteReward as an implemented assessment and payment-covered release coordinator while retaining BROADER_GUIDE placement. The linked Circa guide describes original contributor allocation, qualified actual-payment coverage, frozen CREDIT_PENDING, exact original-key Loyalty ledger readback and uncertain-credit recovery. Certificates and realized carbon are independently selected holdings, not attached automatic value; historical participation, future carbon and material-value entitlements remain with the original contributor. Other reviewed classifications retain their bounded source evidence; provider and installed transaction acceptance remain explicitly unproven.",
+      "sourceFindings": [
+        {
+          "id": "DOC-INTERNAL-WASTE-REWARD-MATURITY",
+          "severity": "P2",
+          "documentIds": [
+            "reference.internal-source-boundary-register",
+            "accelerators.circa-operations-rewards"
+          ],
+          "anchors": [
+            "referenceInternalSourceBoundaryRegister-3-register",
+            "acceleratorsCircaOperationsRewards-5-rewards-and-settlement"
+          ],
+          "contradiction": "wasteReward row remains SCHEMA_DEFINED and assessment-only; linked reward section omits its implemented material-value assessment/release workflow.",
+          "actualSource": "WasteReward material-value policy/batch/claims and release coordinator validate recycler-payment allocation coverage, freeze CREDIT_PENDING, call original-key Loyalty earning and require matching ledger for COMPLETED. They never execute recycler payment or directly mutate balances.",
+          "correction": "Retain BROADER_GUIDE but update row maturity/source paths and linked guide to the implemented payment-evidence-gated original-contributor workflow. Preserve governed rates, pending same-key recovery, Loyalty-only accounting and separate qualified-provider/installed-transaction acceptance.",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "resolution": "Retain BROADER_GUIDE but update row maturity/source paths and linked guide to the implemented payment-evidence-gated original-contributor workflow. Preserve governed rates, pending same-key recovery, Loyalty-only accounting and separate qualified-provider/installed-transaction acceptance."
+        },
+        {
+          "id": "DOC-INTERNAL-CARBON-OWNERSHIP",
+          "severity": "P1",
+          "documentIds": [
+            "accelerators.circa-operations-rewards"
+          ],
+          "anchors": [
+            "acceleratorsCircaOperationsRewards-3-assets-receipt-and-ownership"
+          ],
+          "blockIndex": 13,
+          "contradiction": "Attached illustrative carbon can move with an asset while historical approval rewards remain with the original contributor.",
+          "actualSource": "Digital bundle contract keeps certificate and realized-carbon components independently selected under component owners. Transfers do not move original contributor history, future allocations or material-value entitlements.",
+          "correction": "Forward-correct coupled ownership to independently selected certificate/realized-carbon holdings; preserve original contributor entitlements. Do not imply projected carbon is transferable or realized/certified impact.",
+          "status": "RESOLVED_SOURCE_EDITORIAL",
+          "resolution": "Forward-correct coupled ownership to independently selected certificate/realized-carbon holdings; preserve original contributor entitlements. Do not imply projected carbon is transferable or realized/certified impact."
+        }
+      ],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
+      },
+      "previousRationale": "Changed Program/Reservation schemas remain schema owners, WasteApi an implemented API, Nexus inert configuration and nSetup governance. Unchanged exact-byte classifications retain prior bounded evidence. WasteReward now implements payment-gated material-value release but its whole-module row remains SCHEMA_DEFINED/assessment-only. The linked Circa guide also wrongly couples carbon with asset ownership. These are editorial gaps, not runtime acceptance blockers."
+    }
+  ],
+  "canonicalDocuments": {
+    "reference.internal-source-boundary-register": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "e1c3bcd2c00194b3149f7e7e0c6374c9e8aed866c073bc9e946c8b9c4c16db4e"
+    },
+    "discovery.search-indexing": {
+      "owner": "nodics.discovery/modules/discoveryRuntime",
+      "componentFile": "nodics.discovery/modules/discoveryRuntime/data/docs-v001/records/documentation/discoveryRuntimeDocumentationComponentData.js",
+      "articleBlocksSha256": "27c8f5e8a0b3f591b2f5aa83276449923fde2b3155108f78c048e74006eb6ff7"
+    },
+    "accelerators.circa-operations-rewards": {
+      "owner": "nodics.accelerators/modules/waste/modules/eWaste",
+      "componentFile": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
+      "articleBlocksSha256": "1bba40b7ca9186cd83e5489ae4e563ee683ba77012833b26d8161faa8c51c392"
+    },
+    "loyalty.wallets-rewards-ledger": {
+      "owner": "nodics.loyalty/modules/loyaltyWallet",
+      "componentFile": "nodics.loyalty/modules/loyaltyWallet/data/docs-v002/records/documentation/loyaltyWalletDocumentationComponentData.js",
+      "articleBlocksSha256": "c1225f824ecd9c235f81c5815d7fbca3bba88686add878528ba548bb7ccdb59f"
+    },
+    "rules.deterministic-evaluation": {
+      "owner": "nodics.rulesEngine/modules/rulesEvaluation",
+      "componentFile": "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationComponentData.js",
+      "articleBlocksSha256": "2b869d2eb4beef849bbfff0b38a549991d3432e689b0e2106de7e6919e9a23db"
+    },
+    "wcms.publishing-lifecycle": {
+      "owner": "nodics.wcms/modules/cms",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "articleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c"
+    },
+    "communication.overview": {
+      "owner": "nodics.communication/modules/commsCore",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v002/records/documentation/commsCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "62e23d5681f376f3f14b500b64482f3535efc55cd0893a29b4c7deec15573b6d"
+    },
+    "communication.provider-runbooks": {
+      "owner": "nodics.communication/modules/commsCore",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v002/records/documentation/commsCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "2d9df8c1c8e267e669e7665a9438e9c31fde23b4a47299d033fbac7b873d8dff"
+    },
+    "copilot.provider-usage-budgets": {
+      "owner": "nodics.copilot/modules/copilotProviders/modules/copilotProvider",
+      "componentFile": "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationComponentData.js",
+      "articleBlocksSha256": "70252f14a6346e266d1b41ce398fff92d1e390d499ca5352beea90d4e11ab3ad"
+    },
+    "commerce.payment-provider-boundaries": {
+      "owner": "nodics.commerce/modules/payment/modules/paymentCore",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4"
+    },
+    "applications.nexus-data-content-guide": {
+      "owner": "nodics.accelerators/modules/nexus/modules/nexus.web",
+      "componentFile": "nodics.accelerators/modules/nexus/modules/nexus.web/data/docs-v001/records/documentation/nexus_webDocumentationComponentData.js",
+      "articleBlocksSha256": "55d5270b30d7d6dbf3b7f5581bb3619450dba8ad9982b957b4ff60b329e058ba"
+    },
+    "foundation.overview": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "2075439784ccd8c3c65ebdfa3a8a9dfd6837e23a55dc328d3640f50ba9bdf22c"
+    },
+    "reference.source-backed-documentation-coverage-audit": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "01a5c9fd5e1a6820744e8f645ac82f0ae7ec2dd267147c8b16ed94af5712e632"
+    },
+    "reference.documentation-gap-backlog": {
+      "owner": "nodics.docs",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "1d0348d48232b50cc6bcc1cb36ff80c10ee0aae20d174aea0ec2a1ea4cfcd060"
+    },
+    "framework.local-quick-start": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "24b59a834157ebd8ad30692ca9a0ddda6679e4327db36530f62b73e95dad90b9"
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.docs/scripts/audit-source-coverage.mjs": "e8b354af5c7f56aa657fd020d7b1b5841b0b9b3c7580572764535a55cdcd982a",
+    "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js": "a19f16a4bbfc16c620baf01a66f62cbe768080273f9a9798eceb84d47efabd1c",
+    "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js": "d9650330503109f99d401dafde3b34e4241c86313824e32d9715d03aa2bd450d",
+    "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js": "76161f4a6739694191ef30108d5c8eab0f4830dac3bba6256ba079d6a5388648",
+    "nodics.waste/modules/wasteApi/src/router/routers.js": "1268799e250be91d5bed87a577507c367f315509b774e07b8d2b0bc3e106c8f3",
+    "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js": "f668d766a9210446c92f8556c0e771f490be13c3758135f6c40139601a473c6b",
+    "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js": "f4b5739c9a72d99f940601e34433f13f0463b5d5469e57d6e8cde366a3f85cd7",
+    "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js": "d784bde82cf5695b85b30824053350d60f345871407c85c07e46b0dc8f301750",
+    "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js": "22743131c279f0a17251ceca6ddd1939ad5a920243fd5d20bf01a36d719a778d",
+    "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js": "23c2de0de9fe9c9d1c62c9a6591f6a6bd7a1bc99236378b2ee5ac12511df88cb",
+    "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js": "6e6870fc78f7babb12acf1e04f079caa19ca68a410676932e5834ad6d7b8f216",
+    "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js": "46c6ad2537bcb03ec0a4db18e02394ee2266e5ebee8d1e2091fe0c59968ca752",
+    "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js": "44985be4001faee9f6a8a2f42296377417e074b2588d918abc939ba97f8eb326",
+    "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js": "0194664fa957dea6539c9c169bdba2105ab098fb3e4b5b89e8260f1e2df03c2d",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js": "5742ab7416ea29f2b1676d5d8a5ee6b833bab5db2748d5f886b785e0e1d8c541",
+    "nodics.waste/modules/wasteReward/src/schemas/schemas.js": "002f5c96c45acac24e8f32463d9f31e126da4a0668f5240b1818cc68f9012c78",
+    "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js": "6582d85ece6a5f7721098980623818a21a9b36398e73c26bb1f896b18925515a",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js": "537da8f6eb7ac9ebd38f18f1dc16bca77798ff4d577bb4e543c2751f4830deea",
+    "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js": "4233684db10ba846b70c647e88261d3e60dd833418e0d5e62cbedeef4031e98f",
+    "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js": "669ec9adde7acafcfbc3cc12ecebb117e1560d1dde2e1f287412da56b0e0d1ed",
+    "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js": "0d957ed6e175e06164c608dd7f6713d32a0bdb7b8ee45ab3ca29ced402437d84",
+    "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js": "78797613577acb984461600864cd4ac0f902ff350791edf944b69e7e9dc4c07e",
+    "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md": "779921aba4d3f9cf93cc61b6274e0a7d38e1439261f472179ec12d9b1d3dc982",
+    "nodics.waste/modules/wasteCompliance/src/schemas/schemas.js": "62fbb82f89970f890ebdf7460b3192dd2d03fa6ce77cdb94a3abee4022d4a4eb",
+    "nodics.waste/modules/wasteCompliance/AGENTS.md": "0634d5a941a68f5398bbb51a39d25be8166a5465833aad0828e2d379e453ba13",
+    "nodics.waste/modules/wasteMovement/src/schemas/schemas.js": "e88b8ba14caeafe610c8e92802c23e034ff6d2d8bea97faba55d17b0e38ddd5a",
+    "nodics.waste/modules/wasteMovement/AGENTS.md": "ac77263ae1f0417ee30fdf45dee1457d9c806320d9a0a174e3e4fbf2ac21ad31",
+    "nodics.waste/modules/wasteReceipt/src/schemas/schemas.js": "cba9fc5ce0c10c3ce68d2727afe14b76362b08c0d2956f2c46750f8db94597e4",
+    "nodics.waste/modules/wasteReceipt/AGENTS.md": "4f8af61b6f422120e4d4768dbced9d1390654198164fa1f89bf5c291c8659269",
+    "nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js": "e30c04d29390d23f08cb05cfa84b233448bdd5ca77036035ef38dabd4ac6df7f",
+    "nodics.copilot/modules/copilotProviders/modules/openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js": "3a428ad8eb2342a1ee5e64f87c5125bb72ffb9b9d55c52775f6b53d56b38f82f",
+    "nodics.copilot/modules/copilotProviders/modules/openAiProvider/AGENTS.md": "93c477a947ecfafefd35de2f88743147fe8c73f80450853abc6daabb75cdb94b",
+    "nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js": "d3ad69a7381db609d3a20c5c6bd5c1ba1f99a836bbe7d124b7a0a7028ae028a1",
+    "nodics.engagement/modules/engagementComms/src/service/defaultEngagementCommunicationService.js": "3305de4da523dbcab4a439f12ae9e1130397ef6267a1a33f2b9f2bb57fcd51b3",
+    "nodics.engagement/modules/engagementComms/AGENTS.md": "f2a835386dbddcd06a8fe8dbd91597104a672dd6dce89b781d38afb1ff8f22d4",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js": "df732b2269112552b8da52408371f6f8f32b2c81f213509575e7292293b5b035",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js": "a55b835f2b5591360ef726742115a5e71177351318136d8dcad03b091bb91509",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js": "2b8f5236100095057ba61f4fe1033cb95c5f7afbd0dd7e6100508335fa01dc44",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js": "5b298dd49b1193b50c6b4655df17a0de3c88b90a700acfc90de34f20a0ec39b7",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js": "15fe651b39fc97f595280a9524c466f7c35d3e36467574066f5854859ed6bb24",
+    "nodics.communication/modules/localCommsProvider/src/service/defaultLocalCommunicationProviderService.js": "4c1c398477db29ab9afa151c5114bd0a8ed0c24ce60e82a60d21ee56ddc927db",
+    "nodics.copilot/modules/copilotProviders/modules/claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js": "f89fa2526c4d95e387311d8f81158af0bbc3f5df13d7b5f29abf12b14472a7e4",
+    "nodics.copilot/modules/copilotProviders/modules/claudeProvider/AGENTS.md": "1152cdc28163e480ddc44a1d92ba17b4eb4350547c14889d79f441faaaa60419",
+    "nodics.copilot/modules/copilotProviders/modules/geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js": "a5b9549c344ef215c36d0ff4e6601c337b3f1588297f78e452f0be4798bbd97c",
+    "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md": "01f39a4a1cf19fbe17b307f49ffcbe1b35e46e3d65bbe8ffa0b1e314e2b70530",
+    "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js": "cdb42d7206d15310f00d369c4c2b8ba0ac81beaf269bc0dfb35126e713036a9e",
+    "nodics.accelerators/modules/nexus/modules/nexusCore/package.json": "94f6e1187ee0c89370e59d41fc3f5a0041b4058f8637e15a1c503c897ff63f32",
+    "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js": "79fa668ffcb42985499b51ca6de22c5687a5271e60262f200e27db28d350992e",
+    "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md": "ef80c3a66903efb4878e865e94357a782a79bdb059840ed87074b6ade114e912",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json": "191fc0704b6e78a9786887e3a2d3bab0b77805bd67f9096b9714be34faba66e2",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md": "203b8ae0d092f03860c6b86bbcd5ad74e6fe29a149d3c61207de2486af187aca",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/AGENTS.md": "c245a2d5747c646d96f97b2797f334524150e28c3455e6502ac5c59b62be1449",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json": "3513b25e7de5df872b02b82e77eed54ac7345ac88c719e3a9fdfe529521d581d",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/README.md": "01f08382c3ac83cd0faeb392fbca8f2f82321feb220ebe054c5fc6a7a2e7c9f9",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/AGENTS.md": "e1e0eb04a490a45d1303a3cbf8c8eb5680744254b54389d001a22f3504392a50",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json": "5f834edd31c415d7e7ff14aa8c21e3b7d210260e4f4eee57d078c745b3861333",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/README.md": "6d52276597729d4a1143d50d934a24007605224619d994c5448da58186eef5ef",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/AGENTS.md": "848f6dade3751245f881ea75cb55354197c148a3472cd1fdf40c49bfa9724c40",
+    "nodics.foundation/modules/nFacade/src/facade/common.js": "d668d31bf044739021816a08c829f98fc1a6f7ba7b117b3270cccbe960005c8f",
+    "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js": "ea9dbdb7c2ed6bae23f2540fbd0b07441819a675824daa87c22958e0c02225ee",
+    "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js": "61d90ec5a6373fef9f9a9cc8b90ad99283b8f9532edae48164efeb7ad732c1d9",
+    "nodics.foundation/modules/nSetup/package.json": "89c196e15dd81342ae20224c57242fa95c915a54a530c6d1a4740e7cf74b9288",
+    "nodics.foundation/modules/nSetup/AGENTS.md": "f9763f6ff20ee6a902df8a034fd49ab0db15b41eb834f4c2955544864e99adfe",
+    "nodics.waste/modules/wasteReward/llm/contracts/material-value.md": "248590b88635368299be88738876139ea1571f6ad88f5f72f083314297004d9d",
+    "nodics.waste/modules/wasteReward/src/service/defaultWasteMaterialValueSettlementService.js": "94d0d1dfff7f8d4b55c8e85cee074dd23676ecefc4ce9d9ce937e24c0541ca50",
+    "nodics.waste/modules/wasteReward/AGENTS.md": "0fbb56151c537e6d0b35c298a821a33bb9d81f0f73c7b26f1fde70c383a06f18",
+    "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/bundle-holdings-and-gifts.md": "5fe67ffa5f8ccfcc14f000c91282dcc64566f5e951a01b1323d41086301d24e2"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.docs/scripts/audit-source-coverage.mjs",
+      "finalSha256": "e8b354af5c7f56aa657fd020d7b1b5841b0b9b3c7580572764535a55cdcd982a",
+      "previousSha256": "e8b354af5c7f56aa657fd020d7b1b5841b0b9b3c7580572764535a55cdcd982a",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js",
+      "finalSha256": "a19f16a4bbfc16c620baf01a66f62cbe768080273f9a9798eceb84d47efabd1c",
+      "previousSha256": "a19f16a4bbfc16c620baf01a66f62cbe768080273f9a9798eceb84d47efabd1c",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.discovery/modules/discoveryRanking/src/service/defaultDiscoveryRankingEngineService.js",
+      "finalSha256": "d9650330503109f99d401dafde3b34e4241c86313824e32d9715d03aa2bd450d",
+      "previousSha256": "d9650330503109f99d401dafde3b34e4241c86313824e32d9715d03aa2bd450d",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.discovery/modules/discoverySource/src/service/defaultDiscoverySourceRegistryService.js",
+      "finalSha256": "76161f4a6739694191ef30108d5c8eab0f4830dac3bba6256ba079d6a5388648",
+      "previousSha256": "76161f4a6739694191ef30108d5c8eab0f4830dac3bba6256ba079d6a5388648",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteApi/src/router/routers.js",
+      "finalSha256": "1268799e250be91d5bed87a577507c367f315509b774e07b8d2b0bc3e106c8f3",
+      "previousSha256": "4d7bff94086e182a7c44a550bed155cb997670317877f4c65b8acb067385e2df",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read all current route declarations. Secured business workbench and owner commands remain genuine API contracts, not internal disposable plumbing. Additional routes retain permission/exposure boundaries; register's broader-guide classification and separate installed authorization limit remain appropriate.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.waste/modules/wasteApi/src/controller/defaultWasteInternalController.js",
+      "finalSha256": "f668d766a9210446c92f8556c0e771f490be13c3758135f6c40139601a473c6b",
+      "previousSha256": "f668d766a9210446c92f8556c0e771f490be13c3758135f6c40139601a473c6b",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteApi/src/facade/defaultWasteInternalFacade.js",
+      "finalSha256": "f4b5739c9a72d99f940601e34433f13f0463b5d5469e57d6e8cde366a3f85cd7",
+      "previousSha256": "f4b5739c9a72d99f940601e34433f13f0463b5d5469e57d6e8cde366a3f85cd7",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js",
+      "finalSha256": "d784bde82cf5695b85b30824053350d60f345871407c85c07e46b0dc8f301750",
+      "previousSha256": "cb5ca2db5cc227045b5f73ecd649044493b0964a2ee62aa441783cab22d4dec3",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "New transfer/test-credit/conversion eligibility selections remain governed Program data. Schema-only maturity remains correct for this module; operations stay with Wallet and API owners.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-loyalty-waste.json",
+          "sha256": "d784bde82cf5695b85b30824053350d60f345871407c85c07e46b0dc8f301750",
+          "disposition": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
+      "finalSha256": "22743131c279f0a17251ceca6ddd1939ad5a920243fd5d20bf01a36d719a778d",
+      "previousSha256": "22743131c279f0a17251ceca6ddd1939ad5a920243fd5d20bf01a36d719a778d",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js",
+      "finalSha256": "23c2de0de9fe9c9d1c62c9a6591f6a6bd7a1bc99236378b2ee5ac12511df88cb",
+      "previousSha256": "254addf3434ab62457fd91600ea7a4b764e65c33c06d77825e6425e57b8170d1",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "New outcome/auction holdPolicy and optional expiresAt describe held-value persistence; schema does not execute reservation, expiry or concurrency. Register does not promise every hold expires and broader-guide classification remains correct.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-loyalty-waste.json",
+          "sha256": "23c2de0de9fe9c9d1c62c9a6591f6a6bd7a1bc99236378b2ee5ac12511df88cb",
+          "disposition": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js",
+      "finalSha256": "6e6870fc78f7babb12acf1e04f079caa19ca68a410676932e5834ad6d7b8f216",
+      "previousSha256": "6e6870fc78f7babb12acf1e04f079caa19ca68a410676932e5834ad6d7b8f216",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOperatorService.js",
+      "finalSha256": "46c6ad2537bcb03ec0a4db18e02394ee2266e5ebee8d1e2091fe0c59968ca752",
+      "previousSha256": "46c6ad2537bcb03ec0a4db18e02394ee2266e5ebee8d1e2091fe0c59968ca752",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.rulesEngine/modules/rulesCore/src/service/defaultRuleOutcomeRegistryService.js",
+      "finalSha256": "44985be4001faee9f6a8a2f42296377417e074b2588d918abc939ba97f8eb326",
+      "previousSha256": "44985be4001faee9f6a8a2f42296377417e074b2588d918abc939ba97f8eb326",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService.js",
+      "finalSha256": "0194664fa957dea6539c9c169bdba2105ab098fb3e4b5b89e8260f1e2df03c2d",
+      "previousSha256": "0194664fa957dea6539c9c169bdba2105ab098fb3e4b5b89e8260f1e2df03c2d",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+      "finalSha256": "5742ab7416ea29f2b1676d5d8a5ee6b833bab5db2748d5f886b785e0e1d8c541",
+      "previousSha256": "b452d6e9569ffe67d7d4f4566974c5140e4a62338ce4deef1b82121dc1f36696",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read current complete provider. It delegates reserve/capture/release/reverse to Loyalty, checks exact ledger references, preserves original human request and uses dedicated auction adapter. Existing service-account early return is not fresh wallet-owner proof; the guide does not promise that. No second ledger or live qualification.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "5742ab7416ea29f2b1676d5d8a5ee6b833bab5db2748d5f886b785e0e1d8c541",
+          "disposition": "reviewed-corrected"
+        }
+      ]
+    },
+    {
+      "path": "nodics.waste/modules/wasteReward/src/schemas/schemas.js",
+      "finalSha256": "002f5c96c45acac24e8f32463d9f31e126da4a0668f5240b1818cc68f9012c78",
+      "previousSha256": "bbe8c94935088d59fe9267a436f24893243ef7dd0e9737b34b89e23f1ab2c7bc",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "New governed MaterialValue policy, payment/contribution claims and batch/releases are backed by implemented WasteReward assessment/settlement services. Whole-module SCHEMA_DEFINED/assessment-only register row is stale; Loyalty still exclusively owns wallet/ledger posting.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-loyalty-waste.json",
+          "sha256": "002f5c96c45acac24e8f32463d9f31e126da4a0668f5240b1818cc68f9012c78",
+          "disposition": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "nodics.wcms/modules/cmsStaged/src/schemas/schemas.js",
+      "finalSha256": "6582d85ece6a5f7721098980623818a21a9b36398e73c26bb1f896b18925515a",
+      "previousSha256": "6582d85ece6a5f7721098980623818a21a9b36398e73c26bb1f896b18925515a",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js",
+      "finalSha256": "537da8f6eb7ac9ebd38f18f1dc16bca77798ff4d577bb4e543c2751f4830deea",
+      "previousSha256": "34dfb6abfa74a7d8f5ba87eb3176a6e0fbb56fd832c9365414e8380a5ae51cef",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read full preparation: validated owner config, exact calculated positive total and amount/currency matching produce a frozen provider-neutral contract. It never reserves/debits value, matching the register and Payment guide.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "537da8f6eb7ac9ebd38f18f1dc16bca77798ff4d577bb4e543c2751f4830deea",
+          "disposition": "reviewed-corrected"
+        }
+      ]
+    },
+    {
+      "path": "nodics.communication/modules/commsVerification/src/service/defaultCommunicationVerificationService.js",
+      "finalSha256": "4233684db10ba846b70c647e88261d3e60dd833418e0d5e62cbedeef4031e98f",
+      "previousSha256": "4233684db10ba846b70c647e88261d3e60dd833418e0d5e62cbedeef4031e98f",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.communication/modules/smsCommsProvider/src/service/defaultSmsCommunicationProviderService.js",
+      "finalSha256": "669ec9adde7acafcfbc3cc12ecebb117e1560d1dde2e1f287412da56b0e0d1ed",
+      "previousSha256": "669ec9adde7acafcfbc3cc12ecebb117e1560d1dde2e1f287412da56b0e0d1ed",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.communication/modules/smtpCommsProvider/src/service/defaultSmtpCommunicationProviderService.js",
+      "finalSha256": "0d957ed6e175e06164c608dd7f6713d32a0bdb7b8ee45ab3ca29ced402437d84",
+      "previousSha256": "0d957ed6e175e06164c608dd7f6713d32a0bdb7b8ee45ab3ca29ced402437d84",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/src/service/defaultOllamaCopilotProviderAdapterService.js",
+      "finalSha256": "78797613577acb984461600864cd4ac0f902ff350791edf944b69e7e9dc4c07e",
+      "previousSha256": "78797613577acb984461600864cd4ac0f902ff350791edf944b69e7e9dc4c07e",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/ollamaProvider/AGENTS.md",
+      "finalSha256": "779921aba4d3f9cf93cc61b6274e0a7d38e1439261f472179ec12d9b1d3dc982",
+      "previousSha256": "779921aba4d3f9cf93cc61b6274e0a7d38e1439261f472179ec12d9b1d3dc982",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteCompliance/src/schemas/schemas.js",
+      "finalSha256": "62fbb82f89970f890ebdf7460b3192dd2d03fa6ce77cdb94a3abee4022d4a4eb",
+      "previousSha256": "62fbb82f89970f890ebdf7460b3192dd2d03fa6ce77cdb94a3abee4022d4a4eb",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteCompliance/AGENTS.md",
+      "finalSha256": "0634d5a941a68f5398bbb51a39d25be8166a5465833aad0828e2d379e453ba13",
+      "previousSha256": "0634d5a941a68f5398bbb51a39d25be8166a5465833aad0828e2d379e453ba13",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteMovement/src/schemas/schemas.js",
+      "finalSha256": "e88b8ba14caeafe610c8e92802c23e034ff6d2d8bea97faba55d17b0e38ddd5a",
+      "previousSha256": "e88b8ba14caeafe610c8e92802c23e034ff6d2d8bea97faba55d17b0e38ddd5a",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteMovement/AGENTS.md",
+      "finalSha256": "ac77263ae1f0417ee30fdf45dee1457d9c806320d9a0a174e3e4fbf2ac21ad31",
+      "previousSha256": "ac77263ae1f0417ee30fdf45dee1457d9c806320d9a0a174e3e4fbf2ac21ad31",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteReceipt/src/schemas/schemas.js",
+      "finalSha256": "cba9fc5ce0c10c3ce68d2727afe14b76362b08c0d2956f2c46750f8db94597e4",
+      "previousSha256": "cba9fc5ce0c10c3ce68d2727afe14b76362b08c0d2956f2c46750f8db94597e4",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteReceipt/AGENTS.md",
+      "finalSha256": "4f8af61b6f422120e4d4768dbced9d1390654198164fa1f89bf5c291c8659269",
+      "previousSha256": "4f8af61b6f422120e4d4768dbced9d1390654198164fa1f89bf5c291c8659269",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js",
+      "finalSha256": "e30c04d29390d23f08cb05cfa84b233448bdd5ca77036035ef38dabd4ac6df7f",
+      "previousSha256": "e30c04d29390d23f08cb05cfa84b233448bdd5ca77036035ef38dabd4ac6df7f",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/openAiProvider/src/service/defaultOpenAiCopilotProviderAdapterService.js",
+      "finalSha256": "3a428ad8eb2342a1ee5e64f87c5125bb72ffb9b9d55c52775f6b53d56b38f82f",
+      "previousSha256": "3a428ad8eb2342a1ee5e64f87c5125bb72ffb9b9d55c52775f6b53d56b38f82f",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/openAiProvider/AGENTS.md",
+      "finalSha256": "93c477a947ecfafefd35de2f88743147fe8c73f80450853abc6daabb75cdb94b",
+      "previousSha256": "93c477a947ecfafefd35de2f88743147fe8c73f80450853abc6daabb75cdb94b",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js",
+      "finalSha256": "d3ad69a7381db609d3a20c5c6bd5c1ba1f99a836bbe7d124b7a0a7028ae028a1",
+      "previousSha256": "d3ad69a7381db609d3a20c5c6bd5c1ba1f99a836bbe7d124b7a0a7028ae028a1",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.engagement/modules/engagementComms/src/service/defaultEngagementCommunicationService.js",
+      "finalSha256": "3305de4da523dbcab4a439f12ae9e1130397ef6267a1a33f2b9f2bb57fcd51b3",
+      "previousSha256": "3305de4da523dbcab4a439f12ae9e1130397ef6267a1a33f2b9f2bb57fcd51b3",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.engagement/modules/engagementComms/AGENTS.md",
+      "finalSha256": "f2a835386dbddcd06a8fe8dbd91597104a672dd6dce89b781d38afb1ff8f22d4",
+      "previousSha256": "f2a835386dbddcd06a8fe8dbd91597104a672dd6dce89b781d38afb1ff8f22d4",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
+      "finalSha256": "df732b2269112552b8da52408371f6f8f32b2c81f213509575e7292293b5b035",
+      "previousSha256": "df732b2269112552b8da52408371f6f8f32b2c81f213509575e7292293b5b035",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+      "finalSha256": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+      "previousSha256": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
+      "finalSha256": "a55b835f2b5591360ef726742115a5e71177351318136d8dcad03b091bb91509",
+      "previousSha256": "a55b835f2b5591360ef726742115a5e71177351318136d8dcad03b091bb91509",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js",
+      "finalSha256": "2b8f5236100095057ba61f4fe1033cb95c5f7afbd0dd7e6100508335fa01dc44",
+      "previousSha256": "2b8f5236100095057ba61f4fe1033cb95c5f7afbd0dd7e6100508335fa01dc44",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js",
+      "finalSha256": "5b298dd49b1193b50c6b4655df17a0de3c88b90a700acfc90de34f20a0ec39b7",
+      "previousSha256": "5b298dd49b1193b50c6b4655df17a0de3c88b90a700acfc90de34f20a0ec39b7",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+      "finalSha256": "15fe651b39fc97f595280a9524c466f7c35d3e36467574066f5854859ed6bb24",
+      "previousSha256": "15fe651b39fc97f595280a9524c466f7c35d3e36467574066f5854859ed6bb24",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.communication/modules/localCommsProvider/src/service/defaultLocalCommunicationProviderService.js",
+      "finalSha256": "4c1c398477db29ab9afa151c5114bd0a8ed0c24ce60e82a60d21ee56ddc927db",
+      "previousSha256": "4c1c398477db29ab9afa151c5114bd0a8ed0c24ce60e82a60d21ee56ddc927db",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/claudeProvider/src/service/defaultClaudeCopilotProviderAdapterService.js",
+      "finalSha256": "f89fa2526c4d95e387311d8f81158af0bbc3f5df13d7b5f29abf12b14472a7e4",
+      "previousSha256": "f89fa2526c4d95e387311d8f81158af0bbc3f5df13d7b5f29abf12b14472a7e4",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/claudeProvider/AGENTS.md",
+      "finalSha256": "1152cdc28163e480ddc44a1d92ba17b4eb4350547c14889d79f441faaaa60419",
+      "previousSha256": "1152cdc28163e480ddc44a1d92ba17b4eb4350547c14889d79f441faaaa60419",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/geminiProvider/src/service/defaultGeminiCopilotProviderAdapterService.js",
+      "finalSha256": "a5b9549c344ef215c36d0ff4e6601c337b3f1588297f78e452f0be4798bbd97c",
+      "previousSha256": "a5b9549c344ef215c36d0ff4e6601c337b3f1588297f78e452f0be4798bbd97c",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/geminiProvider/AGENTS.md",
+      "finalSha256": "01f39a4a1cf19fbe17b307f49ffcbe1b35e46e3d65bbe8ffa0b1e314e2b70530",
+      "previousSha256": "01f39a4a1cf19fbe17b307f49ffcbe1b35e46e3d65bbe8ffa0b1e314e2b70530",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.copilot/modules/copilotProviders/modules/mockProvider/src/service/defaultCopilotMockProviderAdapterService.js",
+      "finalSha256": "cdb42d7206d15310f00d369c4c2b8ba0ac81beaf269bc0dfb35126e713036a9e",
+      "previousSha256": "cdb42d7206d15310f00d369c4c2b8ba0ac81beaf269bc0dfb35126e713036a9e",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.accelerators/modules/nexus/modules/nexusCore/package.json",
+      "finalSha256": "94f6e1187ee0c89370e59d41fc3f5a0041b4058f8637e15a1c503c897ff63f32",
+      "previousSha256": "94f6e1187ee0c89370e59d41fc3f5a0041b4058f8637e15a1c503c897ff63f32",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.accelerators/modules/nexus/modules/nexusCore/config/properties.js",
+      "finalSha256": "79fa668ffcb42985499b51ca6de22c5687a5271e60262f200e27db28d350992e",
+      "previousSha256": "028cdc8aac418cba071e5df2ad056a1e993f3d374ac227bde64accf8adb83685",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read complete properties: initialization profiles and content/media/engagement package selections plus acceptance probe are inert descriptors, not imports or business execution. INTERNAL_CONFIGURATION remains accurate.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.accelerators/modules/nexus/modules/nexusCore/AGENTS.md",
+      "finalSha256": "ef80c3a66903efb4878e865e94357a782a79bdb059840ed87074b6ade114e912",
+      "previousSha256": "ef80c3a66903efb4878e865e94357a782a79bdb059840ed87074b6ade114e912",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json",
+      "finalSha256": "191fc0704b6e78a9786887e3a2d3bab0b77805bd67f9096b9714be34faba66e2",
+      "previousSha256": "191fc0704b6e78a9786887e3a2d3bab0b77805bd67f9096b9714be34faba66e2",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/README.md",
+      "finalSha256": "203b8ae0d092f03860c6b86bbcd5ad74e6fe29a149d3c61207de2486af187aca",
+      "previousSha256": "203b8ae0d092f03860c6b86bbcd5ad74e6fe29a149d3c61207de2486af187aca",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/AGENTS.md",
+      "finalSha256": "c245a2d5747c646d96f97b2797f334524150e28c3455e6502ac5c59b62be1449",
+      "previousSha256": "c245a2d5747c646d96f97b2797f334524150e28c3455e6502ac5c59b62be1449",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json",
+      "finalSha256": "3513b25e7de5df872b02b82e77eed54ac7345ac88c719e3a9fdfe529521d581d",
+      "previousSha256": "3513b25e7de5df872b02b82e77eed54ac7345ac88c719e3a9fdfe529521d581d",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/README.md",
+      "finalSha256": "01f08382c3ac83cd0faeb392fbca8f2f82321feb220ebe054c5fc6a7a2e7c9f9",
+      "previousSha256": "01f08382c3ac83cd0faeb392fbca8f2f82321feb220ebe054c5fc6a7a2e7c9f9",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/AGENTS.md",
+      "finalSha256": "e1e0eb04a490a45d1303a3cbf8c8eb5680744254b54389d001a22f3504392a50",
+      "previousSha256": "e1e0eb04a490a45d1303a3cbf8c8eb5680744254b54389d001a22f3504392a50",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json",
+      "finalSha256": "5f834edd31c415d7e7ff14aa8c21e3b7d210260e4f4eee57d078c745b3861333",
+      "previousSha256": "5f834edd31c415d7e7ff14aa8c21e3b7d210260e4f4eee57d078c745b3861333",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/README.md",
+      "finalSha256": "6d52276597729d4a1143d50d934a24007605224619d994c5448da58186eef5ef",
+      "previousSha256": "6d52276597729d4a1143d50d934a24007605224619d994c5448da58186eef5ef",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/AGENTS.md",
+      "finalSha256": "848f6dade3751245f881ea75cb55354197c148a3472cd1fdf40c49bfa9724c40",
+      "previousSha256": "848f6dade3751245f881ea75cb55354197c148a3472cd1fdf40c49bfa9724c40",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.foundation/modules/nFacade/src/facade/common.js",
+      "finalSha256": "d668d31bf044739021816a08c829f98fc1a6f7ba7b117b3270cccbe960005c8f",
+      "previousSha256": "d668d31bf044739021816a08c829f98fc1a6f7ba7b117b3270cccbe960005c8f",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.foundation/modules/nFacade/src/facade/cache/defaultCacheFacade.js",
+      "finalSha256": "ea9dbdb7c2ed6bae23f2540fbd0b07441819a675824daa87c22958e0c02225ee",
+      "previousSha256": "ea9dbdb7c2ed6bae23f2540fbd0b07441819a675824daa87c22958e0c02225ee",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.foundation/modules/nFacade/src/facade/validator/defaultValidatorFacade.js",
+      "finalSha256": "61d90ec5a6373fef9f9a9cc8b90ad99283b8f9532edae48164efeb7ad732c1d9",
+      "previousSha256": "61d90ec5a6373fef9f9a9cc8b90ad99283b8f9532edae48164efeb7ad732c1d9",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.foundation/modules/nSetup/package.json",
+      "finalSha256": "89c196e15dd81342ae20224c57242fa95c915a54a530c6d1a4740e7cf74b9288",
+      "previousSha256": "89c196e15dd81342ae20224c57242fa95c915a54a530c6d1a4740e7cf74b9288",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.foundation/modules/nSetup/AGENTS.md",
+      "finalSha256": "f9763f6ff20ee6a902df8a034fd49ab0db15b41eb834f4c2955544864e99adfe",
+      "previousSha256": "7d0036dfb73f0278b435e20dfeb3a34aa7791a9ae186b2439e41b94c7bba3494",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read complete current guidance: mandatory ownership/default-placement rules remain non-runtime governance. Changes add no schemas/routes/services, so INTERNAL_GOVERNANCE remains accurate.",
+      "ownershipEvidence": [],
+      "comparison": "HEAD is not old pinned baseline; git diff HEAD is not claimed as exact historical delta. Current assertions and exact matching ownership evidence used."
+    },
+    {
+      "path": "nodics.waste/modules/wasteReward/llm/contracts/material-value.md",
+      "finalSha256": "248590b88635368299be88738876139ea1571f6ad88f5f72f083314297004d9d",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read full contract: governed valuation and qualified recycler-payment coverage gate original-contributor release via Loyalty. Current certificate holder and caller-paid flags confer no entitlement.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteReward/src/service/defaultWasteMaterialValueSettlementService.js",
+      "finalSha256": "94d0d1dfff7f8d4b55c8e85cee074dd23676ecefc4ce9d9ce937e24c0541ca50",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read full implemented service: validates exact coverage, freezes original release/wallet, invokes internal Loyalty and requires matching ledger. Disproves schema-only classification without proving installed qualification.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.waste/modules/wasteReward/AGENTS.md",
+      "finalSha256": "0fbb56151c537e6d0b35c298a821a33bb9d81f0f73c7b26f1fde70c383a06f18",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Owner explicitly owns material-value assessment/release and excludes payment execution, second ledger/default copies and caller-paid authority.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/llm/contracts/bundle-holdings-and-gifts.md",
+      "finalSha256": "5fe67ffa5f8ccfcc14f000c91282dcc64566f5e951a01b1323d41086301d24e2",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read full current contract: certificate/realized-carbon holdings are independently selected, with original locks/recovery; contributor history, future allocations and material entitlements never transfer.",
+      "ownershipEvidence": []
+    }
+  ],
+  "canonicalReview": [
+    {
+      "documentId": "reference.internal-source-boundary-register",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "e1c3bcd2c00194b3149f7e7e0c6374c9e8aed866c073bc9e946c8b9c4c16db4e",
+      "previousArticleBlocksSha256": "8cb2320d0ac5eeb125c0873fc37d4b4a40cb920e77b88f7ef3df4cf6deefbde4",
+      "articleBytesChanged": true,
+      "componentRelocated": true,
+      "anchors": [
+        "referenceInternalSourceBoundaryRegister-1-business-problem",
+        "referenceInternalSourceBoundaryRegister-2-classification-flow",
+        "referenceInternalSourceBoundaryRegister-3-register",
+        "referenceInternalSourceBoundaryRegister-4-classification-contract",
+        "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance",
+        "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+        "referenceInternalSourceBoundaryRegister-7-common-mistakes",
+        "referenceInternalSourceBoundaryRegister-8-verification"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW_AFTER_IMMUTABLE_EDITORIAL_CORRECTION",
+      "rationale": "The register now classifies WasteReward as an implemented assessment and payment-covered release coordinator while retaining BROADER_GUIDE placement. The linked Circa guide describes original contributor allocation, qualified actual-payment coverage, frozen CREDIT_PENDING, exact original-key Loyalty ledger readback and uncertain-credit recovery. Certificates and realized carbon are independently selected holdings, not attached automatic value; historical participation, future carbon and material-value entitlements remain with the original contributor. Other reviewed classifications retain their bounded source evidence; provider and installed transaction acceptance remain explicitly unproven."
+    },
+    {
+      "documentId": "discovery.search-indexing",
+      "componentFile": "nodics.discovery/modules/discoveryRuntime/data/docs-v001/records/documentation/discoveryRuntimeDocumentationComponentData.js",
+      "articleBlocksSha256": "27c8f5e8a0b3f591b2f5aa83276449923fde2b3155108f78c048e74006eb6ff7",
+      "previousArticleBlocksSha256": "27c8f5e8a0b3f591b2f5aa83276449923fde2b3155108f78c048e74006eb6ff7",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "discoverySearchIndexing-8-current-implementation-coverage"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "accelerators.circa-operations-rewards",
+      "componentFile": "nodics.accelerators/modules/waste/modules/eWaste/data/docs-v001/records/documentation/eWasteDocumentationRelease008ComponentData.js",
+      "articleBlocksSha256": "1bba40b7ca9186cd83e5489ae4e563ee683ba77012833b26d8161faa8c51c392",
+      "previousArticleBlocksSha256": "74da3b9f9cad09e5c9ae1a5c279f2f20f8df710ed3508e1c1fccdcb46d6a513e",
+      "articleBytesChanged": true,
+      "componentRelocated": true,
+      "anchors": [
+        "acceleratorsCircaOperationsRewards-1-staff-roles-and-resource-boundaries",
+        "acceleratorsCircaOperationsRewards-5-rewards-and-settlement",
+        "circa-downstream-waste-owner-boundaries",
+        "acceleratorsCircaOperationsRewards-3-assets-receipt-and-ownership"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW_AFTER_IMMUTABLE_EDITORIAL_CORRECTION",
+      "rationale": "The register now classifies WasteReward as an implemented assessment and payment-covered release coordinator while retaining BROADER_GUIDE placement. The linked Circa guide describes original contributor allocation, qualified actual-payment coverage, frozen CREDIT_PENDING, exact original-key Loyalty ledger readback and uncertain-credit recovery. Certificates and realized carbon are independently selected holdings, not attached automatic value; historical participation, future carbon and material-value entitlements remain with the original contributor. Other reviewed classifications retain their bounded source evidence; provider and installed transaction acceptance remain explicitly unproven."
+    },
+    {
+      "documentId": "loyalty.wallets-rewards-ledger",
+      "componentFile": "nodics.loyalty/modules/loyaltyWallet/data/docs-v002/records/documentation/loyaltyWalletDocumentationComponentData.js",
+      "articleBlocksSha256": "c1225f824ecd9c235f81c5815d7fbca3bba88686add878528ba548bb7ccdb59f",
+      "previousArticleBlocksSha256": "c1225f824ecd9c235f81c5815d7fbca3bba88686add878528ba548bb7ccdb59f",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "loyaltyWalletsRewardsLedger-3-source-map",
+        "loyaltyWalletsRewardsLedger-9-capture",
+        "loyaltyWalletsRewardsLedger-8-reserve",
+        "loyaltyWalletsRewardsLedger-4-owner-model",
+        "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern"
+      ],
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS"
+    },
+    {
+      "documentId": "rules.deterministic-evaluation",
+      "componentFile": "nodics.rulesEngine/modules/rulesEvaluation/data/docs-v001/records/documentation/rulesEvaluationDocumentationComponentData.js",
+      "articleBlocksSha256": "2b869d2eb4beef849bbfff0b38a549991d3432e689b0e2106de7e6919e9a23db",
+      "previousArticleBlocksSha256": "2b869d2eb4beef849bbfff0b38a549991d3432e689b0e2106de7e6919e9a23db",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "rules-evaluation-customize-and-extend-safely"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "wcms.publishing-lifecycle",
+      "componentFile": "nodics.wcms/modules/cms/data/docs-v001/records/documentation/cmsDocumentationComponentData.js",
+      "articleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "previousArticleBlocksSha256": "54759c6fe3e2f67230e60e0fdb2febb551d699c4ebc83ac37bfa81deb24b874c",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "communication.overview",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v002/records/documentation/commsCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "62e23d5681f376f3f14b500b64482f3535efc55cd0893a29b4c7deec15573b6d",
+      "previousArticleBlocksSha256": "62e23d5681f376f3f14b500b64482f3535efc55cd0893a29b4c7deec15573b6d",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "communicationOverview-6-verification-journey",
+        "communicationOverview-8-engagement-integration"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "communication.provider-runbooks",
+      "componentFile": "nodics.communication/modules/commsCore/data/docs-v002/records/documentation/commsCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "2d9df8c1c8e267e669e7665a9438e9c31fde23b4a47299d033fbac7b873d8dff",
+      "previousArticleBlocksSha256": "2d9df8c1c8e267e669e7665a9438e9c31fde23b4a47299d033fbac7b873d8dff",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "communicationProviderRunbooks-10-sms-injected-sandbox-configuration",
+        "communicationProviderRunbooks-5-email-controlled-smtp-configuration",
+        "communicationProviderRunbooks-1-implemented-modes-and-limits"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "copilot.provider-usage-budgets",
+      "componentFile": "nodics.copilot/modules/copilotProviders/modules/copilotProvider/data/docs-v001/records/documentation/copilotProviderDocumentationComponentData.js",
+      "articleBlocksSha256": "70252f14a6346e266d1b41ce398fff92d1e390d499ca5352beea90d4e11ab3ad",
+      "previousArticleBlocksSha256": "70252f14a6346e266d1b41ce398fff92d1e390d499ca5352beea90d4e11ab3ad",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "copilot-provider-adapter-contracts",
+        "copilotProviderUsageBudgets-4-verification-and-failure-recovery"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "commerce.payment-provider-boundaries",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4",
+      "previousArticleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "commercePaymentProviderBoundaries-2-boundary-model",
+        "commercePaymentProviderBoundaries-3-safe-payload-contract",
+        "commercePaymentProviderBoundaries-5-implementation-handoff"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "applications.nexus-data-content-guide",
+      "componentFile": "nodics.accelerators/modules/nexus/modules/nexus.web/data/docs-v001/records/documentation/nexus_webDocumentationComponentData.js",
+      "articleBlocksSha256": "55d5270b30d7d6dbf3b7f5581bb3619450dba8ad9982b957b4ff60b329e058ba",
+      "previousArticleBlocksSha256": "55d5270b30d7d6dbf3b7f5581bb3619450dba8ad9982b957b4ff60b329e058ba",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "applicationsNexusDataContentGuide-2-release-layout"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "foundation.overview",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "2075439784ccd8c3c65ebdfa3a8a9dfd6837e23a55dc328d3640f50ba9bdf22c",
+      "previousArticleBlocksSha256": "2075439784ccd8c3c65ebdfa3a8a9dfd6837e23a55dc328d3640f50ba9bdf22c",
+      "articleBytesChanged": false,
+      "componentRelocated": true,
+      "anchors": [
+        "foundationOverview-5-request-processing-model",
+        "foundationOverview-8-developer-workflow"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "reference.source-backed-documentation-coverage-audit",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "01a5c9fd5e1a6820744e8f645ac82f0ae7ec2dd267147c8b16ed94af5712e632",
+      "previousArticleBlocksSha256": "01a5c9fd5e1a6820744e8f645ac82f0ae7ec2dd267147c8b16ed94af5712e632",
+      "articleBytesChanged": false,
+      "componentRelocated": true,
+      "anchors": [
+        "referenceSourceBackedDocumentationCoverageAudit-1-audit-method"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "reference.documentation-gap-backlog",
+      "componentFile": "nodics.docs/data/docs-v001/records/documentation/nodicsDocumentationRelease002ComponentData.js",
+      "articleBlocksSha256": "1d0348d48232b50cc6bcc1cb36ff80c10ee0aae20d174aea0ec2a1ea4cfcd060",
+      "previousArticleBlocksSha256": "1d0348d48232b50cc6bcc1cb36ff80c10ee0aae20d174aea0ec2a1ea4cfcd060",
+      "articleBytesChanged": false,
+      "componentRelocated": true,
+      "anchors": [
+        "referenceDocumentationGapBacklog-2-classification-policy"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    },
+    {
+      "documentId": "framework.local-quick-start",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "24b59a834157ebd8ad30692ca9a0ddda6679e4327db36530f62b73e95dad90b9",
+      "previousArticleBlocksSha256": "24b59a834157ebd8ad30692ca9a0ddda6679e4327db36530f62b73e95dad90b9",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "relocationReview": "Concurrent forward release moved this canonical component from docs-v001 to docs-v002. Final catalogue check confirms identical articleBlocksSha256; no changed article assertions or blind content-hash renewal.",
+      "anchors": [
+        "frameworkLocalQuickStart-1-quick-path"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    }
+  ],
+  "tests": [
+    {
+      "command": "node --test nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchRankingContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchPublicationContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchBenefitContract.test.js nodics.commerce/modules/baseCommerce/modules/product/test/productCatalogueQuery.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentParticipantContextContract.test.js nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js nodics.waste/modules/wasteReward/test/materialConfiguration.test.js nodics.waste/modules/wasteReward/test/materialTransportContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 211,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-internal-tests.log"
+    },
+    {
+      "command": "node --test nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/physicalOrderReversalContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentOriginalCaptureSandboxContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceRefundContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 53,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-original-evidence-tests.log"
+    }
+  ],
+  "exclusions": [
+    "No runtime source, canonical CMS/manifest/shared closure edits.",
+    "No browser/E2E, native deployment, external calls, secrets, imports, publication, commits or context regeneration.",
+    "Local source fixtures and classification cannot qualify installed providers, transactions or financial settlement."
+  ]
+}

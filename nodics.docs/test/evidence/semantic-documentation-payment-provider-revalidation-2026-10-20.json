@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "validation": {
+    "sourceTests": {
+      "passed": 264,
+      "failed": 0,
+      "logs": [
+        "/tmp/semantic-commerce-internal-tests.log",
+        "/tmp/semantic-commerce-original-evidence-tests.log"
+      ]
+    },
+    "strictGateNegativeContract": {
+      "command": "node --test --test-name-pattern='manual review closure binds scope' nodics.docs/test/semanticReviewContract.test.mjs",
+      "passed": 1,
+      "failed": 0
+    },
+    "sidecarQualification": {
+      "status": "PASS",
+      "method": "Unchanged qualifySemanticReview applied to current canonical catalogue and exact source hashes after editorial correction.",
+      "scopesChecked": 4,
+      "closed": 4,
+      "openContentGap": 0
+    },
+    "concurrentChange": "Initial final check caught nTooling quick-start component relocation to docs-v002. Its article hash was unchanged; corrected the evidence path and reran all four checks successfully.",
+    "integratedAggregate": "Not modified. Heisenberg owns final aggregate/composition integration; runtime/provider/publication acceptance is not executed.",
+    "editorialSuccessorTests": {
+      "passed": 42,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-successor-tests.log"
+    },
+    "finalSourceTests": {
+      "passed": 62,
+      "failed": 0,
+      "log": "/tmp/commerce-semantic-final-source-tests.log",
+      "command": "node --test nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalBundleSettlement.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js"
+    }
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "PASS_SOURCE_REVIEW",
+  "coordination": {
+    "aggregateOwner": "Heisenberg",
+    "aggregateEdited": false,
+    "canonicalSourceEdited": false,
+    "handoff": "Final sidecars sent to Heisenberg for exclusive shared-aggregate integration; no aggregate edit here. Recheck exact bytes before merging."
+  },
+  "method": {
+    "baseline": "semantic-documentation-closure.json",
+    "baselineSha256": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "sourceSnapshotAt": "2026-10-20T10:57:55.320Z",
+    "review": "Current source/contracts compared with article assertions; exact-byte prior semantic evidence retained for unchanged files. Matching batch2 ownership records reused. Bounded documentation review, not a new full source audit.",
+    "changedBoundSources": 3,
+    "unchangedReuse": 4,
+    "commsEngagement": "No evolving Communication/Engagement runtime review or edits. Identical referenced bytes retain prior evidence only; future drift invalidates it.",
+    "finalReviewAt": "2026-10-20T11:23:34.784Z",
+    "finalComparison": "Read corrected article assertions against previously inspected unchanged source bytes; preserved exact blocks for unrelated reviewed articles. Six editorial corrections plus Digital historical-refund correction have explicit semantic rationale, not hash-only renewal."
+  },
+  "items": [
+    {
+      "item": "Payment Core and provider split",
+      "requestedAction": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
+      "evidence": [
+        {
+          "documentId": "commerce.payment-provider-boundaries",
+          "anchors": [
+            "commercePaymentProviderBoundaries-1-source-map",
+            "commercePaymentProviderBoundaries-2-boundary-model",
+            "commercePaymentProviderBoundaries-3-safe-payload-contract",
+            "commercePaymentProviderBoundaries-4-customization-and-extension-guidance",
+            "commercePaymentProviderBoundaries-5-implementation-handoff",
+            "commercePaymentProviderBoundaries-6-evidence-checklist",
+            "commercePaymentProviderBoundaries-7-common-mistakes",
+            "commercePaymentProviderBoundaries-8-verification",
+            "commerce-payment-provider-boundaries-original-capture-contract"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+        "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+        "nodics.commerce/modules/payment/modules/paymentCore/llm/contracts/README.md",
+        "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js"
+      ],
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Payment execution retains credential-free participant/auction evidence without granting provider authority and binds replay to original participant/capture. Loyalty reward preparation remains separate from provider accounting calls. The unchanged article accurately describes safe projections, original-capture guarded refunds, offline sandbox limits and reconciliation uncertainty. Method configuration and provider acknowledgements are not real settlement qualification.",
+      "sourceFindings": [],
+      "remediation": [],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source/editorial and isolated unit tests only; no runtime, browser, E2E, imports, providers, publication or financial acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "commerce.payment-provider-boundaries": {
+      "owner": "nodics.commerce/modules/payment/modules/paymentCore",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4"
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js": "dcf6615ea4a37cf71ed14b338fc9b35bbb8b8d01fbf0bc7e31931c9501c40e6e",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js": "6c6300618962f854777695767b30da5129c2d89f8d1cc0a2a2ba562f4dd50602",
+    "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js": "45fdcd1f4b182c083c2644af30b65d80a726e7dcd8ae17c4d0003370a963cda2",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js": "15fe651b39fc97f595280a9524c466f7c35d3e36467574066f5854859ed6bb24",
+    "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js": "5742ab7416ea29f2b1676d5d8a5ee6b833bab5db2748d5f886b785e0e1d8c541",
+    "nodics.commerce/modules/payment/modules/paymentCore/llm/contracts/README.md": "7b67f0789c2e866dbfb8b7862e0372590f763d8bb44933db4c5aeabf07e41431",
+    "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js": "537da8f6eb7ac9ebd38f18f1dc16bca77798ff4d577bb4e543c2751f4830deea"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
+      "finalSha256": "dcf6615ea4a37cf71ed14b338fc9b35bbb8b8d01fbf0bc7e31931c9501c40e6e",
+      "previousSha256": "582bd237034b34aa34c59e038f166153ef3b25796af56817e2242732d370205d",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read current complete service. Typed participant/actor and auction commitment evidence are credential-free, forwarded without becoming provider authority, and bound on in-flight/stored replay. Original capture retention/readback and provider delegation preserve guide's method/provider and safe-payload boundary.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "dcf6615ea4a37cf71ed14b338fc9b35bbb8b8d01fbf0bc7e31931c9501c40e6e",
+          "disposition": "reviewed-corrected"
+        }
+      ]
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js",
+      "finalSha256": "6c6300618962f854777695767b30da5129c2d89f8d1cc0a2a2ba562f4dd50602",
+      "previousSha256": "6c6300618962f854777695767b30da5129c2d89f8d1cc0a2a2ba562f4dd50602",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
+      "finalSha256": "45fdcd1f4b182c083c2644af30b65d80a726e7dcd8ae17c4d0003370a963cda2",
+      "previousSha256": "45fdcd1f4b182c083c2644af30b65d80a726e7dcd8ae17c4d0003370a963cda2",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+      "finalSha256": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+      "previousSha256": "ae9151751bd0bc5885c83053ac7390be0b7be6347f147c0876b775c51781f5b7",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js",
+      "finalSha256": "15fe651b39fc97f595280a9524c466f7c35d3e36467574066f5854859ed6bb24",
+      "previousSha256": "15fe651b39fc97f595280a9524c466f7c35d3e36467574066f5854859ed6bb24",
+      "disposition": "REUSED_UNCHANGED_PRIOR_SEMANTIC_REVIEW",
+      "rationale": "Exact source bytes match the pinned semantic baseline. Retain its original bounded owner/classification assertion without claiming new full-file code review, expanded implementation depth or runtime acceptance.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+      "finalSha256": "5742ab7416ea29f2b1676d5d8a5ee6b833bab5db2748d5f886b785e0e1d8c541",
+      "previousSha256": "b452d6e9569ffe67d7d4f4566974c5140e4a62338ce4deef1b82121dc1f36696",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read current complete provider. It delegates reserve/capture/release/reverse to Loyalty, checks exact ledger references, preserves original human request and uses dedicated auction adapter. Existing service-account early return is not fresh wallet-owner proof; the guide does not promise that. No second ledger or live qualification.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "5742ab7416ea29f2b1676d5d8a5ee6b833bab5db2748d5f886b785e0e1d8c541",
+          "disposition": "reviewed-corrected"
+        }
+      ]
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentCore/llm/contracts/README.md",
+      "finalSha256": "7b67f0789c2e866dbfb8b7862e0372590f763d8bb44933db4c5aeabf07e41431",
+      "previousSha256": null,
+      "disposition": "REVIEWED_SUPPLEMENTAL_OWNER_SOURCE",
+      "rationale": "Read full contract: original capture, signed Order approval, stable financial keys/readback, private participant evidence and offline-only qualification agree with article.",
+      "ownershipEvidence": []
+    },
+    {
+      "path": "nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js",
+      "finalSha256": "537da8f6eb7ac9ebd38f18f1dc16bca77798ff4d577bb4e543c2751f4830deea",
+      "previousSha256": "34dfb6abfa74a7d8f5ba87eb3176a6e0fbb56fd832c9365414e8380a5ae51cef",
+      "disposition": "REVIEWED_CURRENT_ARTICLE_ASSERTIONS",
+      "rationale": "Read full preparation: validated owner config, exact calculated positive total and amount/currency matching produce a frozen provider-neutral contract. It never reserves/debits value, matching the register and Payment guide.",
+      "ownershipEvidence": [
+        {
+          "report": "ownership-review-batch2-commerce.json",
+          "sha256": "537da8f6eb7ac9ebd38f18f1dc16bca77798ff4d577bb4e543c2751f4830deea",
+          "disposition": "reviewed-corrected"
+        }
+      ]
+    }
+  ],
+  "canonicalReview": [
+    {
+      "documentId": "commerce.payment-provider-boundaries",
+      "componentFile": "nodics.commerce/modules/payment/modules/paymentCore/data/docs-v001/records/documentation/paymentCoreDocumentationComponentData.js",
+      "articleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4",
+      "previousArticleBlocksSha256": "e1b61f494a81e251271587d743fce2c850a2d97a32adce2aab97877269578fc4",
+      "articleBytesChanged": false,
+      "componentRelocated": false,
+      "anchors": [
+        "commercePaymentProviderBoundaries-1-source-map",
+        "commercePaymentProviderBoundaries-2-boundary-model",
+        "commercePaymentProviderBoundaries-3-safe-payload-contract",
+        "commercePaymentProviderBoundaries-4-customization-and-extension-guidance",
+        "commercePaymentProviderBoundaries-5-implementation-handoff",
+        "commercePaymentProviderBoundaries-6-evidence-checklist",
+        "commercePaymentProviderBoundaries-7-common-mistakes",
+        "commercePaymentProviderBoundaries-8-verification",
+        "commerce-payment-provider-boundaries-original-capture-contract"
+      ],
+      "disposition": "RETAIN_PRIOR_ASSERTIONS_WITH_CHANGED_SOURCE_CHECK"
+    }
+  ],
+  "tests": [
+    {
+      "command": "node --test nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchRankingContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchPublicationContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchBenefitContract.test.js nodics.commerce/modules/baseCommerce/modules/product/test/productCatalogueQuery.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentParticipantContextContract.test.js nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionMerchantScopeContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionItemSimulationContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceItemMerchantContract.test.js nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentItemSimulationContract.test.js nodics.waste/modules/wasteReward/test/materialConfiguration.test.js nodics.waste/modules/wasteReward/test/materialTransportContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 211,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-internal-tests.log"
+    },
+    {
+      "command": "node --test nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/physicalOrderReversalContract.test.js nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionUsedBenefitReversalDisabledContract.test.js nodics.commerce/modules/payment/modules/paymentCore/test/paymentOriginalCaptureSandboxContract.test.js nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceRefundContract.test.js",
+      "timeoutMs": 180000,
+      "passed": 53,
+      "failed": 0,
+      "log": "/tmp/semantic-commerce-original-evidence-tests.log"
+    }
+  ],
+  "exclusions": [
+    "No runtime source, canonical CMS/manifest/shared closure edits.",
+    "No browser/E2E, native deployment, external calls, secrets, imports, publication, commits or context regeneration.",
+    "Local source fixtures and classification cannot qualify installed providers, transactions or financial settlement."
+  ]
+}

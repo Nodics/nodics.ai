@@ -1,5 +1,32 @@
 # wasteCore Agents
 
+Certificate asset states, operation phases and operation states are declared in
+`src/utils/enums.js` and consumed through loaded `ENUMS`. Array definitions use
+their string keys; mapped phase definitions use their wire values. Enum extension
+does not authorize a transition: preserve explicit operation allowlists, original
+beneficiary/custody guards and fresh private admission. Document exported helper
+inputs, outputs, persistence effects, failures and override boundaries.
+
+Asset owner/original-owner/physical-owner/digital-owner and event from/to fields
+are typed Profile descriptors, not static customer child references. Owner
+commands validate customer/Enterprise identity. Never restore customer-only
+refSchema targets: save-time traversal runs even with recursive:false and can
+otherwise attempt nested customer writes for an Enterprise descriptor.
+
+Coupon certificate holds/consumption use `DefaultWasteCertificateCouponService`
+and the same generated asset/event CAS owner. Require fresh domain admission and
+exact Digital acquisition source evidence for every mutation. `REDEEMED` is final;
+only a failed, uncompleted acquisition may release a reservation. Never transfer
+the original contributor's rewards, carbon or material entitlements implicitly.
+Reusable limits and evidence transport defaults belong in this module's
+`config/properties.js`, under `waste.certificateCoupons`.
+
+Certificate bundle mutations belong to the existing asset/event persistence
+boundary through `DefaultWasteCertificateBundleComponentService`. Require eWaste's
+fresh authority callback, generated CAS and exact original-operation readback.
+Never unlock during transfer or change physical custody/contributor entitlements.
+See [certificate holdings](llm/contracts/README.md#certificate-bundle-holdings).
+
 Follow [scoped business Workbench](llm/contracts/business-workbench.md) for ordinary
 business reads. Keep Waste Core's employee schema ACL at zero; admit owner commands
 before canonical identity persistence. Discovery and reads use `wasteApi`, current
@@ -17,12 +44,11 @@ preserving other areas, advanced responsibilities, scope and registration proof.
 Follow the parent contract: `../../AGENTS.md`.
 Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
-Digital original-sale refund locks/events remain in the existing reversal owner.
-Reuse the transfer owner's inspected CAS/unique-code/readback primitives, bind
-the original approved command and custody snapshot, and retain locks on uncertain
-settlement. Restore digital ownership only after eWaste verifies original seller
-reversal and original Payment refund; never mutate wallets or infer custody.
-See [the reversal contract](llm/contracts/README.md#original-digital-sale-refund).
+Completed digital sales are final; no automatic asset-reversal mutation service
+remains. Preserve historical REVERSAL events, refund metadata and locked receipts
+as evidence, not executable replay authority. Do not restore the retired adapter
+or infer permission to clear an installed lock. See
+[historical refund evidence](llm/contracts/README.md#original-digital-sale-refund).
 
 The transfer owner also owns strictly unfenced RESERVED captured/refunded
 cleanup through `digitalCompensationState`, `fenceDigitalCompensation` and

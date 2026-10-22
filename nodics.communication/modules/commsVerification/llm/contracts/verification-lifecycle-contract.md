@@ -9,6 +9,12 @@ here. Foundation retains generated pipelines, concurrency and database-provider
 semantics. Communication Core owns delivery. Profile owns identity,
 authentication, employee membership, approval, continuation and access.
 
+The private command permission `communication.verification.execute` is defined
+by the explicit `commsVerification:verificationExecutePermission` Init release.
+That owner release creates or preserves only the permission catalogue entry; it
+does not assign the permission, enable stored verification, or qualify a
+transport. Deployment authority remains a separate Profile-governed grant.
+
 The pure `create(command, policy)` and `verify(challenge, secret, now)` helpers
 are retained. Their return values are calculations, **not persisted proof**.
 New stored methods implement opt-in persistence and single-use consumption. They

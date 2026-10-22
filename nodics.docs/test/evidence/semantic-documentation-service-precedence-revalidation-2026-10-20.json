@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "evidenceQualification": {
+    "mechanism": "nodics.docs/scripts/semantic-review-contract.mjs:qualifySemanticReview",
+    "status": "closed-with-evidence",
+    "expected": true,
+    "sourceAndSupportingHashes": "ALL_CURRENT_AT_FINAL_CHECK",
+    "validatorHashes": "UNCHANGED",
+    "scope": "Revalidate this exact scope after the authorized forward article correction; aggregate remains Heisenberg-owned.",
+    "result": "PASS",
+    "diagnostic": "After the catalogue owner resolved duplicate component selection, the unchanged qualifySemanticReview accepted this final scope against the current owner catalogue. All source, supporting and validator hashes independently match current bytes. Runtime acceptance remains unexecuted.",
+    "resolvedPriorBlocker": "ERR_TOOL_DOC_00011 duplicate nodicsDocsComponentacceleratorsAgoraIndustryTemplates previously prevented catalogue construction. Resolved externally by canonical release selection; no validator weakening or local bypass."
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVALIDATION",
+  "item": "Service runtime and override precedence",
+  "requestedAction": "Document generated services, virtual service behavior, override precedence, and extension safety.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "rationale": "Final nConfig rereview distinguishes live contribution ordering from offline explicit caller policy. Live selected inactive-owner defaults apply after framework contributions and before project/environment/server/node overrides, with framework descendants excluded from the project boundary. Offline defaults are merged below caller-supplied inheritedProperties, preserving explicit null and replace-empty collections, before authored layers apply. This restores the original bounded offline precedence rather than adding runtime behavior. The release article's cited effective-runtime section remains unchanged; service identity, generated-before-authored composition, memberOrigins and overrideTrace are unaffected. Owner contract, guidance and focused tests agree; runtime acceptance remains unexecuted.",
+  "readiness": {
+    "mode": "AUTHORIZED_FRAMEWORK_MAINTAINER_REVIEW",
+    "writeOwner": "nodics.docs/test/evidence",
+    "outcome": "Close authorized source-editorial correction through an immutable owner successor and exact semantic evidence.",
+    "method": "Recovered matching historical source bytes where stated, read actual deltas/current named methods and cited article blocks, compare authority/failure/override claims, reuse only byte-identical prior source reviews.",
+    "excluded": "No runtime startup, E2E, native import/publication, credentials, old release rewrite, generated context, commits or shared aggregate edits."
+  },
+  "historicalBaseline": {
+    "aggregate": "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "aggregateSha256AtRead": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+    "previousSourceRevalidation": null
+  },
+  "items": [
+    {
+      "item": "Service runtime and override precedence",
+      "requestedAction": "Document generated services, virtual service behavior, override precedence, and extension safety.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Final nConfig rereview distinguishes live contribution ordering from offline explicit caller policy. Live selected inactive-owner defaults apply after framework contributions and before project/environment/server/node overrides, with framework descendants excluded from the project boundary. Offline defaults are merged below caller-supplied inheritedProperties, preserving explicit null and replace-empty collections, before authored layers apply. This restores the original bounded offline precedence rather than adding runtime behavior. The release article's cited effective-runtime section remains unchanged; service identity, generated-before-authored composition, memberOrigins and overrideTrace are unaffected. Owner contract, guidance and focused tests agree; runtime acceptance remains unexecuted.",
+      "evidence": [
+        {
+          "documentId": "foundation.service-runtime-overrides",
+          "anchors": [
+            "foundationServiceRuntimeOverrides-2-resolution-flow",
+            "foundationServiceRuntimeOverrides-3-precedence-contract",
+            "foundationServiceRuntimeOverrides-4-operational-evidence",
+            "foundationServiceRuntimeOverrides-6-customization-and-extension-guidance"
+          ]
+        },
+        {
+          "documentId": "framework.module-loading-service-precedence",
+          "anchors": [
+            "frameworkModuleLoadingServicePrecedence-1-loading-order",
+            "frameworkModuleLoadingServicePrecedence-3-customization-and-extension"
+          ]
+        },
+        {
+          "documentId": "configuration.framework-startup-lifecycle",
+          "anchors": [
+            "configurationFrameworkStartupLifecycle-7-file-and-artifact-loading",
+            "configurationFrameworkStartupLifecycle-11-entity-lifecycle-hooks"
+          ]
+        },
+        {
+          "documentId": "framework.release-upgrade-compatibility",
+          "anchors": [
+            "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js",
+        "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js",
+        "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js",
+        "nodics.foundation/modules/nConfig/src/utils/utils.js"
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "foundation.service-runtime-overrides": {
+      "owner": "nodics.foundation/modules/nService",
+      "componentFile": "nodics.foundation/modules/nService/data/docs-v001/records/documentation/nServiceDocumentationComponentData.js",
+      "articleBlocksSha256": "15fc42b45e55f2514485472cff5fb0f2e88073865b4cedf922dd4c3ec515d3c0"
+    },
+    "framework.module-loading-service-precedence": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "35331ab136034e25507c5e8c0f82a5309882d2b63c29b601770cbbed54712574"
+    },
+    "configuration.framework-startup-lifecycle": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "6bb8535904f5534dd216dabc479d1270688f2e7663f69f44c6cf7367f81417f6"
+    },
+    "framework.release-upgrade-compatibility": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v002/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "1ee44414aae228283ad5f47d29308426aae06e123d93f6519332588f237ab529"
+    }
+  },
+  "priorCanonicalDocuments": {
+    "foundation.service-runtime-overrides": {
+      "owner": "nodics.foundation/modules/nService",
+      "componentFile": "nodics.foundation/modules/nService/data/docs-v001/records/documentation/nServiceDocumentationComponentData.js",
+      "articleBlocksSha256": "15fc42b45e55f2514485472cff5fb0f2e88073865b4cedf922dd4c3ec515d3c0",
+      "sections": [
+        {
+          "anchor": "foundationServiceRuntimeOverrides-2-resolution-flow",
+          "title": "Resolution flow"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-3-precedence-contract",
+          "title": "Precedence contract"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-4-operational-evidence",
+          "title": "Operational evidence"
+        },
+        {
+          "anchor": "foundationServiceRuntimeOverrides-6-customization-and-extension-guidance",
+          "title": "Customization and extension guidance"
+        }
+      ]
+    },
+    "framework.module-loading-service-precedence": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "35331ab136034e25507c5e8c0f82a5309882d2b63c29b601770cbbed54712574",
+      "sections": [
+        {
+          "anchor": "frameworkModuleLoadingServicePrecedence-1-loading-order",
+          "title": "Loading order"
+        },
+        {
+          "anchor": "frameworkModuleLoadingServicePrecedence-3-customization-and-extension",
+          "title": "Customization and extension"
+        }
+      ]
+    },
+    "configuration.framework-startup-lifecycle": {
+      "owner": "nodics.foundation/modules/nConfig",
+      "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+      "articleBlocksSha256": "6bb8535904f5534dd216dabc479d1270688f2e7663f69f44c6cf7367f81417f6",
+      "sections": [
+        {
+          "anchor": "configurationFrameworkStartupLifecycle-7-file-and-artifact-loading",
+          "title": "File and artifact loading"
+        },
+        {
+          "anchor": "configurationFrameworkStartupLifecycle-11-entity-lifecycle-hooks",
+          "title": "Entity lifecycle hooks"
+        }
+      ]
+    },
+    "framework.release-upgrade-compatibility": {
+      "owner": "nodics.foundation/modules/nTooling",
+      "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+      "articleBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608",
+      "sections": [
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
+          "title": "Explaining an effective runtime"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+          "title": "Folder contract"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+          "title": "Compatibility rules"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+          "title": "Configuration behavior"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+          "title": "Upgrade flow"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+          "title": "Code and contract compatibility"
+        },
+        {
+          "anchor": "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+          "title": "Security boundaries under customization"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js": "4e6ccc9fd027942987fa7a20fc1f190db3a117b08923ff19357e67d329665d69",
+    "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+    "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
+    "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
+    "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js": "26368b14b5b4924421bc6177ac107ce9c48ed189f58a74fa74cf4a9f122582d8",
+    "nodics.foundation/modules/nConfig/src/utils/utils.js": "af6c7350571b04ee50a916f434ff8b15c4a2241b5ee6df3eff34b7d6d3a12eef"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js",
+      "previousSha256": "58047c2664c51d479083450197cd3ab763486838427715d939fdbc1a4b649e56",
+      "sha256": "4e6ccc9fd027942987fa7a20fc1f190db3a117b08923ff19357e67d329665d69",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Reviewed the final initializer delta and current offline method against the owner contract. Live loading applies selected inactive-owner defaults once after framework contributions and before project/environment/server/node overrides; framework containment is excluded from project detection, including nested checkout layouts. Offline readDeploymentConfiguration instead merges selected defaults below explicitly supplied inheritedProperties, then replays authored layers. Explicit caller null and $config:replace empty arrays are preserved; absent caller policy receives selected defaults and authored properties win last. Offline caller input is not a scan of framework defaults. Service/facade/controller composition and lifecycle behavior are unchanged. Focused tests cover sibling/nested live layouts, absent/explicit/authored offline policy, and both release projections.",
+      "previousRevalidationSha256": "c687c2967be65a6d1851d62bd9acbc561d259b88f67341d80c111ec0b1f82e25"
+    },
+    {
+      "path": "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+      "previousSha256": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+      "sha256": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js",
+      "previousSha256": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
+      "sha256": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/src/service/defaultInfraService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js",
+      "previousSha256": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
+      "sha256": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js",
+      "previousSha256": "26368b14b5b4924421bc6177ac107ce9c48ed189f58a74fa74cf4a9f122582d8",
+      "sha256": "26368b14b5b4924421bc6177ac107ce9c48ed189f58a74fa74cf4a9f122582d8",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.foundation/modules/nConfig/src/utils/utils.js",
+      "previousSha256": "0f78e4f4c645a281a0ba3d21fb8c0541665d3c0afa404530a0d3ce63275e124c",
+      "sha256": "af6c7350571b04ee50a916f434ff8b15c4a2241b5ee6df3eff34b7d6d3a12eef",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/src/utils/utils.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Recovered 3f5ab7b57 bytes match prior hash. Read complete diff: exact package-name grammar, trusted framework/project metadata, symlink containment, bounded traversal, duplicate rejection and allowed owner-kind checks return a descriptor only. collectModuleRecords sourceDiscovery is opt-in; ordinary runtime path is retained, and null-prototype counts remove inherited-key collisions."
+    }
+  ],
+  "correctnessAndCoverageLimitations": [
+    "No actual server was generated, started, restarted or used to inspect loaded memberOrigins.",
+    "Current initializer hash is bound to this review; another concurrent edit reopens it."
+  ],
+  "tests": [
+    {
+      "command": "node --test nodics.foundation/modules/nConfig/test/inactiveRuntimeRoleConfiguration.test.js nodics.foundation/modules/nConfig/test/runtimeRootDataReleaseProjectionContract.test.js",
+      "passed": 23,
+      "failed": 0,
+      "scope": "Isolated owner contracts; no running server, runtime acceptance or E2E."
+    }
+  ],
+  "evidenceValidatorRegression": {
+    "command": "node --test --test-name-pattern='manual review closure binds' nodics.docs/test/semanticReviewContract.test.mjs",
+    "passed": 1,
+    "failed": 0
+  },
+  "unchangedValidatorSha256": {
+    "nodics.docs/test/semanticReviewContract.test.mjs": "89fa7fc0f9b23eee170f04aa4023f21054226eb274642614297d6a48d1c12457",
+    "nodics.docs/scripts/semantic-review-contract.mjs": "5ebe473c28ed21de599d5cd6d5ea96eaddc6d1ed6d548a543afd060442f57f0e"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "integration": {
+    "aggregateWriter": "Heisenberg",
+    "aggregateEditedByThisReview": false,
+    "instruction": "Heisenberg must verify current hashes and integrate this PASS disposition, new canonical binding, source hashes and sourceRevalidation while preserving historical provenance and unrelated scopes."
+  },
+  "supportingSourceEvidence": {
+    "nodics.foundation/modules/nConfig/llm/contracts/configuration-inheritance-contract.md": "32ab4d374a4293d8fe1482ea8940ec48615e1e1e117098f02c2444a02fdf6702",
+    "nodics.foundation/modules/nConfig/test/inactiveRuntimeRoleConfiguration.test.js": "859587fb3006686e49d42298dc04e54e4b5f6a006ebf1df75153afdd7372e169",
+    "nodics.foundation/modules/nConfig/AGENTS.md": "2831ec3b37fdcf554cf1eec167bd66f820f8ed01ca6f6011c175d1ec52c978f3",
+    "nodics.foundation/modules/nConfig/test/runtimeRootDataReleaseProjectionContract.test.js": "df327fa02e27e616cfd26d6f84a18ca4c7a8497a5d87659efd243165e9c87952"
+  },
+  "priorReview": {
+    "disposition": "PASS_SOURCE_REVIEW",
+    "rationale": "Read all cited service/loader/startup/effective-runtime sections against the recovered utilities delta and fresh working-tree initializer delta. Installed-source lookup reads bounded exact package metadata under trusted roots without registering, activating, loading properties or widening MODULE_ROOTS; ordinary runtime discovery and generated-before-authored member merging remain separate. The initializer correction inserts explicitly selected inactive-owner defaults after framework properties and before project layers, and applies the same offline precedence. It changes configuration ordering, not service identity, member overrides, hook grouping, generated baseline or vService behavior. The existing cited sections remain accurate; the unrelated release-guide forceCurrent paragraph is outside this item's cited effective-runtime anchor and remains open under its own scope.",
+    "canonicalDocuments": {
+      "foundation.service-runtime-overrides": {
+        "owner": "nodics.foundation/modules/nService",
+        "componentFile": "nodics.foundation/modules/nService/data/docs-v001/records/documentation/nServiceDocumentationComponentData.js",
+        "articleBlocksSha256": "15fc42b45e55f2514485472cff5fb0f2e88073865b4cedf922dd4c3ec515d3c0"
+      },
+      "framework.module-loading-service-precedence": {
+        "owner": "nodics.foundation/modules/nConfig",
+        "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+        "articleBlocksSha256": "35331ab136034e25507c5e8c0f82a5309882d2b63c29b601770cbbed54712574"
+      },
+      "configuration.framework-startup-lifecycle": {
+        "owner": "nodics.foundation/modules/nConfig",
+        "componentFile": "nodics.foundation/modules/nConfig/data/docs-v001/records/documentation/configDocumentationComponentData.js",
+        "articleBlocksSha256": "6bb8535904f5534dd216dabc479d1270688f2e7663f69f44c6cf7367f81417f6"
+      },
+      "framework.release-upgrade-compatibility": {
+        "owner": "nodics.foundation/modules/nTooling",
+        "componentFile": "nodics.foundation/modules/nTooling/data/docs-v001/records/documentation/nToolingDocumentationComponentData.js",
+        "articleBlocksSha256": "007409b9fa5a45238ad3ff09bbac708ffcb2ffa0df7f8b5fa759af742e2e3608"
+      }
+    },
+    "sourceFileSha256": {
+      "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js": "8d8059019eb33fae3152d229be83f010047097b7233ab8c957f24977f79b5000",
+      "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+      "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
+      "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
+      "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js": "26368b14b5b4924421bc6177ac107ce9c48ed189f58a74fa74cf4a9f122582d8",
+      "nodics.foundation/modules/nConfig/src/utils/utils.js": "af6c7350571b04ee50a916f434ff8b15c4a2241b5ee6df3eff34b7d6d3a12eef"
+    }
+  },
+  "forwardArticleRevalidation": {
+    "documentId": "framework.release-upgrade-compatibility",
+    "owner": "nodics.foundation/modules/nTooling",
+    "contentPath": "docs-v002",
+    "version": "0.0.2",
+    "citedAnchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
+    "sectionChanged": false,
+    "relatedReview": "semantic-documentation-release-upgrade-revalidation-2026-10-20.json"
+  },
+  "revalidationHistory": [
+    {
+      "status": "SUPERSEDED_OFFLINE_PRECEDENCE_INTERPRETATION",
+      "reason": "The preceding review incorrectly treated offline inheritedProperties as scanned framework defaults. It is explicit caller policy and must override selected defaults, including null and replace-empty collections. The current review below supersedes that interpretation.",
+      "rationale": "Re-read the changed release/upgrade article after its authorized forward nTooling correction and verified the effective-runtime section cited by this service scope is byte-identical. New zero-work recovery/prerequisite prose is confined to upgrade-flow and reviewed under the separate release scope; service identity, generated-before-authored composition, memberOrigins and overrideTrace guarantees are unchanged. Also reviewed the final initializer correction: frameworkRoot descendants are explicitly excluded when detecting the first project contribution, even when the framework checkout is nested beneath the project; selected inactive-owner defaults therefore remain after framework defaults and before customer overrides. The offline merge and normal service/facade/controller loading remain unchanged. The existing source-local and server/runtime acceptance limits still apply.",
+      "sourceFileSha256": {
+        "nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js": "c687c2967be65a6d1851d62bd9acbc561d259b88f67341d80c111ec0b1f82e25",
+        "nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js": "bb5d3337be3fa83eb9bfe8f06fb0fd5dc4df0f0daa7a3b851a4d3a178e09084b",
+        "nodics.foundation/modules/nConfig/src/service/defaultInfraService.js": "b79d0730ae092dc640a6961789d3ac5152891f98d2064fd423910453f75ddfe4",
+        "nodics.foundation/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService.js": "a56b5bb6c4d225b39c124b3f078f42b846b7f84db835c50e7833b09784713fec",
+        "nodics.foundation/modules/nService/vService/src/service/procs/get/defaultModelsGetInitializerService.js": "26368b14b5b4924421bc6177ac107ce9c48ed189f58a74fa74cf4a9f122582d8",
+        "nodics.foundation/modules/nConfig/src/utils/utils.js": "af6c7350571b04ee50a916f434ff8b15c4a2241b5ee6df3eff34b7d6d3a12eef"
+      },
+      "supportingSourceEvidence": {
+        "nodics.foundation/modules/nConfig/llm/contracts/configuration-inheritance-contract.md": "b89eb2037ba3dbc8a07227948b43f01546b44b9db3e0a3988d690f7f4b9e28b5",
+        "nodics.foundation/modules/nConfig/test/inactiveRuntimeRoleConfiguration.test.js": "65ad61b4b897fc24cf633485ee421ed1592ad982bcb90171244f0d4d7b6d3d35"
+      },
+      "tests": [
+        {
+          "command": "node --test --test-reporter=dot nodics.foundation/modules/nConfig/test/inactiveRuntimeRoleConfiguration.test.js",
+          "passed": 21,
+          "failed": 0
+        }
+      ]
+    }
+  ],
+  "supportingSourceReviews": [
+    {
+      "path": "nodics.foundation/modules/nConfig/llm/contracts/configuration-inheritance-contract.md",
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/llm/contracts/configuration-inheritance-contract.md",
+      "sha256": "32ab4d374a4293d8fe1482ea8940ec48615e1e1e117098f02c2444a02fdf6702",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Separates live framework/default/customer ordering from offline explicit inheritedProperties policy. Preserves null and collection operators and states caller input is not scanned framework properties."
+    },
+    {
+      "path": "nodics.foundation/modules/nConfig/AGENTS.md",
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/AGENTS.md",
+      "sha256": "2831ec3b37fdcf554cf1eec167bd66f820f8ed01ca6f6011c175d1ec52c978f3",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Owner guidance matches the live/offline distinction and requires ordinary selected-owner property defaults in projection fixtures; release selectors do not manufacture installer defaults."
+    },
+    {
+      "path": "nodics.foundation/modules/nConfig/test/inactiveRuntimeRoleConfiguration.test.js",
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/test/inactiveRuntimeRoleConfiguration.test.js",
+      "sha256": "859587fb3006686e49d42298dc04e54e4b5f6a006ebf1df75153afdd7372e169",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Reviewed live sibling/nested boundary coverage and offline absent/default, explicit null/replace-empty, and authored override cases. Existing rejection tests retained."
+    },
+    {
+      "path": "nodics.foundation/modules/nConfig/test/runtimeRootDataReleaseProjectionContract.test.js",
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nConfig/test/runtimeRootDataReleaseProjectionContract.test.js",
+      "sha256": "df327fa02e27e616cfd26d6f84a18ca4c7a8497a5d87659efd243165e9c87952",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Reviewed complete six-line delta. Fixture merges actual Workflow owner properties with project release selectors through the owner binding service, asserts project selectors do not define installers, and retains live/offline projection assertions."
+    }
+  ]
+}

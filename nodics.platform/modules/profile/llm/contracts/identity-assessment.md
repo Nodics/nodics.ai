@@ -47,7 +47,7 @@ The existing assessment workflow has a separately default-disabled
 `ownerService` defaults to `DefaultProfileBootstrapIdentityAssessmentService`.
 This is not a login exemption list or a qualification setting. Its bounded
 `sources` select exact approved Init release codes and versions; the framework
-selector is `profile:init-v001` version `0.0.3` from `init-v001`. Later layers may select their
+selector is `profile:init-v001` version `0.0.8` from `init-v001`. Later layers may select their
 approved releases or override the comparison owner, preserving the contracts
 below. A selection is usable only when the existing nImport installation owner
 reports exactly one active CURRENT installation with the same release version,
@@ -73,7 +73,7 @@ remain present after successful comparison.
 
 Human bootstrap employees and the credential-bearing guest belong to the
 configured authority tenant (`defaultTenant`), not each newly provisioned tenant.
-The forward `profile:init-v001` version `0.0.3` separates `defaultEmployeeData`
+The forward `profile:init-v001` version `0.0.8` separates `defaultEmployeeData`
 (humans) from `preservedServiceEmployeeData` (runtime service principal). Its human
 and guest headers declare `options.tenants: [defaultTenant]`. Service employees,
 groups and supporting reference data retain their tenant-local dispatch.

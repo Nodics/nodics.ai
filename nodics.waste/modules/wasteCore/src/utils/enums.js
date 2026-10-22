@@ -11,6 +11,10 @@
 
 /** @module wasteCore/src/utils/enums @description Defines provider-neutral Waste enum contributions. @layer utility @owner wasteCore @override Later modules may add supported values without redefining meanings. */
 module.exports = {
+    WasteAssetStatus: { definition: ['PENDING_ASSET_CREATION', 'OWNED', 'LISTING_REQUESTED', 'LISTED', 'LISTING_FAILED', 'BID_RECEIVED', 'SALE_PENDING', 'SOLD', 'GIFT_PENDING', 'GIFTED', 'REDEMPTION_PENDING', 'REDEEMED', 'DONATION_PENDING', 'DONATED', 'LOCKED', 'DISPUTED', 'ARCHIVED'] },
+    WasteCertificateOperationStatus: { definition: ["RESERVED","TRANSFERRING","TRANSFERRED","COMPLETED","RELEASING","RELEASED","CONSUMING","CONSUMED","CANCELLED"] },
+    WasteCertificateOperation: { definition: {"INSPECT":"inspect","RESERVE":"reserve","TRANSFER":"transfer","FINALIZE":"finalize","CONSUME":"consume","RELEASE":"release"} },
+
     WasteRecordStatus: { definition: ['DRAFT', 'ACTIVE', 'INACTIVE', 'DEPRECATED', 'ARCHIVED'] },
     WasteConditionGrade: { definition: ['NEW_UNUSED', 'WORKING', 'REUSABLE', 'REPAIRABLE', 'PARTS_ONLY', 'RECYCLABLE', 'DAMAGED', 'HAZARDOUS', 'UNKNOWN'] },
     WasteCollectionPointStatus: { definition: ['ACTIVE', 'TEMPORARILY_CLOSED', 'FULL', 'MAINTENANCE', 'INACTIVE'] },

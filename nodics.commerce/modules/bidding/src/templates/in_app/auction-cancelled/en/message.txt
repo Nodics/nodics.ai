@@ -1,0 +1,1 @@
+Auction {{roundCode}} was cancelled. Any remaining hold release is reported separately.

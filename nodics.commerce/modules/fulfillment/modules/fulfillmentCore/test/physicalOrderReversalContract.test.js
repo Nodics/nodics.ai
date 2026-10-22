@@ -158,16 +158,16 @@ test('foreign staff, absent policy, denied current Profile scope, missing approv
     assert.deepEqual(f.data,before);assert.equal(f.state.payments,0);
 });
 
-test('Store policies read original retained Cart Store, reject cross-Store drift and preserve legacy external domain fallback',async()=>{
+test('Store policies read original retained Cart Store, reject cross-Store drift and preserve explicit external owner selection',async()=>{
     const f=await fixture();f.request.payload.storeCode='electronics-store';
     assert.equal((await recovery.preview(f.request)).eligible,true);
     f.data.cart.cart[0].storeCode='electronics-store';await assert.rejects(recovery.preview(f.request),/Store/);
     f.data.cart.cart[0].storeCode='apparel-store';f.policies.order.refunds.storeCodes={'electronics-store':true};
     await assert.rejects(recovery.preview(f.request),/policy/);
-    f.policies.order.refunds={enabled:true,orderCodePrefixes:['order'],storeCodes:{},ownerPorts:{eWaste:{moduleName:'waste',apiPrefix:'/reverse'}},defaultOwnerPort:'eWaste'};
+    f.policies.order.refunds={enabled:true,orderCodePrefixes:['order'],storeCodes:{},ownerPorts:{selected:{moduleName:'selectedOwner',apiPrefix:'/reverse'}},defaultOwnerPort:'selected'};
     SERVICE.DefaultModuleService.invokeModule=async r=>r.moduleName==='profile'?{data:{principalCode:'reviewer',scopes:[{scopeType:'ENTERPRISE',scopeCode:'e'}],deniedScopes:[]}}:{result:{eligible:true,kind:'EXTERNAL'}};
     f.data.order.orderLifecycleRequest[0].evidence.requestedResolution='REFUND';
-    assert.equal((await recovery.plan(await recovery.load(f.request))).provider,'eWaste');
+    assert.equal((await recovery.plan(await recovery.load(f.request))).provider,'selected');
 });
 
 test('dispatch and cancellation locks are mutually exclusive and stale preview cannot reverse a shipment',async()=>{

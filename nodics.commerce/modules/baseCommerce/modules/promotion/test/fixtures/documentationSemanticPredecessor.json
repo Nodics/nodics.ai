@@ -1,0 +1,199 @@
+{
+  "owner": "nodics.commerce/modules/baseCommerce/modules/promotion",
+  "section": {
+    "kind": "CONTENT_PACK",
+    "contentPath": "docs-v002",
+    "pack": "promotion",
+    "version": "0.0.2",
+    "owningDomain": "documentation",
+    "lifecycle": "PUBLISHABLE",
+    "destinationRole": "WCMS_STAGED",
+    "environmentScope": [
+      "ALL"
+    ],
+    "sensitivity": "PUBLIC",
+    "versioningPolicy": "IMMUTABLE",
+    "publicationPolicy": "REQUIRED",
+    "initialPublicationPolicy": "ADMIN_INITIATED",
+    "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+    "removalPolicy": "UNPUBLISH_OR_RETIRE",
+    "sourceMode": "cms-records",
+    "sourceAuthority": "data/docs-v002/records/documentation",
+    "sites": [
+      "nodicsDocumentationSite"
+    ],
+    "accessMode": "PUBLIC",
+    "pages": 1,
+    "components": 1,
+    "routes": 1,
+    "releaseChecksum": "fb30a32a498d9dae866bfff5067b3e2fc95cb16f83132afec4c5e7abf14a7eeb",
+    "generatedHashes": {
+      "docs-v002/records/documentation/promotionDocumentationComponentData.js": "7ab8b7243624d0d0c9f2cd1f72cd7aa05e6daf23a49b1a51deb3bfb215906d62",
+      "docs-v002/records/documentation/promotionDocumentationNodeData.js": "cbecdaff8f193a36f1d99c88528853568319ed872782a042844941f75666aab9",
+      "docs-v002/records/documentation/promotionDocumentationPageData.js": "bad8ea9fb6aa86a39da8c18974ea489a11cb4985aa3e8591eb8f8ffccd3a99cd",
+      "docs-v002/records/documentation/promotionDocumentationPageMetadataData.js": "ca6ccf2d9d5d7ad8004d102ee4a8523638a1fc1c8a6b27d339a49208c83fa5bc",
+      "docs-v002/records/documentation/promotionDocumentationPublicationStateData.js": "02a57cf9b913696bb22326b558b81de934f83f3cac797bb9effc0d8226559f36",
+      "docs-v002/records/documentation/promotionDocumentationRouteData.js": "8589314cf9db9f3f961aa3baa5da2df8bf657603c9e27a6efce1d372322e958b",
+      "docs-v002/records/documentation/promotionDocumentationSearchMetadataData.js": "41a81fc4af7139e385fd05193fce7af00ba4179e4f2310a78327f9ab2bc73481",
+      "docs-v002/headers/100_promotionDocumentationContentPackHeader.js": "bcfa4311885656fddb5b5d52ae7dd3c869199c6137102ea4efd381ac29142c58"
+    },
+    "includes": [
+      {
+        "manifestPack": "nodics.docs",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.docs/data/manifest.json",
+          "manifestSection": "foundation"
+        }
+      }
+    ],
+    "referenceCatalogues": [
+      {
+        "manifestPack": "nodics.docs",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.docs/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "cart",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "digitalCore",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "fulfillmentCore",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      }
+    ]
+  },
+  "successorVersion": "0.0.3",
+  "successorChecksum": "94c3bbc8624973b1ac1a2330dbe209d8e2613ea837e12f058b7e580617600ff5",
+  "previousArticles": [
+    {
+      "id": "promotion.campaigns-coupon-issuance",
+      "componentCode": "nodicsDocsComponentpromotionCampaignsCouponIssuance",
+      "blocksSha256": "31eb14faeb35fa1eb2a885561e53dd02683e36807836d3e3a287ba73ccbcbd16",
+      "headings": [
+        {
+          "text": "Immutable coupon offers, supply and purchasing rights",
+          "anchor": "promotion-governed-coupon-offers",
+          "level": 2
+        },
+        {
+          "text": "Accepted redemption scopes and private acquisition reporting",
+          "anchor": "promotion-coupon-participation-reporting",
+          "level": 2
+        },
+        {
+          "text": "Coupon delivery ownership and source qualification",
+          "anchor": "promotion-coupon-delivery-verification",
+          "level": 2
+        },
+        {
+          "text": "Business context and reader paths",
+          "anchor": "promotion-business-context",
+          "level": 2
+        },
+        {
+          "text": "Policy versus live budget and issued stock",
+          "anchor": "promotion-policy-live-budget",
+          "level": 2
+        },
+        {
+          "text": "Exact setup contribution and JSON contract",
+          "anchor": "promotion-setup-contract",
+          "level": 2
+        },
+        {
+          "text": "First-use budget admission and original replay",
+          "anchor": "promotion-budget-admission",
+          "level": 2
+        },
+        {
+          "text": "Purpose keys and atomic secure issuance",
+          "anchor": "promotion-secure-issuance",
+          "level": 2
+        },
+        {
+          "text": "Purchase, quote, redemption and reversal boundaries",
+          "anchor": "promotion-purchase-redemption",
+          "level": 2
+        },
+        {
+          "text": "Exact issuer merchant authority, not owner switching",
+          "anchor": "promotion-issuer-merchant-scope",
+          "level": 2
+        },
+        {
+          "text": "Coupon-bound issuer benefit COMMIT and inverse boundary",
+          "anchor": "promotion-coupon-bound-benefit-accounting",
+          "level": 2
+        },
+        {
+          "text": "ITEM rights: VERIFIED delivery versus LOCAL simulation",
+          "anchor": "promotion-local-item-simulation",
+          "level": 2
+        },
+        {
+          "text": "Already-redeemed benefits: inverse remains disabled",
+          "anchor": "promotion-used-benefit-inverses-disabled",
+          "level": 2
+        },
+        {
+          "text": "Failure and recovery matrix",
+          "anchor": "promotion-recovery",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension",
+          "anchor": "promotion-customization",
+          "level": 2
+        },
+        {
+          "text": "Source map and evidence limits",
+          "anchor": "promotion-source-map",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "promotion-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "promotion-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/promotion-campaigns-coupon-issuance"
+    }
+  ],
+  "corrections": [
+    {
+      "id": "promotion.campaigns-coupon-issuance",
+      "previousBlocksSha256": "31eb14faeb35fa1eb2a885561e53dd02683e36807836d3e3a287ba73ccbcbd16",
+      "articleBlocksSha256": "876fbd7fdd8a70c2cc7b930b464fd53586941e1f1c5de9717f3ee0f4dfa8ffb1"
+    }
+  ]
+}

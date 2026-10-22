@@ -156,6 +156,21 @@ test('conflicting or operator constraints, unsupported models and malformed inte
     }
 });
 
+test('insert-only rejection reports a fixed non-data-bearing contract category', async () => {
+    const f = fixture(),
+        request = f.request();
+    request.query = { code: 'private-record-value-that-must-not-appear' };
+    await assert.rejects(
+        step(save, 'saveModel', request),
+        (error) => {
+            assert.match(error.message, /query-constraint/u);
+            assert.doesNotMatch(error.message, /private-record-value/u);
+            return true;
+        },
+    );
+    assert.equal(f.calls.length, 0);
+});
+
 test('scope constraints are preserved and matching attributed fields allow creation', async () => {
     const f = fixture(),
         request = f.request();

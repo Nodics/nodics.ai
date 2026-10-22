@@ -365,6 +365,23 @@ module.exports = {
           default: 3,
           description: "Bounded maximum attempts declared by policy",
         },
+        requeueCount: {
+          type: "int",
+          required: true,
+          default: 0,
+          description:
+            "Number of explicitly governed dead-letter requeues performed",
+        },
+        lastRequeuedAt: {
+          type: "date",
+          required: false,
+          description: "Timestamp of the latest governed dead-letter requeue",
+        },
+        lastRequeueReason: {
+          type: "string",
+          required: false,
+          description: "Bounded operator reason for the latest dead-letter requeue",
+        },
         nextRetryAt: {
           type: "date",
           required: false,

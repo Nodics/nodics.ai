@@ -320,17 +320,6 @@ module.exports = {
         accessGroups: ["customerUserGroup"],
         permission: "waste.submission.create",
       },
-      purchase: {
-        key: "/marketplace/:code/purchase",
-        method: "POST",
-        secured: true,
-        controller: "DefaultEWasteExperienceController",
-        operation: "purchase",
-        apiExposure: "eWasteCustomer",
-        authTokenTypes: ["access"],
-        accessGroups: ["customerUserGroup"],
-        permission: "waste.asset.own.read",
-      },
       purchases: {
         key: "/purchases",
         method: "GET",
@@ -537,40 +526,19 @@ module.exports = {
   },
 };
 
-/** Bidding is Commerce-owned; the accelerator only adapts its customer journey. */
+/** Private history only; auction commands use Bidding directly with original participant authority. */
 module.exports.eWaste.bids = {};
 module.exports.eWaste.bids.bids = {
   secured: true,
   authTokenTypes: ["access"],
-  accessGroups: ["customerUserGroup"],
-  permission: "commerce.checkout.place",
+  accessGroups: ["customerUserGroup", "employeeUserGroup"],
+  permission: "commerce.bid.participate",
   apiExposure: "eWasteCustomer",
+  requestPrivacy: { sensitive: true }, cache: { enabled: false },
   key: "/bids",
   method: "GET",
   controller: "DefaultEWasteExperienceController",
   operation: "bids",
-};
-module.exports.eWaste.bids.placeBid = {
-  secured: true,
-  authTokenTypes: ["access"],
-  accessGroups: ["customerUserGroup"],
-  permission: "commerce.checkout.place",
-  apiExposure: "eWasteCustomer",
-  key: "/marketplace/:code/bids",
-  method: "POST",
-  controller: "DefaultEWasteExperienceController",
-  operation: "placeBid",
-};
-module.exports.eWaste.bids.decideBid = {
-  secured: true,
-  authTokenTypes: ["access"],
-  accessGroups: ["customerUserGroup"],
-  permission: "commerce.checkout.place",
-  apiExposure: "eWasteCustomer",
-  key: "/bids/:code/decisions",
-  method: "POST",
-  controller: "DefaultEWasteExperienceController",
-  operation: "decideBid",
 };
 
 /** Customer merchant claims are separate from employee fulfillment confirmation. */
@@ -621,20 +589,6 @@ module.exports.eWaste.orderReview.requestOrderReview = {
   method: "POST",
   controller: "DefaultEWasteExperienceController",
   operation: "requestOrderReview",
-};
-
-module.exports.eWaste.internalOrderReversal = {
-  internalOrderReversalInvoke: {
-    secured: true,
-    authTokenTypes: ["service"],
-    accessGroups: ["serviceAccountUserGroup"],
-    permission: "waste.asset.sale.transfer",
-    apiExposure: "wasteInternal",
-    key: "/internal/order-reversals/:phase",
-    method: "POST",
-    controller: "DefaultEWasteOrderReversalController",
-    operation: "invoke",
-  },
 };
 
 module.exports.eWaste.internalDigitalSale = {

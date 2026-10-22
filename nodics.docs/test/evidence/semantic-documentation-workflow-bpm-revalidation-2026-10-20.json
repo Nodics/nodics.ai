@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "evidenceQualification": {
+    "mechanism": "nodics.docs/scripts/semantic-review-contract.mjs:qualifySemanticReview",
+    "status": "closed-with-evidence",
+    "expected": true,
+    "sourceAndSupportingHashes": "ALL_CURRENT_AT_FINAL_CHECK",
+    "validatorHashes": "UNCHANGED",
+    "scope": "Eight independent in-memory scoped bundles; shared aggregate not edited. Open release-guide scope intentionally rejects closure."
+  },
+  "reviewDate": "2026-10-20",
+  "reviewType": "MANUAL_SEMANTIC_SOURCE_EDITORIAL_REVIEW",
+  "reviewStatus": "COMPLETED_BOUNDED_SOURCE_EDITORIAL_REVALIDATION",
+  "item": "Workflow and BPM source map",
+  "requestedAction": "Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility.",
+  "disposition": "PASS_SOURCE_REVIEW",
+  "requestedExplanationSatisfied": true,
+  "rationale": "Read the complete nbpm source-map article and all cited Process runtime/action-adapter sections against the exact Workflow properties diff and the matching removal from composition-only nodics.process/config/properties.js. The same adapter defaults, safe noop allowlist, disabled native designer/BPMN settings and PROCESS_DEFINITION installer move to the implementing Workflow owner. Completed-task CMS decision enforcement and domain ownership remain unchanged. The guide already distinguishes declarative definitions from grants, explicit effective allowlisting from registered adapter definitions, immutable versions from draft editing, and Process callbacks from actual CMS publication.",
+  "readiness": {
+    "mode": "AUTHORIZED_FRAMEWORK_MAINTAINER_REVIEW",
+    "writeOwner": "nodics.docs/test/evidence",
+    "outcome": "Requalify exact stale editorial scopes without weakening validators or claiming runtime acceptance.",
+    "method": "Recovered matching historical source bytes where stated, read actual deltas/current named methods and cited article blocks, compare authority/failure/override claims, reuse only byte-identical prior source reviews.",
+    "excluded": "No runtime startup, E2E, import, publication, credentials, source/manifest rewrite, generated context, commits or shared aggregate edits."
+  },
+  "historicalBaseline": {
+    "aggregate": "nodics.docs/test/evidence/semantic-documentation-closure.json",
+    "aggregateSha256AtRead": "4a98d12b297622e406c1bccf82cdb84e3f4eefc2100b563105731e07ff182b25",
+    "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+    "previousSourceRevalidation": null
+  },
+  "items": [
+    {
+      "item": "Workflow and BPM source map",
+      "requestedAction": "Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility.",
+      "disposition": "PASS_SOURCE_REVIEW",
+      "requestedExplanationSatisfied": true,
+      "rationale": "Read the complete nbpm source-map article and all cited Process runtime/action-adapter sections against the exact Workflow properties diff and the matching removal from composition-only nodics.process/config/properties.js. The same adapter defaults, safe noop allowlist, disabled native designer/BPMN settings and PROCESS_DEFINITION installer move to the implementing Workflow owner. Completed-task CMS decision enforcement and domain ownership remain unchanged. The guide already distinguishes declarative definitions from grants, explicit effective allowlisting from registered adapter definitions, immutable versions from draft editing, and Process callbacks from actual CMS publication.",
+      "evidence": [
+        {
+          "documentId": "process.workflow-bpm-source-map",
+          "anchors": [
+            "processWorkflowBpmSourceMap-1-source-map",
+            "processWorkflowBpmSourceMap-2-workflow-model",
+            "processWorkflowBpmSourceMap-3-contract",
+            "processWorkflowBpmSourceMap-5-implementation-handoff",
+            "processWorkflowBpmSourceMap-6-evidence-checklist"
+          ]
+        },
+        {
+          "documentId": "process.runtime-lifecycle",
+          "anchors": [
+            "processRuntimeLifecycle-2-definition-lifecycle",
+            "processRuntimeLifecycle-3-starting-an-instance",
+            "processRuntimeLifecycle-4-task-lifecycle",
+            "processRuntimeLifecycle-5-instance-detail-and-audit",
+            "processRuntimeLifecycle-6-scheduled-triggers"
+          ]
+        },
+        {
+          "documentId": "process.action-adapters",
+          "anchors": [
+            "processActionAdapters-1-safe-default",
+            "processActionAdapters-2-what-is-not-allowed",
+            "processActionAdapters-5-adapter-operating-contract"
+          ]
+        }
+      ],
+      "sourceFiles": [
+        "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js",
+        "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+        "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js",
+        "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+        "nodics.process/modules/workflow/config/properties.js"
+      ],
+      "liveAcceptance": {
+        "status": "NOT_EXECUTED",
+        "boundary": "Source-editorial review and isolated local checks only; no native or provider acceptance."
+      }
+    }
+  ],
+  "canonicalDocuments": {
+    "process.workflow-bpm-source-map": {
+      "owner": "nodics.foundation/modules/nbpm",
+      "componentFile": "nodics.foundation/modules/nbpm/data/docs-v001/records/documentation/bpmDocumentationComponentData.js",
+      "articleBlocksSha256": "2ccc0261b2ec890966b7848ae08be8255485c0d9a278dfcabdf543ff53034252"
+    },
+    "process.runtime-lifecycle": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "12a962f27dd555f7ac17bd4f7be7c3c49978b1f8ba2646a8392cbb4b54ef4f48"
+    },
+    "process.action-adapters": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "684331782340723c2aceb84492be9459448c12693b0c4c1eb7a87a416cc630c3"
+    }
+  },
+  "priorCanonicalDocuments": {
+    "process.workflow-bpm-source-map": {
+      "owner": "nodics.foundation/modules/nbpm",
+      "componentFile": "nodics.foundation/modules/nbpm/data/docs-v001/records/documentation/bpmDocumentationComponentData.js",
+      "articleBlocksSha256": "2ccc0261b2ec890966b7848ae08be8255485c0d9a278dfcabdf543ff53034252",
+      "sections": [
+        {
+          "anchor": "processWorkflowBpmSourceMap-1-source-map",
+          "title": "Source map"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-2-workflow-model",
+          "title": "Workflow model"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-3-contract",
+          "title": "Contract"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-5-implementation-handoff",
+          "title": "Implementation handoff"
+        },
+        {
+          "anchor": "processWorkflowBpmSourceMap-6-evidence-checklist",
+          "title": "Evidence checklist"
+        }
+      ]
+    },
+    "process.runtime-lifecycle": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "12a962f27dd555f7ac17bd4f7be7c3c49978b1f8ba2646a8392cbb4b54ef4f48",
+      "sections": [
+        {
+          "anchor": "processRuntimeLifecycle-2-definition-lifecycle",
+          "title": "Definition lifecycle"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-3-starting-an-instance",
+          "title": "Starting an instance"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-4-task-lifecycle",
+          "title": "Task lifecycle"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-5-instance-detail-and-audit",
+          "title": "Instance detail and audit"
+        },
+        {
+          "anchor": "processRuntimeLifecycle-6-scheduled-triggers",
+          "title": "Scheduled triggers"
+        }
+      ]
+    },
+    "process.action-adapters": {
+      "owner": "nodics.process/modules/workflow",
+      "componentFile": "nodics.process/modules/workflow/data/docs-v001/records/documentation/workflowDocumentationComponentData.js",
+      "articleBlocksSha256": "684331782340723c2aceb84492be9459448c12693b0c4c1eb7a87a416cc630c3",
+      "sections": [
+        {
+          "anchor": "processActionAdapters-1-safe-default",
+          "title": "Safe default"
+        },
+        {
+          "anchor": "processActionAdapters-2-what-is-not-allowed",
+          "title": "What is not allowed"
+        },
+        {
+          "anchor": "processActionAdapters-5-adapter-operating-contract",
+          "title": "Adapter operating contract"
+        }
+      ]
+    }
+  },
+  "sourceFileSha256": {
+    "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js": "ae3010057215a7936f39293402028fddc84c08199aff644a844257dfd0a367dc",
+    "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js": "c2fd2ae6a1c208951e2b60aaedd96c705b61bbdd5c9230eb7856344e1d422482",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js": "a17dc3de5c1e0cf2da23fd094c008a31f58837215020b2592ac38dfeb15096ff",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js": "c98c0a6c4a2c66211257b0cc3a3f290eca50e999cd510bb6d966f2151d73021d",
+    "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js": "306a3bb3858f799184852f49ae0ba6e3188579f744cd0a2889005560f38744cd",
+    "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js": "1c4b5a6465cc23879513657175273e4a850121ca50296a019cfda5fe95ee8aec",
+    "nodics.process/modules/workflow/config/properties.js": "7d0d1c572e78d82f17c04da308b959eb15e490086e8fc46949fbfd1c6447469b"
+  },
+  "sourceReviews": [
+    {
+      "path": "nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js",
+      "previousSha256": "ae3010057215a7936f39293402028fddc84c08199aff644a844257dfd0a367dc",
+      "sha256": "ae3010057215a7936f39293402028fddc84c08199aff644a844257dfd0a367dc",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.foundation/modules/nbpm/src/service/workflow/defaultWorkflowService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js",
+      "previousSha256": "c2fd2ae6a1c208951e2b60aaedd96c705b61bbdd5c9230eb7856344e1d422482",
+      "sha256": "c2fd2ae6a1c208951e2b60aaedd96c705b61bbdd5c9230eb7856344e1d422482",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js",
+      "previousSha256": "a17dc3de5c1e0cf2da23fd094c008a31f58837215020b2592ac38dfeb15096ff",
+      "sha256": "a17dc3de5c1e0cf2da23fd094c008a31f58837215020b2592ac38dfeb15096ff",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+      "previousSha256": "c98c0a6c4a2c66211257b0cc3a3f290eca50e999cd510bb6d966f2151d73021d",
+      "sha256": "c98c0a6c4a2c66211257b0cc3a3f290eca50e999cd510bb6d966f2151d73021d",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.process/modules/workflow/src/service/operation/defaultProcessPublicationDecisionCallbackService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js",
+      "previousSha256": "306a3bb3858f799184852f49ae0ba6e3188579f744cd0a2889005560f38744cd",
+      "sha256": "306a3bb3858f799184852f49ae0ba6e3188579f744cd0a2889005560f38744cd",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+      "previousSha256": "1c4b5a6465cc23879513657175273e4a850121ca50296a019cfda5fe95ee8aec",
+      "sha256": "1c4b5a6465cc23879513657175273e4a850121ca50296a019cfda5fe95ee8aec",
+      "changed": false,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+      "disposition": "UNCHANGED_BASELINE_REUSED",
+      "rationale": "Exact source bytes match the aggregate's earlier manual review. That prior semantic evidence is retained; no fresh full-file reread is claimed."
+    },
+    {
+      "path": "nodics.process/modules/workflow/config/properties.js",
+      "previousSha256": "21b4f6b7982190a261ed1c4c1fee5ea816d060f69b4649fe6baf73236d2d66c1",
+      "sha256": "7d0d1c572e78d82f17c04da308b959eb15e490086e8fc46949fbfd1c6447469b",
+      "changed": true,
+      "reviewedPath": "/Users/himkardwivedi/Apps/HimkarPrj/nodicsRoot/nodics.ai/nodics.process/modules/workflow/config/properties.js",
+      "disposition": "PASS_SOURCE_REVALIDATION",
+      "rationale": "Recovered 3f5ab7b57 bytes match prior hash. Exact fields are relocated without value changes from the group: actionAdapters enabled:true/allowUnregisteredActions:false/noop-only defaults; designer disabled with import/export/persistence disabled and bounded graph sizes; PROCESS role installer DefaultProcessDefinitionContributionService. This improves child-only composition and grants neither allowed domain actions nor activation."
+    }
+  ],
+  "correctnessAndCoverageLimitations": [
+    "No workflow definition import, instance start, task decision, callback, retry, incident operation or browser task queue was executed.",
+    "Existing source-map and action-adapter operating guarantees are preserved; relocation is not proof that any deployment selected or qualified them."
+  ],
+  "tests": [
+    {
+      "command": "Exact owner/group relocation comparison and scoped semantic evidence validation",
+      "status": "STATIC_ONLY"
+    }
+  ],
+  "evidenceValidatorRegression": {
+    "command": "node --test --test-name-pattern='manual review closure binds' nodics.docs/test/semanticReviewContract.test.mjs",
+    "passed": 1,
+    "failed": 0
+  },
+  "unchangedValidatorSha256": {
+    "nodics.docs/test/semanticReviewContract.test.mjs": "89fa7fc0f9b23eee170f04aa4023f21054226eb274642614297d6a48d1c12457",
+    "nodics.docs/scripts/semantic-review-contract.mjs": "5ebe473c28ed21de599d5cd6d5ea96eaddc6d1ed6d548a543afd060442f57f0e"
+  },
+  "liveAcceptance": {
+    "status": "NOT_EXECUTED"
+  },
+  "integration": {
+    "aggregateWriter": "Heisenberg",
+    "aggregateEditedByThisReview": false,
+    "instruction": "Verify current article/source hashes, merge only this scope's sourceFileSha256 bindings and reasoned sourceRevalidation into the existing aggregate; preserve original action, historical findings/limits and unrelated scopes. Changed inputs reopen review."
+  },
+  "supportingSourceEvidence": {
+    "nodics.process/config/properties.js": "8e5bbbe025c8923950594dd255bd74fd5ba3540734594d17a01dbda1889be96e"
+  }
+}

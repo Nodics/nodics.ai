@@ -157,12 +157,15 @@ and avoid redundant validation and CI polling without weakening required gates.
 ## Minimal configuration principle
 
 Apply the [mandatory default ownership gate](nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md#mandatory-default-ownership-gate).
-All reusable property definitions, defaults and standard wiring belong to their
-implementing framework modules. Customer files contain only actual selections
-and overrides, never mandatory copies of standard publication/provider mechanics.
-Review consumers and mixed objects, not only equal values. Keep registration,
-activation, qualification and authorization separate. Tests and generators must
-not make misplaced customer declarations part of the framework contract.
+Every reusable property definition, validation contract, complete default value
+and standard wiring belong exclusively to their implementing framework modules.
+Customer and runtime property files may contain only explicit values overriding
+framework-defined defaults; they must not define properties, supply missing
+defaults or repeat inherited values. Keep governed business data and topology
+metadata in their existing authorities. Review consumers and mixed objects, not
+only equal values. Keep registration, activation, qualification and authorization
+separate. Tests and generators must not make misplaced customer declarations
+part of the framework contract.
 
 Apply [Runtime Knowledge Is Framework-Owned](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#runtime-knowledge-is-framework-owned).
 Never add Copilot source catalogs to modules or accelerators. Active modules are
@@ -186,11 +189,13 @@ Each corrective batch updates its existing principle/contract, nearest owner
 guidance and meaningful regression coverage before it is reported complete.
 
 Apply `nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`
-for every configuration change. Inherit tested capability defaults and declare
-only intentional customer, environment, server or node differences. Prove
-activation and index order before moving values; preserve secret, authority,
-feature-enablement and destructive-operation boundaries. Small wrapper files
-around copied defaults do not satisfy this principle.
+for every configuration change. Inherit tested capability defaults. Customer,
+environment, server or node property files may contain only intentional value
+overrides for framework-defined properties; they must not define properties,
+supply defaults or repeat inherited values. Prove activation and index order
+before moving values; preserve secret, authority, feature-enablement and
+destructive-operation boundaries. Small wrapper files around copied defaults
+do not satisfy this principle.
 
 ## Repository boundary
 
@@ -321,9 +326,10 @@ generated validations do not substitute for this review.
 
 Apply the mandatory configuration ownership restrictions in
 `nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`.
-Local provider defaults are framework-owned; customer layers declare only actual
-selection or deployment differences. No environment descriptor, copied secret,
-or duplicate endpoint/authentication authority may be introduced by code or generators.
+Local provider defaults and property contracts are framework-owned; customer
+layers declare only explicit overrides to those framework-defined values. Do
+not introduce customer property definitions, copied defaults, environment
+descriptors, copied secrets, or duplicate endpoint/authentication authorities.
 
 
 Backend startup, readiness and API acceptance must work without any frontend

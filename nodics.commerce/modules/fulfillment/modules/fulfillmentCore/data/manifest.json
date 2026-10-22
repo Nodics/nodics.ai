@@ -30,7 +30,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "docs-v001",
       "pack": "fulfillmentCore",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -52,16 +52,16 @@
       "pages": 2,
       "components": 2,
       "routes": 2,
-      "releaseChecksum": "7b78d3ec733edad14eec9173b0aecd8853d2cb54405d5b46bce5cb712a9151cd",
+      "releaseChecksum": "18c6150b622561da65367c707494a88b9213eebff895cd6b24b874cf2a0c58ba",
       "generatedHashes": {
-        "docs-v001/records/documentation/fulfillmentCoreDocumentationNodeData.js": "9b66fb9979bf4c55669a53c2b518fc885e56ea250e0c776615d7e6d3d8424b82",
-        "docs-v001/records/documentation/fulfillmentCoreDocumentationPageMetadataData.js": "929ffd01eb0d64adc7e0a759e689cd923a6c6b590c9fbd06ff4e0487f94449f1",
-        "docs-v001/records/documentation/fulfillmentCoreDocumentationPublicationStateData.js": "21535d318bcf0e0e455a7115ba30706051df2e683b805c687432eb5daad0d850",
-        "docs-v001/records/documentation/fulfillmentCoreDocumentationSearchMetadataData.js": "9badbf977d3f1e17a8c1c82592efa8472b27584ed273a328143318e137fe90fa",
-        "docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js": "209b99268a270fa5fd4de0f44e2cdf52f4f195cfe16cc58c2dc16a6dde94fe3c",
-        "docs-v001/records/documentation/fulfillmentCoreDocumentationPageData.js": "09c19ffaad2b29957e85849b486fa3721cfcd9fd0973d80e45c0fd7c529b8b0e",
-        "docs-v001/records/documentation/fulfillmentCoreDocumentationRouteData.js": "fc956176d9b7c9d04a6a201b2c81a64321d3c5797beaac0f9953019849a607ef",
-        "docs-v001/headers/100_fulfillmentCoreDocumentationContentPackHeader.js": "25ee970eb88c766ca2edecbfe6e14fef6a140ca2c995bb4a9e220c501ac8047b"
+        "docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002NodeData.js": "b341447fe4996b212c919629ce3413376c96ba21a1bba5f640e9b1b5a911cd1e",
+        "docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PageMetadataData.js": "a97cb88a3c4ad6566968edff8f3234f52974a65e0a93beb465163504c0bda413",
+        "docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002SearchMetadataData.js": "4fb160a9beba5f0af0631599a7e4112c6b5c9e02f6aeae9a9d4fc9f7fc38b628",
+        "docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002ComponentData.js": "a57aae78030abf91fb77566c280e339395f755d2e3d3c8a25cd9d8bf3008d4ae",
+        "docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PageData.js": "09c19ffaad2b29957e85849b486fa3721cfcd9fd0973d80e45c0fd7c529b8b0e",
+        "docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002RouteData.js": "5062310f1f88ea564860ca8dc61df1c1f2f99450901736717c5ca0ba18b693d4",
+        "docs-v001/records/documentation/fulfillmentCoreDocumentationRelease002PublicationStateData.js": "5c791736f6baa22d08f33ab38b09712532effea263277db7806df9326fb9e749",
+        "docs-v001/headers/100_fulfillmentCoreDocumentationRelease002ContentPackHeader.js": "29636299e0967027608c0ce050c31593753c4ee0b22d1b6a8208336243d485da"
       },
       "includes": [
         {

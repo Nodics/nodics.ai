@@ -1,5 +1,12 @@
 # Pricing
 
+Digital bundle listings use the persisted
+[`DefaultPricingBundleListingService` port](llm/contracts/bundle-listing-prices.md).
+Its default-disabled automatic policy appends the exact source-proven row to the
+complete activated book through existing Pricing retention, managed CAS and
+receipts. It preserves ordinary Staged authoring and individual-row publication.
+Registration and unit proof do not activate or qualify an installed deployment.
+
 Individual price rows can be captured with their exact existing book version and
 approved Product reference through the existing publication API and Process
 approval. They use separate row pointers and never replace the book snapshot.

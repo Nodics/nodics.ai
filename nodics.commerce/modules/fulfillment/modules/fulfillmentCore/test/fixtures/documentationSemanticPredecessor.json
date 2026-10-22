@@ -1,0 +1,237 @@
+{
+  "owner": "nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+  "section": {
+    "kind": "CONTENT_PACK",
+    "contentPath": "docs-v001",
+    "pack": "fulfillmentCore",
+    "version": "0.0.1",
+    "owningDomain": "documentation",
+    "lifecycle": "PUBLISHABLE",
+    "destinationRole": "WCMS_STAGED",
+    "environmentScope": [
+      "ALL"
+    ],
+    "sensitivity": "PUBLIC",
+    "versioningPolicy": "IMMUTABLE",
+    "publicationPolicy": "REQUIRED",
+    "initialPublicationPolicy": "ADMIN_INITIATED",
+    "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+    "removalPolicy": "UNPUBLISH_OR_RETIRE",
+    "sourceMode": "cms-records",
+    "sourceAuthority": "data/docs-v001/records/documentation",
+    "sites": [
+      "nodicsDocumentationSite"
+    ],
+    "accessMode": "PUBLIC",
+    "pages": 2,
+    "components": 2,
+    "routes": 2,
+    "releaseChecksum": "7b78d3ec733edad14eec9173b0aecd8853d2cb54405d5b46bce5cb712a9151cd",
+    "generatedHashes": {
+      "docs-v001/records/documentation/fulfillmentCoreDocumentationNodeData.js": "9b66fb9979bf4c55669a53c2b518fc885e56ea250e0c776615d7e6d3d8424b82",
+      "docs-v001/records/documentation/fulfillmentCoreDocumentationPageMetadataData.js": "929ffd01eb0d64adc7e0a759e689cd923a6c6b590c9fbd06ff4e0487f94449f1",
+      "docs-v001/records/documentation/fulfillmentCoreDocumentationPublicationStateData.js": "21535d318bcf0e0e455a7115ba30706051df2e683b805c687432eb5daad0d850",
+      "docs-v001/records/documentation/fulfillmentCoreDocumentationSearchMetadataData.js": "9badbf977d3f1e17a8c1c82592efa8472b27584ed273a328143318e137fe90fa",
+      "docs-v001/records/documentation/fulfillmentCoreDocumentationComponentData.js": "209b99268a270fa5fd4de0f44e2cdf52f4f195cfe16cc58c2dc16a6dde94fe3c",
+      "docs-v001/records/documentation/fulfillmentCoreDocumentationPageData.js": "09c19ffaad2b29957e85849b486fa3721cfcd9fd0973d80e45c0fd7c529b8b0e",
+      "docs-v001/records/documentation/fulfillmentCoreDocumentationRouteData.js": "fc956176d9b7c9d04a6a201b2c81a64321d3c5797beaac0f9953019849a607ef",
+      "docs-v001/headers/100_fulfillmentCoreDocumentationContentPackHeader.js": "25ee970eb88c766ca2edecbfe6e14fef6a140ca2c995bb4a9e220c501ac8047b"
+    },
+    "includes": [
+      {
+        "manifestPack": "nodics.docs",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.docs/data/manifest.json",
+          "manifestSection": "foundation"
+        }
+      }
+    ],
+    "referenceCatalogues": [
+      {
+        "manifestPack": "promotion",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/baseCommerce/modules/promotion/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "digitalCore",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/digitalCommerce/modules/digitalCore/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "nodics.docs",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.docs/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      },
+      {
+        "manifestPack": "cart",
+        "source": {
+          "type": "LOCAL_SIBLING",
+          "repositoryName": "nodics.ai",
+          "manifestPath": "nodics.commerce/modules/checkout/modules/cart/data/manifest.json",
+          "manifestSection": "documentation"
+        }
+      }
+    ]
+  },
+  "successorVersion": "0.0.2",
+  "successorChecksum": "18c6150b622561da65367c707494a88b9213eebff895cd6b24b874cf2a0c58ba",
+  "previousArticles": [
+    {
+      "id": "fulfillment.shipping-management",
+      "componentCode": "nodicsDocsComponentfulfillmentShippingManagement",
+      "blocksSha256": "5a6ca17cce7ca188c2308fbb4887b17425c6c2096aaa0b37057c244428d60db0",
+      "headings": [
+        {
+          "text": "Business context",
+          "anchor": "fulfillmentShippingManagement-1-business-context",
+          "level": 2
+        },
+        {
+          "text": "Journey and ownership",
+          "anchor": "fulfillmentShippingManagement-2-journey-and-ownership",
+          "level": 2
+        },
+        {
+          "text": "Data and configuration detail",
+          "anchor": "fulfillmentShippingManagement-3-data-and-configuration-detail",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension",
+          "anchor": "fulfillmentShippingManagement-4-customization-and-extension",
+          "level": 2
+        },
+        {
+          "text": "Operations and governance",
+          "anchor": "fulfillmentShippingManagement-5-operations-and-governance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "fulfillmentShippingManagement-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "fulfillmentShippingManagement-7-verification",
+          "level": 2
+        },
+        {
+          "text": "Current implementation coverage",
+          "anchor": "fulfillmentShippingManagement-8-current-implementation-coverage",
+          "level": 2
+        },
+        {
+          "text": "Physical cancellation and return owner bridge",
+          "anchor": "physical-cancellation-return-owner-bridge",
+          "level": 2
+        },
+        {
+          "text": "Package receipts, inspections and stock disposition",
+          "anchor": "physical-return-receipt-inspection",
+          "level": 2
+        },
+        {
+          "text": "Physical recovery and qualification",
+          "anchor": "physical-recovery-qualification",
+          "level": 2
+        },
+        {
+          "text": "ITEM benefit delivery is not a shipment status",
+          "anchor": "fulfillment-item-delivery-boundary",
+          "level": 2
+        },
+        {
+          "text": "Explicit LOCAL ITEM simulation, not delivery",
+          "anchor": "fulfillment-local-item-simulation",
+          "level": 2
+        },
+        {
+          "text": "SIM: handle and nonimmutable evidence contract",
+          "anchor": "fulfillment-sim-receipt-boundary",
+          "level": 2
+        },
+        {
+          "text": "Simulation rejection, recovery and safe extension",
+          "anchor": "fulfillment-simulation-recovery",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/fulfillment-shipping-management"
+    },
+    {
+      "id": "commerce.fulfillment-core-source-map",
+      "componentCode": "nodicsDocsComponentcommerceFulfillmentCoreSourceMap",
+      "blocksSha256": "ef763053ea50378fd68c5823b49395c34a3890633d070dcaaae8b083b60467c2",
+      "headings": [
+        {
+          "text": "Business problem",
+          "anchor": "commerceFulfillmentCoreSourceMap-1-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Source map",
+          "anchor": "commerceFulfillmentCoreSourceMap-2-source-map",
+          "level": 2
+        },
+        {
+          "text": "Execution flow",
+          "anchor": "commerceFulfillmentCoreSourceMap-3-execution-flow",
+          "level": 2
+        },
+        {
+          "text": "Contract",
+          "anchor": "commerceFulfillmentCoreSourceMap-4-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "commerceFulfillmentCoreSourceMap-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operating rules",
+          "anchor": "commerceFulfillmentCoreSourceMap-6-operating-rules",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceFulfillmentCoreSourceMap-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceFulfillmentCoreSourceMap-8-verification",
+          "level": 2
+        }
+      ],
+      "route": "/docs/framework/commerce-fulfillment-core-source-map"
+    }
+  ],
+  "corrections": [
+    {
+      "id": "fulfillment.shipping-management",
+      "previousBlocksSha256": "5a6ca17cce7ca188c2308fbb4887b17425c6c2096aaa0b37057c244428d60db0",
+      "articleBlocksSha256": "18e1af46191ca9382c5c0b4c619fc743c79598a4341fef1afb910f5ec245b2c2"
+    },
+    {
+      "id": "commerce.fulfillment-core-source-map",
+      "previousBlocksSha256": "ef763053ea50378fd68c5823b49395c34a3890633d070dcaaae8b083b60467c2",
+      "articleBlocksSha256": "c3b98334c84fb8e0568f847ddf6983b2a8044c0cef2bd60cd5a9e3b783156687"
+    }
+  ]
+}

@@ -39,24 +39,30 @@ test('all five imports and help paths are inert in a fresh process without proje
 function fixture(fail = '') {
   const calls = [];
   let revision = 0;
-  const routes = ['/nodics/cart/v0/carts/{cartCode}/calculations', '/nodics/checkoutCore/v0/checkouts/place',
-    '/nodics/order/v0/orders/{orderCode}/lifecycle/preview', '/nodics/process/v0/incidents',
-    '/nodics/process/v0/instances/{instanceCode}/retry', '/nodics/process/v0/instances/{instanceCode}/compensate'];
+  const routes = {
+    commerce: ['/nodics/cart/v0/carts/{cartCode}/calculations', '/nodics/checkoutCore/v0/checkouts/place',
+      '/nodics/order/v0/orders/{orderCode}/lifecycle/preview'],
+    process: ['/nodics/process/v0/incidents', '/nodics/process/v0/instances/{instanceCode}/retry',
+      '/nodics/process/v0/instances/{instanceCode}/compensate'],
+  };
   return {
     calls,
     options: {
       execute: true, environment: { NODICS_AUTH_TOKEN: 'fixture', NODICS_ACCEPTANCE_ORIGIN: 'https://partner.invalid' },
-      configuration: { topology: { groups: { backends: ['COMMERCE', 'ENGAGEMENT'].map((role, i) =>
+      configuration: { topology: { groups: { backends: ['COMMERCE', 'PROCESS', 'ENGAGEMENT'].map((role, i) =>
         ({ role, server: role.toLowerCase(), host: 'fixture.invalid', port: 1200 + i })) } } },
       fetch: async (url, request) => {
         const route = new URL(url).pathname;
         calls.push({ route, request });
         if (fail === 'checkout' && route.endsWith('/openapi')) return Response.json({ paths: {} });
         if (fail === 'denied' && route.endsWith('/openapi')) return Response.json({}, { status: 403 });
-        if (route.endsWith('/openapi')) return Response.json({ paths: Object.fromEntries(routes.map(route =>
+        if (route.endsWith('/openapi')) {
+          const ownerRoutes = new URL(url).port === '1201' ? routes.process : routes.commerce;
+          return Response.json({ paths: Object.fromEntries(ownerRoutes.map(route =>
           [route, { [route.endsWith('/incidents') ? 'get' : 'post']: {} }])) });
-        if (route.endsWith('/public/feedback')) return Response.json({ code: 'feedback', revision, status: 'RECEIVED' });
-        if (route.endsWith('/operator/feedback')) return Response.json([{ code: 'feedback' }]);
+        }
+        if (route.endsWith('/public/feedback')) return Response.json({ code: 'feedback', status: 'RECEIVED' });
+        if (route.endsWith('/operator/feedback')) return Response.json([{ code: 'feedback', revision }]);
         if (route.includes('/actions/')) {
           const status = { TRIAGE: 'TRIAGED', ASSIGN: 'ASSIGNED', START: 'IN_PROGRESS', RESOLVE: 'RESOLVED', CONFIRM: 'CLOSED' }[route.split('/').at(-1)];
           return Response.json({ code: 'feedback', revision: ++revision, status: fail === 'engagement' ? 'RECEIVED' : status });
@@ -75,7 +81,7 @@ test('composition runs both canonical owners and retains their evidence', async 
   const f = fixture();
   assert.deepEqual(await run(f.options), { checkout: { state: 'PASSED' }, engagement: { state: 'PASSED', feedbackCode: 'feedback', revision: 5 } });
   assert.ok(f.calls[0].route.endsWith('/openapi'));
-  assert.equal(f.calls.length, 10);
+  assert.equal(f.calls.length, 11);
 });
 test('Checkout contract failure or denial prevents Engagement mutations; Engagement failure propagates', async () => {
   for (const failure of ['checkout', 'denied', 'engagement']) {

@@ -61,7 +61,10 @@ async function run() {
         await assert.rejects(() => placement.place(request, ports), error => error === failure);
         assert.deepEqual(calls, placementSteps.slice(0, index + 1), 'Placement must stop at the failed owner');
         assert.deepEqual(compensation.checkpoint.completed, placementPhases.slice(0, index).map(phase => phase[1]));
-        assert.deepEqual(compensation.checkpoint.results, Object.fromEntries(placementPhases.slice(0, index).map(phase => [phase[2], phase[3]])));
+        assert.deepEqual(compensation.checkpoint.results, {
+            ...Object.fromEntries(placementPhases.slice(0, index).map(phase => [phase[2], phase[3]])),
+            ...(index >= placementSteps.indexOf('authorizePayment') ? { paymentAttempted: true } : {})
+        });
         assert.equal(compensation.checkpoint.tenant, request.tenant);
         assert.equal(compensation.checkpoint.idempotencyKey, request.idempotencyKey);
         assert.equal(compensation.checkpoint.correlationId, request.correlationId);

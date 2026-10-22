@@ -14,7 +14,89 @@
 /** @module loyaltyApi/src/router/routers @description Declares internal Loyalty resource APIs for remote module integrations. @layer router @owner loyaltyApi @override Later modules may add routes while preserving resource-oriented route keys. */
 module.exports = {
     loyaltyApi: {
+        transferNotifications: {
+            source: { secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.transfer.notification.source', apiExposure: 'loyaltyInternal',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/internal/transfers/notification-source', method: 'POST',
+                controller: 'DefaultLoyaltyInternalController', operation: 'transferNotificationSource' },
+        },
+        auctionFunds: Object.fromEntries(['qualify', 'inspect', 'reserve', 'adjust', 'release', 'capture'].map(operation => [operation, {
+            secured: true, authTokenTypes: ['access', 'service'],
+            accessGroups: ['customerUserGroup', 'employeeUserGroup', 'serviceAccountUserGroup'],
+            permissions: ['commerce.bid.participate', 'commerce.bid.manage'], apiExposure: 'loyaltyAuction',
+            cache: { enabled: false }, requestPrivacy: { sensitive: true },
+            key: '/auction-funds/' + operation, method: 'POST', controller: 'DefaultLoyaltyInternalController',
+            operation: 'auction' + operation[0].toUpperCase() + operation.slice(1),
+        }])),
+        participation: {
+            wallet: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/wallet', method: 'GET', controller: 'DefaultLoyaltyInternalController', operation: 'participantWallet'
+            },
+            enterpriseTestCredit: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['platformAdministratorUserGroup'],
+                permission: 'loyalty.wallet.testCredit', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/admin/enterprise-test-credits', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'enterpriseTestCredit'
+            },
+            transferSettings: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'loyalty.transfers.manage', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/transfer-policy/read', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'transferSettings'
+            },
+            updateTransferSettings: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'loyalty.transfers.manage', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/transfer-policy', method: 'PUT', controller: 'DefaultLoyaltyInternalController', operation: 'updateTransferSettings'
+            },
+            partnerConversionOptions: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+                permission: 'loyalty.partnerConversion.read', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/partner-conversions/options', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'partnerConversionOptions'
+            },
+            partnerConversionQuote: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+                permission: 'loyalty.partnerConversion.execute', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/partner-conversions/quote', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'partnerConversionQuote'
+            },
+            partnerConversionConfirm: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+                permission: 'loyalty.partnerConversion.execute', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/partner-conversions/confirm', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'partnerConversionConfirm'
+            },
+            partnerConversionStatus: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+                permission: 'loyalty.partnerConversion.read', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/partner-conversions/status', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'partnerConversionStatus'
+            },
+            transfer: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+                permission: 'loyalty.rewards.transfer', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/reward-transfers', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'participantTransfer'
+            },
+            transferStatus: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup', 'employeeUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyParticipation',
+                cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/participant/reward-transfers/:operationKey', method: 'GET', controller: 'DefaultLoyaltyInternalController', operation: 'participantTransferStatus'
+            }
+        },
         internal: {
+            rewardUnitEvidence: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal', cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/reward-unit-evidence', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'rewardUnitEvidence'
+            },
             walletEvidence: {
                 secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
                 permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal', cache: { enabled: false }, requestPrivacy: { sensitive: true },
@@ -24,6 +106,16 @@ module.exports = {
                 secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
                 permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal', cache: { enabled: false }, requestPrivacy: { sensitive: true },
                 key: '/reward-ledger-evidence', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'ledgerEvidence'
+            },
+            reservationEvidence: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal', cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/reward-reservation-evidence', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'reservationEvidence'
+            },
+            redemptionEvidence: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal', cache: { enabled: false }, requestPrivacy: { sensitive: true },
+                key: '/reward-redemption-evidence', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'redemptionEvidence'
             },
             openWallet: {
                 secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],

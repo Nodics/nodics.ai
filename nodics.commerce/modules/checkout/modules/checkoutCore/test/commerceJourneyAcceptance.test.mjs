@@ -169,7 +169,8 @@ test('all campaigns require checkout commit, redemption and order campaign/cart 
       { checkoutStatus: 'PENDING' }, { checkoutRedemptionCode: null }, { orderCampaign: null },
       { orderCampaign: 'other-campaign' }, { orderCartCode: 'foreign-cart' }]) {
       const h = harness({ coupon, ...changes });
-      await assert.rejects(runCommerceJourneyAcceptance(h.options), /Checkout promotion apply|Customer order did not retain/);
+      await assert.rejects(runCommerceJourneyAcceptance(h.options),
+        /Checkout did not complete|Checkout promotion apply|Customer order did not retain/);
       assert(!h.calls.some(call => call.path.endsWith('/promotions/apply')));
     }
   }

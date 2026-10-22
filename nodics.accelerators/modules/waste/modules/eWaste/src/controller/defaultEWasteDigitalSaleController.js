@@ -17,7 +17,9 @@ module.exports = {
   invoke: function (request, callback) {
     const phase = request.httpRequest?.params?.phase;
     const result = Promise.resolve().then(() => {
-      if (!["evidence", "compensation-resolve", "availability", "reserve", "confirm", "deliver", "cancel", "refund-preview", "refund-prepare", "refund-settle", "refund-complete"].includes(phase)) throw new Error("Unsupported digital-sale phase");
+      if (!["evidence", "compensation-resolve", "availability", "reserve", "confirm", "deliver", "cancel", "refund-preview", "refund-prepare", "refund-settle", "refund-complete",
+        "bundle-holdings", "bundle-inspect", "bundle-reserve", "bundle-transfer", "bundle-release", "bundle-finalize",
+        "coupon-inspect", "coupon-reserve", "coupon-consume", "coupon-release"].includes(phase)) throw new Error("Unsupported digital-sale phase");
       request.httpResponse?.setHeader?.("Cache-Control", "no-store");
       const { enterpriseCode, ...payload } = request.httpRequest?.body || {};
       return SERVICE.DefaultEWasteDigitalSaleService.invoke({ tenant: request.tenant, authData: request.authData,

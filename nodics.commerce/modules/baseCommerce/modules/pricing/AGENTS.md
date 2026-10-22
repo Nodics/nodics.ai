@@ -1,5 +1,20 @@
 # Pricing Agent Contract
 
+Read [bundle listing prices](llm/contracts/bundle-listing-prices.md) for the explicit
+automatic held-bundle amendment. Preserve the complete activated book, independent
+Digital source/actor proof, original pointer CAS, retained receipt and private
+continuation. Never substitute a success-shaped adapter, publish only one row as
+a replacement book, invent Product approval, or enable the policy by registration.
+Bounds and their configurable validation ceilings belong to framework properties;
+missing definitions refuse without service fallbacks. Preserve admission-before-
+auth-factory ordering and original credential pins through every target write.
+Ordinary source authoring and individual-row approval rules below remain unchanged.
+Preserve the composed Digital/Pricing/Product/nPublish regression: actual source
+authoring, immutable graph, reverse authorization, journal and target receipts must
+produce publication success. Transport/storage isolation must not substitute a
+success-shaped Product or Pricing adapter in that composition. Test public-command
+recovery and original receipt reuse, not only isolated owner retries.
+
 Individual row releases reuse existing Pricing retention/pointers/receipts,
 nPublish and Process. Capture exactly one immutable row plus its exact existing
 book and independently proven approved Product; never publish a replacement

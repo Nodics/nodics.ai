@@ -20,7 +20,8 @@ const requiredAutomated = [
     'localizationManagementApiContract', 'localizationQualificationContract', 'AxisLocalizationContext',
     'LocalizationOperationsRoutePage'
 ];
-assert.equal(acceptance.contractVersion, 1);
+assert.equal(acceptance.contractVersion, 0);
+assert.equal(acceptance.executionScope, 'LOCAL_ONLY');
 assert.equal(acceptance.capability, 'nodics.localization');
 assert.deepEqual(acceptance.automatedEvidence, requiredAutomated);
 assert.equal(acceptance.decision, 'CONDITIONALLY_READY', 'repository evidence must not impersonate production approval');

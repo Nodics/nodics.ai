@@ -93,6 +93,7 @@ module.exports = {
         global.NODICS = { getModels: (module, tenant) => module === 'promotion' && tenant === 'tenantA' ? models : {} };
         let queue = Promise.resolve();
         global.SERVICE = {
+            DefaultCouponOfferService: require('../../src/service/defaultCouponOfferService'),
             DefaultPromotionOperationService: operation, DefaultPromotionSetupContributionService: setup,
             DefaultPromotionBudgetAdmissionService: admission, DefaultCouponSecureIssuanceService: secure,
             DefaultPromotionDistributionAdmissionService: { ...require('../../src/service/defaultPromotionDistributionAdmissionService'),

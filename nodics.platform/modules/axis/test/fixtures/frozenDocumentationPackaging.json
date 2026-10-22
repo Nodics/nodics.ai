@@ -1,0 +1,474 @@
+{
+  "head": "61a81489a0e360ad2846853a005f3c40add630a7",
+  "frozen": {
+    "kind": "CONTENT_PACK",
+    "contentPath": "docs-v001",
+    "pack": "nodics.platform.axis",
+    "version": "0.0.1",
+    "owningDomain": "axis",
+    "lifecycle": "PUBLISHABLE",
+    "destinationRole": "WCMS_STAGED",
+    "environmentScope": [
+      "ALL"
+    ],
+    "sensitivity": "PUBLIC",
+    "versioningPolicy": "IMMUTABLE",
+    "publicationPolicy": "REQUIRED",
+    "initialPublicationPolicy": "ADMIN_INITIATED",
+    "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+    "removalPolicy": "UNPUBLISH_OR_RETIRE",
+    "sourceMode": "cms-records",
+    "sourceAuthority": "data/docs-v001/records/documentation",
+    "sites": [
+      "axisDocumentationSite"
+    ],
+    "accessMode": "PUBLIC",
+    "pages": 18,
+    "components": 19,
+    "routes": 18,
+    "releaseChecksum": "209c2b1a4a5c367645cbc292307285b928de4d3f4ce8e94d4d714f113e6594d9",
+    "generatedHashes": {
+      "docs-v001/records/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
+      "docs-v001/records/documentation/axisDocumentationDashboardData.js": "0a2084e73332c2b8f514d399dd1eefa89b6366c33091ac1b858c87fa00b7abf7",
+      "docs-v001/records/documentation/axisDocumentationLegacyNavigationCleanupData.js": "9834348653678933d43ea165ae67c9f275a64dfc35aa7e705c51314007f7ec0b",
+      "docs-v001/records/documentation/axisDocumentationNavigationData.js": "ffea967d9fae65d5153fb3b092f3826c5682456365cff6f5d8efa1ea8c438827",
+      "docs-v001/records/documentation/axisDocumentationNodeData.js": "2a589bbea5937eb79aaae4ae1e3460d3a1e4b5aa8ea5cbe4d51f232afe760a08",
+      "docs-v001/records/documentation/axisDocumentationPageMetadataData.js": "5aab24695d09212b7bde0658163ddb197d2e6a95f57c6a04ed6e90477e8d7cce",
+      "docs-v001/records/documentation/axisDocumentationProductData.js": "e1e980db49906f19c49f9a33fdb347b2fc9752716290c38751955f2c488f6b84",
+      "docs-v001/records/documentation/axisDocumentationPublicationStateData.js": "e5d01cd96c01440183a95495840f95352a9af89c416d73c5ead6f4d7b21a31af",
+      "docs-v001/records/documentation/axisDocumentationSearchMetadataData.js": "60c1772bd60b8a8807ad2ac92ad8c845d9f9dc11142d9efeac292e77c94d3787",
+      "docs-v001/records/documentation/axisDocumentationComponentData.js": "42ce81ac1a89afe433321f1b9db7dc8de4f84d647a5b43fea869f90066b3305d",
+      "docs-v001/records/documentation/axisDocumentationPageData.js": "de4033d92d5faca60b9709acbc7662fae370cd1e2b09d336d09206ce0d3a8de7",
+      "docs-v001/records/documentation/axisDocumentationRendererData.js": "e65bdc1a34aa1ac60ef98f9ab6bd2a7f684095ce2db01f7483d675d7efd34a71",
+      "docs-v001/records/documentation/axisDocumentationRouteData.js": "fc8ee198df8b4bf3ea96eb2d6938e6ad9781d72f145875cea91bcae7b9935f33",
+      "docs-v001/records/documentation/axisDocumentationSiteData.js": "5c230ba36d9fb06a62e547b3ddd77846794d044dcd3f8c66af4307b3fd507b96",
+      "docs-v001/records/documentation/axisDocumentationSlotData.js": "69f8b32f526a18e5a43ef990e9c416dfdec9f163550eee1d2ef269da2de41458",
+      "docs-v001/records/documentation/axisDocumentationTemplateData.js": "ecbb59623f1d164262b956834d0b3481d6fbfe124c0e9c522b84aa652e457121",
+      "docs-v001/records/documentation/axisDocumentationTypeCodeData.js": "18c2a6071c533beb6c308682328eceb12e92fb0f5e3c32ceb4bddd523f29cc27",
+      "docs-v001/headers/axisDocumentationContentPackHeader.js": "6eea8107d7c1ec1e841d96d88f01b29a0889cef1f6456c90b0dc1103ad7b6519",
+      "docs-v001/records/documentation/axisDocumentationMediaData.js": "e0287cde4bd2e63b200f62ee13d04f886f4e0fef1f17f530b68191cbd657082c",
+      "docs-v001/assets/documentation/assetManifest.js": "4da371a282a99ce7e2e211d0025d2af05606d08972cccc468df0fb5f7487610d"
+    }
+  },
+  "articles": [
+    {
+      "id": "axis.overview",
+      "componentCode": "axisDocsComponentoverview",
+      "metadataCode": "axisDocsMetadataoverview",
+      "blocksChecksum": "e5d7574d381cf5f082cde7062f1940748f8a1687a8a0d2db48d6291ec048331d",
+      "evidenceChecksum": "6a45d0594492122d94654a98f0bb6e768324d0878322699c4b1e1735ff78a75c",
+      "route": "/docs/nodics-axis",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "README.md"
+        ],
+        "retired": [],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "11901b3f574c33945486131f96cba1f0328ab4f6acdde77158657307724753ce",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.architecture",
+      "componentCode": "axisDocsComponentarchitecture",
+      "metadataCode": "axisDocsMetadataarchitecture",
+      "blocksChecksum": "8d32c97005d9d11b695181bb57c090482863b385eee27b122269780e4ef5c853",
+      "evidenceChecksum": "e30070b2025de7be9f25c8af21c8e9e3985b92a2f9673763f546c9b57afde698",
+      "route": "/docs/nodics-axis/architecture",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/architecture-and-ownership.md"
+        ],
+        "retired": [
+          "docs/architecture-and-ownership.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.technology-stack",
+      "componentCode": "axisDocsComponenttechnologystack",
+      "metadataCode": "axisDocsMetadatatechnologystack",
+      "blocksChecksum": "f9e80bceedd66d4dd3f16da90ed98f97b2a266c5a329da41ce2c13ed762443ae",
+      "evidenceChecksum": "de83a520c7f661a91c0a9bde6242b2dd5cd730e08b14afb4fe72305743f3727f",
+      "route": "/docs/nodics-axis/technology-stack",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/frontend-technology-stack.md"
+        ],
+        "retired": [
+          "docs/frontend-technology-stack.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.design-system",
+      "componentCode": "axisDocsComponentdesignsystem",
+      "metadataCode": "axisDocsMetadatadesignsystem",
+      "blocksChecksum": "8318b52efd1a89069a7e3849894d885c384d79f4a8fcaf03b0f7260a10bbc42d",
+      "evidenceChecksum": "1ccdc56e3f34472bcd2be6e9c60cdf2f2998113fd83d65a3dcb0d7eba82618e3",
+      "route": "/docs/nodics-axis/design-system",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/design-system-and-shell.md"
+        ],
+        "retired": [
+          "docs/design-system-and-shell.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.cms-renderers",
+      "componentCode": "axisDocsComponentcmsrenderers",
+      "metadataCode": "axisDocsMetadatacmsrenderers",
+      "blocksChecksum": "a845263d61a4104da010fe05b91c5298aa18b50ed57217965c7084f1536443ba",
+      "evidenceChecksum": "cd57abe8aeaa1d3b30ecb17e8114ccc0b410651352e567e2fa958c01b68c6d43",
+      "route": "/docs/nodics-axis/cms-renderers",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/cms-delivery-and-renderers.md"
+        ],
+        "retired": [
+          "docs/cms-delivery-and-renderers.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.documentation-content",
+      "componentCode": "axisDocsComponentdocumentationcontent",
+      "metadataCode": "axisDocsMetadatadocumentationcontent",
+      "blocksChecksum": "3606822d4c7733d3d026afc3358036307eee5f7c8b69f72639c14c9f858814ed",
+      "evidenceChecksum": "7e908fe006650a7c5549273f740340a7d5c0f2d391b8069d0965a68663ed876c",
+      "route": "/docs/nodics-axis/documentation-content",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/documentation-content.md"
+        ],
+        "retired": [
+          "docs/documentation-content.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.employee-access",
+      "componentCode": "axisDocsComponentemployeeaccess",
+      "metadataCode": "axisDocsMetadataemployeeaccess",
+      "blocksChecksum": "781ebb8c8cc9ad3d466b5879d93f3016ee31c3952a06c868f44c704d04c81419",
+      "evidenceChecksum": "f179d4b61bcd4a09288d33260fb2e3a8081867fc22bbf70bbf235c48f33b1b95",
+      "route": "/docs/nodics-axis/employee-access",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/employee-login.md"
+        ],
+        "retired": [
+          "docs/employee-login.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.assistant",
+      "componentCode": "axisDocsComponentassistant",
+      "metadataCode": "axisDocsMetadataassistant",
+      "blocksChecksum": "7d9f70b9025b519bf6b05351b49ab1ac157f9b750adbef6e9551d5ceca4a2449",
+      "evidenceChecksum": "545b94298a5661f389fad700f1ddb98d22e0ef67b2da25f6ecafe4b67547805a",
+      "route": "/docs/nodics-axis/assistant",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/assistant-frontend.md"
+        ],
+        "retired": [
+          "docs/assistant-frontend.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.schema-workbench",
+      "componentCode": "axisDocsComponentschemaworkbench",
+      "metadataCode": "axisDocsMetadataschemaworkbench",
+      "blocksChecksum": "dae97ce1f94398c3ef5714a13c50f63fa4f5f336a73fe6bfca4293b1b0d886b1",
+      "evidenceChecksum": "d4f1b1d7fc3d3a3e7c28c5fe6aed9f44f33acd82d2c6fd79b98fd2c18aedb0de",
+      "route": "/docs/nodics-axis/schema-workbench",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/schema-workbench.md"
+        ],
+        "retired": [
+          "docs/schema-workbench.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.page-designer",
+      "componentCode": "axisDocsComponentpagedesigner",
+      "metadataCode": "axisDocsMetadatapagedesigner",
+      "blocksChecksum": "52621ea8c98a95c5c989d19801a75ed4d067ca9beefbcf8b57c6ded9b575924f",
+      "evidenceChecksum": "5472b7817b6c22f12707fef9c47f9eec06fabfda249f9d58b412bdb0e6e4b08b",
+      "route": "/docs/nodics-axis/page-designer",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+        ],
+        "retired": [],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "8e4be6959f8a8c391f633c2b7cb205270927975e5fa1b2b0d8b8558d1e6d5a05",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.experience-studio",
+      "componentCode": "axisDocsComponentexperiencestudio",
+      "metadataCode": "axisDocsMetadataexperiencestudio",
+      "blocksChecksum": "5ad4f7c681621fdec45961e6a91206a2462f2b473b425ef9b2a425f56828380a",
+      "evidenceChecksum": "195f9c8429cd65bb5b312cd856be29466e5feec197c9ff6726af9615aa5423fa",
+      "route": "/docs/nodics-axis/experience-studio",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+        ],
+        "retired": [],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "8e4be6959f8a8c391f633c2b7cb205270927975e5fa1b2b0d8b8558d1e6d5a05",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.module-health",
+      "componentCode": "axisDocsComponentmodulehealth",
+      "metadataCode": "axisDocsMetadatamodulehealth",
+      "blocksChecksum": "e2ac01aef55002501079fca1772e5f5ed0095d43ebf2471be48211e585a7a587",
+      "evidenceChecksum": "c06f4c0de032670674ddb0213c8e32f19bb1d4631fb0134884ff2fd785a46e15",
+      "route": "/docs/nodics-axis/module-health",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/module-health.md"
+        ],
+        "retired": [
+          "docs/module-health.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.imports-exports",
+      "componentCode": "axisDocsComponentimportsexports",
+      "metadataCode": "axisDocsMetadataimportsexports",
+      "blocksChecksum": "92824bea5a2c9b5ecfc32964e745814fe47d948cb3719894e7d5b751be60cd10",
+      "evidenceChecksum": "5c81b990be7a82a8541edb39b57a6ad1e938a8a46e78b4163fb928c368d11fa5",
+      "route": "/docs/nodics-axis/imports-exports",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/imports-and-exports.md"
+        ],
+        "retired": [
+          "docs/imports-and-exports.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.media-management",
+      "componentCode": "axisDocsComponentmediamanagement",
+      "metadataCode": "axisDocsMetadatamediamanagement",
+      "blocksChecksum": "643aba18317f7de715cffbf129cb864bc6e9119c7c4ef8dfbbca02f101d1a360",
+      "evidenceChecksum": "5472b7817b6c22f12707fef9c47f9eec06fabfda249f9d58b412bdb0e6e4b08b",
+      "route": "/docs/nodics-axis/media",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+        ],
+        "retired": [],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "8e4be6959f8a8c391f633c2b7cb205270927975e5fa1b2b0d8b8558d1e6d5a05",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.customer-engagement",
+      "componentCode": "axisDocsComponentcustomerengagement",
+      "metadataCode": "axisDocsMetadatacustomerengagement",
+      "blocksChecksum": "89773500bf311d44df941b6f22e28d0a6703526c58873ca6695596d5c34d1a77",
+      "evidenceChecksum": "5472b7817b6c22f12707fef9c47f9eec06fabfda249f9d58b412bdb0e6e4b08b",
+      "route": "/docs/nodics-axis/customer-engagement",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+        ],
+        "retired": [],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "8e4be6959f8a8c391f633c2b7cb205270927975e5fa1b2b0d8b8558d1e6d5a05",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.openapi-reference",
+      "componentCode": "axisDocsComponentopenapireference",
+      "metadataCode": "axisDocsMetadataopenapireference",
+      "blocksChecksum": "ac3504d5c4633fb1886b52bbd150d131a77c6da635aaef46951d19761aa6b1cc",
+      "evidenceChecksum": "5472b7817b6c22f12707fef9c47f9eec06fabfda249f9d58b412bdb0e6e4b08b",
+      "route": "/docs/nodics-axis/openapi-reference",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js"
+        ],
+        "retired": [],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "8e4be6959f8a8c391f633c2b7cb205270927975e5fa1b2b0d8b8558d1e6d5a05",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.feature-delivery",
+      "componentCode": "axisDocsComponentfeaturedelivery",
+      "metadataCode": "axisDocsMetadatafeaturedelivery",
+      "blocksChecksum": "b96af977c6967322bdd17d418be56907c191537a38119d261205ef009d9802b5",
+      "evidenceChecksum": "1854c88b6f67843d27f26ad699f9eb14779f0482a0acdd9179c377e7e4a143e5",
+      "route": "/docs/nodics-axis/feature-delivery",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/feature-delivery-checklist.md"
+        ],
+        "retired": [
+          "docs/feature-delivery-checklist.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    },
+    {
+      "id": "axis.implementation-contract",
+      "componentCode": "axisDocsComponentimplementationcontract",
+      "metadataCode": "axisDocsMetadataimplementationcontract",
+      "blocksChecksum": "8bb1904af1199dbe09c7ddd4cbecfa826dfa09577e327ba54b4204b499312a94",
+      "evidenceChecksum": "9fe7bd7d5bc55bedc9c15203d60eae05a7e1c429997316a3bd5079b6702723d4",
+      "route": "/docs/nodics-axis/implementation-contract",
+      "digestMode": "titledText",
+      "lifecycleState": "STAGED",
+      "sourceEvidenceMigration": {
+        "original": [
+          "data/manifest.json",
+          "docs/../data/docs-v001/records/documentation/axisDocumentationComponentData.js",
+          "docs/implementation-and-documentation-contract.md"
+        ],
+        "retired": [
+          "docs/implementation-and-documentation-contract.md"
+        ],
+        "register": "test/evidence/documentation-migration-register.json",
+        "registerChecksum": "77c5ca563e2a2278ffa03090b2bf0ca18fd584f678a1d2d8fbde94e792409901",
+        "selectedChecksum": "6ad5f10b7118a1ad84e331d40c3a505b4fc771866d4366a30f1da5abc3d50b0f",
+        "rationale": "Replace normalized predecessor self-source and registered retired Markdown selectors with the selected canonical CMS source. Retired evidence remains explicitly recorded in the existing migration register and frozen predecessor."
+      }
+    }
+  ]
+}

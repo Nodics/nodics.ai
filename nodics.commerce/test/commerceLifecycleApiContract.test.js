@@ -24,6 +24,17 @@ assert.equal(routers.operator.action.permission, 'commerce.lifecycle.act');
 const api = require(path.join(orderRoot, 'src/service/defaultOrderLifecycleOperationService'));
 (async function () {
     const saved = []; let updates = 0; let downstreamCalls = 0;
+    SERVICE.DefaultOrderBusinessAccessService = require(path.join(orderRoot, 'src/service/defaultOrderBusinessAccessService'));
+    SERVICE.DefaultOrderLifecycleRepositoryService = require(path.join(orderRoot, 'src/service/defaultOrderLifecycleRepositoryService'));
+    SERVICE.DefaultIdentityGovernanceService = { getSystemAuthData: () => ({ testPersistenceAuthority: true }) };
+    SERVICE.DefaultSecuredRequestPipelineService = {
+        getGrantedPermissions: request => request.authData.permissions,
+        isPermissionGranted: (permission, granted) => granted.includes(permission)
+    };
+    SERVICE.DefaultOrderLifecycleRequestService = { get: async request => ({ code: 'SUC_READ', result:
+        saved.filter(row => Object.entries(request.query).every(([key, value]) => row[key] === value)) }) };
+    const staff = (actorId, tenant = 't1') => ({ tokenType: 'access', principalType: 'human', principalId: actorId,
+        tenant, enterpriseCode: 'merchant', userGroups: ['employeeUserGroup'], permissions: ['commerce.lifecycle.act'] });
     const downstreamActionEvidence = api.downstreamActionEvidence;
     api.downstreamActionEvidence = async function (request, record) {
         downstreamCalls += 1;
@@ -43,13 +54,13 @@ const api = require(path.join(orderRoot, 'src/service/defaultOrderLifecycleOpera
     });
     for (const requestType of ['REFUND', 'CANCELLATION', 'RETURN']) {
         const code = 'request-' + requestType;
-        const request = { tenant: 't1', ownerId: 'customer1', actorId: 'customer1', orderCode: 'o1', idempotencyKey: code, correlationId: 'x', payload: { code, requestType }, query: {} };
+        const request = { tenant: 't1', enterpriseCode: 'merchant', ownerId: 'customer1', actorId: 'customer1', orderCode: 'o1', idempotencyKey: code, correlationId: 'x', payload: { code, requestType }, query: {} };
         const created = await api.create(request);
         assert.equal(created.status, 'SUBMITTED');
         assert.equal(await api.create(request), created);
-        const action = { tenant: 't1', actorId: 'approver1', requestCode: code, actionCode: 'APPROVE', payload: {} };
-        await assert.rejects(() => api.action({ ...action, actorId: 'customer1' }), /Maker-checker/u);
-        await assert.rejects(() => api.action({ ...action, tenant: 't2' }), /Lifecycle request not found/u);
+        const action = { tenant: 't1', actorId: 'approver1', authData: staff('approver1'), requestCode: code, actionCode: 'APPROVE', payload: {} };
+        await assert.rejects(() => api.action({ ...action, actorId: 'customer1', authData: staff('customer1') }), /Maker-checker/u);
+        await assert.rejects(() => api.action({ ...action, tenant: 't2', authData: staff('approver1', 't2') }), /Lifecycle request not found/u);
         const blocked = await api.action(action);
         assert.equal(blocked.status, 'SUBMITTED', 'Generic approval must not authorize reverse effects');
         assert.equal(blocked.revision, 1);
@@ -68,7 +79,7 @@ const api = require(path.join(orderRoot, 'src/service/defaultOrderLifecycleOpera
     const retained = saved.find(record => record.requestType === 'CANCELLATION');
     const priorDownstream = { inventory: { status: 'RELEASED', code: 'retained-release' } };
     retained.evidence.downstream = priorDownstream;
-    const reconciliation = await api.action({ tenant: 't1', actorId: 'approver1', requestCode: retained.code, actionCode: 'REJECT', payload: {} });
+    const reconciliation = await api.action({ tenant: 't1', actorId: 'approver1', authData: staff('approver1'), requestCode: retained.code, actionCode: 'REJECT', payload: {} });
     assert.equal(reconciliation.status, 'RECONCILIATION_REQUIRED');
     assert.equal(reconciliation.evidence.execution.recoveryRequired, true);
     assert.equal(reconciliation.evidence.execution.nextAction, 'MANUAL_RECONCILIATION_OF_EXISTING_OWNER_EVIDENCE');

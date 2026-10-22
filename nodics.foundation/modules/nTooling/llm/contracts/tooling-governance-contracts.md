@@ -750,6 +750,15 @@ and every participating backend, including Commerce Staged, to be ready. It neve
 starts runtimes or frontends. Customer release-module selections are inputs, not
 an editable list of canonical gates. Failures stop later steps.
 
+`acceptance:write-recovery-resilience` coordinates project-selected canonical
+owner commands across bounded fault and topology-restart phases. Project JSON
+selects operations and project checkpoint adapters; nTooling owns only the
+selection validator, explicit approvals, deterministic run keys, one-write
+orchestration, topology restart, failure stop and redacted aggregate evidence.
+It never retries an uncertain write or owns domain reconciliation. The complete
+adapter protocol is in
+`llm/contracts/write-recovery-resilience-acceptance.md`.
+
 BackOffice owns `acceptance:local`; Profile owns `acceptance:runtime-grants`;
 Editorial, Waste and Loyalty/Checkout integration retain their respective suites.
 Local bootstrap requires `--execute --approve-publications`. Runtime startup needs

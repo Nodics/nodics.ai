@@ -117,6 +117,7 @@ function fixture(t, level = 'edit') {
     global.NODICS = { getServerState: () => 'started', getModule: name => name === 'promotion' ? moduleObject : undefined,
         isModuleActive: () => true, getModels: () => ({ PromotionModel: wrapper }), getRouters: () => routes };
     global.SERVICE = { DefaultPromotionDraftService: owner, DefaultPromotionService: generatedService(),
+        DefaultCouponOfferService: require('../src/service/defaultCouponOfferService'),
         DefaultPromotionBusinessWorkbenchService: workbench, DefaultPromotionOperationService: operation,
         DefaultPromotionPublicationService: require('../src/service/defaultPromotionPublicationService'),
         DefaultPromotionBudgetAdmissionService: require('../src/service/defaultPromotionBudgetAdmissionService'),

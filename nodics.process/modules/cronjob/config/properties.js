@@ -17,6 +17,17 @@
  * @override Project, environment, server, or node layers may override cronjob scheduling behavior without changing framework defaults.
  */
 module.exports = {
+    tooling: {
+        commands: {
+            'acceptance:cronjob-execution': {
+                acceptanceContract: true,
+                projectHome: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultCronJobExecutionAcceptanceService.mjs'
+            }
+        }
+    },
+
     // Inert inventory; an allowed local server must explicitly select this capability.
     localResetProvider: {
         "contributions": {
@@ -39,6 +50,11 @@ module.exports = {
     },
 
     cronjob: {
+        acceptance: {
+            requestTimeoutMs: 30000,
+            executionTimeoutMs: 120000,
+            pollIntervalMs: 500
+        },
         processRetrySleepTime: 2000,
         runOnStartup: false,
         waitTime: 1000,

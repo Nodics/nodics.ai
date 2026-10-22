@@ -53,7 +53,7 @@ test('ordered generated campaign hooks preserve only the exact private admission
         assert.deepEqual(command.query, { tenant: 'tenantA', code: 'campaign' });
     } };
     const handlers = SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors('promotion').preSave.map(item => item.handler);
-    assert.deepEqual(handlers, ['DefaultPromotionBudgetAdmissionService.protectSave',
+    assert.deepEqual(handlers, ['DefaultCouponOfferService.protect', 'DefaultPromotionBudgetAdmissionService.protectSave',
         'DefaultCouponSellerAuthorizationService.protect', 'DefaultPromotionPublicationService.validateSourceAuthoring',
         'DefaultPromotionOperationService.validatePolicyAuthoring']);
     await setup.installContribution(f.request);

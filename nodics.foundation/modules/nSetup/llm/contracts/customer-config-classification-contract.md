@@ -19,18 +19,50 @@ forward selected release with stable references and shared assets, not rewritten
 receipts or an implied publication. Source review is not executed qualification.
 
 A customer must not maintain a copy of Nodics configuration to use Nodics.
-Every configurable value has one authoritative owner. Environment, server and
-node `config/properties.js` files contain only deployment choices, composition,
-and justified differences from the effective inherited configuration.
+Every configurable property has one authoritative framework-module owner for
+its definition, validation and full default. Environment, server and node
+`config/properties.js` files are value-override layers only: they may override
+framework-defined properties but may not define properties, supply defaults,
+or repeat inherited values. Runtime topology and composition remain with their
+existing authorities.
 
 This rule covers the entire authored dependency chain. Replacing a large
 `properties.js` with an import of an equally large environment helper does not
 satisfy it. Do not optimize line count by hiding values, adding a parallel
 loader, or weakening validation. A small file is an outcome of correct ownership.
 
-Every configurable property's reusable default belongs to its owning framework capability (or its established reusable domain owner). Customer projects extend those values only when a partner intentionally changes behavior or supplies application identity/selection. Derive structural facts from the existing module metadata and validated file/manifest contracts instead of making each partner repeat them. Preserve explicit activation, authorization and publication choices; folder presence never grants execution authority.
+Every configurable property's reusable definition, validation and complete
+default belong to its implementing framework capability. A customer project may
+override a property only when it intentionally changes the inherited value;
+application identity, business selections and composition belong to their
+established data and metadata authorities. Derive structural facts from
+existing module metadata and validated file/manifest contracts instead of
+making each partner repeat them. Preserve explicit activation, authorization
+and publication choices; folder presence never grants execution authority.
 
 ## Mandatory Default Ownership Gate
+
+Every configurable property has one implementing framework-module owner. That
+owner exclusively defines the property, its validation contract and its
+complete reusable default value in the module's `config/properties.js` and
+associated owner contracts. This is a strict coding principle, not a placement
+preference.
+
+Customer-module and project/environment/server/node runtime configuration may
+contain only an explicit value that overrides a property already defined by
+its framework owner. Such a value must intentionally differ from the inherited
+baseline and be placed at the narrowest correct scope. These layers must never
+define a property, supply a missing default, or repeat an inherited value. If
+an owner definition or baseline is missing, add it to the implementing
+framework module. Do not work around the gap in customer configuration, a
+helper, generator, or another module.
+
+This property rule does not relocate governed business records, identity and
+permission assignments, data-release selections, or runtime topology metadata.
+Those remain with their existing authorities and contracts. Deployment inputs
+such as endpoints or credential references must populate framework-defined
+properties at their established runtime scope; the scope does not become a
+second property-definition/default owner.
 
 Every reusable property definition, validation contract and default has an
 implementing framework owner. Customer configuration is an override, not a
@@ -50,10 +82,13 @@ activation/merge boundary. Classify each leaf of mixed objects separately:
   and a safe unconfigured state, such as null, empty selection or disabled.
   Required inputs must fail clearly at the owner boundary; never invent a
   customer identity or destination to make a default executable.
-- The project selects composition, business references, public origins,
-  endpoints, credentials references and deliberate behavior differences.
-  Standard role behavior belongs to owner-contributed runtime-role profiles;
-  explicit deployment capability enablement remains a deployment choice.
+- The project selects composition, business references and release identities
+  through their established metadata/data authorities. Where deployment values
+  are represented as properties, the framework owner defines the property and
+  baseline; project/environment/server/node layers provide only actual
+  overrides. Standard role behavior belongs to owner-contributed runtime-role
+  profiles; explicit capability activation remains with its existing topology
+  authority.
 - Business records, permission/role assignments, approval definitions and
   demo offers remain governed owner data. Moving a sample setting into a
   framework default does not make its ownership correct.
@@ -77,8 +112,9 @@ The gate fails when an ordinary customer must name standard implementation
 classes, duplicate role mechanics, copy schema definitions, or maintain technical
 inventories merely to use a selected framework capability. An advanced provider
 replacement is allowed only as an intentional override of an owner-defined
-contract. Equal-value safety pins require a specific reason and review trigger;
-an entire object cannot be exempted as a deployment choice.
+contract. Equal-value copies are not overrides and must not be retained as
+safety pins; enforce mandatory security invariants in their framework owner.
+An entire object cannot be exempted as a deployment choice.
 
 Apply the gate to source fallbacks, templates, generators, frontend consumers,
 tests and documentation as well as properties files. Frontends retain their own
@@ -115,7 +151,7 @@ domain defaults remain with their existing owners.
 | --- | --- | --- |
 | Reusable capability default | Owning framework capability `config/properties.js` | Cookie names, catalogue limits, provider-independent operational defaults |
 | Domain default | Owning reusable accelerator module | Domain vocabulary and reusable domain policy |
-| Customer/application policy | Owning customer module `config/properties.js`, or its established contribution contract | Chosen application profiles, customer store identity, project data-package selections |
+| Customer/application policy | Governed customer/business records or established composition metadata; a property value may override only a framework-defined default | Chosen application profiles, customer store identity, project data-package selections |
 | Shared project administration policy | Explicitly selected customer administration module | Cross-application installation descriptors consumed by the administrative runtime |
 | Environment difference | `envs/<environment>/config/properties.js` | Deployment endpoints, shared CORS policy, secret references, environment logging |
 | Server difference | `envs/<environment>/<server>/config/properties.js` | Active modules, listening ports, isolated database names, peer targets, runtime identity coordinates |
@@ -185,11 +221,14 @@ when generic tooling resolves or validates them.
 
 ## Minimal configuration requirements
 
-1. Inherit a framework default when it expresses the intended policy. Retain an
-   equal value only for a documented compatibility or security pin, with an
-   owner and review trigger.
-2. Put shared environment differences at the environment boundary. Put shared
-   customer policy at its customer module boundary, selected where needed.
+1. Inherit a framework default when it expresses the intended policy. Customer
+   and runtime property files may contain only an explicit value that overrides
+   a framework-defined baseline. Do not retain an equal-value copy as a pin;
+   encode mandatory security invariants in the owning framework contract or
+   enforcement logic.
+2. Put actual property overrides at the narrowest appropriate environment or
+   customer scope. Keep shared customer policy in its governed data/owner
+   authority, not as a second property/default definition.
 3. Keep activation lists, deployment targets and credential references in
    the appropriate composition/deployment layer; grants remain Profile-owned data.
    Do not hoist local opt-ins,
@@ -319,8 +358,9 @@ must not be reported as proof that every repository file is correctly placed.
 ## Completion requires property ownership, not only equality
 
 A configuration refactor must classify every declaration in its agreed inventory:
-reusable capability default, intentional customer/application choice, environment
-value, server selection/exception, or explicit safety pin. Include consumer-level
+reusable capability default, intentional customer/application data choice,
+environment override, server selection/exception, or explicit property override.
+Include consumer-level
 inheritance: default database/search connection merging and capability-specific
 collection extensions can eliminate copied values that a raw property comparison
 misses. Use the owning capability's extension contract for collection differences;
@@ -328,9 +368,9 @@ for example nRouter's CORS header override maps preserve its baseline.
 
 A value being different from today's framework default does not make it a new
 framework default: local security relaxations, sample execution, provider choices,
-authority, databases and endpoints remain deployment policy. Conversely, equality
-is not a blanket reason to keep a pin. Record the specific negative role/provider
-selection and review trigger when an equal value must remain explicit. Check
+authority, databases and endpoints remain deployment policy. Equal-to-default
+property values are inherited, not repeated as pins. Put mandatory security
+invariants in the owning framework contract or enforcement logic. Check
 inactive-owner declarations and remove inert leftovers instead of activating a
 capability solely to justify its configuration.
 
@@ -477,8 +517,9 @@ customer, environment, server and node configuration, including generators.
   nRouter constructs origins and owns standard headers and credential behavior. Retain server-specific denials,
   explicit disablement and genuine deployment overrides. CORS never grants API
   permission, changes tenant authority or permits wildcard credentialed origins.
-- nAuth owns `bootstrapIdentity` bindings. Customer projects may override
-  `bootstrapIdentity.adminPassword` through existing project/environment/server/
+- nAuth owns `bootstrapIdentity` bindings. Customer projects may provide an
+  explicit value for the framework-defined `bootstrapIdentity.adminPassword`
+  through existing project/environment/server/
   node layers only as a governed deployment input or future runtime credential
   value; authored source must not carry live literal credentials. nAuth still
   enforces password strength and distinct admin/service credentials. Framework

@@ -20,6 +20,7 @@ refuse. Later lifecycle states and PUBLIC_DELIVERY retain their existing actor
 checks. Validation must never populate an approval actor or advance lifecycle.
 
 - [Registered enterprise lifecycle suite and deferred safety classification](enterprise-lifecycle-suite.md)
+- [Cross-owner write-recovery resilience acceptance](write-recovery-resilience-acceptance.md)
 
 This index routes developers to nTooling's command, generation, qualification and reference-change contracts.
 
@@ -44,6 +45,10 @@ See [Forward data releases](tooling-governance-contracts.md#forward-data-release
 ## Functional Journey Composition
 
 See [Functional Journey Composition](tooling-governance-contracts.md#functional-journey-composition).
+
+## Write-Recovery Resilience Acceptance
+
+See [Write-Recovery Resilience Acceptance](write-recovery-resilience-acceptance.md).
 
 ## Project and repository build targeting
 

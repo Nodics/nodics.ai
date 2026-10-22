@@ -81,6 +81,7 @@ for (const qualified of [false, true]) {
     global.SERVICE = {
       DefaultBackofficeCapabilityDefinitionService: definition,
       DefaultDigitalCommerceNotificationService: notifications,
+      DefaultDigitalParticipationService: require('../src/service/defaultDigitalParticipationService'),
       DefaultRouterService: {
         prepareUrl: () => "http://localhost:4352/nodics/digitalCore/v0",
       },

@@ -9,6 +9,7 @@
 
  */
 
+import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { completeAcceptanceWorkflow } from '../../../../../../nodics.foundation/modules/nTooling/src/service/project/defaultProjectAcceptanceService.mjs';
 import { readProjectEnvironmentConfiguration, projectRuntimeAcceptance, projectEndpointUrl, projectCorsOrigin, projectRuntime, projectInitializationProfile } from '../../../../../../nodics.foundation/modules/nTooling/src/service/project/defaultProjectEnvironmentConfigurationService.mjs';
@@ -22,6 +23,8 @@ export async function runGuidedInitializationAcceptance({
   if (!execute || !approvePublications) throw new Error('Explicit --execute --approve-publications is required for mutating acceptance');
   const environmentProfile = configuration || readProjectEnvironmentConfiguration(projectRoot, environment.ENV || '');
   const config = acceptance || projectRuntimeAcceptance(projectRoot, environmentProfile, { role: 'PLATFORM' }).guidedInitialization || {};
+  const requestTimeoutMs = boundedTimeout(config.requestTimeoutMs, 30000);
+  const initializationTimeoutMs = boundedTimeout(config.initializationTimeoutMs, 360000);
   const platformUrl = environment.NODICS_PLATFORM_URL || projectEndpointUrl(environmentProfile, { role: 'PLATFORM' });
   const processUrl = environment.NODICS_PROCESS_URL || projectEndpointUrl(environmentProfile, { role: 'PROCESS' });
   const origin = environment.AXIS_ORIGIN || projectCorsOrigin(environmentProfile, 'axis');
@@ -29,14 +32,24 @@ export async function runGuidedInitializationAcceptance({
   const loginId = environment.AXIS_LOGIN_ID || 'admin';
   const password = environment.AXIS_PASSWORD || environment.NODICS_BOOTSTRAP_ADMIN_PASSWORD;
   const profileCode = projectInitializationProfile(projectRuntime(environmentProfile, config.runtime), environment.NODICS_INITIALIZATION_PROFILE || config.profileCode, config.profileTemplate);
+  let mediaUrl;
+  const mediaPublicationEvidence = [];
+  const capabilityPreparationEvidence = [];
 
   const publicationProfiles = config.publicationProfiles;
   assert(Array.isArray(publicationProfiles) && publicationProfiles.length > 0, 'Select application publication profiles for guided acceptance');
   const deliveryTarget = config.deliveryProbe;
   assert(deliveryTarget?.site && deliveryTarget.path && deliveryTarget.locale && deliveryTarget.channel, 'Select an application delivery probe for guided acceptance');
 
-  async function request(url, options = {}) {
-    const response = await fetchRequest(url, { signal: AbortSignal.timeout(30000), ...options });
+  function boundedTimeout(value, fallback) {
+    const timeout = Number(value ?? fallback);
+    assert(Number.isSafeInteger(timeout) && timeout >= 1000 && timeout <= 600000,
+      'Guided initialization timeout must be between 1000 and 600000 milliseconds');
+    return timeout;
+  }
+
+  async function request(url, { timeoutMs = requestTimeoutMs, ...options } = {}) {
+    const response = await fetchRequest(url, { signal: AbortSignal.timeout(timeoutMs), ...options });
     const value = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(`${url} returned ${String(response.status)}: ${String(value.message || 'request failed')}`);
     return value.data || value.result || value;
@@ -72,20 +85,81 @@ export async function runGuidedInitializationAcceptance({
     assert(completed.instance?.status === 'COMPLETED', `Publication workflow did not complete for ${publicationCode}`);
   }
 
-  async function publishApplicationProfile(headers, code) {
+  async function approveMediaDependencies(headers, status, applicationCode) {
+    const dependencies = [].concat(status.mediaDependencies?.dependencies || [])
+      .filter(item => item.qualified !== true);
+    if (!dependencies.length) return;
+    assert(mediaUrl, 'Authenticated bootstrap does not advertise a STAGED Media endpoint');
+    for (const dependency of dependencies) {
+      assert(dependency.mediaCode && Number.isInteger(Number(dependency.versionId)) &&
+        /^[a-f0-9]{64}$/i.test(dependency.checksum || ''),
+      `Invalid exact Media dependency for ${applicationCode}`);
+      const publicationCode = dependency.publicationCode || `media-${crypto.createHash('sha256')
+        .update([applicationCode, dependency.mediaCode, Number(dependency.versionId), dependency.checksum].join(':'))
+        .digest('hex')}`;
+      assert(/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(publicationCode),
+        `Invalid Media publication identity for ${dependency.mediaCode}`);
+      const publication = await request(`${mediaUrl}/v0/publication/requests`, {
+        method: 'POST', headers,
+        body: JSON.stringify({ publicationCode, mediaCode: dependency.mediaCode,
+          versionId: Number(dependency.versionId), expectedChecksum: dependency.checksum }),
+      });
+      assert(publication.publicationCode === publicationCode,
+        `Media publication identity changed for ${dependency.mediaCode}`);
+      if (publication.state !== 'ONLINE') {
+        assert(publication.state === 'PENDING_APPROVAL',
+          `Media publication did not enter approval for ${dependency.mediaCode}`);
+        const completed = await completeAcceptanceWorkflow({
+          request: (baseUrl, route, options) => request(baseUrl + route, options),
+          baseUrl: processUrl, headers, definitionCode: 'mediaPublicationApproval',
+          correlation: { key: 'publicationCode', value: publicationCode }, nodeCode: 'mediaReview',
+          decision: { approved: true, reason: `Guided initialization Media approval for ${applicationCode}` },
+          instanceUnavailable: `Media publication workflow is unavailable for ${dependency.mediaCode}`,
+          taskUnavailable: `Media publication approval task is unavailable for ${dependency.mediaCode}`,
+        });
+        assert(completed.instance?.status === 'COMPLETED',
+          `Media publication workflow did not complete for ${dependency.mediaCode}`);
+      }
+      mediaPublicationEvidence.push({ applicationCode, mediaCode: dependency.mediaCode,
+        publicationCode, sourceVersion: Number(dependency.versionId) });
+    }
+  }
+
+  async function publishApplicationProfile(code) {
     let status = await request(`${platformUrl}/nodics/backoffice/v0/applications/${encodeURIComponent(code)}/initialization`, { headers });
     if (status.readiness === 'READY' && status.publication?.state === 'ONLINE') return status;
     const reason = `Guided initialization for ${code}`;
-    const initiated = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization/initiate`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ reason }),
+    const prepared = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization/prepare`, {
+      method: 'POST', headers, body: JSON.stringify({ reason }), timeoutMs: initializationTimeoutMs,
     });
-    const publicationCode = initiated.publication?.code;
-    assert(publicationCode && initiated.publication?.state === 'PENDING_APPROVAL',
-      `${code} did not enter publication approval`);
-    await approvePublication(headers, publicationCode, reason);
-    status = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization`, { headers });
+    assert(prepared.preparationOperation?.operation === 'applicationInitialization.prepareCapability',
+      `${code} capability preparation did not return owner evidence`);
+    capabilityPreparationEvidence.push({ code, attempted: prepared.preparationOperation.attempted === true,
+      changed: prepared.preparationOperation.changed === true,
+      stepCount: prepared.preparationOperation.stepCount });
+    status = prepared;
+    if (status.readiness === 'READY' && status.publication?.state === 'ONLINE') return status;
+    // Capability preparation may legitimately change Profile authority records.
+    // Continue only with a newly authenticated human security stamp.
+    headers = await authenticateHeaders();
+    if (status.publication?.state !== 'ONLINE') {
+      const initiated = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization/initiate`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ reason }),
+        timeoutMs: initializationTimeoutMs,
+      });
+      const publicationCode = initiated.publication?.code;
+      assert(publicationCode && initiated.publication?.state === 'PENDING_APPROVAL',
+        `${code} did not enter publication approval`);
+      await approvePublication(headers, publicationCode, reason);
+      status = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization`, { headers });
+    }
+    if (status.mediaDependencies?.qualified !== true &&
+        [].concat(status.mediaDependencies?.dependencies || []).some(item => item.qualified !== true)) {
+      await approveMediaDependencies(headers, status, code);
+      status = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization`, { headers });
+    }
     assert(status.readiness === 'READY' && status.publication?.state === 'ONLINE', `${code} is not READY Online`);
     return status;
   }
@@ -97,18 +171,23 @@ export async function runGuidedInitializationAcceptance({
     'x-enterprise-code': enterpriseCode,
   };
 
-  const authentication = await request(`${platformUrl}/nodics/profile/v0/employee/browser/authenticate`, {
-    method: 'POST', headers: commonHeaders, body: JSON.stringify({ loginId, password }),
-  });
-  assert(authentication.authToken, 'Employee authentication did not return an access token');
-  const headers = { ...commonHeaders, Authorization: `Bearer ${authentication.authToken}`,
-    'x-nodics-client-contract-version': '1' };
+  async function authenticateHeaders() {
+    const authentication = await request(`${platformUrl}/nodics/profile/v0/employee/browser/authenticate`, {
+      method: 'POST', headers: commonHeaders, body: JSON.stringify({ loginId, password }),
+    });
+    assert(authentication.authToken, 'Employee authentication did not return an access token');
+    return { ...commonHeaders, Authorization: `Bearer ${authentication.authToken}`,
+      'x-nodics-client-contract-version': '1' };
+  }
+
+  let headers = await authenticateHeaders();
   const bootstrap = await request(`${platformUrl}/nodics/backoffice/v0/bootstrap`, { headers });
   const imports = bootstrap.modules?.import || [];
   const staged = imports.find(item => item.runtimeRole?.publication === 'STAGED');
   const online = imports.find(item => item.runtimeRole?.publication === 'ONLINE');
   assert(staged, 'Authenticated bootstrap does not advertise a semantic STAGED import connection');
   assert(online, 'Authenticated bootstrap does not advertise a semantic ONLINE import connection');
+  mediaUrl = staged.endpoint.replace(/\/nodics\/import\/?$/, '/nodics/media');
 
   const catalogueUrl = `${staged.endpoint}/v0/initialization-profiles`;
   let profiles = await request(catalogueUrl, { headers });
@@ -124,7 +203,7 @@ export async function runGuidedInitializationAcceptance({
   assert(validation.mode === 'VALIDATE', 'Profile validation did not use validation-only mode');
 
   const installation = await request(`${staged.endpoint}/v0/initialization-profiles/${profileCode}/install`, {
-    method: 'POST', headers, body: '{}',
+    method: 'POST', headers, body: '{}', timeoutMs: initializationTimeoutMs,
   });
   assert(installation.mode === 'INSTALL', 'Profile installation response mode is invalid');
   assert(installation.profile?.status === 'CURRENT', 'Initialization profile did not become CURRENT');
@@ -135,7 +214,7 @@ export async function runGuidedInitializationAcceptance({
   profile = profiles.find(item => item.profileCode === profileCode);
   assert(profile?.status === 'CURRENT', 'CURRENT initialization state did not persist after reconciliation');
   const noOp = await request(`${staged.endpoint}/v0/initialization-profiles/${profileCode}/install`, {
-    method: 'POST', headers, body: '{}',
+    method: 'POST', headers, body: '{}', timeoutMs: initializationTimeoutMs,
   });
   assert(noOp.results.every(item => item.skipped === true), 'Repeated installation was not an idempotent no-op');
 
@@ -143,7 +222,7 @@ export async function runGuidedInitializationAcceptance({
   assert(Array.isArray(history), 'Import history contract did not return a list');
   assert(history.some(run => ['init', 'core'].includes(run.dataType)), 'Guided execution is missing from import run history');
 
-  const onlineResponse = await fetchRequest(`${online.endpoint}/v0/initialization-profiles`, { headers, signal: AbortSignal.timeout(30000) });
+  const onlineResponse = await fetchRequest(`${online.endpoint}/v0/initialization-profiles`, { headers, signal: AbortSignal.timeout(requestTimeoutMs) });
   const onlineBody = await onlineResponse.json().catch(() => ({}));
   assert(onlineResponse.status === 403 && String(onlineBody.message || '').includes('dataImport'),
     'Online runtime must reject data-import administration');
@@ -151,7 +230,7 @@ export async function runGuidedInitializationAcceptance({
   const publicationEvidence = [];
   await importMandatoryProcessRelease(headers);
   for (const code of publicationProfiles) {
-    const status = await publishApplicationProfile(headers, code);
+    const status = await publishApplicationProfile(code);
     assert(status.lineage?.publication?.transitions?.some(item => item.toState === 'PENDING_APPROVAL'),
       `${code} publication lineage does not contain Process approval`);
     publicationEvidence.push({ code, publication: status.publication.code, state: status.publication.state });
@@ -165,6 +244,8 @@ export async function runGuidedInitializationAcceptance({
     validationMode: validation.mode, repeatedInstall: 'SKIPPED_CURRENT',
     historyRuns: history.length, onlineDataImport: 'DISABLED',
     publicationEvidence, onlineDelivery: 'AVAILABLE',
+    mediaPublicationEvidence,
+    capabilityPreparationEvidence,
   };
   log(JSON.stringify(evidence, null, 2));
   return evidence;

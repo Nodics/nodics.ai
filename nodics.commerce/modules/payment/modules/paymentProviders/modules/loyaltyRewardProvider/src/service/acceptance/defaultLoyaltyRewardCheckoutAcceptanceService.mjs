@@ -19,11 +19,8 @@ import { createAcceptanceContext } from "../../../../../../../../../../nodics.fo
 import { projectRuntimeAcceptance } from "../../../../../../../../../../nodics.foundation/modules/nTooling/src/service/project/defaultProjectEnvironmentConfigurationService.mjs";
 import amounts from "../../../../../../../../../../nodics.loyalty/modules/loyaltyCore/src/service/defaultLoyaltyAmountService.js";
 
-const evidenceGaps = Object.freeze([
-  "No explicit read API independently exposes reservation/redemption status or payment transaction entries for this journey; ledger references and checkout checkpoints are checked instead.",
-  "Digital delivery is evidenced by the owned checkout checkpoint and entitlement, not an independent delivery-record read.",
-  "API projections cannot prove absence of tenant/request context in persisted rows; that invariant belongs to Loyalty persistence tests.",
-]);
+const defaultAcceptanceName = "loyaltyRewardCheckout";
+const acceptanceNamePattern = /^[A-Za-z][A-Za-z0-9]{0,127}$/;
 
 function requireValue(condition, message) {
   if (!condition) throw new Error(message);
@@ -81,6 +78,66 @@ function validateFixture(fixture) {
   return fixture;
 }
 
+/**
+ * Selects one bounded customer-owned acceptance profile without embedding its identity in the provider.
+ * @param {Object<string,Object>} acceptance Effective `tooling.acceptance` configuration.
+ * @param {string} acceptanceName Exact acceptance property key.
+ * @returns {Object} Selected fixture for owner validation.
+ */
+export function selectLoyaltyRewardCheckoutAcceptance(
+  acceptance,
+  acceptanceName = defaultAcceptanceName,
+) {
+  requireValue(
+    typeof acceptanceName === "string" &&
+      acceptanceNamePattern.test(acceptanceName) &&
+      !["constructor", "prototype", "__proto__"].includes(acceptanceName),
+    "Loyalty reward checkout acceptance selection must use 1..128 letters or digits and start with a letter",
+  );
+  requireValue(
+    acceptance && Object.hasOwn(acceptance, acceptanceName),
+    "Loyalty reward checkout acceptance profile is unavailable: " +
+      acceptanceName,
+  );
+  const selected = acceptance[acceptanceName];
+  requireValue(
+    selected && typeof selected === "object" && !Array.isArray(selected),
+    "tooling.acceptance." + acceptanceName + " fixture is required",
+  );
+  return selected;
+}
+
+/**
+ * Resolves one bounded customer-owned acceptance profile name from CLI arguments.
+ * @param {string[]} argv Command-line arguments.
+ * @returns {string} Exact `tooling.acceptance` property key.
+ */
+export function loyaltyRewardCheckoutAcceptanceArgument(argv = []) {
+  const options = argv.filter(
+    (argument) =>
+      argument === "--acceptance" || argument.startsWith("--acceptance="),
+  );
+  requireValue(
+    options.length <= 1,
+    "Loyalty reward checkout accepts one --acceptance=<name> selection",
+  );
+  const acceptanceName = options.length
+    ? options[0].slice("--acceptance=".length)
+    : defaultAcceptanceName;
+  requireValue(
+    argv.every((argument) =>
+      argument === "--execute" || argument.startsWith("--acceptance="),
+    ),
+    "Unsupported reward checkout argument",
+  );
+  requireValue(
+    acceptanceNamePattern.test(acceptanceName) &&
+      !["constructor", "prototype", "__proto__"].includes(acceptanceName),
+    "Loyalty reward checkout acceptance selection must use 1..128 letters or digits and start with a letter",
+  );
+  return acceptanceName;
+}
+
 function walletProjection(projection, fixture) {
   const wallet = projection?.wallet;
   requireValue(
@@ -121,6 +178,7 @@ function walletProjection(projection, fixture) {
 export async function runLoyaltyRewardCheckoutAcceptance({
   execute = false,
   fixture,
+  acceptanceName = defaultAcceptanceName,
   configuration,
   environment = process.env,
   projectRoot = environment.NODICS_PROJECT_ROOT || process.cwd(),
@@ -141,15 +199,18 @@ export async function runLoyaltyRewardCheckoutAcceptance({
     configuration,
     fetch: fetchRequest,
   });
+  const acceptance = fixture
+    ? undefined
+    : projectRuntimeAcceptance(projectRoot, context.configuration, {
+        role: "PLATFORM",
+      });
   const selected = validateFixture(
     fixture ||
-      projectRuntimeAcceptance(projectRoot, context.configuration, {
-        role: "PLATFORM",
-      }).loyaltyRewardCheckout,
+      selectLoyaltyRewardCheckoutAcceptance(acceptance, acceptanceName),
   );
   const serviceToken = requiredString(
     environment.NODICS_LOYALTY_ACCEPTANCE_SERVICE_TOKEN,
-    "Provisioning prerequisite: NODICS_LOYALTY_ACCEPTANCE_SERVICE_TOKEN with existing loyalty.wallet.read authority",
+    "Provisioning prerequisite: NODICS_LOYALTY_ACCEPTANCE_SERVICE_TOKEN with existing loyalty.wallet.read and commerce.payment.read authority",
     32768,
   );
   // Credentials are supplied by the caller, never generated or elevated by acceptance.
@@ -178,6 +239,8 @@ export async function runLoyaltyRewardCheckoutAcceptance({
         "/nodics/checkoutCore/v0/checkouts/{orderCode}",
         "/nodics/order/v0/orders/{orderCode}",
         "/nodics/digitalCore/v0/entitlements",
+        "/nodics/digitalCore/v0/entitlements/delivery-evidence",
+        "/nodics/paymentCore/v0/internal/evidence/query",
       ],
     ],
     [
@@ -185,6 +248,8 @@ export async function runLoyaltyRewardCheckoutAcceptance({
       [
         "/nodics/loyaltyApi/v0/wallets/{walletCode}",
         "/nodics/loyaltyApi/v0/wallet-projections",
+        "/nodics/loyaltyApi/v0/reward-reservation-evidence",
+        "/nodics/loyaltyApi/v0/reward-redemption-evidence",
         "/nodics/loyaltyApi/v0/reward-reservations",
         "/nodics/loyaltyApi/v0/reward-reservations/{reservationCode}/capture",
       ],
@@ -439,19 +504,124 @@ export async function runLoyaltyRewardCheckoutAcceptance({
         ),
       "Ledger amount, freshness or reservation/redemption reference mismatch",
     );
+    const evidenceSelector = {
+      ownerType: "CUSTOMER",
+      ownerCode: selected.customerCode,
+      programCode: selected.programCode,
+      rewardTypeCode: selected.rewardTypeCode,
+    };
+    const reservationEvidence = await post(
+      "LOYALTY",
+      "/nodics/loyaltyApi/v0/reward-reservation-evidence",
+      { ...evidenceSelector, reservationCode: capture[0].reservationCode },
+      serviceHeaders,
+    );
+    const reservation = reservationEvidence?.reservation;
+    requireValue(
+      reservationEvidence?.wallet?.code === selected.walletCode &&
+        reservation?.code === capture[0].reservationCode &&
+        reservation.walletCode === selected.walletCode &&
+        reservation.programCode === selected.programCode &&
+        reservation.rewardTypeCode === selected.rewardTypeCode &&
+        reservation.status === "CAPTURED" &&
+        reservation.sourceType === capture[0].sourceType &&
+        reservation.sourceCode === capture[0].sourceCode &&
+        reservation.targetType === capture[0].targetType &&
+        reservation.targetCode === orderCode &&
+        amounts.compare(reservation.amount, amount, selected.rewardScale) === 0,
+      "Independent Loyalty reservation evidence mismatch",
+    );
+    const redemptionEvidence = await post(
+      "LOYALTY",
+      "/nodics/loyaltyApi/v0/reward-redemption-evidence",
+      { ...evidenceSelector, redemptionCode: capture[0].redemptionCode },
+      serviceHeaders,
+    );
+    const redemption = redemptionEvidence?.redemption;
+    requireValue(
+      redemptionEvidence?.wallet?.code === selected.walletCode &&
+        redemption?.code === capture[0].redemptionCode &&
+        redemption.walletCode === selected.walletCode &&
+        redemption.programCode === selected.programCode &&
+        redemption.rewardTypeCode === selected.rewardTypeCode &&
+        redemption.status === "CAPTURED" &&
+        redemption.reservationCode === capture[0].reservationCode &&
+        redemption.captureLedgerEntryCode === capture[0].code &&
+        redemption.targetType === capture[0].targetType &&
+        redemption.targetCode === orderCode &&
+        amounts.compare(redemption.amount, amount, selected.rewardScale) === 0,
+      "Independent Loyalty redemption evidence mismatch",
+    );
+    const paymentEvidence = await post(
+      "COMMERCE",
+      "/nodics/paymentCore/v0/internal/evidence/query",
+      { orderCode, cartCode, ownerId: selected.customerCode },
+      serviceHeaders,
+    );
+    const authorizations = paymentEvidence?.transactions?.filter(
+      (row) => row.operation === "AUTHORIZE",
+    );
+    const captures = paymentEvidence?.transactions?.filter(
+      (row) => row.operation === "CAPTURE",
+    );
+    requireValue(
+      paymentEvidence?.contractVersion === 1 &&
+        paymentEvidence.orderCode === orderCode &&
+        paymentEvidence.cartCode === cartCode &&
+        paymentEvidence.ownerId === selected.customerCode &&
+        authorizations?.length === 1 &&
+        captures?.length === 1 &&
+        authorizations[0].methodCode === "LOYALTY_REWARD" &&
+        captures[0].methodCode === "LOYALTY_REWARD" &&
+        authorizations[0].providerCode === selected.providerCode &&
+        captures[0].providerCode === selected.providerCode &&
+        authorizations[0].providerReference === capture[0].reservationCode &&
+        captures[0].providerReference === capture[0].redemptionCode &&
+        [authorizations[0], captures[0]].every(
+          (row) =>
+            row.walletCode === selected.walletCode &&
+            row.programCode === selected.programCode &&
+            row.rewardTypeCode === selected.rewardTypeCode &&
+            amounts.compare(row.totalAmount, amount, selected.rewardScale) === 0,
+        ),
+      "Independent Payment transaction evidence mismatch",
+    );
+    const deliveries = [];
+    for (const entitlement of owned) {
+      const deliveryEvidence = await post(
+        "COMMERCE",
+        "/nodics/digitalCore/v0/entitlements/delivery-evidence",
+        { entitlementCode: entitlement.code },
+      );
+      const delivery = deliveryEvidence?.delivery;
+      requireValue(
+        deliveryEvidence?.contractVersion === 1 &&
+          deliveryEvidence.entitlementCode === entitlement.code &&
+          delivery?.status === "DELIVERED" &&
+          delivery.orderCode === orderCode &&
+          delivery.providerOwner === "promotion" &&
+          typeof delivery.providerCode === "string" &&
+          checkpoint.evidence.digitalDeliveryCodes.includes(delivery.code),
+        "Independent Digital delivery evidence mismatch",
+      );
+      deliveries.push(delivery);
+    }
     return {
-      status: "API_CHECKS_PASSED",
-      fullAcceptance: false,
-      evidenceGaps: [...evidenceGaps],
+      status: "PASSED",
+      fullAcceptance: true,
+      evidenceGaps: [],
       cartCode,
       orderCode,
       walletCode: selected.walletCode,
       amount,
       reservationCode: capture[0].reservationCode,
       redemptionCode: capture[0].redemptionCode,
+      reservationEvidenceCode: reservation.code,
+      redemptionEvidenceCode: redemption.code,
       ledgerCodes: entries.map((row) => row.code),
       entitlementCodes: owned.map((row) => row.code),
-      deliveryReferences: checkpoint.evidence.digitalDeliveryCodes,
+      deliveryReferences: deliveries.map((row) => row.code),
+      paymentTransactionCodes: [authorizations[0].code, captures[0].code],
     };
   } catch (error) {
     throw new Error(
@@ -466,20 +636,18 @@ export async function runLoyaltyRewardCheckoutAcceptance({
   }
 }
 
-/** CLI is import-inert; unmet evidence coverage remains visibly non-successful for full qualification. */
+/** CLI is import-inert and returns success only after every owner API confirms the journey. */
 export async function main(argv = process.argv.slice(2)) {
   if (argv.includes("--help")) {
     console.log(
-      "acceptance:loyalty-reward-checkout --execute\nRequires running PLATFORM/COMMERCE/LOYALTY, customer fixture, funded wallet and pre-authorized service token. No permission grants or wallet seeding. API evidence gaps yield exit 2.",
+      "acceptance:loyalty-reward-checkout --execute [--acceptance=<name>]\nDefaults to tooling.acceptance.loyaltyRewardCheckout and permits one bounded customer-owned named acceptance profile. Requires running PLATFORM/COMMERCE/LOYALTY, customer fixture, funded wallet and pre-authorized service token. No permission grants or wallet seeding.",
     );
     return;
   }
-  requireValue(
-    argv.every((arg) => arg === "--execute"),
-    "Unsupported reward checkout argument",
-  );
+  const acceptanceName = loyaltyRewardCheckoutAcceptanceArgument(argv);
   const report = await runLoyaltyRewardCheckoutAcceptance({
     execute: argv.includes("--execute"),
+    acceptanceName,
   });
   console.log(JSON.stringify(report, null, 2));
   return report.fullAcceptance ? 0 : 2;

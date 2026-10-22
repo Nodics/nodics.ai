@@ -85,18 +85,29 @@ test('actual native graphs keep full profile validation on Platform and target-o
                 .resolve(input);
             global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };
             const releases = require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService'));
-            global.SERVICE = { DefaultDataReleaseService: releases };
+            global.SERVICE = { DefaultDataReleaseService: releases,
+                DefaultContentPackService: require(path.join(input.frameworkRoot,
+                    'nodics.foundation/modules/nData/nImport/import/src/service/contentPack/defaultContentPackService')) };
             const owner = require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nPublish/src/service/defaultPublicationSetupObservationService'));
             const original = CONFIG.get.bind(CONFIG), defaults = require(path.join(input.frameworkRoot, 'nodics.foundation/modules/nPublish/config/properties')).publish.setup.observation;
             CONFIG.get = key => key === 'publish' ? { setup: { observation: { ...defaults,
                 ...original(key)?.setup?.observation, enabled: true } } } : original(key);
             const policy = original('publish')?.setup?.observation;
+            let baselinePins = 0;
             if (policy?.enabled === true) {
                 for (const code of Object.keys(policy.plans || {})) {
                     const approved = owner.resolvePlan(code);
                     if (approved.plan.stages.some(stage => stage.server === input.server &&
                         stage.descriptor.targetRuntimeRole !== original('runtimeRole').code))
                         throw Error('Reviewed stage runtime-role mismatch');
+                    if (approved.plan.baseline?.server === input.server) {
+                        const baseline = require(path.join(input.frameworkRoot,
+                            'nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationBaselineService'));
+                        const descriptor = baseline.descriptor(approved.plan.baselineCode);
+                        if (owner.digest(descriptor) !== approved.plan.baseline.descriptorDigest)
+                            throw Error('Reviewed CMS baseline descriptor mismatch: ' + approved.plan.baselineCode);
+                        baselinePins++;
+                    }
                 }
             }
             const pins = input.steps.map(step => {
@@ -104,11 +115,12 @@ test('actual native graphs keep full profile validation on Platform and target-o
                 releases.validateDestination(release);
                 const snapshot = owner.sourceSnapshot(release);
                 const checksum = crypto.createHash('sha256').update(release.declaredFiles.slice().sort().map(name =>
-                    name + ':' + crypto.createHash('sha256').update(snapshot.files.get(name)).digest('hex')).join('|')).digest('hex');
+                    name + ':' + crypto.createHash('sha256').update(snapshot.files.get(name)).digest('hex')).join('|'))
+                    .update(release.prerequisites.length ? '|prerequisites:' + JSON.stringify(release.prerequisites) : '').digest('hex');
                 if (checksum !== release.checksum) throw Error('Source checksum mismatch: ' + step.code);
                 return { code: step.code, checksum, files: release.declaredFiles.length };
             });
-            process.stdout.write(JSON.stringify({ planOwnerAvailable: Boolean(NODICS.getRawModule(input.planOwner)), pins }));
+            process.stdout.write(JSON.stringify({ planOwnerAvailable: Boolean(NODICS.getRawModule(input.planOwner)), baselinePins, pins }));
         `;
         let releaseCount = 0;
         for (const server of servers) {
@@ -119,6 +131,7 @@ test('actual native graphs keep full profile validation on Platform and target-o
             { encoding: 'utf8', env: { PATH: process.env.PATH, HOME: process.env.HOME }, timeout: 30000, maxBuffer: 1048576 }));
             assert.equal(evidence.planOwnerAvailable, true, 'reviewed plan owner must be locally discovered on ' + server);
             assert.equal(evidence.pins.length, steps.length); releaseCount += evidence.pins.length;
+            if (server === 'wcmsStagedServer') assert.equal(evidence.baselinePins, 1);
             t.diagnostic(JSON.stringify({ server, sourceBytePins: evidence.pins.length }));
         }
         assert.equal(releaseCount, normalized.filter(step => step.type === 'DATA_RELEASE').length);

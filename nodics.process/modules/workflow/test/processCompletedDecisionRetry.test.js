@@ -54,6 +54,7 @@ function fixture(approved = true) {
     const process = clone(defaults);
     process.actionAdapters.allowedActions = ['cms.applyPublicationDecision'];
     process.publicationDecisionCallback = { target: { moduleName: 'cms', connectionName: 'cmsStaged' } };
+    state.process = process;
     global.CONFIG = { get: key => key === 'process' ? process : key === 'defaultTenant' ? 'default' : undefined };
     global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); this.code = code; } } };
     global.NODICS = { getInternalAuthToken: () => 'test-runtime-token' };
@@ -209,6 +210,56 @@ function fixture(approved = true) {
         await lifecycle.retryInstance(f.request);
         assert.strictEqual(f.instance.status, 'COMPLETED');
         assert.deepStrictEqual(f.descriptors[0], f.descriptors[1]);
+        checks++;
+    }
+    {
+        const f = fixture(), original = clone(f.task);
+        f.incident.status = 'DEAD_LETTER';
+        f.incident.attempt = 3;
+        f.incident.requeueCount = 0;
+        f.process.runtime.deadLetterRequeue = { enabled: true, maximumRequeues: 1 };
+        f.request.runtimeOperation = {
+            expectedAttempt: 3,
+            requeueDeadLetter: true,
+            reason: 'Framework callback defect corrected',
+            correlationId: 'support-case-1',
+        };
+        await lifecycle.retryInstance(f.request);
+        assert.strictEqual(f.incident.status, 'RESOLVED');
+        assert.strictEqual(f.incident.attempt, 1);
+        assert.strictEqual(f.incident.requeueCount, 1);
+        assert.strictEqual(f.instance.status, 'COMPLETED');
+        assert.deepStrictEqual(f.task, original);
+        assert(f.audits.some(item => item.eventType === 'process.incident.requeued' &&
+            item.metadata.reason === 'Framework callback defect corrected'));
+        checks++;
+    }
+    {
+        const f = fixture();
+        f.incident.attempt = 0;
+        f.incident.requeueCount = 1;
+        f.incident.lastRequeueReason = 'Interrupted response after requeue';
+        f.request.runtimeOperation = { expectedAttempt: 0, correlationId: 'support-case-resume' };
+        await lifecycle.retryInstance(f.request);
+        assert.strictEqual(f.incident.status, 'RESOLVED');
+        assert.strictEqual(f.incident.attempt, 1);
+        assert(f.audits.some(item => item.eventType === 'process.incident.requeueResumed' &&
+            item.metadata.correlationId === 'support-case-resume'));
+        checks++;
+    }
+    for (const mutate of [
+        () => {},
+        f => { f.process.runtime.deadLetterRequeue = { enabled: true, maximumRequeues: 1 }; f.incident.requeueCount = 1; },
+        f => { f.process.runtime.deadLetterRequeue = { enabled: true, maximumRequeues: 1 }; f.request.runtimeOperation.reason = ''; },
+    ]) {
+        const f = fixture();
+        f.incident.status = 'DEAD_LETTER';
+        f.incident.attempt = 3;
+        f.incident.requeueCount = 0;
+        f.request.runtimeOperation = { expectedAttempt: 3, requeueDeadLetter: true, reason: 'Reviewed repair' };
+        mutate(f);
+        await assert.rejects(lifecycle.retryInstance(f.request), error => error.code === 'ERR_PROCESS_00023');
+        assert.strictEqual(f.incident.status, 'DEAD_LETTER');
         checks++;
     }
     console.log('Completed decision retry: ' + checks + ' scenarios passed');

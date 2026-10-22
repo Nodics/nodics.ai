@@ -12,6 +12,7 @@
         "wasteReceipt",
         "wasteImpact",
         "wasteReward",
+        "wasteCarbon",
         "wasteMovement",
         "wasteCompliance",
         "wasteApi"

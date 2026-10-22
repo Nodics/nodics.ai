@@ -129,8 +129,15 @@ NODICS module map. It reads only the conventional owner `config/properties.js`,
 rejects escaped symlinks, and resolves only the selected role's profile.
 
 The contribution is the owner's `<namespace>.runtimeRoleProfiles.<runtimeRole>`.
-It becomes an earlier default through `configurationBindings.merge`, before
-ordinary active-module and project/environment/server/node contributions. The
+It becomes a selected default through `configurationBindings.merge`, after
+ordinary framework contributions and before project/environment/server/node
+contributions. Active owner placeholders must not erase explicitly selected
+inactive-owner values; later customer overrides and collection replacement remain
+authoritative. Live loading inserts these defaults at the selected project path
+boundary. Offline loading preserves explicitly supplied `inheritedProperties`
+over selected defaults, then applies authored layers; this caller input is not a
+scan of active runtime framework properties. Preserve explicit nulls and
+collection operators in that input. The
 same merge applies offline. Explicit `$config: replace` with `value: []` disables
 an inherited path list; ordinary arrays retain their existing positional merge.
 References may reuse canonical owner descriptors rather than copying them.

@@ -141,7 +141,7 @@ module.exports = {
         request.model = model;
         try {
             let query = this.resolveModelQuery(request.originalQuery || {}, model);
-            if (request.options && request.options.versionedImport === true &&
+            if (request.options && request.options.governedVersionedImport === true &&
                 request.schemaModel && request.schemaModel.rawSchema &&
                 request.schemaModel.rawSchema.isVersionedEnabled === true && model.versionId !== undefined) {
                 query.versionId = model.versionId;

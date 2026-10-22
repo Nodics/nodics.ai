@@ -100,7 +100,8 @@ module.exports = {
         const self = this; const exact = SERVICE.DefaultExactAmountService;
         const authData = this.serviceAuthData(cart);
         const original = originalRequest ? { tenant: originalRequest.tenant, enterpriseCode: originalRequest.enterpriseCode,
-            storeCode: cart.storeCode, ownerId: originalRequest.ownerId,
+            storeCode: cart.storeCode, locale: cart.locale || originalRequest.locale, ownerId: cart.ownerId,
+            ownerRef: structuredClone(cart.ownerRef),
             authData: structuredClone(originalRequest.authData || {}) } : undefined;
         return {
             exact,
@@ -130,15 +131,17 @@ module.exports = {
             },
             promotion: async request => {
                 const activated = self.activatedDelivery('promotion', cart);
-                const quoteAuthData = activated && original ? structuredClone(original.authData) : authData;
                 if (activated)
-                    request = self.ownerContext(request, cart, quoteAuthData);
-                if (SERVICE.DefaultPromotionOperationService && SERVICE.DefaultPromotionOperationService.quote) {
-                    return SERVICE.DefaultPromotionOperationService.quote({
+                    request = self.ownerContext(request, cart, authData);
+                const owner = SERVICE.DefaultPromotionOperationService;
+                if (activated && original && typeof owner?.trustedQuote === 'function') {
+                    return owner.trustedQuote(structuredClone(original), {
                         tenant: request.tenant,
                         enterpriseCode: request.enterpriseCode || cart.enterpriseCode,
                         storeCode: cart.storeCode,
+                        locale: cart.locale,
                         ownerId: request.ownerId || cart.ownerId,
+                        ownerRef: structuredClone(request.ownerRef || cart.ownerRef),
                         cartCode: request.cartCode || cart.code,
                         couponCode: request.couponCode || cart.couponCode,
                         subtotal: request.subtotal,
@@ -148,10 +151,19 @@ module.exports = {
                         targetType: 'CART',
                         correlationId: cart.correlationId,
                         idempotencyKey: request.idempotencyKey || cart.idempotencyKey,
-                        authData: quoteAuthData
+                        authData: structuredClone(authData)
                     });
                 }
                 if (activated) throw new Error('Activated Promotion owner is unavailable');
+                if (owner && owner.quote) return owner.quote({
+                    tenant: request.tenant, enterpriseCode: request.enterpriseCode || cart.enterpriseCode,
+                    storeCode: cart.storeCode, ownerId: request.ownerId || cart.ownerId,
+                    cartCode: request.cartCode || cart.code, couponCode: request.couponCode || cart.couponCode,
+                    subtotal: request.subtotal, productCodes: request.productCodes || [],
+                    customerGroup: request.customerGroup || cart.customerGroup, currency: request.currency,
+                    targetType: 'CART', correlationId: cart.correlationId,
+                    idempotencyKey: request.idempotencyKey || cart.idempotencyKey, authData
+                });
                 const values = await self.list(SERVICE.DefaultPromotionService, request.tenant, self.scopedQuery(request, { status: 'ACTIVE' }), 100, authData);
                 const selected = values.find(value => value.actions && value.actions.discountAmount && (!value.conditions || value.conditions.couponRequired !== true) && (!value.conditions || !value.conditions.minimumSubtotal || exact.compare(request.subtotal, value.conditions.minimumSubtotal) >= 0));
                 if (!selected) return { discountAmount: '0', reasonCode: 'NO_APPLICABLE_PROMOTION', sourceHash: 'none' };

@@ -10,6 +10,10 @@ provider-token authority or caller-selected wallet/ledger/financial identities.
 Missing approval, remaining-authority or settlement gates fail closed, without
 enabling policy or manufacturing Profile/customer context.
 
+Keep exact journey evidence reads in Payment Core. They must remain service-only,
+private, bounded and owner-filtered through the generated Payment transaction
+service; never expose provider credentials, raw persistence queries or broad CRUD.
+
 Real CARD and historical unbound simulator captures remain fail-closed. Only
 fresh, explicitly selected `LOCAL_SANDBOX_DEMO` captures may use the retained
 original-capture offline contract through guarded Order authority. Preserve

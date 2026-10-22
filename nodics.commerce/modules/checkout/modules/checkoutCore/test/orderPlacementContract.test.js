@@ -16,6 +16,46 @@ const test = require('node:test');
 const placement = require('../src/service/defaultOrderPlacementService');
 const placementPorts = require('../src/service/defaultCheckoutPlacementPortsService');
 
+test('Enterprise spending uses the authoritative total and original signed participant before any acquisition', async t => {
+    const previous = global.SERVICE;
+    t.after(() => { global.SERVICE = previous; });
+    const request = { tenant: 'tenant', idempotencyKey: 'place',
+        ownerRef: { module: 'profile', schema: 'enterprise', code: 'enterprise' },
+        actorRef: { principalType: 'human', code: 'employee', loginId: 'employee-login', enterpriseCode: 'enterprise' },
+        authData: { tenant: 'tenant', principalType: 'human', tokenType: 'access' }, authorization: 'Bearer original',
+        payload: { amount: '1.00', currency: 'FORGED' } };
+    const calculation = { totalAmount: '9007199254740993.01', currency: 'POINTS' };
+    const events = [];
+    let outcome = { confirmed: true, policyRevision: 3 };
+    global.SERVICE = { DefaultCommerceParticipantSpendService: { enforce: async (context, terms) => {
+        events.push('admit'); assert.equal(context, request);
+        assert.deepEqual(terms, { ownerRef: request.ownerRef, actorRef: request.actorRef,
+            amount: calculation.totalAmount, currency: calculation.currency });
+        return outcome;
+    } } };
+    const ports = { findPlacement: async () => undefined, calculateCart: async () => calculation,
+        enforceParticipantSpend: placementPorts.create().enforceParticipantSpend,
+        reserveInventory: async () => { events.push('reserve'); throw new Error('stop after admission'); },
+        compensate: async checkpoint => { events.push('compensate');
+            if (outcome?.confirmed) assert.equal(checkpoint.results.spending, outcome);
+        } };
+    await assert.rejects(placement.place(request, ports), /stop after admission/);
+    assert.deepEqual(events, ['admit', 'reserve', 'compensate']);
+    for (const denied of [undefined, {}, { confirmed: false }]) {
+        events.length = 0; outcome = denied;
+        await assert.rejects(placement.place(request, ports), /not confirmed/);
+        assert.deepEqual(events, ['admit', 'compensate']);
+    }
+    events.length = 0; delete SERVICE.DefaultCommerceParticipantSpendService;
+    await assert.rejects(placement.place(request, ports), /policy owner is unavailable/);
+    assert.deepEqual(events, ['compensate']);
+    delete ports.enforceParticipantSpend;
+    await assert.rejects(placement.place(request, ports), /admission is unavailable/);
+    const existing = { status: 'COMPLETED' };
+    ports.findPlacement = async () => existing;
+    assert.equal(await placement.place(request, ports), existing);
+});
+
 test('Checkout derives bound offline capture only from reviewed server policy, never browser mode', async t => {
     const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE };
     t.after(() => { global.CONFIG = previous.CONFIG; global.SERVICE = previous.SERVICE; });

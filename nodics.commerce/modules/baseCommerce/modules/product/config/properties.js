@@ -80,6 +80,13 @@ module.exports = {
         script:
           "src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs",
       },
+      "acceptance:coupon-catalogue-availability": {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: "@nTooling/node-script",
+        script:
+          "src/service/acceptance/defaultCouponCatalogueAvailabilityAcceptanceService.mjs",
+      },
     },
   },
   // Inert inventory; an allowed local server must explicitly select this capability.
@@ -102,6 +109,13 @@ module.exports = {
 
   product: {
     enabled: true,
+    acceptance: {
+      couponCatalogueAvailability: {
+        requestTimeoutMs: 30000,
+        pageSize: 50,
+        maximumPages: 20,
+      },
+    },
     businessAuthoring: {
       readPermission: "commerce.product.read",
       writePermission: "commerce.product.write",
@@ -113,6 +127,11 @@ module.exports = {
       enabled: false,
       catalogVersion: null,
       locales: [],
+      bundlePublication: {
+        enabled: false,
+        source: { moduleName: "digitalCore", connectionName: "commerce", targetAuthority: { runtimeRole: "COMMERCE" },
+          apiVersion: "v0", timeoutMs: 15000, maxAttempts: 1 },
+      },
       intentSource: {
         connectionName: null,
         connectionType: "abstract",
@@ -156,6 +175,9 @@ module.exports = {
         dimensions: {
           brands: { paths: ["brand", "localizedAttributes.brand"] },
           categories: { paths: ["categoryCodes"] },
+          kinds: { paths: ["localizedAttributes.kind"] },
+          issuers: { paths: ["localizedAttributes.issuerRef.code"] },
+          conditions: { paths: ["localizedAttributes.condition"] },
           collections: {
             paths: ["collectionCodes", "localizedAttributes.collection"],
           },

@@ -13,30 +13,32 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const catalogue = require("../src/service/defaultEWasteCatalogueService");
-const defaults = require("../config/properties").eWaste.catalogue;
 
-test("independent customers can override browse policy without changing domain code", async () => {
+test("Product owns generic browse policy, totals and facets without a second accelerator scanner", async () => {
   const scoped = {
     ...catalogue,
-    settings: () => ({ ...defaults, pageSize: 1 }),
-    marketplace: async () => ({ coupons: [
-      { code: "B", name: "Beta", rewardPrice: 5, issuer: "Partner" },
-      { code: "A", name: "Alpha", rewardPrice: 3, issuer: "Partner" },
-    ], assets: [] }),
+    products: async (_, path, query) => {
+      assert.equal(path, "/products/discovery");
+      assert.equal(query.view, "AVAILABLE_SHOP");
+      assert.equal(query.sortCode, "price-asc");
+      assert.equal(query.pageSize, undefined);
+      return { products: [{ productCode: "A", localizedAttributes: { kind: "COUPON" } }],
+        total: 2, page: 1, pageSize: 1, facets: { issuers: [{ code: "Partner", label: "Partner" }] }, pagination: { hasNext: true } };
+    },
+    offer: async (_, product) => ({ code: product.productCode, available: true }),
   };
   const result = await scoped.catalogue({ query: { kind: "COUPON", sort: "POINTS_ASC" } });
   assert.equal(result.items[0].code, "A");
   assert.equal(result.total, 2);
   assert.equal(result.pageSize, 1);
   assert.deepEqual(result.facets.issuers, [{ code: "Partner", label: "Partner" }]);
-  assert.equal(defaults.pageSize, 12);
+  assert.equal(require("../config/properties").eWaste.catalogue, undefined);
 });
 
-test("invalid filters reject before any owner read and arrays do not become selectors", async () => {
+test("invalid domain selectors reject before owner transport; generic selectors stay with Product", async () => {
   let reads = 0;
-  const scoped = { ...catalogue, settings: () => defaults, marketplace: async () => { reads++; } };
-  for (const query of [{ kind: "PRIVATE" }, { kind: "ASSET", page: ["1"] },
-    { kind: "COUPON", minPoints: "20", maxPoints: "10" }, { kind: "COUPON", validUntil: "2026-02-30" }]) {
+  const scoped = { ...catalogue, products: async () => { reads++; } };
+  for (const query of [{ kind: "PRIVATE" }, { kind: "ASSET", sort: "PRIVATE" }]) {
     await assert.rejects(scoped.catalogue({ query }));
   }
   assert.equal(reads, 0);

@@ -131,7 +131,7 @@ module.exports = {
         const matches = SERVICE.DefaultDataReleaseService.discoverReleases(dataType).filter(item => item.releaseCode === code);
         if (matches.length !== 1 || matches[0].invalidManifest) this.fail();
         return Object.fromEntries(['moduleName', 'releaseCode', 'sectionCode', 'dataType', 'version', 'checksum',
-            'sourceRoot', 'declaredFiles', 'installer', 'owningDomain', 'lifecycle', 'destinationRole', 'environmentScope']
+            'sourceRoot', 'declaredFiles', 'prerequisites', 'installer', 'owningDomain', 'lifecycle', 'destinationRole', 'environmentScope']
             .filter(key => matches[0][key] !== undefined).map(key => [key, structuredClone(matches[0][key])]));
     },
     /** Reuses nImport confinement with a private read budget, never changing global installer limits. */
@@ -200,6 +200,7 @@ module.exports = {
                     stage.release.moduleName !== stage.code.split(':')[0] || stage.release.dataType !== stage.descriptor.dataType ||
                     !this.identifier(stage.release.version) || !/^[a-f0-9]{64}$/.test(stage.release.checksum || '') ||
                     !Array.isArray(stage.release.declaredFiles) || !stage.release.declaredFiles.length ||
+                    !Array.isArray(stage.release.prerequisites) || stage.release.prerequisites.length > 256 ||
                     !Array.isArray(stage.release.environmentScope)) this.fail();
             } else if (stage.descriptor.type === 'MEDIA_ASSET_MANIFEST') {
                 if (!Array.isArray(stage.assets) || !stage.assets.length || stage.assets.length > 100 ||
@@ -379,6 +380,7 @@ module.exports = {
         if (release.invalidManifest || ['moduleName', 'releaseCode', 'dataType', 'sectionCode', 'version', 'checksum', 'sourceRoot',
             'installer', 'owningDomain', 'lifecycle', 'destinationRole'].some(key => release[key] !== pin[key]) ||
             this.digest(release.environmentScope) !== this.digest(pin.environmentScope) ||
+            this.digest(release.prerequisites) !== this.digest(pin.prerequisites) ||
             this.digest(release.declaredFiles) !== this.digest(pin.declaredFiles)) this.fail();
         owner.validateDestination(release);
         const snapshot = this.sourceSnapshot(release);
@@ -386,7 +388,9 @@ module.exports = {
             const bytes = snapshot.files.get(name); if (!Buffer.isBuffer(bytes)) this.fail();
             return name + ':' + crypto.createHash('sha256').update(bytes).digest('hex');
         });
-        if (crypto.createHash('sha256').update(hashes.join('|')).digest('hex') !== pin.checksum) this.fail();
+        if (crypto.createHash('sha256').update(hashes.join('|'))
+            .update(release.prerequisites.length ? '|prerequisites:' + JSON.stringify(release.prerequisites) : '')
+            .digest('hex') !== pin.checksum) this.fail();
         const code = owner.installationCode(request.tenant, release);
         const receipt = await this.readOne(SERVICE.DefaultDataInstallationService, request, { code });
         if (receipt && (receipt.code !== code || receipt.tenant !== request.tenant ||
@@ -443,12 +447,15 @@ module.exports = {
         const ready = Boolean(row.auditTrail?.some(entry => entry.toState === 'APPROVED') &&
             active?.version === row.targetVersion && evidence.readiness === 'READY' && evidence.releaseStatus === 'CURRENT' &&
             evidence.publication.state === 'ONLINE' && evidence.mediaDependencies?.qualified === true);
-        return { ready, authority: { baselineCode: plan.baselineCode, readiness: ready ? 'READY' : 'UNAVAILABLE',
+        const readiness = ready ? 'READY' : evidence.readiness === 'MEDIA_DEPENDENCIES_PENDING'
+            ? 'MEDIA_DEPENDENCIES_PENDING' : 'UNAVAILABLE';
+        return { ready, authority: { baselineCode: plan.baselineCode, readiness,
             releaseStatus: evidence.releaseStatus,
             publication: { code: row.code, state: row.state, revision: row.revision, sourceVersion: row.sourceVersion, targetVersion: row.targetVersion },
             mediaDependencies: { contractVersion: 1, owner: 'media', qualified: evidence.mediaDependencies?.qualified === true,
                 status: evidence.mediaDependencies?.status, dependencies: [].concat(evidence.mediaDependencies?.dependencies || []).map(item => ({
-                    code: item.code, mediaCode: item.mediaCode, versionId: item.versionId, checksum: item.checksum, status: item.status })) } } };
+                    owner: item.owner, mediaCode: item.mediaCode, versionId: item.versionId, checksum: item.checksum,
+                    publicationCode: item.publicationCode, status: item.status, qualified: item.qualified === true })) } } };
     },
     /** Two fresh observations fence drift; every call rechecks policy, plan bytes and configuration. No result is retained. */
     observe: async function (request, input) {

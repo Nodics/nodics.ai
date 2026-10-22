@@ -646,7 +646,7 @@ test("premature task, unpublished action, disabled selection and unknown action 
   let f = fixture();
   await assert.rejects(
     registry.execute(f.request, execution(f)),
-    /completed Process task/,
+    /decision evidence/,
   );
   f = fixture();
   completedTask(f);
@@ -851,6 +851,57 @@ test("outbound credential cannot authorize a different local deployment or calle
     );
     assert.equal(f.callbacks.length, 0);
     assert.equal(f.instance.activeRemoteAction, undefined);
+  }
+});
+
+test("selected cross-enterprise runtime scope preserves the Process service principal", async () => {
+  const f = fixture();
+  f.request.authData.entCode = "partnerEnterprise";
+  f.instance.context.enterpriseCode = "partnerEnterprise";
+  f.settings.remoteActions.runtimeEnterpriseScope = {
+    enabled: true,
+    enterpriseCodes: ["partnerEnterprise"],
+  };
+  const authorization = await transport.runtimeAuthorization(
+    f.request,
+    execution(f),
+  );
+  assert.equal(authorization.auth.entCode, "enterpriseA");
+  assert.equal(authorization.auth.runtimeInstanceId, "process-1");
+});
+
+test("cross-enterprise runtime scope fails closed for unbound or malformed selections", async () => {
+  for (const mutate of [
+    (f) => {
+      f.instance.context.enterpriseCode = "anotherEnterprise";
+    },
+    (f) => {
+      f.settings.remoteActions.runtimeEnterpriseScope.enterpriseCodes = [
+        "anotherEnterprise",
+      ];
+    },
+    (f) => {
+      f.settings.remoteActions.runtimeEnterpriseScope.enterpriseCodes = [
+        "partnerEnterprise",
+        "partnerEnterprise",
+      ];
+    },
+    (f) => {
+      f.settings.remoteActions.runtimeEnterpriseScope.enterpriseCodes = ["bad code"];
+    },
+  ]) {
+    const f = fixture();
+    f.request.authData.entCode = "partnerEnterprise";
+    f.instance.context.enterpriseCode = "partnerEnterprise";
+    f.settings.remoteActions.runtimeEnterpriseScope = {
+      enabled: true,
+      enterpriseCodes: ["partnerEnterprise"],
+    };
+    mutate(f);
+    await assert.rejects(
+      transport.runtimeAuthorization(f.request, execution(f)),
+      /another deployment or enterprise/,
+    );
   }
 });
 

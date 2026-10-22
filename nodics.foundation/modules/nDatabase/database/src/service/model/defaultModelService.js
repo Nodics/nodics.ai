@@ -159,7 +159,7 @@ module.exports = {
                             delete nestedOptions.replaceArraysOnVersionMerge;
                         }
                         // A version-selection option belongs to the selected root, never its child.
-                        delete nestedOptions.versionedImport;
+                        delete nestedOptions.governedVersionedImport;
                         if (nestedOptions.allowCmsAssociationReplacement === true) {
                             models.forEach(item => {
                                 if (item && !Array.isArray(item.accessGroups)) {
@@ -169,14 +169,21 @@ module.exports = {
                         }
                         let nestedQuery = nestedOptions.allowCmsAssociationReplacement === true &&
                             models.every(item => item && item.code) ? { code: '$code' } : undefined;
-                        SERVICE['Default' + propertyObject.schemaName.toUpperCaseFirstChar() + 'Service'].saveAll({
+                        const nestedService = SERVICE['Default' + propertyObject.schemaName.toUpperCaseFirstChar() + 'Service'];
+                        SERVICE.DefaultModelService.reconcileNestedCmsVersions({
+                            request: request,
+                            service: nestedService,
+                            schema: cmsAssociation && cms.rawSchema[propertyObject.schemaName],
+                            models: models,
+                            options: nestedOptions
+                        }).then(reconciledModels => nestedService.saveAll({
                             tenant: request.tenant,
                             authData: request.authData,
                             searchOptions: request.searchOptions,
                             options: nestedOptions,
                             query: nestedQuery,
-                            models: models
-                        }).then(success => {
+                            models: reconciledModels
+                        })).then(success => {
                             if (success.result && success.result.length > 0) {
                                 if (propertyObject.type === 'one') {
                                     let key = (propertyObject.propertyName) ? success.result[0][propertyObject.propertyName] : success.result[0]._id;
@@ -228,6 +235,39 @@ module.exports = {
                 reject(error);
             }
         });
+    },
+
+    /**
+     * Pins canonical nested CMS associations to their current stored revision.
+     * The versioned provider then decides between an identical replay and one
+     * append-only successor after its own fresh optimistic-lock read.
+     *
+     * @param {Object} input Canonical nested-save context.
+     * @returns {Promise<Object[]>} The same models with current revision pins.
+     */
+    reconcileNestedCmsVersions: async function (input) {
+        if (input.options?.allowCmsAssociationReplacement !== true ||
+            input.schema?.isVersionedEnabled !== true) return input.models;
+        if (!input.service || typeof input.service.get !== 'function' ||
+            !Array.isArray(input.models) || input.models.some(model => !model || typeof model.code !== 'string' || !model.code)) {
+            throw new CLASSES.NodicsError('ERR_SAVE_00007', 'Versioned CMS association reconciliation is unavailable');
+        }
+        for (const model of input.models) {
+            const response = await input.service.get({
+                tenant: input.request.tenant,
+                authData: input.request.authData,
+                query: { code: model.code },
+                searchOptions: { limit: 1, sort: { versionId: -1 } },
+                options: { recursive: false, skipItemCache: true }
+            });
+            const records = response && response.result;
+            if (!Array.isArray(records) || records.length > 1 ||
+                records[0] && (!Number.isSafeInteger(records[0].versionId) || records[0].versionId < 0)) {
+                throw new CLASSES.NodicsError('ERR_SAVE_00007', 'Versioned CMS association evidence is invalid');
+            }
+            if (records[0]) model.versionId = records[0].versionId;
+        }
+        return input.models;
     },
     /**
      * Populates referenced models according to recursive request options.

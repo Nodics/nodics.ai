@@ -145,9 +145,10 @@ module.exports = {
   /** Reads the canonical Loyalty evidence capability with exact customer and source binding, never a hidden schema route. */
   ledgerEvidence: async function (r, customerCode, terms, selectors) {
     const evidence = await this.remote(r, "loyaltyApi", "loyalty", "/reward-ledger-evidence", {
-      enterpriseCode: r.enterpriseCode, customerCode, programCode: terms.programCode, rewardTypeCode: terms.rewardTypeCode, ...selectors }, true);
+      enterpriseCode: r.enterpriseCode, ownerType: "CUSTOMER", ownerCode: customerCode,
+      programCode: terms.programCode, rewardTypeCode: terms.rewardTypeCode, ...selectors }, true);
     if (evidence?.contractVersion !== 1 || evidence.tenant !== r.tenant || evidence.enterpriseCode !== r.enterpriseCode ||
-        evidence.customerCode !== customerCode || evidence.wallet?.tenant !== r.tenant || evidence.wallet.ownerType !== "CUSTOMER" ||
+        evidence.ownerType !== "CUSTOMER" || evidence.ownerCode !== customerCode || evidence.wallet?.tenant !== r.tenant || evidence.wallet.ownerType !== "CUSTOMER" ||
         evidence.wallet.ownerCode !== customerCode || evidence.wallet.status !== "OPEN" || evidence.wallet.active === false || !evidence.wallet.code ||
         (selectors.earningIdempotencyKey && !isDeepStrictEqual(evidence.ledgerSelection, { entryType: "EARN",
           sourceType: selectors.sourceType, sourceCode: selectors.sourceCode, idempotencyKey: selectors.earningIdempotencyKey,
@@ -176,11 +177,11 @@ module.exports = {
     };
     await current();
     const evidence = await this.remote(r, "loyaltyApi", "loyalty", "/wallet-evidence", {
-      enterpriseCode: r.enterpriseCode, customerCode: command.sellerRef.code,
+      enterpriseCode: r.enterpriseCode, ownerType: "CUSTOMER", ownerCode: command.sellerRef.code,
       programCode: terms.programCode, rewardTypeCode: terms.rewardTypeCode }, true);
     const wallet = evidence?.wallet, balance = evidence?.balance;
     if (evidence?.contractVersion !== 1 || evidence.tenant !== r.tenant || evidence.enterpriseCode !== r.enterpriseCode ||
-        evidence.customerCode !== command.sellerRef.code || evidence.programCode !== terms.programCode || evidence.rewardTypeCode !== terms.rewardTypeCode ||
+        evidence.ownerType !== "CUSTOMER" || evidence.ownerCode !== command.sellerRef.code || evidence.programCode !== terms.programCode || evidence.rewardTypeCode !== terms.rewardTypeCode ||
         typeof wallet?.code !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.:@|\-]{0,191}$/.test(wallet.code) ||
         wallet.tenant !== r.tenant || wallet.ownerType !== "CUSTOMER" || wallet.ownerCode !== command.sellerRef.code ||
         wallet.status !== "OPEN" || wallet.active === false ||
@@ -497,19 +498,34 @@ module.exports = {
   },
   /** Coordinates allowlisted phases only. Missing policy, ambiguous payment and uncertain ledger outcomes remain recovery-required. */
   invoke: async function (input, phase) {
+    if (phase === "bundle-holdings") {
+      const r = this.context(input);
+      r.validateAuthority = () => this.recheckAuthority(r);
+      return SERVICE.DefaultWasteCertificateHoldingsService.list(r, r.payload);
+    }
+    if (["coupon-inspect", "coupon-reserve", "coupon-consume", "coupon-release"].includes(phase)) {
+      const r = this.context(input);
+      r.validateAuthority = () => this.recheckAuthority(r);
+      return SERVICE.DefaultWasteCertificateCouponService.invoke(r, r.payload, phase.slice(7));
+    }
+    if (["bundle-inspect", "bundle-reserve", "bundle-transfer", "bundle-release", "bundle-finalize"].includes(phase)) {
+      const r = this.context(input);
+      r.validateAuthority = () => this.recheckAuthority(r);
+      return SERVICE.DefaultWasteCertificateBundleComponentService[phase.slice(7)](r, r.payload);
+    }
     if (phase === "evidence") return SERVICE.DefaultEWasteDigitalSaleEvidenceService.read(input);
-    if (["refund-preview", "refund-prepare", "refund-settle", "refund-complete"].includes(phase))
-      return SERVICE.DefaultEWasteOrderReversalService.digitalInvoke(input, phase.slice(7));
+    if (["refund-preview", "refund-prepare", "refund-settle", "refund-complete"].includes(phase)) {
+      this.context(input);
+      if (phase === "refund-preview") return { eligible: false, reason: "COMPLETED_BUNDLE_FINAL_SALE" };
+      throw new Error("Completed ownership purchases are final sales; incomplete purchases require original Checkout recovery");
+    }
     const r = this.context(input), waste = SERVICE.DefaultWasteAssetTransferOperationService;
     if (phase === "compensation-resolve") return this.resolveCompensation(r);
     if (["availability", "reserve"].includes(phase)) {
       const resolved = await this.binding(r);
-      if (phase === "availability") return { available: resolved.asset.assetStatus === "LISTED" && !resolved.asset.metadata?.pendingTransferCode &&
-          isDeepStrictEqual(resolved.asset.ownerRef, resolved.ref.sellerRef), status: "OWNER_CHECKED", assetCode: resolved.ref.assetCode };
-      const command = await this.command(r, resolved);
-      const event = await waste.reserveDigitalSale(r, command, resolved.policies.transfer.metadata.digitalOwnership.reservationSeconds);
-      if (event.transferStatus !== "RESERVED") throw new Error("Digital purchase requires original-command recovery");
-      return this.result(event, "RESERVED");
+      if (phase === "availability") return { available: false, status: "OWNER_CHECKED", assetCode: resolved.ref.assetCode,
+        reasonCode: "COMMON_COMMERCE_BUNDLE_REQUIRED" };
+      throw new Error("Publish a governed Digital bundle before common Commerce purchase; legacy sale admission is closed");
     }
     let event = await this.event(r);
     if (phase === "cancel") {
@@ -537,22 +553,10 @@ module.exports = {
     if (phase === "confirm") {
       const capture = await this.capture(r, event);
       if (event.transferStatus !== "COMPLETED") {
-        event = await waste.prepareDigitalSettlement(r, event, capture);
-        const c = event.metadata.digitalSale.command, terms = c.policies.reward.metadata.digitalOwnership;
-        const wallet = await this.sellerWalletEvidence(r, event);
-        const key = event.code + ":sale-proceeds";
-        const result = await this.remote(r, "loyaltyApi", "loyalty", "/reward-earnings", { walletCode: wallet.code,
-          programCode: terms.programCode, rewardTypeCode: terms.rewardTypeCode, amount: capture.amount, scale: terms.scale,
-          sourceType: "WASTE_ASSET_SALE", sourceCode: event.code, idempotencyKey: key }, true);
-        const entry = result?.ledgerEntry;
-        if (!entry?.code || entry.walletCode !== wallet.code || entry.programCode !== terms.programCode || entry.rewardTypeCode !== terms.rewardTypeCode ||
-            entry.sourceType !== "WASTE_ASSET_SALE" || entry.entryType !== "EARN" ||
-            entry.sourceCode !== event.code || entry.idempotencyKey !== key || this.amount().compare(String(entry.amount), capture.amount) !== 0)
-          throw new Error("Original seller-proceeds ledger is unconfirmed");
-        event = await waste.completeDigitalSale(r, event, { rewardSettlementRefs: [{ module: "loyaltyLedger", schema: "rewardLedgerEntry", code: entry.code }], carbonSettlementRefs: [] });
+        throw new Error("Historical incomplete sale requires original Checkout reconciliation; no eWaste seller credit is permitted");
       } else {
         if (!isDeepStrictEqual(event.metadata.digitalSale.capture, capture)) throw new Error("Original capture changed");
-        event = await waste.completeDigitalSale(r, event, event.metadata.digitalSale.settlement);
+        event = await waste.verifyDigitalSale(r, event);
       }
       await this.verifySettlement(r, event);
       return this.result(event, "SOLD");

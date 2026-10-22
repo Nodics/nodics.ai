@@ -131,6 +131,82 @@ module.exports = {
   ensureBootstrapAll: function (request) {
     return SERVICE.DefaultMandatoryIdentityBootstrapService.ensureBootstrapAll(this, "employee", request);
   },
+  /** Applies one exact reviewed service API-key scope transition through private Init release authority. */
+  adoptRuntimeServiceScopesAll: async function (request) {
+    const fail = () => {
+      throw new CLASSES.NodicsError("ERR_PROFILE_CREDENTIAL_OWNERSHIP");
+    };
+    const plain = value => value && Object.getPrototypeOf(value) === Object.prototype;
+    const key = (value, maximum = 192) => typeof value === "string" && value.length > 0 &&
+      value.length <= maximum && value.trim() === value;
+    const codes = value => Array.isArray(value) && value.length > 0 && value.length <= 128 &&
+      value.every(item => key(item, 192) && item !== "*") && new Set(value).size === value.length;
+    const success = response => /^SUC_/.test(response?.code || "") && response.success !== false &&
+      !response.error && (!response.errors || Array.isArray(response.errors) && !response.errors.length);
+    const models = request?.models;
+    if (!key(request?.tenant) || !Array.isArray(models) || models.length < 1 || models.length > 16 ||
+        SERVICE.DefaultDataReleaseService?.isIdentityAuthorityReleaseExecution?.(
+          request.tenant, "employee", "adoptRuntimeServiceScopesAll") !== true) fail();
+    const identities = new Set(), logins = new Set(), allScopes = new Set();
+    const instructions = models.map(model => {
+      if (!plain(model) || Object.keys(model).sort().join("|") !==
+          "code|expectedScopeCodes|loginId|scopeCodes" || !key(model.code) ||
+          !key(model.loginId, 320) || !codes(model.expectedScopeCodes) || !codes(model.scopeCodes) ||
+          identities.has(model.code) || logins.has(model.loginId)) fail();
+      identities.add(model.code);
+      logins.add(model.loginId);
+      model.expectedScopeCodes.forEach(code => allScopes.add(code));
+      model.scopeCodes.forEach(code => allScopes.add(code));
+      return { ...model, expectedScopeCodes: [...model.expectedScopeCodes], scopeCodes: [...model.scopeCodes] };
+    });
+    await SERVICE.DefaultIdentityCatalogueService.requirePermissions([...allScopes]);
+    const read = async instruction => {
+      const response = await this.get({ tenant: request.tenant, authData: request.authData,
+        query: { $or: [{ code: instruction.code }, { loginId: instruction.loginId }] },
+        options: { recursive: false, skipItemCache: true },
+        searchOptions: { pageSize: 2, pageNumber: 1 } });
+      if (!success(response) || response.count !== 1 || !Array.isArray(response.result) ||
+          response.result.length !== 1) fail();
+      const person = response.result[0];
+      const serviceGroup = CONFIG.get("identityGovernance")?.principalPolicy?.serviceGroup;
+      if (!person?._id || person.code !== instruction.code || person.loginId !== instruction.loginId ||
+          person.active !== true || person.disabled || person.registrationSuspended ||
+          person.principalType !== "service" || person.authenticationIdentity || person.apiKey ||
+          !person.apiKeyHash || person.apiKeyStatus !== "active" ||
+          !Array.isArray(person.userGroups) || !person.userGroups.includes(serviceGroup) ||
+          !Array.isArray(person.apiKeyScopes) || new Set(person.apiKeyScopes).size !== person.apiKeyScopes.length ||
+          !Number.isInteger(person.authVersion) || person.authVersion < 1) fail();
+      return person;
+    };
+    const prepared = [];
+    for (const instruction of instructions) {
+      const person = await read(instruction);
+      const current = JSON.stringify(person.apiKeyScopes);
+      const expected = JSON.stringify(instruction.expectedScopeCodes);
+      const desired = JSON.stringify(instruction.scopeCodes);
+      if (current !== expected && current !== desired) fail();
+      prepared.push({ instruction, person, changed: current !== desired });
+    }
+    const result = [];
+    for (const { instruction, person, changed } of prepared) {
+      if (changed) {
+        const updated = await this.update({ tenant: request.tenant, authData: request.authData,
+          query: { _id: person._id, code: person.code, loginId: person.loginId, active: true,
+            principalType: "service", userGroups: person.userGroups, apiKeyHash: person.apiKeyHash,
+            apiKeyStatus: "active", apiKeyScopes: person.apiKeyScopes, authVersion: person.authVersion },
+          model: { apiKeyScopes: instruction.scopeCodes }, options: { returnModified: true } });
+        if (!success(updated) || updated.result?.acknowledged !== true || updated.result.matchedCount !== 1) fail();
+        const current = await read(instruction);
+        if (String(current._id) !== String(person._id) ||
+            JSON.stringify(current.apiKeyScopes) !== JSON.stringify(instruction.scopeCodes) ||
+            JSON.stringify(current.userGroups) !== JSON.stringify(person.userGroups) ||
+            String(current.apiKeyHash) !== String(person.apiKeyHash) ||
+            current.authVersion <= person.authVersion) fail();
+      }
+      result.push({ code: instruction.code });
+    }
+    return { result };
+  },
   /** Adds reviewed reference-release roles to existing native employees through normal owner updates. */
   addReferenceGroupsAll: async function (request) {
     const fail = () => {

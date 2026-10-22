@@ -27,21 +27,20 @@ assert(providerPackage.nodics.owns.includes('service'));
 
 const calls = [];
 global.CONFIG = {
-    get: key => key === 'loyaltyRewardProvider' ? {
-        providerCode: 'loyalty-reward-points',
-        programCode: 'default',
-        rewardTypeCode: 'points',
-        loyaltyTarget: { moduleName: 'loyaltyApi', connectionName: 'loyaltyServer', targetAuthority: { runtimeRole: 'LOYALTY' } }
-    } : undefined
+    get: key => key === 'loyaltyRewardProvider' ? require('../config/properties').loyaltyRewardProvider : undefined
 };
 global.SERVICE = {
+    DefaultExactAmountService: require('../../../../../../baseCommerce/modules/pricing/src/service/defaultExactAmountService'),
     DefaultModuleService: {
         invokeModule: async options => {
             calls.push(options);
-            if (options.operationName === 'reserve') return { reservation: { code: 'reservation-001' }, ledgerEntry: { code: 'ledger-reserve-001' } };
-            if (options.operationName === 'capture') return { redemption: { code: 'redemption-001' }, ledgerEntry: { code: 'ledger-capture-001' } };
-            if (options.operationName === 'release') return { reservation: { code: 'reservation-001' }, ledgerEntry: { code: 'ledger-release-001' } };
-            if (options.operationName === 'reverse') return { reversedEntry: { code: 'ledger-capture-001' }, ledgerEntry: { code: 'ledger-reverse-001' } };
+            const payload = options.requestBody;
+            const entry = { ...payload, entryType: { reserve: 'RESERVE', capture: 'CAPTURE', release: 'RELEASE', reverse: 'REVERSE' }[options.operationName],
+                reservationCode: 'reservation-001', code: 'ledger-' + options.operationName + '-001' };
+            if (options.operationName === 'reserve') return { reservation: { ...payload, code: 'reservation-001', status: 'RESERVED' }, ledgerEntry: entry };
+            if (options.operationName === 'capture') return { redemption: { code: 'redemption-001' }, ledgerEntry: entry };
+            if (options.operationName === 'release') return { reservation: { code: 'reservation-001', status: 'RELEASED' }, ledgerEntry: entry };
+            if (options.operationName === 'reverse') return { reversedEntry: { code: 'ledger-capture-001' }, ledgerEntry: entry };
             throw new Error('unexpected operation');
         }
     }

@@ -11,7 +11,25 @@
 
 "use strict";
 const crypto = require("node:crypto");
-/** @module bidding/service/defaultBiddingService @description Owns participant-scoped pre-checkout bids, seller acceptance and accepted terms handed to Pricing; Product remains the offer authority and Checkout alone reserves payment. @layer service @owner bidding @override Configure eligible stores, validity and amount limits in later layers; preserve participant authorization, durable acceptance, exact amounts and idempotency. */
+/**
+ * @module bidding/service/defaultBiddingService
+ * @description Owns participant-scoped pre-checkout bids, seller acceptance and accepted terms handed
+ * to Pricing; Product remains the offer authority and Checkout alone reserves payment.
+ * @layer service
+ * @owner bidding
+ * @override Configure eligible stores, validity and amount limits in later layers; preserve
+ * participant authorization, durable acceptance, exact amounts and idempotency.
+ * @remarks Bidding keeps negotiation and persisted auction ownership separate. Effective
+ * identity/offer services come from framework configuration; requests cannot choose executable owners.
+ * Private participant persistence and owner-held money remain outside caller control.
+ * Inputs and outputs are specified on each exported member below.
+ * Effects and failures remain in the existing owner flow; missing evidence is never synthetic success.
+ * Exported members: policy, fail, participantContext, identity, sellerRef, sameRef, participantQuery,
+ * context, records, command, hash, offer, project, list, participant, read, create, update, decide,
+ * openAuction, auctionPublication, readAuction, listAuctions, commandAuction.
+ * @override Customize through the existing loader-visible module members, preserving private
+ * authority.
+ */
 module.exports = {
   /** Reads the layered negotiation policy; no caller may select a policy implementation. */
   policy: function () {
@@ -21,23 +39,41 @@ module.exports = {
   fail: function (message) {
     throw new CLASSES.NodicsError("ERR_BIDDING_INVALID", message);
   },
-  /** Resolves a trusted participant through the configured identity owner; HTTP callers cannot choose a service. */
+  /**
+   * Resolves a trusted participant through the configured identity owner; HTTP callers cannot choose a
+   * service.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Fresh canonical participant context from the effective identity owner.
+   * @remarks Effects: May read Profile identity/scopes; never rewrites a signed employee into a
+   * customer.
+   * Failure behavior: Propagates absent identity service or participant denial.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   participantContext: async function (request) {
     if (!this.policy().enabled)
       this.fail("Bidding is not enabled for this deployment");
     const runtime = CONFIG.get("runtimeRole"),
       role = typeof runtime === "string" ? runtime : runtime?.code;
-    if ((this.policy().runtimeRoles || { COMMERCE: true })[role] !== true)
+    if (this.policy().runtimeRoles?.[role] !== true)
       throw new CLASSES.NodicsError(
         "ERR_BIDDING_RUNTIME_FORBIDDEN",
         "Bidding requires its configured operational Commerce runtime",
       );
     return this.identity().resolve(request);
   },
-  /** Resolves the layered seller-authorization seam without accepting executable input. */
+  /**
+   * Resolves the layered seller-authorization seam without accepting executable input.
+   * @returns {Object} Effective configured identity service.
+   * @remarks Effects: Registry lookup only; no identity or permission mutation.
+   * Failure behavior: Rejects missing or incompatible configured service.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   identity: function () {
     const service =
-      SERVICE[this.policy().identityService || "DefaultBiddingIdentityService"];
+      SERVICE[this.policy().identityService];
     if (
       !service ||
       typeof service.resolve !== "function" ||
@@ -112,10 +148,21 @@ module.exports = {
       .update(JSON.stringify(value))
       .digest("hex");
   },
-  /** Resolves generic Product eligibility through the server-owned offer contract. */
+  /**
+   * Resolves generic Product eligibility through the server-owned offer contract.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @param {string} productCode Canonical published Product code.
+   * @param {string} storeCode Canonical governed Store code.
+   * @returns {Promise<Object>} Canonical eligible offer for the exact Product and Store.
+   * @remarks Effects: Delegates read-only offer resolution.
+   * Failure behavior: Rejects missing owner or unavailable/invalid offer.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   offer: async function (request, productCode, storeCode) {
     const service =
-      SERVICE[this.policy().offerService || "DefaultBiddingOfferService"];
+      SERVICE[this.policy().offerService];
     if (!service || typeof service.resolve !== "function")
       this.fail("Bidding offer policy is unavailable");
     return service.resolve(request, productCode, storeCode);
@@ -206,7 +253,17 @@ module.exports = {
     const request = await this.participantContext(input);
     return this.project(request, await this.participant(request, request.code));
   },
-  /** Persists a confirmed single-unit bid; funds remain untouched until normal Checkout. */
+  /**
+   * Persists a confirmed single-unit bid; funds remain untouched until normal Checkout.
+   * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
+   * grant authority.
+   * @returns {Promise<Object>} Owner-safe persisted negotiation projection.
+   * @remarks Effects: Persists one confirmed single-unit bid and reuses exact replay identity; no funds
+   * acquisition.
+   * Failure behavior: Rejects unauthorized, mismatched, duplicate-conflicting or ineligible intake.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   create: async function (input) {
     const request = await this.participantContext(input),
       key = this.command(request),
@@ -260,6 +317,8 @@ module.exports = {
       p.productCode,
       p.storeCode,
     );
+    if (product.localizedAttributes?.commerceBidding?.mode === "AUCTION")
+      this.fail("Use the published auction round for this offer");
     if (request.sellerRefs.some((ref) => this.sameRef(ref, sellerRef)))
       this.fail("You cannot bid on your own product");
     if (!(product.variantCodes || []).includes(p.variantCode))
@@ -315,7 +374,18 @@ module.exports = {
     });
     return this.participant(request, bid.code);
   },
-  /** Accepts, rejects or withdraws reviewed terms; acceptance is durable before issuing its private Pricing quote. */
+  /**
+   * Accepts, rejects or withdraws reviewed terms; acceptance is durable before issuing its private
+   * Pricing quote.
+   * @param {Object} input Operation input/selectors validated by this owner; supplied identities do not
+   * grant authority.
+   * @returns {Promise<Object>} Owner-safe accepted, rejected or withdrawn negotiation projection.
+   * @remarks Effects: Persists the decision before issuing its original private Pricing quote.
+   * Failure behavior: Rejects foreign actor, changed reviewed terms, terminal conflicts or uncertain
+   * quote/write evidence.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
   decide: async function (input) {
     const request = await this.participantContext(input),
       key = this.command(request),
@@ -368,7 +438,7 @@ module.exports = {
     if (action !== "ACCEPT") return this.project(request, bid);
     const store = this.policy().stores[bid.storeCode];
     const orderCode =
-      (store.orderCodePrefix || "BID_ORDER_") +
+      (store.orderCodePrefix || this.policy().orderCodePrefix) +
       this.hash([request.tenant, request.enterpriseCode, bid.code])
         .slice(0, 24)
         .toUpperCase();
@@ -404,4 +474,61 @@ module.exports = {
     });
     return this.project(request, bid);
   },
+  /**
+   * Opens a persisted published auction without changing ordinary negotiation semantics.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Result from the corresponding canonical persisted-auction owner method.
+   * @remarks Effects: Delegates round creation/commands and their existing persisted funding fences; no
+   * parallel workflow.
+   * Failure behavior: Propagates participant, publication, concurrency or owner-recovery failure.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  openAuction: function (request) { return SERVICE.DefaultBiddingAuctionService.open(request); },
+  /**
+   * Delegates read-only fresh-publication admission to the canonical auction owner.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Result from the corresponding canonical persisted-auction owner method.
+   * @remarks Effects: Read-only auction delegation; no negotiation or financial mutation.
+   * Failure behavior: Propagates participant, publication, concurrency or owner-recovery failure.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  auctionPublication: function (request) { return SERVICE.DefaultBiddingAuctionService.publicationContext(request); },
+  /**
+   * Returns public aggregate and authorized participant detail for one round.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Result from the corresponding canonical persisted-auction owner method.
+   * @remarks Effects: Read-only auction delegation; no negotiation or financial mutation.
+   * Failure behavior: Propagates participant, publication, concurrency or owner-recovery failure.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  readAuction: function (request) { return SERVICE.DefaultBiddingAuctionService.read(request); },
+  /**
+   * Pages the current participant's auction history through the owning aggregate.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Result from the corresponding canonical persisted-auction owner method.
+   * @remarks Effects: Read-only auction delegation; no negotiation or financial mutation.
+   * Failure behavior: Propagates participant, publication, concurrency or owner-recovery failure.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  listAuctions: function (request) { return SERVICE.DefaultBiddingAuctionService.list(request); },
+  /**
+   * Serializes auction participant commands through the round revision fence.
+   * @param {Object} request Original owner request with tenant, authData and operation selectors;
+   * payload is not authority.
+   * @returns {Promise<Object>} Result from the corresponding canonical persisted-auction owner method.
+   * @remarks Effects: Delegates round creation/commands and their existing persisted funding fences; no
+   * parallel workflow.
+   * Failure behavior: Propagates participant, publication, concurrency or owner-recovery failure.
+   * @override Override through the effective module member; retain the original owner, scope and
+   * evidence checks described above.
+   */
+  commandAuction: function (request) { return SERVICE.DefaultBiddingAuctionService.command(request); },
 };

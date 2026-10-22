@@ -27,6 +27,12 @@ module.exports = {
 
   cart: {
     enabled: true,
+    participation: {
+      profile: { connectionName: "profile", targetAuthority: { runtimeRole: "PLATFORM" }, timeoutMilliseconds: 15000 },
+    },
+    merchantScope: {
+      storeTarget: { connectionName: "commerce", targetAuthority: { runtimeRole: "COMMERCE" }, timeoutMs: 15000 },
+    },
     customerApi: {
       defaultChannelCode: "web",
       defaultLocale: "en",

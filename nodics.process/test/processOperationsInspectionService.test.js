@@ -88,7 +88,9 @@ const inspectionService = require('../modules/workflow/src/service/operation/def
     assert.strictEqual(listedInstances.code, 'SUC_PROCESS_00000');
     assert.strictEqual(listedInstances.data.length, 1);
     assert.deepStrictEqual(captures[0].query, { definitionCode: 'contentApproval', status: 'RUNNING' });
-    assert.strictEqual(captures[0].searchOptions.limit, 100);
+    assert.strictEqual(captures[0].searchOptions.pageSize, 100);
+    assert.strictEqual(captures[0].searchOptions.pageNumber, 1);
+    assert.strictEqual(captures[0].searchOptions.limit, undefined);
 
     let instance = await inspectionService.getInstance({ tenant: 'default', instanceCode: 'instance-1' });
     assert.strictEqual(instance.data.code, 'instance-1');
@@ -99,7 +101,8 @@ const inspectionService = require('../modules/workflow/src/service/operation/def
     });
     assert.strictEqual(listedTasks.data.length, 1);
     assert.deepStrictEqual(captures[2].query, { instanceCode: 'instance-1', assignee: 'content-admin' });
-    assert.strictEqual(captures[2].searchOptions.limit, 2);
+    assert.strictEqual(captures[2].searchOptions.pageSize, 2);
+    assert.strictEqual(captures[2].searchOptions.pageNumber, 1);
 
     let task = await inspectionService.getTask({ tenant: 'default', taskCode: 'task-1' });
     assert.strictEqual(task.data.code, 'task-1');

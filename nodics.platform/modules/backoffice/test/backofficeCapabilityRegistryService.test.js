@@ -77,6 +77,18 @@ assert.deepEqual(Object.keys(registry.applyFunctionalModuleEligibility({
 }, { eligibleModules: ['wasteCore', 'nodics.waste'] })), [], 'all declared instance owners must be eligible');
 assert.throws(() => registry.buildCatalogue({ product: [{ backoffice: capability('one', []) },
     { backoffice: capability('two', []) }] }, 1, { permissions: ['*'] }), /Inconsistent BackOffice capability providers/);
+let roleLocal = capability('product', [item('catalog', undefined, undefined, 'catalog.read')]);
+roleLocal.navigation[0].lifecycleActions = [{ id: 'archive', permission: 'catalog.archive', featureState: 'ACTIVE' }];
+let operational = structuredClone(roleLocal);
+operational.navigation[0].lifecycleActions[0].featureState = 'DISABLED';
+let selected = registry.selectMetadata('product', [{ backoffice: roleLocal }, { backoffice: operational }]);
+assert.equal(selected.navigation[0].lifecycleActions[0].featureState, 'ACTIVE',
+    'a structurally identical action remains available when one registered runtime role can execute it');
+assert.equal(operational.navigation[0].lifecycleActions[0].featureState, 'DISABLED', 'selection must not mutate provider metadata');
+let inconsistentAction = structuredClone(operational);
+inconsistentAction.navigation[0].lifecycleActions[0].permission = 'catalog.delete';
+assert.throws(() => registry.selectMetadata('product', [{ backoffice: roleLocal }, { backoffice: inconsistentAction }]),
+    /Inconsistent BackOffice capability providers/, 'only role-local availability may differ');
 assert.throws(() => registry.buildCatalogue({ first: [{ backoffice: capability('first', [item('duplicate', undefined, undefined, 'read')]) }],
     second: [{ backoffice: capability('second', [item('duplicate', undefined, undefined, 'read')]) }] }, 1, { permissions: ['*'] }),
     /Duplicate BackOffice navigation id/);

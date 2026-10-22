@@ -15,6 +15,8 @@ const test = require("node:test"),
   assert = require("node:assert/strict"),
   method = require("../src/service/defaultLoyaltyRewardPaymentMethodService");
 test("calculated price is authoritative and caller underpayment is rejected", () => {
+  global.CONFIG = { get: key => require('../config/properties')[key] };
+  global.SERVICE = { DefaultExactAmountService: require('../../../../../../../../nodics.foundation/modules/nCommon/src/utils/exactAmount') };
   const base = {
     tenant: "default",
     walletCode: "wallet",
@@ -31,4 +33,6 @@ test("calculated price is authoritative and caller underpayment is rejected", ()
   );
   assert.throws(() => method.prepare({ ...base, amount: "0" }), /positive/);
   assert.equal(method.prepare({ ...base, rewardAmount: "20" }).amount, "20.00");
+  delete global.CONFIG;
+  delete global.SERVICE;
 });

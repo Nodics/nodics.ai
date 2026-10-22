@@ -256,7 +256,7 @@ test('actual business groups retain draft-only editing without legacy manage, ap
         }
         await assert.rejects(admit(input, routers.approve), { code: 'ERR_AUTH_00003' });
         const seller = Object.values(routers).filter(route => route.permission === 'commerce.coupon.seller.manage');
-        assert.equal(seller.length, 2);
+        assert.equal(seller.length, 3);
         for (const route of seller) {
             if (group.permissions.includes('commerce.coupon.seller.manage')) await admit(input, route);
             else await assert.rejects(admit(input, route), { code: 'ERR_AUTH_00003' });

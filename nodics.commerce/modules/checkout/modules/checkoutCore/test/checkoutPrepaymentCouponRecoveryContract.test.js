@@ -125,7 +125,7 @@ test("prepayment recovery fences exact original cleanup, preserves legacy audit 
   assert.equal(state.forbidden, 0); assert.equal(JSON.stringify(result).includes("PRIVATE"), false);
 });
 
-test("actual legacy compensate writer and real Digital Cart resolver conform to this branch", async () => {
+test("actual scoped compensate writer and real Digital Cart resolver conform to this branch", async () => {
   const { request, state, uncertainKey } = fixture();
   delete SERVICE.DefaultDigitalCommerceCheckoutService;
   SERVICE.DefaultCheckoutCheckpointService.save = async r => { state.rows = [copy(r.model)]; return { code: "SUC_SAVE_00000", result: r.model }; };
@@ -143,7 +143,7 @@ test("actual legacy compensate writer and real Digital Cart resolver conform to 
   } };
   assert.equal((await recovery.recover(request)).cartCode, state.cart.code);
   assert.equal(releases, 1); assert.equal(state.forbidden, 0);
-  assert.equal(Object.hasOwn(state.rows[0], "enterpriseCode"), false);
+  assert.equal(state.rows[0].enterpriseCode, request.enterpriseCode);
 });
 
 for (const [name, mutate] of Object.entries({

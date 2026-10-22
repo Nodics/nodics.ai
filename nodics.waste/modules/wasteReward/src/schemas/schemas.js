@@ -14,6 +14,213 @@
 /** @module wasteReward/src/schemas/schemas @description Defines immutable Waste reward-assessment evidence. @layer schema @owner wasteReward */
 module.exports = {
     wasteReward: {
+        wasteMaterialValuePolicy: {
+            super: 'base', model: true,
+            backoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'], concurrency: { managed: true, field: 'revision' } },
+            schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false },
+            cache: { enabled: false }, event: { enabled: false }, search: { enabled: true, idPropertyName: 'code' },
+            definition: {
+                version: { type: 'string', required: true, description: 'Governed immutable policy version; use a new record identity for amendments.' },
+                status: { type: 'string', required: true, enum: ['ACTIVE', 'INACTIVE'], description: 'Admission state for new assessments.' },
+                programCode: { type: 'string', required: true, description: 'Explicit canonical Loyalty program selection.' },
+                rewardTypeCode: { type: 'string', required: true, description: 'Explicit canonical Loyalty reward type.' },
+                currency: { type: 'string', required: true, description: 'Monetary currency to which the recorded conversion rate applies.' },
+                commercialModel: { type: 'string', required: true, enum: ['PROGRAM_FUNDED', 'CUSTOMER_SHARING'], description: 'Recorded material-value commercial model.' },
+                currencyScale: { type: 'int', required: true, description: 'Exact monetary minor-unit scale.' },
+                rewardScale: { type: 'int', required: true, description: 'Recorded Loyalty reward precision.' },
+                basisScale: { type: 'int', required: true, description: 'Exact accepted-quantity weighting precision.' },
+                contributorShare: { type: 'object', required: true, description: 'Recorded rational contributor share, never an implicit hierarchy entitlement.' },
+                conversionRate: { type: 'object', required: true, description: 'Recorded rational reward units per currency unit.' },
+                roundingMode: { type: 'string', required: true, enum: ['DOWN', 'HALF_UP'], description: 'Explicit allocation and conversion rounding.' },
+                categories: { type: 'object', required: true, description: 'Recorded material category, quantity/weight units and attribution weights.' },
+                revision: { type: 'int', required: true, default: 0, description: 'Managed governed policy record revision.' }
+            }
+        },
+        wasteMaterialValuePaymentClaim: {
+            super: 'base', model: true,
+            backoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'], concurrency: { managed: true, field: 'revision' } },
+            schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false },
+            cache: { enabled: false }, event: { enabled: false }, search: { enabled: true, idPropertyName: 'code' },
+            definition: {
+                batchCode: { type: 'string', required: true, description: 'Only batch admitted for this receipt identity.' },
+                paymentRef: { type: 'object', required: true, description: 'Authoritative recycler-payment reference.' },
+                revision: { type: 'int', required: true, default: 0, description: 'Managed insert-only claim revision.' }
+            }
+        },
+        "wasteMaterialValueBatch": {
+            "super": "base",
+            "model": true,
+            "backoffice": {
+                "mutationMode": "READ_ONLY",
+                "operations": [
+                    "search",
+                    "read"
+                ],
+                "concurrency": {
+                    "managed": true,
+                    "field": "revision"
+                }
+            },
+            "schemaPolicies": [
+                "operational"
+            ],
+            "service": {
+                "enabled": true
+            },
+            "router": {
+                "enabled": false
+            },
+            "cache": {
+                "enabled": false
+            },
+            "event": {
+                "enabled": false
+            },
+            "search": {
+                "enabled": true,
+                "idPropertyName": "code"
+            },
+            "definition": {
+                "assessedBy": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Authenticated coordinating service principal; never the payment beneficiary."
+                },
+                "valuationRef": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted valuationRef."
+                },
+                "batchRef": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted batchRef."
+                },
+                "payerRef": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted payerRef."
+                },
+                "payeeRef": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted payeeRef."
+                },
+                "confirmationRef": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted confirmationRef."
+                },
+                "currency": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Owner-persisted currency."
+                },
+                "confirmedValue": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Owner-persisted confirmedValue."
+                },
+                "policy": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted policy."
+                },
+                "synthetic": {
+                    "type": "boolean",
+                    "required": true,
+                    "description": "Owner-persisted synthetic."
+                },
+                "evidenceHash": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Owner-persisted evidenceHash."
+                },
+                "allocations": {
+                    "type": "array",
+                    "required": true,
+                    "description": "Owner-persisted allocations."
+                },
+                "releases": {
+                    "type": "array",
+                    "required": true,
+                    "description": "Owner-persisted releases."
+                },
+                "recordedAt": {
+                    "type": "date",
+                    "required": true,
+                    "description": "Owner-persisted recordedAt."
+                },
+                "qualificationRef": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted qualificationRef."
+                },
+                "revision": {
+                    "type": "int",
+                    "required": true,
+                    "default": 0,
+                    "description": "Owner-persisted revision."
+                }
+            }
+        },
+        "wasteMaterialValueContributionClaim": {
+            "super": "base",
+            "model": true,
+            "backoffice": {
+                "mutationMode": "READ_ONLY",
+                "operations": [
+                    "search",
+                    "read"
+                ],
+                "concurrency": {
+                    "managed": true,
+                    "field": "revision"
+                }
+            },
+            "schemaPolicies": [
+                "operational"
+            ],
+            "service": {
+                "enabled": true
+            },
+            "router": {
+                "enabled": false
+            },
+            "cache": {
+                "enabled": false
+            },
+            "event": {
+                "enabled": false
+            },
+            "search": {
+                "enabled": true,
+                "idPropertyName": "code"
+            },
+            "definition": {
+                "batchCode": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Owner-persisted batchCode."
+                },
+                "evidenceHash": {
+                    "type": "string",
+                    "required": true,
+                    "description": "Owner-persisted evidenceHash."
+                },
+                "contributionRef": {
+                    "type": "object",
+                    "required": true,
+                    "description": "Owner-persisted contributionRef."
+                },
+                "revision": {
+                    "type": "int",
+                    "required": true,
+                    "default": 0,
+                    "description": "Owner-persisted revision."
+                }
+            }
+        },
         wasteRewardAssessment: {
             backoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'] },
             super: 'base',

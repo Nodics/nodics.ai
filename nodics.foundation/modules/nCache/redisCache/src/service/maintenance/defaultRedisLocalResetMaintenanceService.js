@@ -19,6 +19,27 @@
  * @override Preserve operator attestations, bounded scans, unchanged-key checks, native-only configuration and closed owned clients.
  */
 module.exports = {
+  /** Resolves bounded provider-owned defaults after normal Nodics layering. */
+  resolvePolicy: function () {
+    const selected = global.CONFIG?.get?.("redisLocalResetMaintenance") || {};
+    const limits = {
+      maximumKeys: 100000,
+      maximumKeyBytes: 67108864,
+      maximumScanPages: 16384,
+      inventoryTimeoutMs: 300000,
+      operationTimeoutMs: 60000,
+      scanCount: 1000,
+      deleteBatchSize: 1000,
+    };
+    const policy = {};
+    for (const [name, maximum] of Object.entries(limits)) {
+      const value = selected[name];
+      if (!Number.isSafeInteger(value) || value < 1 || value > maximum)
+        throw new Error("RESET_REDIS_POLICY_INVALID");
+      policy[name] = value;
+    }
+    return policy;
+  },
   /** Validates the actual nCache-derived namespace and native standalone engine. */
   validate: function (options) {
     const engine = options.engine || {}, source = engine.options || {};
@@ -64,6 +85,7 @@ module.exports = {
   /** Holds bounded exact keys privately and refuses namespace drift; no key name/value leaves a receipt. */
   bind: function (options, client) {
     const namespace = this.validate(options);
+    const policy = this.resolvePolicy();
     if (!client || typeof client.scan !== "function" || typeof client.del !== "function" || typeof client.disconnect !== "function")
       throw new Error("RESET_REDIS_CAPABILITY_UNAVAILABLE");
     let reviewed = null, closed = false, closeOutcome;
@@ -78,7 +100,7 @@ module.exports = {
       let timer, timedOut = false;
       try {
         return await Promise.race([Promise.resolve().then(work), new Promise((resolve, reject) => {
-          timer = setTimeout(() => { timedOut = true; reject(new Error("RESET_REDIS_OPERATION_UNCERTAIN")); }, 5000);
+          timer = setTimeout(() => { timedOut = true; reject(new Error("RESET_REDIS_OPERATION_UNCERTAIN")); }, policy.operationTimeoutMs);
         })]);
       } catch {
         const error = new Error("RESET_REDIS_OPERATION_UNCONFIRMED");
@@ -89,11 +111,11 @@ module.exports = {
     };
     const inventory = async () => {
       let cursor = 0, pages = 0, bytes = 0;
-      const deadline = Date.now() + 10000;
+      const deadline = Date.now() + policy.inventoryTimeoutMs;
       const keys = new Set();
       do {
-        if (++pages > 256 || Date.now() > deadline) throw new Error("RESET_REDIS_SCAN_BOUND_EXCEEDED");
-        const result = await call(() => client.scan(cursor, { MATCH: namespace + "*", COUNT: 100 }));
+        if (++pages > policy.maximumScanPages || Date.now() > deadline) throw new Error("RESET_REDIS_SCAN_BOUND_EXCEEDED");
+        const result = await call(() => client.scan(cursor, { MATCH: namespace + "*", COUNT: policy.scanCount }));
         if (!result || !Number.isSafeInteger(result.cursor) || result.cursor < 0 || !Array.isArray(result.keys))
           throw new Error("RESET_REDIS_SCAN_UNCONFIRMED");
         cursor = result.cursor;
@@ -102,7 +124,7 @@ module.exports = {
             throw new Error("RESET_REDIS_FOREIGN_KEY_REFUSED");
           if (!keys.has(key)) bytes += Buffer.byteLength(key);
           keys.add(key);
-          if (keys.size > 1000 || bytes > 1048576) throw new Error("RESET_REDIS_KEY_BOUND_EXCEEDED");
+          if (keys.size > policy.maximumKeys || bytes > policy.maximumKeyBytes) throw new Error("RESET_REDIS_KEY_BOUND_EXCEEDED");
         }
       } while (cursor !== 0);
       return [...keys].sort();
@@ -116,8 +138,8 @@ module.exports = {
         if (JSON.stringify(current) !== JSON.stringify(reviewed)) throw new Error("RESET_REDIS_NAMESPACE_CHANGED");
         let removedCount = 0;
         try {
-          for (let offset = 0; offset < reviewed.length; offset += 100) {
-            const batch = reviewed.slice(offset, offset + 100);
+          for (let offset = 0; offset < reviewed.length; offset += policy.deleteBatchSize) {
+            const batch = reviewed.slice(offset, offset + policy.deleteBatchSize);
             const result = await call(() => client.del(batch));
             if (!Number.isSafeInteger(result) || result < 0 || result > batch.length) throw new Error("RESET_REDIS_DELETE_UNCONFIRMED");
             removedCount += result;

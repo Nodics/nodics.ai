@@ -16,18 +16,26 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const placement = require('../src/service/defaultOrderPlacementService');
 const portsService = require('../src/service/defaultCheckoutPlacementPortsService');
+const installLoyaltyEnums = require('../../../../../../nodics.loyalty/modules/loyaltyWallet/test/helpers/runtimeEnums');
+let priorEnums;
+test.beforeEach(() => { priorEnums = [Object.hasOwn(global, 'ENUMS'), global.ENUMS]; });
+test.afterEach(() => {
+    if (priorEnums[0]) global.ENUMS = priorEnums[1];
+    else delete global.ENUMS;
+});
 
 test('digital reservation selects the authenticated persisted Cart Store before owner effects', async t => {
     const previous = global.SERVICE;
     t.after(() => { global.SERVICE = previous; });
-    const request = { tenant: 'tenantA', enterpriseCode: 'enterpriseA', ownerId: 'buyerA',
+    const request = { tenant: 'tenantA', enterpriseCode: 'enterpriseA', ownerId: 'buyer-login',
+        ownerRef: { module: 'profile', schema: 'customer', code: 'buyerA' },
         authData: { principalId: 'buyerA' }, storeCode: 'untrusted-request-store',
         payload: { cartCode: 'cartA', storeCode: 'untrusted-body-store' } };
     const before = structuredClone(request), calculation = { entries: [] }, calls = [];
     let cart = { code: 'cartA', storeCode: 'saved-store' };
     global.SERVICE = {
         DefaultCartOperationService: { cartSnapshot: async context => {
-            assert.equal(context.cartCode, 'cartA'); assert.equal(context.ownerId, 'buyerA');
+            assert.equal(context.cartCode, 'cartA'); assert.equal(context.ownerId, 'buyer-login');
             assert.equal(context.authData, request.authData); return cart;
         } },
         DefaultDigitalCommerceCheckoutService: { reserveForCheckout: async (context, priced) => {
@@ -36,7 +44,7 @@ test('digital reservation selects the authenticated persisted Cart Store before 
     };
     const ports = portsService.create();
     assert.deepEqual(await ports.reserveDigitalUnits(request, calculation), ['owner-reservation']);
-    assert.equal(calls[0].storeCode, 'saved-store'); assert.deepEqual(request, before);
+    assert.equal(calls[0].storeCode, 'saved-store'); assert.equal(calls[0].ownerId, 'buyerA'); assert.deepEqual(request, before);
     delete request.storeCode;
     await ports.reserveDigitalUnits(request, calculation);
     assert.equal(calls[1].storeCode, 'saved-store');
@@ -90,6 +98,12 @@ const paymentExecution = require('../../../../payment/modules/paymentCore/src/se
 const loyaltyMethod = require('../../../../payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService');
 const loyaltyProvider = require('../../../../payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService');
 const loyaltyOperations = require('../../../../../../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService');
+const loyaltyAmount = require('../../../../../../nodics.loyalty/modules/loyaltyCore/src/service/defaultLoyaltyAmountService');
+const loyaltyCoreDefaults = require('../../../../../../nodics.loyalty/modules/loyaltyCore/config/properties');
+const loyaltyReservationDefaults = require('../../../../../../nodics.loyalty/modules/loyaltyReservation/config/properties');
+const methodDefaults = require('../../../../payment/modules/paymentMethods/modules/loyaltyRewardPayment/config/properties');
+const providerDefaults = require('../../../../payment/modules/paymentProviders/modules/loyaltyRewardProvider/config/properties');
+const exact = require('../../../../baseCommerce/modules/pricing/src/service/defaultExactAmountService');
 
 /** Models generated owner persistence for isolated scoped journey evidence. @returns {Object} In-memory owner. */
 function store() {
@@ -116,6 +130,8 @@ function store() {
 
 /** Seeds a scoped persisted Cart and funded wallet before installing owner ports. @param {Object} overrides Test owner options. @returns {Promise<Object>} Fixture stores. */
 async function setup(overrides) {
+    global.ENUMS = {};
+    installLoyaltyEnums();
     const balanceStore = store();
     const ledgerStore = store();
     const reservationStore = store();
@@ -129,19 +145,16 @@ async function setup(overrides) {
     const digitalEvents = [];
     const options = overrides || {};
     await cartStore.save({ model: { code: options.orderCode + ':cart', tenant: 'runtimeTenantFromToken',
-        enterpriseCode: 'enterprise-1', ownerId: 'customer-1', storeCode: 'published-store', currency: 'POINTS', status: 'ACTIVE', revision: 1 } });
+        enterpriseCode: 'enterprise-1', ownerId: 'customer-1', storeCode: 'published-store', locale: 'en', currency: 'POINTS', status: 'ACTIVE', revision: 1 } });
     await cartEntryStore.save({ model: { code: 'entry-1', cartCode: options.orderCode + ':cart', tenant: 'runtimeTenantFromToken',
         enterpriseCode: 'enterprise-1', ownerId: 'customer-1', productCode: 'coupon-product', quantity: '1', status: 'ACTIVE', revision: 1 } });
 
-    global.CONFIG = {
-        get: key => {
-            if (key === 'loyaltyRewardPayment') return { enabled: true, providerCode: 'loyalty-reward-points', defaultCurrency: 'POINTS', defaultProgramCode: 'default', defaultRewardTypeCode: 'points' };
-            if (key === 'loyaltyRewardProvider') return { enabled: true, providerCode: 'loyalty-reward-points' };
-            if (key === 'stripeProvider') return { enabled: true };
-            return undefined;
-        }
-    };
+    const defaults = structuredClone({ ...methodDefaults, ...providerDefaults,
+        loyalty: { ...loyaltyCoreDefaults.loyalty, ...loyaltyReservationDefaults.loyalty } });
+    global.CONFIG = { get: key => defaults[key] };
     global.SERVICE = {
+        DefaultExactAmountService: exact,
+        DefaultLoyaltyAmountService: loyaltyAmount,
         DefaultCheckoutPlacementPortsService: portsService,
         DefaultCheckoutCompensationRecoveryService: require('../src/service/defaultCheckoutCompensationRecoveryService'),
         DefaultPaymentExecutionService: paymentExecution,
@@ -152,7 +165,17 @@ async function setup(overrides) {
         DefaultRewardReservationService: reservationStore,
         DefaultRewardRedemptionService: redemptionStore,
         DefaultModuleService: {
-            invokeModule: options => options.moduleName === 'profile' ? Promise.resolve({data:[{code:'customer-1',loginId:'customer@example.test'}]}) : options.methodName === 'GET' ? Promise.resolve({data:{ownerType:'CUSTOMER',ownerCode:'customer-1'}}) : loyaltyOperations[options.operationName](options.request)
+            invokeModule: options => {
+                if (options.moduleName === 'profile') {
+                    assert.equal(options.apiName, '/customer/identity');
+                    assert.equal(options.header.Authorization, 'Bearer customer-test-token');
+                    return Promise.resolve({ data: { contractVersion: 1, tenant: 'runtimeTenantFromToken',
+                        enterpriseCode: 'enterprise-1', customer: { code: 'customer-1', loginId: 'customer@example.test' } } });
+                }
+                if (options.methodName === 'GET') return Promise.resolve({ data: {
+                    code: 'wallet-1', status: 'OPEN', active: true, ownerType: 'CUSTOMER', ownerCode: 'customer-1' } });
+                return loyaltyOperations[options.operationName](options.request);
+            }
         },
         DefaultPaymentTransactionEntryService: paymentStore,
         DefaultCheckoutCheckpointService: checkoutCheckpointStore,
@@ -225,7 +248,11 @@ function checkoutRequest(code) {
         tenant: 'runtimeTenantFromToken',
         enterpriseCode: 'enterprise-1',
         ownerId: 'customer-1',
-        authData: { tenant: 'runtimeTenantFromToken', principalId: 'customer-1', principalType:'customer', loginId:'customer@example.test', userGroups: ['customerUserGroup'] },
+        ownerRef: { module: 'profile', schema: 'customer', code: 'customer-1' },
+        actorRef: { principalType: 'customer', code: 'customer-1', loginId: 'customer@example.test', enterpriseCode: 'enterprise-1' },
+        participantEnterpriseCode: 'enterprise-1',
+        authData: { tenant: 'runtimeTenantFromToken', enterpriseCode: 'enterprise-1', tokenType: 'access',
+            principalId: 'customer-1', principalType:'customer', loginId:'customer@example.test', userGroups: ['customerUserGroup'] },
         httpRequest: { headers: { authorization: 'Bearer customer-test-token' } },
         idempotencyKey: code + ':place',
         correlationId: code + ':corr',

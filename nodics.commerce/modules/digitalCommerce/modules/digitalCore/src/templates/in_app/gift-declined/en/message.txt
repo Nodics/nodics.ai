@@ -1,0 +1,1 @@
+Gift {{giftReference}} was declined. Its reservations were released; no rewards were credited.

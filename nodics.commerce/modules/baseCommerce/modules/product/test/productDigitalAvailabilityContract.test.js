@@ -19,6 +19,10 @@ const discovery = require('../src/service/defaultProductDiscoveryService');
 const promotion = require('../../promotion/src/service/defaultPromotionOperationService');
 const digital = require('../../../../digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceCheckoutService');
 const ownership = require('../../../../digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceOwnershipService');
+const couponOffer = require('../../promotion/src/service/defaultCouponOfferService');
+const allocation = require('../../promotion/src/service/defaultCouponOfferAllocationService');
+const unknown = { available: false, status: 'OUT_OF_STOCK', acquisitionRequirements: null };
+const known = { available: true, status: 'IN_STOCK', acquisitionRequirements: { type: 'REWARDS' } };
 
 /** Installs actual read-only owner orchestration with bounded in-memory persistence doubles. */
 function fixture() {
@@ -31,8 +35,9 @@ function fixture() {
     const rows = [row], coupons = [{ code: 'unit', tenant: 't', enterpriseCode: 'e', batchCode: 'batch', promotionCode: 'rule', status: 'ACTIVE' }];
     const calls = { retained: [], inventory: [], pool: [], batches: [], prices: [] };
     const config = { product: { discovery: { activationService: 'ActiveReader' }, publication: { searchEnrichment: {} } },
-        digitalCore: { maximumCouponUnitsPerCheckout: 20 } };
+        digitalCore: { maximumCouponUnitsPerCheckout: 20 }, promotion: structuredClone(require('../../promotion/config/properties').promotion) };
     global.CONFIG = { get: key => config[key] };
+    global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
     const reader = { ...discovery, publicationSelections: new WeakMap(), searchSelected: async (input, query) => {
         assert.equal(query.status, 'STALE');
         assert.deepEqual(query.publicationVersion, ['a'.repeat(64)]);
@@ -51,6 +56,9 @@ function fixture() {
                 .filter(item => input.query.code.$in.includes(item.code)) };
         } },
         DefaultDigitalCommerceCheckoutService: digital,
+        DefaultCouponOfferService: couponOffer,
+        DefaultCouponOfferAllocationService: allocation,
+        DefaultCouponAcquisitionPersistenceService: { read: async () => undefined },
         DefaultStoreService: { get: async () => ({ result: [{ tenant: 't', code: 's', enterpriseRef: { code: 'e' }, status: 'ACTIVE', defaultCurrency: 'AED' }] }) },
         DefaultCustomerPriceSummaryService: { summarize: async input => { calls.prices.push(input); return {}; } },
         DefaultCustomerAvailabilitySummaryService: { summarize: async input => {
@@ -59,7 +67,9 @@ function fixture() {
         } },
         DefaultPromotionOperationService: { ...promotion, promotions: async input => {
             assert.equal(input.storeCode, 's'); assert.equal(input.enterpriseCode, 'e');
-            return [{ code: 'rule', status: 'ACTIVE', conditions: { sourceProductCode: 'offer' } }];
+            return [{ code: 'rule', status: 'ACTIVE', conditions: { sourceProductCode: 'offer' }, couponOffer: {
+                version: 1, supply: { mode: 'LIMITED', quantity: 4 }, expiry: { mode: 'NONE' }, terms: [],
+                requirements: { type: 'REWARDS', priceRef: 'price' } } }];
         } },
         DefaultCouponBatchService: { get: async input => {
             calls.batches.push(input);
@@ -85,12 +95,12 @@ test('consumer prices receive the actual retained Product version, ignoring call
     assert.equal(f.calls.prices.length, 1);
 });
 
-test('search cards and PDP replace indexed Not available with live Promotion coupon supply', async () => {
+test('unselected canonical offers remain unknown on search cards and PDP instead of exposing mutable policy', async () => {
     const f = fixture(), before = structuredClone(f.rows);
     const rows = await f.reader.search(f.request, f.reader.query(f.request), {});
-    assert.deepEqual(f.reader.card(rows[0]).availability, { available: true, status: 'IN_STOCK' });
+    assert.deepEqual(f.reader.card(rows[0]).availability, unknown);
     const detail = await f.reader.detail({ ...f.request, productCode: 'offer' });
-    assert.deepEqual(detail.product.availability, { available: true, status: 'IN_STOCK' });
+    assert.deepEqual(detail.product.availability, unknown);
     assert.equal(f.calls.inventory.length, 0);
     assert.equal(f.calls.retained.length, 2, 'One retained batch per request; no recursive enrichment or pinned lookup');
     assert.equal(f.calls.pool.length, 2);
@@ -107,7 +117,7 @@ test('mixed results retain one physical Inventory batch and one pool read per di
     assert.equal(f.calls.inventory.length, 1);
     assert.deepEqual(f.calls.inventory[0].products, [{ productCode: 'physical', skus: ['PHYSICAL'] }]);
     assert.equal(f.calls.pool.length, 1);
-    assert.equal(f.calls.batches.length, 1);
+    assert.equal(f.calls.batches.length, 0);
     assert.equal(f.calls.prices.length, 1);
     assert.deepEqual(f.calls.prices[0].productCodes, ['offer', 'physical']);
 });
@@ -123,7 +133,7 @@ test('selected public coupons use one exact original-authority Promotion batch a
             assert.equal(request.projection, undefined);
             assert.equal(request.quantity, '1');
             assert.deepEqual(request.authData, f.request.authData);
-            return new Map(codes.map(code => [code, { available: true, status: 'IN_STOCK' }]));
+            return new Map(codes.map(code => [code, structuredClone(known)]));
         } };
     const before = structuredClone(f.request), result = await enrichment.consumerSummaries(f.request, f.rows);
     assert.equal(calls.length, 1); assert.deepEqual(calls[0].codes, ['offer', 'other']);
@@ -153,6 +163,7 @@ test('selected batch values must be exact safe summaries and never fall through 
         { get available() { return true; }, status: 'IN_STOCK' },
         { available: true, get status() { return 'IN_STOCK'; } },
         { available: true, status: 'IN_STOCK', [Symbol('private')]: 'private' }];
+    values.push({ available: true, status: 'IN_STOCK', acquisitionRequirements: null });
     for (const value of values) {
         const f = fixture();
         let digitalCalls = 0, selected = true;
@@ -166,6 +177,29 @@ test('selected batch values must be exact safe summaries and never fall through 
     }
 });
 
+test('selected requirements reject malformed public DTOs without falling back to copied Product policy', async () => {
+    for (const value of [{}, { type: 'UNKNOWN' }, { type: 'REWARDS', priceRef: 'private' },
+        { type: 'CERTIFICATES' }, { type: 'BOTH', certificates: { quantity: 0, categoryCode: 'x', milestoneCode: 'y' } },
+        { get type() { throw new Error('Accessor must never run'); } }]) {
+        const f = fixture();
+        f.row.payload.localizedAttributes.acquisitionRequirements = { type: 'REWARDS' };
+        SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => true,
+            publicAvailabilityBatch: async () => new Map([['offer', { ...known, acquisitionRequirements: value }]]) };
+        await assert.rejects(enrichment.consumerSummaries(f.request, f.rows));
+        assert.equal(f.calls.pool.length, 0);
+    }
+});
+
+test('signed coupon enrichment refuses publication-selection withdrawal during owner read', async () => {
+    const f = fixture(); let selected = true;
+    f.request.authData = { tenant: 't', enterpriseCode: 'e', principalType: 'customer', tokenType: 'access' };
+    SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => selected };
+    SERVICE.DefaultDigitalCommerceCheckoutService = { availabilityFromProjection: async () => {
+        selected = false; return { available: true, purchaseRequirements: { type: 'REWARDS', priceRef: 'private' } };
+    } };
+    await assert.rejects(enrichment.consumerSummaries(f.request, f.rows), /publication selection changed/);
+});
+
 test('selected out-of-stock batch summaries stay unavailable without Digital fallback', async () => {
     const f = fixture();
     let digitalCalls = 0;
@@ -173,9 +207,9 @@ test('selected out-of-stock batch summaries stay unavailable without Digital fal
         digitalCalls++; return { available: true };
     } };
     SERVICE.DefaultPromotionDistributionAdmissionService = { selected: () => true,
-        publicAvailabilityBatch: async () => new Map([['offer', { available: false, status: 'OUT_OF_STOCK' }]]) };
+        publicAvailabilityBatch: async () => new Map([['offer', { ...known, available: false, status: 'OUT_OF_STOCK' }]]) };
     assert.deepEqual((await enrichment.consumerSummaries(f.request, f.rows)).availability.offer,
-        { available: false, status: 'OUT_OF_STOCK' });
+        { ...known, available: false, status: 'OUT_OF_STOCK' });
     assert.equal(digitalCalls, 0);
 });
 
@@ -184,7 +218,7 @@ test('sold or reserved pools replace stale available snapshots with unavailable 
         const f = fixture(); f.coupons[0][field] = 'buyer';
         f.row.payload.availability = { available: true, status: 'IN_STOCK' };
         const result = await enrichment.consumerSummaries(f.request, f.rows);
-        assert.deepEqual(result.availability.offer, { available: false, status: 'OUT_OF_STOCK' });
+        assert.deepEqual(result.availability.offer, unknown);
         assert.equal(f.calls.inventory.length, 0);
     }
 });
@@ -231,7 +265,7 @@ test('unsupported per-item metadata is unavailable without hiding valid coupons 
     const rows = await f.reader.search(f.request, f.reader.query(f.request), {});
     assert.equal(rows.length, 2);
     assert.deepEqual(f.reader.card(rows.find(r => r.productCode === 'asset')).availability, { available: false, status: 'OUT_OF_STOCK' });
-    assert.deepEqual(f.reader.card(rows.find(r => r.productCode === 'offer')).availability, { available: true, status: 'IN_STOCK' });
+    assert.deepEqual(f.reader.card(rows.find(r => r.productCode === 'offer')).availability, unknown);
     const detail = await f.reader.detail({ ...f.request, productCode: 'asset' });
     assert.deepEqual(detail.product.availability, { available: false, status: 'OUT_OF_STOCK' });
     assert.equal(f.calls.pool.length, 1);
@@ -250,7 +284,8 @@ test('unknown or inconsistent Digital metadata produces only a false listing sum
     ]) {
         const f = fixture(); f.row.payload.localizedAttributes = attributes;
         const result = await enrichment.consumerSummaries(f.request, f.rows);
-        assert.deepEqual(result.availability.offer, { available: false, status: 'OUT_OF_STOCK' });
+        assert.deepEqual(result.availability.offer, { available: false, status: 'OUT_OF_STOCK',
+            ...(attributes.digitalDeliveryType === 'COUPON_CODE' ? { acquisitionRequirements: null } : {}) });
         assert.equal(f.calls.pool.length, 0);
         assert.equal(f.calls.inventory.length, 0);
     }
@@ -292,7 +327,7 @@ test('unselected ownership leaves mixed discovery and PDP available without bind
             const rows = await f.reader.search(f.request, f.reader.query(f.request), {});
             assert.equal(rows.length, 3);
             assert.deepEqual(f.reader.card(rows.find(row => row.productCode === 'asset')).availability, { available: false, status: 'OUT_OF_STOCK' });
-            assert.deepEqual(f.reader.card(rows.find(row => row.productCode === 'offer')).availability, { available: true, status: 'IN_STOCK' });
+            assert.deepEqual(f.reader.card(rows.find(row => row.productCode === 'offer')).availability, unknown);
             assert.deepEqual(f.reader.card(rows.find(row => row.productCode === 'physical')).availability, { available: false, status: 'OUT_OF_STOCK' });
             assert.equal(f.calls.pool.length, 1); assert.equal(f.calls.inventory.length, 1);
             const detail = await f.reader.detail({ ...f.request, productCode: 'asset' });
@@ -314,7 +349,7 @@ test('Product fixes quantity at one, ignores caller selectors, and redacts all o
         return { ...await owner.call(this, input), protectedTokenCiphertext: 'must-not-escape' };
     };
     const result = await enrichment.consumerSummaries(f.request, f.rows);
-    assert.deepEqual(result.availability.offer, { available: true, status: 'IN_STOCK' });
+    assert.deepEqual(result.availability.offer, unknown);
     assert.deepEqual(f.request, before);
 });
 
@@ -340,7 +375,7 @@ test('Cart still requires an exact SKU even though Product summaries do not sele
 test('coupon-only delivery requires no physical owner; physical activation failures remain errors', async () => {
     const f = fixture(); f.config.inventory = { publication: { delivery: { enabled: true } } };
     delete SERVICE.DefaultCustomerAvailabilitySummaryService;
-    assert.equal((await enrichment.consumerSummaries(f.request, f.rows)).availability.offer.available, true);
+    assert.equal((await enrichment.consumerSummaries(f.request, f.rows)).availability.offer.available, false);
     f.row.payload.localizedAttributes = { productType: 'PHYSICAL' };
     await assert.rejects(enrichment.consumerSummaries(f.request, f.rows), /owner is unavailable/);
 });
@@ -358,7 +393,7 @@ test('later Product enrichment member overrides are called through the effective
     const layered = { ...enrichment, consumerAvailability: async function (request, rows) {
         calls++; return enrichment.consumerAvailability.call(this, request, rows);
     } };
-    assert.equal((await layered.consumerSummaries(f.request, f.rows)).availability.offer.available, true);
+    assert.equal((await layered.consumerSummaries(f.request, f.rows)).availability.offer.available, false);
     assert.equal(calls, 1);
 });
 

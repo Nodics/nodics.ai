@@ -23,6 +23,21 @@ module.exports = {
   data: {
     dataReleases: {
       runtimeRoleProfiles: {
+        PLATFORM: {
+          contributions: [
+            { moduleName: "product", sections: ["accessGroups"] },
+            { moduleName: "promotion", sections: ["accessGroups"] },
+            { moduleName: "order", sections: ["accessGroups", "specialAccessGroups", "specialAccessRoles"] },
+            { moduleName: "inventory", sections: ["specialAccessGroups", "specialAccessRoles"] },
+            {
+              moduleName: "digitalCore",
+              sections: [
+                "bundleParticipantPermissions",
+                "participantAccessGroups",
+              ],
+            },
+          ],
+        },
         PROCESS: {
           contributions: [
             { moduleName: "product", sections: ["productPublicationWorkflow"] },

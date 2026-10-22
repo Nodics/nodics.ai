@@ -1,0 +1,143 @@
+{
+  "contractVersion": 2,
+  "module": "wasteCarbon",
+  "sections": {
+    "transferFinalizationPermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.2",
+      "displayName": "Carbon held-transfer finalization permission",
+      "description": "Explicit coordinator permission definition; no grants or provider qualification.",
+      "owningDomain": "wasteCarbon",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v002",
+      "files": {
+        "init-v002/headers/identity/wasteCarbonFinalizationPermissionHeader.js": "771ecaac2d2ebe8a8bbd3fd8212b2d74cfc59015ba14f648edd3da5a3195043d",
+        "init-v002/records/identity/wasteCarbonFinalizationPermissionData.js": "e76ec881f259640c1df7bd5ad57d43ae466a5bce70c2b1fb1afbf653f30d5d23"
+      }
+    },
+    "permissionCatalogue": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "wasteCarbon capability permissions",
+      "description": "Explicit owner permission definitions; preserve existing Profile-managed assignments.",
+      "owningDomain": "wasteCarbon",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/wasteCarbonPermissionHeader.js": "bab69242c44415e1c8f6ff19ac00cd3d53a205088213f83a68c4043e98b4708d",
+        "init-v001/records/identity/wasteCarbonPermissionData.js": "f9a59044e462d1ea4857505d7a16be5242f7717f8a0ff38b4e9849251d936f72"
+      }
+    },
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "docs-v001",
+      "pack": "wasteCarbon",
+      "version": "0.0.1",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "sourceMode": "cms-records",
+      "sourceAuthority": "data/docs-v001/records/documentation",
+      "sites": [
+        "nodicsDocumentationSite"
+      ],
+      "accessMode": "PUBLIC",
+      "pages": 1,
+      "components": 1,
+      "routes": 1,
+      "releaseChecksum": "aad198eb981558e11ac57cfa2cc4e8ab195af61698281763069edd2355511190",
+      "generatedHashes": {
+        "docs-v001/headers/100_wasteCarbonDocumentationContentPackHeader.js": "9ad3cd751d029b1db3d8b1a222f60750e2b0de3a472827d047916d45453f192a",
+        "docs-v001/records/documentation/wasteCarbonDocumentationComponentData.js": "b533a5eed0190cbeffe1b2a80aa65f08d54b255698a8425055979eebb2ce1e21",
+        "docs-v001/records/documentation/wasteCarbonDocumentationNodeData.js": "df2390b60605743ba159e701c4e24d3b88f17ffb39c4ba8581a641735161a8e0",
+        "docs-v001/records/documentation/wasteCarbonDocumentationPageData.js": "5f30945041093460c4a3b3fe7d364f8c60a77098576fda235d63625db494b9f4",
+        "docs-v001/records/documentation/wasteCarbonDocumentationPageMetadataData.js": "d3f0cafe07c202410185274301be7186c0b183cb41b3f352b19904dee6e06d77",
+        "docs-v001/records/documentation/wasteCarbonDocumentationPublicationStateData.js": "289fcbe7474e292bea5efbed8bd38f6af43bdbbeca50fbd152bc7eaa524a924b",
+        "docs-v001/records/documentation/wasteCarbonDocumentationRouteData.js": "0fa81f492075f1ff090641c5cf6df761d4cd7c46355334e19f9f82344ccd42b5",
+        "docs-v001/records/documentation/wasteCarbonDocumentationSearchMetadataData.js": "19de070dbf0530047398db222f7c79e3bb9e7ced426b756ba3c96ffabf146f60"
+      },
+      "includes": [
+        {
+          "manifestPack": "nodics.docs",
+          "source": {
+            "type": "LOCAL_SIBLING",
+            "repositoryName": "nodics.ai",
+            "manifestPath": "nodics.docs/data/manifest.json",
+            "manifestSection": "foundation"
+          }
+        }
+      ]
+    },
+    "participantAccessGroups": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "sourceRoot": "init-v003",
+      "version": "0.0.1",
+      "displayName": "Waste carbon participant access groups",
+      "description": "Customer participation group for owned carbon holdings",
+      "owningDomain": "wasteCarbon",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "files": {
+        "init-v003/headers/identity/wasteCarbonParticipantUserGroupHeader.js": "5456e1fd31e83cb05a15f505e03308f46468fcc440d43f38c7d227ccad7fe6df",
+        "init-v003/records/identity/wasteCarbonParticipantUserGroupData.js": "0940e5337d30b9c11b17aaabadaadfd3a784be918e14ed6a99815202a28f3094"
+      },
+      "prerequisites": [
+        {
+          "moduleName": "profile",
+          "sectionCode": "accessGroups",
+          "version": "0.0.3",
+          "checksum": "bc6a5dcb7a49e369e7bdb53475d737ce9a5f42cf9781dd80fdb738ecc63c130f",
+          "partition": "DEFAULT"
+        },
+        {
+          "moduleName": "wasteCarbon",
+          "sectionCode": "permissionCatalogue",
+          "version": "0.0.1",
+          "checksum": "6a71b997ef08f8e7626d0a32f9d7177d9ef73f51dc4e87b66758f13cc1b09ba3",
+          "partition": "DEFAULT"
+        }
+      ]
+    }
+  }
+}

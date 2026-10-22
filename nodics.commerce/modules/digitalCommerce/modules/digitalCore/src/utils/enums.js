@@ -18,6 +18,7 @@
  */
 module.exports = {
     DigitalOwnershipAvailabilityReason: {
-        definition: ['DIGITAL_OWNERSHIP_NOT_SELECTED', 'DIGITAL_OWNERSHIP_NOT_QUALIFIED']
+        definition: ['DIGITAL_OWNERSHIP_NOT_SELECTED', 'DIGITAL_OWNERSHIP_NOT_QUALIFIED',
+            'DIGITAL_OWNERSHIP_BINDING_UNAVAILABLE']
     }
 };

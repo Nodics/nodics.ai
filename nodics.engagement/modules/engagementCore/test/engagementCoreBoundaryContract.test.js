@@ -26,11 +26,16 @@ const contract = fs.readFileSync(path.join(moduleRoot, 'llm/contracts/README.md'
 
 assert.strictEqual(packageJson.name, 'engagementCore');
 assert.strictEqual(packageJson.nodics.kind, 'capability');
-assert.deepStrictEqual(packageJson.nodics.owns, ['configuration', 'schema', 'service', 'utility', 'test', 'llm']);
+assert.deepStrictEqual([...packageJson.nodics.owns].sort(), ["configuration","schema","service","utility","test","llm","data"].sort());
 assert.strictEqual(packageJson.nodics.runtime.router, false);
 assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'engagementCore schemas must exist');
 assert(fs.existsSync(path.join(moduleRoot, 'src/service/defaultEngagementIntakeService.js')), 'engagementCore intake service must exist');
-assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'engagementCore must not contain data before it owns seed data');
+const manifest = JSON.parse(fs.readFileSync(path.join(moduleRoot, 'data/manifest.json'), 'utf8'));
+const permissions = manifest.sections.permissionCatalogue;
+assert.strictEqual(permissions.owningDomain, packageJson.name);
+assert.strictEqual(permissions.selectionPolicy, 'EXPLICIT');
+assert.strictEqual(permissions.destinationRole, 'PLATFORM');
+assert(Object.keys(permissions.files).length > 0, 'Owner permission data must be governed by an explicit release');
 assert(!fs.existsSync(path.join(moduleRoot, 'docs')), 'engagementCore must not contain module-local docs');
 assert(!fs.existsSync(path.join(moduleRoot, 'llm/README.md')), 'engagementCore must use AGENTS.md for AI navigation');
 assert(readme.includes('## Capability status'), 'engagementCore README must expose implementation status');

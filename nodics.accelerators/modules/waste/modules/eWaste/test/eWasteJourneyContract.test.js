@@ -118,6 +118,28 @@ const enabled = service.enabledJourneys(contract, {
   gift: { enabled: false },
   recyclingHandoff: { enabled: false },
 });
+const previousSelection = Object.fromEntries(
+  [
+    "submission", "approvedAsset", "marketplace", "gift", "donation",
+    "couponRedemption", "recyclingHandoff",
+  ].map((name) => [name, { enabled: true }]),
+);
+assert.deepStrictEqual(service.enabledJourneys(contract), contract.journeys);
+assert.deepStrictEqual(
+  service.enabledJourneys(contract),
+  service.enabledJourneys(contract, previousSelection),
+);
+const bindings = require(
+  "../../../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService",
+);
+const later = bindings.merge(
+  { eWaste: require("../config/properties").eWaste },
+  { eWaste: { journeys: { gift: { enabled: false } } } },
+);
+assert.deepStrictEqual(
+  service.enabledJourneys(contract, later.eWaste.journeys),
+  contract.journeys.filter((journey) => journey.code !== "EWASTE_GIFT"),
+);
 assert(
   !enabled.some(function (journey) {
     return journey.code === "EWASTE_GIFT";

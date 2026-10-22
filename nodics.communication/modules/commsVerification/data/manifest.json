@@ -1,0 +1,30 @@
+{
+  "contractVersion": 2,
+  "module": "commsVerification",
+  "sections": {
+    "verificationExecutePermission": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "0.0.1",
+      "displayName": "Communication verification execute permission",
+      "description": "Forward Communication Verification permission definition for the private command boundary; grants remain separately governed.",
+      "owningDomain": "commsVerification",
+      "lifecycle": "REFERENCE",
+      "destinationRole": "PLATFORM",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "RESTRICTED",
+      "versioningPolicy": "NONE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "selectionPolicy": "EXPLICIT",
+      "sourceRoot": "init-v001",
+      "files": {
+        "init-v001/headers/identity/commsVerificationExecutePermissionHeader.js": "50729c0329fa503d29da5c7a09e784c7968828d27dd856cb7f349c06afeea76f",
+        "init-v001/records/identity/commsVerificationExecutePermissionData.js": "cf5cf067f68fc69b32454da51d94791fcf15af1baf850fbe01f77b94cb9cca88"
+      }
+    }
+  }
+}

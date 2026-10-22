@@ -14,22 +14,76 @@ const crypto = require("node:crypto");
 
 /** @module wasteImpact/service/defaultWasteImpactAssessmentService @description Owns immutable asset reassessments and explicit accepted-result selection through generated persistence. Serializes recoverable writes with asset revisions; never changes approval facts or reward settlement. @owner wasteImpact @layer service @override Later providers use the existing calculation adapter. Preserve source authorization, append-only history and command recovery. */
 module.exports = {
-  /** Resolves the generated-repository adapter. */
+  /**
+   * Reads persisted impact provenance for a qualified carbon-evidence service. This projection never authorizes issuance, transfer, rewards or public claims.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Reads persisted impact provenance for a qualified carbon-evidence service. This projection never authorizes issuance, transfer, rewards or public claims.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
+  evidenceForCarbon: async function (request) {
+    const auth = request.authData || {};
+    const security = SERVICE.DefaultSecuredRequestPipelineService;
+    if (!request.tenant || (auth.tenant && auth.tenant !== request.tenant) ||
+      auth.principalType !== "service" || !auth.loginId || !security ||
+      !security.isPermissionGranted("waste.impact.evidence.read", security.getGrantedPermissions(request), {}))
+      this.store().fail("ERR_WASTE_REVIEW_FORBIDDEN", "Authorized impact evidence service required");
+    const code = request.payload?.impactCode;
+    if (typeof code !== "string" || !code || code.length > 180)
+      this.store().fail("ERR_WASTE_IMPACT_COMMAND_INVALID", "Persisted impact identity required");
+    const result = await this.store().one("wasteImpactResult", request, code);
+    if (!result) this.store().fail("ERR_WASTE_RECORD_NOT_FOUND", "Impact evidence is unavailable");
+    return {
+      impactRef: { module: "wasteImpact", schema: "wasteImpactResult", code: result.code },
+      sourceRef: this.copy(result.sourceRef || null),
+      calculationStatus: result.calculationStatus,
+      formulaVersion: result.formulaVersion || null,
+      calculatedAt: result.calculatedAt || null,
+      metrics: this.copy(result.metrics || []),
+      provider: this.copy(result.metadata?.provider || null),
+      environmentalAssessment: this.copy(result.metadata?.environmentalAssessment || null),
+      creditIssuanceAuthorized: false,
+      issuedQuantity: null,
+      publicClaimAllowed: false
+    };
+  },
+  /**
+   * Resolves the generated-repository adapter.
+   * @returns {Object} Effective generated-repository adapter; does not itself read or write.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   store: function () {
     return SERVICE.DefaultWastePersistenceService;
   },
-  /** Returns a detached snapshot for durable calculation evidence. */
+  /**
+   * Returns a detached snapshot for durable calculation evidence.
+   * @param {*} value Value to validate, normalize or project as described above.
+   * @returns {*} Detached evidence copy; leaves the input unchanged.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   copy: function (value) {
     return JSON.parse(JSON.stringify(value));
   },
-  /** Hashes deterministic command identities and bounded fingerprints. */
+  /**
+   * Hashes deterministic command identities and bounded fingerprints.
+   * @param {*} value Value to validate, normalize or project as described above.
+   * @returns {string} Deterministic digest of ordered identity components; no persistence.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   digest: function (value) {
     return crypto
       .createHash("sha256")
       .update(JSON.stringify(value))
       .digest("hex");
   },
-  /** Resolves the asset through its approved submission and enforces current Profile scope before revealing records. */
+  /**
+   * Resolves the asset through its approved submission and enforces current Profile scope before revealing records.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {string} permission Exact owner capability permission; not inferred from roles.
+   * @returns {Promise<*>} Resolves the asset through its approved submission and enforces current Profile scope before revealing records.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   context: async function (request, permission) {
     const store = this.store(),
       access = SERVICE.DefaultWasteOperationalAccessService;
@@ -58,7 +112,15 @@ module.exports = {
       );
     return { submission, asset: assets[0] };
   },
-  /** Validates explicit operator intent. Provider names, arbitrary facts and configuration are never accepted from the body. */
+  /**
+   * Validates explicit operator intent. Provider names, arbitrary facts and configuration are never accepted from the body.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {Object} asset Canonical Waste asset with custody, contributor and mutation fences.
+   * @param {string} action Explicit supported lifecycle action.
+   * @returns {*} Validates explicit operator intent. Provider names, arbitrary facts and configuration are never accepted from the body.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   command: function (request, asset, action) {
     const body = request.payload || {},
       allowed = [
@@ -108,7 +170,14 @@ module.exports = {
       idempotencyKey: request.idempotencyKey,
     };
   },
-  /** Rejects reuse of an idempotency key with changed command details. */
+  /**
+   * Rejects reuse of an idempotency key with changed command details.
+   * @param {Object} record Persisted owner record or its detached projection.
+   * @param {Object|string} command Original validated command or fixed owner-selected command name.
+   * @returns {void} Returns only if the original immutable command matches.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   assertCommand: function (record, command) {
     if (record.metadata?.commandFingerprint !== command.fingerprint)
       this.store().fail(
@@ -116,7 +185,13 @@ module.exports = {
         "This command reference already belongs to different assessment details",
       );
   },
-  /** Returns public assessment data from a frozen record; internal actor and idempotency details stay private. */
+  /**
+   * Returns public assessment data from a frozen record; internal actor and idempotency details stay private.
+   * @param {Object} result Persisted operation or assessment evidence.
+   * @param {string} acceptedCode Currently accepted immutable assessment identity.
+   * @returns {Object} Allowlisted evidence projection; no accounting or persistence writes.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   project: function (result, acceptedCode) {
     return {
       code: result.code,
@@ -129,7 +204,14 @@ module.exports = {
       reason: result.metadata?.assessmentReason || null,
     };
   },
-  /** Pages immutable records belonging to an already-authorized asset, including its legacy approval result. */
+  /**
+   * Pages immutable records belonging to an already-authorized asset, including its legacy approval result.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {Object} asset Canonical Waste asset with custody, contributor and mutation fences.
+   * @returns {Promise<*>} Pages immutable records belonging to an already-authorized asset, including its legacy approval result.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   historyForAsset: async function (request, asset) {
     const page = Number(request.query?.page || 1),
       limit = 20;
@@ -203,12 +285,26 @@ module.exports = {
         : null,
     };
   },
-  /** Reads staff history under the same source scope as operational review. */
+  /**
+   * Reads staff history under the same source scope as operational review.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Reads staff history under the same source scope as operational review.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   history: async function (request) {
     const { asset } = await this.context(request, "waste.review.queue.read");
     return this.historyForAsset(request, asset);
   },
-  /** Finishes an asset-persisted result or selection event without recalculating after configuration changes. */
+  /**
+   * Finishes an asset-persisted result or selection event without recalculating after configuration changes.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @param {Object} asset Canonical Waste asset with custody, contributor and mutation fences.
+   * @param {Object|string} command Original validated command or fixed owner-selected command name.
+   * @returns {Promise<*>} Finishes an asset-persisted result or selection event without recalculating after configuration changes.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   finish: async function (request, asset, command) {
     const pending = asset.metadata?.pendingImpactCommand;
     if (!pending || pending.record.code !== command.code)
@@ -233,7 +329,13 @@ module.exports = {
       });
     return current;
   },
-  /** Recovers the frozen pending command after restart; recorded inputs and actor remain unchanged. */
+  /**
+   * Recovers the frozen pending command after restart; recorded inputs and actor remain unchanged.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Recovers the frozen pending command after restart; recorded inputs and actor remain unchanged.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   recover: async function (request) {
     let { asset } = await this.context(request, "waste.review.queue.read");
     const pending = asset.metadata?.pendingImpactCommand;
@@ -268,7 +370,13 @@ module.exports = {
     });
     return this.historyForAsset({ ...request, query: {} }, asset);
   },
-  /** Reassesses existing reviewed facts with the current configured provider; accepted results and original reward evidence remain unchanged. */
+  /**
+   * Reassesses existing reviewed facts with the current configured provider; accepted results and original reward evidence remain unchanged.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Reassesses existing reviewed facts with the current configured provider; accepted results and original reward evidence remain unchanged.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   reassess: async function (request) {
     let { asset } = await this.context(request, "waste.verification.record");
     const command = this.command(request, asset, "ASSESS"),
@@ -348,7 +456,13 @@ module.exports = {
     asset = await this.finish(request, asset, command);
     return this.historyForAsset({ ...request, query: {} }, asset);
   },
-  /** Accepts an explicitly reviewed saved assessment using compare-and-set; no recalculation, payment or reward mutations occur. */
+  /**
+   * Accepts an explicitly reviewed saved assessment using compare-and-set; no recalculation, payment or reward mutations occur.
+   * @param {Object} request Original trusted request, including tenant, signed principal and operation payload.
+   * @returns {Promise<*>} Accepts an explicitly reviewed saved assessment using compare-and-set; no recalculation, payment or reward mutations occur.
+   * @throws {Error} Owner validation or dependency failures propagate; callers must retain the original intent for recovery.
+   * @override Dispatch through the effective owner; preserve the stated scope, evidence and side-effect contract.
+   */
   select: async function (request) {
     let { asset } = await this.context(request, "waste.review.approve");
     const command = this.command(request, asset, "SELECT"),

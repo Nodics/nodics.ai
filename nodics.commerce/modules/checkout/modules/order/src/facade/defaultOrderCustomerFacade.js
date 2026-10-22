@@ -14,15 +14,12 @@
 /** @module order/src/facade/defaultOrderCustomerFacade @description Enforces customer ownership context for Order read APIs. @layer facade @owner order */
 module.exports = {
     /** Applies authenticated customer tenant and principal context. @param {Object} request Request. @returns {Object} Request. */
-    applyContext: function (request) {
-        const auth = request.authData || {};
-        request.tenant = auth.tenant || request.tenant;
-        request.ownerId = auth.principalId || auth.code || auth.loginId || request.ownerId;
-        if (!request.tenant || !request.ownerId) throw new Error('Authenticated tenant and customer are required');
-        return request;
+    applyContext: async function (request) {
+        const participant = await FACADE.DefaultCartCustomerFacade.resolveContext(request, 'commerce.order.own.read');
+        return SERVICE.DefaultCheckoutAuctionService ? SERVICE.DefaultCheckoutAuctionService.partition(participant) : participant;
     },
     /** Reads a customer-owned Order. @param {Object} request Request. @returns {Promise<Object>} Order summary. */
-    read: function (request) { return Promise.resolve().then(() => SERVICE.DefaultOrderOperationService.read(this.applyContext(request))); },
+    read: async function (request) { return SERVICE.DefaultOrderOperationService.read(await this.applyContext(request)); },
     /** Lists customer-owned Orders. @param {Object} request Request. @returns {Promise<Array>} Orders. */
-    listOwn: function (request) { return Promise.resolve().then(() => SERVICE.DefaultOrderOperationService.listOwn(this.applyContext(request))); }
+    listOwn: async function (request) { return SERVICE.DefaultOrderOperationService.listOwn(await this.applyContext(request)); }
 };

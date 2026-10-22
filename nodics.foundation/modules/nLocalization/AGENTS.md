@@ -11,3 +11,6 @@ Follow the root Nodics AI agent contract before changing this boundary:
 This capability is stateless and provider-neutral. Keep persistence, schemas, routers, translation values, tenant policy resolution, and publication lifecycle out of this module. Never trust a browser-supplied tenant, site, or unrestricted locale override; callers must supply authorized scope and policy.
 
 Preserve canonical BCP 47 output, immutable context, bounded inputs, tenant-partitioned keys, stable error codes, and fail-closed authority behavior. Any provider customization must remain configuration-selected and must be proven by an override test.
+
+Scope-key tests must retain the exact supplied release version and prove that a
+different release changes the key while namespace ordering remains canonical.

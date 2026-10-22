@@ -55,6 +55,7 @@ module.exports = {
         if (!request || !request.tenant || !rule || rule.tenant !== request.tenant || !rule.storeCode) {
             throw new Error('Tenant-scoped Commerce Search rule and Store are required');
         }
+        SERVICE.DefaultCommerceSearchPolicyService.validate(rule);
         let projectedAt = request.now ? new Date(request.now) : new Date();
         let source = {
             tenant: rule.tenant,
@@ -64,8 +65,11 @@ module.exports = {
             scopeType: rule.scopeType,
             categoryCode: rule.categoryCode,
             searchTerm: rule.searchTerm,
-            actions: (rule.actions || []).map(this.action),
-            priority: rule.priority || 0,
+            validFrom: rule.validFrom === undefined ? undefined : new Date(rule.validFrom).toISOString(),
+            validTo: rule.validTo === undefined ? undefined : new Date(rule.validTo).toISOString(),
+            benefitRef: rule.benefitRef ? structuredClone(rule.benefitRef) : undefined,
+            actions: rule.actions.map(this.action),
+            priority: SERVICE.DefaultCommerceSearchPolicyService.priority(rule),
             revision: rule.revision
         };
         return Object.assign({}, source, {

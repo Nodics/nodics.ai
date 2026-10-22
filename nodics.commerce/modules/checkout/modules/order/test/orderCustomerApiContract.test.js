@@ -31,8 +31,14 @@ let calls;
 function installGlobals() {
     calls = [];
     delete global.CLASSES;
-    global.FACADE = { DefaultOrderCustomerFacade: facade };
+    global.FACADE = { DefaultOrderCustomerFacade: facade,
+        DefaultCartCustomerFacade: require('../../cart/src/facade/defaultCartCustomerFacade') };
+    global.CONFIG = { get: key => key === 'cart' ? require('../../cart/config/properties').cart : undefined };
     global.SERVICE = {
+        DefaultSecuredRequestPipelineService: { getGrantedPermissions: () => ['commerce.order.own.read'],
+            isPermissionGranted: (permission, granted) => granted.includes(permission) },
+        DefaultModuleService: { invokeModule: async () => ({ contractVersion: 1, tenant: 'default', enterpriseCode: 'market',
+            customer: { code: 'customer-1', loginId: 'customer-1' } }) },
         DefaultOrderOperationService: service,
         DefaultCommerceOrderService: {
             get: async request => {
@@ -105,8 +111,11 @@ test('Order customer routes expose customer-owned order read without catalog lif
     assert(!routers.order.customer.read.key.includes('/catalog'));
 });
 
+function signed() { return { authorization: 'Bearer customer', authData: { tenant: 'default', enterpriseCode: 'market',
+    principalId: 'customer-1', loginId: 'customer-1', principalType: 'customer', tokenType: 'access' } }; }
+
 test('Order customer API returns order detail with entries and lifecycle for authenticated owner', async () => {
-    const response = await controller.read({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { orderCode: 'order-1' } } });
+    const response = await controller.read({ ...signed(), httpRequest: { params: { orderCode: 'order-1' } } });
     assert.equal(response.data.order.code, 'order-1');
     assert.equal(response.data.entries[0].productCode, 'agoraLinenWrapDress');
     assert.equal(response.data.lifecycle[0].requestType, 'CANCELLATION');
@@ -116,8 +125,8 @@ test('Order customer API returns order detail with entries and lifecycle for aut
 });
 
 test('Order customer API rejects missing authenticated owner and non-owned orders', async () => {
-    await assert.rejects(() => controller.read({ httpRequest: { params: { orderCode: 'order-1' } } }), /Authenticated tenant and customer/);
-    await assert.rejects(() => controller.read({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { orderCode: 'order-2' } } }), /Customer Order not found/);
+    await assert.rejects(() => controller.read({ httpRequest: { params: { orderCode: 'order-1' } } }), /participant authority/);
+    await assert.rejects(() => controller.read({ ...signed(), httpRequest: { params: { orderCode: 'order-2' } } }), /Customer Order not found/);
 });
 
 test('Order customer API maps non-owned order reads to access denied when Nodics errors are available', async () => {
@@ -131,7 +140,7 @@ test('Order customer API maps non-owned order reads to access denied when Nodics
     };
 
     await assert.rejects(
-        () => controller.read({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { orderCode: 'order-2' } } }),
+        () => controller.read({ ...signed(), httpRequest: { params: { orderCode: 'order-2' } } }),
         error => error.code === 'ERR_AUTH_00003'
     );
 });

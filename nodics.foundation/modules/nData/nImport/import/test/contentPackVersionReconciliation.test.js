@@ -34,7 +34,7 @@ function request(overrides) {
     }, overrides || {});
 }
 
-async function validatesGovernedReleaseUsesNextStoredRevision() {
+async function validatesGovernedReleasePinsStoredRevisionForProviderReconciliation() {
     let observed;
     const models = [{ code: 'documentation', versionId: 0 }];
     const result = await service.reconcileContentPackVersions(request(), {
@@ -51,7 +51,7 @@ async function validatesGovernedReleaseUsesNextStoredRevision() {
         limit: 1,
         sort: { versionId: -1 }
     });
-    assert.strictEqual(result[0].versionId, 5);
+    assert.strictEqual(result[0].versionId, 4);
 }
 
 async function validatesFirstInstallPreservesPortableInitialRevision() {
@@ -88,7 +88,7 @@ async function validatesGuidedDataReleaseUsesNextStoredRevision() {
     }, models);
 
     assert.strictEqual(reads, 1);
-    assert.strictEqual(result[0].versionId, 3);
+    assert.strictEqual(result[0].versionId, 2);
 }
 
 async function validatesOrdinaryImportsRetainStrictCallerRevision() {
@@ -105,7 +105,7 @@ async function validatesOrdinaryImportsRetainStrictCallerRevision() {
     assert.strictEqual(result[0].versionId, 0);
 }
 
-validatesGovernedReleaseUsesNextStoredRevision()
+validatesGovernedReleasePinsStoredRevisionForProviderReconciliation()
     .then(validatesFirstInstallPreservesPortableInitialRevision)
     .then(validatesGuidedDataReleaseUsesNextStoredRevision)
     .then(validatesOrdinaryImportsRetainStrictCallerRevision)

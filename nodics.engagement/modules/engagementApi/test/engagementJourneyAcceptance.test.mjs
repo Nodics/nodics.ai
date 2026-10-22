@@ -29,8 +29,8 @@ function fixture(change = () => {}, deny = '') {
       else assert.equal(request.headers.Authorization, undefined);
       if (route === deny) return Response.json({ message: 'denied' }, { status: 403 });
       let body;
-      if (route.endsWith('/public/feedback')) body = { code: 'partner-feedback', status: 'RECEIVED', revision };
-      else if (route.endsWith('/operator/feedback')) body = [{ code: 'partner-feedback' }];
+      if (route.endsWith('/public/feedback')) body = { code: 'partner-feedback', status: 'RECEIVED' };
+      else if (route.endsWith('/operator/feedback')) body = [{ code: 'partner-feedback', revision }];
       else if (route.includes('/actions/')) {
         assert.equal(JSON.parse(request.body).expectedRevision, revision);
         body = { code: 'partner-feedback', status: states[route.split('/').at(-1)], revision: ++revision };
@@ -59,6 +59,8 @@ test('all five correlated transitions and both public projections are required',
     .map(c => c.request.headers['x-correlation-id']);
   assert.equal(new Set(correlations).size, 1);
   assert.match(correlations[0], /^engagement-acceptance-/);
+  assert.deepEqual(f.calls.filter(c => c.route.endsWith('/testimonials') || c.route.endsWith('/reviews'))
+    .map(c => c.request.headers['x-correlation-id']), [correlations[0], correlations[0]]);
   assert.equal(f.calls.length, 9);
 });
 
@@ -66,9 +68,9 @@ test('intake, queue, every lifecycle outcome and public shapes fail closed', asy
   const cases = [
     ['/public/feedback', body => ({ ...body, status: 'REJECTED' })],
     ['/public/feedback', body => ({ ...body, code: '' })],
-    ['/public/feedback', body => ({ ...body, revision: null })],
-    ['/public/feedback', body => ({ ...body, revision: '0' })],
     ['/operator/feedback', () => []],
+    ['/operator/feedback', body => [{ ...body[0], revision: null }]],
+    ['/operator/feedback', body => [{ ...body[0], revision: '0' }]],
     ...['TRIAGE', 'ASSIGN', 'START', 'RESOLVE', 'CONFIRM'].flatMap(action => [
       ['/actions/' + action, body => ({ ...body, status: 'RECEIVED' })],
       ['/actions/' + action, body => ({ ...body, code: 'unrelated' })],

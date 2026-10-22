@@ -1,5 +1,13 @@
 # commsSchema contracts
 
+## Source Eligibility
+
+`commsIntent.requiresSourceEligibility` freezes whether a current domain-owner
+check is mandatory. It is part of new checked intent identity; removing a runtime
+owner mapping cannot downgrade a stored checked message. Existing intents without
+the bit retain their unrelated behavior. Core owns the fixed metadata-only
+dispatch check and uses the same intent/attempt records, never a second outbox.
+
 ## Private Telegram Update Receipt
 
 `commsTelegramUpdate` owns native Telegram replay binding through generated

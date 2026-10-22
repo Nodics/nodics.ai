@@ -310,12 +310,25 @@ module.exports = {
         let settings = this.settings();
         let response = await service.get({
             tenant: request.tenant || settings.defaultTenant || 'default',
-            authData: request.authData || { tokenType: 'service', principalId: 'cms-delivery' },
+            authData: this.persistenceAuthData(request),
             options: Object.assign({}, request.options || {}, { recursive: false }),
             searchOptions: { pageSize: settings.maxComponents },
             query: query
         });
         return response && Array.isArray(response.result) ? response.result : [];
+    },
+
+    /** Uses the framework system principal for private Online persistence reads. */
+    persistenceAuthData: function (request) {
+        const identity = SERVICE.DefaultIdentityGovernanceService;
+        if (!identity || typeof identity.getSystemAuthData !== 'function') {
+            throw this.error('ERR_CMS_00083', 'CMS delivery persistence identity is unavailable');
+        }
+        const authData = identity.getSystemAuthData();
+        if (!authData || authData.isSystem !== true || !Array.isArray(authData.userGroups) || !authData.userGroups.length) {
+            throw this.error('ERR_CMS_00083', 'CMS delivery persistence identity is invalid');
+        }
+        return authData;
     },
 
     /** Resolves a public delivery URL for a media code without exposing provider storage details. */

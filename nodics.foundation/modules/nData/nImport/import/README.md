@@ -34,6 +34,11 @@ This module owns generic import mechanics. Functional modules own their data mea
   [maintenance sequence](llm/contracts/import-release-contracts.md#existing-installation-maintenance-sequence):
   suppress `types.init.startupExecution`, keep Init enabled, migrate the default
   partition before tenants through governed operator imports, then restore startup.
+  nImport keeps `types.init.startupProfileSelections` empty by default. A project
+  module may explicitly select an Init-only guided profile for one exact
+  environment and runtime role when its reviewed authority pack must be installed
+  before first internal authentication on an empty schema; normal release
+  admission, create-preserve behavior and receipts still apply.
 
 - Custom owner installers read fixed JSON payloads through
   `DefaultDataReleaseService.readContributionPayload(contribution, installerCode, payloadName)`.
@@ -66,35 +71,16 @@ This module owns generic import mechanics. Functional modules own their data mea
 
 ## Release Readiness Contract
 
-Release planning and execution delegate header-target admission to capability
-owners selected by `data.dataReleases.targetValidators.<moduleName>`. Each
-loader-visible service exports read-only `validateImportTarget(metadata)` and
-must return exactly `true`; unavailable owners, refusals and owner failures
-reject before any installation claim or row dispatch. Metadata contains only
-module/schema/index/operation and release destination/lifecycle, never rows.
-This prevents a correctly labelled Staged release from hiding operational
-targets. It does not replace row validation, grant permissions or make a failed
-partial import atomic. Custom installers retain their existing preflight owner.
-See [target admission and partial recovery](llm/contracts/README.md#release-target-admission-and-partial-recovery).
+Release planning and execution require capability-owner
+[target admission](llm/contracts/README.md#release-target-admission-and-partial-recovery)
+before installation claims or row dispatch. This never grants permissions,
+replaces row validation or makes partial imports atomic.
 
-The data-release catalogue is the backend authority for import readiness. Every
-catalogue item can carry a client-safe `readiness` projection with:
-
-- `capabilityCode`, `displayName`, `capabilityType`, and `group`;
-- `businessStatus`, `technicalStatus`, `releaseStatus`, and `nextAction`;
-- bounded blockers with stable `blockerCode`, `code`, shared severity
-  (`INFO`, `WARNING`, `BLOCKED`, or `REPAIR_REQUIRED`), `owner`,
-  `ownerType`, `source`, `message`, `action`, client-safe disabled reason,
-  sanitized technical status, and optional client-safe `repair` metadata;
-- optional `extendsCapability` and `businessOutcome` for business grouping.
-
-Axis renders this projection as preparation readiness. It must not calculate
-readiness from browser state, source folders, or release names.
-
-This projection uses the same blocker vocabulary as BackOffice application
-capability readiness. Axis pages must not keep legacy `ACTION` or `BLOCKER`
-normalization fallbacks as the primary contract; those strings are historical
-compatibility only.
+The backend data-release catalogue owns readiness; Axis renders it without
+inferring state from source folders or browser state. The
+[module release contract](llm/contracts/import-release-contracts.md#module-release-manifests)
+defines bounded blocker fields, shared severity vocabulary, capability grouping
+and permitted repair operations.
 
 Readiness is derived from the available release, installed receipt, active run
 state, optional manifest capability metadata, and optional release descriptor
@@ -110,21 +96,9 @@ metadata. Common state mapping is:
 | `DOWNGRADE_AVAILABLE` | `NEEDS_ATTENTION` | Review installed version |
 | `INVALID_RELEASE` | `NEEDS_ATTENTION` | Repair release manifest |
 
-Blocker `repair` metadata is declarative guidance, not a browser authority. It
-identifies whether a safe governed action is available now, the owning operation
-family, an action code, idempotency, and whether confirmation is required.
-Install/update/retry release actions stay inside nImport. Source defects such as
-invalid generated release manifests are marked unavailable for automatic browser
-repair and should guide the developer/operator to repair the owning source
-release instead of asking business users to understand manifest internals.
-
-The module registers `dataReleaseReadinessRepairProvider` when BackOffice
-operational-readiness orchestration is present in the same runtime. BackOffice
-owns repair locks, receipts, audit, cluster refresh events, and Axis response
-contracts. The provider owns only nImport-specific execution and delegates to
-`DefaultDataReleaseService.preflight` or `DefaultDataReleaseService.execute`.
-Projects must not add parallel import repair handlers in Axis or custom project
-code; extend nImport release policy, release data, or owner manifests instead.
+Repair metadata is guidance, not authority. nImport owns install/update/retry;
+BackOffice owns orchestration, locks, receipts and audit. Invalid source releases
+require owner repair, not automatic browser repair or a project-owned importer.
 
 ## Optional Release Descriptor
 
@@ -161,10 +135,13 @@ owning modules and configuration layers.
 
 ## Documentation
 
-Deep documentation lives in:
+The [manifest](data/manifest.json) selects the current immutable documentation:
 
-- `nodics.foundation/modules/nData/nImport/import/data/docs-v001/records/documentation/importDocumentationComponentData.js`
-- `nodics.docs/docs/pages/applications/tee-deap-solution-use-cases.md`
+- [Import, export and migration guide](data/docs-v001/records/documentation/importDocumentationComponentData.js)
+- [Release contracts](llm/contracts/import-release-contracts.md) cover prerequisites,
+  staging, media boundaries, layered composition, receipts and recovery.
+  Cross-framework TEE/DEAP guidance is discovered through the `nodics.docs`
+  catalogue, not a parallel Markdown authoring tree.
 
 ## Verification
 
@@ -234,8 +211,3 @@ not imported rows or operator claims. nImport delegates fresh validation through
 `data.dataReleases.targetValidators` and exposes only transient exact-request
 metadata to the owning generated operation. Read the
 [placement contract](llm/contracts/README.md#explicit-enterprise-placement).
-
-Governed release discovery collects exact declared paths before grouping files by
-name. Separate manifest sections can reuse header or record basenames without
-discarding one another or loading unselected siblings. A `NO_DATA` run or an
-explicit zero-success summary cannot produce a `CURRENT` installation receipt.
